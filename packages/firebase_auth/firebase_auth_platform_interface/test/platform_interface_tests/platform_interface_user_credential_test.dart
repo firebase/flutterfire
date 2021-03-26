@@ -18,7 +18,7 @@ void main() {
   const String kMockEmail = 'test@example.com';
   const String kMockPassword = 'test-password';
 
-  final kMockUserData = <String, dynamic>{
+  final kMockUserData = <String, Object?>{
     'uid': kMockUid,
     'email': kMockEmail,
   };
@@ -94,7 +94,7 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> data)
       : super(auth, data);
 }
 

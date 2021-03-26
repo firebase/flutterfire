@@ -779,11 +779,9 @@ class _OtherProvidersSignInSectionState
         GoogleAuthProvider googleProvider = GoogleAuthProvider();
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
-        final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-        final GoogleAuthCredential googleAuthCredential =
-            GoogleAuthProvider.credential(
+        final googleUser = await GoogleSignIn().signIn();
+        final googleAuth = await googleUser.authentication;
+        final googleAuthCredential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );

@@ -14,7 +14,7 @@ import 'utils/exception.dart';
 /// Method Channel delegate for [UserPlatform] instances.
 class MethodChannelUser extends UserPlatform {
   /// Constructs a new [MethodChannelUser] instance.
-  MethodChannelUser(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+  MethodChannelUser(FirebaseAuthPlatform auth, Map<String, Object?> data)
       : super(auth, data);
 
   @override
@@ -22,7 +22,7 @@ class MethodChannelUser extends UserPlatform {
     try {
       await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
         'User#delete',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
         },
       );
@@ -34,17 +34,17 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<String> getIdToken(bool forceRefresh) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#getIdToken',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'forceRefresh': forceRefresh,
           'tokenOnly': true,
         },
-      ))!;
+      );
 
-      return data['token'];
+      return data!['token']! as String;
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -53,17 +53,17 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<IdTokenResult> getIdTokenResult(bool forceRefresh) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#getIdToken',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'forceRefresh': forceRefresh,
           'tokenOnly': false,
         },
-      ))!;
+      );
 
-      return IdTokenResult(data);
+      return IdTokenResult(data!);
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -74,17 +74,16 @@ class MethodChannelUser extends UserPlatform {
     AuthCredential credential,
   ) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#linkWithCredential',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'credential': credential.asMap(),
         },
-      ))!;
+      );
 
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+      final userCredential = MethodChannelUserCredential(auth, data!);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -98,17 +97,16 @@ class MethodChannelUser extends UserPlatform {
     AuthCredential credential,
   ) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#reauthenticateUserWithCredential',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'credential': credential.asMap(),
         },
-      ))!;
+      );
 
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+      final userCredential = MethodChannelUserCredential(auth, data!);
 
       auth.currentUser = userCredential.user;
       return userCredential;
@@ -120,15 +118,15 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> reload() async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#reload',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
         },
-      ))!;
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, data!);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e) {
@@ -142,7 +140,7 @@ class MethodChannelUser extends UserPlatform {
   ) async {
     try {
       await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
-          'User#sendEmailVerification', <String, dynamic>{
+          'User#sendEmailVerification', <String, Object?>{
         'appName': auth.app.name,
         'actionCodeSettings': actionCodeSettings?.asMap()
       });
@@ -154,18 +152,17 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<UserPlatform> unlink(String providerId) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#unlink',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'providerId': providerId,
         },
-      ))!;
+      );
 
       // Native returns a UserCredential, whereas Dart should expect a User
-      MethodChannelUserCredential userCredential =
-          MethodChannelUserCredential(auth, data);
+      final userCredential = MethodChannelUserCredential(auth, data!);
       MethodChannelUser? user = userCredential.user as MethodChannelUser?;
 
       auth.currentUser = user;
@@ -179,16 +176,16 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateEmail(String newEmail) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#updateEmail',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'newEmail': newEmail,
         },
-      ))!;
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, data!);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e) {
@@ -199,16 +196,16 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updatePassword(String newPassword) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#updatePassword',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'newPassword': newPassword,
         },
-      ))!;
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, data!);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e) {
@@ -219,16 +216,16 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#updatePhoneNumber',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'credential': phoneCredential.asMap(),
         },
-      ))!;
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, data!);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e) {
@@ -239,16 +236,16 @@ class MethodChannelUser extends UserPlatform {
   @override
   Future<void> updateProfile(Map<String, String?> profile) async {
     try {
-      Map<String, dynamic> data = (await MethodChannelFirebaseAuth.channel
-          .invokeMapMethod<String, dynamic>(
+      final data = await MethodChannelFirebaseAuth.channel
+          .invokeMapMethod<String, Object?>(
         'User#updateProfile',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'profile': profile,
         },
-      ))!;
+      );
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, data!);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e) {
@@ -264,7 +261,7 @@ class MethodChannelUser extends UserPlatform {
     try {
       await MethodChannelFirebaseAuth.channel.invokeMethod<void>(
         'User#verifyBeforeUpdateEmail',
-        <String, dynamic>{
+        <String, Object?>{
           'appName': auth.app.name,
           'newEmail': newEmail,
           'actionCodeSettings': actionCodeSettings?.asMap(),

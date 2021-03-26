@@ -41,7 +41,7 @@ void main() {
     test('asMap()', () {
       final result = authCredential.asMap();
 
-      expect(result, isA<Map<String, dynamic>>());
+      expect(result, isA<Map<String, Object?>>());
       expect(result['providerId'], equals(kMockProviderId));
       expect(result['signInMethod'], equals(kMockSignInMethod));
       expect(result['token'], equals(kMockToken));

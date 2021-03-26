@@ -23,16 +23,16 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
             'messagingSenderId': '123',
             'projectId': '123',
           },
-          'pluginConstants': {},
+          'pluginConstants': <String, Object?>{},
         }
       ];
     }
 
     if (call.method == 'Firebase#initializeApp') {
-      return {
+      return <String, Object?>{
         'name': call.arguments['appName'],
         'options': call.arguments['options'],
-        'pluginConstants': {},
+        'pluginConstants': <String, Object?>{},
       };
     }
 
@@ -47,6 +47,6 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
 Future<T> neverEndingFuture<T>() async {
   // ignore: literal_only_boolean_expressions
   while (true) {
-    await Future.delayed(const Duration(minutes: 5));
+    await Future<void>.delayed(const Duration(minutes: 5));
   }
 }

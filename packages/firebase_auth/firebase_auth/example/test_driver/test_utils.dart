@@ -1,5 +1,3 @@
-// @dart = 2.9
-
 import 'dart:convert';
 import 'dart:math';
 
@@ -26,8 +24,8 @@ String /*!*/ generateRandomEmail({
 }
 
 // Gets a custom token from the rnfirebase api for test purposes.
-Future getCustomToken(
-    String uid, Map<String, dynamic> claims, String idToken) async {
+Future<String> getCustomToken(
+    String uid, Map<String, Object?> claims, String idToken) async {
   try {
     var path = 'https://api.rnfirebase.io/auth/user/$uid/custom-token';
     var body = json.encode(claims);
@@ -40,8 +38,8 @@ Future getCustomToken(
     );
     if (response.statusCode == 200) {
       // successful, parse json
-      var jsonData = json.decode(response.body);
-      return jsonData['token'];
+      var jsonData = json.decode(response.body) as Map<String, Object?>;
+      return jsonData['token']! as String;
     } else {
       // response wasn't successful, throw
       throw Exception(

@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 
-typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
+typedef MethodCallCallback = FutureOr<Object?> Function(MethodCall methodCall);
 typedef Callback = void Function(MethodCall call);
 
 // mock values
@@ -33,16 +33,16 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
             'messagingSenderId': '123',
             'projectId': '123',
           },
-          'pluginConstants': {},
+          'pluginConstants': <String, Object?>{},
         }
       ];
     }
 
     if (call.method == 'Firebase#initializeApp') {
-      return {
+      return <String, Object?>{
         'name': call.arguments['appName'],
         'options': call.arguments['options'],
-        'pluginConstants': {},
+        'pluginConstants': <String, Object?>{},
       };
     }
 
@@ -54,18 +54,19 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
   });
 }
 
-void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
-      return await methodCallCallback(call);
-    });
+void handleMethodCall(MethodCallCallback methodCallCallback) {
+  MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
+    return await methodCallCallback(call);
+  });
+}
 
-Future<void> simulateEvent(String name, Map<String, dynamic>? user) async {
+Future<void> simulateEvent(String name, Map<String, Object?>? user) async {
   await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
     MethodChannelFirebaseAuth.channel.name,
     MethodChannelFirebaseAuth.channel.codec.encodeMethodCall(
       MethodCall(
         name,
-        <String, dynamic>{'user': user, 'appName': defaultFirebaseAppName},
+        <String, Object?>{'user': user, 'appName': defaultFirebaseAppName},
       ),
     ),
     (_) {},
@@ -86,11 +87,12 @@ Future<void> testExceptionHandling(
   );
 }
 
-Map<String, dynamic> generateUser(
-  Map<String, dynamic> user,
-  Map<String, dynamic> updatedInfo,
+Map<String, Object?> generateUser(
+  Map<String, Object?> user,
+  Map<String, Object?> updatedInfo,
 ) {
-  Map<String, dynamic> kMockUpdatedUser = Map<String, dynamic>.from(user);
-  kMockUpdatedUser.addAll(updatedInfo);
-  return kMockUpdatedUser;
+  return {
+    ...user,
+    ...updatedInfo,
+  };
 }

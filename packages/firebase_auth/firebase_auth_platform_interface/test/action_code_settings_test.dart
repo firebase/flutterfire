@@ -44,16 +44,17 @@ void main() {
         test('returns the current instance as a [Map]', () {
           final result = actionCodeSettings.asMap();
 
-          expect(result, isA<Map<String, dynamic>>());
+          expect(result, isA<Map<String, Object?>>());
 
           expect(result['url'], equals(kMockUrl));
           expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
-          expect(result['android']['packageName'], equals(kMockPackageName));
-          expect(result['android']['installApp'], equals(kMockInstallApp));
-          expect(
-              result['android']['minimumVersion'], equals(kMockMinimumVersion));
-          expect(result['iOS']['bundleId'], equals(kMockBundleId));
+          expect(result['android'], {
+            'packageName': kMockPackageName,
+            'installApp': kMockInstallApp,
+            'minimumVersion': kMockMinimumVersion,
+          });
+          expect(result['iOS'], {'bundleId': kMockBundleId});
         });
       });
 

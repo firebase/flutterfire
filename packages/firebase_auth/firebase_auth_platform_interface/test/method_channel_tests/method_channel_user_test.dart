@@ -26,7 +26,7 @@ void main() {
   const String kMockNewPhoneNumber = '5555555556';
   const String kMockIdTokenResultSignInProvider = 'password';
   const String kMockIdTokenResultSignInFactor = 'test';
-  const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
+  const Map<Object?, Object?> kMockIdTokenResultClaims = <Object?, Object?>{
     'claim1': 'value1',
   };
   const String kMockPhoneNumber = TEST_PHONE_NUMBER;
@@ -36,22 +36,24 @@ void main() {
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
   final int kMockIdTokenResultIssuedAtTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-  final Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
-    'token': kMockIdToken,
-    'expirationTimestamp': kMockIdTokenResultExpirationTimestamp,
-    'authTimestamp': kMockIdTokenResultAuthTimestamp,
-    'issuedAtTimestamp': kMockIdTokenResultIssuedAtTimestamp,
-    'signInProvider': kMockIdTokenResultSignInProvider,
-    'claims': kMockIdTokenResultClaims,
-    'signInSecondFactor': kMockIdTokenResultSignInFactor
-  };
+  final Map<String, Object?> kMockIdTokenResult = Map.unmodifiable(
+    <String, Object?>{
+      'token': kMockIdToken,
+      'expirationTimestamp': kMockIdTokenResultExpirationTimestamp,
+      'authTimestamp': kMockIdTokenResultAuthTimestamp,
+      'issuedAtTimestamp': kMockIdTokenResultIssuedAtTimestamp,
+      'signInProvider': kMockIdTokenResultSignInProvider,
+      'claims': kMockIdTokenResultClaims,
+      'signInSecondFactor': kMockIdTokenResultSignInFactor
+    },
+  );
 
   final int kMockCreationTimestamp =
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  final List kMockInitialProviderData = [
+  const kMockInitialProviderData = <Map<String, String>>[
     <String, String>{
       'providerId': kMockProviderId,
       'uid': kMockUid,
@@ -62,24 +64,26 @@ void main() {
     },
   ];
 
-  Map<String, dynamic> kMockUser = <String, dynamic>{
-    'uid': kMockUid,
-    'isAnonymous': true,
-    'emailVerified': false,
-    'metadata': <String, int>{
-      'creationTime': kMockCreationTimestamp,
-      'lastSignInTime': kMockLastSignInTimestamp,
+  final kMockUser = Map<String, Object?>.unmodifiable(
+    <String, Object?>{
+      'uid': kMockUid,
+      'isAnonymous': true,
+      'emailVerified': false,
+      'metadata': <String, int>{
+        'creationTime': kMockCreationTimestamp,
+        'lastSignInTime': kMockLastSignInTimestamp,
+      },
+      'photoURL': kMockPhotoURL,
+      'providerData': kMockInitialProviderData,
     },
-    'photoURL': kMockPhotoURL,
-    'providerData': kMockInitialProviderData,
-  };
+  );
 
   Future<void> mockSignIn() async {
     await auth.signInAnonymously();
   }
 
   group('$MethodChannelUser', () {
-    late Map<String, dynamic> user;
+    late Map<String, Object?> user;
     late List kMockProviderData;
 
     setUpAll(() async {
@@ -96,48 +100,55 @@ void main() {
 
         switch (call.method) {
           case 'Auth#registerChangeListeners':
-            return {};
+            return <String, Object?>{};
           case 'Auth#signInAnonymously':
-            return <String, dynamic>{'user': user};
+            return <String, Object?>{'user': user};
           case 'Auth#signInWithEmailAndPassword':
             user = generateUser(
-                user, <String, dynamic>{'email': call.arguments['email']});
-            return <String, dynamic>{'user': user};
+                user, <String, Object?>{'email': call.arguments['email']});
+            return <String, Object?>{'user': user};
           case 'User#updateProfile':
-            Map<String, dynamic> previousUser = user;
+            Map<String, Object?> previousUser = user;
             user = generateUser(
-                user, Map<String, dynamic>.from(call.arguments['profile']));
+              user,
+              Map<String, Object?>.from(
+                call.arguments['profile'] as Map<String, Object?>,
+              ),
+            );
             return previousUser;
           case 'User#updatePhoneNumber':
-            Map<String, dynamic> previousUser = user;
+            Map<String, Object?> previousUser = user;
             user = generateUser(
-                user, <String, dynamic>{'phoneNumber': kMockNewPhoneNumber});
+                user, <String, Object?>{'phoneNumber': kMockNewPhoneNumber});
             return previousUser;
           case 'User#updatePassword':
           case 'User#updateEmail':
           case 'User#sendLinkToEmail':
           case 'User#sendPasswordResetEmail':
-            Map<String, dynamic> previousUser = user;
+            Map<String, Object?> previousUser = user;
             user = generateUser(
-                user, <String, dynamic>{'email': call.arguments['newEmail']});
+                user, <String, Object?>{'email': call.arguments['newEmail']});
             return previousUser;
           case 'User#getIdToken':
             if (call.arguments['tokenOnly'] == false) {
               return kMockIdTokenResult;
             }
-            return <String, dynamic>{'token': kMockIdToken};
+            return <String, Object?>{'token': kMockIdToken};
           case 'User#reload':
             return user;
           case 'User#reauthenticateUserWithCredential':
           case 'User#linkWithCredential':
             user = generateUser(
-                user, <String, dynamic>{'providerData': kMockProviderData});
-            return <String, dynamic>{'user': user};
+                user, <String, Object?>{'providerData': kMockProviderData});
+            return <String, Object?>{'user': user};
           case 'User#unlink':
-            user = generateUser(user, <String, dynamic>{'providerData': []});
-            return <String, dynamic>{'user': user};
+            user = generateUser(
+              user,
+              <String, Object?>{'providerData': <Object?>[]},
+            );
+            return <String, Object?>{'user': user};
           default:
-            return <String, dynamic>{'user': user};
+            return <String, Object?>{'user': user};
         }
       });
 
@@ -150,7 +161,7 @@ void main() {
 
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
-      kMockProviderData = List.from(kMockInitialProviderData);
+      kMockProviderData = kMockInitialProviderData;
       await mockSignIn();
 
       log.clear();
@@ -162,7 +173,7 @@ void main() {
       test('should return correct value', () async {
         // Setup
         user =
-            generateUser(user, <String, dynamic>{'displayName': 'updatedName'});
+            generateUser(user, <String, Object?>{'displayName': 'updatedName'});
         await auth.currentUser!.reload();
 
         expect(auth.currentUser!.displayName, equals('updatedName'));
@@ -175,7 +186,7 @@ void main() {
       });
       test('should return correct value', () async {
         const updatedEmail = 'updated@email.com';
-        user = generateUser(user, <String, dynamic>{'email': updatedEmail});
+        user = generateUser(user, <String, Object?>{'email': updatedEmail});
         await auth.currentUser!.reload();
 
         expect(auth.currentUser!.email, equals(updatedEmail));
@@ -187,7 +198,7 @@ void main() {
         expect(auth.currentUser!.emailVerified, isFalse);
       });
       test('should return true', () async {
-        user = generateUser(user, <String, dynamic>{'emailVerified': true});
+        user = generateUser(user, <String, Object?>{'emailVerified': true});
         await auth.currentUser!.reload();
 
         expect(auth.currentUser!.emailVerified, isTrue);
@@ -199,7 +210,7 @@ void main() {
         expect(auth.currentUser!.isAnonymous, isTrue);
       });
       test('should return false', () async {
-        user = generateUser(user, <String, dynamic>{'isAnonymous': false});
+        user = generateUser(user, <String, Object?>{'isAnonymous': false});
         await auth.currentUser!.reload();
 
         expect(auth.currentUser!.isAnonymous, isFalse);
@@ -278,7 +289,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#getIdToken',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'forceRefresh': true,
                 'tokenOnly': true
@@ -308,7 +319,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#getIdToken',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'forceRefresh': true,
                 'tokenOnly': false
@@ -358,7 +369,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#linkWithCredential',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'credential': credential.asMap()
               },
@@ -405,7 +416,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#reauthenticateUserWithCredential',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'credential': credential.asMap()
               },
@@ -436,7 +447,7 @@ void main() {
         // Setup
         expect(auth.currentUser!.displayName, isNull);
         user = generateUser(
-            user, <String, dynamic>{'displayName': 'test'}); // change mock user
+            user, <String, Object?>{'displayName': 'test'}); // change mock user
 
         // Test
         await auth.currentUser!.reload();
@@ -447,7 +458,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#reload',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
               },
             )
@@ -478,7 +489,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#sendEmailVerification',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'actionCodeSettings': actionCodeSettings.asMap()
               },
@@ -508,7 +519,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#unlink',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'providerId': kMockProviderId
               },
@@ -544,7 +555,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#updateEmail',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'newEmail': newEmail
               },
@@ -576,7 +587,7 @@ void main() {
           log[0],
           isMethodCall(
             'User#updatePassword',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': '[DEFAULT]',
               'newPassword': newPassword
             },
@@ -595,9 +606,10 @@ void main() {
     });
 
     group('updatePhoneNumber()', () {
-      PhoneAuthCredential phoneAuthCredential =
-          PhoneAuthProvider.credential(verificationId: 'test', smsCode: 'test')
-              as PhoneAuthCredential;
+      PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: 'test',
+        smsCode: 'test',
+      );
 
       test('gets result successfully', () async {
         await auth.currentUser!.updatePhoneNumber(phoneAuthCredential);
@@ -607,9 +619,9 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#updatePhoneNumber',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
-                'credential': <String, dynamic>{
+                'credential': <String, Object?>{
                   'providerId': 'phone',
                   'signInMethod': 'phone',
                   'verificationId': 'test',
@@ -651,9 +663,9 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#updateProfile',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
-                'profile': <String, dynamic>{
+                'profile': <String, Object?>{
                   'displayName': newDisplayName,
                   'photoURL': newPhotoURL,
                 }
@@ -690,7 +702,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#verifyBeforeUpdateEmail',
-              arguments: <String, dynamic>{
+              arguments: <String, Object?>{
                 'appName': '[DEFAULT]',
                 'newEmail': newEmail,
                 'actionCodeSettings': actionCodeSettings.asMap(),

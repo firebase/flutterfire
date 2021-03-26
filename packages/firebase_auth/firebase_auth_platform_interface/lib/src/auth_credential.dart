@@ -29,8 +29,8 @@ class AuthCredential {
   final int? token;
 
   /// Returns the current instance as a serialized [Map].
-  Map<String, dynamic> asMap() {
-    return <String, dynamic>{
+  Map<String, Object?> asMap() {
+    return <String, Object?>{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'token': token,

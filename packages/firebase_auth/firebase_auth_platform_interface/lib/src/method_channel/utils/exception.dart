@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -28,9 +29,10 @@ Object convertPlatformException(Object exception) {
 FirebaseException platformExceptionToFirebaseAuthException(
   PlatformException platformException,
 ) {
-  Map<String, dynamic>? details = platformException.details != null
-      ? Map<String, dynamic>.from(platformException.details)
-      : null;
+  // ignore: unnecessary_cast, remove the dynamic
+  final exceptionDetails = platformException as Object?;
+
+  final details = exceptionDetails.castMap<String, Object?>();
 
   String code = 'unknown';
   String? message = platformException.message;
@@ -38,21 +40,22 @@ FirebaseException platformExceptionToFirebaseAuthException(
   AuthCredential? credential;
 
   if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
+    code = details['code'] as String? ?? code;
+    message = details['message'] as String? ?? message;
 
-    if (details['additionalData'] != null) {
-      if (details['additionalData']['authCredential'] != null) {
+    final additionalData = details.castMap<String, Object?>();
+    if (additionalData != null) {
+      email = additionalData['email'] as String?;
+
+      final authCredential =
+          additionalData['authCredential'].castMap<String, Object?>();
+
+      if (authCredential != null) {
         credential = AuthCredential(
-          providerId: details['additionalData']['authCredential']['providerId'],
-          signInMethod: details['additionalData']['authCredential']
-              ['signInMethod'],
-          token: details['additionalData']['authCredential']['token'],
+          providerId: authCredential['providerId']! as String,
+          signInMethod: authCredential['signInMethod']! as String,
+          token: authCredential['token'] as int?,
         );
-      }
-
-      if (details['additionalData']['email'] != null) {
-        email = details['additionalData']['email'];
       }
     }
   }

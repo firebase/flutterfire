@@ -24,7 +24,9 @@ abstract class AuthJsImpl {
     String email,
     String password,
   );
-  external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
+  external PromiseJsImpl<List<Object?>> fetchSignInMethodsForEmail(
+    String email,
+  );
   external UserJsImpl get currentUser;
   external String get tenantId;
   external set tenantId(String s);
@@ -34,12 +36,12 @@ abstract class AuthJsImpl {
   external String get languageCode;
   external set languageCode(String s);
   external Func0 onAuthStateChanged(
-    dynamic nextOrObserver, [
+    Object? nextOrObserver, [
     Func1? opt_error,
     Func0? opt_completed,
   ]);
   external Func0 onIdTokenChanged(
-    dynamic nextOrObserver, [
+    Object? nextOrObserver, [
     Func1? opt_error,
     Func0? opt_completed,
   ]);
@@ -243,7 +245,7 @@ class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external FacebookAuthProviderJsImpl addScope(String scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    Object? customOAuthParameters,
   );
   external static OAuthCredential credential(String token);
 }
@@ -254,7 +256,7 @@ class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external GithubAuthProviderJsImpl addScope(String scope);
   external GithubAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    Object? customOAuthParameters,
   );
   external static OAuthCredential credential(String token);
 }
@@ -265,7 +267,7 @@ class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external GoogleAuthProviderJsImpl addScope(String scope);
   external GoogleAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    Object? customOAuthParameters,
   );
   external static OAuthCredential credential(
       [String? idToken, String? accessToken]);
@@ -276,7 +278,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(String providerId);
   external OAuthProviderJsImpl addScope(String scope);
   external OAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    Object? customOAuthParameters,
   );
   external OAuthCredential credential([String? idToken, String? accessToken]);
 }
@@ -286,7 +288,7 @@ class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
   external static String get PROVIDER_ID;
   external TwitterAuthProviderJsImpl setCustomParameters(
-    dynamic customOAuthParameters,
+    Object? customOAuthParameters,
   );
   external static OAuthCredential credential(String token, String secret);
 }
@@ -314,7 +316,7 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
-    container, [
+    Object? container, [
     Object? parameters,
     AppJsImpl? app,
   ]);

@@ -31,7 +31,7 @@ void main() {
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-  Map<String, dynamic> kMockUser = <String, dynamic>{
+  Map<String, Object?> kMockUser = <String, Object?>{
     'uid': kMockUid,
     'isAnonymous': false,
     'emailVerified': false,
@@ -51,11 +51,11 @@ void main() {
     ],
   };
 
-  final Map<String, dynamic> kMockInitialProviders = <String, dynamic>{
+  final Map<String, Object?> kMockInitialProviders = <String, Object?>{
     'providers': ['facebook']
   };
 
-  const Map<String, dynamic> kMockActionCodeInfoData = <String, dynamic>{
+  const Map<String, Object?> kMockActionCodeInfoData = <String, Object?>{
     'email': regularTestEmail,
     'previousEmail': 'previous@email.com'
   };
@@ -65,11 +65,11 @@ void main() {
     data: kMockActionCodeInfoData,
   );
 
-  const Map<String, dynamic> kMockAdditionalUserInfo = <String, dynamic>{
+  const Map<String, Object?> kMockAdditionalUserInfo = <String, Object?>{
     'isNewUser': false,
     'username': 'flutterUser',
     'providerId': 'testProvider',
-    'profile': <String, dynamic>{'foo': 'bar'},
+    'profile': <String, Object?>{'foo': 'bar'},
   };
 
   Future<void> mockSignIn() async {
@@ -94,7 +94,7 @@ void main() {
   }
 
   group('$MethodChannelFirebaseAuth', () {
-    late Map<String, dynamic> user;
+    late Map<String, Object?> user;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
@@ -110,47 +110,47 @@ void main() {
 
         switch (call.method) {
           case 'Auth#registerChangeListeners':
-            return {};
+            return <String, Object?>{};
           case 'Auth#signInAnonymously':
-            user = generateUser(user, <String, dynamic>{
+            user = generateUser(user, <String, Object?>{
               'isAnonymous': true,
             });
-            return <String, dynamic>{'user': user};
+            return <String, Object?>{'user': user};
           case 'Auth#signInWithEmailLink':
           case 'Auth#signInWithEmailAndPassword':
             user = generateUser(
-                user, <String, dynamic>{'email': call.arguments['email']});
-            return <String, dynamic>{
+                user, <String, Object?>{'email': call.arguments['email']});
+            return <String, Object?>{
               'user': user,
               'additionalUserInfo': kMockAdditionalUserInfo
             };
           case 'Auth#signInWithCustomToken':
-            user = generateUser(user, <String, dynamic>{
+            user = generateUser(user, <String, Object?>{
               'email': regularTestEmail,
             });
-            return <String, dynamic>{
+            return <String, Object?>{
               'user': user,
               'additionalUserInfo': kMockAdditionalUserInfo
             };
           case 'Auth#signInWithCredential':
-            user = generateUser(user, <String, dynamic>{
+            user = generateUser(user, <String, Object?>{
               'email': call.arguments['credential']['email'],
             });
-            return <String, dynamic>{
+            return <String, Object?>{
               'user': user,
               'additionalUserInfo': kMockAdditionalUserInfo
             };
           case 'Auth#verifyPasswordResetCode':
-            return <String, dynamic>{'email': call.arguments['code']};
+            return <String, Object?>{'email': call.arguments['code']};
           case 'Auth#verifyPhoneNumber':
             return null;
           case 'Auth#checkActionCode':
-            return <String, dynamic>{
+            return <String, Object?>{
               'operation': 2,
               'data': kMockActionCodeInfoData,
             };
           case 'Auth#setLanguageCode':
-            return <String, dynamic>{
+            return <String, Object?>{
               'languageCode': call.arguments['languageCode']
             };
           case 'Auth#setSettings':
@@ -159,7 +159,7 @@ void main() {
             return kMockInitialProviders;
 
           default:
-            return <String, dynamic>{'user': kMockUser};
+            return <String, Object?>{'user': kMockUser};
         }
       });
 
@@ -229,7 +229,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#applyActionCode',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'code': code,
             },
@@ -262,7 +262,7 @@ void main() {
         // check result
         expect(result, isA<ActionCodeInfo>());
         expect(result.operation, equals(ActionCodeInfoOperation.verifyEmail));
-        expect(result.data, isA<Map<String, dynamic>>());
+        expect(result.data, isA<Map<String, Object?>>());
         expect(result.data['email'], equals(kMockActionCodeInfo.data['email']));
         expect(
           result.data['previousEmail'],
@@ -273,7 +273,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#checkActionCode',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'code': code,
             },
@@ -306,7 +306,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#confirmPasswordReset',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'code': code,
               'newPassword': newPassword,
@@ -339,7 +339,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#createUserWithEmailAndPassword',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
               'password': testPassword,
@@ -373,7 +373,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#fetchSignInMethodsForEmail',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
             },
@@ -421,7 +421,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signInAnonymously',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
             },
           ),
@@ -459,7 +459,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signInWithCredential',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'credential': credential.asMap()
             },
@@ -501,7 +501,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signInWithCustomToken',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'token': token
             },
@@ -539,7 +539,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signInWithEmailAndPassword',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
               'password': testPassword
@@ -581,7 +581,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signInWithEmailLink',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
               'emailLink': emailLink
@@ -617,7 +617,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#sendPasswordResetEmail',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
               'actionCodeSettings': actionCodeSettings.asMap(),
@@ -654,7 +654,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#sendSignInLinkToEmail',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'email': regularTestEmail,
               'actionCodeSettings': actionCodeSettings.asMap(),
@@ -689,7 +689,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#setLanguageCode',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'languageCode': languageCode,
             },
@@ -721,7 +721,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#setSettings',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'appVerificationDisabledForTesting': isDisabled,
               'userAccessGroup': null,
@@ -804,7 +804,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#signOut',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
             },
           ),
@@ -835,7 +835,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#useEmulator',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'host': 'example.com',
               'port': 31337,
@@ -857,7 +857,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#verifyPasswordResetCode',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'code': testCode,
             },
@@ -907,7 +907,7 @@ void main() {
         expect(log, <Matcher>[
           isMethodCall(
             'Auth#verifyPhoneNumber',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'appName': defaultFirebaseAppName,
               'handle': handle,
               'phoneNumber': testPhoneNumber,
@@ -983,12 +983,12 @@ void main() {
 
         await simulateEvent('Auth#authStateChanges', user);
 
-        final Map<String, dynamic> updatedUser = <String, dynamic>{
+        final Map<String, Object?> updatedUser = <String, Object?>{
           'email': testEmail,
         };
         await simulateEvent('Auth#authStateChanges', updatedUser);
 
-        expect(log, equals([]));
+        expect(log, isEmpty);
       });
     });
 
@@ -1026,7 +1026,7 @@ void main() {
         await simulateEvent('Auth#idTokenChanges', null);
         await simulateEvent('Auth#idTokenChanges', user);
 
-        expect(log, equals([]));
+        expect(log, isEmpty);
       });
     });
 
@@ -1067,14 +1067,14 @@ void main() {
         await simulateEvent('Auth#idTokenChanges', null);
         await simulateEvent('Auth#idTokenChanges', user);
 
-        expect(log, equals([]));
+        expect(log, isEmpty);
       });
     });
   });
 }
 
 class MockUserPlatform extends UserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> user)
+  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> user)
       : super(auth, user);
 }
 

@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const bool kMockIsNewUser = true;
   const String kMockDisplayName = 'test-name';
-  final Map<String, dynamic> kMockProfile = <String, dynamic>{
+  final Map<String, Object?> kMockProfile = <String, Object?>{
     'displayName': kMockDisplayName
   };
   const String kMockProviderId = 'password';

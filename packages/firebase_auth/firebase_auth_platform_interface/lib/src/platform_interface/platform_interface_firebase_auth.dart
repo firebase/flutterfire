@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -40,13 +41,16 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAuthPlatform.instanceFor({
     required FirebaseApp app,
-    required Map<dynamic, dynamic> pluginConstants,
+    required Map<Object?, Object?> pluginConstants,
   }) {
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
-        languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-        currentUser: pluginConstants['APP_CURRENT_USER'] == null
-            ? null
-            : Map<String, dynamic>.from(pluginConstants['APP_CURRENT_USER']));
+    return FirebaseAuthPlatform //
+        .instance
+        .delegateFor(app: app)
+        .setInitialValues(
+          languageCode: pluginConstants['APP_LANGUAGE_CODE'] as String?,
+          currentUser:
+              pluginConstants['APP_CURRENT_USER'].castMap<String, Object?>(),
+        );
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -80,7 +84,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');

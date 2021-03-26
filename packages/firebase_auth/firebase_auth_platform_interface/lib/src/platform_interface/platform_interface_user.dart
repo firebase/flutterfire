@@ -6,14 +6,35 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/action_code_settings.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/utils/convert.dart';
 import 'package:firebase_auth_platform_interface/src/user_info.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// A user account.
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserPlatform(this.auth, Map<String, dynamic> user)
-      : _user = user,
+  UserPlatform(this.auth, Map<String, Object?> user)
+      : displayName = user['displayName'] as String?,
+        email = user['email'] as String?,
+        emailVerified = user['emailVerified']! as bool,
+        metadata = user['metadata'] //
+            .castMap<String, Object?>()
+            .guard(
+              (v) => UserMetadata(
+                v['creationTime'] as int?,
+                v['lastSignInTime'] as int?,
+              ),
+            )!,
+        phoneNumber = user['phoneNumber'] as String?,
+        photoURL = user['photoURL'] as String?,
+        providerData = user['providerData']
+            .castList<Map<String, String?>>()!
+            .map((data) => UserInfo(data))
+            .toList(),
+        isAnonymous = user['isAnonymous']! as bool,
+        refreshToken = user['refreshToken'] as String?,
+        tenantId = user['tenantId'] as String?,
+        uid = user['uid']! as String,
         super(token: _token);
 
   static final Object _token = Object();
@@ -26,21 +47,15 @@ abstract class UserPlatform extends PlatformInterface {
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
 
-  final Map<String, dynamic> _user;
-
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String? get displayName {
-    return _user['displayName'];
-  }
+  final String? displayName;
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String? get email {
-    return _user['email'];
-  }
+  final String? email;
 
   /// Returns whether the users email address has been verified.
   ///
@@ -48,65 +63,44 @@ abstract class UserPlatform extends PlatformInterface {
   ///
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
-  bool get emailVerified {
-    return _user['emailVerified'];
-  }
+  final bool emailVerified;
 
   /// Returns whether the user is a anonymous.
-  bool get isAnonymous {
-    return _user['isAnonymous'];
-  }
+  final bool isAnonymous;
 
   /// Returns additional metadata about the user, such as their creation time.
-  UserMetadata get metadata {
-    return UserMetadata(
-        _user['metadata']['creationTime'], _user['metadata']['lastSignInTime']);
-  }
+  final UserMetadata metadata;
 
   /// Returns the users phone number.
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String? get phoneNumber {
-    return _user['phoneNumber'];
-  }
+  final String? phoneNumber;
 
   /// Returns a photo URL for the user.
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String? get photoURL {
-    return _user['photoURL'];
-  }
+  final String? photoURL;
 
   /// Returns a list of user information for each linked provider.
-  List<UserInfo> get providerData {
-    return List.from(_user['providerData'])
-        .map((data) => UserInfo(Map<String, String?>.from(data)))
-        .toList();
-  }
+  final List<UserInfo> providerData;
 
   /// Returns a JWT refresh token for the user.
   ///
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
-  String? get refreshToken {
-    return _user['refreshToken'];
-  }
+  final String? refreshToken;
 
   /// The current user's tenant ID.
   ///
   /// This is a read-only property, which indicates the tenant ID used to sign
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
-  String? get tenantId {
-    return _user['tenantId'];
-  }
+  final String? tenantId;
 
   /// The user's unique ID.
-  String get uid {
-    return _user['uid'];
-  }
+  final String uid;
 
   /// Deletes and signs out the user.
   ///
@@ -249,7 +243,8 @@ abstract class UserPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredentialPlatform> reauthenticateWithCredential(
-      AuthCredential credential) {
+    AuthCredential credential,
+  ) {
     throw UnimplementedError(
         'reauthenticateWithCredential() is not implemented');
   }

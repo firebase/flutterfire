@@ -25,7 +25,7 @@ void main() {
       DateTime.now().subtract(const Duration(days: 2)).millisecondsSinceEpoch;
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
-  final List kMockInitialProviderData = [
+  const kMockInitialProviderData = <Map<String, String>>[
     <String, String>{
       'providerId': kMockProviderId,
       'uid': kMockUid,
@@ -36,12 +36,12 @@ void main() {
     },
   ];
   group('$UserPlatform()', () {
-    Map<String, dynamic> kMockUser;
+    Map<String, Object?> kMockUser;
     setUpAll(() async {
       await Firebase.initializeApp();
       auth = FirebaseAuthPlatform.instance;
 
-      kMockUser = <String, dynamic>{
+      kMockUser = <String, Object?>{
         'uid': kMockUid,
         'isAnonymous': true,
         'email': kMockEmail,
@@ -243,8 +243,9 @@ void main() {
 
     test('throws if .updatePhoneNumber', () async {
       PhoneAuthCredential phoneCredential = PhoneAuthProvider.credential(
-          verificationId: 'verificationId',
-          smsCode: '12345') as PhoneAuthCredential;
+        verificationId: 'verificationId',
+        smsCode: '12345',
+      );
       try {
         await userPlatform.updatePhoneNumber(phoneCredential);
       } on UnimplementedError catch (e) {
@@ -281,6 +282,6 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> data)
       : super(auth, data);
 }

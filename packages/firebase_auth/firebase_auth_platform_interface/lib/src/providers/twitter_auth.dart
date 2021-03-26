@@ -49,17 +49,17 @@ class TwitterAuthProvider extends AuthProvider {
     return _kProviderId;
   }
 
-  Map<dynamic, dynamic> _parameters = {};
+  Map<Object?, Object?> _parameters = {};
 
   /// Returns the parameters for this provider instance.
-  Map<dynamic, dynamic> get parameters {
+  Map<Object?, Object?> get parameters {
     return _parameters;
   }
 
   /// Sets the OAuth custom parameters to pass in a Twitter OAuth request for
   /// popup and redirect sign-in operations.
   TwitterAuthProvider setCustomParameters(
-    Map<dynamic, dynamic> customOAuthParameters,
+    Map<Object?, Object?> customOAuthParameters,
   ) {
     _parameters = customOAuthParameters;
     return this;

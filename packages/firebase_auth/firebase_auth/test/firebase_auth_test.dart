@@ -42,7 +42,7 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  Map<String, dynamic> kMockUser = <String, dynamic>{
+  Map<String, Object?> kMockUser = <String, Object?>{
     'isAnonymous': true,
     'emailVerified': false,
     'displayName': 'displayName',
@@ -71,7 +71,7 @@ void main() {
   MockFirebaseAuth mockAuthPlatform = MockFirebaseAuth();
 
   group('$FirebaseAuth', () {
-    Map<String, dynamic> user;
+    Map<String, Object?> user;
     // used to generate a unique application name for each test
     var testCount = 0;
 
@@ -98,7 +98,7 @@ void main() {
         isNewUser: false,
         username: 'flutterUser',
         providerId: 'testProvider',
-        profile: <String, dynamic>{'foo': 'bar'},
+        profile: <String, Object?>{'foo': 'bar'},
       );
       mockCredential = EmailAuthProvider.credential(
         email: 'test',
@@ -170,7 +170,7 @@ void main() {
           Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
-        return <String, dynamic>{'user': user};
+        return <String, Object?>{'user': user};
       });
     });
 
@@ -431,7 +431,7 @@ void main() {
         final GithubAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as GithubAuthCredential;
         expect(captured.providerId, equals('github.com'));
         expect(captured.accessToken, equals(kMockGithubToken));
       });
@@ -445,7 +445,7 @@ void main() {
         final EmailAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as EmailAuthCredential;
         expect(captured.providerId, equals('password'));
         expect(captured.email, equals('test@example.com'));
         expect(captured.emailLink,
@@ -461,7 +461,7 @@ void main() {
         final TwitterAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as TwitterAuthCredential;
         expect(captured.providerId, equals('twitter.com'));
         expect(captured.accessToken, equals(kMockIdToken));
         expect(captured.secret, equals(kMockAccessToken));
@@ -476,7 +476,7 @@ void main() {
         final GoogleAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as GoogleAuthCredential;
         expect(captured.providerId, equals('google.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
@@ -489,10 +489,10 @@ void main() {
           accessToken: kMockAccessToken,
         );
         await auth!.signInWithCredential(credential);
-        final OAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as OAuthCredential;
         expect(captured.providerId, equals('apple.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
@@ -507,7 +507,7 @@ void main() {
         final PhoneAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as PhoneAuthCredential;
         expect(captured.providerId, equals('phone'));
         expect(captured.verificationId, equals(kMockVerificationId));
         expect(captured.smsCode, equals(kMockSmsCode));
@@ -520,7 +520,7 @@ void main() {
         final FacebookAuthCredential captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as FacebookAuthCredential;
         expect(captured.providerId, equals('facebook.com'));
         expect(captured.accessToken, equals(kMockAccessToken));
       });
@@ -653,7 +653,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#userChanges, []),
       returnValue: const Stream<UserPlatform?>.empty(),
       returnValueForMissingStub: const Stream<UserPlatform?>.empty(),
-    );
+    ) as Stream<UserPlatform?>;
   }
 
   @override
@@ -662,7 +662,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#idTokenChanges, []),
       returnValue: const Stream<UserPlatform?>.empty(),
       returnValueForMissingStub: const Stream<UserPlatform?>.empty(),
-    );
+    ) as Stream<UserPlatform?>;
   }
 
   @override
@@ -671,7 +671,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#authStateChanges, []),
       returnValue: const Stream<UserPlatform?>.empty(),
       returnValueForMissingStub: const Stream<UserPlatform?>.empty(),
-    );
+    ) as Stream<UserPlatform?>;
   }
 
   @override
@@ -680,7 +680,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
       returnValueForMissingStub: TestFirebaseAuthPlatform(),
-    );
+    ) as FirebaseAuthPlatform;
   }
 
   @override
@@ -692,7 +692,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#createUserWithEmailAndPassword, [email, password]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -708,7 +708,7 @@ class MockFirebaseAuth extends Mock
       returnValue: neverEndingFuture<ConfirmationResultPlatform>(),
       returnValueForMissingStub:
           neverEndingFuture<ConfirmationResultPlatform>(),
-    );
+    ) as Future<ConfirmationResultPlatform>;
   }
 
   @override
@@ -719,7 +719,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithCredential, [credential]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -728,7 +728,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithCustomToken, [token]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -740,7 +740,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithEmailAndPassword, [email, password]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -749,7 +749,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithPopup, [provider]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -761,7 +761,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithEmailLink, [email, emailLink]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -770,7 +770,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInWithRedirect, [provider]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -779,12 +779,12 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInAnonymously, []),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -794,7 +794,7 @@ class MockFirebaseAuth extends Mock
       }),
       returnValue: TestFirebaseAuthPlatform(),
       returnValueForMissingStub: TestFirebaseAuthPlatform(),
-    );
+    ) as FirebaseAuthPlatform;
   }
 
   @override
@@ -803,7 +803,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#getRedirectResult, []),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -812,7 +812,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#setLanguageCode, [languageCode]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -821,7 +821,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#useEmulator, [host, port]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -830,7 +830,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#checkActionCode, [code]),
       returnValue: neverEndingFuture<ActionCodeInfo>(),
       returnValueForMissingStub: neverEndingFuture<ActionCodeInfo>(),
-    );
+    ) as Future<ActionCodeInfo>;
   }
 
   @override
@@ -839,7 +839,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#confirmPasswordReset, [code, newPassword]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -848,7 +848,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#checkActionCode, [email]),
       returnValue: neverEndingFuture<List<String>>(),
       returnValueForMissingStub: neverEndingFuture<List<String>>(),
-    );
+    ) as Future<List<String>>;
   }
 
   @override
@@ -857,7 +857,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#isSignInWithEmailLink, [emailLink]),
       returnValue: false,
       returnValueForMissingStub: false,
-    );
+    ) as bool;
   }
 
   @override
@@ -869,7 +869,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#sendPasswordResetEmail, [email, actionCodeSettings]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -881,7 +881,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#sendSignInLinkToEmail, [email, actionCodeSettings]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -896,7 +896,7 @@ class MockFirebaseAuth extends Mock
       ]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -905,7 +905,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#setPersistence, [persistence]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -914,7 +914,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signOut, [signOut]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -923,7 +923,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#verifyPasswordResetCode, [code]),
       returnValue: neverEndingFuture<String>(),
       returnValueForMissingStub: neverEndingFuture<String>(),
-    );
+    ) as Future<String>;
   }
 
   @override
@@ -950,14 +950,14 @@ class MockFirebaseAuth extends Mock
       }),
       returnValue: neverEndingFuture<String>(),
       returnValueForMissingStub: neverEndingFuture<String>(),
-    );
+    ) as Future<void>;
   }
 }
 
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
+  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> _user) {
     TestUserPlatform(auth, _user);
   }
 }
@@ -997,7 +997,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   void instanceFor({
     FirebaseApp? app,
-    Map<dynamic, dynamic>? pluginConstants,
+    Map<Object?, Object?>? pluginConstants,
   }) {}
 
   @override
@@ -1007,7 +1007,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -1031,7 +1031,7 @@ class MockRecaptchaVerifier extends Mock
       Invocation.getter(#delegate),
       returnValue: MockRecaptchaVerifierFactoryPlatform(),
       returnValueForMissingStub: MockRecaptchaVerifierFactoryPlatform(),
-    );
+    ) as RecaptchaVerifierFactoryPlatform;
   }
 }
 
@@ -1075,7 +1075,7 @@ class TestAuthProvider extends AuthProvider {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> data)
       : super(auth, data);
 }
 

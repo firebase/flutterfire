@@ -11,11 +11,11 @@ void main() {
   const int kMockExpirationTimestamp = 1234566;
   const int kMockAuthTimestamp = 1234567;
   const int kMockIssuedAtTimestamp = 12345678;
-  final Map<dynamic, dynamic> kMockClaims = <dynamic, dynamic>{
+  final Map<Object?, Object?> kMockClaims = <Object?, Object?>{
     'claim1': 'value1',
   };
 
-  final Map<String, dynamic> kMockData = <String, dynamic>{
+  final Map<String, Object?> kMockData = <String, Object?>{
     'claims': kMockClaims,
     'issuedAtTimestamp': kMockIssuedAtTimestamp,
     'authTimestamp': kMockAuthTimestamp,
@@ -43,11 +43,11 @@ void main() {
 
     group('claims', () {
       test('returns [Map] of data[claims] ', () {
-        expect(idTokenResult.claims, isA<Map<String, dynamic>>());
+        expect(idTokenResult.claims, isA<Map<String, Object?>>());
       });
 
       test('returns null when data[claims] is null', () {
-        Map<String, dynamic> testData = <String, dynamic>{
+        Map<String, Object?> testData = <String, Object?>{
           'claims': null,
         };
 

@@ -27,8 +27,7 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a new [PhoneAuthCredential] from a provided [verificationId] and
   /// [smsCode].
-  // TODO(rrousselGit): Should this return a PhoneAuthCredential instead?
-  static AuthCredential credential({
+  static PhoneAuthCredential credential({
     required String verificationId,
     required String smsCode,
   }) {
@@ -76,8 +75,8 @@ class PhoneAuthCredential extends AuthCredential {
 
   /// Returns the credential as a serialized [Map].
   @override
-  Map<String, dynamic> asMap() {
-    return <String, dynamic>{
+  Map<String, Object?> asMap() {
+    return <String, Object?>{
       'providerId': providerId,
       'signInMethod': signInMethod,
       'verificationId': verificationId,

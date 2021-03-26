@@ -22,7 +22,9 @@ void runInstanceTests() {
     // generate unique email address for test run
     String regularTestEmail = generateRandomEmail();
 
-    Future<void> commonSuccessCallback(currentUserCredential) async {
+    Future<void> commonSuccessCallback(
+      UserCredential currentUserCredential,
+    ) async {
       var currentUser = currentUserCredential.user;
 
       expect(currentUser, isInstanceOf<Object>());
@@ -59,7 +61,7 @@ void runInstanceTests() {
         await ensureSignedOut();
 
         if (subscription2 != null) {
-          await Future.delayed(const Duration(seconds: 5));
+          await Future<void>.delayed(const Duration(seconds: 5));
           await subscription2.cancel();
         }
       });
@@ -101,7 +103,7 @@ void runInstanceTests() {
         await ensureSignedOut();
 
         if (subscription2 != null) {
-          await Future.delayed(const Duration(seconds: 5));
+          await Future<void>.delayed(const Duration(seconds: 5));
           await subscription2.cancel();
         }
       });
@@ -216,7 +218,7 @@ void runInstanceTests() {
       test('should create a user with an email and password', () async {
         var email = generateRandomEmail();
 
-        Function successCallback = (UserCredential newUserCredential) async {
+        Future<void> successCallback(UserCredential newUserCredential) async {
           expect(newUserCredential.user, isA<User>());
           User newUser = newUserCredential.user;
 
@@ -231,11 +233,13 @@ void runInstanceTests() {
           expect(additionalUserInfo.isNewUser, isTrue);
 
           await auth.currentUser?.delete();
-        };
+        }
 
         await auth
             .createUserWithEmailAndPassword(
-                email: email, password: TEST_PASSWORD)
+              email: email,
+              password: TEST_PASSWORD,
+            )
             .then(successCallback);
       });
 
@@ -434,8 +438,9 @@ void runInstanceTests() {
 
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {
-        Function successCallback =
-            (UserCredential currentUserCredential) async {
+        Future<void> successCallback(
+          UserCredential currentUserCredential,
+        ) async {
           var currentUser = currentUserCredential.user;
 
           expect(currentUser, isA<User>());
@@ -448,7 +453,7 @@ void runInstanceTests() {
           expect(additionalUserInfo, isInstanceOf<Object>());
 
           await auth.signOut();
-        };
+        }
 
         await auth.signInAnonymously().then(successCallback);
       });
@@ -657,9 +662,10 @@ void runInstanceTests() {
     group('verifyPhoneNumber()', () {
       test('should fail with an invalid phone number', () async {
         Future<Exception> getError() async {
-          Completer completer = Completer<FirebaseAuthException>();
+          final completer = Completer<FirebaseAuthException>();
 
-          unawaited(auth.verifyPhoneNumber(
+          unawaited(
+            auth.verifyPhoneNumber(
               phoneNumber: 'foo',
               verificationCompleted: (PhoneAuthCredential credential) {
                 return completer
@@ -675,7 +681,9 @@ void runInstanceTests() {
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
                     .completeError(Exception('Should not have been called'));
-              }));
+              },
+            ),
+          );
 
           return completer.future;
         }
@@ -692,9 +700,10 @@ void runInstanceTests() {
         await auth.signInAnonymously();
 
         Future<PhoneAuthCredential> getCredential() async {
-          Completer completer = Completer<PhoneAuthCredential>();
+          final completer = Completer<PhoneAuthCredential>();
 
-          unawaited(auth.verifyPhoneNumber(
+          unawaited(
+            auth.verifyPhoneNumber(
               phoneNumber: testPhoneNumber,
               // ignore: invalid_use_of_visible_for_testing_member
               autoRetrievedSmsCodeForTesting: testSmsCode,
@@ -717,7 +726,9 @@ void runInstanceTests() {
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
                     .completeError(Exception('Should not have been called'));
-              }));
+              },
+            ),
+          );
 
           return completer.future;
         }

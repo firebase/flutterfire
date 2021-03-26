@@ -7,11 +7,13 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth_web/src/utils/convert.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'auth_interop.dart' as auth_interop;
+import 'auth_interop.dart';
 import 'firebase_interop.dart' as firebase_interop;
 import 'utils/utils.dart';
 
@@ -73,12 +75,16 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   auth_interop.UserMetadata get metadata => jsObject.metadata;
 
   /// List of additional provider-specific information about the user.
-  List<UserInfo> get providerData => jsObject.providerData
-      // explicitly typing the param as dynamic to work-around
-      // https://github.com/dart-lang/sdk/issues/33537
-      .map((dynamic data) =>
-          UserInfo<auth_interop.UserInfoJsImpl>._fromJsObject(data))
-      .toList();
+  List<UserInfo> get providerData {
+    return jsObject.providerData
+        // explicitly typing the param as Object? to work-around
+        // https://github.com/dart-lang/sdk/issues/33537
+        .map((Object data) {
+      return UserInfo<auth_interop.UserInfoJsImpl>._fromJsObject(
+        data as UserInfoJsImpl,
+      );
+    }).toList();
+  }
 
   /// Refresh token for the user account.
   String get refreshToken => jsObject.refreshToken;
@@ -237,7 +243,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   }
 
   /// Returns a JSON-serializable representation of this object.
-  Map<String, dynamic> toJson() => dartify(jsObject.toJSON());
+  Map<String, Object?> toJson() =>
+      dartify(jsObject.toJSON())! as Map<String, Object?>;
 
   @override
   String toString() => 'User: $uid';
@@ -264,7 +271,8 @@ class IdTokenResult extends JsObjectWrapper<auth_interop.IdTokenResultImpl> {
 
   /// The entire payload claims of the ID token including the standard reserved
   /// claims as well as the custom claims.
-  Map<String, dynamic>? get claims => dartify(jsObject.claims);
+  Map<String, Object?>? get claims =>
+      dartify(jsObject.claims)! as Map<String, Object?>;
 
   /// The ID token expiration time.
   DateTime get expirationTime => parseHttpDate(jsObject.expirationTime);
@@ -331,7 +339,8 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         _changeController!.add(User.getInstance(user));
       });
 
-      final errorWrapper = allowInterop((e) => _changeController!.addError(e));
+      final errorWrapper =
+          allowInterop((Object? e) => _changeController!.addError(e!));
 
       void startListen() {
         assert(_onAuthUnsubscribe == null);
@@ -371,7 +380,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       });
 
       final errorWrapper =
-          allowInterop((e) => _idTokenChangedController!.addError(e));
+          allowInterop((Object? e) => _idTokenChangedController!.addError(e!));
 
       void startListen() {
         assert(_onIdTokenChangedUnsubscribe == null);
@@ -403,18 +412,21 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
 
   /// Applies a verification [code] sent to the user by e-mail or by other
   /// out-of-band mechanism.
-  Future applyActionCode(String code) =>
-      handleThenable(jsObject.applyActionCode(code));
+  Future<void> applyActionCode(String code) {
+    return handleThenable(jsObject.applyActionCode(code));
+  }
 
   /// Checks a verification [code] sent to the user by e-mail or by other
   /// out-of-band mechanism.
   /// It returns [ActionCodeInfo], metadata about the code.
-  Future<auth_interop.ActionCodeInfo> checkActionCode(String code) =>
-      handleThenable(jsObject.checkActionCode(code));
+  Future<auth_interop.ActionCodeInfo> checkActionCode(String code) {
+    return handleThenable(jsObject.checkActionCode(code));
+  }
 
   /// Completes password reset process with a [code] and a [newPassword].
-  Future confirmPasswordReset(String code, String newPassword) =>
-      handleThenable(jsObject.confirmPasswordReset(code, newPassword));
+  Future<void> confirmPasswordReset(String code, String newPassword) {
+    return handleThenable(jsObject.confirmPasswordReset(code, newPassword));
+  }
 
   /// Creates a new user account associated with the specified email address and
   /// password.
@@ -444,9 +456,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// This is useful to differentiate methods of sign-in for the same provider,
   /// eg. EmailAuthProvider which has 2 methods of sign-in, email/password and
   /// email/link.
-  Future<List<String>> fetchSignInMethodsForEmail(String email) =>
-      handleThenable(jsObject.fetchSignInMethodsForEmail(email))
-          .then((list) => List<String>.from(list));
+  Future<List<String>> fetchSignInMethodsForEmail(String email) async {
+    final list = handleThenable(jsObject.fetchSignInMethodsForEmail(email));
+    return list.castList<String>()!;
+  }
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
@@ -457,9 +470,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// if sign is unsuccessful.
   /// The [UserCredential] with a null [User] is returned if no redirect
   /// operation was called.
-  Future<UserCredential> getRedirectResult() =>
-      handleThenable(jsObject.getRedirectResult())
-          .then((u) => UserCredential.fromJsObject(u));
+  Future<UserCredential> getRedirectResult() {
+    return handleThenable(jsObject.getRedirectResult())
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Sends a sign-in email link to the user with the specified email.
   ///
@@ -471,9 +485,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// To complete sign in with the email link, call
   /// [Auth.signInWithEmailLink] with the email address and
   /// the email link supplied in the email sent to the user.
-  Future sendSignInLinkToEmail(String email,
-          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(jsObject.sendSignInLinkToEmail(email, actionCodeSettings));
+  Future<void> sendSignInLinkToEmail(
+    String email, [
+    auth_interop.ActionCodeSettings? actionCodeSettings,
+  ]) {
+    return handleThenable(
+      jsObject.sendSignInLinkToEmail(email, actionCodeSettings),
+    );
+  }
 
   /// Sends a password reset e-mail to the given [email].
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
@@ -494,10 +513,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// The Android package name and iOS bundle ID will be respected only if
   /// they are configured in the same Firebase Auth project used.
-  Future sendPasswordResetEmail(String email,
-          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(
-          jsObject.sendPasswordResetEmail(email, actionCodeSettings));
+  Future<void> sendPasswordResetEmail(
+    String email, [
+    auth_interop.ActionCodeSettings? actionCodeSettings,
+  ]) {
+    return handleThenable(
+      jsObject.sendPasswordResetEmail(email, actionCodeSettings),
+    );
+  }
 
   /// Changes the current type of persistence on the current Auth instance for
   /// the currently saved Auth session and applies this type of persistence
@@ -516,24 +539,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// The [persistence] string is the auth state persistence mechanism.
   /// See allowed [persistence] values in [Persistence] class.
-  Future setPersistence(String persistence) =>
-      handleThenable(jsObject.setPersistence(persistence));
+  Future<void> setPersistence(String persistence) {
+    return handleThenable(jsObject.setPersistence(persistence));
+  }
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
   Future<UserCredential> signInWithCredential(
-          auth_interop.OAuthCredential credential) =>
-      handleThenable(jsObject.signInWithCredential(credential))
-          .then((u) => UserCredential.fromJsObject(u));
+    auth_interop.OAuthCredential credential,
+  ) {
+    return handleThenable(jsObject.signInWithCredential(credential))
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Asynchronously signs in as an anonymous user.
   //
   // If there is already an anonymous user signed in, that user will be
   // returned; otherwise, a new anonymous user identity will be created and
   // returned.
-  Future<UserCredential> signInAnonymously() =>
-      handleThenable(jsObject.signInAnonymously())
-          .then((u) => UserCredential.fromJsObject(u));
+  Future<UserCredential> signInAnonymously() {
+    return handleThenable(jsObject.signInAnonymously())
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Asynchronously signs in using a custom token.
   ///
@@ -542,9 +569,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// Fails with an error if the token is invalid, expired, or not accepted by
   /// the Firebase Auth service.
-  Future<UserCredential> signInWithCustomToken(String token) =>
-      handleThenable(jsObject.signInWithCustomToken(token))
-          .then((u) => UserCredential.fromJsObject(u));
+  Future<UserCredential> signInWithCustomToken(String token) {
+    return handleThenable(jsObject.signInWithCustomToken(token))
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Signs in a user asynchronously using a custom [token] and returns any
   /// additional user info data or credentials.
@@ -570,14 +598,18 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// user, and the password is used to access the user's account in your
   /// Firebase project.
   Future<UserCredential> signInWithEmailAndPassword(
-          String email, String password) =>
-      handleThenable(jsObject.signInWithEmailAndPassword(email, password))
-          .then((u) => UserCredential.fromJsObject(u));
+    String email,
+    String password,
+  ) {
+    return handleThenable(jsObject.signInWithEmailAndPassword(email, password))
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Signs in using [email] and [emailLink] link.
-  Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
-      handleThenable(jsObject.signInWithEmailLink(email, emailLink))
-          .then((u) => UserCredential.fromJsObject(u));
+  Future<UserCredential> signInWithEmailLink(String email, String emailLink) {
+    return handleThenable(jsObject.signInWithEmailLink(email, emailLink))
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Asynchronously signs in using a phone number in E.164 format
   /// (e.g. +16505550101).
@@ -590,24 +622,28 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// For abuse prevention, this method also requires a [ApplicationVerifier].
   /// The Firebase Auth SDK includes a reCAPTCHA-based implementation, [RecaptchaVerifier].
   Future<ConfirmationResult> signInWithPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
-      handleThenable(jsObject.signInWithPhoneNumber(
-              phoneNumber, applicationVerifier.jsObject))
-          .then((c) => ConfirmationResult.fromJsObject(c));
+    String phoneNumber,
+    ApplicationVerifier applicationVerifier,
+  ) {
+    return handleThenable(jsObject.signInWithPhoneNumber(
+            phoneNumber, applicationVerifier.jsObject))
+        .then((c) => ConfirmationResult.fromJsObject(c));
+  }
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
   /// Returns [UserCredential] if successful, or an error object if unsuccessful.
-  Future<UserCredential> signInWithPopup(AuthProvider provider) =>
-      handleThenable(jsObject.signInWithPopup(provider.jsObject))
-          .then((u) => UserCredential.fromJsObject(u));
+  Future<UserCredential> signInWithPopup(AuthProvider provider) {
+    return handleThenable(jsObject.signInWithPopup(provider.jsObject))
+        .then((u) => UserCredential.fromJsObject(u));
+  }
 
   /// Signs in using a full-page redirect flow with the given [provider].
-  Future signInWithRedirect(AuthProvider provider) =>
+  Future<void> signInWithRedirect(AuthProvider provider) =>
       handleThenable(jsObject.signInWithRedirect(provider.jsObject));
 
   /// Signs out the current user.
-  Future signOut() => handleThenable(jsObject.signOut());
+  Future<void> signOut() => handleThenable(jsObject.signOut());
 
   /// Configures the Auth instance to work with a local emulator
   ///
@@ -676,13 +712,16 @@ class FacebookAuthProvider
       auth_interop.FacebookAuthProviderJsImpl.PROVIDER_ID;
 
   /// Creates a new FacebookAuthProvider.
-  factory FacebookAuthProvider() => FacebookAuthProvider.fromJsObject(
-      auth_interop.FacebookAuthProviderJsImpl());
+  factory FacebookAuthProvider() {
+    return FacebookAuthProvider.fromJsObject(
+      auth_interop.FacebookAuthProviderJsImpl(),
+    );
+  }
 
   /// Creates a new FacebookAuthProvider from a [jsObject].
   FacebookAuthProvider.fromJsObject(
-      auth_interop.FacebookAuthProviderJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+    auth_interop.FacebookAuthProviderJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
 
   /// Adds additional OAuth 2.0 scopes that you want to request from the
   /// authentication provider.
@@ -697,9 +736,12 @@ class FacebookAuthProvider
   /// 'redirect_uri', 'scope', 'response_type' and 'state' are not allowed
   /// and ignored.
   FacebookAuthProvider setCustomParameters(
-          Map<String, dynamic> customOAuthParameters) =>
-      FacebookAuthProvider.fromJsObject(
-          jsObject.setCustomParameters(jsify(customOAuthParameters)));
+    Map<String, Object?> customOAuthParameters,
+  ) {
+    return FacebookAuthProvider.fromJsObject(
+      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+    );
+  }
 
   /// Creates a credential for Facebook.
   static auth_interop.OAuthCredential credential(String token) =>
@@ -735,9 +777,12 @@ class GithubAuthProvider
   /// 'redirect_uri', 'scope', 'response_type' and 'state'
   /// are not allowed and ignored.
   GithubAuthProvider setCustomParameters(
-          Map<String, dynamic> customOAuthParameters) =>
-      GithubAuthProvider.fromJsObject(
-          jsObject.setCustomParameters(jsify(customOAuthParameters)));
+    Map<String, Object?> customOAuthParameters,
+  ) {
+    return GithubAuthProvider.fromJsObject(
+      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+    );
+  }
 
   /// Creates a credential for GitHub.
   static auth_interop.OAuthCredential credential(String token) =>
@@ -774,15 +819,24 @@ class GoogleAuthProvider
   /// 'redirect_uri', 'scope', 'response_type' and 'state'
   /// are not allowed and ignored.
   GoogleAuthProvider setCustomParameters(
-          Map<String, dynamic> customOAuthParameters) =>
-      GoogleAuthProvider.fromJsObject(
-          jsObject.setCustomParameters(jsify(customOAuthParameters)));
+    Map<String, Object?> customOAuthParameters,
+  ) {
+    return GoogleAuthProvider.fromJsObject(
+      jsObject.setCustomParameters(jsify(customOAuthParameters)),
+    );
+  }
 
   /// Creates a credential for Google.
   /// At least one of [idToken] and [accessToken] is required.
-  static auth_interop.OAuthCredential credential(
-          [String? idToken, String? accessToken]) =>
-      auth_interop.GoogleAuthProviderJsImpl.credential(idToken, accessToken);
+  static auth_interop.OAuthCredential credential([
+    String? idToken,
+    String? accessToken,
+  ]) {
+    return auth_interop.GoogleAuthProviderJsImpl.credential(
+      idToken,
+      accessToken,
+    );
+  }
 }
 
 /// OAuth auth provider.
@@ -807,7 +861,8 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   /// required OAuth 2.0 parameters such as client_id, redirect_uri, scope,
   /// response_type and state are not allowed and will be ignored.
   OAuthProvider setCustomParameters(
-          Map<String, dynamic> customOAuthParameters) =>
+    Map<String, Object?> customOAuthParameters,
+  ) =>
       OAuthProvider.fromJsObject(
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
@@ -841,7 +896,8 @@ class TwitterAuthProvider
   /// such as 'oauth_consumer_key', 'oauth_token', 'oauth_signature', etc
   /// are not allowed and will be ignored.
   TwitterAuthProvider setCustomParameters(
-          Map<String, dynamic> customOAuthParameters) =>
+    Map<String, Object?> customOAuthParameters,
+  ) =>
       TwitterAuthProvider.fromJsObject(
           jsObject.setCustomParameters(jsify(customOAuthParameters)));
 
@@ -940,18 +996,34 @@ class RecaptchaVerifier
   ///         print('Response expired');
   ///       }
   ///     });
-  factory RecaptchaVerifier(container,
-          [Map<String, dynamic>? parameters, App? app]) =>
-      (parameters != null)
-          ? ((app != null)
-              ? RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters), app.jsObject))
-              : RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters))))
-          : RecaptchaVerifier.fromJsObject(
-              auth_interop.RecaptchaVerifierJsImpl(container));
+  factory RecaptchaVerifier(
+    Object? container, [
+    Map<String, Object?>? parameters,
+    App? app,
+  ]) {
+    if (parameters == null) {
+      return RecaptchaVerifier.fromJsObject(
+        auth_interop.RecaptchaVerifierJsImpl(container),
+      );
+    }
+
+    if (app == null) {
+      return RecaptchaVerifier.fromJsObject(
+        auth_interop.RecaptchaVerifierJsImpl(
+          container,
+          jsify(parameters),
+        ),
+      );
+    }
+
+    return RecaptchaVerifier.fromJsObject(
+      auth_interop.RecaptchaVerifierJsImpl(
+        container,
+        jsify(parameters),
+        app.jsObject,
+      ),
+    );
+  }
 
   /// Creates a new RecaptchaVerifier from a [jsObject].
   RecaptchaVerifier.fromJsObject(auth_interop.RecaptchaVerifierJsImpl jsObject)
@@ -1022,7 +1094,8 @@ class AdditionalUserInfo
   String get providerId => jsObject.providerId;
 
   /// Returns the profile.
-  Map<String, dynamic>? get profile => dartify(jsObject.profile);
+  Map<String, Object?>? get profile =>
+      dartify(jsObject.profile)! as Map<String, Object?>;
 
   /// Returns the user name.
   String get username => jsObject.username;

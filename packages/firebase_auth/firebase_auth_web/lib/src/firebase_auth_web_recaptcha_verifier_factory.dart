@@ -39,10 +39,10 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
     RecaptchaVerifierOnExpired? onExpired,
   }) : super() {
     String element;
-    Map<String, dynamic> parameters = {};
+    Map<String, Object?> parameters = {};
 
     if (onSuccess != null) {
-      parameters['callback'] = (resp) {
+      parameters['callback'] = (Object? resp) {
         onSuccess();
       };
     }

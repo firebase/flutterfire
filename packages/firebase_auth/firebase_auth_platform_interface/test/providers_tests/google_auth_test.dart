@@ -51,7 +51,7 @@ void main() {
 
     group('setCustomParameters()', () {
       test('sets custom parameters', () {
-        final Map<dynamic, dynamic> kCustomOAuthParameters = <dynamic, dynamic>{
+        final kCustomOAuthParameters = <Object?, Object?>{
           'login_hint': 'user@example.com'
         };
         final result =

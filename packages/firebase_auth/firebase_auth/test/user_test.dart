@@ -14,7 +14,7 @@ import 'package:mockito/mockito.dart';
 // import './user_test.mocks.dart';
 import './mock.dart';
 
-Map<String, dynamic> kMockUser1 = <String, dynamic>{
+Map<String, Object?> kMockUser1 = <String, Object?>{
   'isAnonymous': true,
   'emailVerified': false,
   'displayName': 'displayName',
@@ -29,13 +29,13 @@ void main() {
 
   FirebaseAuth? auth;
 
-  const Map<String, dynamic> kMockIdTokenResult = <String, dynamic>{
+  const Map<String, Object?> kMockIdTokenResult = <String, Object?>{
     'token': '12345',
     'expirationTimestamp': 123456,
     'authTimestamp': 1234567,
     'issuedAtTimestamp': 12345678,
     'signInProvider': 'password',
-    'claims': <dynamic, dynamic>{
+    'claims': <Object?, Object?>{
       'claim1': 'value1',
     },
   };
@@ -45,7 +45,7 @@ void main() {
   final int kMockLastSignInTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
 
-  Map<String, dynamic> kMockUser = <String, dynamic>{
+  Map<String, Object?> kMockUser = <String, Object?>{
     'isAnonymous': true,
     'emailVerified': false,
     'uid': '42',
@@ -72,7 +72,7 @@ void main() {
     isNewUser: false,
     username: 'flutterUser',
     providerId: 'testProvider',
-    profile: <String, dynamic>{'foo': 'bar'},
+    profile: <String, Object?>{'foo': 'bar'},
   );
 
   EmailAuthCredential mockCredential =
@@ -82,7 +82,7 @@ void main() {
   var mockAuthPlatform = MockFirebaseAuth();
 
   group('$User', () {
-    Map<String, dynamic>? user;
+    Map<String, Object?>? user;
 
     // used to generate a unique application name for each test
     var testCount = 0;
@@ -131,7 +131,7 @@ void main() {
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
         switch (call.method) {
           default:
-            return <String, dynamic>{'user': user};
+            return <String, Object?>{'user': user};
         }
       });
     });
@@ -273,7 +273,9 @@ void main() {
         when(mockUserPlatform!.updatePhoneNumber(any)).thenAnswer((i) async {});
 
         PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-            verificationId: 'test', smsCode: 'test') as PhoneAuthCredential;
+          verificationId: 'test',
+          smsCode: 'test',
+        );
 
         await auth!.currentUser!.updatePhoneNumber(phoneAuthCredential);
 
@@ -365,7 +367,7 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#signInAnonymously, const []),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -374,12 +376,12 @@ class MockFirebaseAuth extends Mock
       Invocation.method(#delegateFor, const [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
       returnValueForMissingStub: TestFirebaseAuthPlatform(),
-    );
+    ) as FirebaseAuthPlatform;
   }
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     return super.noSuchMethod(
@@ -389,14 +391,14 @@ class MockFirebaseAuth extends Mock
       }),
       returnValue: TestFirebaseAuthPlatform(),
       returnValueForMissingStub: TestFirebaseAuthPlatform(),
-    );
+    ) as FirebaseAuthPlatform;
   }
 }
 
 class MockUserPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> _user) {
+  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> _user) {
     TestUserPlatform(auth, _user);
   }
 
@@ -406,7 +408,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#delete, []),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -415,7 +417,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#reload, []),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -424,7 +426,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#getIdToken, [forceRefresh]),
       returnValue: neverEndingFuture<String>(),
       returnValueForMissingStub: neverEndingFuture<String>(),
-    );
+    ) as Future<String>;
   }
 
   @override
@@ -433,7 +435,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#unlink, [providerId]),
       returnValue: neverEndingFuture<UserPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserPlatform>(),
-    );
+    ) as Future<UserPlatform>;
   }
 
   @override
@@ -442,7 +444,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#getIdTokenResult, [forceRefresh]),
       returnValue: neverEndingFuture<IdTokenResult>(),
       returnValueForMissingStub: neverEndingFuture<IdTokenResult>(),
-    );
+    ) as Future<IdTokenResult>;
   }
 
   @override
@@ -453,7 +455,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#reauthenticateWithCredential, [credential]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -464,7 +466,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#linkWithCredential, [credential]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
       returnValueForMissingStub: neverEndingFuture<UserCredentialPlatform>(),
-    );
+    ) as Future<UserCredentialPlatform>;
   }
 
   @override
@@ -473,7 +475,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#sendEmailVerification, [actionCodeSettings]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -482,7 +484,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#updateEmail, [newEmail]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -491,7 +493,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#updatePassword, [newPassword]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -500,7 +502,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#updatePhoneNumber, [phoneCredential]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -509,7 +511,7 @@ class MockUserPlatform extends Mock
       Invocation.method(#updateProfile, [profile]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 
   @override
@@ -524,7 +526,7 @@ class MockUserPlatform extends Mock
       ]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
-    );
+    ) as Future<void>;
   }
 }
 
@@ -554,7 +556,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     return this;
@@ -562,7 +564,7 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
+  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, Object?> data)
       : super(auth, data);
 }
 

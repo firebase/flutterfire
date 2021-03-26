@@ -48,8 +48,8 @@ class ActionCodeSettings {
   final String url;
 
   /// Returns the current instance as a [Map].
-  Map<String, dynamic> asMap() {
-    return <String, dynamic>{
+  Map<String, Object?> asMap() {
+    return <String, Object?>{
       'url': url,
       'dynamicLinkDomain': dynamicLinkDomain,
       'handleCodeInApp': handleCodeInApp,

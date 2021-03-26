@@ -93,7 +93,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   FirebaseAuthWeb setInitialValues({
-    Map<String, dynamic>? currentUser,
+    Map<String, Object?>? currentUser,
     String? languageCode,
   }) {
     // Values are already set on web
@@ -302,10 +302,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   ) async {
     try {
       // Do not inline - type is not inferred & error is thrown.
-      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
+      final verifier =
+          applicationVerifier.delegate! as auth_interop.RecaptchaVerifier;
 
       return ConfirmationResultWeb(
-          this, await _webAuth!.signInWithPhoneNumber(phoneNumber, verifier));
+        this,
+        await _webAuth!.signInWithPhoneNumber(phoneNumber, verifier),
+      );
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

@@ -70,7 +70,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   }
 
   /// Returns the assigned factory delegate.
-  dynamic get delegate {
+  Object? get delegate {
     throw UnimplementedError('delegate is not implemented');
   }
 

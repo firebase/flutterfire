@@ -9,7 +9,7 @@ void main() {
   const int kMockOperation = 2;
   const String kMockEmail = 'test@test.com';
   const String kMockPreviousEmail = 'previous@test.com';
-  final Map<String, dynamic> kMockData = <String, dynamic>{
+  final Map<String, Object?> kMockData = <String, Object?>{
     'email': kMockEmail,
     'previousEmail': kMockPreviousEmail
   };
@@ -25,7 +25,7 @@ void main() {
 
     group('data', () {
       test('returns expected data', () {
-        expect(actionCodeInfo.data, isA<Map<String, dynamic>>());
+        expect(actionCodeInfo.data, isA<Map<String, Object?>>());
         expect(actionCodeInfo.data['email'], equals(kMockEmail));
         expect(
             actionCodeInfo.data['previousEmail'], equals(kMockPreviousEmail));
@@ -34,11 +34,11 @@ void main() {
       test('handles email is null', () {
         ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
             operation: kMockOperation,
-            data: <String, dynamic>{
+            data: <String, Object?>{
               'email': null,
               'previousEmail': kMockPreviousEmail
             });
-        expect(testActionCodeInfo.data, isA<Map<String, dynamic>>());
+        expect(testActionCodeInfo.data, isA<Map<String, Object?>>());
         expect(testActionCodeInfo.data['email'], isNull);
         expect(testActionCodeInfo.data['previousEmail'],
             equals(kMockPreviousEmail));
@@ -47,11 +47,11 @@ void main() {
       test('handles previousEmail is null', () {
         ActionCodeInfo testActionCodeInfo = ActionCodeInfo(
             operation: kMockOperation,
-            data: <String, dynamic>{
+            data: <String, Object?>{
               'email': kMockEmail,
               'previousEmail': null
             });
-        expect(testActionCodeInfo.data, isA<Map<String, dynamic>>());
+        expect(testActionCodeInfo.data, isA<Map<String, Object?>>());
         expect(testActionCodeInfo.data['email'], equals(kMockEmail));
         expect(testActionCodeInfo.data['previousEmail'], isNull);
       });

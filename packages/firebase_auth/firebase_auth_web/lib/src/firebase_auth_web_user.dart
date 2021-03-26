@@ -35,7 +35,7 @@ class UserWeb extends UserPlatform {
           'phoneNumber': _webUser.phoneNumber,
           'photoURL': _webUser.photoURL,
           'providerData': _webUser.providerData
-              .map((auth_interop.UserInfo webUserInfo) => <String, dynamic>{
+              .map((auth_interop.UserInfo webUserInfo) => <String, Object?>{
                     'displayName': webUserInfo.displayName,
                     'email': webUserInfo.email,
                     'phoneNumber': webUserInfo.phoneNumber,
@@ -101,7 +101,8 @@ class UserWeb extends UserPlatform {
     _assertIsSignedOut(auth);
     try {
       // Do not inline - type is not inferred & error is thrown.
-      auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
+      final verifier =
+          applicationVerifier.delegate! as auth_interop.RecaptchaVerifier;
 
       return ConfirmationResultWeb(
         auth,

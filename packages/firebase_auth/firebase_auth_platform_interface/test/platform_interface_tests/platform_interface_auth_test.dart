@@ -36,7 +36,7 @@ void main() {
       handleMethodCall((call) async {
         switch (call.method) {
           case 'Auth#registerChangeListeners':
-            return {};
+            return <String, Object?>{};
           default:
             return null;
         }
@@ -51,9 +51,9 @@ void main() {
     test('FirebaseAuthPlatform.instanceFor', () {
       final result = FirebaseAuthPlatform.instanceFor(
           app: app,
-          pluginConstants: <dynamic, dynamic>{
+          pluginConstants: <Object?, Object?>{
             'APP_LANGUAGE_CODE': 'en',
-            'APP_CURRENT_USER': <dynamic, dynamic>{'uid': '1234'}
+            'APP_CURRENT_USER': <Object?, Object?>{'uid': '1234'}
           });
       expect(result, isA<FirebaseAuthPlatform>());
       expect(result.currentUser, isA<UserPlatform>());
@@ -181,24 +181,24 @@ void main() {
         String mode2 = 'mode%3DsignIn';
         String code1 = 'oobCode=';
         String code2 = 'oobCode%3D';
-        List options = [
-          {'email': testEmail, 'expected': false},
-          {'email': '$testEmail$mode1', 'expected': false},
-          {'email': '$testEmail$mode2', 'expected': false},
-          {'email': '$testEmail$mode1&$mode2', 'expected': false},
-          {'email': '$testEmail$code1', 'expected': false},
-          {'email': '$testEmail$code2', 'expected': false},
-          {'email': '$testEmail$code1&$code2', 'expected': false},
-          {'email': '$testEmail$mode1&$code1', 'expected': true},
-          {'email': '$testEmail$mode1&$code2', 'expected': true},
-          {'email': '$testEmail$mode2&$code1', 'expected': true},
-          {'email': '$testEmail$mode2&$code2', 'expected': true},
-        ];
+        final options = <String, bool>{
+          testEmail: false,
+          '$testEmail$mode1': false,
+          '$testEmail$mode2': false,
+          '$testEmail$mode1&$mode2': false,
+          '$testEmail$code1': false,
+          '$testEmail$code2': false,
+          '$testEmail$code1&$code2': false,
+          '$testEmail$mode1&$code1': true,
+          '$testEmail$mode1&$code2': true,
+          '$testEmail$mode2&$code1': true,
+          '$testEmail$mode2&$code2': true,
+        };
 
-        for (final element in options) {
+        for (final element in options.entries) {
           expect(
-            firebaseAuthPlatform.isSignInWithEmailLink(element['email']),
-            equals(element['expected']),
+            firebaseAuthPlatform.isSignInWithEmailLink(element.key),
+            equals(element.value),
           );
         }
       });

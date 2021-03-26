@@ -145,7 +145,7 @@ void runUserTests() {
         await auth.signInAnonymously();
 
         Future<String> getVerificationId() {
-          Completer completer = Completer<String>();
+          final completer = Completer<String>();
 
           unawaited(auth.verifyPhoneNumber(
             phoneNumber: TEST_PHONE_NUMBER,
@@ -336,12 +336,9 @@ void runUserTests() {
     group('reload()', () {
       test('should not error', () async {
         await auth.signInAnonymously();
-        try {
-          await auth.currentUser.reload();
-          await auth.signOut();
-        } catch (e) {
-          fail('should not throw error');
-        }
+        await auth.currentUser.reload();
+        await auth.signOut();
+
         expect(auth.currentUser, isNull);
       });
     });
@@ -349,12 +346,11 @@ void runUserTests() {
     group('sendEmailVerification()', () {
       test('should not error', () async {
         await auth.createUserWithEmailAndPassword(
-            email: generateRandomEmail(), password: TEST_PASSWORD);
-        try {
-          await auth.currentUser.sendEmailVerification();
-        } catch (e) {
-          fail('should not throw error');
-        }
+          email: generateRandomEmail(),
+          password: TEST_PASSWORD,
+        );
+
+        await auth.currentUser.sendEmailVerification();
         expect(auth.currentUser, isNotNull);
       });
 
@@ -365,14 +361,12 @@ void runUserTests() {
           url: 'https://react-native-firebase-testing.firebaseapp.com/foo',
         );
         await auth.createUserWithEmailAndPassword(
-            email: generateRandomEmail(), password: TEST_PASSWORD);
+          email: generateRandomEmail(),
+          password: TEST_PASSWORD,
+        );
 
         // Test
-        try {
-          await auth.currentUser.sendEmailVerification(actionCodeSettings);
-        } catch (error) {
-          fail(error);
-        }
+        await auth.currentUser.sendEmailVerification(actionCodeSettings);
         expect(auth.currentUser, isNotNull);
       }, skip: kIsWeb);
     });
@@ -581,7 +575,7 @@ void runUserTests() {
         String testSMSCode = TEST_SMS_CODE;
 
         Future<String> getVerificationId() {
-          Completer completer = Completer<String>();
+          final completer = Completer<String>();
 
           unawaited(auth.verifyPhoneNumber(
             phoneNumber: TEST_PHONE_NUMBER,
@@ -603,8 +597,12 @@ void runUserTests() {
         String storedVerificationId = await getVerificationId();
 
         // Update user profile
-        await auth.currentUser.updatePhoneNumber(PhoneAuthProvider.credential(
-            verificationId: storedVerificationId, smsCode: testSMSCode));
+        await auth.currentUser.updatePhoneNumber(
+          PhoneAuthProvider.credential(
+            verificationId: storedVerificationId,
+            smsCode: testSMSCode,
+          ),
+        );
 
         await auth.currentUser.reload();
         User user = auth.currentUser;

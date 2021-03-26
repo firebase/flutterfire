@@ -21,7 +21,7 @@ class AdditionalUserInfo {
 
   /// A [Map] containing additional profile information from the identity
   /// provider.
-  final Map<String, dynamic>? profile;
+  final Map<String, Object?>? profile;
 
   /// The federated identity provider ID.
   final String? providerId;

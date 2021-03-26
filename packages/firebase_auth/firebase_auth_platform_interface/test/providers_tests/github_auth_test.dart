@@ -50,7 +50,7 @@ void main() {
 
     group('setCustomParameters()', () {
       test('sets custom parameters', () {
-        final Map<dynamic, dynamic> kCustomOAuthParameters = <dynamic, dynamic>{
+        final kCustomOAuthParameters = <Object?, Object?>{
           'allow_signup': 'false',
         };
         final result =

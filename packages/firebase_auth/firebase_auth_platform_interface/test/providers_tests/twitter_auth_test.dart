@@ -34,9 +34,7 @@ void main() {
 
     group('setCustomParameters()', () {
       test('sets custom parameters', () {
-        final Map<dynamic, dynamic> kCustomOAuthParameters = <dynamic, dynamic>{
-          'lang': 'es'
-        };
+        final kCustomOAuthParameters = <Object?, Object?>{'lang': 'es'};
         final result =
             twitterAuthProvider.setCustomParameters(kCustomOAuthParameters);
         expect(result, isA<TwitterAuthProvider>());

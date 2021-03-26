@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_web/src/utils/convert.dart';
 import '../interop/auth.dart' as auth_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -42,7 +43,7 @@ ActionCodeInfo? convertWebActionCodeInfo(
     return null;
   }
 
-  return ActionCodeInfo(operation: 0, data: <String, dynamic>{
+  return ActionCodeInfo(operation: 0, data: <String, Object?>{
     'email': webActionCodeInfo.data.email,
     'previousEmail': webActionCodeInfo.data.previousEmail,
   });
@@ -68,16 +69,18 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 IdTokenResult convertWebIdTokenResult(
   auth_interop.IdTokenResult webIdTokenResult,
 ) {
-  return IdTokenResult(<String, dynamic>{
-    'claims': webIdTokenResult.claims,
-    'expirationTimestamp':
-        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
-    'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
-    'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
-    'signInProvider': webIdTokenResult.signInProvider,
-    'signInSecondFactor': null,
-    'token': webIdTokenResult.token,
-  });
+  return IdTokenResult(
+    <String, Object?>{
+      'claims': webIdTokenResult.claims,
+      'expirationTimestamp':
+          webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+      'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
+      'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
+      'signInProvider': webIdTokenResult.signInProvider,
+      'signInSecondFactor': null,
+      'token': webIdTokenResult.token,
+    },
+  );
 }
 
 /// Converts a [ActionCodeSettings] into a [auth_interop.ActionCodeSettings].
@@ -87,23 +90,33 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
     return null;
   }
 
-  Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
+  Map<String, Object?> actionCodeSettingsMap = actionCodeSettings.asMap();
 
-  auth_interop.ActionCodeSettings webActionCodeSettings =
-      auth_interop.ActionCodeSettings(
-          url: actionCodeSettings.url,
-          handleCodeInApp: actionCodeSettings.handleCodeInApp);
+  final webActionCodeSettings = auth_interop.ActionCodeSettings(
+    url: actionCodeSettings.url,
+    handleCodeInApp: actionCodeSettings.handleCodeInApp,
+  );
 
   if (actionCodeSettingsMap['android'] != null) {
-    webActionCodeSettings.android = auth_interop.AndroidSettings(
-        packageName: actionCodeSettingsMap['android']['packageName'],
-        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
-        installApp: actionCodeSettingsMap['android']['installApp']);
+    webActionCodeSettings.android = actionCodeSettingsMap['android'] //
+        .castMap<String, Object?>()
+        .guard(
+          (v) => auth_interop.AndroidSettings(
+            packageName: v['packageName'] as String?,
+            minimumVersion: v['minimumVersion'] as String?,
+            installApp: v['installApp'] as bool?,
+          ),
+        )!;
   }
 
   if (actionCodeSettingsMap['iOS'] != null) {
-    webActionCodeSettings.iOS = auth_interop.IosSettings(
-        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+    webActionCodeSettings.iOS = actionCodeSettingsMap['iOS'] //
+        .castMap<String, Object?>()
+        .guard(
+          (v) => auth_interop.IosSettings(
+            bundleId: v['bundleId'] as String?,
+          ),
+        )!;
   }
 
   return webActionCodeSettings;
@@ -124,7 +137,8 @@ String convertPlatformPersistence(Persistence persistence) {
 
 /// Converts a [AuthProvider] into a [auth_interop.AuthProvider].
 auth_interop.AuthProvider? convertPlatformAuthProvider(
-    AuthProvider authProvider) {
+  AuthProvider authProvider,
+) {
   if (authProvider is EmailAuthProvider) {
     return auth_interop.EmailAuthProvider();
   }
@@ -135,8 +149,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
 
     authProvider.scopes
         .forEach((String scope) => facebookAuthProvider.addScope(scope));
-    facebookAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    facebookAuthProvider
+        .setCustomParameters(authProvider.parameters.cast<String, Object?>());
     return facebookAuthProvider;
   }
 
@@ -147,7 +161,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     authProvider.scopes
         .forEach((String scope) => githubAuthProvider.addScope(scope));
     githubAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+      authProvider.parameters.cast<String, Object?>(),
+    );
     return githubAuthProvider;
   }
 
@@ -157,8 +172,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
 
     authProvider.scopes
         .forEach((String scope) => googleAuthProvider.addScope(scope));
-    googleAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    googleAuthProvider
+        .setCustomParameters(authProvider.parameters.cast<String, Object?>());
     return googleAuthProvider;
   }
 
@@ -166,8 +181,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.TwitterAuthProvider twitterAuthProvider =
         auth_interop.TwitterAuthProvider();
 
-    twitterAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    twitterAuthProvider
+        .setCustomParameters(authProvider.parameters.cast<String, Object?>());
     return twitterAuthProvider;
   }
 
@@ -182,7 +197,7 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     authProvider.scopes
         .forEach((String scope) => oAuthProvider.addScope(scope));
     oAuthProvider.setCustomParameters(
-      Map<String, dynamic>.from(authProvider.parameters!),
+      authProvider.parameters!.cast<String, Object?>(),
     );
     return oAuthProvider;
   }

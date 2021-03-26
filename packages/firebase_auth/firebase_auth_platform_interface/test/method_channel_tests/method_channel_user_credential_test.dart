@@ -20,18 +20,18 @@ void main() {
   const String kMockProviderId = 'provider-id';
   const String kMockSignInMethod = 'password';
 
-  final Map<String, dynamic> kMockInitialUserData = <String, dynamic>{
-    'user': <String, dynamic>{
+  const kMockInitialUserData = <String, Object?>{
+    'user': <String, Object?>{
       'uid': kMockUid,
       'email': kMockEmail,
     },
-    'additionalUserInfo': <String, dynamic>{
-      'profile': <String, dynamic>{'foo': 'bar'},
+    'additionalUserInfo': <String, Object?>{
+      'profile': <String, Object?>{'foo': 'bar'},
       'isNewUser': true,
       'providerId': 'info$kMockProviderId',
       'username': 'info$kMockUsername',
     },
-    'authCredential': <String, dynamic>{
+    'authCredential': <String, Object?>{
       'providerId': 'auth$kMockProviderId',
       'signInMethod': kMockSignInMethod,
     },
@@ -39,7 +39,7 @@ void main() {
 
   group('$MethodChannelUserCredential()', () {
     late MethodChannelUserCredential userCredential;
-    late Map<String, dynamic> userData = kMockInitialUserData;
+    late Map<String, Object?> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -48,9 +48,7 @@ void main() {
       userCredential = MethodChannelUserCredential(auth, userData);
     });
 
-    setUp(() {
-      userData = Map<String, dynamic>.from(kMockInitialUserData);
-    });
+    setUp(() => userData = kMockInitialUserData);
 
     group('Constructor', () {
       test('creates an instance of [MethodChannelUserCredential]', () {
@@ -68,7 +66,7 @@ void main() {
         expect(additionalUserInfo, isA<AdditionalUserInfo>());
 
         expect(additionalUserInfo.isNewUser, isTrue);
-        expect(additionalUserInfo.profile, isA<Map<String, dynamic>>());
+        expect(additionalUserInfo.profile, isA<Map<String, Object?>>());
         expect(additionalUserInfo.profile!['foo'], equals('bar'));
         expect(additionalUserInfo.username, equals('info$kMockUsername'));
         expect(additionalUserInfo.providerId, equals('info$kMockProviderId'));
@@ -91,29 +89,36 @@ void main() {
       });
 
       test('set additionalUserInfo.profile to empty map', () {
-        userData['additionalUserInfo']['profile'] = null;
+        userData = {
+          ...userData,
+          'additionalUserInfo': {
+            ...userData['additionalUserInfo']! as Map<String, Object?>,
+            'profile': null,
+          }
+        };
+
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 
         expect(testUser.additionalUserInfo, isA<AdditionalUserInfo>());
         expect(
-            testUser.additionalUserInfo!.profile, isA<Map<String, dynamic>>());
+          testUser.additionalUserInfo!.profile,
+          isA<Map<String, Object?>>(),
+        );
         expect(testUser.additionalUserInfo!.profile, isEmpty);
       });
 
       test('set authCredential to null', () {
-        userData['authCredential'] = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        userData = {...userData, 'authCredential': null};
+        final testUser = MethodChannelUserCredential(auth, userData);
 
         expect(testUser.credential, isNull);
       });
 
       test('set user to null', () {
-        userData['user'] = null;
-        MethodChannelUserCredential testUser =
-            MethodChannelUserCredential(auth, userData);
+        userData = {...userData, 'user': null};
 
+        final testUser = MethodChannelUserCredential(auth, userData);
         expect(testUser.user, isNull);
       });
     });
