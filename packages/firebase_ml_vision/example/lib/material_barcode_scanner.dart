@@ -42,7 +42,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   AnimationController _animationController;
   String _scannerHint;
   bool _closeWindow = false;
-  String _barcodePictureFilePath;
+  XFile _barcodePictureFile;
   Size _previewSize;
   AnimationState _currentState = AnimationState.search;
   CustomPainter _animationPainter;
@@ -288,12 +288,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     final String dirPath = '${extDir.path}/Pictures/barcodePics';
     await Directory(dirPath).create(recursive: true);
 
-    final String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
-
-    final String filePath = '$dirPath/$timestamp.jpg';
-
+    XFile pictureFile;
     try {
-      await _cameraController.takePicture(filePath);
+      pictureFile = await _cameraController.takePicture();
     } on CameraException catch (e) {
       print(e);
     }
@@ -302,7 +299,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _cameraController = null;
 
     setState(() {
-      _barcodePictureFilePath = filePath;
+      _barcodePictureFile = pictureFile;
     });
   }
 
@@ -458,7 +455,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _initCameraAndScanner();
     setState(() {
       _closeWindow = false;
-      _barcodePictureFilePath = null;
+      _barcodePictureFile = null;
       _scannerHint = null;
       _switchAnimationState(AnimationState.search);
     });
@@ -467,14 +464,14 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   Widget build(BuildContext context) {
     Widget background;
-    if (_barcodePictureFilePath != null) {
+    if (_barcodePictureFile != null) {
       background = Container(
         color: Colors.black,
         child: Transform.scale(
           scale: _getImageZoom(MediaQuery.of(context)),
           child: Center(
             child: Image.file(
-              File(_barcodePictureFilePath),
+              File(_barcodePictureFile.path),
               fit: BoxFit.fitWidth,
             ),
           ),
