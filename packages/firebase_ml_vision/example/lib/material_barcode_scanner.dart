@@ -156,11 +156,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   }
 
   Future<void> _openCamera(CameraDescription camera) async {
-    final ResolutionPreset preset =
-        defaultTargetPlatform == TargetPlatform.android
-            ? ResolutionPreset.medium
-            : ResolutionPreset.low;
-
+    final ResolutionPreset preset = defaultTargetPlatform == TargetPlatform.iOS
+        ? ResolutionPreset.low
+        : ResolutionPreset.high;
     _cameraController = CameraController(camera, preset, enableAudio: false);
     await _cameraController.initialize();
     _previewSize = _cameraController.value.previewSize;
