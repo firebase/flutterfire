@@ -162,10 +162,10 @@ class BarcodeFormat {
   static const BarcodeFormat aztec = BarcodeFormat._(0x1000);
 
   /// Raw BarcodeFormat value.
-  final int? value;
+  final int value;
 
   BarcodeFormat operator |(BarcodeFormat other) =>
-      BarcodeFormat._(value! | other.value!);
+      BarcodeFormat._(value | other.value);
 }
 
 /// Detector for performing barcode scanning on an input image.
@@ -281,7 +281,7 @@ class Barcode {
             ? null
             : BarcodeDriverLicense._(_data['driverLicense']);
 
-  final List<Offset>? _cornerPoints;
+  final List<Offset> _cornerPoints;
 
   /// The bounding rectangle of the detected barcode.
   ///
@@ -314,7 +314,7 @@ class Barcode {
   /// The four corner points in clockwise direction starting with top-left.
   ///
   /// Due to the possible perspective distortions, this is not necessarily a rectangle.
-  List<Offset> get cornerPoints => List<Offset>.from(_cornerPoints!);
+  List<Offset> get cornerPoints => List<Offset>.from(_cornerPoints);
 
   /// The format type of the barcode value.
   ///
