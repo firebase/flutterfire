@@ -4,9 +4,6 @@
 
 include: all_lint_rules.yaml
 analyzer:
-  strong-mode:
-    implicit-casts: false
-    implicit-dynamic: false
   errors:
     import_of_legacy_library_into_null_safe: ignore
     # Otherwise cause the import of all_lint_rules to warn because of some rules conflicts.
