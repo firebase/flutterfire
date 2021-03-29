@@ -207,19 +207,18 @@ class FirebaseVisionImagePlaneMetadata {
 /// [rotation] defaults to [ImageRotation.rotation0]. Currently only rotates on
 /// Android.
 ///
-/// When using iOS, [rawFormat] throws [AssertionError] if `null`,
-/// and [planeData] throws [AssertionError] if not empty.
+/// When using iOS, [rawFormat] and [planeData] throw [AssertionError] if `null`.
 class FirebaseVisionImageMetadata {
   FirebaseVisionImageMetadata({
     required this.size,
-    required this.rawFormat,
-    required this.planeData,
+    this.rawFormat,
+    this.planeData,
     this.rotation = ImageRotation.rotation0,
   })  : assert(
           defaultTargetPlatform != TargetPlatform.iOS || rawFormat != null,
         ),
         assert(
-          defaultTargetPlatform != TargetPlatform.iOS || planeData.isNotEmpty,
+          defaultTargetPlatform != TargetPlatform.iOS || planeData != null,
         );
 
   /// Size of the image in pixels.
@@ -239,12 +238,12 @@ class FirebaseVisionImageMetadata {
   /// See https://developer.apple.com/documentation/corevideo/1563591-pixel_format_identifiers?language=objc
   ///
   /// Not used on Android.
-  final dynamic rawFormat;
+  final Object? rawFormat;
 
   /// The plane attributes to create the image buffer on iOS.
   ///
   /// Not used on Android.
-  final List<FirebaseVisionImagePlaneMetadata> planeData;
+  final List<FirebaseVisionImagePlaneMetadata>? planeData;
 
   int _imageRotationToInt(ImageRotation rotation) {
     switch (rotation) {
@@ -266,7 +265,8 @@ class FirebaseVisionImageMetadata {
         'rotation': _imageRotationToInt(rotation),
         'rawFormat': rawFormat,
         'planeData': planeData
-            .map((FirebaseVisionImagePlaneMetadata plane) => plane._serialize())
+            ?.map(
+                (FirebaseVisionImagePlaneMetadata plane) => plane._serialize())
             .toList(),
       };
 }
