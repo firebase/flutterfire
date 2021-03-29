@@ -109,12 +109,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      guard(() => _webFirestore.settings(firestore_interop.Settings(
+      guardSync(() => _webFirestore.settings(firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
           ssl: settings.sslEnabled)));
     } else {
-      guard(() => _webFirestore.settings(
+      guardSync(() => _webFirestore.settings(
           firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes)));
     }
   }

@@ -31,7 +31,7 @@ class TransactionWeb extends TransactionPlatform {
     final webDocumentSnapshot = await guard(() =>
         _webTransactionDelegate.get(_webFirestoreDelegate.doc(documentPath)));
 
-    return guard(
+    return guardSync(
         () => convertWebDocumentSnapshot(_firestore, webDocumentSnapshot));
   }
 

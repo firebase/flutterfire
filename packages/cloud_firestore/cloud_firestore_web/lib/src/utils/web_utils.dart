@@ -127,19 +127,50 @@ firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
   return firestore_interop.FieldPath(fieldPath.components.toList().join('.'));
 }
 
+FirebaseException buildFirebaseException(
+    core_interop.FirebaseError firebaseError) {
+  String code = firebaseError.code.replaceFirst('firestore/', '');
+  String message =
+      firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+  return FirebaseException(
+      plugin: 'cloud_firestore', code: code, message: message);
+}
+
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
-R guard<R>(R Function() cb) {
+Future<R> guard<R>(Future<R> Function() cb) async {
   try {
+    final value = await cb();
+    return value;
+  } catch (error) {
+    if (error is! core_interop.FirebaseError) {
+      rethrow;
+    }
+
+    throw buildFirebaseException(error);
+  }
+}
+
+R guardSync<R>(R Function() cb) {
+  try {
+    final value = cb();
+    assert(value != Future);
+
     return cb();
   } catch (error) {
     if (error is! core_interop.FirebaseError) {
       rethrow;
     }
 
-    String code = error.code.replaceFirst('firestore/', '');
-    String message = error.message.replaceFirst('(${error.code})', '');
-    throw FirebaseException(
-        plugin: 'cloud_firestore', code: code, message: message);
+    throw buildFirebaseException(error);
   }
+}
+
+/// Returns a [FirebaseException] from a thrown web error.
+Exception getFirebaseException(Object object) {
+  if (object is! core_interop.FirebaseError && object is Exception) {
+    return object;
+  }
+
+  return buildFirebaseException(object as core_interop.FirebaseError);
 }
