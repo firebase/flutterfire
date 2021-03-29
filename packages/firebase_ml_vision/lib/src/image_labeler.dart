@@ -27,7 +27,7 @@ part of firebase_ml_vision;
 /// ```
 class ImageLabeler {
   ImageLabeler._({
-    required dynamic options,
+    required Object options,
     required this.modelType,
     required int handle,
   })   : _options = options,
