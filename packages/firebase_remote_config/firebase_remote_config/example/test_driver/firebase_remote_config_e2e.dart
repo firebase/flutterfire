@@ -22,6 +22,7 @@ void main() {
         'welcome': 'default welcome',
         'hello': 'default hello',
       });
+      await remoteConfig.ensureInitialized();
     });
 
     testWidgets('fetch', (WidgetTester tester) async {

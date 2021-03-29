@@ -1,3 +1,13 @@
+## 8.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FEAT**: Migrate firebase_analytics to sound null safety (#5341).
+
 ## 7.1.1
 
  - Update a dependency to the latest release.
