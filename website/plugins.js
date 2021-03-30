@@ -1,10 +1,9 @@
 module.exports = [
   {
-    name: 'AdMob',
-    pub: 'google_mobile_ads',
+    name: 'AdMob (Deprecated)',
+    pub: 'firebase_admob',
     firebase: 'admob',
-    remoteSource: 'https://github.com/googleads/googleads-mobile-flutter',
-    documentation: 'https://pub.dev/documentation/google_mobile_ads/latest/',
+    documentation: '',
     support: {
       web: false,
       mobile: true,
