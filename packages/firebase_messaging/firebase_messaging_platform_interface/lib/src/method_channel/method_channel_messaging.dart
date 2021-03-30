@@ -235,12 +235,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     }
 
     try {
-      Map<String, int> response = await (channel
+      Map<String, int>? response = await channel
           .invokeMapMethod<String, int>('Messaging#getNotificationSettings', {
         'appName': app.name,
-      }) as FutureOr<Map<String, int>>);
+      });
 
-      return convertToNotificationSettings(response);
+      return convertToNotificationSettings(response!);
     } catch (e) {
       throw convertPlatformException(e);
     }
