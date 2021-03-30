@@ -14,6 +14,7 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
@@ -131,10 +132,16 @@ class FirebaseMlVisionHandler implements MethodChannel.MethodCallHandler {
       case "bytes":
         @SuppressWarnings("unchecked")
         Map<String, Object> metadataData = (Map<String, Object>) imageData.get("metadata");
-
+        ArrayList<Map<String, Object>> planeMetadata =
+            (ArrayList<Map<String, Object>>) metadataData.get("planeData");
+        int width = (int) (double) metadataData.get("width");
+        if (planeMetadata != null && planeMetadata.size() > 0) {
+          // Some devices add additional padding to width. This is properly represented in bytesPerRow.
+          width = (int) planeMetadata.get(0).get("bytesPerRow");
+        }
         FirebaseVisionImageMetadata metadata =
             new FirebaseVisionImageMetadata.Builder()
-                .setWidth((int) (double) metadataData.get("width"))
+                .setWidth(width)
                 .setHeight((int) (double) metadataData.get("height"))
                 .setFormat(FirebaseVisionImageMetadata.IMAGE_FORMAT_NV21)
                 .setRotation(getRotation((int) metadataData.get("rotation")))
