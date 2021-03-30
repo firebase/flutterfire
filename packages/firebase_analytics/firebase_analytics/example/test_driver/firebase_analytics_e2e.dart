@@ -43,6 +43,10 @@ void main() {
               {
                 'item_id': 2,
                 'item_name': 'Item 2',
+                'details': {
+                  'detail_1': 1,
+                  'detail_2': '2',
+                },
               },
             ],
           },
