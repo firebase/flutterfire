@@ -80,7 +80,7 @@ function Home() {
       <main>
           {/* Temporary. remove note when admob fully deprecated */}
           <div style={{display:'flex', justifyContent:'center', paddingTop:'10px'}}>
-            The FlutterFire AdMob package is deprecated and will be removed in the future. We recommend switching to the official <a href="https://pub.dev/packages/google_mobile_ads" target="_blank">google_mobile_ads</a> package by Google. A migration guide is available <a href="https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob#deprecation-of-firebase_admob-plugin" target="_blank">here</a>.
+            The FlutterFire AdMob package is deprecated and will be removed in the future. We recommend switching to the official &nbsp;<a href="https://pub.dev/packages/google_mobile_ads" target="_blank">google_mobile_ads</a>&nbsp; package by Google. A migration guide is available &nbsp;<a href="https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob#deprecation-of-firebase_admob-plugin" target="_blank">here</a>.
           </div>
         <div className={styles.plugins}>
           <table className={styles.table}>
