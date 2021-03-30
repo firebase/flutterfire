@@ -105,7 +105,8 @@ guides and remove any legacy Fabric integration steps from your project:
 ```groovy {3} title="android/build.gradle"
 dependencies {
   // ... other dependencies
-  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+  classpath 'com.google.gms:google-services:4.3.5'
+  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.1'
 }
 ```
 
@@ -114,11 +115,18 @@ dependencies {
 ```groovy {3} title="android/app/build.gradle"
 // ... other imports
 
-apply plugin: 'com.google.firebase.crashlytics'
 
 android {
   // ... your android config
 }
+
+dependencies {
+  // ... your dependencies
+}
+
+// This must appear at the bottom of the file
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 ```
 
 #### b. iOS
