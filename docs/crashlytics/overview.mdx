@@ -102,7 +102,7 @@ guides and remove any legacy Fabric integration steps from your project:
 
 1. Add the following classpaths to your `android/build.gradle` file.
 
-```groovy {3} title="android/build.gradle"
+```groovy {4} title="android/build.gradle"
 dependencies {
   // ... other dependencies
   classpath 'com.google.gms:google-services:4.3.5'
@@ -112,9 +112,8 @@ dependencies {
 
 2. Apply the following to your `android/app/build.gradle` file.
 
-```groovy {3} title="android/app/build.gradle"
+```groovy {13} title="android/app/build.gradle"
 // ... other imports
-
 
 android {
   // ... your android config
