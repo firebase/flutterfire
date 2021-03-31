@@ -128,17 +128,17 @@ firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
 }
 
 FirebaseException buildFirebaseException(
-    core_interop.FirebaseError firebaseError,
+  core_interop.FirebaseError firebaseError,
 ) {
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
 
-    return FirebaseException(
-      plugin: 'cloud_firestore',
-      code: code,
-      message: message,
-    );
+  return FirebaseException(
+    plugin: 'cloud_firestore',
+    code: code,
+    message: message,
+  );
 }
 
 /// Will return a [FirebaseException] from a thrown web error.
@@ -161,7 +161,7 @@ R guardSync<R>(R Function() cb) {
     final value = cb();
     assert(value != Future);
 
-    return cb();
+    return value;
   } catch (error) {
     if (error is! core_interop.FirebaseError) {
       rethrow;
@@ -172,10 +172,10 @@ R guardSync<R>(R Function() cb) {
 }
 
 /// Returns a [FirebaseException] from a thrown web error.
-Exception getFirebaseException(Object object) {
-  if (object is! core_interop.FirebaseError && object is Exception) {
-    return object;
+Object getFirebaseException(Object object) {
+  if (object is core_interop.FirebaseError) {
+    return buildFirebaseException(object);
   }
 
-  return buildFirebaseException(object as core_interop.FirebaseError);
+  return object;
 }

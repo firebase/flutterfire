@@ -28,8 +28,10 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(String documentPath) async {
-    final webDocumentSnapshot = await guard(() =>
-        _webTransactionDelegate.get(_webFirestoreDelegate.doc(documentPath)));
+    final webDocumentSnapshot = await guard(() {
+      return _webTransactionDelegate
+          .get(_webFirestoreDelegate.doc(documentPath));
+    });
 
     return guardSync(
         () => convertWebDocumentSnapshot(_firestore, webDocumentSnapshot));

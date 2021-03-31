@@ -52,7 +52,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   WriteBatchPlatform batch() => WriteBatchWeb(_webFirestore);
 
   @override
-  Future<void> clearPersistence() async {
+  Future<void> clearPersistence() {
     return guard(_webFirestore.clearPersistence);
   }
 
@@ -85,10 +85,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    await guard(() => _webFirestore.runTransaction((transaction) async {
-          return transactionHandler(
-              TransactionWeb(this, _webFirestore, transaction!));
-        }).timeout(timeout));
+    await guard(() {
+      return _webFirestore.runTransaction((transaction) async {
+        return transactionHandler(
+            TransactionWeb(this, _webFirestore, transaction!));
+      }).timeout(timeout);
+    });
     // Workaround for 'Runtime type information not available for type_variable_local'
     // See: https://github.com/dart-lang/sdk/issues/29722
 
@@ -109,13 +111,13 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      guardSync(() => _webFirestore.settings(firestore_interop.Settings(
+      _webFirestore.settings(firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
-          ssl: settings.sslEnabled)));
+          ssl: settings.sslEnabled));
     } else {
-      guardSync(() => _webFirestore.settings(
-          firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes)));
+      _webFirestore
+          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
     }
   }
 

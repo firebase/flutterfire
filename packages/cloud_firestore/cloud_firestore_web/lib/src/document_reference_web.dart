@@ -26,10 +26,12 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
-    return guard(() => _delegate.set(
-          CodecUtility.encodeMapData(data)!,
-          convertSetOptions(options),
-        ));
+    return guard(() {
+      return _delegate.set(
+        CodecUtility.encodeMapData(data)!,
+        convertSetOptions(options),
+      );
+    });
   }
 
   @override
