@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:flutter/services.dart';
 
 import 'package:firebase_performance/firebase_performance.dart';
@@ -15,12 +13,12 @@ void main() {
   group('$FirebasePerformance', () {
     final List<MethodCall> performanceLog = <MethodCall>[];
 
-    FirebasePerformance performance;
-    int firebasePerformanceHandle;
+    late FirebasePerformance performance;
+    int? firebasePerformanceHandle;
 
     int nextHandle = 0;
 
-    bool isPerformanceCollectionEnabledResult;
+    bool? isPerformanceCollectionEnabledResult;
 
     setUpAll(() {
       FirebasePerformance.channel
@@ -162,8 +160,8 @@ void main() {
     group('$Trace', () {
       final List<MethodCall> traceLog = <MethodCall>[];
 
-      Trace testTrace;
-      int currentTestTraceHandle;
+      late Trace testTrace;
+      int? currentTestTraceHandle;
 
       setUpAll(() {
         FirebasePerformance.channel
@@ -285,8 +283,8 @@ void main() {
     group('$HttpMetric', () {
       final List<MethodCall> httpMetricLog = <MethodCall>[];
 
-      HttpMetric testMetric;
-      int currentTestMetricHandle;
+      late HttpMetric testMetric;
+      int? currentTestMetricHandle;
 
       setUpAll(() {
         FirebasePerformance.channel
@@ -411,8 +409,8 @@ void main() {
     group('$PerformanceAttributes', () {
       final List<MethodCall> attributeLog = <MethodCall>[];
 
-      Trace attributeTrace;
-      int currentTraceHandle;
+      late Trace attributeTrace;
+      int? currentTraceHandle;
 
       setUpAll(() {
         FirebasePerformance.channel

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_performance;
 
 /// Abstract class that allows adding/removing attributes to an object.
@@ -75,19 +73,20 @@ abstract class PerformanceAttributes {
   /// Returns the value of an attribute.
   ///
   /// Returns `null` if an attribute with this [name] has not been added.
-  String getAttribute(String name) => _attributes[name];
+  String? getAttribute(String name) => _attributes[name];
 
   /// All attributes added.
-  Future<Map<String, String>> getAttributes() {
+  Future<Map<String, String>> getAttributes() async {
     if (_hasStopped) {
       return Future<Map<String, String>>.value(
         Map<String, String>.unmodifiable(_attributes),
       );
     }
 
-    return FirebasePerformance.channel.invokeMapMethod<String, String>(
+    final attributes = await FirebasePerformance.channel.invokeMapMethod<String, String>(
       'PerformanceAttributes#getAttributes',
       <String, dynamic>{'handle': _handle},
     );
+    return attributes ?? {};
   }
 }

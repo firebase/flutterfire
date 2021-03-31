@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_performance;
 
 /// Metric used to collect data for network requests/responses.
@@ -29,31 +27,31 @@ class HttpMetric extends PerformanceAttributes {
   @override
   bool _hasStopped = false;
 
-  int _httpResponseCode;
-  int _requestPayloadSize;
-  String _responseContentType;
-  int _responsePayloadSize;
+  int? _httpResponseCode;
+  int? _requestPayloadSize;
+  String? _responseContentType;
+  int? _responsePayloadSize;
 
   @override
   final int _handle;
 
   /// HttpResponse code of the request.
-  int get httpResponseCode => _httpResponseCode;
+  int? get httpResponseCode => _httpResponseCode;
 
   /// Size of the request payload.
-  int get requestPayloadSize => _requestPayloadSize;
+  int? get requestPayloadSize => _requestPayloadSize;
 
   /// Content type of the response such as text/html, application/json, etc...
-  String get responseContentType => _responseContentType;
+  String? get responseContentType => _responseContentType;
 
   /// Size of the response payload.
-  int get responsePayloadSize => _responsePayloadSize;
+  int? get responsePayloadSize => _responsePayloadSize;
 
   /// HttpResponse code of the request.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set httpResponseCode(int httpResponseCode) {
+  set httpResponseCode(int? httpResponseCode) {
     if (_hasStopped) return;
 
     _httpResponseCode = httpResponseCode;
@@ -70,7 +68,7 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set requestPayloadSize(int requestPayloadSize) {
+  set requestPayloadSize(int? requestPayloadSize) {
     if (_hasStopped) return;
 
     _requestPayloadSize = requestPayloadSize;
@@ -87,7 +85,7 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set responseContentType(String responseContentType) {
+  set responseContentType(String? responseContentType) {
     if (_hasStopped) return;
 
     _responseContentType = responseContentType;
@@ -104,7 +102,7 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set responsePayloadSize(int responsePayloadSize) {
+  set responsePayloadSize(int? responsePayloadSize) {
     if (_hasStopped) return;
 
     _responsePayloadSize = responsePayloadSize;
