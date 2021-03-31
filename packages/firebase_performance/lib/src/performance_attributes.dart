@@ -83,7 +83,8 @@ abstract class PerformanceAttributes {
       );
     }
 
-    final attributes = await FirebasePerformance.channel.invokeMapMethod<String, String>(
+    final attributes =
+        await FirebasePerformance.channel.invokeMapMethod<String, String>(
       'PerformanceAttributes#getAttributes',
       <String, Object>{'handle': _handle},
     );
