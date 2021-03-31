@@ -15,7 +15,7 @@ class FirebasePerformance {
   FirebasePerformance._(this._handle) {
     channel.invokeMethod<bool>(
       'FirebasePerformance#instance',
-      <String, dynamic>{'handle': _handle},
+      <String, Object>{'handle': _handle},
     );
   }
 
@@ -39,7 +39,7 @@ class FirebasePerformance {
   Future<bool> isPerformanceCollectionEnabled() async {
     final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
       'FirebasePerformance#isPerformanceCollectionEnabled',
-      <String, dynamic>{'handle': _handle},
+      <String, Object>{'handle': _handle},
     );
     return isPerformanceCollectionEnabled!;
   }
@@ -51,7 +51,7 @@ class FirebasePerformance {
   Future<void> setPerformanceCollectionEnabled(bool enable) {
     return channel.invokeMethod<void>(
       'FirebasePerformance#setPerformanceCollectionEnabled',
-      <String, dynamic>{'handle': _handle, 'enable': enable},
+      <String, Object>{'handle': _handle, 'enable': enable},
     );
   }
 
@@ -65,7 +65,7 @@ class FirebasePerformance {
 
     FirebasePerformance.channel.invokeMethod<void>(
       'FirebasePerformance#newTrace',
-      <String, dynamic>{'handle': _handle, 'traceHandle': handle, 'name': name},
+      <String, Object>{'handle': _handle, 'traceHandle': handle, 'name': name},
     );
 
     return Trace._(handle, name);
@@ -77,7 +77,7 @@ class FirebasePerformance {
 
     FirebasePerformance.channel.invokeMethod<void>(
       'FirebasePerformance#newHttpMetric',
-      <String, dynamic>{
+      <String, Object>{
         'handle': _handle,
         'httpMetricHandle': handle,
         'url': url,

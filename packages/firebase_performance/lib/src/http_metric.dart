@@ -57,7 +57,7 @@ class HttpMetric extends PerformanceAttributes {
     _httpResponseCode = httpResponseCode;
     FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#httpResponseCode',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'httpResponseCode': httpResponseCode,
       },
@@ -74,7 +74,7 @@ class HttpMetric extends PerformanceAttributes {
     _requestPayloadSize = requestPayloadSize;
     FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#requestPayloadSize',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'requestPayloadSize': requestPayloadSize,
       },
@@ -91,7 +91,7 @@ class HttpMetric extends PerformanceAttributes {
     _responseContentType = responseContentType;
     FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#responseContentType',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'responseContentType': responseContentType,
       },
@@ -108,7 +108,7 @@ class HttpMetric extends PerformanceAttributes {
     _responsePayloadSize = responsePayloadSize;
     FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#responsePayloadSize',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'responsePayloadSize': responsePayloadSize,
       },
@@ -126,7 +126,7 @@ class HttpMetric extends PerformanceAttributes {
 
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
-      <String, dynamic>{'handle': _handle},
+      <String, Object>{'handle': _handle},
     );
   }
 
@@ -144,7 +144,7 @@ class HttpMetric extends PerformanceAttributes {
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#stop',
-      <String, dynamic>{'handle': _handle},
+      <String, Object>{'handle': _handle},
     );
   }
 }
