@@ -8,6 +8,18 @@ jobs:
     steps:
       - uses: styfle/cancel-workflow-action@0.3.1
         with:
-          # TODO(Salakar): Update ids once on master.
-          workflow_id: 1411321,1411322,1414417,1414454,1414624,1414626,1414627
+          workflow_id: >-
+            all_plugins,
+            docs,
+            firebase_admob,
+            firebase_auth,
+            firebase_core,
+            firebase_creashlytics,
+            firebase_database,
+            firebase_firestore,
+            firebase_functions,
+            firebase_messaging,
+            firebase_performance,
+            firebase_remote_config,
+            firebase_storage
           access_token: ${{ github.token }}
