@@ -9,17 +9,17 @@ jobs:
       - uses: styfle/cancel-workflow-action@0.3.1
         with:
           workflow_id: >-
-            all_plugins,
-            docs,
-            firebase_admob,
-            firebase_auth,
-            firebase_core,
-            firebase_creashlytics,
-            firebase_database,
-            firebase_firestore,
-            firebase_functions,
-            firebase_messaging,
-            firebase_performance,
-            firebase_remote_config,
+            all_plugins.yaml,
+            docs.yaml,
+            firebase_admob.yaml,
+            firebase_auth.yaml,
+            firebase_core.yaml,
+            firebase_creashlytics.yaml,
+            firebase_database.yaml,
+            firebase_firestore.yaml,
+            firebase_functions.yaml,
+            firebase_messaging.yaml,
+            firebase_performance.yaml,
+            firebase_remote_config.yaml,
             firebase_storage
           access_token: ${{ github.token }}
