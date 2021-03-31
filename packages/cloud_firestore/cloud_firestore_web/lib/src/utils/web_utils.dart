@@ -128,12 +128,17 @@ firestore_interop.FieldPath convertFieldPath(FieldPath fieldPath) {
 }
 
 FirebaseException buildFirebaseException(
-    core_interop.FirebaseError firebaseError) {
+    core_interop.FirebaseError firebaseError,
+) {
   String code = firebaseError.code.replaceFirst('firestore/', '');
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
-  return FirebaseException(
-      plugin: 'cloud_firestore', code: code, message: message);
+
+    return FirebaseException(
+      plugin: 'cloud_firestore',
+      code: code,
+      message: message,
+    );
 }
 
 /// Will return a [FirebaseException] from a thrown web error.
