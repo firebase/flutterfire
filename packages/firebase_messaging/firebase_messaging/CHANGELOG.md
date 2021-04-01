@@ -1,3 +1,12 @@
+## 9.1.0
+
+ - **FEAT**: android.tag property on Notification (#5452).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
 ## 9.0.1
 
  - Update a dependency to the latest release.
