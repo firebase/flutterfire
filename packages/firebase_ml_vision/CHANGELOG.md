@@ -1,3 +1,112 @@
+## 0.11.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.10.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **FIX**: build fixes for android BoM 25.13.0.
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.9.10
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.9.9
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
+## 0.9.7
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: fix typo in the documentation of firebase_ml_vision(#3603).
+
+## 0.9.6+3
+
+ - **FIX**: local dependencies in example apps (#3319).
+
+## 0.9.6+2
+
+* Add options for cloud document text recognition.
+
+## 0.9.6+1
+
+* Add options for cloud text recognition.
+
+## 0.9.6
+
+* Add recognition of text in document images through `DocumentTextRecognizer`. See `README.md` for more information.
+
+## 0.9.5+1
+
+* Add options for cloud text recognition.
+
+## 0.9.5
+
+* Fix for error if confidence is 1 or 0.
+
+## 0.9.4
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.9.3+9
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.9.3+8
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.3+7
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.3+6
+
+* Replace deprecated text theme fields in example app.
+
+## 0.9.3+5
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.9.3+4
+
+* Formatted member documentations.
+
+## 0.9.3+3
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.9.3+2
+
+* Remove AndroidX warning.
+
+## 0.9.3+1
+
+* Skip e2e test on Android.
+
+## 0.9.3
+
+* Support v2 embedding. This plugin will remain compatible with the original embedding and won't
+require app migration.
+
+
 ## 0.9.2+3
 
 * Use `BoxDecoration` `const` constructor in example app.
@@ -90,7 +199,7 @@ You should now call `detector.close()` when a detector will no longer be used.
 * **Breaking Change** Removed on-device model dependencies from plugin.
   `Android` now requires adding the on-device label detector dependency manually.
   `iOS` now requires adding the on-device barcode/face/label/text detector dependencies manually.
-  See the `README.md` for more details. https://pub.dartlang.org/packages/firebase_ml_vision#-readme-tab-
+  See the `README.md` for more details. https://pub.dev/packages/firebase_ml_vision#-readme-tab-
 
 ## 0.5.1+2
 

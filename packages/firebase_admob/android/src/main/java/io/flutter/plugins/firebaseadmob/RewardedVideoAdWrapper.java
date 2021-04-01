@@ -85,6 +85,14 @@ public class RewardedVideoAdWrapper implements RewardedVideoAdListener {
     return status;
   }
 
+  public void setUserId(String userId) {
+    rewardedInstance.setUserId(userId);
+  }
+
+  public void setCustomData(String customData) {
+    rewardedInstance.setCustomData(customData);
+  }
+
   public void load(String adUnitId, Map<String, Object> targetingInfo) {
     status = Status.LOADING;
     AdRequestBuilderFactory factory = new AdRequestBuilderFactory(targetingInfo);

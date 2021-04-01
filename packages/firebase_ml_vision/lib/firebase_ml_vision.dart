@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 library firebase_ml_vision;
 
 import 'dart:async';
@@ -17,3 +19,4 @@ part 'src/face_detector.dart';
 part 'src/firebase_vision.dart';
 part 'src/image_labeler.dart';
 part 'src/text_recognizer.dart';
+part 'src/document_text_recognizer.dart';

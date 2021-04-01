@@ -8,10 +8,12 @@ import com.google.firebase.perf.metrics.Trace;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterTrace implements MethodChannel.MethodCallHandler {
+class FlutterTrace implements MethodChannel.MethodCallHandler {
+  private final FirebasePerformancePlugin plugin;
   private final Trace trace;
 
-  FlutterTrace(final Trace trace) {
+  FlutterTrace(FirebasePerformancePlugin plugin, final Trace trace) {
+    this.plugin = plugin;
     this.trace = trace;
   }
 
@@ -57,7 +59,7 @@ public class FlutterTrace implements MethodChannel.MethodCallHandler {
     trace.stop();
 
     final Integer handle = call.argument("handle");
-    FirebasePerformancePlugin.removeHandler(handle);
+    plugin.removeHandler(handle);
 
     result.success(null);
   }

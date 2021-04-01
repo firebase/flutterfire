@@ -2,12 +2,12 @@
 
 A Flutter plugin to use the [Firebase In-App Messaging API](https://firebase.google.com/products/in-app-messaging).
 
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
+For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
 ## Usage
 
 ### Import the firebase_in_app_messaging plugin
-To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dartlang.org/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
+To use the firebase_in_app_messaging plugin, follow the [plugin installation instructions](https://pub.dev/packages/firebase_in_app_messaging#pub-pkg-tab-installing).
 
 ### Android integration
 
@@ -17,9 +17,9 @@ There are a few extra steps required for the Android integration. Enable the Goo
 ```gradle
 dependencies {
   // Example existing classpath
-  classpath 'com.android.tools.build:gradle:3.3.0'
+  classpath 'com.android.tools.build:gradle:3.5.4'
   // Add the google services classpath
-  classpath 'com.google.gms:google-services:4.3.0'
+  classpath 'com.google.gms:google-services:4.3.4'
 }
 ```
 
@@ -54,7 +54,7 @@ import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 To trigger in-app messages programmatically
 
 ```dart
-FirebaseInAppMessaging.triggerEvent('eventName');
+FirebaseInAppMessaging.instance.triggerEvent('eventName');
 ```
 
 #### Temporarily disable in-app messages ([docs](https://firebase.google.com/docs/in-app-messaging/modify-message-behavior?platform=android#temporarily_disable_in-app_messages))
@@ -62,11 +62,11 @@ FirebaseInAppMessaging.triggerEvent('eventName');
 If you'd like to suppress message displays for any reason, for example to avoid interrupting a sequence of payment processing screens, you can do that the following
 
 ```dart
-FirebaseInAppMessaging.setMessagesSuppressed(true);
+FirebaseInAppMessaging.instance.setMessagesSuppressed(true);
 
 
 // To re-enable
-FirebaseInAppMessaging.setMessagesSuppressed(false);
+FirebaseInAppMessaging.instance.setMessagesSuppressed(false);
 ```
 
 #### Enable opt-out message delivery ([docs](https://firebase.google.com/docs/in-app-messaging/modify-message-behavior?platform=android#enable_opt-out_message_delivery))
@@ -74,7 +74,7 @@ FirebaseInAppMessaging.setMessagesSuppressed(false);
 First, follow the step outlined [here](https://firebase.google.com/docs/in-app-messaging/modify-message-behavior#enable_opt-out_message_delivery) for both iOS and Android. Then add the following code in your app:
 
 ```dart
-FirebaseInAppMessaging.setAutomaticDataCollectionEnabled(false);
+FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(false);
 ```
 
 ## Example
@@ -84,5 +84,10 @@ for a complete sample app using the Firebase In-App Messaging.
 
 ## Issues and feedback
 
-Please file [issues](https://github.com/flutter/flutter/issues/new)
-to send feedback or report a bug. Thank you!
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

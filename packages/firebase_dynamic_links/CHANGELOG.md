@@ -1,3 +1,108 @@
+## 2.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints for firebase_dynamic_links (#5256).
+ - **BREAKING** **FEAT**: Migrate firebase_dynamic_links to sound null safety (#5368).
+
+## 0.8.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.7.0
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.6.3
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.6.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.6.1
+
+ - **FIX**: fixed issue with overwriting correct url with null one (#3567).
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.6.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 0.6.0
+
+* Depend on new `firebase_core` plugin.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+
+## 0.5.3
+
+* Fix for passing null/nil link between native libraries and flutter code.
+
+## 0.5.2
+
+* Fix for race-condition issue on iOS during initialization process
+
+## 0.5.1
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.5.0+12
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.5.0+11
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.5.0+10
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.5.0+9
+
+* Remove the deprecated `author:` field from pubspec.yaml
+* Migrate the plugin to the pubspec platforms manifest.
+* Bump the minimum Flutter version to 1.10.0.
+
+## 0.5.0+8
+
+* Support v2 embedding. This will remain compatible with the original embedding and won't require app migration.
+
+## 0.5.0+7
+
+* Add `getDynamicLink` to support expanding from short links.
+
+## 0.5.0+6
+
+* Updated README instructions for contributing for consistency with other Flutterfire plugins.
+
+## 0.5.0+5
+
+* Remove AndroidX warning.
+
 ## 0.5.0+4
 
 * Fix example app build by updating version of `url_launcher` that is compatible with androidx apps.

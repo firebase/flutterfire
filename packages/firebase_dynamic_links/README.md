@@ -1,6 +1,6 @@
 # Google Dynamic Links for Firebase
 
-[![pub package](https://img.shields.io/pub/v/firebase_dynamic_links.svg)](https://pub.dartlang.org/packages/firebase_dynamic_links)
+[![pub package](https://img.shields.io/pub/v/firebase_dynamic_links.svg)](https://pub.dev/packages/firebase_dynamic_links)
 
 A Flutter plugin to use the [Google Dynamic Links for Firebase API](https://firebase.google.com/docs/dynamic-links/).
 
@@ -9,8 +9,6 @@ With Dynamic Links, your users get the best available experience for the platfor
 In addition, Dynamic Links work across app installs: if a user opens a Dynamic Link on iOS or Android and doesn't have your app installed, the user can be prompted to install it; then, after installation, your app starts and can access the link.
 
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
-
-*Note*: This plugin is still under development, and some APIs might not be available yet. [Feedback](https://github.com/FirebaseExtended/flutterfire/issues) and [Pull Requests](https://github.com/FirebaseExtended/flutterfire/pulls) are most welcome!
 
 ## Usage
 
@@ -83,9 +81,9 @@ You can receive a Dynamic Link containing a deep link that takes the user to spe
 
 1. In the [Firebase Console](https://console.firebase.google.com), open the Dynamic Links section.
   - Accept the terms of service if you are prompted to do so.
-  - Take note of your project's Dynamic Links URL prefix, which is displayed at the top of the Dynamic Links page. You need your project's Dynamic Links URL prefix to programmatically create Dynamic Links. A Dynamic Links URL prefix looks like `https://YOUR_SUBDOMAIN.page.link`.
+  - Take note of your project's Dynamic Links URL prefix, which is displayed at the top of the Dynamic Links page. You need your project's Dynamic Links URL prefix to programmatically create Dynamic Links. Unless you are using a custom domain, a Dynamic Links URL prefix looks like `https://YOUR_SUBDOMAIN.page.link`.
 
-Receiving dynamic links on *iOS* requires a couple more steps than *Android*. If you only want to receive dynamic links on *Android*, skip to step 4. You can also follow a video on the next two steps [here.](https://youtu.be/sFPo296OQqk?t=2m40s)
+Receiving dynamic links on *iOS* requires a couple more steps than *Android*. If you only want to receive dynamic links on *Android*, skip to step 5. You can also follow a video on the next two steps [here.](https://youtu.be/KLBjAg6HvG0?t=60)
 
 2. In the **Info** tab of your *iOS* app's Xcode project:
   - Create a new **URL Type** to be used for Dynamic Links.
@@ -94,10 +92,22 @@ Receiving dynamic links on *iOS* requires a couple more steps than *Android*. If
 3. In the **Capabilities** tab of your app's Xcode project, enable **Associated Domains** and add the following to the **Associated Domains** list:
 
 ```
-applinks:YOUR_SUBDOMAIN.page.link
+applinks:YOUR_URL_PREFIX
 ```
 
-4. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
+Remember not to include `https://` or any slashes or paths in your prefix
+
+4. **If you are using a custom domain** create an key in your `Info.plist` file called `FirebaseDynamicLinksCustomDomains` and set it to your app's Dynamic Link URL prefixes. For example:
+
+```xml
+<key>FirebaseDynamicLinksCustomDomains</key>
+<array>
+  <string>https://example.com/promos</string>
+  <string>https://example.com/links/share</string>
+</array>
+```
+
+5. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
 and configure listeners for link callbacks when the application is active or in background calling `onLink`.
 
 ```dart
@@ -122,13 +132,6 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
   }
 
   void initDynamicLinks() async {
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
-
-    if (deepLink != null) {
-      Navigator.pushNamed(context, deepLink.path);
-    }
-
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (PendingDynamicLinkData dynamicLink) async {
         final Uri deepLink = dynamicLink?.link;
@@ -142,6 +145,13 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
         print(e.message);
       }
     );
+    
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      Navigator.pushNamed(context, deepLink.path);
+    }
   }
   .
   .
@@ -154,3 +164,13 @@ If your app did not open from a dynamic link, `getInitialLink()` will return `nu
 ## Getting Started
 
 See the `example` directory for a complete sample app using Google Dynamic Links for Firebase.
+
+## Issues and feedback
+
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

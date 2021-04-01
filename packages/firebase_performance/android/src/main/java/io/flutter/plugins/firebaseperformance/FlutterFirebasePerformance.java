@@ -10,7 +10,7 @@ import com.google.firebase.perf.metrics.Trace;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandler {
+class FlutterFirebasePerformance implements MethodChannel.MethodCallHandler {
   private static String parseHttpMethod(String httpMethod) {
     switch (httpMethod) {
       case "HttpMethod.Connect":
@@ -36,16 +36,11 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     }
   }
 
+  private final FirebasePerformancePlugin plugin;
   private final FirebasePerformance performance;
 
-  @SuppressWarnings("ConstantConditions")
-  static void getInstance(MethodCall call, MethodChannel.Result result) {
-    final Integer handle = call.argument("handle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterFirebasePerformance());
-    result.success(null);
-  }
-
-  private FlutterFirebasePerformance() {
+  FlutterFirebasePerformance(FirebasePerformancePlugin plugin) {
+    this.plugin = plugin;
     this.performance = FirebasePerformance.getInstance();
   }
 
@@ -87,7 +82,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final Trace trace = performance.newTrace(name);
 
     final Integer handle = call.argument("traceHandle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterTrace(trace));
+    plugin.addHandler(handle, new FlutterTrace(plugin, trace));
 
     result.success(null);
   }
@@ -100,7 +95,7 @@ public class FlutterFirebasePerformance implements MethodChannel.MethodCallHandl
     final HttpMetric metric = performance.newHttpMetric(url, parseHttpMethod(httpMethod));
 
     final Integer handle = call.argument("httpMetricHandle");
-    FirebasePerformancePlugin.addHandler(handle, new FlutterHttpMetric(metric));
+    plugin.addHandler(handle, new FlutterHttpMetric(plugin, metric));
 
     result.success(null);
   }

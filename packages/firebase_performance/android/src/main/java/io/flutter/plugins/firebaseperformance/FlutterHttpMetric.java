@@ -8,10 +8,12 @@ import com.google.firebase.perf.metrics.HttpMetric;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
+class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
+  private final FirebasePerformancePlugin plugin;
   private final HttpMetric httpMetric;
 
-  FlutterHttpMetric(final HttpMetric metric) {
+  FlutterHttpMetric(FirebasePerformancePlugin plugin, final HttpMetric metric) {
+    this.plugin = plugin;
     this.httpMetric = metric;
   }
 
@@ -60,7 +62,7 @@ public class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
     httpMetric.stop();
 
     final Integer handle = call.argument("handle");
-    FirebasePerformancePlugin.removeHandler(handle);
+    plugin.removeHandler(handle);
 
     result.success(null);
   }

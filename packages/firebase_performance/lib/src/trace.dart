@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_performance;
 
 /// [Trace] allows you to set the beginning and end of a custom trace in your app.
@@ -29,7 +31,6 @@ class Trace extends PerformanceAttributes {
 
   final Map<String, int> _metrics = <String, int>{};
 
-  @override
   bool _hasStarted = false;
 
   @override
@@ -48,7 +49,7 @@ class Trace extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStarted = true;
     return FirebasePerformance.channel.invokeMethod<void>(
@@ -66,7 +67,7 @@ class Trace extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(
@@ -82,7 +83,7 @@ class Trace extends PerformanceAttributes {
   /// taking action.
   Future<void> incrementMetric(String name, int value) {
     if (!_hasStarted || _hasStopped) {
-      return Future<void>.value(null);
+      return Future<void>.value();
     }
 
     _metrics.putIfAbsent(name, () => 0);
@@ -99,7 +100,7 @@ class Trace extends PerformanceAttributes {
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
   Future<void> setMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) return Future<void>.value(null);
+    if (!_hasStarted || _hasStopped) return Future<void>.value();
 
     _metrics[name] = value;
     return FirebasePerformance.channel.invokeMethod<void>(

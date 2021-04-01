@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 
 import 'camera_preview_scanner.dart';
@@ -13,9 +15,9 @@ void main() {
     MaterialApp(
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => _ExampleList(),
-        '/$PictureScanner': (BuildContext context) => PictureScanner(),
+        '/$PictureScanner': (BuildContext context) => const PictureScanner(),
         '/$CameraPreviewScanner': (BuildContext context) =>
-            CameraPreviewScanner(),
+            const CameraPreviewScanner(),
         '/$MaterialBarcodeScanner': (BuildContext context) =>
             const MaterialBarcodeScanner(),
       },
