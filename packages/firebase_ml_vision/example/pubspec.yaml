@@ -7,7 +7,7 @@ environment:
   flutter: ">=1.12.0"
 
 dependencies:
-  camera: ^0.8.0
+  camera: ^0.8.1
   cupertino_icons: ^1.0.2
   firebase_core:
     path: ../../firebase_core/firebase_core
