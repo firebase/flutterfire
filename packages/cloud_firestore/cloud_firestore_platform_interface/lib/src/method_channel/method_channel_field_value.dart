@@ -44,7 +44,7 @@ class MethodChannelFieldValue {
   final dynamic value;
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is MethodChannelFieldValue &&
       other.type == type &&
       const DeepCollectionEquality().equals(other.value, value);

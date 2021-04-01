@@ -191,7 +191,7 @@ which returns a `List` containing [`DocumentSnapshot`](!cloud_firestore.Document
 FirebaseFirestore.instance
     .collection('users')
     .get()
-    .then((QuerySnapshot querySnapshot) => {
+    .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
             print(doc["first_name"]);
         });
@@ -525,8 +525,8 @@ Future<void> deleteField() {
   return users
     .doc('ABC123')
     .update({'age': FieldValue.delete()})
-    .then((value) => print("User Deleted"))
-    .catchError((error) => print("Failed to delete user: $error"));
+    .then((value) => print("User's Property Deleted"))
+    .catchError((error) => print("Failed to delete user's property: $error"));
 }
 ```
 

@@ -3,12 +3,12 @@ description: Demonstrates how to use the firebase_ml_vision plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.10.0"
 
 dependencies:
-  camera: ^0.5.6+1
-  cupertino_icons: ^0.1.2
+  camera: ^0.8.1
+  cupertino_icons: ^1.0.2
   firebase_core:
     path: ../../firebase_core/firebase_core
   firebase_ml_vision:

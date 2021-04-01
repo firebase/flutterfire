@@ -1,6 +1,12 @@
-## 7.1.2
+## 8.0.0-dev.0
 
- - Updated Android's `logEvent` implementation so it supports `parameters` values of type `List<Map<String, dynamic>>` like the iOS implementation
+> Note: This release has breaking changes.
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FEAT**: Migrate firebase_analytics to sound null safety (#5341).
 
 ## 7.1.1
 

@@ -52,13 +52,7 @@ class ImplementsFirebasePlatform implements FirebasePlatform {
 }
 
 // ignore: avoid_implementing_value_types
-class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {
-  @override
-  // ignore: hash_and_equals, false positive
-  bool operator ==(Object? other) {
-    return super == other;
-  }
-}
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
 
 class ExtendsFirebasePlatform extends FirebasePlatform {}
 
