@@ -22,10 +22,9 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   static MethodChannel channel = const MethodChannel(
     'plugins.flutter.io/firebase_crashlytics',
   );
-
-  /// The analytics [MethodChannel] for sending fatal errors to the crashlytic's service
-  static MethodChannel _analyticsChannel =
-      const MethodChannel('plugins.flutter.io/firebase_analytics');
+  // TODO: reinstate once analytics plugin is part of recording fatal error crashes.
+  // static MethodChannel _analyticsChannel =
+  //     const MethodChannel('plugins.flutter.io/firebase_analytics');
 
   bool? _isCrashlyticsCollectionEnabled;
   String _FATAL_FLAG = 'com.firebase.crashlytics.flutter.fatal';
@@ -98,7 +97,6 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     try {
       /// "fatal" is an optional parameter that we're using to signal to the Crashlytic's service that this particular
       /// error was a fatal one.  The below if statement is Firebase's prescribed method of signalling a fatal error.
-      /// Analytics plugin is required to send a fatal signal.
       if (fatal) {
         try {
           num currentUnixTimeSeconds =
