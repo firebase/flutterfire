@@ -12,6 +12,8 @@ To use this plugin, add `firebase_database` as a [dependency in your pubspec.yam
 
 
 **Example connecting to the default database:**
+
+**Example connecting to the default database:**
 ```dart
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
