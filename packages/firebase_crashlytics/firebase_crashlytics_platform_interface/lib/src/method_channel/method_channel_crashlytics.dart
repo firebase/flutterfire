@@ -102,18 +102,19 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
       if (fatal) {
         try {
           num currentUnixTimeSeconds =
-              (DateTime.now().millisecondsSinceEpoch / 1000).floor();
+              (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
 
           await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
 
-          await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
-            'name': '_ae',
-            'parameters': {
-              'fatal': 1,
-              'timestamp': '$currentUnixTimeSeconds',
-            },
-          });
-        } on MissingPluginException catch (error) {
+          // TODO: once confirmation on the event name is recieved, reinstate analytics.logEvent below.
+          // await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
+          //   'name': '_ae',
+          //   'parameters': {
+          //     'fatal': 1,
+          //     'timestamp': '$currentUnixTimeSeconds',
+          //   },
+          // });
+        } on MissingPluginException catch (e) {
           // noop - User ought to install firebase_analytics plugin
         } on PlatformException catch (e, s) {
           throw platformExceptionToFirebaseException(e, s);
