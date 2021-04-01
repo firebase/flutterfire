@@ -10,9 +10,6 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 To use this plugin, add `firebase_database` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages). You will also need the `firebase_core` dependency if you do not have it already.
 
-
-**Example connecting to the default database:**
-
 **Example connecting to the default database:**
 ```dart
 import 'package:firebase_core/firebase_core.dart';
