@@ -106,7 +106,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
 
           await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
 
-          // TODO: once confirmation on the event name is recieved, reinstate analytics.logEvent below.
+          // TODO: once confirmation on the event name is received, reinstate analytics.logEvent below.
           // await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
           //   'name': '_ae',
           //   'parameters': {
