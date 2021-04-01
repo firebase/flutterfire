@@ -18,7 +18,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.2
-  pedantic: ^1.11.0
   test: any
 
 flutter:
