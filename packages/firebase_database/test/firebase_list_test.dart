@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -16,24 +14,27 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseList', () {
-    StreamController<Event> onChildAddedStreamController;
-    StreamController<Event> onChildRemovedStreamController;
-    StreamController<Event> onChildChangedStreamController;
-    StreamController<Event> onChildMovedStreamController;
-    MockQuery query;
-    FirebaseList list;
-    Completer<ListChange> callbackCompleter;
+    late StreamController<Event> onChildAddedStreamController;
+    late StreamController<Event> onChildRemovedStreamController;
+    late StreamController<Event> onChildChangedStreamController;
+    late StreamController<Event> onChildMovedStreamController;
+    late StreamController<Event> onValue;
+    late MockQuery query;
+    late FirebaseList list;
+    late Completer<ListChange> callbackCompleter;
 
     setUp(() {
       onChildAddedStreamController = StreamController<Event>();
       onChildRemovedStreamController = StreamController<Event>();
       onChildChangedStreamController = StreamController<Event>();
       onChildMovedStreamController = StreamController<Event>();
+      onValue = StreamController<Event>();
       query = MockQuery(
         onChildAddedStreamController.stream,
         onChildRemovedStreamController.stream,
         onChildChangedStreamController.stream,
         onChildMovedStreamController.stream,
+        onValue.stream,
       );
       callbackCompleter = Completer<ListChange>();
 
@@ -59,6 +60,7 @@ void main() {
       onChildRemovedStreamController.close();
       onChildChangedStreamController.close();
       onChildMovedStreamController.close();
+      onValue.close();
     });
 
     Future<ListChange> resetCompleterOnCallback() async {
@@ -180,6 +182,139 @@ void main() {
       expect(list, <DataSnapshot>[snapshot2, snapshot3, snapshot1]);
     });
   });
+
+  group('Without FirebaseList listeners', () {
+    late StreamController<Event> onChildAddedStreamController;
+    late StreamController<Event> onChildRemovedStreamController;
+    late StreamController<Event> onChildChangedStreamController;
+    late StreamController<Event> onChildMovedStreamController;
+    late StreamController<Event> onValue;
+    late MockQuery query;
+    late FirebaseList list;
+
+    setUp(() {
+      onChildAddedStreamController = StreamController<Event>();
+      onChildRemovedStreamController = StreamController<Event>();
+      onChildChangedStreamController = StreamController<Event>();
+      onChildMovedStreamController = StreamController<Event>();
+      onValue = StreamController<Event>();
+
+      query = MockQuery(
+        onChildAddedStreamController.stream,
+        onChildRemovedStreamController.stream,
+        onChildChangedStreamController.stream,
+        onChildMovedStreamController.stream,
+        onValue.stream,
+      );
+
+      list = FirebaseList(query: query);
+    });
+
+    tearDown(() {
+      onChildAddedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildChangedStreamController.close();
+      onChildMovedStreamController.close();
+      onValue.close();
+    });
+
+    void processChildAddedEvent(Event event) {
+      onChildAddedStreamController.add(event);
+    }
+
+    void processChildRemovedEvent(Event event) {
+      onChildRemovedStreamController.add(event);
+    }
+
+    void processChildChangedEvent(Event event) {
+      onChildChangedStreamController.add(event);
+    }
+
+    void processChildMovedEvent(Event event) {
+      onChildMovedStreamController.add(event);
+    }
+
+    test('can add to empty list', () async {
+      final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
+      processChildAddedEvent(MockEvent(null, snapshot));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot]);
+    });
+
+    test('can add before first element', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
+      processChildAddedEvent(MockEvent(null, snapshot2));
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot1, snapshot2]);
+    });
+
+    test('can add after last element', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      processChildAddedEvent(MockEvent('key10', snapshot2));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot1, snapshot2]);
+    });
+
+    test('can remove from singleton list', () async {
+      final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
+      processChildAddedEvent(MockEvent(null, snapshot));
+      processChildRemovedEvent(MockEvent(null, snapshot));
+      await Future.delayed(const Duration());
+      expect(list, isEmpty);
+    });
+
+    test('can remove former of two elements', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
+      processChildAddedEvent(MockEvent(null, snapshot2));
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      processChildRemovedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot2]);
+    });
+
+    test('can remove latter of two elements', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
+      processChildAddedEvent(MockEvent(null, snapshot2));
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      processChildRemovedEvent(MockEvent('key10', snapshot2));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot1]);
+    });
+
+    test('can change child', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2a = MockDataSnapshot('key20', 20);
+      final DataSnapshot snapshot2b = MockDataSnapshot('key20', 25);
+      final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
+      processChildAddedEvent(MockEvent(null, snapshot3));
+      processChildAddedEvent(MockEvent(null, snapshot2a));
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      processChildChangedEvent(MockEvent('key10', snapshot2b));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot1, snapshot2b, snapshot3]);
+    });
+    test('can move child', () async {
+      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
+      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
+      final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
+      processChildAddedEvent(MockEvent(null, snapshot3));
+      processChildAddedEvent(MockEvent(null, snapshot2));
+      processChildAddedEvent(MockEvent(null, snapshot1));
+      await Future.delayed(const Duration());
+      processChildMovedEvent(MockEvent('key30', snapshot1));
+      await Future.delayed(const Duration());
+      expect(list, <DataSnapshot>[snapshot2, snapshot3, snapshot1]);
+    });
+  });
 }
 
 class MockQuery extends Mock implements Query {
@@ -188,6 +323,7 @@ class MockQuery extends Mock implements Query {
     this.onChildRemoved,
     this.onChildChanged,
     this.onChildMoved,
+    this.onValue,
   );
 
   @override
@@ -201,6 +337,9 @@ class MockQuery extends Mock implements Query {
 
   @override
   final Stream<Event> onChildMoved;
+
+  @override
+  final Stream<Event> onValue;
 }
 
 class ListChange {
@@ -213,7 +352,7 @@ class ListChange {
   ListChange._(this.index, this.index2, this.snapshot);
 
   final int index;
-  final int index2;
+  final int? index2;
   final DataSnapshot snapshot;
 
   @override
@@ -238,7 +377,7 @@ class MockEvent implements Event {
   MockEvent(this.previousSiblingKey, this.snapshot);
 
   @override
-  final String previousSiblingKey;
+  final String? previousSiblingKey;
 
   @override
   final DataSnapshot snapshot;
