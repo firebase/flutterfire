@@ -88,7 +88,6 @@ class FirebaseList extends ListBase<DataSnapshot>
         return index;
       }
     }
-    return null;
   }
 
   void _onChildAdded(Event event) {
