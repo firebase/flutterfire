@@ -7,7 +7,8 @@ A Flutter plugin to use the [Firebase Realtime Database API](https://firebase.go
 For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
 
 ## Usage
-To use this plugin, add `firebase_database` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You will also need the `firebase_core` dependency if you do not have it already.
+
+To use this plugin, add `firebase_database` as a [dependency in your pubspec.yaml file](https://flutter.dev/docs/development/packages-and-plugins/using-packages). You will also need the `firebase_core` dependency if you do not have it already.
 
 ```dart
 import 'package:firebase_core/firebase_core.dart';
