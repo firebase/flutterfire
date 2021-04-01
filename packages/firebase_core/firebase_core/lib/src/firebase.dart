@@ -6,6 +6,9 @@ part of firebase_core;
 
 /// The entry point for accessing Firebase.
 class Firebase {
+  // Ensures end-users cannot initialize the class.
+  Firebase._();
+
   // Cached & lazily loaded instance of [FirebasePlatform].
   // Avoids a [MethodChannelFirebase] being initialized until the user
   // starts using Firebase.
@@ -13,17 +16,11 @@ class Firebase {
   // instance directly as a static property since the class is not initialized.
   @visibleForTesting
   // ignore: public_member_api_docs
-  static FirebasePlatform delegatePackingProperty;
+  static FirebasePlatform? delegatePackingProperty;
 
   static FirebasePlatform get _delegate {
-    if (delegatePackingProperty == null) {
-      delegatePackingProperty = FirebasePlatform.instance;
-    }
-    return delegatePackingProperty;
+    return delegatePackingProperty ??= FirebasePlatform.instance;
   }
-
-  // Ensures end-users cannot initialize the class.
-  Firebase._();
 
   /// Returns a list of all [FirebaseApp] instances that have been created.
   static List<FirebaseApp> get apps {
@@ -37,10 +34,15 @@ class Firebase {
   ///
   /// The default app instance cannot be initialized here and should be created
   /// using the platform Firebase integration.
-  static Future<FirebaseApp> initializeApp(
-      {String name, FirebaseOptions options}) async {
-    FirebaseAppPlatform app =
-        await _delegate.initializeApp(name: name, options: options);
+  static Future<FirebaseApp> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) async {
+    FirebaseAppPlatform app = await _delegate.initializeApp(
+      name: name,
+      options: options,
+    );
+
     return FirebaseApp._(app);
   }
 
@@ -50,18 +52,22 @@ class Firebase {
   /// Throws if the app does not exist.
   static FirebaseApp app([String name = defaultFirebaseAppName]) {
     FirebaseAppPlatform app = _delegate.app(name);
-    return app == null ? null : FirebaseApp._(app);
+
+    return FirebaseApp._(app);
   }
 
+  // TODO(rrousselGit): remove ==/hashCode
   @override
-  bool operator ==(dynamic other) {
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! Firebase) return false;
     return other.hashCode == hashCode;
   }
 
   @override
-  int get hashCode => this.toString().hashCode;
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => toString().hashCode;
 
   @override
   String toString() => '$Firebase';

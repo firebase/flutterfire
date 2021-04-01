@@ -3,8 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-
-import 'package:meta/meta.dart' show required, visibleForTesting;
+import 'package:meta/meta.dart' show visibleForTesting;
 
 import 'method_channel_firebase_analytics.dart';
 
@@ -41,9 +40,11 @@ abstract class FirebaseAnalyticsPlatform {
     if (!instance.isMock) {
       try {
         instance._verifyProvidesDefaultImplementations();
+        // ignore: avoid_catching_errors
       } on NoSuchMethodError catch (_) {
         throw AssertionError(
-            'Platform interfaces must not be implemented with `implements`');
+          'Platform interfaces must not be implemented with `implements`',
+        );
       }
     }
     _instance = instance;
@@ -60,8 +61,8 @@ abstract class FirebaseAnalyticsPlatform {
 
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
-    @required String name,
-    Map<String, dynamic> parameters,
+    required String name,
+    Map<String, Object?>? parameters,
   }) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
@@ -73,24 +74,30 @@ abstract class FirebaseAnalyticsPlatform {
   }
 
   /// Sets the user id.
-  Future<void> setUserId(String id) {
+  ///
+  /// Setting a null [id] removes the user id.
+  Future<void> setUserId(String? id) {
     throw UnimplementedError('setUserId() is not implemented on this platform');
   }
 
   /// Sets the current screen name, which specifies the current visual context
   /// in your app.
+  ///
+  /// Setting a null [screenName] clears the current screen name.
   Future<void> setCurrentScreen({
-    @required String screenName,
-    String screenClassOverride,
+    required String? screenName,
+    String? screenClassOverride,
   }) {
     throw UnimplementedError(
         'setCurrentScreen() is not implemented on this platform');
   }
 
   /// Sets a user property to the given value.
+  ///
+  /// Setting a null [value] removes the user property.
   Future<void> setUserProperty({
-    @required String name,
-    @required String value,
+    required String name,
+    required String? value,
   }) {
     throw UnimplementedError(
         'setUserProperty() is not implemented on this platform');

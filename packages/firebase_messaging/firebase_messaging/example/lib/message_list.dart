@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +27,7 @@ class _MessageList extends State<MessageList> {
   @override
   Widget build(BuildContext context) {
     if (_messages.isEmpty) {
-      return Text("No messages received");
+      return const Text('No messages received');
     }
 
     return ListView.builder(

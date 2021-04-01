@@ -1,6 +1,7 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -40,7 +41,7 @@ class DocumentChangePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentChange] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentChangePlatform instance) {
+  static void verifyExtends(DocumentChangePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 

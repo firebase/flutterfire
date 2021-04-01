@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 part of firebase_ml_vision;
 
 /// Option for controlling additional trade-offs in performing face detection.
@@ -86,7 +88,7 @@ class FaceDetector {
     );
 
     final List<Face> faces = <Face>[];
-    for (dynamic data in reply) {
+    for (final dynamic data in reply) {
       faces.add(Face._(data));
     }
 
@@ -96,7 +98,7 @@ class FaceDetector {
   /// Release resources used by this detector.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(

@@ -69,7 +69,7 @@ between app restarts. The user can clear the apps cached data via the device set
 
 On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
 If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
-these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html))
+these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html)
 will be thrown):
 
 ```dart
@@ -92,10 +92,9 @@ to uniquely identify your users (for both analytical and security reasons). Anon
 using Firebase Firestore, Realtime Database or even an external API, since you're able to detect whether a request comes from an authenticated user.
 
 If no previous anonymous account on the platform (for your specific application) has been created, when signing in anonymously Firebase
-will create a new unique user which will be persisted across app restarts/page reloads. If the user signs-out and reauthenticates
-anonymously again, they will be signed-in with the previously created account. It is however important to remember the anonymous account created
-will not be persisted if the user uninstalls the application, clears their browser storage or uses a private browsing method (e.g.
-incognito mode on Google Chrome).
+will create a new user that will be persisted across app restarts/page reloads. If the user signs in anonymously multiple times, they will be signed-in with the initially created account. It is however important to remember the anonymous account created
+will not be persisted if the user signs out or uninstalls the application, clears their browser storage or uses a private browsing method (e.g.
+incognito mode on Google Chrome). Performing any of there operations mean that the user won't be able to access the same account anymore.
 
 To get started, call the `signInAnonymously()` method on the [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
 
@@ -162,6 +161,10 @@ try {
   }
 }
 ```
+
+:::caution
+Note: uninstalling your application on iOS or macOS can still preserve your users authentication state between app re-installs as the underlying Firebase iOS SDK persists authentication state to keychain. See [#4661](https://github.com/FirebaseExtended/flutterfire/issues/4661) for more information.
+:::
 
 Once successful, if you are listening to changes in [authentication state](#authentication-state), a new event will be sent to your
 listeners.
@@ -407,7 +410,7 @@ example:
 ```dart
 try {
   await FirebaseAuth.instance.currentUser.delete();
-} catch on FirebaseAuthException (e) {
+} on FirebaseAuthException catch (e) {
   if (e.code == 'requires-recent-login') {
     print('The user must reauthenticate before this operation can be executed.');
   }
@@ -477,4 +480,14 @@ Future<void> linkGoogleAndTwitter() async {
   // Link the Twitter account to the Google account.
   await googleUserCredential.user.linkWithCredential(twitterAuthCredential);
 }
+```
+
+### Emulator Usage
+
+If you are using the local Authentication emulator, then it is possible to connect to this using the `useEmulator` method.
+Ensure you pass the correct port on which the Firebase emulator is running on.
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
+
+```dart
+FirebaseAuth.instance.useEmulator('http://localhost:9099');
 ```

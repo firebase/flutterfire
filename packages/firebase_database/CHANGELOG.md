@@ -1,3 +1,39 @@
+## 6.1.1
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints for firebase_database (#5233).
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
+## 6.1.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 5.0.0
+
+ - Update a dependency to the latest release.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 4.4.0
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
 ## 4.3.0
 
  - **FEAT**: bump compileSdkVersion to 29 (#3975).
