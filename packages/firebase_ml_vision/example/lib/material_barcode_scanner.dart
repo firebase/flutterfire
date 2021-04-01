@@ -44,7 +44,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   AnimationState _currentState = AnimationState.search;
   CustomPainter? _animationPainter;
   int _animationStart = DateTime.now().millisecondsSinceEpoch;
-  final BarcodeDetector _barcodeDetector = FirebaseVision.instance.barcodeDetector();
+  final BarcodeDetector _barcodeDetector =
+      FirebaseVision.instance.barcodeDetector();
 
   @override
   void initState() {
@@ -119,7 +120,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         rectangle: Rectangle(
           width: widget.validRectangle.width,
           height: widget.validRectangle.height,
-          color: newState == AnimationState.endSearch ? Colors.transparent : Colors.white,
+          color: newState == AnimationState.endSearch
+              ? Colors.transparent
+              : Colors.white,
         ),
         animation: Tween<double>(
           begin: begin,
@@ -150,9 +153,10 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   }
 
   Future<void> _openCamera(CameraDescription camera) async {
-    final ResolutionPreset preset = defaultTargetPlatform == TargetPlatform.android
-        ? ResolutionPreset.high
-        : ResolutionPreset.low;
+    final ResolutionPreset preset =
+        defaultTargetPlatform == TargetPlatform.android
+            ? ResolutionPreset.high
+            : ResolutionPreset.low;
 
     _cameraController = CameraController(camera, preset, enableAudio: false);
     await _cameraController!.initialize();
@@ -202,11 +206,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     }
 
     final EdgeInsets padding = data.padding;
-    final double maxLogicalHeight = data.size.height - padding.top - padding.bottom;
+    final double maxLogicalHeight =
+        data.size.height - padding.top - padding.bottom;
 
     // Width & height are flipped from CameraController.previewSize on iOS
-    final double imageHeight =
-        defaultTargetPlatform == TargetPlatform.iOS ? imageSize.height : imageSize.width;
+    final double imageHeight = defaultTargetPlatform == TargetPlatform.iOS
+        ? imageSize.height
+        : imageSize.width;
 
     final double imageScale = imageHeight / maxLogicalHeight;
     final double halfWidth = imageScale * widget.validRectangle.width! / 2;
@@ -259,7 +265,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   void dispose() {
     _currentState = AnimationState.endSearch;
-    _cameraController?.stopImageStream().then((_) => _cameraController?.dispose());
+    _cameraController
+        ?.stopImageStream()
+        .then((_) => _cameraController?.dispose());
     _animationController?.dispose();
     _barcodeDetector.close();
 
@@ -308,7 +316,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     final double logicalHeight = _previewSize!.aspectRatio * logicalWidth;
 
     final EdgeInsets padding = data.padding;
-    final double maxLogicalHeight = data.size.height - padding.top - padding.bottom;
+    final double maxLogicalHeight =
+        data.size.height - padding.top - padding.bottom;
 
     return maxLogicalHeight / logicalHeight;
   }
@@ -360,7 +369,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   margin: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     'SPAN Reader',
-                                    style: Theme.of(context).textTheme.bodyText1,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ),
                                 Text(
@@ -370,10 +380,12 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                        margin: const EdgeInsets.only(bottom: 3),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 3),
                                         child: const Text('Material Design'),
                                       ),
                                       const Text('120 pages'),
@@ -453,7 +465,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
           ),
         ),
       );
-    } else if (_cameraController != null && _cameraController!.value.isInitialized) {
+    } else if (_cameraController != null &&
+        _cameraController!.value.isInitialized) {
       background = _buildCameraPreview();
     } else {
       background = Container(
@@ -470,7 +483,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               constraints: const BoxConstraints.expand(),
               child: CustomPaint(
                 painter: WindowPainter(
-                  windowSize: Size(widget.validRectangle.width!, widget.validRectangle.height!),
+                  windowSize: Size(widget.validRectangle.width!,
+                      widget.validRectangle.height!),
                   outerFrameColor: widget.frameColor,
                   closeWindow: _closeWindow,
                   innerFrameColor: _currentState == AnimationState.endSearch
@@ -574,7 +588,8 @@ class WindowPainter extends CustomPainter {
       center.dy + windowHalfHeight,
     );
 
-    final Rect left = Rect.fromLTRB(0, windowRect.top, windowRect.left, windowRect.bottom);
+    final Rect left =
+        Rect.fromLTRB(0, windowRect.top, windowRect.left, windowRect.bottom);
     final Rect top = Rect.fromLTRB(0, 0, size.width, windowRect.top);
     final Rect right = Rect.fromLTRB(
       windowRect.right,
@@ -608,7 +623,8 @@ class WindowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(WindowPainter oldDelegate) => oldDelegate.closeWindow != closeWindow;
+  bool shouldRepaint(WindowPainter oldDelegate) =>
+      oldDelegate.closeWindow != closeWindow;
 }
 
 class Rectangle {
@@ -635,7 +651,8 @@ class Rectangle {
 }
 
 class RectangleTween extends Tween<Rectangle> {
-  RectangleTween(Rectangle begin, Rectangle end) : super(begin: begin, end: end);
+  RectangleTween(Rectangle begin, Rectangle end)
+      : super(begin: begin, end: end);
 
   @override
   Rectangle lerp(double t) => Rectangle.lerp(begin!, end!, t);
