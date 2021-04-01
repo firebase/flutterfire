@@ -20,8 +20,6 @@
     "@types/react-router-dom": "^5.1.5",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
-    "docusaurus": "^1.14.6",
-    "docusaurus-init": "^1.14.1",
     "compare-versions": "^3.6.0",
     "docusaurus-plugin-sass": "^0.1.11",
     "dotenv": "^8.2.0",
