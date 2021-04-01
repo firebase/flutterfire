@@ -88,16 +88,15 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool result = await _channel.invokeMethod<bool>(
-          'FirebaseDatabase#setPersistenceEnabled',
-          <String, dynamic>{
-            'app': app?.name,
-            'databaseURL': databaseURL,
-            'enabled': enabled,
-          },
-        ) ??
-        false;
-    return result;
+    final bool? result = await _channel.invokeMethod<bool>(
+      'FirebaseDatabase#setPersistenceEnabled',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'enabled': enabled,
+      },
+    );
+    return result!;
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -118,16 +117,15 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool result = await _channel.invokeMethod<bool>(
-          'FirebaseDatabase#setPersistenceCacheSizeBytes',
-          <String, dynamic>{
-            'app': app?.name,
-            'databaseURL': databaseURL,
-            'cacheSize': cacheSize,
-          },
-        ) ??
-        false;
-    return result;
+    final bool? result = await _channel.invokeMethod<bool>(
+      'FirebaseDatabase#setPersistenceCacheSizeBytes',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'cacheSize': cacheSize,
+      },
+    );
+    return result!;
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous

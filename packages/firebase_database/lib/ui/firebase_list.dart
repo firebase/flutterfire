@@ -88,7 +88,6 @@ class FirebaseList extends ListBase<DataSnapshot>
         return index;
       }
     }
-    // ignore: avoid_returning_null
     return null;
   }
 
@@ -96,48 +95,35 @@ class FirebaseList extends ListBase<DataSnapshot>
     int index = 0;
     if (event.previousSiblingKey != null) {
       final _index = _indexForKey(event.previousSiblingKey!);
-      if (_index != null) {
-        index = _index + 1;
-      }
+      index = _index! + 1;
     }
     _snapshots.insert(index, event.snapshot);
     onChildAdded?.call(index, event.snapshot);
   }
 
   void _onChildRemoved(Event event) {
-    final int? index = _indexForKey(event.snapshot.key);
-    if (index != null) {
-      _snapshots.removeAt(index);
-      if (onChildRemoved != null) {
-        onChildRemoved!(index, event.snapshot);
-      }
-    }
+    final index = _indexForKey(event.snapshot.key);
+    _snapshots.removeAt(index!);
+    onChildRemoved?.call(index, event.snapshot);
   }
 
   void _onChildChanged(Event event) {
-    final int? index = _indexForKey(event.snapshot.key);
-    if (index != null) {
-      _snapshots[index] = event.snapshot;
-      onChildChanged?.call(index, event.snapshot);
-    }
+    final index = _indexForKey(event.snapshot.key);
+    _snapshots[index!] = event.snapshot;
+    onChildChanged?.call(index, event.snapshot);
   }
 
   void _onChildMoved(Event event) {
-    final int? fromIndex = _indexForKey(event.snapshot.key);
-    if (fromIndex != null) {
-      _snapshots.removeAt(fromIndex);
-    }
+    final fromIndex = _indexForKey(event.snapshot.key);
+    _snapshots.removeAt(fromIndex!);
+
     int toIndex = 0;
     if (event.previousSiblingKey != null) {
-      final int? prevIndex = _indexForKey(event.previousSiblingKey!);
-      if (prevIndex != null) {
-        toIndex = prevIndex + 1;
-      }
+      final prevIndex = _indexForKey(event.previousSiblingKey!);
+      toIndex = prevIndex! + 1;
     }
     _snapshots.insert(toIndex, event.snapshot);
-    if (fromIndex != null) {
-      onChildMoved?.call(fromIndex, toIndex, event.snapshot);
-    }
+    onChildMoved?.call(fromIndex, toIndex, event.snapshot);
   }
 
   void _onValue(Event event) {
