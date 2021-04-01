@@ -136,7 +136,7 @@ void main() {
         ),
         isMethodCall(
           'Trace#start',
-          arguments: <String, Object>{'handle': currentHandle},
+          arguments: <String, Object?>{'handle': currentHandle},
         ),
       ]);
     });

@@ -126,7 +126,7 @@ class HttpMetric extends PerformanceAttributes {
 
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
-      <String, Object>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -144,7 +144,7 @@ class HttpMetric extends PerformanceAttributes {
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#stop',
-      <String, Object>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 }

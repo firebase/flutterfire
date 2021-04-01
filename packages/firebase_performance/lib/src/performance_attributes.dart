@@ -48,7 +48,7 @@ abstract class PerformanceAttributes {
     _attributes[name] = value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'PerformanceAttributes#putAttribute',
-      <String, Object>{
+      <String, Object?>{
         'handle': _handle,
         'name': name,
         'value': value,
@@ -66,7 +66,7 @@ abstract class PerformanceAttributes {
     _attributes.remove(name);
     return FirebasePerformance.channel.invokeMethod<void>(
       'PerformanceAttributes#removeAttribute',
-      <String, Object>{'handle': _handle, 'name': name},
+      <String, Object?>{'handle': _handle, 'name': name},
     );
   }
 
@@ -86,7 +86,7 @@ abstract class PerformanceAttributes {
     final attributes =
         await FirebasePerformance.channel.invokeMapMethod<String, String>(
       'PerformanceAttributes#getAttributes',
-      <String, Object>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
     return attributes ?? {};
   }

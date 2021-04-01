@@ -52,7 +52,7 @@ class Trace extends PerformanceAttributes {
     _hasStarted = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#start',
-      <String, Object>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -70,7 +70,7 @@ class Trace extends PerformanceAttributes {
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#stop',
-      <String, Object>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -87,7 +87,7 @@ class Trace extends PerformanceAttributes {
     _metrics[name] = (_metrics[name] ?? 0) + value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#incrementMetric',
-      <String, Object>{'handle': _handle, 'name': name, 'value': value},
+      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
     );
   }
 
@@ -102,7 +102,7 @@ class Trace extends PerformanceAttributes {
     _metrics[name] = value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#setMetric',
-      <String, Object>{'handle': _handle, 'name': name, 'value': value},
+      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
     );
   }
 
@@ -115,7 +115,7 @@ class Trace extends PerformanceAttributes {
 
     final metric = await FirebasePerformance.channel.invokeMethod<int>(
       'Trace#getMetric',
-      <String, Object>{'handle': _handle, 'name': name},
+      <String, Object?>{'handle': _handle, 'name': name},
     );
     return metric ?? 0;
   }
