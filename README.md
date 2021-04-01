@@ -19,7 +19,7 @@
 FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
 that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows
 how to use these plugins in
-the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
+the [Firebase for Flutter](https://firebase.google.com/codelabs/firebase-get-to-know-flutter) codelab.
 
 [Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile,
 web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free

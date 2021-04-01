@@ -1,3 +1,11 @@
+## 2.1.0
+
+ - **FIX**: regression in `RemoteMessage.fromMap()` causing silent failure (#5336).
+ - **FEAT**: android.tag property on Notification (#5452).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+
 ## 2.0.1
 
  - **FIX**: regression in `RemoteMessage.fromMap()` causing silent failure (#5336).
