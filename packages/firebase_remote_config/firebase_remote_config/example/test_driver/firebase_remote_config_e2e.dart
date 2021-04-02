@@ -1,4 +1,4 @@
-// @dart=2.9
+
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
@@ -9,7 +9,7 @@ void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$RemoteConfig', () {
-    RemoteConfig remoteConfig;
+    late RemoteConfig remoteConfig;
 
     setUp(() async {
       await Firebase.initializeApp();
