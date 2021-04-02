@@ -15,7 +15,7 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  image_picker: ^0.6.0
+  image_picker: ^0.7.4
 
 dependency_overrides:
   firebase_core:

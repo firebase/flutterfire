@@ -26,6 +26,7 @@ class _PictureScannerState extends State<PictureScanner> {
   Size _imageSize;
   dynamic _scanResults;
   Detector _currentDetector = Detector.text;
+  final _imagePicker = ImagePicker();
   final BarcodeDetector _barcodeDetector =
       FirebaseVision.instance.barcodeDetector();
   final FaceDetector _faceDetector = FirebaseVision.instance.faceDetector();
@@ -44,8 +45,8 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final File pickedImage =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
+    final pickedImage =
+        await _imagePicker.getImage(source: ImageSource.gallery);
     final File imageFile = File(pickedImage.path);
 
     setState(() {
