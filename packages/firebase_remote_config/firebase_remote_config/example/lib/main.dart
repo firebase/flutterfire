@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,14 +19,14 @@ void main() {
         future: setupRemoteConfig(),
         builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
           return snapshot.hasData
-              ? WelcomeWidget(remoteConfig: snapshot.data!)
+              ? WelcomeWidget(remoteConfig: snapshot.data)
               : Container();
         },
       )));
 }
 
 class WelcomeWidget extends AnimatedWidget {
-  WelcomeWidget({required this.remoteConfig}) : super(listenable: remoteConfig);
+  WelcomeWidget({this.remoteConfig}) : super(listenable: remoteConfig);
 
   final RemoteConfig remoteConfig;
 
