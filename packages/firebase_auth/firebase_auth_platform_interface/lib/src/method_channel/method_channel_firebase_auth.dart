@@ -27,14 +27,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
 
-  static Map<String, StreamController<UserPlatform?>>
-      _authStateChangesListeners = <String, StreamController<UserPlatform?>>{};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _authStateChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
-  static Map<String, StreamController<UserPlatform?>> _idTokenChangesListeners =
-      <String, StreamController<UserPlatform?>>{};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _idTokenChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
-  static Map<String, StreamController<UserPlatform?>> _userChangesListeners =
-      <String, StreamController<UserPlatform?>>{};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _userChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
@@ -79,9 +82,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
-        _createBroadcastStream<UserPlatform>();
-    _idTokenChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
-    _userChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+    _idTokenChangesListeners[app.name] =
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+    _userChangesListeners[app.name] =
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
   }
 
   @override
@@ -94,7 +99,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
     assert(_userChangesListeners[appName] != null);
 
-    _userChangesListeners[appName]!.add(userPlatform);
+    _userChangesListeners[appName]!.add(_ValueWrapper(userPlatform));
   }
 
   /// Handles any incoming [authChanges] listener events.
@@ -102,22 +107,22 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
-    StreamController<UserPlatform?> /*!*/ streamController =
-        _authStateChangesListeners[appName]!;
+    // ignore: close_sinks
+    final streamController = _authStateChangesListeners[appName]!;
     MethodChannelFirebaseAuth /*!*/ instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
-      streamController.add(null);
+      streamController.add(_ValueWrapper.absent());
     } else {
       final MethodChannelUser user =
           MethodChannelUser(instance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
-      streamController.add(instance.currentUser);
+      streamController.add(_ValueWrapper(instance.currentUser));
     }
   }
 
@@ -127,28 +132,28 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
       String appName, Map<dynamic, dynamic> arguments) async {
-    // ignore: close_sinks
-    StreamController<UserPlatform?> /*!*/ idTokenStreamController =
-        _idTokenChangesListeners[appName]!;
-    // ignore: close_sinks
-    StreamController<UserPlatform?> /*!*/ userChangesStreamController =
-        _userChangesListeners[appName]!;
+    final StreamController<_ValueWrapper<UserPlatform>>
+        // ignore: close_sinks
+        idTokenStreamController = _idTokenChangesListeners[appName]!;
+    final StreamController<_ValueWrapper<UserPlatform>>
+        // ignore: close_sinks
+        userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth /*!*/ instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
-      idTokenStreamController.add(null);
-      userChangesStreamController.add(null);
+      idTokenStreamController.add(_ValueWrapper.absent());
+      userChangesStreamController.add(_ValueWrapper.absent());
     } else {
       final MethodChannelUser user =
           MethodChannelUser(instance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
-      idTokenStreamController.add(user);
-      userChangesStreamController.add(user);
+      idTokenStreamController.add(_ValueWrapper(user));
+      userChangesStreamController.add(_ValueWrapper(user));
     }
   }
 
@@ -275,15 +280,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Stream<UserPlatform?> authStateChanges() =>
-      _authStateChangesListeners[app.name]!.stream;
+      _authStateChangesListeners[app.name]!.stream.map((event) => event.value);
 
   @override
   Stream<UserPlatform?> idTokenChanges() =>
-      _idTokenChangesListeners[app.name]!.stream;
+      _idTokenChangesListeners[app.name]!.stream.map((event) => event.value);
 
   @override
   Stream<UserPlatform?> userChanges() =>
-      _userChangesListeners[app.name]!.stream;
+      _userChangesListeners[app.name]!.stream.map((event) => event.value);
 
   @override
   Future<void> sendPasswordResetEmail(
@@ -545,11 +550,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
                   as PhoneAuthCredential;
           verificationCompleted(phoneAuthCredential);
         } else if (name == 'Auth#phoneVerificationFailed') {
-          final Map<dynamic, dynamic> error = arguments['error'];
-          final Map<dynamic, dynamic> details = error['details'];
+          final Map<dynamic, dynamic>? error = arguments['error'];
+          final Map<dynamic, dynamic>? details = error?['details'];
 
           FirebaseAuthException exception = FirebaseAuthException(
-            message: details != null ? details['message'] : error['message'],
+            message: details != null ? details['message'] : error?['message'],
             code: details != null ? details['code'] : 'unknown',
           );
 
@@ -569,4 +574,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       throw convertPlatformException(e);
     }
   }
+}
+
+/// Simple helper class to make nullable values transferable through StreamControllers.
+class _ValueWrapper<T> {
+  _ValueWrapper(this.value);
+
+  factory _ValueWrapper.absent() => _ValueWrapper(null);
+
+  final T? value;
 }

@@ -56,7 +56,7 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
 
 void handleEventChannel(
   final String name, [
-  List<MethodCall> log,
+  List<MethodCall>? log,
 ]) {
   MethodChannel(name).setMockMethodCallHandler((MethodCall methodCall) async {
     log?.add(methodCall);
@@ -72,7 +72,7 @@ void handleEventChannel(
 
 Future<void> injectEventChannelResponse(
     String channelName, Map<String, dynamic> event) async {
-  await ServicesBinding.instance.defaultBinaryMessenger.handlePlatformMessage(
+  await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
     channelName,
     MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
     (_) {},

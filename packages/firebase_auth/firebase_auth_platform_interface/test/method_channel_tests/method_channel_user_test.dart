@@ -96,11 +96,11 @@ void main() {
 
         switch (call.method) {
           case 'Auth#registerIdTokenListener':
-            final String name = 'idTokenChannel';
+            const String name = 'idTokenChannel';
             handleEventChannel(name, log);
             return name;
           case 'Auth#registerAuthStateListener':
-            final String name = 'authStateChannel';
+            const String name = 'authStateChannel';
             handleEventChannel(name, log);
             return name;
           case 'Auth#signInAnonymously':
