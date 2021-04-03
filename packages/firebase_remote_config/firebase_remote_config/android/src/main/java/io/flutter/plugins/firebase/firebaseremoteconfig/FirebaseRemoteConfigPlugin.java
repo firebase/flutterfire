@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.firebaseremoteconfig;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
+import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -34,6 +35,7 @@ public class FirebaseRemoteConfigPlugin
 
   private MethodChannel channel;
 
+  @SuppressWarnings("deprecation") // Registrar deprecated (v1 plugin embedding).
   public static void registerWith(Registrar registrar) {
     FirebaseRemoteConfigPlugin plugin = new FirebaseRemoteConfigPlugin();
     plugin.setupChannel(registrar.messenger());
@@ -45,7 +47,7 @@ public class FirebaseRemoteConfigPlugin
   }
 
   @Override
-  public void onDetachedFromEngine(FlutterPluginBinding binding) {
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     tearDownChannel();
   }
 
@@ -56,8 +58,7 @@ public class FirebaseRemoteConfigPlugin
         cachedThreadPool,
         () -> {
           Map<String, Object> configProperties = getConfigProperties(remoteConfig);
-          Map<String, Object> configValues = new HashMap<>();
-          configValues.putAll(configProperties);
+          Map<String, Object> configValues = new HashMap<>(configProperties);
           configValues.put("parameters", parseParameters(remoteConfig.getAll()));
           return configValues;
         });
@@ -100,14 +101,14 @@ public class FirebaseRemoteConfigPlugin
   }
 
   @Override
-  public void onMethodCall(MethodCall call, final MethodChannel.Result result) {
+  public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
     FirebaseRemoteConfig remoteConfig = getRemoteConfig(call.arguments());
 
     switch (call.method) {
       case "RemoteConfig#ensureInitialized":
         {
-          methodCallTask = remoteConfig.ensureInitialized();
+          methodCallTask = Tasks.whenAll(remoteConfig.ensureInitialized());
           break;
         }
       case "RemoteConfig#activate":
@@ -132,8 +133,8 @@ public class FirebaseRemoteConfigPlugin
         }
       case "RemoteConfig#setConfigSettings":
         {
-          int fetchTimeout = call.argument("fetchTimeout");
-          int minimumFetchInterval = call.argument("minimumFetchInterval");
+          int fetchTimeout = Objects.requireNonNull(call.argument("fetchTimeout"));
+          int minimumFetchInterval = Objects.requireNonNull(call.argument("minimumFetchInterval"));
           FirebaseRemoteConfigSettings settings =
               new FirebaseRemoteConfigSettings.Builder()
                   .setFetchTimeoutInSeconds(fetchTimeout)
@@ -144,7 +145,7 @@ public class FirebaseRemoteConfigPlugin
         }
       case "RemoteConfig#setDefaults":
         {
-          Map<String, Object> defaults = call.argument("defaults");
+          Map<String, Object> defaults = Objects.requireNonNull(call.argument("defaults"));
           methodCallTask = remoteConfig.setDefaultsAsync(defaults);
           break;
         }
@@ -203,12 +204,11 @@ public class FirebaseRemoteConfigPlugin
     switch (status) {
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_SUCCESS:
         return "success";
-      case FirebaseRemoteConfig.LAST_FETCH_STATUS_FAILURE:
-        return "failure";
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_THROTTLED:
         return "throttled";
       case FirebaseRemoteConfig.LAST_FETCH_STATUS_NO_FETCH_YET:
         return "noFetchYet";
+      case FirebaseRemoteConfig.LAST_FETCH_STATUS_FAILURE:
       default:
         return "failure";
     }
@@ -216,12 +216,11 @@ public class FirebaseRemoteConfigPlugin
 
   private String mapValueSource(int source) {
     switch (source) {
-      case FirebaseRemoteConfig.VALUE_SOURCE_STATIC:
-        return "static";
       case FirebaseRemoteConfig.VALUE_SOURCE_DEFAULT:
         return "default";
       case FirebaseRemoteConfig.VALUE_SOURCE_REMOTE:
         return "remote";
+      case FirebaseRemoteConfig.VALUE_SOURCE_STATIC:
       default:
         return "static";
     }

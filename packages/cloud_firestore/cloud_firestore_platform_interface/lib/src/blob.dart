@@ -19,7 +19,7 @@ class Blob {
   final Uint8List bytes;
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is Blob &&
       const DeepCollectionEquality().equals(other.bytes, bytes);
 

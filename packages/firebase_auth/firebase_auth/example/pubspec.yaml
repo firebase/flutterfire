@@ -3,7 +3,7 @@ description: Demonstrates how to use the firebase_auth plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   firebase_auth:
@@ -37,7 +37,7 @@ dev_dependencies:
   drive: 0.0.1-6.0.pre
   flutter_driver:
     sdk: flutter
-  http: ^0.13.0-nullsafety.0
+  http: ^0.13.0
   test: any
 
 flutter:

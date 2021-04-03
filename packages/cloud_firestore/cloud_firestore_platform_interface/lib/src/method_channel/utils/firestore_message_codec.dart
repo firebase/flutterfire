@@ -124,8 +124,8 @@ class FirestoreMessageCodec extends StandardMessageCodec {
       case _kGeoPoint:
         return GeoPoint(buffer.getFloat64(), buffer.getFloat64());
       case _kDocumentReference:
-        final String appName = readValue(buffer) as String;
-        final String path = readValue(buffer) as String;
+        final String appName = readValue(buffer)! as String;
+        final String path = readValue(buffer)! as String;
         final FirebaseApp app = Firebase.app(appName);
         final FirebaseFirestorePlatform firestore =
             FirebaseFirestorePlatform.instanceFor(app: app);

@@ -28,7 +28,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final ImagePicker _picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
   //When the model is ready, _loaded changes to trigger the screen state change.
@@ -37,7 +36,8 @@ class _MyAppState extends State<MyApp> {
   /// Triggers selection of an image and the consequent inference.
   Future<void> getImageLabels() async {
     try {
-      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker.pickImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;
@@ -60,7 +60,7 @@ class _MyAppState extends State<MyApp> {
   /// Gets the model ready for inference on images.
   static Future<String> loadModel() async {
     final modelFile = await loadModelFromFirebase();
-    return await loadTFLiteModel(modelFile);
+    return loadTFLiteModel(modelFile);
   }
 
   /// Downloads custom model from the Firebase console and return its file.
@@ -100,9 +100,9 @@ class _MyAppState extends State<MyApp> {
     try {
       final appDirectory = await getApplicationDocumentsDirectory();
       final labelsData =
-          await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
+          await rootBundle.load('assets/labels_mobilenet_v1_224.txt');
       final labelsFile =
-          await File(appDirectory.path + "/_labels_mobilenet_v1_224.txt")
+          await File('${appDirectory.path}/_labels_mobilenet_v1_224.txt')
               .writeAsBytes(labelsData.buffer.asUint8List(
                   labelsData.offsetInBytes, labelsData.lengthInBytes));
 
@@ -111,8 +111,8 @@ class _MyAppState extends State<MyApp> {
             labels: labelsFile.path,
             isAsset: false,
           ) ==
-          "success");
-      return "Model is loaded";
+          'success');
+      return 'Model is loaded';
     } catch (exception) {
       print(
           'Failed on loading your model to the TFLite interpreter: $exception');
@@ -129,9 +129,10 @@ class _MyAppState extends State<MyApp> {
       ),
       body: Column(
         children: [
-          _image != null
-              ? Image.file(_image)
-              : Text('Please select image to analyze.'),
+          if (_image != null)
+            Image.file(_image)
+          else
+            const Text('Please select image to analyze.'),
           Column(
             children: _labels != null
                 ? _labels.map((label) {
@@ -143,16 +144,16 @@ class _MyAppState extends State<MyApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImageLabels,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   /// In case of error shows unrecoverable error screen.
   Widget errorScreen() {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Text("Error loading model. Please check the logs."),
+        child: Text('Error loading model. Please check the logs.'),
       ),
     );
   }
@@ -164,13 +165,12 @@ class _MyAppState extends State<MyApp> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 20),
               child: CircularProgressIndicator(),
             ),
-            Text("Please make sure that you are using wifi."),
+            Text('Please make sure that you are using wifi.'),
           ],
         ),
       ),
@@ -178,6 +178,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   /// Shows different screens based on the state of the custom model.
+  @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,

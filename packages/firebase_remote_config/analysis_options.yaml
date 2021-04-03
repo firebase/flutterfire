@@ -10,7 +10,8 @@ analyzer:
     # We explicitly enabled even conflicting rules and are fixing the conflict
     # in this file
     included_file_warning: ignore
-
+  exclude:
+    - "**/generated_plugin_registrant.dart"
 linter:
   rules:
     ## Disabled rules because the repository doesn't respect them (yet)

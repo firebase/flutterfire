@@ -39,6 +39,7 @@ class RemoteNotification {
         smallIcon: map['android']['smallIcon'],
         sound: map['android']['sound'],
         ticker: map['android']['ticker'],
+        tag: map['android']['tag'],
         visibility: convertToAndroidNotificationVisibility(
             map['android']['visibility']),
       );
@@ -112,6 +113,7 @@ class AndroidNotification {
       this.smallIcon,
       this.sound,
       this.ticker,
+      this.tag,
       this.visibility = AndroidNotificationVisibility.private});
 
   /// The channel the notification is delivered on.
@@ -153,6 +155,9 @@ class AndroidNotification {
 
   /// The visibility level of the notification.
   final AndroidNotificationVisibility visibility;
+
+  /// The tag of the notification.
+  final String? tag;
 }
 
 /// Apple specific properties of a [RemoteNotification].

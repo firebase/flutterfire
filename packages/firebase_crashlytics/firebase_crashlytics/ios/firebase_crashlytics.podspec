@@ -30,6 +30,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '10.0'
 
+  s.dependency 'Flutter'
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Crashlytics', firebase_sdk_version
 

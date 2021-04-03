@@ -1,3 +1,11 @@
+## 5.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 5.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_functions_platform_interface" to `5.0.0-1.0.nullsafety.0`.
+
 ## 4.0.2-1.0.nullsafety.2
 
  - Update a dependency to the latest release.

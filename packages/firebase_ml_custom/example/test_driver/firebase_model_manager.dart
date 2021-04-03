@@ -9,8 +9,8 @@ part of 'firebase_ml_custom.dart';
 void firebaseModelManagerTest() {
   group('$FirebaseModelManager', () {
     final FirebaseModelManager modelManager = FirebaseModelManager.instance;
-    final MODEL_NAME = 'mobilenet_v1_1_0_224';
-    final INVALID_MODEL_NAME = 'invalidModelName';
+    const MODEL_NAME = 'mobilenet_v1_1_0_224';
+    const INVALID_MODEL_NAME = 'invalidModelName';
 
     test('download model and get its file', () async {
       final model = FirebaseCustomRemoteModel(MODEL_NAME);

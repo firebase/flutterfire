@@ -1,3 +1,171 @@
+# Deprecation of firebase_admob Plugin
+
+The `firebase_admob` plugin will be deprecated in April 2021 in favor of [Google Mobile Ads SDK for
+Flutter](https://pub.dev/packages/google_mobile_ads).
+
+Google Mobile Ads SDK for Flutter is a new Flutter plugin that supports more Ads formats than
+`firebase_admob`. Google Mobile Ads SDK for Flutter currently supports loading and displaying
+banner, interstitial (full-screen), native ads, and rewarded video ads across AdMob and AdManager.
+It also supports displaying banner and native ads as Widgets as opposed to being overlayed over all
+app content.
+
+Projects currently using `firebase_admob` are encouraged to migrate to Google Mobile Ads SDK for
+Flutter following the instructions outlined below.
+
+## Migrating to Google Mobile Ads SDK for Flutter
+
+The main change of google_mobile_ads plugin is how ads are displayed. This section provides a quick
+migration guide when transitioning to the new plugin.
+
+### Banner and Native Ads
+
+Banner and native ads in the `firebase_admob` plugin were displayed as an overlay on top of all app
+content. With `google_mobile_ads`, they can now only be displayed as a Flutter Widget. Below is an
+example of displaying a BannerAd anchored to the bottom with an offset using the `firebase_admob`
+plugin:
+
+```dart
+void main() {
+ WidgetsFlutterBinding.ensureInitialized();
+ FirebaseAdMob.instance.initialize(appId: appId);
+
+ runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+ @override
+ MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  BannerAd _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.banner,
+    );
+
+    _bannerAd
+      ..load()
+      ..show(
+        anchorOffset: 10.0,
+        anchorType: AnchorType.bottom,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyAppWidget();
+  }
+}
+```
+
+When transitioning to `google_mobile_ads`, the `show` method has been removed with `AdWidget`
+replacing it. Below is an example of displaying an ad with `google_mobile_ads` that is also anchored
+to the bottom with an offset:
+
+```dart
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  BannerAd _bannerAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: BannerAd.testAdUnitId,
+      listener: AdListener(),
+      request: AdRequest(),
+    );
+    _bannerAd.load();
+ }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _bannerAd.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        MyAppWidget(),
+        Container(
+          padding: EdgeInsets.only(bottom: 10.0),
+          alignment: Alignment.bottomCenter,
+          child: AdWidget(ad: _bannerAd),
+        ),
+      ],
+    );
+  }
+}
+```
+
+### Interstitial and Rewarded Ads
+
+The typical pattern for displaying interstitial and rewarded Ads with `firebase_admob` would be to
+call `show` right after `load`. This is now discouraged and `show` should only be called when
+`AdListener.onAdLoaded` has been called. Below is an example usage of an interstitial ad:
+
+```dart
+class MyApp extends StatefulWidget {
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
+  InterstitialAd _interstitialAd;
+
+  @override
+  void initState() {
+    super.initState();
+    _interstitialAd = InterstitialAd(
+      adUnitId: InterstitialAd.testAdUnitId,
+      request: AdRequest(),
+      listener: AdListener(
+        onAdLoaded: (Ad ad) {
+          // Ad is now ready to show at any time.
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print(error);
+          ad.dispose();
+        },
+        onAdClosed: (Ad ad) {
+          ad.dispose();
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _interstitialAd?.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyAppWidget();
+  }
+}
+```
+
 # firebase_admob
 
 A plugin for [Flutter](https://flutter.io) that supports loading and
@@ -17,7 +185,7 @@ to do so will result in a crash on launch of your app.  The line should look lik
     android:value="[ADMOB_APP_ID]"/>
 ```
 
-where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you 
+where `[ADMOB_APP_ID]` is your App ID.  You must pass the same value when you
 initialize the plugin in your Dart code.
 
 See https://goo.gl/fQ2neu for more information about configuring `AndroidManifest.xml`
@@ -58,7 +226,7 @@ Starting in version 17.0.0, if you are an AdMob publisher you are now required t
 
 Failure to add this tag will result in the app crashing at app launch with a message starting with *"The Google Mobile Ads SDK was initialized incorrectly."*
 
-On Android, this value must be the same as the App ID value set in your 
+On Android, this value must be the same as the App ID value set in your
 `AndroidManifest.xml`.
 
 ### iOS
@@ -79,13 +247,13 @@ You are also required to ensure that you have Google Service file from Firebase 
 
 ### iOS
 
-Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode. 
+Create an "App" in firebase and generate a GoogleService-info.plist file. This file needs to be embedded in the projects "Runner/Runner" folder using Xcode.
 
 https://firebase.google.com/docs/ios/setup#create-firebase-project -> Steps 1-3
 
 ### Android
 
-Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder. 
+Create an "App" in firebase and generate a google-service.json file. This file needs to be embedded in you projects "android/app" folder.
 
 https://firebase.google.com/docs/android/setup#create-firebase-project -> Steps 1-3.1
 

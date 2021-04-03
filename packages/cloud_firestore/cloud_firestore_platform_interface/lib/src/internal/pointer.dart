@@ -73,7 +73,7 @@ class Pointer {
   }
 
   @override
-  bool operator ==(dynamic other) => other is Pointer && other.path == path;
+  bool operator ==(Object other) => other is Pointer && other.path == path;
 
   @override
   int get hashCode => path.hashCode;
