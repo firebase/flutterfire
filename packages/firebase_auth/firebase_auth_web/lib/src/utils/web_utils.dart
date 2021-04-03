@@ -182,7 +182,7 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     authProvider.scopes
         .forEach((String scope) => oAuthProvider.addScope(scope));
     oAuthProvider.setCustomParameters(
-      Map<String, dynamic>.from(authProvider.parameters!),
+      Map<String, dynamic>.from(authProvider.parameters),
     );
     return oAuthProvider;
   }
