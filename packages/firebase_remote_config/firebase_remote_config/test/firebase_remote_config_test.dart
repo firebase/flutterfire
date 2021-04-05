@@ -331,7 +331,7 @@ class MockFirebaseRemoteConfig extends Mock
 
   @override
   RemoteConfigFetchStatus? get lastFetchStatus {
-    return super.noSuchMethod(Invocation.method(#lastFetchStatus, []),
+    return super.noSuchMethod(Invocation.getter(#lastFetchStatus),
         returnValue: RemoteConfigFetchStatus.success,
         returnValueForMissingStub: RemoteConfigFetchStatus.success);
   }
