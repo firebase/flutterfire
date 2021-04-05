@@ -24,8 +24,7 @@ FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException,
     [StackTrace? stackTrace]) {
   Map<String, String>? details = platformException.details != null
-      ? Map<String, dynamic>.from(platformException.details)
-          as Map<String, String>?
+      ? Map<String, String>.from(platformException.details)
       : null;
 
   String code = 'unknown';
