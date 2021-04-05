@@ -34,8 +34,8 @@ void main() {
 
   group('$RemoteConfig', () {
     setUpAll(() async {
-      await Firebase.initializeApp();
       FirebaseRemoteConfigPlatform.instance = mockRemoteConfigPlatform;
+      await Firebase.initializeApp();
       remoteConfig = RemoteConfig.instance;
     });
 
@@ -49,6 +49,10 @@ void main() {
         expect(remoteConfig.app?.name, defaultFirebaseAppName);
       });
     });
+
+    when(mockRemoteConfigPlatform.instanceFor(
+            app: anyNamed('app'), pluginConstants: anyNamed('pluginConstants')))
+        .thenAnswer((_) => mockRemoteConfigPlatform);
 
     when(mockRemoteConfigPlatform.delegateFor(
       app: anyNamed('app'),
@@ -324,8 +328,29 @@ class MockFirebaseRemoteConfig extends Mock
           ValueSource.valueStatic,
         ));
   }
+
+  @override
+  RemoteConfigFetchStatus? get lastFetchStatus {
+    return super.noSuchMethod(Invocation.method(#lastFetchStatus, []),
+        returnValue: RemoteConfigFetchStatus.success,
+        returnValueForMissingStub: RemoteConfigFetchStatus.success);
+  }
 }
 
 class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
   TestFirebaseRemoteConfigPlatform() : super();
+
+  void instanceFor(
+      {FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
+
+  @override
+  FirebaseRemoteConfigPlatform? delegateFor({FirebaseApp? app}) {
+    return this;
+  }
+
+  @override
+  FirebaseRemoteConfigPlatform setInitialValues(
+      {Map<dynamic, dynamic>? remoteConfigValues}) {
+    return this;
+  }
 }
