@@ -15,7 +15,7 @@ String TEST_PASSWORD = 'testpassword';
 String TEST_PHONE_NUMBER = '+447111555666';
 String TEST_SMS_CODE = '123456';
 
-String /*!*/ generateRandomEmail({
+String generateRandomEmail({
   String prefix = '',
   String suffix = '@foo.bar',
 }) {

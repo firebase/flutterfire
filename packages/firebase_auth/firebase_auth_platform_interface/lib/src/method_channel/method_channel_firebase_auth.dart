@@ -109,13 +109,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       String appName, Map<dynamic, dynamic> arguments) async {
     // ignore: close_sinks
     final streamController = _authStateChangesListeners[appName]!;
-    MethodChannelFirebaseAuth /*!*/ instance =
+    MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
-      streamController.add(_ValueWrapper.absent());
+      streamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user =
           MethodChannelUser(instance, userMap.cast<String, dynamic>());
@@ -138,14 +138,14 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final StreamController<_ValueWrapper<UserPlatform>>
         // ignore: close_sinks
         userChangesStreamController = _userChangesListeners[appName]!;
-    MethodChannelFirebaseAuth /*!*/ instance =
+    MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
-      idTokenStreamController.add(_ValueWrapper.absent());
-      userChangesStreamController.add(_ValueWrapper.absent());
+      idTokenStreamController.add(const _ValueWrapper.absent());
+      userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user =
           MethodChannelUser(instance, userMap.cast<String, dynamic>());
@@ -543,7 +543,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         final name = arguments['name'];
         if (name == 'Auth#phoneVerificationCompleted') {
           final int token = arguments['token'];
-          final String /*!*/ smsCode = arguments['smsCode'];
+          final String? smsCode = arguments['smsCode'];
 
           PhoneAuthCredential phoneAuthCredential =
               PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode)
@@ -578,9 +578,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
 /// Simple helper class to make nullable values transferable through StreamControllers.
 class _ValueWrapper<T> {
-  _ValueWrapper(this.value);
+  const _ValueWrapper(this.value);
 
-  factory _ValueWrapper.absent() => _ValueWrapper(null);
+  const _ValueWrapper.absent() : value = null;
 
   final T? value;
 }
