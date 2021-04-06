@@ -112,7 +112,7 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           //     'timestamp': '$currentUnixTimeSeconds',
           //   },
           // });
-        } on MissingPluginException catch (e) {
+        } on MissingPluginException {
           // noop - User ought to install firebase_analytics plugin
         } on PlatformException catch (e, s) {
           throw platformExceptionToFirebaseException(e, s);
