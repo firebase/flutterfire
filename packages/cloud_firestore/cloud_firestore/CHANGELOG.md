@@ -1,3 +1,8 @@
+## 1.0.4
+
+ - **FIX**: made QueryDocumentSnapshot.data() non-nullable (#5476).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
 ## 1.0.3
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

@@ -3,6 +3,10 @@
  - **CHORE**: bump packages.
  - **BREAKING** **FEAT**: Migrate firebase_in_app_messaging to sound null safety
 
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.

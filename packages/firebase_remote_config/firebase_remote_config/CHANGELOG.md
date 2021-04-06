@@ -1,3 +1,7 @@
+## 0.9.0-dev.2
+
+ - Update a dependency to the latest release.
+
 ## 0.9.0-dev.1
 
  - **FIX**: ensureInitialized() task should ignore return value (fixes #5222) (#5467).
