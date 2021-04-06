@@ -132,6 +132,32 @@ void main() {
         verify(kMockStoragePlatform.ref(testPath));
       });
 
+      test('verify delegate method is called for http urls with spaces', () {
+        const String customBucket = 'test.appspot.com';
+        const String testPath = 'file with  spaces   .gif';
+        const String url =
+            'https://firebasestorage.googleapis.com/v0/b/$customBucket/o/$testPath?alt=media';
+
+        final ref = storage.refFromURL(url);
+
+        expect(ref, isA<Reference>());
+        verify(kMockStoragePlatform.ref(testPath));
+      });
+
+      // https://github.com/FirebaseExtended/flutterfire/issues/5673
+      test('verify delegate method is called for http urls with + symbol', () {
+        const String customBucket = 'test.appspot.com';
+        const String testPath = 'foo+bar/file.gif';
+        const String url =
+            'https://firebasestorage.googleapis.com/v0/b/$customBucket/o/$testPath?alt=media';
+
+        final ref = storage.refFromURL(url);
+
+        expect(ref, isA<Reference>());
+        expect(ref.fullPath, testPath);
+        verify(kMockStoragePlatform.ref(testPath));
+      });
+
       test("verify delegate method when url starts with 'gs://'", () {
         const String testPath = 'bar/baz.png';
         const String url = 'gs://foo/$testPath';
