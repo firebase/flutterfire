@@ -66,10 +66,13 @@ If you would like to record a fatal error, you may pass in a `fatal` argument as
 The crash report will appear in your Crashlytics dashboard with the event type `Crash`, the event summary stack trace will also be referenced as a `Fatal Exception`.
 
 ```dart
-await FirebaseCrashlytics.instance.recordError(error, stackTrace,
-                                reason: 'a fatal error',
-                                // Pass in 'fatal' argument
-                                fatal: true);
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a fatal error',
+  // Pass in 'fatal' argument
+  fatal: true
+);
 ```
 
 ### Non-Fatal crash
@@ -77,8 +80,11 @@ await FirebaseCrashlytics.instance.recordError(error, stackTrace,
 By default non-fatal errors are recorded. The crash report will appear in your Crashlytics dashboard with the event type `Non-fatal`, the event summary stack trace will also be referenced as a `Non-fatal Exception`.
 
 ```dart
-await FirebaseCrashlytics.instance.recordError(error, stackTrace,
-                                reason: 'a non-fatal error');
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a non-fatal error'
+);
 ```
 
 ## Add custom keys
