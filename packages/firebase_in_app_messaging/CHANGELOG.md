@@ -1,8 +1,3 @@
-## 1.0.0
-
- - **CHORE**: bump packages.
- - **BREAKING** **FEAT**: Migrate firebase_in_app_messaging to sound null safety
-
 ## 0.4.0+1
 
  - Update a dependency to the latest release.
