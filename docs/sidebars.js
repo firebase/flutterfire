@@ -82,7 +82,7 @@ module.exports = {
     "Realtime Database": [
       "database/overview",
       toReferenceAPI("firebase_database"),
-      toReferenceAPI("firebase_database"),
+      toGithubExample("firebase_database"),
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
@@ -93,12 +93,12 @@ module.exports = {
       "remote-config/overview",
       "remote-config/usage",
       toReferenceAPI("firebase_remote_config"),
-      toReferenceAPI("firebase_remote_config"),
+      toGithubExample("firebase_remote_config"),
     ],
     "Performance Monitoring": [
       "performance/overview",
       toReferenceAPI("firebase_performance"),
-      toReferenceAPI("firebase_performance"),
+      toGithubExample("firebase_performance"),
     ],
   },
 };
