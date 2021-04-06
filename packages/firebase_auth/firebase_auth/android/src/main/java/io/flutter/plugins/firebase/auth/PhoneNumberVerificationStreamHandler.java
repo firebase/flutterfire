@@ -23,7 +23,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
     void onCredentialsReceived(PhoneAuthCredential credential);
   }
 
-  final AtomicReference<Activity> activity = new AtomicReference<>(null);
+  final AtomicReference<Activity> activityRef = new AtomicReference<>(null);
   final FirebaseAuth firebaseAuth;
   final String phoneNumber;
   final int timeout;
@@ -40,7 +40,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
       Activity activity,
       Map<String, Object> arguments,
       OnCredentialsListener onCredentialsListener) {
-    this.activity.set(activity);
+    this.activityRef.set(activity);
 
     firebaseAuth = FlutterFirebaseAuthPlugin.getAuth(arguments);
     phoneNumber = (String) Objects.requireNonNull(arguments.get(Constants.PHONE_NUMBER));
@@ -76,7 +76,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
               event.put(Constants.SMS_CODE, phoneAuthCredential.getSmsCode());
             }
 
-            event.put("name", "Auth#phoneVerificationCompleted");
+            event.put(Constants.NAME, "Auth#phoneVerificationCompleted");
 
             if (eventSink != null) {
               eventSink.success(event);
@@ -92,7 +92,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
             Map<String, Object> event = new HashMap<>();
             event.put("error", error);
 
-            event.put("name", "Auth#phoneVerificationFailed");
+            event.put(Constants.NAME, "Auth#phoneVerificationFailed");
 
             if (eventSink != null) {
               eventSink.success(event);
@@ -110,7 +110,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
             event.put(Constants.VERIFICATION_ID, verificationId);
             event.put(Constants.FORCE_RESENDING_TOKEN, forceResendingTokenHashCode);
 
-            event.put("name", "Auth#phoneCodeSent");
+            event.put(Constants.NAME, "Auth#phoneCodeSent");
 
             if (eventSink != null) {
               eventSink.success(event);
@@ -122,7 +122,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
             Map<String, Object> event = new HashMap<>();
             event.put(Constants.VERIFICATION_ID, verificationId);
 
-            event.put("name", "Auth#phoneCodeAutoRetrievalTimeout");
+            event.put(Constants.NAME, "Auth#phoneCodeAutoRetrievalTimeout");
 
             if (eventSink != null) {
               eventSink.success(event);
@@ -139,7 +139,7 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
     }
 
     PhoneAuthOptions.Builder phoneAuthOptionsBuilder = new PhoneAuthOptions.Builder(firebaseAuth);
-    phoneAuthOptionsBuilder.setActivity(activity.get());
+    phoneAuthOptionsBuilder.setActivity(activityRef.get());
     phoneAuthOptionsBuilder.setPhoneNumber(phoneNumber);
     phoneAuthOptionsBuilder.setCallbacks(callbacks);
     phoneAuthOptionsBuilder.setTimeout((long) timeout, TimeUnit.MILLISECONDS);
@@ -160,6 +160,6 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   public void onCancel(Object arguments) {
     eventSink = null;
 
-    activity.set(null);
+    activityRef.set(null);
   }
 }

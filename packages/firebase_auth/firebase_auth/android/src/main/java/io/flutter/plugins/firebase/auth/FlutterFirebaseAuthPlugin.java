@@ -726,8 +726,8 @@ public class FlutterFirebaseAuthPlugin
                     authCredentials.put(hashCode, credential);
                   });
 
-          streamHandlers.put(channel, handler);
           channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
 
           return eventChannelName;
         });

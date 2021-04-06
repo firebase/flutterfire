@@ -78,4 +78,5 @@ public class Constants {
   public static final String AUTO_RETRIEVED_SMS_CODE_FOR_TESTING = "autoRetrievedSmsCodeForTesting";
   public static final String HOST = "host";
   public static final String PORT = "port";
+  public static final String NAME = "name";
 }
