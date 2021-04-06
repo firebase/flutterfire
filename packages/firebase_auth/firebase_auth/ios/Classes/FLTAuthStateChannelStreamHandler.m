@@ -42,7 +42,7 @@
 
 - (FlutterError *)onCancelWithArguments:(id)arguments {
   if (_listener) {
-    [_auth removeIDTokenDidChangeListener:_listener];
+    [_auth removeAuthStateDidChangeListener:_listener];
   }
   _listener = nil;
 
