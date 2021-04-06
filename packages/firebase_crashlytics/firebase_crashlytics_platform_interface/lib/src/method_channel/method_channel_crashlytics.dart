@@ -27,7 +27,6 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   //     const MethodChannel('plugins.flutter.io/firebase_analytics');
 
   bool? _isCrashlyticsCollectionEnabled;
-  String _FATAL_FLAG = 'com.firebase.crashlytics.flutter.fatal';
 
   @override
   bool get isCrashlyticsCollectionEnabled {
@@ -102,7 +101,8 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
           num currentUnixTimeSeconds =
               (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
 
-          await setCustomKey(_FATAL_FLAG, '$currentUnixTimeSeconds');
+          await setCustomKey('com.firebase.crashlytics.flutter.fatal',
+              '$currentUnixTimeSeconds');
 
           // TODO: once confirmation on the event name is received, reinstate analytics.logEvent below.
           // await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
