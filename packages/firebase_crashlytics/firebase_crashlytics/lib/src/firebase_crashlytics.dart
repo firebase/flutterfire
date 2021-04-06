@@ -78,7 +78,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
       Iterable<DiagnosticsNode> information = const [],
-      bool? printDetails}) async {
+      bool? printDetails,
+      bool fatal = false}) async {
     // Use the debug flag if printDetails is not provided
     printDetails ??= kDebugMode;
 
@@ -125,6 +126,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
+      fatal: fatal,
     );
   }
 

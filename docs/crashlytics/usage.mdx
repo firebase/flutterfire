@@ -80,6 +80,35 @@ Firebase Crashlytics will upload the crash report to the Firebase Console.
 The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
 `This is a test crash caused by calling .crash() in Dart.`
 
+## Crash types
+
+### Fatal crash
+
+If you would like to record a fatal error, you may pass in a `fatal` argument as `true`.
+The crash report will appear in your Crashlytics dashboard with the event type `Crash`, the event summary stack trace will also be referenced as a `Fatal Exception`.
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a fatal error',
+  // Pass in 'fatal' argument
+  fatal: true
+);
+```
+
+### Non-Fatal crash
+
+By default non-fatal errors are recorded. The crash report will appear in your Crashlytics dashboard with the event type `Non-fatal`, the event summary stack trace will also be referenced as a `Non-fatal Exception`.
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a non-fatal error'
+);
+```
+
 ## Add custom keys
 
 To associate key/value pairs with your crash reports, you can use the `setCustomKey` method
