@@ -154,7 +154,6 @@ void main() {
         final ref = storage.refFromURL(url);
 
         expect(ref, isA<Reference>());
-        expect(ref.fullPath, testPath);
         verify(kMockStoragePlatform.ref(testPath));
       });
 
