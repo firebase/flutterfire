@@ -1,3 +1,7 @@
+## 9.1.1
+
+ - Update a dependency to the latest release.
+
 ## 9.1.0
 
  - **FEAT**: android.tag property on Notification (#5452).

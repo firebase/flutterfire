@@ -1,3 +1,8 @@
+## 2.1.1
+
+ - **FIX**: APN message with critical sound causing a hidden error (#5653).
+ - **FIX**: fix getNotificationSettings for null safety (#5518).
+
 ## 2.1.0
 
  - **FIX**: regression in `RemoteMessage.fromMap()` causing silent failure (#5336).

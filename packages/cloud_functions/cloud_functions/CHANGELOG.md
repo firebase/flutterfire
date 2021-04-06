@@ -1,3 +1,7 @@
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
 ## 1.0.2
 
  - **FIX**: use `kIsWeb` to check platform is Web (#5369).

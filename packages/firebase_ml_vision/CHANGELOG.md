@@ -1,3 +1,14 @@
+## 0.11.0+1
+
+ - **DOCS**: update ml_vision model pods documentation.
+ - **DOCS**: Upgrading to camera plugin 0.8.1 (#5520).
+ - **DOCS**: Disable audio for camera controller. (#5502).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints on firebase_ml_vision (#5234).
+
 ## 0.11.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.

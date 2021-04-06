@@ -1,3 +1,15 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add Flutter dependency to podspec (#5455).
+ - **FEAT**: fatal error crash report (#5427).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FIX**: `checkForUnsentReports` should error if `isCrashlyticsCollectionEnabled` is false (#5187).
+
 ## 1.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

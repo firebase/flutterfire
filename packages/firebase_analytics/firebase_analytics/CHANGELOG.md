@@ -1,3 +1,8 @@
+## 8.0.0-dev.1
+
+ - **FIX**: remove screen_view from reservedEventNames (#4251).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
 ## 8.0.0-dev.0
 
 > Note: This release has breaking changes.
