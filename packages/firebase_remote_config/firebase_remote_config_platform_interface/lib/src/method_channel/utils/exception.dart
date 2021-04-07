@@ -21,8 +21,9 @@ Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
 /// `details` of the exception exist. Firebase returns specific codes and messages
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
-    PlatformException platformException,
-    [StackTrace? stackTrace]) {
+  PlatformException platformException, [
+  StackTrace? stackTrace,
+]) {
   Map<String, String>? details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;

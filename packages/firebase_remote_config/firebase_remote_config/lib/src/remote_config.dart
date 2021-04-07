@@ -10,32 +10,23 @@ part of firebase_remote_config;
 /// [RemoteConfig.instance] is async.
 // ignore: prefer_mixin
 class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
-  RemoteConfig._({this.app})
-      : super(app?.name ?? '', 'plugins.flutter.io/firebase_remote_config');
+  RemoteConfig._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
-
-  // Cached and lazily loaded instance of [FirebaseRemoteConfigPlatform]
-  // to avoid creating a [MethodChannelFirebaseRemoteConfig] when not needed
-  // or creating an instance with the default app before a user specifies an
-  // app.
-  FirebaseRemoteConfigPlatform? _delegatePackingProperty;
 
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
-  FirebaseRemoteConfigPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseRemoteConfigPlatform.instanceFor(
-      app: app,
-      pluginConstants: pluginConstants,
-    );
-  }
+  late final _delegate = FirebaseRemoteConfigPlatform.instanceFor(
+    app: app,
+    pluginConstants: pluginConstants,
+  );
 
   /// The [FirebaseApp] this instance was initialized with.
-  final FirebaseApp? app;
+  final FirebaseApp app;
 
   /// Returns an instance using the default [FirebaseApp].
   static RemoteConfig get instance {

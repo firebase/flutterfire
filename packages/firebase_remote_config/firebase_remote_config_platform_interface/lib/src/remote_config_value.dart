@@ -40,15 +40,17 @@ class RemoteConfigValue {
 
   /// Decode value to string.
   String asString() {
-    return _value != null
-        ? const Utf8Codec().decode(_value!)
+    final value = _value;
+    return value != null
+        ? const Utf8Codec().decode(value)
         : defaultValueForString;
   }
 
   /// Decode value to int.
   int asInt() {
-    if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value!);
+    final value = _value;
+    if (value != null) {
+      final String strValue = const Utf8Codec().decode(value);
       final int intValue = int.tryParse(strValue) ?? defaultValueForInt;
       return intValue;
     } else {
@@ -58,8 +60,9 @@ class RemoteConfigValue {
 
   /// Decode value to double.
   double asDouble() {
-    if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value!);
+    final value = _value;
+    if (value != null) {
+      final String strValue = const Utf8Codec().decode(value);
       final double doubleValue =
           double.tryParse(strValue) ?? defaultValueForDouble;
       return doubleValue;
@@ -70,8 +73,9 @@ class RemoteConfigValue {
 
   /// Decode value to bool.
   bool asBool() {
-    if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value!);
+    final value = _value;
+    if (value != null) {
+      final String strValue = const Utf8Codec().decode(value);
       final lowerCase = strValue.toLowerCase();
       return lowerCase == 'true' || lowerCase == '1';
     } else {
