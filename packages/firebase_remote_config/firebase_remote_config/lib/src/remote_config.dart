@@ -11,17 +11,24 @@ part of firebase_remote_config;
 // ignore: prefer_mixin
 class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   RemoteConfig._({this.app})
-      : super(app!.name, 'plugins.flutter.io/firebase_remote_config');
+      : super(app?.name ?? '', 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
+
+  // Cached and lazily loaded instance of [FirebaseRemoteConfigPlatform]
+  // to avoid creating a [MethodChannelFirebaseRemoteConfig] when not needed
+  // or creating an instance with the default app before a user specifies an
+  // app.
+  FirebaseRemoteConfigPlatform? _delegatePackingProperty;
 
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
   FirebaseRemoteConfigPlatform get _delegate {
-    return FirebaseRemoteConfigPlatform.instanceFor(
+    return _delegatePackingProperty ??=
+        FirebaseRemoteConfigPlatform.instanceFor(
       app: app,
       pluginConstants: pluginConstants,
     );
@@ -37,14 +44,9 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   /// Returns an instance using the specified [FirebaseApp].
   static RemoteConfig instanceFor({required FirebaseApp app}) {
-    if (_firebaseRemoteConfigInstances.containsKey(app.name)) {
-      return _firebaseRemoteConfigInstances[app.name]!;
-    }
-
-    RemoteConfig newInstance = RemoteConfig._(app: app);
-    _firebaseRemoteConfigInstances[app.name] = newInstance;
-
-    return newInstance;
+    return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
+      return RemoteConfig._(app: app);
+    });
   }
 
   /// Returns the [DateTime] of the last successful fetch.
@@ -52,17 +54,17 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// If no successful fetch has been made a [DateTime] representing
   /// the epoch (1970-01-01 UTC) is returned.
   DateTime get lastFetchTime {
-    return _delegate.lastFetchTime!;
+    return _delegate.lastFetchTime;
   }
 
   /// Returns the status of the last fetch attempt.
   RemoteConfigFetchStatus get lastFetchStatus {
-    return _delegate.lastFetchStatus!;
+    return _delegate.lastFetchStatus;
   }
 
   /// Returns the [RemoteConfigSettings] of the current instance.
   RemoteConfigSettings get settings {
-    return _delegate.settings!;
+    return _delegate.settings;
   }
 
   /// Makes the last fetched config available to getters.

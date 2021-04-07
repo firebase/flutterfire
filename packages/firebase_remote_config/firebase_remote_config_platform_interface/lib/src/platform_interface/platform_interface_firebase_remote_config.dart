@@ -27,7 +27,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     Map<dynamic, dynamic>? pluginConstants,
   }) {
     return FirebaseRemoteConfigPlatform.instance
-        .delegateFor(app: app)!
+        .delegateFor(app: app!)
         .setInitialValues(
           remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
         );
@@ -66,7 +66,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none
   /// default [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseRemoteConfigPlatform? delegateFor({FirebaseApp? app}) {
+  FirebaseRemoteConfigPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -77,7 +77,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// async calls.
   @protected
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic>? remoteConfigValues}) {
+      {required Map<dynamic, dynamic> remoteConfigValues}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
@@ -85,17 +85,17 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   ///
   /// If no successful fetch has been made a [DateTime] representing
   /// the epoch (1970-01-01 UTC) is returned.
-  DateTime? get lastFetchTime {
+  DateTime get lastFetchTime {
     throw UnimplementedError('lastFetchTime getter not implemented');
   }
 
   /// Returns the status of the last fetch attempt.
-  RemoteConfigFetchStatus? get lastFetchStatus {
+  RemoteConfigFetchStatus get lastFetchStatus {
     throw UnimplementedError('lastFetchStatus getter not implemented');
   }
 
   /// Returns the [RemoteConfigSettings] of the current instance.
-  RemoteConfigSettings? get settings {
+  RemoteConfigSettings get settings {
     throw UnimplementedError('settings getter not implemented');
   }
 

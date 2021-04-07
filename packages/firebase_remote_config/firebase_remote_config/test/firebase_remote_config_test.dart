@@ -19,9 +19,9 @@ void main() {
 
   late RemoteConfig remoteConfig;
   DateTime mockLastFetchTime = DateTime(2020);
-  RemoteConfigFetchStatus? mockLastFetchStatus =
+  RemoteConfigFetchStatus mockLastFetchStatus =
       RemoteConfigFetchStatus.noFetchYet;
-  RemoteConfigSettings? mockRemoteConfigSettings = RemoteConfigSettings(
+  RemoteConfigSettings mockRemoteConfigSettings = RemoteConfigSettings(
     fetchTimeout: const Duration(seconds: 10),
     minimumFetchInterval: const Duration(hours: 1),
   );
@@ -330,10 +330,27 @@ class MockFirebaseRemoteConfig extends Mock
   }
 
   @override
-  RemoteConfigFetchStatus? get lastFetchStatus {
+  RemoteConfigFetchStatus get lastFetchStatus {
     return super.noSuchMethod(Invocation.getter(#lastFetchStatus),
         returnValue: RemoteConfigFetchStatus.success,
         returnValueForMissingStub: RemoteConfigFetchStatus.success);
+  }
+
+  @override
+  DateTime get lastFetchTime {
+    return super.noSuchMethod(Invocation.getter(#lastFetchTime),
+        returnValue: DateTime(2020), returnValueForMissingStub: DateTime(2020));
+  }
+
+  @override
+  RemoteConfigSettings get settings {
+    RemoteConfigSettings mockRemoteConfigSettings = RemoteConfigSettings(
+      fetchTimeout: const Duration(seconds: 10),
+      minimumFetchInterval: const Duration(hours: 1),
+    );
+    return super.noSuchMethod(Invocation.getter(#settings),
+        returnValue: mockRemoteConfigSettings,
+        returnValueForMissingStub: mockRemoteConfigSettings);
   }
 }
 
@@ -344,7 +361,7 @@ class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
       {FirebaseApp? app, Map<dynamic, dynamic>? pluginConstants}) {}
 
   @override
-  FirebaseRemoteConfigPlatform? delegateFor({FirebaseApp? app}) {
+  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp? app}) {
     return this;
   }
 
