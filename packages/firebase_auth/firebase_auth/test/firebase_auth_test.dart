@@ -201,6 +201,21 @@ void main() {
       });
     });
 
+    group('tenantId', () {
+      test('.tenantId should call delegate method', () {
+        auth!.tenantId;
+        verify(mockAuthPlatform.tenantId);
+      });
+
+      test('set tenantId should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.tenantId = '123').thenReturn('');
+
+        auth!.tenantId = '123';
+        verify(mockAuthPlatform.tenantId);
+      });
+    });
+
     group('languageCode', () {
       test('.languageCode should call delegate method', () {
         auth!.languageCode;

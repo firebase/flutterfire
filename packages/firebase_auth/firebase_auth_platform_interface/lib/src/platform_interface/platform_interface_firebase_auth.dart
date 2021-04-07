@@ -23,6 +23,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   @protected
   final FirebaseApp? appInstance;
 
+  /// The current Auth instance's tenant ID.
+  ///
+  /// When you set the tenant ID of an Auth instance, all future sign-in/sign-up
+  /// operations will pass this tenant ID and sign in or sign up users to the
+  /// specified tenant project. When set to null, users are signed in to the
+  /// parent project. By default, this is set to `null`.
+  String? tenantId;
+
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
 

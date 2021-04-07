@@ -180,7 +180,12 @@ public class FlutterFirebaseAuthPlugin
   private FirebaseAuth getAuth(Map<String, Object> arguments) {
     String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
     FirebaseApp app = FirebaseApp.getInstance(appName);
-    return FirebaseAuth.getInstance(app);
+    FirebaseAuth auth = FirebaseAuth.getInstance(app);
+    String tenantId = (String) arguments.get(Constants.TENANT_ID);
+    if (tenantId != null) {
+      auth.setTenantId(tenantId);
+    }
+    return auth;
   }
 
   private MethodChannel.Result getMethodChannelResultHandler(String method) {
@@ -387,6 +392,7 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.PROVIDER_DATA, parseUserInfoList(firebaseUser.getProviderData()));
     output.put(Constants.REFRESH_TOKEN, ""); // native does not provide refresh tokens
     output.put(Constants.UID, firebaseUser.getUid());
+    output.put(Constants.TENANT_ID, firebaseUser.getTenantId());
 
     return output;
   }

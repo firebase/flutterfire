@@ -107,6 +107,21 @@ class FirebaseAuth extends FirebasePluginPlatform {
     await _delegate.useEmulator(host, port);
   }
 
+  /// The current Auth instance's tenant ID.
+  String? get tenantId {
+    return _delegate.tenantId;
+  }
+
+  /// Set the current Auth instance's tenant ID.
+  ///
+  /// When you set the tenant ID of an Auth instance, all future sign-in/sign-up
+  /// operations will pass this tenant ID and sign in or sign up users to the
+  /// specified tenant project. When set to null, users are signed in to the
+  /// parent project. By default, this is set to `null`.
+  set tenantId(String? tenantId) {
+    _delegate.tenantId = tenantId;
+  }
+
   /// Applies a verification code sent to the user by email or other out-of-band
   /// mechanism.
   ///
