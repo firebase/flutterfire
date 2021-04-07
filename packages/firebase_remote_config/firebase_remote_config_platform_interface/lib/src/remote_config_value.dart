@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -21,7 +19,7 @@ enum ValueSource {
 class RemoteConfigValue {
   /// Wraps a value with metadata and type-safe getters.
   @protected
-  RemoteConfigValue(this._value, this.source) : assert(source != null);
+  RemoteConfigValue(this._value, this.source);
 
   /// Default value for String
   static const String defaultValueForString = '';
@@ -35,7 +33,7 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  List<int> _value;
+  List<int>? _value;
 
   /// Indicates at which source this value came from.
   final ValueSource source;
@@ -43,14 +41,14 @@ class RemoteConfigValue {
   /// Decode value to string.
   String asString() {
     return _value != null
-        ? const Utf8Codec().decode(_value)
+        ? const Utf8Codec().decode(_value!)
         : defaultValueForString;
   }
 
   /// Decode value to int.
   int asInt() {
     if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value);
+      final String strValue = const Utf8Codec().decode(_value!);
       final int intValue = int.tryParse(strValue) ?? defaultValueForInt;
       return intValue;
     } else {
@@ -61,7 +59,7 @@ class RemoteConfigValue {
   /// Decode value to double.
   double asDouble() {
     if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value);
+      final String strValue = const Utf8Codec().decode(_value!);
       final double doubleValue =
           double.tryParse(strValue) ?? defaultValueForDouble;
       return doubleValue;
@@ -73,7 +71,7 @@ class RemoteConfigValue {
   /// Decode value to bool.
   bool asBool() {
     if (_value != null) {
-      final String strValue = const Utf8Codec().decode(_value);
+      final String strValue = const Utf8Codec().decode(_value!);
       final lowerCase = strValue.toLowerCase();
       return lowerCase == 'true' || lowerCase == '1';
     } else {

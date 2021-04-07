@@ -1,5 +1,3 @@
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -25,11 +23,11 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// Create instance using [app] using the existing implementation.
   factory FirebaseRemoteConfigPlatform.instanceFor({
-    FirebaseApp app,
-    Map<dynamic, dynamic> pluginConstants,
+    FirebaseApp? app,
+    Map<dynamic, dynamic>? pluginConstants,
   }) {
     return FirebaseRemoteConfigPlatform.instance
-        .delegateFor(app: app)
+        .delegateFor(app: app!)
         .setInitialValues(
           remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
         );
@@ -39,17 +37,17 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
+  FirebaseApp? get app {
     if (appInstance == null) {
       return Firebase.app();
     }
     return appInstance;
   }
 
-  static FirebaseRemoteConfigPlatform _instance;
+  static FirebaseRemoteConfigPlatform? _instance;
 
   /// The current default [FirebaseRemoteConfigPlatform] instance.
   ///
@@ -61,7 +59,6 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
 
   /// Sets the [FirebaseRemoteConfigPlatform] instance.
   static set instance(FirebaseRemoteConfigPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -69,7 +66,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none
   /// default [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+  FirebaseRemoteConfigPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -80,7 +77,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// async calls.
   @protected
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic> remoteConfigValues}) {
+      {required Map<dynamic, dynamic> remoteConfigValues}) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
