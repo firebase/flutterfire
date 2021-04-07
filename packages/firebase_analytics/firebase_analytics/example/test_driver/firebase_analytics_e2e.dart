@@ -56,7 +56,7 @@ void main() {
         ),
         completes);
 
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
       expect(
         FirebaseAnalytics().logEvent(
           name: 'test_event',
