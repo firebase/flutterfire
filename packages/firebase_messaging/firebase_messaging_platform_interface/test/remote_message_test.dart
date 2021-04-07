@@ -21,7 +21,6 @@ void main() {
         'messageId': 'messageId',
         'messageType': 'messageType',
         'mutableContent': true,
-        //todo just do this and a null version for message tests
         'notification': {
           'title': 'Hello FlutterFire!',
           'body': 'This notification was created from unit tests!',
@@ -44,8 +43,6 @@ void main() {
         'threadId': null,
         'ttl': null
       };
-// make an unhapy path where every nullable value is passed in?
-// also - do it so that we test constructor and fromMap
     });
 
     test('"RemoteMessage.fromMap" with every possible property expected', () {
@@ -137,7 +134,6 @@ void main() {
         'from': null,
         'messageId': null,
         'messageType': null,
-        //todo just do this and a null version for message tests
         'notification': null,
         'sentTime': null,
         'threadId': null,
