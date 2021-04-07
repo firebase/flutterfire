@@ -25,7 +25,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         super(firestore, path);
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return guard(() {
       return _delegate.set(
         CodecUtility.encodeMapData(data)!,
@@ -35,7 +35,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) async {
+  Future<void> update(Map<String, dynamic> data) {
     return guard(() => _delegate.update(CodecUtility.encodeMapData(data)!));
   }
 
@@ -49,7 +49,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   }
 
   @override
-  Future<void> delete() async {
+  Future<void> delete() {
     return guard(_delegate.delete);
   }
 

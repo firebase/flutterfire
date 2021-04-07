@@ -19,7 +19,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
         super();
 
   @override
-  Future<void> commit() async {
+  Future<void> commit() {
     return guard(_webWriteBatchDelegate.commit);
   }
 

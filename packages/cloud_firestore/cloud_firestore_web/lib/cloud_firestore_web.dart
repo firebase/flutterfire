@@ -64,7 +64,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<void> disableNetwork() async {
+  Future<void> disableNetwork() {
     return guard(_webFirestore.disableNetwork);
   }
 
@@ -73,7 +73,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
       DocumentReferenceWeb(this, _webFirestore, documentPath);
 
   @override
-  Future<void> enableNetwork() async {
+  Future<void> enableNetwork() {
     return guard(_webFirestore.enableNetwork);
   }
 
@@ -123,17 +123,17 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Enable persistence of Firestore data.
   @override
-  Future<void> enablePersistence([PersistenceSettings? settings]) async {
+  Future<void> enablePersistence([PersistenceSettings? settings]) {
     return guard(_webFirestore.enablePersistence);
   }
 
   @override
-  Future<void> terminate() async {
+  Future<void> terminate() {
     return guard(_webFirestore.terminate);
   }
 
   @override
-  Future<void> waitForPendingWrites() async {
+  Future<void> waitForPendingWrites() {
     return guard(_webFirestore.waitForPendingWrites);
   }
 }
