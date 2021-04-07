@@ -344,13 +344,15 @@ class MockFirebaseRemoteConfig extends Mock
 
   @override
   RemoteConfigSettings get settings {
-    RemoteConfigSettings mockRemoteConfigSettings = RemoteConfigSettings(
-      fetchTimeout: const Duration(seconds: 10),
-      minimumFetchInterval: const Duration(hours: 1),
-    );
     return super.noSuchMethod(Invocation.getter(#settings),
-        returnValue: mockRemoteConfigSettings,
-        returnValueForMissingStub: mockRemoteConfigSettings);
+        returnValue: RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(hours: 1),
+        ),
+        returnValueForMissingStub: RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(hours: 1),
+        ));
   }
 }
 
