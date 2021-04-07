@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
+import 'package:firebase_database/ui/firebase_sorted_list.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -183,137 +184,66 @@ void main() {
     });
   });
 
-  group('Without FirebaseList listeners', () {
-    late StreamController<Event> onChildAddedStreamController;
-    late StreamController<Event> onChildRemovedStreamController;
-    late StreamController<Event> onChildChangedStreamController;
-    late StreamController<Event> onChildMovedStreamController;
-    late StreamController<Event> onValue;
-    late MockQuery query;
-    late FirebaseList list;
-
-    setUp(() {
-      onChildAddedStreamController = StreamController<Event>();
-      onChildRemovedStreamController = StreamController<Event>();
-      onChildChangedStreamController = StreamController<Event>();
-      onChildMovedStreamController = StreamController<Event>();
-      onValue = StreamController<Event>();
-
-      query = MockQuery(
-        onChildAddedStreamController.stream,
-        onChildRemovedStreamController.stream,
-        onChildChangedStreamController.stream,
-        onChildMovedStreamController.stream,
-        onValue.stream,
-      );
-
-      list = FirebaseList(query: query);
-    });
-
-    tearDown(() {
-      onChildAddedStreamController.close();
-      onChildRemovedStreamController.close();
+  test('FirebaseList listeners are optional', () {
+    final onChildAddedStreamController = StreamController<Event>();
+    final onChildRemovedStreamController = StreamController<Event>();
+    final onChildChangedStreamController = StreamController<Event>();
+    final onChildMovedStreamController = StreamController<Event>();
+    final onValue = StreamController<Event>();
+    addTearDown(() {
       onChildChangedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildAddedStreamController.close();
       onChildMovedStreamController.close();
       onValue.close();
     });
 
-    void processChildAddedEvent(Event event) {
-      onChildAddedStreamController.add(event);
-    }
+    final query = MockQuery(
+      onChildAddedStreamController.stream,
+      onChildRemovedStreamController.stream,
+      onChildChangedStreamController.stream,
+      onChildMovedStreamController.stream,
+      onValue.stream,
+    );
+    final list = FirebaseList(query: query);
+    addTearDown(list.clear);
 
-    void processChildRemovedEvent(Event event) {
-      onChildRemovedStreamController.add(event);
-    }
+    expect(onChildAddedStreamController.hasListener, isFalse);
+    expect(onChildRemovedStreamController.hasListener, isFalse);
+    expect(onChildChangedStreamController.hasListener, isFalse);
+    expect(onChildMovedStreamController.hasListener, isFalse);
+    expect(onValue.hasListener, isFalse);
+  });
 
-    void processChildChangedEvent(Event event) {
-      onChildChangedStreamController.add(event);
-    }
-
-    void processChildMovedEvent(Event event) {
-      onChildMovedStreamController.add(event);
-    }
-
-    test('can add to empty list', () async {
-      final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
-      processChildAddedEvent(MockEvent(null, snapshot));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot]);
+  test('FirebaseSortedList listeners are optional', () {
+    final onChildAddedStreamController = StreamController<Event>();
+    final onChildRemovedStreamController = StreamController<Event>();
+    final onChildChangedStreamController = StreamController<Event>();
+    final onChildMovedStreamController = StreamController<Event>();
+    final onValue = StreamController<Event>();
+    addTearDown(() {
+      onChildChangedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildAddedStreamController.close();
+      onChildMovedStreamController.close();
+      onValue.close();
     });
 
-    test('can add before first element', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      processChildAddedEvent(MockEvent(null, snapshot2));
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot1, snapshot2]);
-    });
+    final query = MockQuery(
+      onChildAddedStreamController.stream,
+      onChildRemovedStreamController.stream,
+      onChildChangedStreamController.stream,
+      onChildMovedStreamController.stream,
+      onValue.stream,
+    );
+    final list = FirebaseSortedList(query: query, comparator: (a, b) => 0);
+    addTearDown(list.clear);
 
-    test('can add after last element', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      processChildAddedEvent(MockEvent('key10', snapshot2));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot1, snapshot2]);
-    });
-
-    test('can remove from singleton list', () async {
-      final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
-      processChildAddedEvent(MockEvent(null, snapshot));
-      processChildRemovedEvent(MockEvent(null, snapshot));
-      await Future.delayed(const Duration());
-      expect(list, isEmpty);
-    });
-
-    test('can remove former of two elements', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      processChildAddedEvent(MockEvent(null, snapshot2));
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      processChildRemovedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot2]);
-    });
-
-    test('can remove latter of two elements', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      processChildAddedEvent(MockEvent(null, snapshot2));
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      processChildRemovedEvent(MockEvent('key10', snapshot2));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot1]);
-    });
-
-    test('can change child', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2a = MockDataSnapshot('key20', 20);
-      final DataSnapshot snapshot2b = MockDataSnapshot('key20', 25);
-      final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      processChildAddedEvent(MockEvent(null, snapshot3));
-      processChildAddedEvent(MockEvent(null, snapshot2a));
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      processChildChangedEvent(MockEvent('key10', snapshot2b));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot1, snapshot2b, snapshot3]);
-    });
-    test('can move child', () async {
-      final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
-      final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      processChildAddedEvent(MockEvent(null, snapshot3));
-      processChildAddedEvent(MockEvent(null, snapshot2));
-      processChildAddedEvent(MockEvent(null, snapshot1));
-      await Future.delayed(const Duration());
-      processChildMovedEvent(MockEvent('key30', snapshot1));
-      await Future.delayed(const Duration());
-      expect(list, <DataSnapshot>[snapshot2, snapshot3, snapshot1]);
-    });
+    expect(onChildAddedStreamController.hasListener, isFalse);
+    expect(onChildRemovedStreamController.hasListener, isFalse);
+    expect(onChildChangedStreamController.hasListener, isFalse);
+    expect(onChildMovedStreamController.hasListener, isFalse);
+    expect(onValue.hasListener, isFalse);
   });
 }
 
