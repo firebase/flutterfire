@@ -6,14 +6,13 @@ part of firebase_database;
 
 /// Represents a query over the data at a particular location.
 class Query {
-  Query._(
-      {required FirebaseDatabase database,
-      required List<String> pathComponents,
-      Map<String, dynamic>? parameters})
-      : _database = database,
+  Query._({
+    required FirebaseDatabase database,
+    required List<String> pathComponents,
+    Map<String, dynamic>? parameters,
+  })  : _database = database,
         _pathComponents = pathComponents,
-        _parameters = parameters ??
-            Map<String, dynamic>.unmodifiable(<String, dynamic>{});
+        _parameters = parameters ?? const <String, dynamic>{};
 
   final FirebaseDatabase _database;
   final List<String> _pathComponents;

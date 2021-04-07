@@ -22,7 +22,7 @@ Future<void> main() async {
         return mutableData;
       });
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot?.value > value, true);
+      expect(transactionResult.dataSnapshot!.value > value, true);
     });
 
     testWidgets('setPersistenceCacheSizeBytes Integer',

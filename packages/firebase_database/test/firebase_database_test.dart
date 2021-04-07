@@ -55,23 +55,25 @@ void main() {
                 int transactionKey, final MutableData mutableData) async {
               await ServicesBinding.instance!.defaultBinaryMessenger
                   .handlePlatformMessage(
-                      channel.name,
-                      channel.codec.encodeMethodCall(
-                        MethodCall(
-                          'DoTransaction',
-                          <String, dynamic>{
-                            'transactionKey': transactionKey,
-                            'snapshot': <String, dynamic>{
-                              'key': mutableData.key,
-                              'value': mutableData.value,
-                            },
-                          },
-                        ),
-                      ), (_) {
-                updatedValue = channel.codec
-                    .decodeEnvelope(_!)['value']
-                    .cast<String, dynamic>();
-              });
+                channel.name,
+                channel.codec.encodeMethodCall(
+                  MethodCall(
+                    'DoTransaction',
+                    <String, dynamic>{
+                      'transactionKey': transactionKey,
+                      'snapshot': <String, dynamic>{
+                        'key': mutableData.key,
+                        'value': mutableData.value,
+                      },
+                    },
+                  ),
+                ),
+                (data) {
+                  updatedValue = channel.codec
+                      .decodeEnvelope(data!)['value']
+                      .cast<String, dynamic>();
+                },
+              );
             }
 
             await simulateEvent(
@@ -300,14 +302,9 @@ void main() {
           ],
         );
         expect(transactionResult.committed, equals(true));
-        expect(transactionResult.dataSnapshot!.value,
-            equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}));
         expect(
-          database.reference().child('foo').runTransaction(
-                (MutableData mutableData) => Future.value(null),
-                timeout: const Duration(),
-              ),
-          throwsA(isInstanceOf<AssertionError>()),
+          transactionResult.dataSnapshot!.value,
+          equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}),
         );
       });
     });

@@ -29,10 +29,18 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     this.onValue,
     this.onError,
   }) {
-    listen(query.onChildAdded, _onChildAdded, onError: _onError);
-    listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
-    listen(query.onChildChanged, _onChildChanged, onError: _onError);
-    listen(query.onValue, _onValue, onError: _onError);
+    if (onChildAdded != null) {
+      listen(query.onChildAdded, _onChildAdded, onError: _onError);
+    }
+    if (onChildRemoved != null) {
+      listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
+    }
+    if (onChildChanged != null) {
+      listen(query.onChildChanged, _onChildChanged, onError: _onError);
+    }
+    if (onValue != null) {
+      listen(query.onValue, _onValue, onError: _onError);
+    }
   }
 
   /// Database query used to populate the list
@@ -85,7 +93,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
   void _onChildAdded(Event event) {
     _snapshots.add(event.snapshot);
     _snapshots.sort(comparator);
-    onChildAdded?.call(_snapshots.indexOf(event.snapshot), event.snapshot);
+    onChildAdded!(_snapshots.indexOf(event.snapshot), event.snapshot);
   }
 
   void _onChildRemoved(Event event) {
@@ -95,7 +103,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     });
     final int index = _snapshots.indexOf(snapshot);
     _snapshots.removeAt(index);
-    onChildRemoved?.call(index, snapshot);
+    onChildRemoved!(index, snapshot);
   }
 
   void _onChildChanged(Event event) {
@@ -105,11 +113,11 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     });
     final int index = _snapshots.indexOf(snapshot);
     _snapshots[index] = event.snapshot;
-    onChildChanged?.call(index, event.snapshot);
+    onChildChanged!(index, event.snapshot);
   }
 
   void _onValue(Event event) {
-    onValue?.call(event.snapshot);
+    onValue!(event.snapshot);
   }
 
   void _onError(Object o) {

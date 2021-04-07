@@ -22,9 +22,9 @@ dependency_overrides:
     path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  integration_test:
-    sdk: flutter
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
   pedantic: ^1.11.0
   test: any

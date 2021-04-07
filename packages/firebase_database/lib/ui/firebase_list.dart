@@ -28,11 +28,21 @@ class FirebaseList extends ListBase<DataSnapshot>
     this.onValue,
     this.onError,
   }) {
-    listen(query.onChildAdded, _onChildAdded, onError: _onError);
-    listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
-    listen(query.onChildChanged, _onChildChanged, onError: _onError);
-    listen(query.onChildMoved, _onChildMoved, onError: _onError);
-    listen(query.onValue, _onValue, onError: _onError);
+    if (onChildAdded != null) {
+      listen(query.onChildAdded, _onChildAdded, onError: _onError);
+    }
+    if (onChildRemoved != null) {
+      listen(query.onChildRemoved, _onChildRemoved, onError: _onError);
+    }
+    if (onChildChanged != null) {
+      listen(query.onChildChanged, _onChildChanged, onError: _onError);
+    }
+    if (onChildMoved != null) {
+      listen(query.onChildMoved, _onChildMoved, onError: _onError);
+    }
+    if (onValue != null) {
+      listen(query.onValue, _onValue, onError: _onError);
+    }
   }
 
   /// Database query used to populate the list
@@ -82,51 +92,52 @@ class FirebaseList extends ListBase<DataSnapshot>
     // Do not call super.clear(), it will set the length, it's unsupported.
   }
 
-  int? _indexForKey(String key) {
+  int _indexForKey(String key) {
     for (int index = 0; index < _snapshots.length; index++) {
       if (key == _snapshots[index].key) {
         return index;
       }
     }
+
+    throw FallThroughError();
   }
 
   void _onChildAdded(Event event) {
     int index = 0;
     if (event.previousSiblingKey != null) {
-      final _index = _indexForKey(event.previousSiblingKey!);
-      index = _index! + 1;
+      index = _indexForKey(event.previousSiblingKey!) + 1;
     }
     _snapshots.insert(index, event.snapshot);
-    onChildAdded?.call(index, event.snapshot);
+    onChildAdded!(index, event.snapshot);
   }
 
   void _onChildRemoved(Event event) {
     final index = _indexForKey(event.snapshot.key);
-    _snapshots.removeAt(index!);
-    onChildRemoved?.call(index, event.snapshot);
+    _snapshots.removeAt(index);
+    onChildRemoved!(index, event.snapshot);
   }
 
   void _onChildChanged(Event event) {
     final index = _indexForKey(event.snapshot.key);
-    _snapshots[index!] = event.snapshot;
-    onChildChanged?.call(index, event.snapshot);
+    _snapshots[index] = event.snapshot;
+    onChildChanged!(index, event.snapshot);
   }
 
   void _onChildMoved(Event event) {
     final fromIndex = _indexForKey(event.snapshot.key);
-    _snapshots.removeAt(fromIndex!);
+    _snapshots.removeAt(fromIndex);
 
     int toIndex = 0;
     if (event.previousSiblingKey != null) {
       final prevIndex = _indexForKey(event.previousSiblingKey!);
-      toIndex = prevIndex! + 1;
+      toIndex = prevIndex + 1;
     }
     _snapshots.insert(toIndex, event.snapshot);
-    onChildMoved?.call(fromIndex, toIndex, event.snapshot);
+    onChildMoved!(fromIndex, toIndex, event.snapshot);
   }
 
   void _onValue(Event event) {
-    onValue?.call(event.snapshot);
+    onValue!(event.snapshot);
   }
 
   void _onError(Object o) {

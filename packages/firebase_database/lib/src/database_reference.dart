@@ -32,7 +32,9 @@ class DatabaseReference extends Query {
       return null;
     }
     return DatabaseReference._(
-        _database, (List<String>.from(_pathComponents)..removeLast()));
+      _database,
+      List<String>.from(_pathComponents)..removeLast(),
+    );
   }
 
   /// Gets a FIRDatabaseReference for the root location.
