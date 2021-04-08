@@ -9,7 +9,7 @@ final _obfuscatedStackTraceLineRegExp =
 
 /// Returns a [List] containing detailed output of each line in a stack trace.
 List<Map<String, String>> getStackTraceElements(StackTrace stackTrace) {
-  final Trace trace = Trace.from(stackTrace).terse;
+  final Trace trace = Trace.parseVM(stackTrace.toString()).terse;
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
   for (final Frame frame in trace.frames) {
