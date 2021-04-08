@@ -261,7 +261,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// This is a superset of both [authStateChanges] and [idTokenChanges]. It
   /// provides events on all user changes, such as when credentials are linked,
   /// unlinked and when updates to the user profile are made. The purpose of
-  /// this Stream is for listening to realtime updates to the user state 
+  /// this Stream is for listening to realtime updates to the user state
   /// (signed-in, signed-out, different user & token refresh) without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
