@@ -204,7 +204,7 @@ void main() {
     });
 
     group('getStackTraceElements', () {
-      test('with character index', () async {
+      test('with symbolic stack trace', () async {
         final List<String> lines = <String>[
           '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)'
         ];
@@ -219,22 +219,7 @@ void main() {
         });
       });
 
-      test('without character index', () async {
-        final List<String> lines = <String>[
-          '#0      StatefulElement.build (package:flutter/src/widgets/framework.dart:3825:27)'
-        ];
-        final StackTrace trace = StackTrace.fromString(lines.join('\n'));
-        final List<Map<String, String>> elements = getStackTraceElements(trace);
-        expect(elements.length, 1);
-        expect(elements.first, <String, String>{
-          'class': 'StatefulElement',
-          'method': 'build',
-          'file': 'package:flutter/src/widgets/framework.dart',
-          'line': '3825',
-        });
-      });
-
-      test('without class', () async {
+      test('with symbolic stack trace and without class', () async {
         final List<String> lines = <String>[
           '#0      main (package:firebase_crashlytics/test/main.dart:12)'
         ];
