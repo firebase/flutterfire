@@ -1,3 +1,7 @@
+## 1.0.3
+
+ - **DOCS**: userChanges clarification (#5698).
+
 ## 1.0.2
 
  - Update a dependency to the latest release.
