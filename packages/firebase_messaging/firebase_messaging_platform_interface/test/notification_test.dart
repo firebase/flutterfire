@@ -102,7 +102,7 @@ void main() {
   });
 
   group('AndroidNotification', () {
-    test('new instance', () {
+    test('Provide every type of argument', () {
       Map<String, dynamic>? mockAndroidNotificationMap = {
         'channelId': 'channelId',
         'clickAction': 'clickAction',
@@ -144,10 +144,26 @@ void main() {
       expect(notification.ticker, mockAndroidNotificationMap['ticker']);
       expect(notification.visibility, mockAndroidNotificationMap['visibility']);
     });
+
+    test('Provide no arguments', () {
+      AndroidNotification notification = const AndroidNotification();
+      expect(notification.channelId, null);
+      expect(notification.clickAction, null);
+      expect(notification.color, null);
+      expect(notification.count, null);
+      expect(notification.imageUrl, null);
+      expect(notification.link, null);
+      expect(
+          notification.priority, AndroidNotificationPriority.defaultPriority);
+      expect(notification.smallIcon, null);
+      expect(notification.sound, null);
+      expect(notification.ticker, null);
+      expect(notification.visibility, AndroidNotificationVisibility.private);
+    });
   });
 
   group('AppleNotification', () {
-    test('new instance', () {
+    test('Provide every type of argument', () {
       Map<String, dynamic>? mockAppleNotificationMap = {
         'badge': 'badge',
         'sound': const AppleNotificationSound(),
@@ -174,13 +190,42 @@ void main() {
       expect(notification.subtitleLocKey,
           mockAppleNotificationMap['subtitleLocKey']);
     });
+
+    test('Provide no arguments', () {
+      AppleNotification notification = const AppleNotification();
+
+      expect(notification.sound, null);
+      expect(notification.badge, null);
+      expect(notification.imageUrl, null);
+      expect(notification.subtitle, null);
+      expect(notification.subtitleLocArgs, []);
+      expect(notification.subtitleLocKey, null);
+    });
   });
 
   group('AppleNotificationSound', () {
-    test('new instance', () {
-      const testCritical = false;
-      const iosSound = AppleNotificationSound();
-      expect(iosSound.critical, equals(testCritical));
+    test('Provide every type of argument', () {
+      Map<String, dynamic> appleSoundMap = {
+        'critical': true,
+        'name': 'name',
+        'volume': 0.5
+      };
+
+      AppleNotificationSound iosSound = AppleNotificationSound(
+          critical: appleSoundMap!['critical'],
+          name: appleSoundMap!['name'],
+          volume: appleSoundMap!['volume']);
+      expect(iosSound.critical, appleSoundMap['critical']);
+      expect(iosSound.name, appleSoundMap['name']);
+      expect(iosSound.volume, appleSoundMap['volume']);
+    });
+
+    test('Provide no arguments', (){
+      AppleNotificationSound iosSound = const AppleNotificationSound();
+
+      expect(iosSound.critical, false);
+      expect(iosSound.name, null);
+      expect(iosSound.volume, 0);
     });
   });
 }
