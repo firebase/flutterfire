@@ -34,9 +34,11 @@ abstract class FirebasePluginPlatform extends PlatformInterface {
 
   /// Returns any plugin constants this plugin app instance has initialized.
   Map<dynamic, dynamic> get pluginConstants {
-    if (_constantsForPluginApps[_appName] != null &&
-        _constantsForPluginApps[_appName][_methodChannelName] != null) {
-      return _constantsForPluginApps[_appName][_methodChannelName];
+    final appConstants =
+        _constantsForPluginApps[_appName] as Map<Object?, Object?>?;
+
+    if (appConstants != null && appConstants[_methodChannelName] != null) {
+      return appConstants[_methodChannelName]! as Map<dynamic, dynamic>;
     }
 
     return {};

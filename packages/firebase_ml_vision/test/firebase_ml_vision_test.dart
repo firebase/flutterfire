@@ -99,13 +99,13 @@ void main() {
     group('$BarcodeDetector', () {
       BarcodeDetector detector;
       FirebaseVisionImage image;
-      List<dynamic> returnBarcodes;
+      List<Map<Object, dynamic>> returnBarcodes;
 
       setUp(() {
         detector = FirebaseVision.instance.barcodeDetector();
         image = FirebaseVisionImage.fromFilePath('empty');
-        returnBarcodes = <dynamic>[
-          <dynamic, dynamic>{
+        returnBarcodes = [
+          {
             'rawValue': 'hello:raw',
             'displayValue': 'hello:display',
             'format': 0,

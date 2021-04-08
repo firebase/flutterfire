@@ -24,6 +24,7 @@ DateTime? dartifyDate(Object jsObject) {
   if (util.hasProperty(jsObject, 'toDateString')) {
     try {
       var date = jsObject as dynamic;
+      // ignore: avoid_dynamic_calls
       return DateTime.fromMillisecondsSinceEpoch(date.getTime());
     }
     // TODO(rrousselGit): document why try/catch is needed here or find an alternative
