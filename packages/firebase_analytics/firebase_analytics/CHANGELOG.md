@@ -1,3 +1,7 @@
+## 8.0.0-dev.2
+
+ - **FIX**: support complex data structures like list and map on Android (#4394).
+
 ## 8.0.0-dev.1
 
  - **FIX**: remove screen_view from reservedEventNames (#4251).

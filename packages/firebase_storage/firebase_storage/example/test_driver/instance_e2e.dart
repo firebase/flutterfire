@@ -81,6 +81,15 @@ void runInstanceTests() {
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
+      test('accepts a https url with special characters', () async {
+        const url =
+            'https://firebasestorage.googleapis.com/v0/b/react-native-firebase-testing.appspot.com/o/foo+bar/file with  spaces.png?alt=media';
+        Reference ref = storage.refFromURL(url);
+        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.name, 'file with  spaces.png');
+        expect(ref.fullPath, 'foo+bar/file with  spaces.png');
+      });
+
       test('accepts a https encoded url', () async {
         const url =
             'https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Freact-native-firebase-testing.appspot.com%2Fo%2F1mbTestFile.gif%3Falt%3Dmedia';
