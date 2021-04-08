@@ -6,7 +6,6 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
-import 'utils/exception.dart';
 import 'utils/codec_utility.dart';
 
 /// A web specific implementation of [WriteBatch].
@@ -20,12 +19,8 @@ class WriteBatchWeb extends WriteBatchPlatform {
         super();
 
   @override
-  Future<void> commit() async {
-    try {
-      await _webWriteBatchDelegate.commit();
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<void> commit() {
+    return guard(_webWriteBatchDelegate.commit);
   }
 
   @override

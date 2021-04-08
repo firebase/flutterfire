@@ -2,17 +2,18 @@ name: firebase_remote_config
 description:
   Flutter plugin for Firebase Remote Config. Update your application look and feel and behaviour without
   re-releasing.
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config
-version: 0.9.0-dev.1
+homepage: https://firebase.flutter.dev/docs/remote-config/overview
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config
+version: 0.9.0-dev.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ^1.0.2
+  firebase_core: ^1.0.3
   firebase_core_platform_interface: ^4.0.0
-  firebase_remote_config_platform_interface: ^0.2.0-dev.0
+  firebase_remote_config_platform_interface: ^0.2.0-dev.1
   flutter:
     sdk: flutter
 

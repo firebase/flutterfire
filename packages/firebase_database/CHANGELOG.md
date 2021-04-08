@@ -1,3 +1,8 @@
+## 6.1.2
+
+ - **DOCS**: add example for connecting to the default database (#1306).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
 ## 6.1.1
 
  - **DOCS**: remove incorrect ARCHS in ios examples (#5450).

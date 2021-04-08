@@ -1,3 +1,7 @@
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
 ## 8.0.1
 
  - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
