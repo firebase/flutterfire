@@ -49,17 +49,28 @@ void main() {
           expect(result['url'], equals(kMockUrl));
           expect(result['dynamicLinkDomain'], equals(kMockDynamicLinkDomain));
           expect(result['handleCodeInApp'], equals(kMockHandleCodeInApp));
-          expect(result['android']['packageName'], equals(kMockPackageName));
-          expect(result['android']['installApp'], equals(kMockInstallApp));
+
           expect(
-              result['android']['minimumVersion'], equals(kMockMinimumVersion));
-          expect(result['iOS']['bundleId'], equals(kMockBundleId));
+            result['android'],
+            {
+              'packageName': kMockPackageName,
+              'installApp': kMockInstallApp,
+              'minimumVersion': kMockMinimumVersion,
+            },
+          );
+
+          expect(
+            result['iOS'],
+            {'bundleId': kMockBundleId},
+          );
         });
       });
 
       test('toString', () {
-        expect(actionCodeSettings.toString(),
-            equals('$ActionCodeSettings(${actionCodeSettings.asMap})'));
+        expect(
+          actionCodeSettings.toString(),
+          equals('$ActionCodeSettings(${actionCodeSettings.asMap})'),
+        );
       });
     });
   });

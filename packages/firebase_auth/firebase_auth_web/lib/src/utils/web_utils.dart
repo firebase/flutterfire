@@ -94,16 +94,21 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
           url: actionCodeSettings.url,
           handleCodeInApp: actionCodeSettings.handleCodeInApp);
 
-  if (actionCodeSettingsMap['android'] != null) {
+  final android = actionCodeSettingsMap['android'] as Map<Object?, Object?>?;
+
+  if (android != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(
-        packageName: actionCodeSettingsMap['android']['packageName'],
-        minimumVersion: actionCodeSettingsMap['android']['minimumVersion'],
-        installApp: actionCodeSettingsMap['android']['installApp']);
+      packageName: android['packageName'] as String?,
+      minimumVersion: android['minimumVersion'] as String?,
+      installApp: android['installApp'] as bool?,
+    );
   }
 
-  if (actionCodeSettingsMap['iOS'] != null) {
+  final ios = actionCodeSettingsMap['iOS'] as Map<Object?, Object?>?;
+  if (ios != null) {
     webActionCodeSettings.iOS = auth_interop.IosSettings(
-        bundleId: actionCodeSettingsMap['iOS']['bundleId']);
+      bundleId: ios['bundleId'] as String?,
+    );
   }
 
   return webActionCodeSettings;

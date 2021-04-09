@@ -39,7 +39,7 @@ void main() {
 
   group('$MethodChannelUserCredential()', () {
     late MethodChannelUserCredential userCredential;
-    late Map<String, dynamic> userData = kMockInitialUserData;
+    late Map<String, Object?> userData = kMockInitialUserData;
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -91,7 +91,8 @@ void main() {
       });
 
       test('set additionalUserInfo.profile to empty map', () {
-        userData['additionalUserInfo']['profile'] = null;
+        // TODO(rrousselGit): update the test to not rely on mutation, as it mutates data shared between all tests
+        (userData['additionalUserInfo']! as Map)['profile'] = null;
         MethodChannelUserCredential testUser =
             MethodChannelUserCredential(auth, userData);
 
