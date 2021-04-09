@@ -5,6 +5,8 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+// ignore: implementation_imports
+import 'package:firebase_core/src/internals.dart';
 
 import '../../firebase_auth_exception.dart';
 
@@ -28,7 +30,7 @@ Object convertPlatformException(Object exception) {
 FirebaseException platformExceptionToFirebaseAuthException(
   PlatformException platformException,
 ) {
-  Map<String, dynamic>? details = platformException.details != null
+  Map<String, Object?>? details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
 
@@ -38,22 +40,25 @@ FirebaseException platformExceptionToFirebaseAuthException(
   AuthCredential? credential;
 
   if (details != null) {
-    code = details['code'] ?? code;
-    message = details['message'] ?? message;
+    code = details['code'] as String? ?? code;
+    message = details['message'] as String? ?? message;
 
-    if (details['additionalData'] != null) {
-      if (details['additionalData']['authCredential'] != null) {
+    final additionalData =
+        details['additionalData'].safeCast<Map<Object?, Object?>>();
+
+    if (additionalData != null) {
+      final authCredential =
+          additionalData['authCredential'].safeCast<Map<Object?, Object?>>();
+
+      if (authCredential != null) {
         credential = AuthCredential(
-          providerId: details['additionalData']['authCredential']['providerId'],
-          signInMethod: details['additionalData']['authCredential']
-              ['signInMethod'],
-          token: details['additionalData']['authCredential']['token'],
+          providerId: authCredential['providerId']! as String,
+          signInMethod: authCredential['signInMethod']! as String,
+          token: authCredential['token'] as int?,
         );
       }
 
-      if (details['additionalData']['email'] != null) {
-        email = details['additionalData']['email'];
-      }
+      email = additionalData['email'] as String?;
     }
   }
   return FirebaseAuthException(

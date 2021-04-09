@@ -29,9 +29,10 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
     }
 
     if (call.method == 'Firebase#initializeApp') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
+        'name': arguments['appName'],
+        'options': arguments['options'],
         'pluginConstants': {},
       };
     }

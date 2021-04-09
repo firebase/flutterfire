@@ -26,8 +26,11 @@ String /*!*/ generateRandomEmail({
 }
 
 // Gets a custom token from the rnfirebase api for test purposes.
-Future getCustomToken(
-    String uid, Map<String, dynamic> claims, String idToken) async {
+Future<dynamic> getCustomToken(
+  String uid,
+  Map<String, dynamic> claims,
+  String idToken,
+) async {
   try {
     var path = 'https://api.rnfirebase.io/auth/user/$uid/custom-token';
     var body = json.encode(claims);
@@ -40,7 +43,7 @@ Future getCustomToken(
     );
     if (response.statusCode == 200) {
       // successful, parse json
-      var jsonData = json.decode(response.body);
+      var jsonData = json.decode(response.body) as Map<Object, Object>;
       return jsonData['token'];
     } else {
       // response wasn't successful, throw

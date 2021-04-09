@@ -26,20 +26,22 @@ abstract class UserPlatform extends PlatformInterface {
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
 
-  final Map<String, dynamic> _user;
+  // TODO(rrousselGit): deserialize the map inside the constructor instead of inside getters
+  // Otherwise errors (such as missing keys) will happen on read instead of on creation
+  final Map<String, Object?> _user;
 
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
   String? get displayName {
-    return _user['displayName'];
+    return _user['displayName'] as String?;
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
   String? get email {
-    return _user['email'];
+    return _user['email'] as String?;
   }
 
   /// Returns whether the users email address has been verified.
@@ -49,18 +51,22 @@ abstract class UserPlatform extends PlatformInterface {
   /// Once verified, call [reload] to ensure the latest user information is
   /// retrieved from Firebase.
   bool get emailVerified {
-    return _user['emailVerified'];
+    return _user['emailVerified']! as bool;
   }
 
   /// Returns whether the user is a anonymous.
   bool get isAnonymous {
-    return _user['isAnonymous'];
+    return _user['isAnonymous']! as bool;
   }
 
   /// Returns additional metadata about the user, such as their creation time.
   UserMetadata get metadata {
+    final metadata = _user['metadata']! as Map<Object?, Object?>;
+
     return UserMetadata(
-        _user['metadata']['creationTime'], _user['metadata']['lastSignInTime']);
+      metadata['creationTime'] as int?,
+      metadata['lastSignInTime'] as int?,
+    );
   }
 
   /// Returns the users phone number.
@@ -68,7 +74,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
   String? get phoneNumber {
-    return _user['phoneNumber'];
+    return _user['phoneNumber'] as String?;
   }
 
   /// Returns a photo URL for the user.
@@ -76,12 +82,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
   String? get photoURL {
-    return _user['photoURL'];
+    return _user['photoURL'] as String?;
   }
 
   /// Returns a list of user information for each linked provider.
   List<UserInfo> get providerData {
-    return List.from(_user['providerData'])
+    return List.from(_user['providerData']! as Iterable<Object?>)
         .map((data) => UserInfo(Map<String, String?>.from(data)))
         .toList();
   }
@@ -91,7 +97,7 @@ abstract class UserPlatform extends PlatformInterface {
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
   String? get refreshToken {
-    return _user['refreshToken'];
+    return _user['refreshToken'] as String?;
   }
 
   /// The current user's tenant ID.
@@ -100,12 +106,12 @@ abstract class UserPlatform extends PlatformInterface {
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
   String? get tenantId {
-    return _user['tenantId'];
+    return _user['tenantId'] as String?;
   }
 
   /// The user's unique ID.
   String get uid {
-    return _user['uid'];
+    return _user['uid']! as String;
   }
 
   /// Deletes and signs out the user.

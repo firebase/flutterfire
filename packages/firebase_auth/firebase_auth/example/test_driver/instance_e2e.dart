@@ -22,7 +22,8 @@ void runInstanceTests() {
     // generate unique email address for test run
     String regularTestEmail = generateRandomEmail();
 
-    Future<void> commonSuccessCallback(currentUserCredential) async {
+    Future<void> commonSuccessCallback(
+        UserCredential currentUserCredential) async {
       var currentUser = currentUserCredential.user;
 
       expect(currentUser, isInstanceOf<Object>());
