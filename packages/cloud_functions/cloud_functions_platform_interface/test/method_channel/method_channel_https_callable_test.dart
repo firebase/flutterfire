@@ -99,9 +99,9 @@ void main() {
 
     group('call', () {
       test('invokes native method with correct args', () async {
-        final result = await httpsCallable!.call(kParameters);
+        final result =
+            await httpsCallable!.call(kParameters) as Map<Object?, Object?>;
 
-        expect(result, isA<dynamic>());
         expect(result['foo'], 'bar');
 
         // check native method was called

@@ -38,24 +38,27 @@ void main() {
       firebaseMock = FirebaseMock(
           app: allowInterop(
         (String name) => FirebaseAppMock(
-            name: name,
-            options: FirebaseAppOptionsMock(appId: '123'),
-            functions: allowInterop(([region]) => FirebaseFunctionsMock(
-                  httpsCallable: allowInterop((functionName, [options]) {
-                    final String appName = name;
-                    return allowInterop(([data]) {
-                      Map<String, dynamic> result = loggingCall(
-                          appName: appName,
-                          functionName: functionName,
-                          region: region);
-                      return _jsPromise(FirebaseHttpsCallableResultMock(
-                          data: allowInterop((_) => result)));
-                    });
-                  }),
-                  useFunctionsEmulator: allowInterop((url) {
-                    // TODO: add mock testing for useFunctionsEmulator
-                  }),
-                ))),
+          name: name,
+          options: FirebaseAppOptionsMock(appId: '123'),
+          functions: allowInterop(
+            ([region]) => FirebaseFunctionsMock(
+              httpsCallable: allowInterop((functionName, [options]) {
+                final String appName = name;
+                return allowInterop(([data]) {
+                  Map<String, dynamic> result = loggingCall(
+                      appName: appName,
+                      functionName: functionName,
+                      region: region);
+                  return _jsPromise(FirebaseHttpsCallableResultMock(
+                      data: allowInterop((_) => result)));
+                });
+              }),
+              useFunctionsEmulator: allowInterop((url) {
+                // TODO: add mock testing for useFunctionsEmulator
+              }),
+            ),
+          ),
+        ),
       ));
 
       FirebasePlatform.instance = FirebaseCoreWeb();
@@ -66,6 +69,7 @@ void main() {
       // executed when its call method is invoked
       firebaseMock.functions = allowInterop(([app]) => FirebaseFunctionsMock(
             httpsCallable: allowInterop((functionName, [options]) {
+              // ignore: avoid_dynamic_calls
               final String appName = app == null ? '[DEFAULT]' : app.name;
               return allowInterop(([data]) {
                 Map<String, dynamic> result =

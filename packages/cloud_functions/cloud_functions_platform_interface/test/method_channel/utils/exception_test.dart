@@ -62,8 +62,11 @@ void main() {
       expect(result.code, 'unknown');
       expect(result.message, testMessage);
 
-      expect(result.details, isA<Map<String, dynamic>>());
-      expect(result.details['foo'], testAdditionalData['foo']);
+      expect(
+        result.details,
+        isA<Map<String, Object?>>()
+            .having((e) => e['foo'], '["foo"]', testAdditionalData['foo']),
+      );
     });
 
     test('details = null', () {
