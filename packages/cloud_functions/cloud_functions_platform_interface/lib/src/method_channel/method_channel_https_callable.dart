@@ -28,7 +28,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
       'parameters': parameters,
     }).catchError(catchPlatformException);
 
-    if (result is Map<dynamic, dynamic>) {
+    if (result is Map) {
       return Map<String, dynamic>.from(result);
     } else {
       return result;
