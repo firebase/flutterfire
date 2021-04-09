@@ -20,11 +20,11 @@ Future<void> main() async {
       final int value = snapshot.value ?? 0;
       final TransactionResult transactionResult =
           await ref.runTransaction((MutableData mutableData) async {
-        mutableData.value = (mutableData.value ?? 0) + 1;
+        mutableData.value = (mutableData.value as num ?? 0) + 1;
         return mutableData;
       });
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot.value > value, true);
+      expect(transactionResult.dataSnapshot.value as num > value, true);
     });
 
     testWidgets('setPersistenceCacheSizeBytes Integer',

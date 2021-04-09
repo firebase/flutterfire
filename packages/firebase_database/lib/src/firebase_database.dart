@@ -16,21 +16,22 @@ class FirebaseDatabase {
   FirebaseDatabase({this.app, this.databaseURL}) {
     if (_initialized) return;
     _channel.setMethodCallHandler((MethodCall call) async {
+      final arguments = call.arguments as Map<Object, Object>;
+
       switch (call.method) {
         case 'Event':
           final Event event = Event._(call.arguments);
-          _observers[call.arguments['handle']].add(event);
+          _observers[arguments['handle']].add(event);
           return null;
         case 'Error':
-          final DatabaseError error = DatabaseError._(call.arguments['error']);
-          _observers[call.arguments['handle']].addError(error);
+          final DatabaseError error = DatabaseError._(arguments['error']);
+          _observers[arguments['handle']].addError(error);
           return null;
         case 'DoTransaction':
           final MutableData mutableData =
-              MutableData.private(call.arguments['snapshot']);
+              MutableData.private(arguments['snapshot']);
           final MutableData updated =
-              await _transactions[call.arguments['transactionKey']](
-                  mutableData);
+              await _transactions[arguments['transactionKey']](mutableData);
           return <String, dynamic>{'value': updated.value};
         default:
           throw MissingPluginException(

@@ -54,7 +54,9 @@ void main() {
           case 'DatabaseReference#runTransaction':
             Map<String, dynamic> updatedValue;
             Future<void> simulateEvent(
-                int transactionKey, final MutableData mutableData) async {
+              int transactionKey,
+              final MutableData mutableData,
+            ) async {
               await ServicesBinding.instance.defaultBinaryMessenger
                   .handlePlatformMessage(
                       channel.name,
@@ -70,6 +72,7 @@ void main() {
                           },
                         ),
                       ), (_) {
+                // ignore: avoid_dynamic_calls
                 updatedValue = channel.codec
                     .decodeEnvelope(_)['value']
                     .cast<String, dynamic>();
@@ -282,7 +285,9 @@ void main() {
             .reference()
             .child('foo')
             .runTransaction((MutableData mutableData) {
+          // ignore: avoid_dynamic_calls
           mutableData.value['fakeKey'] =
+              // ignore: avoid_dynamic_calls
               'updated ${mutableData.value['fakeKey']}';
           return Future.value(mutableData);
         });
@@ -307,7 +312,7 @@ void main() {
         expect(
           database.reference().child('foo').runTransaction(
                 (MutableData mutableData) async => null,
-                timeout: const Duration(),
+                timeout: Duration.zero,
               ),
           throwsA(isInstanceOf<AssertionError>()),
         );
@@ -507,7 +512,7 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen((_) {}, onError: errors.add);
-        await Future<void>.delayed(const Duration());
+        await Future<void>.delayed(Duration.zero);
 
         await simulateError('Bad foo');
         await simulateError('Bad bar');
@@ -548,7 +553,7 @@ void main() {
         // Subscribe and allow subscription to complete.
         final StreamSubscription<Event> subscription =
             query.onValue.listen(events.add);
-        await Future<void>.delayed(const Duration());
+        await Future<void>.delayed(Duration.zero);
 
         await simulateEvent('1');
         await simulateEvent('2');
@@ -561,7 +566,7 @@ void main() {
 
         // Cancel subscription and allow cancellation to complete.
         await subscription.cancel();
-        await Future<void>.delayed(const Duration());
+        await Future<void>.delayed(Duration.zero);
 
         expect(
           log,
