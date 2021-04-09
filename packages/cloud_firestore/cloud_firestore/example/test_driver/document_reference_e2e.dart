@@ -302,7 +302,10 @@ void runDocumentReferenceTests() {
         expect((data['geopoint'] as GeoPoint).longitude, equals(2));
         expect(data['reference'], isA<DocumentReference>());
         expect((data['reference'] as DocumentReference).id, equals('bar'));
-        expect(data['nan'].isNaN, equals(true));
+        expect(
+          data['nan'],
+          isA<num>().having((e) => e.isNaN, 'isNaN', true),
+        );
         expect(data['infinity'], equals(double.infinity));
         expect(data['negative_infinity'], equals(double.negativeInfinity));
       });
@@ -322,13 +325,13 @@ void runDocumentReferenceTests() {
       test('throws if document does not exist', () async {
         DocumentReference document =
             await initializeTest('document-update-not-exists');
-        try {
-          await document.update({'foo': 'bar'});
-          fail('Should have thrown');
-        } catch (e) {
-          expect(e, isA<FirebaseException>());
-          expect(e.code, equals('not-found'));
-        }
+
+        await expectLater(
+          () => document.update({'foo': 'bar'}),
+          throwsA(
+            isA<FirebaseException>().having((e) => e.code, 'code', 'not-found'),
+          ),
+        );
       });
     });
   });

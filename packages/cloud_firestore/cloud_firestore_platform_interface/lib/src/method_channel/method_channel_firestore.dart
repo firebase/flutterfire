@@ -181,60 +181,69 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       const StandardMethodCodec(FirestoreMessageCodec()),
     );
 
-    snapshotStream = eventChannel.receiveBroadcastStream(
-      <String, dynamic>{'firestore': this, 'timeout': timeout.inMilliseconds},
-    ).listen(
-      (event) async {
-        if (event['error'] != null) {
-          completer.completeError(
-            FirebaseException(
-              plugin: 'cloud_firestore',
-              code: event['error']['code'],
-              message: event['error']['message'],
-            ),
-          );
-          return;
-        } else if (event['complete'] == true) {
-          completer.complete(result);
-          return;
-        }
-
-        final TransactionPlatform transaction =
-            MethodChannelTransaction(transactionId!, event['appName']);
-
-        // If the transaction fails on Dart side, then forward the error
-        // right away and only inform native side of the error.
-        try {
-          result = await transactionHandler(transaction) as T;
-        } catch (error, stack) {
-          // Signal native that a user error occurred, and finish the
-          // transaction
-          await MethodChannelFirebaseFirestore.channel
-              .invokeMethod('Transaction#storeResult', <String, dynamic>{
-            'transactionId': transactionId,
-            'result': {
-              'type': 'ERROR',
-            }
-          });
-
-          // Allow the [runTransaction] method to listen to an error.
-
-          completer.completeError(error, stack);
-
-          return;
-        }
-
-        // Send the transaction commands to Dart.
-        await MethodChannelFirebaseFirestore.channel
-            .invokeMethod('Transaction#storeResult', <String, dynamic>{
-          'transactionId': transactionId,
-          'result': {
-            'type': 'SUCCESS',
-            'commands': transaction.commands,
+    snapshotStream = eventChannel
+        .receiveBroadcastStream(
+          <String, dynamic>{
+            'firestore': this,
+            'timeout': timeout.inMilliseconds
           },
-        });
-      },
-    );
+        )
+        .map((d) => d as Map<Object?, Object?>)
+        .listen(
+          (event) async {
+            final error = event['error'] as Map<Object?, Object?>?;
+            if (error != null) {
+              completer.completeError(
+                FirebaseException(
+                  plugin: 'cloud_firestore',
+                  code: error['code']! as String,
+                  message: error['message'] as String?,
+                ),
+              );
+              return;
+            } else if (event['complete'] == true) {
+              completer.complete(result);
+              return;
+            }
+
+            final TransactionPlatform transaction = MethodChannelTransaction(
+              transactionId!,
+              event['appName']! as String,
+            );
+
+            // If the transaction fails on Dart side, then forward the error
+            // right away and only inform native side of the error.
+            try {
+              result = await transactionHandler(transaction) as T;
+            } catch (error, stack) {
+              // Signal native that a user error occurred, and finish the
+              // transaction
+              await MethodChannelFirebaseFirestore.channel
+                  .invokeMethod('Transaction#storeResult', <String, dynamic>{
+                'transactionId': transactionId,
+                'result': {
+                  'type': 'ERROR',
+                }
+              });
+
+              // Allow the [runTransaction] method to listen to an error.
+
+              completer.completeError(error, stack);
+
+              return;
+            }
+
+            // Send the transaction commands to Dart.
+            await MethodChannelFirebaseFirestore.channel
+                .invokeMethod('Transaction#storeResult', <String, dynamic>{
+              'transactionId': transactionId,
+              'result': {
+                'type': 'SUCCESS',
+                'commands': transaction.commands,
+              },
+            });
+          },
+        );
 
     return completer.future.whenComplete(() {
       snapshotStream.cancel();

@@ -50,9 +50,10 @@ void initializeMethodChannel() {
       ];
     }
     if (call.method == 'Firebase#initializeApp') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
+        'name': arguments['appName'],
+        'options': arguments['options'],
         'pluginConstants': {},
       };
     }
@@ -68,7 +69,9 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
     });
 
 void handleDocumentSnapshotsEventChannel(
-    final String id, List<MethodCall> log) {
+  final String id,
+  List<MethodCall> log,
+) {
   final name = 'plugins.flutter.io/firebase_firestore/document/$id';
   const codec = StandardMethodCodec(TestFirestoreMessageCodec());
 

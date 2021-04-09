@@ -110,24 +110,26 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         snapshotStream =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
                 .receiveBroadcastStream(
-          <String, dynamic>{
-            'reference': this,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).listen((snapshot) {
-          controller.add(
-            DocumentSnapshotPlatform(
-              firestore,
-              snapshot['path'],
-              <String, dynamic>{
-                'data': snapshot['data'],
-                'metadata': snapshot['metadata'],
-              },
-            ),
-          );
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+                  <String, dynamic>{
+                    'reference': this,
+                    'includeMetadataChanges': includeMetadataChanges,
+                  },
+                )
+                .map((d) => d as Map<Object?, Object?>)
+                .listen((Map<Object?, Object?> snapshot) {
+                  controller.add(
+                    DocumentSnapshotPlatform(
+                      firestore,
+                      snapshot['path']! as String,
+                      <String, dynamic>{
+                        'data': snapshot['data'],
+                        'metadata': snapshot['metadata'],
+                      },
+                    ),
+                  );
+                }, onError: (error, stack) {
+                  controller.addError(convertPlatformException(error), stack);
+                });
       },
       onCancel: () {
         snapshotStream?.cancel();

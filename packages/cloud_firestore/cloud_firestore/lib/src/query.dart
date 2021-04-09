@@ -192,8 +192,10 @@ class Query {
   Query limitToLast(int limit) {
     assert(limit > 0, 'limit must be a positive number greater than 0');
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
-    assert(orders.isNotEmpty,
-        'limitToLast() queries require specifying at least one orderBy() clause');
+    assert(
+      orders.isNotEmpty,
+      'limitToLast() queries require specifying at least one orderBy() clause',
+    );
     return Query._(firestore, _delegate.limitToLast(limit));
   }
 
@@ -216,35 +218,38 @@ class Query {
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
-  Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null);
+  Query orderBy(Object field, {bool descending = false}) {
     _assertValidFieldType(field);
-    assert(!_hasStartCursor(),
-        'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()');
-    assert(!_hasEndCursor(),
-        'Invalid query. You must not call endAt(), endAtDocument(), endBefore() or endBeforeDocument() before calling orderBy()');
+    assert(
+      !_hasStartCursor(),
+      'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()',
+    );
+    assert(
+      !_hasEndCursor(),
+      'Invalid query. You must not call endAt(), endAtDocument(), endBefore() or endBeforeDocument() before calling orderBy()',
+    );
 
-    final List<List<dynamic>> orders =
-        List<List<dynamic>>.from(parameters['orderBy']);
+    final orders = List<List<Object?>>.from(parameters['orderBy']);
 
-    assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
-        'OrderBy field "$field" already exists in this query');
+    assert(
+      orders.where((List<dynamic> item) => field == item[0]).isEmpty,
+      'OrderBy field "$field" already exists in this query',
+    );
 
     if (field == FieldPath.documentId) {
       orders.add([field, descending]);
     } else {
       FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field;
+          field is String ? FieldPath.fromString(field) : field as FieldPath;
       orders.add([fieldPath, descending]);
     }
 
-    final List<List<dynamic>> conditions =
-        List<List<dynamic>>.from(parameters['where']);
+    final conditions = List<List<Object?>>.from(parameters['where']);
 
     if (conditions.isNotEmpty) {
-      for (final dynamic condition in conditions) {
-        dynamic field = condition[0];
-        String operator = condition[1];
+      for (final condition in conditions) {
+        Object? field = condition[0];
+        String operator = condition[1]! as String;
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
         // inequality operator is invoked
@@ -253,19 +258,23 @@ class Query {
               'The initial orderBy() field "$orders[0][0]" has to be the same as the where() field parameter "$field" when an inequality operator is invoked.');
         }
 
-        for (final dynamic order in orders) {
-          dynamic orderField = order[0];
+        for (final order in orders) {
+          Object? orderField = order[0];
 
           // Any where() fieldPath parameter cannot match any orderBy() parameter when
           // '==' operand is invoked
           if (operator == '==') {
-            assert(field != orderField,
-                "The '$orderField' cannot be the same as your where() field parameter '$field'.");
+            assert(
+              field != orderField,
+              "The '$orderField' cannot be the same as your where() field parameter '$field'.",
+            );
           }
 
           if (field == FieldPath.documentId) {
-            assert(orderField == FieldPath.documentId,
-                "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.");
+            assert(
+              orderField == FieldPath.documentId,
+              "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
+            );
           }
         }
       }
@@ -407,7 +416,7 @@ class Query {
 
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
-    for (final dynamic condition in conditions) {
+    for (final condition in conditions) {
       dynamic field = condition[0]; // FieldPath or FieldPathType
       String operator = condition[1];
       dynamic value = condition[2];

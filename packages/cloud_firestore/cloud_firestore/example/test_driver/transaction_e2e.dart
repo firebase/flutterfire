@@ -81,15 +81,18 @@ void runTransactionTests() {
     });
 
     test('should abort if timeout is exceeded', () async {
-      try {
-        await firestore.runTransaction((Transaction transaction) async {
-          await Future.delayed(const Duration(seconds: 2));
-        }, timeout: const Duration(seconds: 1));
-        fail('Should have thrown');
-      } catch (e) {
-        expect(e, isA<FirebaseException>());
-        expect(e.code, equals('deadline-exceeded'));
-      }
+      await expectLater(
+        () {
+          return firestore.runTransaction(
+            (transaction) => Future.delayed(const Duration(seconds: 2)),
+            timeout: const Duration(seconds: 1),
+          );
+        },
+        throwsA(
+          isA<FirebaseException>()
+              .having((e) => e.code, 'code', 'deadline-exceeded'),
+        ),
+      );
     });
 
     test('should throw with exception', () async {
@@ -184,7 +187,7 @@ void runTransactionTests() {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.update(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': (documentSnapshot.data()['bar'] as num) + 1,
           });
         });
 
@@ -206,7 +209,7 @@ void runTransactionTests() {
           DocumentSnapshot documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(documentReference, {
-            'bar': documentSnapshot.data()['bar'] + 1,
+            'bar': (documentSnapshot.data()['bar'] as num) + 1,
           });
         });
 
@@ -231,7 +234,7 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': (documentSnapshot.data()['bar'] as num) + 1,
               },
               SetOptions(merge: true));
         });
@@ -254,7 +257,7 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': documentSnapshot.data()['bar'] + 1,
+                'bar': (documentSnapshot.data()['bar'] as num) + 1,
                 'baz': 'ben',
               },
               SetOptions(mergeFields: ['bar']));
@@ -283,7 +286,7 @@ void runTransactionTests() {
             await transaction.get(documentReference);
 
         transaction.set(documentReference, {
-          'foo': documentSnapshot.data()['foo'] + 1,
+          'foo': (documentSnapshot.data()['foo'] as num) + 1,
         });
 
         transaction.update(documentReference, {'bar': 'baz'});
