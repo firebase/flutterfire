@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_messaging_platform_interface/src/method_channel/method_channel_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,9 +30,10 @@ void setupFirebaseMessagingMocks([Callback? customHandlers]) {
       ];
     }
     if (call.method == 'Firebase#initializeApp') {
+      final arguments = call.arguments as Map<Object, Object>;
       return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
+        'name': arguments['appName'],
+        'options': arguments['options'],
         'pluginConstants': {},
       };
     }
@@ -49,7 +52,10 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
       return await methodCallCallback(call);
     });
 
-Future<void> testExceptionHandling(String type, Function testMethod) async {
+Future<void> testExceptionHandling(
+  String type,
+  FutureOr<void> Function() testMethod,
+) async {
   try {
     await testMethod();
   } on FirebaseException catch (_) {

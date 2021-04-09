@@ -54,7 +54,7 @@ void main() {
       handleMethodCall((call) {
         if (call.method == 'DocumentReference#update') {
           isMethodCalled = true;
-          expect(call.arguments['data']['test'], equals(data['test']));
+          expect(['test'], equals(data['test']));
         }
       });
       await _documentReference!.update(data);
@@ -127,8 +127,9 @@ void _assertGetMethodCalled(DocumentReferencePlatform? documentReference,
   bool isMethodCalled = false;
   handleMethodCall((call) {
     if (call.method == 'DocumentReference#get') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       isMethodCalled = true;
-      expect(call.arguments['source'], equals(expectedSourceString));
+      expect(arguments['source'], equals(expectedSourceString));
     }
     return {
       'path': 'test/test',
@@ -141,8 +142,11 @@ void _assertGetMethodCalled(DocumentReferencePlatform? documentReference,
   } else {
     await documentReference!.get();
   }
-  expect(isMethodCalled, isTrue,
-      reason: 'DocumentReference.get was not called');
+  expect(
+    isMethodCalled,
+    isTrue,
+    reason: 'DocumentReference.get was not called',
+  );
 }
 
 //ignore:avoid_void_async
@@ -155,9 +159,16 @@ void _assertSetDataMethodCalled(DocumentReferencePlatform? documentReference,
   }
   handleMethodCall((call) {
     if (call.method == 'DocumentReference#set') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       isMethodCalled = true;
-      expect(call.arguments['data']['test'], equals(data['test']));
-      expect(call.arguments['options']['merge'], expectedMergeValue);
+      expect(
+        (arguments['data']! as Map)['test'],
+        equals(data['test']),
+      );
+      expect(
+        (arguments['options']! as Map)['merge'],
+        expectedMergeValue,
+      );
     }
   });
   if (expectedMergeValue == null) {

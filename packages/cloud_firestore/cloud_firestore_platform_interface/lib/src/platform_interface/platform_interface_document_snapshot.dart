@@ -42,8 +42,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// Metadata about this snapshot concerning its source and if it has local
   /// modifications.
   SnapshotMetadataPlatform get metadata {
-    return SnapshotMetadataPlatform(_data['metadata']['hasPendingWrites'],
-        _data['metadata']['isFromCache']);
+    final metadata = _data['metadata'] as Map<Object?, Object?>;
+    return SnapshotMetadataPlatform(
+      metadata['hasPendingWrites']! as bool,
+      metadata['isFromCache']! as bool,
+    );
   }
 
   /// Signals whether or not the data exists.

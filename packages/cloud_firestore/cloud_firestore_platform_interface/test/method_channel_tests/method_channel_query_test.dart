@@ -126,7 +126,8 @@ void main() {
             .setMockMethodCallHandler((MethodCall methodCall) async {
           switch (methodCall.method) {
             case 'Query#get':
-              MethodChannelQuery query = methodCall.arguments['query'];
+              final arguments = methodCall.arguments as Map<Object?, Object?>;
+              var query = arguments['query']! as MethodChannelQuery;
               if (query.path == 'foo/unknown') {
                 throw PlatformException(
                     code: 'ERROR', details: {'code': 'UNKNOWN_PATH'});

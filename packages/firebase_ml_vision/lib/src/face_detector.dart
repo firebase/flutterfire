@@ -156,7 +156,7 @@ class FaceDetectorOptions {
 
 /// Represents a face detected by [FaceDetector].
 class Face {
-  Face._(dynamic data)
+  Face._(Map<String, Object> data)
       : boundingBox = Rect.fromLTWH(
           data['left'],
           data['top'],
@@ -172,28 +172,37 @@ class Face {
         _landmarks = Map<FaceLandmarkType, FaceLandmark>.fromIterables(
             FaceLandmarkType.values,
             FaceLandmarkType.values.map((FaceLandmarkType type) {
-          final List<dynamic> pos = data['landmarks'][_enumToString(type)];
-          return (pos == null)
-              ? null
-              : FaceLandmark._(
-                  type,
-                  Offset(pos[0], pos[1]),
-                );
+          return data['landmarks']
+              .safeCast<Map<Object, Object>>()
+              .guard((landmarks) {
+            final pos = landmarks[_enumToString(type)] as List<Object>;
+
+            return pos.guard((value) {
+              return FaceLandmark._(
+                type,
+                Offset(pos[0] as double, pos[1] as double),
+              );
+            });
+          });
         })),
         _contours = Map<FaceContourType, FaceContour>.fromIterables(
             FaceContourType.values,
             FaceContourType.values.map((FaceContourType type) {
-          /// added empty map to pass the tests
-          final List<dynamic> arr =
-              (data['contours'] ?? <String, dynamic>{})[_enumToString(type)];
-          return (arr == null)
-              ? null
-              : FaceContour._(
-                  type,
-                  arr
-                      .map<Offset>((dynamic pos) => Offset(pos[0], pos[1]))
-                      .toList(),
-                );
+          return data['contours']
+              .safeCast<Map<Object, Object>>()
+              .guard((contours) {
+            final arr = contours[_enumToString(type)] as List<Object>;
+
+            return arr.cast<List<Object>>().guard((arr) {
+              return FaceContour._(type, [
+                for (final pos in arr)
+                  Offset(
+                    pos[0] as double,
+                    pos[1] as double,
+                  )
+              ]);
+            });
+          });
         }));
 
   final Map<FaceLandmarkType, FaceLandmark> _landmarks;

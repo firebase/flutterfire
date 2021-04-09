@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,9 +38,11 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
     }
 
     if (call.method == 'Firebase#initializeApp') {
+      final arguments = call.arguments as Map<Object?, Object?>;
+
       return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
+        'name': arguments['appName'],
+        'options': arguments['options'],
         'pluginConstants': {
           'plugins.flutter.io/firebase_crashlytics': {
             'isCrashlyticsCollectionEnabled': true
@@ -61,7 +65,10 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
       return await methodCallCallback(call);
     });
 
-Future<void> testExceptionHandling(String type, Function testMethod) async {
+Future<void> testExceptionHandling(
+  String type,
+  FutureOr<void> Function() testMethod,
+) async {
   try {
     await testMethod();
   } on FirebaseException catch (_) {

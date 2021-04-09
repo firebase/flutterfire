@@ -41,29 +41,31 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Firebase Functions Example'),
         ),
         body: Center(
-            child: ListView.builder(
-                itemCount: fruit.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text('${fruit[index]}'),
-                  );
-                })),
+          child: ListView.builder(
+            itemCount: fruit.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text('${fruit[index]}'),
+              );
+            },
+          ),
+        ),
         floatingActionButton: Builder(
           builder: (context) => FloatingActionButton.extended(
             onPressed: () async {
               // See index.js in the functions folder for the example function we
               // are using for this example
               HttpsCallable callable = FirebaseFunctions.instance.httpsCallable(
-                  'listFruit',
-                  options: HttpsCallableOptions(
-                      timeout: const Duration(seconds: 5)));
+                'listFruit',
+                options: HttpsCallableOptions(
+                  timeout: const Duration(seconds: 5),
+                ),
+              );
 
-              await callable().then((v) {
+              await callable().then((result) {
                 setState(() {
                   fruit.clear();
-                  v.data.forEach((f) {
-                    fruit.add(f);
-                  });
+                  fruit.addAll(result.data);
                 });
               }).catchError((e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(

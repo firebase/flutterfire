@@ -16,7 +16,8 @@ void main() {
   FirebaseFirestore? firestoreSecondary;
 
   MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
-    String path = call.arguments['path'];
+    final arguments = call.arguments as Map<Object?, Object?>;
+    String path = arguments['path']! as String;
 
     if (call.method == 'DocumentReference#get' && path == 'doc/exists') {
       return {

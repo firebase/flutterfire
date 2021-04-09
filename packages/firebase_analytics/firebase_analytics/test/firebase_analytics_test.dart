@@ -167,7 +167,9 @@ void main() {
     ) {
       test('$testFunctionName works', () async {
         await testFunction();
-        expect(methodCall!.arguments['name'], testFunctionName);
+        final arguments = methodCall!.arguments as Map<Object?, Object?>;
+
+        expect(arguments['name'], testFunctionName);
       });
     }
 

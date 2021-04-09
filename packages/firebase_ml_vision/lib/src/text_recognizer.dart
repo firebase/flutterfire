@@ -122,8 +122,11 @@ class CloudTextRecognizerOptions {
 class VisionText {
   VisionText._(Map<String, dynamic> data)
       : text = data['text'],
-        blocks = List<TextBlock>.unmodifiable(data['blocks']
-            .map<TextBlock>((dynamic block) => TextBlock._(block)));
+        blocks = List<TextBlock>.unmodifiable(
+          (data['blocks'] as List<Object>).map<TextBlock>(
+            (dynamic block) => TextBlock._(block),
+          ),
+        );
 
   /// String representation of the recognized text.
   final String text;
@@ -143,15 +146,16 @@ abstract class TextContainer {
                 data['height'],
               )
             : null,
-        confidence = data['confidence']?.toDouble(),
+        confidence = (data['confidence'] as num)?.toDouble(),
         cornerPoints = List<Offset>.unmodifiable(
-            data['points'].map<Offset>((dynamic point) => Offset(
-                  point[0],
-                  point[1],
-                ))),
+            (data['points'] as List<Object>)
+                .cast<List<Object>>()
+                .map<Offset>((point) => Offset(point[0], point[1]))),
         recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
-            data['recognizedLanguages'].map<RecognizedLanguage>(
-                (dynamic language) => RecognizedLanguage._(language))),
+          (data['recognizedLanguages'] as List<Object>).map<RecognizedLanguage>(
+            (language) => RecognizedLanguage._(language),
+          ),
+        ),
         text = data['text'];
 
   /// Axis-aligned bounding rectangle of the detected text.
@@ -192,7 +196,10 @@ abstract class TextContainer {
 class TextBlock extends TextContainer {
   TextBlock._(Map<dynamic, dynamic> block)
       : lines = List<TextLine>.unmodifiable(
-            block['lines'].map<TextLine>((dynamic line) => TextLine._(line))),
+          (block['lines'] as List<Object>).map<TextLine>(
+            (dynamic line) => TextLine._(line),
+          ),
+        ),
         super._(block);
 
   /// The contents of the text block, broken down into individual lines.
@@ -202,8 +209,11 @@ class TextBlock extends TextContainer {
 /// Represents a line of text.
 class TextLine extends TextContainer {
   TextLine._(Map<dynamic, dynamic> line)
-      : elements = List<TextElement>.unmodifiable(line['elements']
-            .map<TextElement>((dynamic element) => TextElement._(element))),
+      : elements = List<TextElement>.unmodifiable(
+          (line['elements'] as List<Object>).map<TextElement>(
+            (dynamic element) => TextElement._(element),
+          ),
+        ),
         super._(line);
 
   /// The contents of this line, broken down into individual elements.

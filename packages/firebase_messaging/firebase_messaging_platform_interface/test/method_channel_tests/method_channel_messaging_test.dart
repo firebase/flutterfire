@@ -50,8 +50,9 @@ void main() {
               'sound': 1,
             };
           case 'Messaging#setAutoInitEnabled':
+            final arguments = call.arguments as Map<Object, Object>;
             return {
-              'isAutoInitEnabled': call.arguments['enabled'],
+              'isAutoInitEnabled': arguments['enabled'],
             };
           case 'Messaging#deleteInstanceID':
             return true;

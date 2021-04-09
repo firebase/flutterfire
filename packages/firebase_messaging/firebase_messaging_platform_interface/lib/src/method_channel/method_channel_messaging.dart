@@ -30,8 +30,9 @@ void _firebaseMessagingCallbackDispatcher() {
   // This is where we handle background events from the native portion of the plugin.
   _channel.setMethodCallHandler((MethodCall call) async {
     if (call.method == 'MessagingBackground#onMessage') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       final CallbackHandle handle =
-          CallbackHandle.fromRawHandle(call.arguments['userCallbackHandle']);
+          CallbackHandle.fromRawHandle(arguments['userCallbackHandle']! as int);
 
       // PluginUtilities.getCallbackFromHandle performs a lookup based on the
       // callback handle and returns a tear-off of the original callback.
@@ -40,13 +41,14 @@ void _firebaseMessagingCallbackDispatcher() {
 
       try {
         Map<String, dynamic> messageMap =
-            Map<String, dynamic>.from(call.arguments['message']);
+            Map<String, dynamic>.from(arguments['message']! as Map);
         final RemoteMessage remoteMessage = RemoteMessage.fromMap(messageMap);
         await closure(remoteMessage);
       } catch (e) {
         // ignore: avoid_print
         print(
-            'FlutterFire Messaging: An error occurred in your background messaging handler:');
+          'FlutterFire Messaging: An error occurred in your background messaging handler:',
+        );
         // ignore: avoid_print
         print(e);
       }

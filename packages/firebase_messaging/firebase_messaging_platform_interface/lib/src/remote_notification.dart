@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+// ignore: implementation_imports
+import 'package:firebase_core/src/internals.dart';
 import 'utils.dart';
 
 /// A class representing a notification which has been construted and sent to the
@@ -22,51 +24,58 @@ class RemoteNotification {
       this.bodyLocKey});
 
   /// Constructs a [RemoteNotification] from a raw Map.
-  factory RemoteNotification.fromMap(Map<String, dynamic> map) {
+  factory RemoteNotification.fromMap(Map<String, Object?> map) {
     AndroidNotification? _android;
     AppleNotification? _apple;
 
-    if (map['android'] != null) {
+    final androidMap = map['android'] as Map<Object?, Object?>?;
+
+    if (androidMap != null) {
       _android = AndroidNotification(
-        channelId: map['android']['channelId'],
-        clickAction: map['android']['clickAction'],
-        color: map['android']['color'],
-        count: map['android']['count'],
-        imageUrl: map['android']['imageUrl'],
-        link: map['android']['link'],
-        priority:
-            convertToAndroidNotificationPriority(map['android']['priority']),
-        smallIcon: map['android']['smallIcon'],
-        sound: map['android']['sound'],
-        ticker: map['android']['ticker'],
-        tag: map['android']['tag'],
+        channelId: androidMap['channelId'] as String?,
+        clickAction: androidMap['clickAction'] as String?,
+        color: androidMap['color'] as String?,
+        count: androidMap['count'] as int?,
+        imageUrl: androidMap['imageUrl'] as String?,
+        link: androidMap['link'] as String?,
+        priority: convertToAndroidNotificationPriority(
+          androidMap['priority'] as int?,
+        ),
+        smallIcon: androidMap['smallIcon'] as String?,
+        sound: androidMap['sound'] as String?,
+        ticker: androidMap['ticker'] as String?,
+        tag: androidMap['tag'] as String?,
         visibility: convertToAndroidNotificationVisibility(
-            map['android']['visibility']),
+          androidMap['visibility'] as int?,
+        ),
       );
     }
 
-    if (map['apple'] != null) {
+    final appleMap = map['apple'] as Map<Object?, Object?>?;
+    if (appleMap != null) {
       _apple = AppleNotification(
-          badge: map['apple']['badge'],
-          subtitle: map['apple']['subtitle'],
-          subtitleLocArgs: _toList(map['apple']['subtitleLocArgs']),
-          subtitleLocKey: map['apple']['subtitleLocKey'],
-          imageUrl: map['apple']['imageUrl'],
-          sound: map['apple']['sound'] == null
-              ? null
-              : AppleNotificationSound(
-                  critical: map['apple']['sound']['critical'],
-                  name: map['apple']['sound']['name'],
-                  volume: map['apple']['sound']['volume']));
+        badge: appleMap['badge'] as String?,
+        subtitle: appleMap['subtitle'] as String?,
+        subtitleLocArgs: _toList(appleMap['subtitleLocArgs']),
+        subtitleLocKey: appleMap['subtitleLocKey'] as String?,
+        imageUrl: appleMap['imageUrl'] as String?,
+        sound: appleMap['sound'].safeCast<Map<Object?, Object?>>().guard(
+              (sound) => AppleNotificationSound(
+                critical: sound['critical']! as bool,
+                name: sound['name'] as String?,
+                volume: sound['volume']! as num,
+              ),
+            ),
+      );
     }
 
     return RemoteNotification(
-      title: map['title'],
+      title: map['title'] as String?,
       titleLocArgs: _toList(map['titleLocArgs']),
-      titleLocKey: map['titleLocKey'],
-      body: map['body'],
+      titleLocKey: map['titleLocKey'] as String?,
+      body: map['body'] as String?,
       bodyLocArgs: _toList(map['bodyLocArgs']),
-      bodyLocKey: map['bodyLocKey'],
+      bodyLocKey: map['bodyLocKey'] as String?,
       android: _android,
       apple: _apple,
     );

@@ -258,7 +258,8 @@ class Movie extends StatelessWidget {
   /// Returns a list of genre movie tags.
   List<Widget> genreItems() {
     List<Widget> items = <Widget>[];
-    movie['genre'].forEach((genre) {
+    final genre = movie['genre'] as List<Object>;
+    genre.forEach((genre) {
       items.add(Padding(
         padding: const EdgeInsets.only(right: 2),
         child: Chip(
@@ -324,7 +325,7 @@ class _Likes extends State<Likes> {
           throw Exception('Document does not exist!');
         }
 
-        int updatedLikes = (txSnapshot.data()['likes'] ?? 0) + 1;
+        int updatedLikes = (txSnapshot.data()['likes'] as num ?? 0) + 1;
         transaction.update(widget.reference, {'likes': updatedLikes});
         return updatedLikes;
       });

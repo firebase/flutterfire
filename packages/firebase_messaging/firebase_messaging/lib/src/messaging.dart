@@ -52,7 +52,9 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   //
   // static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
-  static final _onMessageController =
+  // TODO(rrousselGit): make sure that there is no memory leak
+  // ignore: close_sinks
+  static final StreamController<RemoteMessage> _onMessageController =
       StreamController<RemoteMessage>.broadcast(onListen: () {
     Stream<RemoteMessage> onMessageStream =
         FirebaseMessagingPlatform.onMessage.stream;
@@ -69,7 +71,9 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// see [onBackgroundMessage].
   static Stream<RemoteMessage> get onMessage => _onMessageController.stream;
 
-  static final _onMessageOpenedAppController =
+  // TODO(rrousselGit): make sure that there is no memory leak
+  // ignore: close_sinks
+  static final StreamController<RemoteMessage> _onMessageOpenedAppController =
       StreamController<RemoteMessage>.broadcast(onListen: () {
     Stream<RemoteMessage> onMessageOpenedAppStream =
         FirebaseMessagingPlatform.onMessageOpenedApp.stream;

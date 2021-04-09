@@ -20,7 +20,8 @@ void main() {
   );
 
   MethodChannelFirebaseFirestore.channel.setMockMethodCallHandler((call) async {
-    DocumentReferencePlatform ref = call.arguments['reference'];
+    final arguments = call.arguments as Map<Object?, Object?>;
+    final ref = arguments['reference']! as DocumentReferencePlatform;
     if (call.method == 'DocumentReference#get' && ref.path == 'doc/exists') {
       return {
         'data': {

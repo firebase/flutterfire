@@ -13,6 +13,8 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+// ignore: implementation_imports
+import 'package:firebase_core/src/internals.dart';
 
 part 'src/barcode_detector.dart';
 part 'src/face_detector.dart';
