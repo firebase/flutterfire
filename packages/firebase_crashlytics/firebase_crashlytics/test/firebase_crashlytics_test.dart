@@ -82,9 +82,10 @@ void main() {
         ]);
         // Confirm that the stack trace contains current stack.
         expect(
-          methodCallLog[0].arguments['stackTraceElements'],
+          (methodCallLog[0].arguments as Map)['stackTraceElements'],
           contains(
-              containsPair('file', contains('firebase_crashlytics_test.dart'))),
+            containsPair('file', contains('firebase_crashlytics_test.dart')),
+          ),
         );
       });
 
@@ -95,14 +96,15 @@ void main() {
         await crashlytics!
             .recordError(exception, null, reason: exceptionReason);
         expect(methodCallLog[0].method, 'Crashlytics#recordError');
-        expect(methodCallLog[0].arguments['exception'], exception);
-        expect(methodCallLog[0].arguments['reason'], exceptionReason);
+        expect((methodCallLog[0].arguments as Map)['exception'], exception);
+        expect((methodCallLog[0].arguments as Map)['reason'], exceptionReason);
 
         // Confirm that the stack trace contains current stack.
         expect(
-          methodCallLog[0].arguments['stackTraceElements'],
+          (methodCallLog[0].arguments as Map)['stackTraceElements'],
           contains(
-              containsPair('file', contains('firebase_crashlytics_test.dart'))),
+            containsPair('file', contains('firebase_crashlytics_test.dart')),
+          ),
         );
       });
     });

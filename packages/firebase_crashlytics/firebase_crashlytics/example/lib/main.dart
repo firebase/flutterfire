@@ -59,7 +59,7 @@ class _MyAppState extends State<MyApp> {
     }
 
     // Pass all uncaught errors to Crashlytics.
-    Function originalOnError = FlutterError.onError;
+    final originalOnError = FlutterError.onError;
     FlutterError.onError = (FlutterErrorDetails errorDetails) async {
       await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
       // Forward to original handler.

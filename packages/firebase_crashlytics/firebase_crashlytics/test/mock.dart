@@ -35,9 +35,10 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
     }
 
     if (call.method == 'Firebase#initializeApp') {
+      final arguments = call.arguments as Map<Object?, Object?>;
       return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
+        'name': arguments['appName'],
+        'options': arguments['options'],
         'pluginConstants': {
           'plugins.flutter.io/firebase_crashlytics': {
             'isCrashlyticsCollectionEnabled': true
@@ -62,8 +63,10 @@ void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
           'unsentReports': true,
         };
       case 'Crashlytics#setCrashlyticsCollectionEnabled':
+        final arguments = methodCall.arguments as Map<Object?, Object?>;
+
         return {
-          'isCrashlyticsCollectionEnabled': methodCall.arguments['enabled']
+          'isCrashlyticsCollectionEnabled': arguments['enabled'],
         };
       case 'Crashlytics#didCrashOnPreviousExecution':
         return {
