@@ -247,7 +247,7 @@ class BarcodeDetectorOptions {
 // TODO(bparrishMines): Normalize default string values. Some values return null on iOS while Android returns empty string.
 /// Represents a single recognized barcode and its value.
 class Barcode {
-  Barcode._(Map<dynamic, dynamic> _data)
+  Barcode._(Map<Object, Object> _data)
       : boundingBox = _data['left'] != null
             ? Rect.fromLTWH(
                 _data['left'],
@@ -259,10 +259,11 @@ class Barcode {
         rawValue = _data['rawValue'],
         displayValue = _data['displayValue'],
         format = BarcodeFormat._(_data['format']),
-        _cornerPoints = _data['points']
-            ?.map<Offset>((dynamic item) => Offset(
-                  item[0],
-                  item[1],
+        _cornerPoints = (_data['points'] as List<Object>)
+            ?.cast<List<Object>>()
+            ?.map<Offset>((item) => Offset(
+                  item[0] as double,
+                  item[1] as double,
                 ))
             ?.toList(),
         valueType = BarcodeValueType.values[_data['valueType']],
@@ -458,27 +459,29 @@ class BarcodeGeoPoint {
 
 /// A person's or organization's business card.
 class BarcodeContactInfo {
-  BarcodeContactInfo._(Map<dynamic, dynamic> data)
-      : addresses = data['addresses'] == null
-            ? null
-            : List<BarcodeAddress>.unmodifiable(data['addresses']
-                .map<BarcodeAddress>((dynamic item) => BarcodeAddress._(item))),
-        emails = data['emails'] == null
-            ? null
-            : List<BarcodeEmail>.unmodifiable(data['emails']
-                .map<BarcodeEmail>((dynamic item) => BarcodeEmail._(item))),
-        name = data['name'] == null ? null : BarcodePersonName._(data['name']),
-        phones = data['phones'] == null
-            ? null
-            : List<BarcodePhone>.unmodifiable(data['phones']
-                .map<BarcodePhone>((dynamic item) => BarcodePhone._(item))),
-        urls = data['urls'] == null
-            ? null
-            : List<String>.unmodifiable(
-                data['urls'].map<String>((dynamic item) {
-                final String s = item;
-                return s;
-              })),
+  BarcodeContactInfo._(Map<Object, Object> data)
+      : addresses =
+            data['addresses'].safeCast<List<Object>>().guard((addresses) {
+          return List<BarcodeAddress>.unmodifiable(
+            addresses.map<BarcodeAddress>((item) => BarcodeAddress._(item)),
+          );
+        }),
+        emails = data['emails'].safeCast<List<Object>>().guard((emails) {
+          return List<BarcodeEmail>.unmodifiable(
+            emails.map<BarcodeEmail>((item) => BarcodeEmail._(item)),
+          );
+        }),
+        name = data['name'].guard((name) => BarcodePersonName._(data['name'])),
+        phones = data['phones'].safeCast<List<Object>>().guard((phones) {
+          return List<BarcodePhone>.unmodifiable(
+            phones.map<BarcodePhone>((dynamic item) => BarcodePhone._(item)),
+          );
+        }),
+        urls = data['urls'].safeCast<List<Object>>().guard((phones) {
+          return List<String>.unmodifiable(
+            data['urls'].safeCast<List<Object>>().cast<String>(),
+          );
+        }),
         jobTitle = data['jobTitle'],
         organization = data['organization'];
 
@@ -512,12 +515,10 @@ class BarcodeContactInfo {
 
 /// An address.
 class BarcodeAddress {
-  BarcodeAddress._(Map<dynamic, dynamic> data)
+  BarcodeAddress._(Map<Object, Object> data)
       : addressLines = List<String>.unmodifiable(
-            data['addressLines'].map<String>((dynamic item) {
-          final String s = item;
-          return s;
-        })),
+          (data['addressLines'] as List<Object>).cast<String>(),
+        ),
         type = BarcodeAddressType.values[data['type']];
 
   /// Formatted address, multiple lines when appropriate.

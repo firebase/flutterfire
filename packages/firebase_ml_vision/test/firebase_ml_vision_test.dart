@@ -99,13 +99,13 @@ void main() {
     group('$BarcodeDetector', () {
       BarcodeDetector detector;
       FirebaseVisionImage image;
-      List<dynamic> returnBarcodes;
+      List<Map<Object, dynamic>> returnBarcodes;
 
       setUp(() {
         detector = FirebaseVision.instance.barcodeDetector();
         image = FirebaseVisionImage.fromFilePath('empty');
-        returnBarcodes = <dynamic>[
-          <dynamic, dynamic>{
+        returnBarcodes = [
+          {
             'rawValue': 'hello:raw',
             'displayValue': 'hello:display',
             'format': 0,
@@ -495,6 +495,7 @@ void main() {
           await detector.detectInImage(image);
 
           expect(
+            // ignore: avoid_dynamic_calls
             log[0].arguments['options']['barcodeFormats'],
             0x0001 | 0x0010 | 0x0040,
           );
@@ -739,6 +740,7 @@ void main() {
       });
 
       test('processImage with null landmark', () async {
+        // ignore: avoid_dynamic_calls
         testFaces[0]['landmarks']['bottomMouth'] = null;
         returnValue = testFaces;
 

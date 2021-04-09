@@ -101,7 +101,7 @@ class CloudDocumentRecognizerOptions {
 
 /// Representation for start or end of a structural component.
 class DocumentTextRecognizedBreak {
-  DocumentTextRecognizedBreak._(dynamic data)
+  DocumentTextRecognizedBreak._(Map<Object, Object> data)
       : detectedBreakType =
             TextRecognizedBreakType.values[data['detectedBreakType']],
         isPrefix = data['detectedBreakPrefix'];
@@ -115,11 +115,13 @@ class DocumentTextRecognizedBreak {
 
 /// Recognized document text in a document image.
 class VisionDocumentText {
-  VisionDocumentText._(Map<String, dynamic> data)
+  VisionDocumentText._(Map<String, Object> data)
       : text = data['text'],
-        blocks = List<DocumentTextBlock>.unmodifiable(data['blocks']
-            .map<DocumentTextBlock>(
-                (dynamic block) => DocumentTextBlock._(block)));
+        blocks = List<DocumentTextBlock>.unmodifiable(
+          (data['blocks'] as List<Object>).map<DocumentTextBlock>(
+            (block) => DocumentTextBlock._(block),
+          ),
+        );
 
   /// String representation of the recognized text.
   final String text;
@@ -130,7 +132,7 @@ class VisionDocumentText {
 
 /// Abstract class for common attributes of text elements in a document image.
 abstract class DocumentTextContainer {
-  DocumentTextContainer._(Map<dynamic, dynamic> data)
+  DocumentTextContainer._(Map<Object, Object> data)
       : boundingBox = data['left'] != null
             ? Rect.fromLTWH(
                 data['left'],
@@ -139,13 +141,13 @@ abstract class DocumentTextContainer {
                 data['height'],
               )
             : null,
-        confidence = data['confidence']?.toDouble(),
+        confidence = (data['confidence'] as num)?.toDouble(),
         recognizedBreak = data['recognizedBreak'] == null
             ? null
             : DocumentTextRecognizedBreak._(data['recognizedBreak']),
         recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
-          data['recognizedLanguages'].map<RecognizedLanguage>(
-            (dynamic language) => RecognizedLanguage._(language),
+          (data['recognizedLanguages'] as List<Object>).map<RecognizedLanguage>(
+            (language) => RecognizedLanguage._(language),
           ),
         ),
         text = data['text'];
@@ -177,10 +179,12 @@ abstract class DocumentTextContainer {
 
 /// A logical element on the page.
 class DocumentTextBlock extends DocumentTextContainer {
-  DocumentTextBlock._(Map<dynamic, dynamic> block)
+  DocumentTextBlock._(Map<Object, Object> block)
       : paragraphs = List<DocumentTextParagraph>.unmodifiable(
-            block['paragraphs'].map<DocumentTextParagraph>(
-                (dynamic paragraph) => DocumentTextParagraph._(paragraph))),
+          (block['paragraphs'] as List<Object>).map<DocumentTextParagraph>(
+            (paragraph) => DocumentTextParagraph._(paragraph),
+          ),
+        ),
         super._(block);
 
   /// The content of the document block, broken down into individual paragraphs.
@@ -189,9 +193,11 @@ class DocumentTextBlock extends DocumentTextContainer {
 
 /// A structural unit of text representing a number of words in certain order.
 class DocumentTextParagraph extends DocumentTextContainer {
-  DocumentTextParagraph._(Map<dynamic, dynamic> paragraph)
-      : words = List<DocumentTextWord>.unmodifiable(paragraph['words']
-            .map<DocumentTextWord>((dynamic word) => DocumentTextWord._(word))),
+  DocumentTextParagraph._(Map<Object, Object> paragraph)
+      : words = List<DocumentTextWord>.unmodifiable(
+          (paragraph['words'] as List<Object>)
+              .map<DocumentTextWord>((word) => DocumentTextWord._(word)),
+        ),
         super._(paragraph);
 
   /// The content of the document paragraph, broken down into individual words.
@@ -200,10 +206,12 @@ class DocumentTextParagraph extends DocumentTextContainer {
 
 /// A single word representation.
 class DocumentTextWord extends DocumentTextContainer {
-  DocumentTextWord._(Map<dynamic, dynamic> word)
-      : symbols = List<DocumentTextSymbol>.unmodifiable(word['symbols']
-            .map<DocumentTextSymbol>(
-                (dynamic symbol) => DocumentTextSymbol._(symbol))),
+  DocumentTextWord._(Map<Object, Object> word)
+      : symbols = List<DocumentTextSymbol>.unmodifiable(
+          (word['symbols'] as List<Object>).map<DocumentTextSymbol>(
+            (symbol) => DocumentTextSymbol._(symbol),
+          ),
+        ),
         super._(word);
 
   /// The content of the document word, broken down into individual symbols.
