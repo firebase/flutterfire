@@ -83,7 +83,7 @@ void testsMain() {
       });
       expect(result.data, equals(data.deepList));
     });
-    
+
     test(
         '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',
         () async {
