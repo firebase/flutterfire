@@ -87,7 +87,8 @@ void testsMain() {
     test(
         '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',
         () async {
-      callable = FirebaseFunctions.instance.httpsCallable(kTestMapConvertType);
+      HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable(kTestMapConvertType);
 
       var result = await callable();
 
