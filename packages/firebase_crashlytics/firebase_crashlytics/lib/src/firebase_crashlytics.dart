@@ -135,12 +135,13 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
 
     return recordError(
-        flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
-        reason: flutterErrorDetails.context,
-        information: flutterErrorDetails.informationCollector == null
-            ? []
-            : flutterErrorDetails.informationCollector!(),
-        printDetails: false,
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
     );
   }
 
