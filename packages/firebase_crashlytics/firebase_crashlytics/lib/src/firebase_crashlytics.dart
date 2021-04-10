@@ -139,7 +139,9 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
         reason: flutterErrorDetails.context,
         information: flutterErrorDetails.informationCollector == null
             ? []
-            : flutterErrorDetails.informationCollector!());
+            : flutterErrorDetails.informationCollector!(),
+        printDetails: false,
+    );
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
