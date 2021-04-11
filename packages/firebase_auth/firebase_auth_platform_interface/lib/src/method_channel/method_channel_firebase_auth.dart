@@ -190,8 +190,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     final String smsCode = arguments['smsCode'];
 
     PhoneAuthCredential phoneAuthCredential =
-        PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode)
-            as PhoneAuthCredential;
+        PhoneAuthProvider.credentialFromToken(
+      token,
+      smsCode: smsCode,
+    );
     PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle]!;
     callbacks.verificationCompleted(phoneAuthCredential);
   }
