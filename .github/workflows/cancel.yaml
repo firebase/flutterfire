@@ -8,7 +8,7 @@ jobs:
     # temporarily use cancel-workflow-action fork pending upstream adoption of
     # https://github.com/styfle/cancel-workflow-action/pull/62
     steps:
-      - uses: mikehardy/cancel-workflow-action@0.8.0
+      - uses: styfle/cancel-workflow-action@0.9.0
         with:
           # Ids in order:
           # all_plugins
