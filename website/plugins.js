@@ -25,7 +25,7 @@ module.exports = [
     name: 'Authentication',
     pub: 'firebase_auth',
     firebase: 'auth',
-    documentation: 'https://pub.dev/documentation/firebase_auth_mocks',
+    documentation: 'https://firebase.flutter.dev/docs/auth/overview',
     support: {
       web: true,
       mobile: true,
