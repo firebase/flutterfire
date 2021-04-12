@@ -25,7 +25,19 @@ module.exports = [
     name: 'Authentication',
     pub: 'firebase_auth',
     firebase: 'auth',
-    documentation: 'https://firebase.flutter.dev/docs/auth/overview',
+    documentation: 'https://pub.dev/documentation/firebase_auth_mocks',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
+    name: 'Authentication Mocks',
+    pub: 'firebase_auth_mocks',
+    firebase: 'auth',
+    documentation: 'https://pub.dev/documentation/firebase_auth_mocks',
+    remoteSource: 'https://github.com/atn832/firebase_auth_mocks',
     support: {
       web: true,
       mobile: true,
@@ -37,6 +49,18 @@ module.exports = [
     pub: 'cloud_firestore',
     firebase: 'firestore',
     documentation: 'https://firebase.flutter.dev/docs/firestore/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
+    name: 'Cloud Firestore Mocks',
+    pub: 'cloud_firestore_mocks',
+    firebase: 'firestore',
+    documentation: 'https://pub.dev/documentation/cloud_firestore_mocks',
+    remoteSource: 'https://github.com/atn832/cloud_firestore_mocks',
     support: {
       web: true,
       mobile: true,
@@ -70,6 +94,18 @@ module.exports = [
     pub: 'firebase_storage',
     firebase: 'storage',
     documentation: 'https://firebase.flutter.dev/docs/storage/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
+    name: 'Cloud Storage Mocks',
+    pub: 'firebase_storage_mocks',
+    firebase: 'storage',
+    documentation: 'https://pub.dev/packages/firebase_storage_mocks',
+    remoteSource: 'https://github.com/atn832/firebase_storage_mocks',
     support: {
       web: true,
       mobile: true,
