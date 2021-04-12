@@ -31,7 +31,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
     return null;
   }
 
-  RegExp exp = RegExp(r'\/b\/(.*)\/o\/([a-zA-Z0-9.\/\-_]+)(.*)');
+  RegExp exp = RegExp(r'\/b\/(.*)\/o\/([a-zA-Z0-9.\/\-_\s\+]+)(.*)');
   Iterable<RegExpMatch> matches = exp.allMatches(decodedUrl);
 
   if (matches.isEmpty) {

@@ -157,7 +157,11 @@ By overriding `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFl
 catch all errors that are thrown within the Flutter framework.
 
 ```dart
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp();
+
   // Pass all uncaught errors from the framework to Crashlytics.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
