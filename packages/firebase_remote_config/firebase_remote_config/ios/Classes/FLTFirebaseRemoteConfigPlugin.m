@@ -163,7 +163,11 @@ NSString *const kFirebaseRemoteConfigChannelName = @"plugins.flutter.io/firebase
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
-      result.success(status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote);
+      if(status == FIRRemoteConfigFetchAndActivateStatusSuccessFetchedFromRemote) {
+        result.success(@(YES));
+      } else {
+        result.success(@(NO));
+      }
     }
   }];
 }
