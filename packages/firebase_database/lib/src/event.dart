@@ -19,7 +19,8 @@ enum _EventType {
 class Event {
   Event._(Map<Object, Object> _data)
       : previousSiblingKey = _data['previousSiblingKey'],
-        snapshot = DataSnapshot._(_data['snapshot'], _data['childKeys']);
+        snapshot =
+            DataSnapshot._fromJson(_data['snapshot'], _data['childKeys']);
 
   final DataSnapshot snapshot;
 
@@ -29,11 +30,24 @@ class Event {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshot {
-  DataSnapshot._(Map<Object, Object> _data, List<Object> childKeys)
-      : key = _data['key'],
-        value = {
-          for (final key in childKeys) key: (_data['value'] as Map)[key]
-        };
+  DataSnapshot._(this.key, this.value);
+
+  factory DataSnapshot._fromJson(
+    Map<Object, Object> _data,
+    List<Object> childKeys,
+  ) {
+    Object dataValue = _data['value'];
+    Object value;
+
+    if (dataValue is Map<Object, Object>) {
+      value = {for (final key in childKeys) key: dataValue[key]};
+    } else if (dataValue is List<Object>) {
+      value = childKeys.map((key) => dataValue[int.parse(key)]).toList();
+    } else {
+      value = dataValue;
+    }
+    return DataSnapshot._(_data['key'], value);
+  }
 
   /// The key of the location that generated this DataSnapshot.
   final String key;

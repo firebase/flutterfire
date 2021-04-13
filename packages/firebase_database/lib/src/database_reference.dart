@@ -165,7 +165,7 @@ class DatabaseReference extends Query {
           map['error'] != null ? DatabaseError._(map['error']) : null;
       final bool committed = map['committed'];
       final DataSnapshot dataSnapshot = map['snapshot'] != null
-          ? DataSnapshot._(map['snapshot'], map['childKeys'])
+          ? DataSnapshot._fromJson(map['snapshot'], map['childKeys'])
           : null;
 
       FirebaseDatabase._transactions.remove(transactionKey);
