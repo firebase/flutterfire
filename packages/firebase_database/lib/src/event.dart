@@ -39,7 +39,7 @@ class DataSnapshot {
   final String key;
 
   /// Returns the contents of this data snapshot as native types.
-  final Object value;
+  final dynamic value;
 }
 
 class MutableData {
