@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -15,15 +13,15 @@ import 'package:image_picker/image_picker.dart';
 import 'detector_painters.dart';
 
 class PictureScanner extends StatefulWidget {
-  const PictureScanner({Key key}) : super(key: key);
+  const PictureScanner({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _PictureScannerState();
 }
 
 class _PictureScannerState extends State<PictureScanner> {
-  File _imageFile;
-  Size _imageSize;
+  File? _imageFile;
+  Size? _imageSize;
   dynamic _scanResults;
   Detector _currentDetector = Detector.text;
   final BarcodeDetector _barcodeDetector =
@@ -44,9 +42,10 @@ class _PictureScannerState extends State<PictureScanner> {
       _imageSize = null;
     });
 
-    final File pickedImage =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
-    final File imageFile = File(pickedImage.path);
+    final picker = ImagePicker();
+
+    final pickedImage = await picker.getImage(source: ImageSource.gallery);
+    final imageFile = pickedImage != null ? File(pickedImage.path) : null;
 
     setState(() {
       _imageFile = imageFile;
@@ -124,27 +123,25 @@ class _PictureScannerState extends State<PictureScanner> {
 
     switch (_currentDetector) {
       case Detector.barcode:
-        painter = BarcodeDetectorPainter(_imageSize, results);
+        painter = BarcodeDetectorPainter(imageSize, results);
         break;
       case Detector.face:
-        painter = FaceDetectorPainter(_imageSize, results);
+        painter = FaceDetectorPainter(imageSize, results);
         break;
       case Detector.label:
-        painter = LabelDetectorPainter(_imageSize, results);
+        painter = LabelDetectorPainter(imageSize, results);
         break;
       case Detector.cloudLabel:
-        painter = LabelDetectorPainter(_imageSize, results);
+        painter = LabelDetectorPainter(imageSize, results);
         break;
       case Detector.text:
-        painter = TextDetectorPainter(_imageSize, results);
+        painter = TextDetectorPainter(imageSize, results);
         break;
       case Detector.cloudText:
-        painter = TextDetectorPainter(_imageSize, results);
+        painter = TextDetectorPainter(imageSize, results);
         break;
       case Detector.cloudDocumentText:
-        painter = DocumentTextDetectorPainter(_imageSize, results);
-        break;
-      default:
+        painter = DocumentTextDetectorPainter(imageSize, results);
         break;
     }
 
@@ -157,10 +154,12 @@ class _PictureScannerState extends State<PictureScanner> {
     return Container(
       constraints: const BoxConstraints.expand(),
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: Image.file(_imageFile).image,
-          fit: BoxFit.fill,
-        ),
+        image: _imageFile == null
+            ? null
+            : DecorationImage(
+                image: Image.file(_imageFile!).image,
+                fit: BoxFit.fill,
+              ),
       ),
       child: _imageSize == null || _scanResults == null
           ? const Center(
@@ -172,7 +171,7 @@ class _PictureScannerState extends State<PictureScanner> {
                 ),
               ),
             )
-          : _buildResults(_imageSize, _scanResults),
+          : _buildResults(_imageSize!, _scanResults),
     );
   }
 
@@ -184,8 +183,9 @@ class _PictureScannerState extends State<PictureScanner> {
         actions: <Widget>[
           PopupMenuButton<Detector>(
             onSelected: (Detector result) {
+              // _scanResults = null;
               _currentDetector = result;
-              if (_imageFile != null) _scanImage(_imageFile);
+              if (_imageFile != null) _scanImage(_imageFile!);
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<Detector>>[
               const PopupMenuItem<Detector>(
