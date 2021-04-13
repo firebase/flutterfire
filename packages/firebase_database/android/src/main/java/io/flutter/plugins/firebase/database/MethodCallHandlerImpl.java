@@ -25,11 +25,21 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+
+import android.util.Log;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.MutableData;
+
+
+
 
 class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
@@ -182,8 +192,21 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         arguments.put("handle", handle);
         arguments.put("snapshot", snapshotMap);
         arguments.put("previousSiblingKey", previousChildName);
+        arguments.put("childKeys", getChildKeys(snapshot));
         channel.invokeMethod("Event", arguments);
       }
+    }
+
+    private ArrayList<String> getChildKeys(DataSnapshot snapshot) {
+      ArrayList<String> childKeys = new ArrayList<>();
+
+      if (snapshot.hasChildren()) {
+        for (DataSnapshot child : snapshot.getChildren()) {
+          childKeys.add(child.getKey());
+        }
+      }
+
+      return childKeys;
     }
 
     @Override
