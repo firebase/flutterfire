@@ -6,7 +6,7 @@ environment:
   sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.2
   firebase_analytics:
     path: ../../firebase_analytics/firebase_analytics
   firebase_core:
@@ -25,7 +25,7 @@ dependency_overrides:
     path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  e2e: ^0.6.1
+  e2e: ^0.7.0+1
   flutter_driver:
     sdk: flutter
   flutter_test:
