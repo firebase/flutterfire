@@ -1,3 +1,26 @@
+## 8.0.0-dev.2
+
+ - **FIX**: support complex data structures like list and map on Android (#4394).
+
+## 8.0.0-dev.1
+
+ - **FIX**: remove screen_view from reservedEventNames (#4251).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
+## 8.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FEAT**: Migrate firebase_analytics to sound null safety (#5341).
+
+## 7.1.1
+
+ - Update a dependency to the latest release.
+
 ## 7.1.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.

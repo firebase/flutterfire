@@ -1,3 +1,18 @@
+## 6.1.2
+
+ - **DOCS**: add example for connecting to the default database (#1306).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
+## 6.1.1
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints for firebase_database (#5233).
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
 ## 6.1.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.

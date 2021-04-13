@@ -150,7 +150,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   }
 
   @override
-  bool operator ==(Object? other) =>
+  bool operator ==(Object other) =>
       other is FirebaseStorage &&
       other.app.name == app.name &&
       other.bucket == bucket;

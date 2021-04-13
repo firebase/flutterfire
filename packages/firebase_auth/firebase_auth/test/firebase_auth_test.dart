@@ -499,7 +499,7 @@ void main() {
       });
 
       test('PhoneAuthProvider signInWithCredential', () async {
-        final AuthCredential credential = PhoneAuthProvider.credential(
+        final PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: kMockVerificationId,
           smsCode: kMockSmsCode,
         );

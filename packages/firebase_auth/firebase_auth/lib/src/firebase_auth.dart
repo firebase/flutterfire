@@ -77,6 +77,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
+  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
   Future<void> useEmulator(String origin) async {
     assert(origin.isNotEmpty);
     String mappedOrigin = origin;
@@ -262,7 +265,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// This is a superset of both [authStateChanges] and [idTokenChanges]. It
   /// provides events on all user changes, such as when credentials are linked,
   /// unlinked and when updates to the user profile are made. The purpose of
-  /// this Stream is to for listening to realtime updates to the user without
+  /// this Stream is for listening to realtime updates to the user state
+  /// (signed-in, signed-out, different user & token refresh) without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
   Stream<User?> userChanges() => _pipeStreamChanges(_delegate.userChanges());

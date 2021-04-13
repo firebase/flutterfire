@@ -615,8 +615,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// Note: must be called before using auth methods, do not use
   /// with production credentials as local connections are unencrypted
-  Future useEmulator(String origin) =>
-      handleThenable(jsObject.useEmulator(origin));
+  void useEmulator(String origin) => jsObject.useEmulator(origin);
 
   /// Sets the current language to the default device/browser preference.
   void useDeviceLanguage() => jsObject.useDeviceLanguage();

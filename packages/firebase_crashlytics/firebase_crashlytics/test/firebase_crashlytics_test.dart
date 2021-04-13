@@ -30,9 +30,12 @@ void main() {
     tearDown(methodCallLog.clear);
 
     test('checkForUnsentReports', () async {
+      await crashlytics!.setCrashlyticsCollectionEnabled(false);
       await crashlytics!.checkForUnsentReports();
 
       expect(methodCallLog, <Matcher>[
+        isMethodCall('Crashlytics#setCrashlyticsCollectionEnabled',
+            arguments: {'enabled': false}),
         isMethodCall('Crashlytics#checkForUnsentReports', arguments: null)
       ]);
     });

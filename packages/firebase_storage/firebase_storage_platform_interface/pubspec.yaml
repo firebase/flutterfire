@@ -1,15 +1,15 @@
 name: firebase_storage_platform_interface
 description: A common platform interface for the firebase_storage plugin.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage/firebase_storage_platform_interface
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.9.1+hotfix.5"
 
 dependencies:
   collection: ^1.15.0
-  firebase_core: ^1.0.0
+  firebase_core: ^1.0.3
   flutter:
     sdk: flutter
   meta: ^1.3.0

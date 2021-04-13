@@ -60,82 +60,60 @@ void main() {
     });
 
     test('throws if .checkForUnsentReports', () {
-      try {
-        firebaseCrashlyticsPlatform!.checkForUnsentReports();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('checkForUnsentReports() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.checkForUnsentReports(),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'checkForUnsentReports() is not implemented')),
+      );
     });
 
     test('throws if .crash', () {
-      try {
-        firebaseCrashlyticsPlatform!.crash();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('crash() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.crash(),
+        throwsA(isA<UnimplementedError>()
+            .having((e) => e.message, 'message', 'crash() is not implemented')),
+      );
     });
 
     test('throws if .deleteUnsentReports', () {
-      try {
-        firebaseCrashlyticsPlatform!.deleteUnsentReports();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('deleteUnsentReports() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.deleteUnsentReports(),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'deleteUnsentReports() is not implemented')),
+      );
     });
 
     test('throws if .didCrashOnPreviousExecution', () {
-      try {
-        firebaseCrashlyticsPlatform!.didCrashOnPreviousExecution();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message,
-            equals('didCrashOnPreviousExecution() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.didCrashOnPreviousExecution(),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'didCrashOnPreviousExecution() is not implemented')),
+      );
     });
 
     test('throws if .log', () {
-      try {
-        firebaseCrashlyticsPlatform!.log('foo');
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('log() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.log('foo'),
+        throwsA(isA<UnimplementedError>()
+            .having((e) => e.message, 'message', 'log() is not implemented')),
+      );
     });
 
     test('throws if .sendUnsentReports', () {
-      try {
-        firebaseCrashlyticsPlatform!.sendUnsentReports();
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message, equals('sendUnsentReports() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () => firebaseCrashlyticsPlatform!.sendUnsentReports(),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'sendUnsentReports() is not implemented')),
+      );
     });
 
     test('throws if .setCrashlyticsCollectionEnabled', () {
-      try {
-        firebaseCrashlyticsPlatform!.setCrashlyticsCollectionEnabled(true);
-        // ignore: avoid_catching_errors, acceptable as UnimplementedError usage is correct
-      } on UnimplementedError catch (e) {
-        expect(e.message,
-            equals('setCrashlyticsCollectionEnabled() is not implemented'));
-        return;
-      }
-      fail('Should have thrown an [UnimplementedError]');
+      expect(
+        () =>
+            firebaseCrashlyticsPlatform!.setCrashlyticsCollectionEnabled(true),
+        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
+            'setCrashlyticsCollectionEnabled() is not implemented')),
+      );
     });
 
     test('throws if .setUserIdentifier', () {
