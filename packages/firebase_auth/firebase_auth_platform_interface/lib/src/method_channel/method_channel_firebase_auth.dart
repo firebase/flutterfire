@@ -369,7 +369,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     yield* _idTokenChangesListeners[app.name]!.stream;
   }
 
-
   @override
   Stream<UserPlatform?> userChanges() async* {
     yield currentUser;
