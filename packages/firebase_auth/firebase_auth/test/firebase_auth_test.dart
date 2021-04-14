@@ -7,13 +7,13 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import './mock.dart';
-
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import './mock.dart';
 
 void main() {
   setupFirebaseAuthMocks();
@@ -202,17 +202,23 @@ void main() {
     });
 
     group('tenantId', () {
-      test('.tenantId should call delegate method', () {
-        auth!.tenantId;
-        verify(mockAuthPlatform.tenantId);
-      });
-
       test('set tenantId should call delegate method', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.tenantId = '123').thenReturn('');
+        // Each test uses a unique FirebaseApp instance to avoid sharing state
+        final app = await Firebase.initializeApp(
+            name: 'tenantIdTest',
+            options: const FirebaseOptions(
+                apiKey: 'apiKey',
+                appId: 'appId',
+                messagingSenderId: 'messagingSenderId',
+                projectId: 'projectId'));
 
-        auth!.tenantId = '123';
-        verify(mockAuthPlatform.tenantId);
+        FirebaseAuthPlatform.instance =
+            FakeFirebaseAuthPlatform(tenantId: 'foo');
+        auth = FirebaseAuth.instanceFor(app: app);
+        expect(auth!.tenantId, 'foo');
+        auth!.tenantId = 'bar';
+        expect(auth!.tenantId, 'bar');
+        expect(FirebaseAuthPlatform.instance.tenantId, 'bar');
       });
     });
 
@@ -966,6 +972,28 @@ class MockFirebaseAuth extends Mock
       returnValue: neverEndingFuture<String>(),
       returnValueForMissingStub: neverEndingFuture<String>(),
     );
+  }
+}
+
+class FakeFirebaseAuthPlatform extends Fake
+    with MockPlatformInterfaceMixin
+    implements FirebaseAuthPlatform {
+  FakeFirebaseAuthPlatform({this.tenantId});
+
+  @override
+  String? tenantId;
+
+  @override
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+    return this;
+  }
+
+  @override
+  FirebaseAuthPlatform setInitialValues({
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
+  }) {
+    return this;
   }
 }
 
