@@ -19,7 +19,7 @@ Future<void> main() async {
       await Firebase.initializeApp();
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
-      final String orderTestPath = 'ordered/';
+      const String orderTestPath = 'ordered/';
 
       await Future.wait(testDocuments.map((map) {
         String child = map['ref'] as String;
