@@ -1,3 +1,3 @@
-import 'package:integration_test/integration_test_driver.dart';
+import 'package:drive/drive_driver.dart' as drive;
 
-void main() => integrationDriver();
+void main() => drive.main();
