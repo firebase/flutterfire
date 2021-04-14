@@ -25,18 +25,12 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-
-import android.util.Log;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.MutableData;
 
 class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
