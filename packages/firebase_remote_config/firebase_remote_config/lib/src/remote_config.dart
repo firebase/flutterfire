@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_remote_config;
 
 /// The entry point for accessing Remote Config.
@@ -12,29 +10,20 @@ part of firebase_remote_config;
 /// [RemoteConfig.instance] is async.
 // ignore: prefer_mixin
 class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
-  RemoteConfig._({this.app})
+  RemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
   static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
 
-  // Cached and lazily loaded instance of [FirebaseRemoteConfigPlatform]
-  // to avoid creating a [MethodChannelFirebaseRemoteConfig] when not needed
-  // or creating an instance with the default app before a user specifies an
-  // app.
-  FirebaseRemoteConfigPlatform _delegatePackingProperty;
-
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
   /// created and assigned before returning the delegate.
-  FirebaseRemoteConfigPlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseRemoteConfigPlatform.instanceFor(
-      app: app,
-      pluginConstants: pluginConstants,
-    );
-  }
+  late final _delegate = FirebaseRemoteConfigPlatform.instanceFor(
+    app: app,
+    pluginConstants: pluginConstants,
+  );
 
   /// The [FirebaseApp] this instance was initialized with.
   final FirebaseApp app;
@@ -45,17 +34,10 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Returns an instance using the specified [FirebaseApp].
-  static RemoteConfig instanceFor({@required FirebaseApp app}) {
-    assert(app != null);
-
-    if (_firebaseRemoteConfigInstances.containsKey(app.name)) {
-      return _firebaseRemoteConfigInstances[app.name];
-    }
-
-    RemoteConfig newInstance = RemoteConfig._(app: app);
-    _firebaseRemoteConfigInstances[app.name] = newInstance;
-
-    return newInstance;
+  static RemoteConfig instanceFor({required FirebaseApp app}) {
+    return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
+      return RemoteConfig._(app: app);
+    });
   }
 
   /// Returns the [DateTime] of the last successful fetch.
@@ -113,39 +95,31 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   /// Gets the value for a given key as a bool.
   bool getBool(String key) {
-    assert(key != null);
     return _delegate.getBool(key);
   }
 
   /// Gets the value for a given key as an int.
   int getInt(String key) {
-    assert(key != null);
     return _delegate.getInt(key);
   }
 
   /// Gets the value for a given key as a double.
   double getDouble(String key) {
-    assert(key != null);
     return _delegate.getDouble(key);
   }
 
   /// Gets the value for a given key as a String.
   String getString(String key) {
-    assert(key != null);
     return _delegate.getString(key);
   }
 
   /// Gets the [RemoteConfigValue] for a given key.
   RemoteConfigValue getValue(String key) {
-    assert(key != null);
     return _delegate.getValue(key);
   }
 
   /// Sets the [RemoteConfigSettings] for the current instance.
   Future<void> setConfigSettings(RemoteConfigSettings remoteConfigSettings) {
-    assert(remoteConfigSettings != null);
-    assert(remoteConfigSettings.fetchTimeout != null);
-    assert(remoteConfigSettings.minimumFetchInterval != null);
     assert(!remoteConfigSettings.fetchTimeout.isNegative);
     assert(!remoteConfigSettings.minimumFetchInterval.isNegative);
     // To be consistent with iOS fetchTimeout is set to the default
@@ -158,7 +132,6 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   /// Sets the default parameter values for the current instance.
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
-    assert(defaultParameters != null);
     return _delegate.setDefaults(defaultParameters);
   }
 }
