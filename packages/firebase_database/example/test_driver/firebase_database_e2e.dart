@@ -1,3 +1,4 @@
+// @dart = 2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -20,7 +21,7 @@ void testsMain() {
         return mutableData;
       });
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot!.value > value, true);
+      expect(transactionResult.dataSnapshot.value > value, true);
     });
 
     test('setPersistenceCacheSizeBytes Integer', () async {
