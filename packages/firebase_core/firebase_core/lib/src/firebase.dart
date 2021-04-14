@@ -59,7 +59,7 @@ class Firebase {
   // TODO(rrousselGit): remove ==/hashCode
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! Firebase) return false;
     return other.hashCode == hashCode;

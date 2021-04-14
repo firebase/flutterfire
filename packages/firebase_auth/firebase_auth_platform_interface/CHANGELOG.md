@@ -1,3 +1,15 @@
+## 4.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+
+## 4.0.2
+
+ - **DOCS**: userChanges clarification (#5698).
+
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
 ## 4.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

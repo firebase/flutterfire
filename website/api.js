@@ -60,7 +60,7 @@ async function fetchPluginVersions(plugin) {
     if (nsIndex === 0) {
       return ['', nsVersions[0]];
     }
-    
+
     return [sorted[nsIndex - 1], nsVersions[nsVersions.length - 1]];
   } catch (e) {
     console.log(`Failed to load version for plugin "${plugin}".`);

@@ -1,3 +1,22 @@
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Migrate firebase_performance to sound null safety (#5540).
+
+## 0.6.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.6.0+1
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: enable lints in firebase_performance (#5253).
+ - **CHORE**: publish packages.
+
 ## 0.6.0
 
  - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.

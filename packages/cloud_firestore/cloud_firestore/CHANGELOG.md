@@ -1,3 +1,19 @@
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
+## 1.0.4
+
+ - **FIX**: made QueryDocumentSnapshot.data() non-nullable (#5476).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
+## 1.0.3
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+
 ## 1.0.2
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

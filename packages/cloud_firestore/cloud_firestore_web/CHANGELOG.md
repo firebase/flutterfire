@@ -1,3 +1,17 @@
+## 1.0.5
+
+ - **FIX**: conditionally pass options to docChanges (#5751).
+
+## 1.0.4
+
+ - Update a dependency to the latest release.
+
+## 1.0.3
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+
 ## 1.0.2
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

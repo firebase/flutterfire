@@ -88,7 +88,7 @@ class DocumentReference {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is DocumentReference &&
       other.firestore == firestore &&
       other.path == path;

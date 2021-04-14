@@ -27,8 +27,7 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a new [PhoneAuthCredential] from a provided [verificationId] and
   /// [smsCode].
-  // TODO(rrousselGit): Should this return a PhoneAuthCredential instead?
-  static AuthCredential credential({
+  static PhoneAuthCredential credential({
     required String verificationId,
     required String smsCode,
   }) {
@@ -37,7 +36,7 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a [PhoneAuthCredential] from an internal token, where the ID
   /// relates to a natively stored credential.
-  static AuthCredential credentialFromToken(int token, {String? smsCode}) {
+  static PhoneAuthCredential credentialFromToken(int token, {String? smsCode}) {
     return PhoneAuthCredential._credentialFromToken(token, smsCode: smsCode);
   }
 }

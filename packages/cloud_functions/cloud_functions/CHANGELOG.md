@@ -1,3 +1,15 @@
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
+## 1.0.2
+
+ - **FIX**: use `kIsWeb` to check platform is Web (#5369).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+
 ## 1.0.1
 
  - **FIX**: use `kIsWeb` to check platform is Web (#5369).
