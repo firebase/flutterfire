@@ -358,16 +358,23 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Stream<UserPlatform?> authStateChanges() =>
-      _authStateChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> authStateChanges() async* {
+    yield currentUser;
+    yield* _authStateChangesListeners[app.name]!.stream;
+  }
 
   @override
-  Stream<UserPlatform?> idTokenChanges() =>
-      _idTokenChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> idTokenChanges() async* {
+    yield currentUser;
+    yield* _idTokenChangesListeners[app.name]!.stream;
+  }
+
 
   @override
-  Stream<UserPlatform?> userChanges() =>
-      _userChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> userChanges() async* {
+    yield currentUser;
+    yield* _userChangesListeners[app.name]!.stream;
+  }
 
   @override
   Future<void> sendPasswordResetEmail(
