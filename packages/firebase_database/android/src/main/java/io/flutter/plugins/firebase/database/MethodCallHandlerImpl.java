@@ -38,9 +38,6 @@ import android.util.Log;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.MutableData;
 
-
-
-
 class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
   private static final String TAG = "MethodCallHandlerImpl";
