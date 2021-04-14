@@ -5,12 +5,48 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+final List<Map<String, Object>> testDocuments = [
+  {'ref': 'one', 'value': 23},
+  {'ref': 'two', 'value': 56},
+  {'ref': 'three', 'value': 9},
+  {'ref': 'four', 'value': 40}
+];
 Future<void> main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
 
   group('$FirebaseDatabase', () {
-    setUp(() async {
+    setUpAll(() async {
       await Firebase.initializeApp();
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+
+      final String orderTestPath = 'ordered/';
+
+      await Future.wait(testDocuments.map((map) {
+        String child = map['ref'] as String;
+        return database.reference().child('$orderTestPath/$child').set(map);
+      }));
+    });
+
+    testWidgets('correct order returned from query',
+        (WidgetTester tester) async {
+      Event event = await FirebaseDatabase.instance
+          .reference()
+          .child('ordered')
+          .orderByChild('value')
+          .onValue
+          .first;
+
+      final ordered = testDocuments.map((doc) => doc['value'] as int).toList();
+      ordered.sort();
+
+      final documents = event.snapshot.value.values
+          .map((doc) => doc['value'] as int)
+          .toList();
+
+      expect(documents[0], ordered[0]);
+      expect(documents[1], ordered[1]);
+      expect(documents[2], ordered[2]);
+      expect(documents[3], ordered[3]);
     });
 
     testWidgets('runTransaction', (WidgetTester tester) async {
