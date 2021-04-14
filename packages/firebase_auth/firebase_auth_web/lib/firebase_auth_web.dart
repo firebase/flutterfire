@@ -25,7 +25,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       : _webAuth = null,
         super(appInstance: null);
 
-  @override
   Completer<void> _initialized = Completer();
 
   /// The entry point for the [FirebaseAuthWeb] class.
