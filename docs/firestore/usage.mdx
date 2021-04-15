@@ -153,7 +153,7 @@ class UserInformation extends StatelessWidget {
         }
 
         return new ListView(
-          children: snapshot.data.documents.map((DocumentSnapshot document) {
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
             return new ListTile(
               title: new Text(document.data()['full_name']),
               subtitle: new Text(document.data()['company']),
@@ -191,7 +191,7 @@ which returns a `List` containing [`DocumentSnapshot`](!cloud_firestore.Document
 FirebaseFirestore.instance
     .collection('users')
     .get()
-    .then((QuerySnapshot querySnapshot) => {
+    .then((QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((doc) {
             print(doc["first_name"]);
         });
@@ -525,8 +525,8 @@ Future<void> deleteField() {
   return users
     .doc('ABC123')
     .update({'age': FieldValue.delete()})
-    .then((value) => print("User Deleted"))
-    .catchError((error) => print("Failed to delete user: $error"));
+    .then((value) => print("User's Property Deleted"))
+    .catchError((error) => print("Failed to delete user's property: $error"));
 }
 ```
 
@@ -688,6 +688,8 @@ await FirebaseFirestore.instance.enableNetwork()
 If you are using the local [Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
 connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
 immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
+
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
 > On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
 

@@ -65,8 +65,13 @@ class FlutterFirebaseStorageTask {
   static void cancelInProgressTasks() {
     synchronized (inProgressTasks) {
       for (int i = 0; i < inProgressTasks.size(); i++) {
-        int key = inProgressTasks.keyAt(i);
-        FlutterFirebaseStorageTask task = inProgressTasks.get(key);
+        FlutterFirebaseStorageTask task = null;
+        try {
+          task = inProgressTasks.valueAt(i);
+        } catch (ArrayIndexOutOfBoundsException e) {
+          // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
+          // Can safely ignore exception for now, see https://github.com/FirebaseExtended/flutterfire/issues/4334
+        }
         if (task != null) {
           task.destroy();
         }
@@ -139,7 +144,12 @@ class FlutterFirebaseStorageTask {
       if (storageTask.isInProgress() || storageTask.isPaused()) {
         storageTask.cancel();
       }
-      inProgressTasks.remove(handle);
+      try {
+        inProgressTasks.remove(handle);
+      } catch (ArrayIndexOutOfBoundsException e) {
+        // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
+        // Can safely ignore exception for now, see https://github.com/FirebaseExtended/flutterfire/issues/4334
+      }
     }
 
     synchronized (cancelSyncObject) {

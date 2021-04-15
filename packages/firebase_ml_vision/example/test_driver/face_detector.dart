@@ -20,7 +20,7 @@ void faceDetectorTests() {
 
       expect(faces.length, 1);
       expect(
-        faces[0].getContour(FaceContourType.allPoints).positionsList,
+        faces[0].getContour(FaceContourType.allPoints)!.positionsList,
         isNotEmpty,
       );
     });

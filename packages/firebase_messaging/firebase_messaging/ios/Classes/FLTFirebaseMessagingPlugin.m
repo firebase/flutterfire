@@ -86,7 +86,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       details = @{
         kMessagingArgumentCode : code,
         kMessagingArgumentMessage : message,
-        kMessagingArgumentAdditionalData : @{},
       };
     }
 
@@ -164,7 +163,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #pragma mark - Firebase Messaging Delegate
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
-    didReceiveRegistrationToken:(nonnull NSString *)fcmToken {
+    didReceiveRegistrationToken:(nullable NSString *)fcmToken {
   // Don't crash if the token is reset.
   if (fcmToken == nil) {
     return;
@@ -977,7 +976,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     return @{
       kMessagingArgumentCode : code,
       kMessagingArgumentMessage : message,
-      kMessagingArgumentAdditionalData : @{},
     };
   }
 
@@ -1012,7 +1010,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   return @{
     kMessagingArgumentCode : code,
     kMessagingArgumentMessage : message,
-    kMessagingArgumentAdditionalData : @{},
   };
 }
 

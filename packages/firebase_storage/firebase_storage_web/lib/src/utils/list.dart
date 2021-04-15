@@ -8,7 +8,7 @@ import '../interop/storage.dart' as storage_interop;
 import '../list_result_web.dart';
 
 /// Converts ListOptions from the plugin to ListOptions for the JS interop layer.
-storage_interop.ListOptions listOptionsToFbListOptions(ListOptions options) {
+storage_interop.ListOptions? listOptionsToFbListOptions(ListOptions? options) {
   if (options == null) {
     return null;
   }
@@ -22,15 +22,10 @@ storage_interop.ListOptions listOptionsToFbListOptions(ListOptions options) {
 /// Converts a ListResult from the JS interop layer to a ListResultWeb for the plugin.
 ListResultWeb fbListResultToListResultWeb(
     FirebaseStoragePlatform storage, storage_interop.ListResult result) {
-  if (result == null) {
-    return null;
-  }
-
   return ListResultWeb(
     storage,
     nextPageToken: result.nextPageToken,
-    items: result.items?.map<String>((item) => item.fullPath)?.toList(),
-    prefixes:
-        result.prefixes?.map<String>((prefix) => prefix.fullPath)?.toList(),
+    items: result.items.map<String>((item) => item.fullPath).toList(),
+    prefixes: result.prefixes.map<String>((prefix) => prefix.fullPath).toList(),
   );
 }

@@ -13,4 +13,4 @@ import 'package:js/js.dart';
 import 'storage_interop.dart';
 
 @JS()
-external StorageJsImpl storage([AppJsImpl /*?*/ app]);
+external StorageJsImpl storage([AppJsImpl? app]);

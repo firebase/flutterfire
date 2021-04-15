@@ -8,9 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
-import 'package:mockito/mockito.dart';
 
 const String testString = 'Hello World.';
 MockReferencePlatform mockReferencePlatform = MockReferencePlatform();
@@ -20,8 +20,8 @@ MockTaskSnapshotPlatform mockTaskSnapshotPlatform = MockTaskSnapshotPlatform();
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ FirebaseStorage storage;
-  /*late*/ UploadTask uploadTask;
+  late FirebaseStorage storage;
+  late UploadTask uploadTask;
 
   group('Task', () {
     setUpAll(() async {
@@ -33,7 +33,6 @@ void main() {
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReferencePlatform);
       when(mockReferencePlatform.putString(any, any, any))
           .thenReturn(mockUploadTaskPlatform);
-
       uploadTask = storage.ref().putString(testString);
     });
 

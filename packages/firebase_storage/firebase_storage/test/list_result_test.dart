@@ -6,18 +6,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import 'mock.dart';
-
-import 'package:mockito/mockito.dart';
 
 void main() {
   setupFirebaseStorageMocks();
 
   const String kNextPageToken = 'next-page-token';
 
-  /*late*/ FirebaseStorage storage;
-  /*late*/ ListResult listResult;
+  late FirebaseStorage storage;
+  late ListResult listResult;
   MockReferencePlatform mockReference = MockReferencePlatform();
   MockListResultPlatform mockList = MockListResultPlatform();
 
@@ -33,7 +32,6 @@ void main() {
       await Firebase.initializeApp();
       storage = FirebaseStorage.instance;
 
-      // delegate method mocks
       when(kMockStoragePlatform.ref(any)).thenReturn(mockReference);
       when(mockReference.list(any)).thenAnswer((_) => Future.value(mockList));
       when(mockList.items).thenReturn(items);
@@ -42,7 +40,7 @@ void main() {
 
       Reference ref = storage.ref();
       listResult =
-          await ref.list(ListOptions(maxResults: 10, pageToken: 'token'));
+          await ref.list(const ListOptions(maxResults: 10, pageToken: 'token'));
     });
 
     group('.items', () {

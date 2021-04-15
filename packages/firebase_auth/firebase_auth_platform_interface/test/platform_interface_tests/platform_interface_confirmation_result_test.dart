@@ -10,7 +10,7 @@ void main() {
   String kMockVerificationId = 'test-id';
 
   group('$ConfirmationResultPlatform()', () {
-    /*late*/ TestConfirmationResultPlatform confirmationResultPlatform;
+    late TestConfirmationResultPlatform confirmationResultPlatform;
 
     setUpAll(() async {
       confirmationResultPlatform =
@@ -30,11 +30,6 @@ void main() {
         } catch (_) {
           fail('thrown an unexpected exception');
         }
-      });
-
-      test('throws an [AssertionError] exception when instance is null', () {
-        expect(() => ConfirmationResultPlatform.verifyExtends(null),
-            throwsAssertionError);
       });
     });
 

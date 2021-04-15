@@ -9,8 +9,8 @@ class MockAnalytics extends Mock implements Analytics {}
 
 void main() {
   group('FirebaseAnalyticsWeb', () {
-    FirebaseAnalyticsWeb firebaseAnalytics;
-    MockAnalytics analytics;
+    late FirebaseAnalyticsWeb firebaseAnalytics;
+    late MockAnalytics analytics;
 
     setUp(() {
       analytics = MockAnalytics();
@@ -18,40 +18,45 @@ void main() {
     });
 
     test('logEvent', () async {
-      final name = 'random';
+      const name = 'random';
       final parameters = {'a': 'b'};
       await firebaseAnalytics.logEvent(name: name, parameters: parameters);
       verify(analytics.logEvent(name, parameters));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setAnalyticsCollectionEnabled', () async {
-      final enabled = true;
+      const enabled = true;
       await firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
       verify(analytics.setAnalyticsCollectionEnabled(enabled));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserId', () async {
-      final userId = 'userId';
+      const userId = 'userId';
       await firebaseAnalytics.setUserId(userId);
       verify(analytics.setUserId(userId));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setCurrentScreen', () async {
-      final screenName = 'screenName';
+      const screenName = 'screenName';
       // screenClassOverride is discarded in web.
-      final screenClassOverride = 'screenClassOverride';
+      const screenClassOverride = 'screenClassOverride';
       await firebaseAnalytics.setCurrentScreen(
         screenName: screenName,
         screenClassOverride: screenClassOverride,
       );
       verify(analytics.setCurrentScreen(screenName));
+      verifyNoMoreInteractions(analytics);
     });
 
     test('setUserProperty', () async {
-      final name = 'name';
-      final value = 'value';
+      const name = 'name';
+      const value = 'value';
       await firebaseAnalytics.setUserProperty(name: name, value: value);
       verify(analytics.setUserProperties({name: value}));
+      verifyNoMoreInteractions(analytics);
     });
   });
 }
