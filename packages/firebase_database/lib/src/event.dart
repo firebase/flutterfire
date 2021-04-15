@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_database;
 
 enum _EventType {
@@ -22,7 +20,7 @@ class Event {
   final DataSnapshot snapshot;
   Map<dynamic, dynamic> _data;
 
-  String get previousSiblingKey => _data['previousSiblingKey'];
+  String? get previousSiblingKey => _data['previousSiblingKey'];
 }
 
 /// A DataSnapshot contains data from a Firebase Database location.
