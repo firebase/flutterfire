@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:flutter/services.dart';
 
 import 'package:firebase_performance/firebase_performance.dart';
@@ -15,12 +13,12 @@ void main() {
   group('$FirebasePerformance', () {
     final List<MethodCall> performanceLog = <MethodCall>[];
 
-    FirebasePerformance performance;
-    int firebasePerformanceHandle;
+    late FirebasePerformance performance;
+    int? firebasePerformanceHandle;
 
     int nextHandle = 0;
 
-    bool isPerformanceCollectionEnabledResult;
+    bool? isPerformanceCollectionEnabledResult;
 
     setUpAll(() {
       FirebasePerformance.channel
@@ -44,7 +42,7 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#instance',
-          arguments: <String, dynamic>{'handle': firebasePerformanceHandle},
+          arguments: <String, Object?>{'handle': firebasePerformanceHandle},
         ),
       ]);
     });
@@ -61,11 +59,11 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#isPerformanceCollectionEnabled',
-          arguments: <String, dynamic>{'handle': firebasePerformanceHandle},
+          arguments: <String, Object?>{'handle': firebasePerformanceHandle},
         ),
         isMethodCall(
           'FirebasePerformance#isPerformanceCollectionEnabled',
-          arguments: <String, dynamic>{'handle': firebasePerformanceHandle},
+          arguments: <String, Object?>{'handle': firebasePerformanceHandle},
         ),
       ]);
     });
@@ -77,14 +75,14 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#setPerformanceCollectionEnabled',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'enable': true,
           },
         ),
         isMethodCall(
           'FirebasePerformance#setPerformanceCollectionEnabled',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'enable': false,
           },
@@ -98,7 +96,7 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#newTrace',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'traceHandle': nextHandle++,
             'name': 'test-trace',
@@ -113,7 +111,7 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#newHttpMetric',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'httpMetricHandle': nextHandle++,
             'url': 'https://google.com',
@@ -130,7 +128,7 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#newTrace',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'traceHandle': currentHandle,
             'name': 'test-start-trace',
@@ -138,7 +136,7 @@ void main() {
         ),
         isMethodCall(
           'Trace#start',
-          arguments: <String, dynamic>{'handle': currentHandle},
+          arguments: <String, Object?>{'handle': currentHandle},
         ),
       ]);
     });
@@ -149,7 +147,7 @@ void main() {
       expect(performanceLog, <Matcher>[
         isMethodCall(
           'FirebasePerformance#newHttpMetric',
-          arguments: <String, dynamic>{
+          arguments: <String, Object?>{
             'handle': firebasePerformanceHandle,
             'httpMetricHandle': nextHandle++,
             'url': 'https://google.com',
@@ -162,8 +160,8 @@ void main() {
     group('$Trace', () {
       final List<MethodCall> traceLog = <MethodCall>[];
 
-      Trace testTrace;
-      int currentTestTraceHandle;
+      late Trace testTrace;
+      int? currentTestTraceHandle;
 
       setUpAll(() {
         FirebasePerformance.channel
@@ -191,7 +189,7 @@ void main() {
         expect(traceLog, <Matcher>[
           isMethodCall(
             'Trace#start',
-            arguments: <String, dynamic>{'handle': currentTestTraceHandle},
+            arguments: <String, Object?>{'handle': currentTestTraceHandle},
           ),
         ]);
       });
@@ -205,7 +203,7 @@ void main() {
         expect(traceLog, <Matcher>[
           isMethodCall(
             'Trace#stop',
-            arguments: <String, dynamic>{'handle': currentTestTraceHandle},
+            arguments: <String, Object?>{'handle': currentTestTraceHandle},
           ),
         ]);
       });
@@ -219,7 +217,7 @@ void main() {
         expect(traceLog, <Matcher>[
           isMethodCall(
             'Trace#incrementMetric',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestTraceHandle,
               'name': 'metric1',
               'value': 3,
@@ -237,7 +235,7 @@ void main() {
         expect(traceLog, <Matcher>[
           isMethodCall(
             'Trace#setMetric',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestTraceHandle,
               'name': 'metric3',
               'value': 5,
@@ -252,7 +250,7 @@ void main() {
         expect(traceLog, <Matcher>[
           isMethodCall(
             'Trace#getMetric',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestTraceHandle,
               'name': 'metric4',
             },
@@ -285,8 +283,8 @@ void main() {
     group('$HttpMetric', () {
       final List<MethodCall> httpMetricLog = <MethodCall>[];
 
-      HttpMetric testMetric;
-      int currentTestMetricHandle;
+      late HttpMetric testMetric;
+      int? currentTestMetricHandle;
 
       setUpAll(() {
         FirebasePerformance.channel
@@ -317,7 +315,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#start',
-            arguments: <String, dynamic>{'handle': currentTestMetricHandle},
+            arguments: <String, Object?>{'handle': currentTestMetricHandle},
           ),
         ]);
       });
@@ -331,7 +329,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#stop',
-            arguments: <String, dynamic>{'handle': currentTestMetricHandle},
+            arguments: <String, Object?>{'handle': currentTestMetricHandle},
           ),
         ]);
       });
@@ -342,7 +340,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#httpResponseCode',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestMetricHandle,
               'httpResponseCode': 45,
             },
@@ -356,7 +354,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#requestPayloadSize',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestMetricHandle,
               'requestPayloadSize': 436,
             },
@@ -370,7 +368,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#responseContentType',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestMetricHandle,
               'responseContentType': 'hi',
             },
@@ -384,7 +382,7 @@ void main() {
         expect(httpMetricLog, <Matcher>[
           isMethodCall(
             'HttpMetric#responsePayloadSize',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTestMetricHandle,
               'responsePayloadSize': 12,
             },
@@ -411,8 +409,8 @@ void main() {
     group('$PerformanceAttributes', () {
       final List<MethodCall> attributeLog = <MethodCall>[];
 
-      Trace attributeTrace;
-      int currentTraceHandle;
+      late Trace attributeTrace;
+      int? currentTraceHandle;
 
       setUpAll(() {
         FirebasePerformance.channel
@@ -420,7 +418,7 @@ void main() {
           attributeLog.add(methodCall);
           switch (methodCall.method) {
             case 'PerformanceAttributes#getAttributes':
-              return <dynamic, dynamic>{
+              return <Object, Object>{
                 'a1': 'hello',
                 'a2': 'friend',
               };
@@ -443,7 +441,7 @@ void main() {
         expect(attributeLog, <Matcher>[
           isMethodCall(
             'PerformanceAttributes#putAttribute',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTraceHandle,
               'name': 'attr1',
               'value': 'apple',
@@ -458,7 +456,7 @@ void main() {
         expect(attributeLog, <Matcher>[
           isMethodCall(
             'PerformanceAttributes#removeAttribute',
-            arguments: <String, dynamic>{
+            arguments: <String, Object?>{
               'handle': currentTraceHandle,
               'name': 'attr14',
             },
@@ -472,11 +470,11 @@ void main() {
         expect(attributeLog, <Matcher>[
           isMethodCall(
             'PerformanceAttributes#getAttributes',
-            arguments: <String, dynamic>{'handle': currentTraceHandle},
+            arguments: <String, Object?>{'handle': currentTraceHandle},
           ),
         ]);
 
-        expect(result, <dynamic, dynamic>{'a1': 'hello', 'a2': 'friend'});
+        expect(result, <Object, Object>{'a1': 'hello', 'a2': 'friend'});
       });
 
       test('invokeMethod not called if trace has stopped', () {

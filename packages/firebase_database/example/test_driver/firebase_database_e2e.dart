@@ -1,9 +1,8 @@
-// @dart=2.9
-
-import 'package:e2e/e2e.dart';
+// @dart = 2.9
+import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 final List<Map<String, Object>> testDocuments = [
   {'ref': 'one', 'value': 23},
@@ -49,7 +48,7 @@ Future<void> main() async {
       expect(documents[3], ordered[3]);
     });
 
-    testWidgets('runTransaction', (WidgetTester tester) async {
+    test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       final DatabaseReference ref = database.reference().child('counter');
       final DataSnapshot snapshot = await ref.once();
@@ -63,17 +62,17 @@ Future<void> main() async {
       expect(transactionResult.dataSnapshot.value > value, true);
     });
 
-    testWidgets('setPersistenceCacheSizeBytes Integer',
-        (WidgetTester tester) async {
+    test('setPersistenceCacheSizeBytes Integer', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
       await database.setPersistenceCacheSizeBytes(2147483647);
     });
 
-    testWidgets('setPersistenceCacheSizeBytes Long',
-        (WidgetTester tester) async {
+    test('setPersistenceCacheSizeBytes Long', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
   });
 }
+
+void main() => drive.main(testsMain);
