@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebasemlvisionexample;
+package io.flutter.plugins.firebasedatabaseexample;
 
 import io.flutter.embedding.android.FlutterActivity;
 

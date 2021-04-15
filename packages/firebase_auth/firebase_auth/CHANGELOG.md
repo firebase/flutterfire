@@ -1,3 +1,12 @@
+## 1.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+ - **CHORE**: update drive dependency (#5740).
+
+## 1.0.3
+
+ - **DOCS**: userChanges clarification (#5698).
+
 ## 1.0.2
 
  - Update a dependency to the latest release.

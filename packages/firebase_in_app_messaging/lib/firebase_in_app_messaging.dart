@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -30,17 +28,11 @@ class FirebaseInAppMessaging {
 
   /// Enables or disables suppression of message displays.
   Future<void> setMessagesSuppressed(bool suppress) async {
-    if (suppress == null) {
-      throw ArgumentError.notNull('suppress');
-    }
     await channel.invokeMethod<void>('setMessagesSuppressed', suppress);
   }
 
   /// Disable data collection for the app.
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
-    if (enabled == null) {
-      throw ArgumentError.notNull('enabled');
-    }
     await channel.invokeMethod<void>(
         'setAutomaticDataCollectionEnabled', enabled);
   }

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_database;
 
 /// The entry point for accessing a Firebase Database. You can get an instance
@@ -21,17 +19,19 @@ class FirebaseDatabase {
       switch (call.method) {
         case 'Event':
           final Event event = Event._(call.arguments);
-          _observers[arguments['handle']].add(event);
+          _observers[arguments['handle']]?.add(event);
           return null;
         case 'Error':
-          final DatabaseError error = DatabaseError._(arguments['error']);
-          _observers[arguments['handle']].addError(error);
+          final DatabaseError error =
+              DatabaseError._(arguments['error']! as Map<Object?, Object?>);
+          _observers[arguments['handle']]?.addError(error);
           return null;
         case 'DoTransaction':
-          final MutableData mutableData =
-              MutableData.private(arguments['snapshot']);
+          final MutableData mutableData = MutableData.private(
+            arguments['snapshot']! as Map<Object?, Object?>,
+          );
           final MutableData updated =
-              await _transactions[arguments['transactionKey']](mutableData);
+              await _transactions[arguments['transactionKey']]!(mutableData);
           return <String, dynamic>{'value': updated.value};
         default:
           throw MissingPluginException(
@@ -59,12 +59,12 @@ class FirebaseDatabase {
   /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
-  final FirebaseApp app;
+  final FirebaseApp? app;
 
   /// The URL to which this [FirebaseDatabase] belongs
   ///
   /// If null, the URL of the specified [FirebaseApp] is used
-  final String databaseURL;
+  final String? databaseURL;
 
   /// Gets the instance of FirebaseDatabase for the default Firebase app.
   static FirebaseDatabase get instance => _instance;
@@ -91,7 +91,7 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool result = await _channel.invokeMethod<bool>(
+    final bool? result = await _channel.invokeMethod<bool>(
       'FirebaseDatabase#setPersistenceEnabled',
       <String, dynamic>{
         'app': app?.name,
@@ -99,7 +99,7 @@ class FirebaseDatabase {
         'enabled': enabled,
       },
     );
-    return result;
+    return result!;
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -120,7 +120,7 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool result = await _channel.invokeMethod<bool>(
+    final bool? result = await _channel.invokeMethod<bool>(
       'FirebaseDatabase#setPersistenceCacheSizeBytes',
       <String, dynamic>{
         'app': app?.name,
@@ -128,7 +128,7 @@ class FirebaseDatabase {
         'cacheSize': cacheSize,
       },
     );
-    return result;
+    return result!;
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous

@@ -1,3 +1,7 @@
+## 1.0.5
+
+ - **FIX**: conditionally pass options to docChanges (#5751).
+
 ## 1.0.4
 
  - Update a dependency to the latest release.
