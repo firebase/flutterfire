@@ -17,8 +17,9 @@ enum _EventType {
 class Event {
   Event._(Map<Object?, Object?> _data)
       : previousSiblingKey = _data['previousSiblingKey'] as String?,
-        snapshot =
-            DataSnapshot._fromJson(_data['snapshot']! as Map<Object?, Object?>, _data['childKeys'] as List<Object?>?);
+        snapshot = DataSnapshot._fromJson(
+            _data['snapshot']! as Map<Object?, Object?>,
+            _data['childKeys'] as List<Object?>?);
 
   final DataSnapshot snapshot;
 
@@ -40,7 +41,9 @@ class DataSnapshot {
     if (dataValue is Map<Object?, Object?>) {
       value = {for (final key in childKeys!) key: dataValue[key]};
     } else if (dataValue is List<Object?>) {
-      value = childKeys!.map((key) => dataValue[int.parse(key! as String)]).toList();
+      value = childKeys!
+          .map((key) => dataValue[int.parse(key! as String)])
+          .toList();
     } else {
       value = dataValue;
     }

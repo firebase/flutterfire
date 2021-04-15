@@ -28,8 +28,7 @@ void testsMain() {
       }));
     });
 
-    test('correct order returned from query',
-        () async {
+    test('correct order returned from query', () async {
       Event event = await FirebaseDatabase.instance
           .reference()
           .child('ordered')
