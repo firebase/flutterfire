@@ -2,12 +2,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
+import 'package:firebase_database/ui/firebase_sorted_list.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -16,24 +15,27 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseList', () {
-    StreamController<Event> onChildAddedStreamController;
-    StreamController<Event> onChildRemovedStreamController;
-    StreamController<Event> onChildChangedStreamController;
-    StreamController<Event> onChildMovedStreamController;
-    MockQuery query;
-    FirebaseList list;
-    Completer<ListChange> callbackCompleter;
+    late StreamController<Event> onChildAddedStreamController;
+    late StreamController<Event> onChildRemovedStreamController;
+    late StreamController<Event> onChildChangedStreamController;
+    late StreamController<Event> onChildMovedStreamController;
+    late StreamController<Event> onValue;
+    late MockQuery query;
+    late FirebaseList list;
+    late Completer<ListChange> callbackCompleter;
 
     setUp(() {
       onChildAddedStreamController = StreamController<Event>();
       onChildRemovedStreamController = StreamController<Event>();
       onChildChangedStreamController = StreamController<Event>();
       onChildMovedStreamController = StreamController<Event>();
+      onValue = StreamController<Event>();
       query = MockQuery(
         onChildAddedStreamController.stream,
         onChildRemovedStreamController.stream,
         onChildChangedStreamController.stream,
         onChildMovedStreamController.stream,
+        onValue.stream,
       );
       callbackCompleter = Completer<ListChange>();
 
@@ -59,6 +61,7 @@ void main() {
       onChildRemovedStreamController.close();
       onChildChangedStreamController.close();
       onChildMovedStreamController.close();
+      onValue.close();
     });
 
     Future<ListChange> resetCompleterOnCallback() async {
@@ -180,6 +183,68 @@ void main() {
       expect(list, <DataSnapshot>[snapshot2, snapshot3, snapshot1]);
     });
   });
+
+  test('FirebaseList listeners are optional', () {
+    final onChildAddedStreamController = StreamController<Event>();
+    final onChildRemovedStreamController = StreamController<Event>();
+    final onChildChangedStreamController = StreamController<Event>();
+    final onChildMovedStreamController = StreamController<Event>();
+    final onValue = StreamController<Event>();
+    addTearDown(() {
+      onChildChangedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildAddedStreamController.close();
+      onChildMovedStreamController.close();
+      onValue.close();
+    });
+
+    final query = MockQuery(
+      onChildAddedStreamController.stream,
+      onChildRemovedStreamController.stream,
+      onChildChangedStreamController.stream,
+      onChildMovedStreamController.stream,
+      onValue.stream,
+    );
+    final list = FirebaseList(query: query);
+    addTearDown(list.clear);
+
+    expect(onChildAddedStreamController.hasListener, isFalse);
+    expect(onChildRemovedStreamController.hasListener, isFalse);
+    expect(onChildChangedStreamController.hasListener, isFalse);
+    expect(onChildMovedStreamController.hasListener, isFalse);
+    expect(onValue.hasListener, isFalse);
+  });
+
+  test('FirebaseSortedList listeners are optional', () {
+    final onChildAddedStreamController = StreamController<Event>();
+    final onChildRemovedStreamController = StreamController<Event>();
+    final onChildChangedStreamController = StreamController<Event>();
+    final onChildMovedStreamController = StreamController<Event>();
+    final onValue = StreamController<Event>();
+    addTearDown(() {
+      onChildChangedStreamController.close();
+      onChildRemovedStreamController.close();
+      onChildAddedStreamController.close();
+      onChildMovedStreamController.close();
+      onValue.close();
+    });
+
+    final query = MockQuery(
+      onChildAddedStreamController.stream,
+      onChildRemovedStreamController.stream,
+      onChildChangedStreamController.stream,
+      onChildMovedStreamController.stream,
+      onValue.stream,
+    );
+    final list = FirebaseSortedList(query: query, comparator: (a, b) => 0);
+    addTearDown(list.clear);
+
+    expect(onChildAddedStreamController.hasListener, isFalse);
+    expect(onChildRemovedStreamController.hasListener, isFalse);
+    expect(onChildChangedStreamController.hasListener, isFalse);
+    expect(onChildMovedStreamController.hasListener, isFalse);
+    expect(onValue.hasListener, isFalse);
+  });
 }
 
 class MockQuery extends Mock implements Query {
@@ -188,6 +253,7 @@ class MockQuery extends Mock implements Query {
     this.onChildRemoved,
     this.onChildChanged,
     this.onChildMoved,
+    this.onValue,
   );
 
   @override
@@ -201,6 +267,9 @@ class MockQuery extends Mock implements Query {
 
   @override
   final Stream<Event> onChildMoved;
+
+  @override
+  final Stream<Event> onValue;
 }
 
 class ListChange {
@@ -213,7 +282,7 @@ class ListChange {
   ListChange._(this.index, this.index2, this.snapshot);
 
   final int index;
-  final int index2;
+  final int? index2;
   final DataSnapshot snapshot;
 
   @override
@@ -238,7 +307,7 @@ class MockEvent implements Event {
   MockEvent(this.previousSiblingKey, this.snapshot);
 
   @override
-  final String previousSiblingKey;
+  final String? previousSiblingKey;
 
   @override
   final DataSnapshot snapshot;
