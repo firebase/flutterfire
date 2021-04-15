@@ -15,14 +15,14 @@ enum _EventType {
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
 class Event {
-  Event._(Map<Object, Object> _data)
-      : previousSiblingKey = _data['previousSiblingKey'],
+  Event._(Map<Object?, Object?> _data)
+      : previousSiblingKey = _data['previousSiblingKey'] as String?,
         snapshot =
-            DataSnapshot._fromJson(_data['snapshot'], _data['childKeys']);
+            DataSnapshot._fromJson(_data['snapshot']! as Map<Object?, Object?>, _data['childKeys'] as List<Object?>?);
 
   final DataSnapshot snapshot;
 
-  final String previousSiblingKey;
+  final String? previousSiblingKey;
 }
 
 /// A DataSnapshot contains data from a Firebase Database location.
@@ -31,24 +31,24 @@ class DataSnapshot {
   DataSnapshot._(this.key, this.value);
 
   factory DataSnapshot._fromJson(
-    Map<Object, Object> _data,
-    List<Object> childKeys,
+    Map<Object?, Object?> _data,
+    List<Object?>? childKeys,
   ) {
-    Object dataValue = _data['value'];
-    Object value;
+    Object? dataValue = _data['value'];
+    Object? value;
 
-    if (dataValue is Map<Object, Object>) {
-      value = {for (final key in childKeys) key: dataValue[key]};
-    } else if (dataValue is List<Object>) {
-      value = childKeys.map((key) => dataValue[int.parse(key)]).toList();
+    if (dataValue is Map<Object?, Object?>) {
+      value = {for (final key in childKeys!) key: dataValue[key]};
+    } else if (dataValue is List<Object?>) {
+      value = childKeys!.map((key) => dataValue[int.parse(key! as String)]).toList();
     } else {
       value = dataValue;
     }
-    return DataSnapshot._(_data['key'], value);
+    return DataSnapshot._(_data['key'] as String?, value);
   }
 
   /// The key of the location that generated this DataSnapshot.
-  final String key;
+  final String? key;
 
   /// Returns the contents of this data snapshot as native types.
   final dynamic value;

@@ -138,9 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
               key: ValueKey<bool>(_anchorToBottom),
               query: _messagesRef,
               reverse: _anchorToBottom,
-              sort: _anchorToBottom
-                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-                  : null,
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int index) {
                 return SizeTransition(
@@ -148,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ListTile(
                     trailing: IconButton(
                       onPressed: () =>
-                          _messagesRef.child(snapshot.key).remove(),
+                          _messagesRef.child(snapshot.key!).remove(),
                       icon: const Icon(Icons.delete),
                     ),
                     title: Text(

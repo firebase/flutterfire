@@ -112,19 +112,19 @@ class FirebaseList extends ListBase<DataSnapshot>
   }
 
   void _onChildRemoved(Event event) {
-    final index = _indexForKey(event.snapshot.key);
+    final index = _indexForKey(event.snapshot.key!);
     _snapshots.removeAt(index);
     onChildRemoved!(index, event.snapshot);
   }
 
   void _onChildChanged(Event event) {
-    final index = _indexForKey(event.snapshot.key);
+    final index = _indexForKey(event.snapshot.key!);
     _snapshots[index] = event.snapshot;
     onChildChanged!(index, event.snapshot);
   }
 
   void _onChildMoved(Event event) {
-    final fromIndex = _indexForKey(event.snapshot.key);
+    final fromIndex = _indexForKey(event.snapshot.key!);
     _snapshots.removeAt(fromIndex);
 
     int toIndex = 0;
