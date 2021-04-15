@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_ml_vision;
 
 /// Enumeration of supported barcode content value types for [Barcode.valueType].
@@ -185,7 +183,7 @@ class BarcodeFormat {
 /// final List<Barcode> barcodes = await barcodeDetector.detectInImage(image);
 /// ```
 class BarcodeDetector {
-  BarcodeDetector._(this.options, this._handle) : assert(options != null);
+  BarcodeDetector._(this.options, this._handle);
 
   /// The options for configuring this detector.
   final BarcodeDetectorOptions options;
@@ -196,10 +194,9 @@ class BarcodeDetector {
   /// Detects barcodes in the input image.
   Future<List<Barcode>> detectInImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-
     _hasBeenOpened = true;
-    final List<dynamic> reply =
-        await FirebaseVision.channel.invokeListMethod<dynamic>(
+
+    final reply = await FirebaseVision.channel.invokeListMethod<dynamic>(
       'BarcodeDetector#detectInImage',
       <String, dynamic>{
         'handle': _handle,
@@ -210,7 +207,7 @@ class BarcodeDetector {
     );
 
     final List<Barcode> barcodes =
-        reply.map((barcode) => Barcode._(barcode)).toList();
+        reply!.map((barcode) => Barcode._(barcode)).toList();
 
     return barcodes;
   }
@@ -289,14 +286,14 @@ class Barcode {
   /// The bounding rectangle of the detected barcode.
   ///
   /// Could be null if the bounding rectangle can not be determined.
-  final Rect boundingBox;
+  final Rect? boundingBox;
 
   /// Barcode value as it was encoded in the barcode.
   ///
   /// Structured values are not parsed, for example: 'MEBKM:TITLE:Google;URL://www.google.com;;'.
   ///
   /// Null if nothing found.
-  final String rawValue;
+  final String? rawValue;
 
   /// Barcode value in a user-friendly format.
   ///
@@ -309,7 +306,7 @@ class Barcode {
   /// May include the supplement value.
   ///
   /// Null if nothing found.
-  final String displayValue;
+  final String? displayValue;
 
   /// The barcode format, for example [BarcodeFormat.ean13].
   final BarcodeFormat format;
@@ -332,31 +329,31 @@ class Barcode {
   final BarcodeValueType valueType;
 
   /// Parsed email details. (set iff [valueType] is [BarcodeValueType.email]).
-  final BarcodeEmail email;
+  final BarcodeEmail? email;
 
   /// Parsed phone details. (set iff [valueType] is [BarcodeValueType.phone]).
-  final BarcodePhone phone;
+  final BarcodePhone? phone;
 
   /// Parsed SMS details. (set iff [valueType] is [BarcodeValueType.sms]).
-  final BarcodeSMS sms;
+  final BarcodeSMS? sms;
 
   /// Parsed URL bookmark details. (set iff [valueType] is [BarcodeValueType.url]).
-  final BarcodeURLBookmark url;
+  final BarcodeURLBookmark? url;
 
   /// Parsed WiFi AP details. (set iff [valueType] is [BarcodeValueType.wifi]).
-  final BarcodeWiFi wifi;
+  final BarcodeWiFi? wifi;
 
   /// Parsed geo coordinates. (set iff [valueType] is [BarcodeValueType.geographicCoordinates]).
-  final BarcodeGeoPoint geoPoint;
+  final BarcodeGeoPoint? geoPoint;
 
   /// Parsed contact details. (set iff [valueType] is [BarcodeValueType.contactInfo]).
-  final BarcodeContactInfo contactInfo;
+  final BarcodeContactInfo? contactInfo;
 
   /// Parsed calendar event details. (set iff [valueType] is [BarcodeValueType.calendarEvent]).
-  final BarcodeCalendarEvent calendarEvent;
+  final BarcodeCalendarEvent? calendarEvent;
 
   /// Parsed driver's license details. (set iff [valueType] is [BarcodeValueType.driverLicense]).
-  final BarcodeDriverLicense driverLicense;
+  final BarcodeDriverLicense? driverLicense;
 }
 
 /// An email message from a 'MAILTO:' or similar QRCode type.
@@ -368,13 +365,13 @@ class BarcodeEmail {
         subject = data['subject'];
 
   /// The email's address.
-  final String address;
+  final String? address;
 
   /// The email's body.
-  final String body;
+  final String? body;
 
   /// The email's subject.
-  final String subject;
+  final String? subject;
 
   /// The type of the email.
   final BarcodeEmailType type;
@@ -387,7 +384,7 @@ class BarcodePhone {
         type = BarcodePhoneType.values[data['type']];
 
   /// Phone number.
-  final String number;
+  final String? number;
 
   /// Type of the phone number.
   ///
@@ -404,10 +401,10 @@ class BarcodeSMS {
         phoneNumber = data['phoneNumber'];
 
   /// An SMS message body.
-  final String message;
+  final String? message;
 
   /// An SMS message phone number.
-  final String phoneNumber;
+  final String? phoneNumber;
 }
 
 /// A URL and title from a 'MEBKM:' or similar QRCode type.
@@ -417,10 +414,10 @@ class BarcodeURLBookmark {
         url = data['url'];
 
   /// A URL bookmark title.
-  final String title;
+  final String? title;
 
   /// A URL bookmark url.
-  final String url;
+  final String? url;
 }
 
 /// A wifi network parameters from a 'WIFI:' or similar QRCode type.
@@ -432,10 +429,10 @@ class BarcodeWiFi {
             BarcodeWiFiEncryptionType.values[data['encryptionType']];
 
   /// A Wi-Fi access point SSID.
-  final String ssid;
+  final String? ssid;
 
   /// A Wi-Fi access point password.
-  final String password;
+  final String? password;
 
   /// The encryption type of the WIFI
   ///
@@ -450,10 +447,10 @@ class BarcodeGeoPoint {
         longitude = data['longitude'];
 
   /// A location latitude.
-  final double latitude;
+  final double? latitude;
 
   /// A location longitude.
-  final double longitude;
+  final double? longitude;
 }
 
 /// A person's or organization's business card.
@@ -485,29 +482,29 @@ class BarcodeContactInfo {
   /// Contact person's addresses.
   ///
   /// Could be an empty list if nothing found.
-  final List<BarcodeAddress> addresses;
+  final List<BarcodeAddress>? addresses;
 
   /// Contact person's emails.
   ///
   /// Could be an empty list if nothing found.
-  final List<BarcodeEmail> emails;
+  final List<BarcodeEmail>? emails;
 
   /// Contact person's name.
-  final BarcodePersonName name;
+  final BarcodePersonName? name;
 
   /// Contact person's phones.
   ///
   /// Could be an empty list if nothing found.
-  final List<BarcodePhone> phones;
+  final List<BarcodePhone>? phones;
 
   /// Contact urls associated with this person.
-  final List<String> urls;
+  final List<String>? urls;
 
   /// Contact person's title.
-  final String jobTitle;
+  final String? jobTitle;
 
   /// Contact person's organization.
-  final String organization;
+  final String? organization;
 }
 
 /// An address.
@@ -545,25 +542,25 @@ class BarcodePersonName {
         suffix = data['suffix'];
 
   /// The properly formatted name.
-  final String formattedName;
+  final String? formattedName;
 
   /// First name
-  final String first;
+  final String? first;
 
   /// Last name
-  final String last;
+  final String? last;
 
   /// Middle name
-  final String middle;
+  final String? middle;
 
   /// Prefix of the name
-  final String prefix;
+  final String? prefix;
 
   /// Designates a text string to be set as the kana name in the phonebook. Used for Japanese contacts.
-  final String pronunciation;
+  final String? pronunciation;
 
   /// Suffix of the person's name
-  final String suffix;
+  final String? suffix;
 }
 
 /// DateTime data type used in calendar events.
@@ -578,19 +575,19 @@ class BarcodeCalendarEvent {
         end = DateTime.parse(data['end']);
 
   /// The description of the calendar event.
-  final String eventDescription;
+  final String? eventDescription;
 
   /// The location of the calendar event.
-  final String location;
+  final String? location;
 
   /// The organizer of the calendar event.
-  final String organizer;
+  final String? organizer;
 
   /// The status of the calendar event.
-  final String status;
+  final String? status;
 
   /// The summary of the calendar event.
-  final String summary;
+  final String? summary;
 
   /// The start date time of the calendar event.
   final DateTime start;
@@ -618,46 +615,46 @@ class BarcodeDriverLicense {
         issuingCountry = data['issuingCountry'];
 
   /// Holder's first name.
-  final String firstName;
+  final String? firstName;
 
   /// Holder's middle name.
-  final String middleName;
+  final String? middleName;
 
   /// Holder's last name.
-  final String lastName;
+  final String? lastName;
 
   /// Holder's gender. 1 - male, 2 - female.
-  final String gender;
+  final String? gender;
 
   /// City of holder's address.
-  final String addressCity;
+  final String? addressCity;
 
   /// State of holder's address.
-  final String addressState;
+  final String? addressState;
 
   /// Holder's street address.
-  final String addressStreet;
+  final String? addressStreet;
 
   /// Zip code of holder's address.
-  final String addressZip;
+  final String? addressZip;
 
   /// Birth date of the holder.
-  final String birthDate;
+  final String? birthDate;
 
   /// "DL" for driver licenses, "ID" for ID cards.
-  final String documentType;
+  final String? documentType;
 
   /// Driver license ID number.
-  final String licenseNumber;
+  final String? licenseNumber;
 
   /// Expiry date of the license.
-  final String expiryDate;
+  final String? expiryDate;
 
   /// Issue date of the license.
   ///
   /// The date format depends on the issuing country. MMDDYYYY for the US, YYYYMMDD for Canada.
-  final String issuingDate;
+  final String? issuingDate;
 
   /// Country in which DL/ID was issued. US = "USA", Canada = "CAN".
-  final String issuingCountry;
+  final String? issuingCountry;
 }

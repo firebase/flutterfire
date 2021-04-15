@@ -1,3 +1,11 @@
+## 1.0.5
+
+ - **FIX**: conditionally pass options to docChanges (#5751).
+
+## 1.0.4
+
+ - Update a dependency to the latest release.
+
 ## 1.0.3
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

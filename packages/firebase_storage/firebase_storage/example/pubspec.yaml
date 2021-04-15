@@ -30,7 +30,7 @@ dependency_overrides:
     path: ../../firebase_storage_web
 
 dev_dependencies:
-  drive: 0.0.1-6.0.pre
+  drive: 0.1.0
   flutter_driver:
     sdk: flutter
   test: any

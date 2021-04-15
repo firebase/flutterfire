@@ -5,7 +5,6 @@
 package io.flutter.plugins.firebase.firebaseremoteconfigexample;
 
 import android.os.Bundle;
-import dev.flutter.plugins.e2e.E2EPlugin;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugins.firebase.core.FlutterFirebaseCorePlugin;
 import io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlugin;
@@ -19,6 +18,5 @@ public class EmbeddingV1Activity extends FlutterActivity {
     FirebaseRemoteConfigPlugin.registerWith(
         registrarFor(
             "io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlugin"));
-    E2EPlugin.registerWith(registrarFor("dev.flutter.plugins.e2e.E2EPlugin"));
   }
 }

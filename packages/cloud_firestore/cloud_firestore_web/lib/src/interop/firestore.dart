@@ -409,14 +409,18 @@ class QuerySnapshot
 
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange> docChanges(
-          [firestore_interop.SnapshotListenOptions? options]) =>
-      jsObject
-          .docChanges(jsify(options))
-          // explicitly typing the param as dynamic to work-around
-          // https://github.com/dart-lang/sdk/issues/33537
-          // ignore: unnecessary_lambdas
-          .map((dynamic e) => DocumentChange.getInstance(e))
-          .toList();
+      [firestore_interop.SnapshotListenOptions? options]) {
+    List<firestore_interop.DocumentChangeJsImpl> changes = options != null
+        ? jsObject.docChanges(jsify(options))
+        : jsObject.docChanges();
+
+    return changes
+        // explicitly typing the param as dynamic to work-around
+        // https://github.com/dart-lang/sdk/issues/33537
+        // ignore: unnecessary_lambdas
+        .map((dynamic e) => DocumentChange.getInstance(e))
+        .toList();
+  }
 
   List<DocumentSnapshot?> get docs => jsObject.docs
       // explicitly typing the param as dynamic to work-around

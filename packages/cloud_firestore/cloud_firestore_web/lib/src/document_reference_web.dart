@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'utils/exception.dart';
 import 'utils/web_utils.dart';
 import 'utils/codec_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
@@ -26,45 +25,32 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
         super(firestore, path);
 
   @override
-  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) async {
-    try {
-      await _delegate.set(
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
+    return guard(() {
+      return _delegate.set(
         CodecUtility.encodeMapData(data)!,
         convertSetOptions(options),
       );
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   @override
-  Future<void> update(Map<String, dynamic> data) async {
-    try {
-      await _delegate.update(CodecUtility.encodeMapData(data)!);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<void> update(Map<String, dynamic> data) {
+    return guard(() => _delegate.update(CodecUtility.encodeMapData(data)!));
   }
 
   @override
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    try {
-      firestore_interop.DocumentSnapshot documentSnapshot =
-          await _delegate.get(convertGetOptions(options));
-      return convertWebDocumentSnapshot(firestore, documentSnapshot);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    firestore_interop.DocumentSnapshot documentSnapshot =
+        await guard(() => _delegate.get(convertGetOptions(options)));
+
+    return convertWebDocumentSnapshot(firestore, documentSnapshot);
   }
 
   @override
-  Future<void> delete() async {
-    try {
-      await _delegate.delete();
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<void> delete() {
+    return guard(_delegate.delete);
   }
 
   @override
