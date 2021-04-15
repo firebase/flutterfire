@@ -964,7 +964,8 @@ void main() {
       });
 
       test('listens to incoming changes', () async {
-        Stream<UserPlatform?> stream = auth.authStateChanges().asBroadcastStream();
+        Stream<UserPlatform?> stream =
+            auth.authStateChanges().asBroadcastStream();
 
         await expectLater(stream, emits(isNull));
         expect(auth.currentUser, equals(isNull));
@@ -1007,7 +1008,8 @@ void main() {
       });
 
       test('listens to incoming changes', () async {
-        Stream<UserPlatform?> stream = auth.idTokenChanges().asBroadcastStream();
+        Stream<UserPlatform?> stream =
+            auth.idTokenChanges().asBroadcastStream();
 
         await expectLater(stream, emits(isNull));
         expect(auth.currentUser, equals(isNull));
