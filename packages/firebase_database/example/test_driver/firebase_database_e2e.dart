@@ -2,7 +2,8 @@
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_test/flutter_test.dart';
+// import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 final List<Map<String, Object>> testDocuments = [
   {'ref': 'one', 'value': 23},
@@ -10,12 +11,14 @@ final List<Map<String, Object>> testDocuments = [
   {'ref': 'three', 'value': 9},
   {'ref': 'four', 'value': 40}
 ];
-Future<void> main() async {
-  E2EWidgetsFlutterBinding.ensureInitialized();
 
-  group('$FirebaseDatabase', () {
-    setUpAll(() async {
+void testsMain() {
+  group('FirebaseDatabase', () {
+    setUp(() async {
       await Firebase.initializeApp();
+    });
+
+    setUpAll(() async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
       const String orderTestPath = 'ordered/';
@@ -26,8 +29,8 @@ Future<void> main() async {
       }));
     });
 
-    testWidgets('correct order returned from query',
-        (WidgetTester tester) async {
+    test('correct order returned from query',
+        () async {
       Event event = await FirebaseDatabase.instance
           .reference()
           .child('ordered')

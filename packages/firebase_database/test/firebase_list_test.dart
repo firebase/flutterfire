@@ -11,6 +11,8 @@ import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+const kKey = 'key';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -93,7 +95,7 @@ void main() {
     test('can add to empty list', () async {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
       expect(
-        await processChildAddedEvent(MockEvent(null, snapshot)),
+        await processChildAddedEvent(MockEvent(kKey, snapshot)),
         ListChange.at(0, snapshot),
       );
       expect(list, <DataSnapshot>[snapshot]);
@@ -102,9 +104,9 @@ void main() {
     test('can add before first element', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(null, snapshot2));
+      await processChildAddedEvent(MockEvent(kKey, snapshot2));
       expect(
-        await processChildAddedEvent(MockEvent(null, snapshot1)),
+        await processChildAddedEvent(MockEvent(kKey, snapshot1)),
         ListChange.at(0, snapshot1),
       );
       expect(list, <DataSnapshot>[snapshot1, snapshot2]);
@@ -113,7 +115,7 @@ void main() {
     test('can add after last element', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(null, snapshot1));
+      await processChildAddedEvent(MockEvent(kKey, snapshot1));
       expect(
         await processChildAddedEvent(MockEvent('key10', snapshot2)),
         ListChange.at(1, snapshot2),
@@ -123,9 +125,9 @@ void main() {
 
     test('can remove from singleton list', () async {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
-      await processChildAddedEvent(MockEvent(null, snapshot));
+      await processChildAddedEvent(MockEvent(kKey, snapshot));
       expect(
-        await processChildRemovedEvent(MockEvent(null, snapshot)),
+        await processChildRemovedEvent(MockEvent(kKey, snapshot)),
         ListChange.at(0, snapshot),
       );
       expect(list, isEmpty);
@@ -134,10 +136,10 @@ void main() {
     test('can remove former of two elements', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(null, snapshot2));
-      await processChildAddedEvent(MockEvent(null, snapshot1));
+      await processChildAddedEvent(MockEvent(kKey, snapshot2));
+      await processChildAddedEvent(MockEvent(kKey, snapshot1));
       expect(
-        await processChildRemovedEvent(MockEvent(null, snapshot1)),
+        await processChildRemovedEvent(MockEvent(kKey, snapshot1)),
         ListChange.at(0, snapshot1),
       );
       expect(list, <DataSnapshot>[snapshot2]);
@@ -146,8 +148,8 @@ void main() {
     test('can remove latter of two elements', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(null, snapshot2));
-      await processChildAddedEvent(MockEvent(null, snapshot1));
+      await processChildAddedEvent(MockEvent(kKey, snapshot2));
+      await processChildAddedEvent(MockEvent(kKey, snapshot1));
       expect(
         await processChildRemovedEvent(MockEvent('key10', snapshot2)),
         ListChange.at(1, snapshot2),
@@ -160,9 +162,9 @@ void main() {
       final DataSnapshot snapshot2a = MockDataSnapshot('key20', 20);
       final DataSnapshot snapshot2b = MockDataSnapshot('key20', 25);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      await processChildAddedEvent(MockEvent(null, snapshot3));
-      await processChildAddedEvent(MockEvent(null, snapshot2a));
-      await processChildAddedEvent(MockEvent(null, snapshot1));
+      await processChildAddedEvent(MockEvent(kKey, snapshot3));
+      await processChildAddedEvent(MockEvent(kKey, snapshot2a));
+      await processChildAddedEvent(MockEvent(kKey, snapshot1));
       expect(
         await processChildChangedEvent(MockEvent('key10', snapshot2b)),
         ListChange.at(1, snapshot2b),
@@ -173,9 +175,9 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      await processChildAddedEvent(MockEvent(null, snapshot3));
-      await processChildAddedEvent(MockEvent(null, snapshot2));
-      await processChildAddedEvent(MockEvent(null, snapshot1));
+      await processChildAddedEvent(MockEvent(kKey, snapshot3));
+      await processChildAddedEvent(MockEvent(kKey, snapshot2));
+      await processChildAddedEvent(MockEvent(kKey, snapshot1));
       expect(
         await processChildMovedEvent(MockEvent('key30', snapshot1)),
         ListChange.move(0, 2, snapshot1),
@@ -307,7 +309,7 @@ class MockEvent implements Event {
   MockEvent(this.previousSiblingKey, this.snapshot);
 
   @override
-  final String? previousSiblingKey;
+  final String previousSiblingKey;
 
   @override
   final DataSnapshot snapshot;
