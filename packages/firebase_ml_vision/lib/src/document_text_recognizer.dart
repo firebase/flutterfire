@@ -34,7 +34,7 @@ class DocumentTextRecognizer {
   DocumentTextRecognizer._({
     required CloudDocumentRecognizerOptions cloudOptions,
     required int handle,
-  })   : _cloudOptions = cloudOptions,
+  })  : _cloudOptions = cloudOptions,
         _handle = handle;
 
   final int _handle;
@@ -98,10 +98,10 @@ class CloudDocumentRecognizerOptions {
 
 /// Representation for start or end of a structural component.
 class DocumentTextRecognizedBreak {
-  DocumentTextRecognizedBreak._(Map<Object, Object> data)
+  DocumentTextRecognizedBreak._(Map<Object?, Object?> data)
       : detectedBreakType =
-            TextRecognizedBreakType.values[data['detectedBreakType']],
-        isPrefix = data['detectedBreakPrefix'];
+            TextRecognizedBreakType.values[data['detectedBreakType']! as int],
+        isPrefix = data['detectedBreakPrefix'] as bool?;
 
   /// Is set to the detected break type in a text logical component.
   final TextRecognizedBreakType detectedBreakType;
@@ -112,12 +112,12 @@ class DocumentTextRecognizedBreak {
 
 /// Recognized document text in a document image.
 class VisionDocumentText {
-  VisionDocumentText._(Map<String, Object> data)
-      : text = data['text'],
+  VisionDocumentText._(Map<String, Object?> data)
+      : text = data['text'] as String?,
         blocks = List<DocumentTextBlock>.unmodifiable(
-          (data['blocks'] as List<Object>).map<DocumentTextBlock>(
-            (block) => DocumentTextBlock._(block),
-          ),
+          (data['blocks']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((block) => DocumentTextBlock._(block)),
         );
 
   /// String representation of the recognized text.
@@ -129,25 +129,25 @@ class VisionDocumentText {
 
 /// Abstract class for common attributes of text elements in a document image.
 abstract class DocumentTextContainer {
-  DocumentTextContainer._(Map<Object, Object> data)
+  DocumentTextContainer._(Map<Object?, Object?> data)
       : boundingBox = data['left'] != null
             ? Rect.fromLTWH(
-                data['left'],
-                data['top'],
-                data['width'],
-                data['height'],
+                data['left']! as double,
+                data['top']! as double,
+                data['width']! as double,
+                data['height']! as double,
               )
             : null,
-        confidence = (data['confidence'] as num)?.toDouble(),
-        recognizedBreak = data['recognizedBreak'] == null
-            ? null
-            : DocumentTextRecognizedBreak._(data['recognizedBreak']),
+        confidence = (data['confidence'] as num?)?.toDouble(),
+        recognizedBreak = data['recognizedBreak']
+            .safeCast<Map<Object?, Object?>>()
+            .guard((value) => DocumentTextRecognizedBreak._(value)),
         recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
-          (data['recognizedLanguages'] as List<Object>).map<RecognizedLanguage>(
-            (language) => RecognizedLanguage._(language),
-          ),
+          (data['recognizedLanguages']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((language) => RecognizedLanguage._(language)),
         ),
-        text = data['text'];
+        text = data['text'] as String?;
 
   /// Axis-aligned bounding rectangle of the detected text.
   ///
@@ -176,11 +176,11 @@ abstract class DocumentTextContainer {
 
 /// A logical element on the page.
 class DocumentTextBlock extends DocumentTextContainer {
-  DocumentTextBlock._(Map<Object, Object> block)
+  DocumentTextBlock._(Map<Object?, Object?> block)
       : paragraphs = List<DocumentTextParagraph>.unmodifiable(
-          (block['paragraphs'] as List<Object>).map<DocumentTextParagraph>(
-            (paragraph) => DocumentTextParagraph._(paragraph),
-          ),
+          (block['paragraphs']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((p) => DocumentTextParagraph._(p)),
         ),
         super._(block);
 
@@ -190,10 +190,11 @@ class DocumentTextBlock extends DocumentTextContainer {
 
 /// A structural unit of text representing a number of words in certain order.
 class DocumentTextParagraph extends DocumentTextContainer {
-  DocumentTextParagraph._(Map<Object, Object> paragraph)
+  DocumentTextParagraph._(Map<Object?, Object?> paragraph)
       : words = List<DocumentTextWord>.unmodifiable(
-          (paragraph['words'] as List<Object>)
-              .map<DocumentTextWord>((word) => DocumentTextWord._(word)),
+          (paragraph['words']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((word) => DocumentTextWord._(word)),
         ),
         super._(paragraph);
 
@@ -203,11 +204,11 @@ class DocumentTextParagraph extends DocumentTextContainer {
 
 /// A single word representation.
 class DocumentTextWord extends DocumentTextContainer {
-  DocumentTextWord._(Map<Object, Object> word)
+  DocumentTextWord._(Map<Object?, Object?> word)
       : symbols = List<DocumentTextSymbol>.unmodifiable(
-          (word['symbols'] as List<Object>).map<DocumentTextSymbol>(
-            (symbol) => DocumentTextSymbol._(symbol),
-          ),
+          (word['symbols']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((s) => DocumentTextSymbol._(s)),
         ),
         super._(word);
 

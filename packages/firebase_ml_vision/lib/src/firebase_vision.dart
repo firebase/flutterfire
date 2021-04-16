@@ -16,8 +16,8 @@ enum ModelType { onDevice, cloud }
 
 /// Detected language from text recognition in regular and document images.
 class RecognizedLanguage {
-  RecognizedLanguage._(Map<Object, Object> data)
-      : languageCode = data['languageCode'];
+  RecognizedLanguage._(Map<Object?, Object?> data)
+      : languageCode = data['languageCode'] as String?;
 
   /// The BCP-47 language code, such as, en-US or sr-Latn. For more information,
   /// see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.

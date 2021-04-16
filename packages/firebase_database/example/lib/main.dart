@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
         await _counterRef.runTransaction((MutableData mutableData) async {
-      mutableData.value = (mutableData.value as num ?? 0) + 1;
+      mutableData.value = (mutableData.value as num? ?? 0) + 1;
       return mutableData;
     });
 

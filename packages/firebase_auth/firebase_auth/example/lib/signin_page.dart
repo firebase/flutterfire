@@ -44,6 +44,7 @@ class _SignInPageState extends State<SignInPage> {
                 await _signOut();
 
                 final String uid = user.uid;
+                // ignore: use_build_context_synchronously
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text('$uid has successfully signed out.'),
                 ));
@@ -153,6 +154,7 @@ class _EmailPasswordFormState extends State<_EmailPasswordForm> {
       ))
           .user;
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('${user.email} signed in'),
@@ -240,6 +242,7 @@ class _EmailLinkSignInSectionState extends State<_EmailLinkSignInSection> {
               iOSBundleId: 'io.flutter.plugins.firebaseAuthExample',
               androidPackageName: 'io.flutter.plugins.firebaseauthexample'));
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('An email has been sent to $_userEmail'),
@@ -314,6 +317,7 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
     try {
       final User user = (await _auth.signInAnonymously()).user;
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Signed in Anonymously as user ${user.uid}'),
@@ -704,6 +708,7 @@ class _OtherProvidersSignInSectionState
 
       final user = userCredential.user;
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Sign In ${user.uid} with GitHub'),
       ));
@@ -725,6 +730,7 @@ class _OtherProvidersSignInSectionState
       );
       final User user = (await _auth.signInWithCredential(credential)).user;
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: Text('Sign In ${user.uid} with Facebook'),
@@ -757,6 +763,7 @@ class _OtherProvidersSignInSectionState
 
       final user = userCredential.user;
 
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Sign In ${user.uid} with Twitter'),
       ));
@@ -791,6 +798,7 @@ class _OtherProvidersSignInSectionState
       }
 
       final user = userCredential.user;
+      // ignore: use_build_context_synchronously
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Sign In ${user.uid} with Google'),
       ));

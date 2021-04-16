@@ -29,7 +29,7 @@ class TextRecognizer {
     CloudTextRecognizerOptions? cloudOptions,
     required this.modelType,
     required int handle,
-  })   : _cloudOptions = cloudOptions,
+  })  : _cloudOptions = cloudOptions,
         _handle = handle,
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));
@@ -115,12 +115,12 @@ class CloudTextRecognizerOptions {
 
 /// Recognized text in an image.
 class VisionText {
-  VisionText._(Map<String, dynamic> data)
-      : text = data['text'],
+  VisionText._(Map<Object?, Object?> data)
+      : text = data['text'] as String?,
         blocks = List<TextBlock>.unmodifiable(
-          (data['blocks'] as List<Object>).map<TextBlock>(
-            (dynamic block) => TextBlock._(block),
-          ),
+          (data['blocks']! as List<Object>)
+              .cast<Map<Object?, Object?>>()
+              .map<TextBlock>((block) => TextBlock._(block)),
         );
 
   /// String representation of the recognized text.
@@ -132,26 +132,30 @@ class VisionText {
 
 /// Abstract class representing dimensions of recognized text in an image.
 abstract class TextContainer {
-  TextContainer._(Map<dynamic, dynamic> data)
+  TextContainer._(Map<Object?, Object?> data)
       : boundingBox = data['left'] != null
             ? Rect.fromLTWH(
-                data['left'],
-                data['top'],
-                data['width'],
-                data['height'],
+                data['left']! as double,
+                data['top']! as double,
+                data['width']! as double,
+                data['height']! as double,
               )
             : null,
-        confidence = (data['confidence'] as num)?.toDouble(),
+        confidence = (data['confidence'] as num?)?.toDouble(),
         cornerPoints = List<Offset>.unmodifiable(
-            (data['points'] as List<Object>)
-                .cast<List<Object>>()
-                .map<Offset>((point) => Offset(point[0], point[1]))),
-        recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
-          (data['recognizedLanguages'] as List<Object>).map<RecognizedLanguage>(
-            (language) => RecognizedLanguage._(language),
-          ),
+          (data['points']! as List<Object?>)
+              .cast<List<Object>>()
+              .map<Offset>((point) => Offset(
+                    point[0] as double,
+                    point[1] as double,
+                  )),
         ),
-        text = data['text'];
+        recognizedLanguages = List<RecognizedLanguage>.unmodifiable(
+          (data['recognizedLanguages']! as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map((language) => RecognizedLanguage._(language)),
+        ),
+        text = data['text'] as String?;
 
   /// Axis-aligned bounding rectangle of the detected text.
   ///
@@ -189,11 +193,11 @@ abstract class TextContainer {
 
 /// A block of text (think of it as a paragraph) as deemed by the OCR engine.
 class TextBlock extends TextContainer {
-  TextBlock._(Map<dynamic, dynamic> block)
+  TextBlock._(Map<Object?, Object?> block)
       : lines = List<TextLine>.unmodifiable(
-          (block['lines'] as List<Object>).map<TextLine>(
-            (dynamic line) => TextLine._(line),
-          ),
+          (block['lines']! as List<Object>)
+              .cast<Map<Object?, Object?>>()
+              .map<TextLine>((line) => TextLine._(line)),
         ),
         super._(block);
 
@@ -205,9 +209,9 @@ class TextBlock extends TextContainer {
 class TextLine extends TextContainer {
   TextLine._(Map<dynamic, dynamic> line)
       : elements = List<TextElement>.unmodifiable(
-          (line['elements'] as List<Object>).map<TextElement>(
-            (dynamic element) => TextElement._(element),
-          ),
+          (line['elements'] as List<Object?>)
+              .cast<Map<Object?, Object?>>()
+              .map<TextElement>((element) => TextElement._(element)),
         ),
         super._(line);
 
@@ -223,5 +227,5 @@ class TextLine extends TextContainer {
 /// If a word is split between two lines by a hyphen, each part is encoded as a
 /// separate element.
 class TextElement extends TextContainer {
-  TextElement._(Map<dynamic, dynamic> element) : super._(element);
+  TextElement._(Map<Object?, Object?> element) : super._(element);
 }

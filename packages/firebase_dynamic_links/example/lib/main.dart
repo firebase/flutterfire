@@ -58,7 +58,7 @@ class _MainScreenState extends State<_MainScreen> {
     final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
-      // ignore: unawaited_futures
+      // ignore: unawaited_futures, use_build_context_synchronously
       Navigator.pushNamed(context, deepLink.path);
     }
   }
