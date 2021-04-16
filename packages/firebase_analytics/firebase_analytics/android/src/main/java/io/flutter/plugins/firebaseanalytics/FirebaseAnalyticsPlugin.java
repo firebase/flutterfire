@@ -183,11 +183,11 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putDouble(key, (Double) value);
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
+      } else if (value == null) {
+        bundle.putString(key, null);
       } else {
-        String name = value == null ? "null" : value.getClass().getCanonicalName();
-
         throw new IllegalArgumentException(
-            "Unsupported value type: " + name);
+          "Unsupported value type: " + value.getClass().getCanonicalName());
       }
     }
     return bundle;
