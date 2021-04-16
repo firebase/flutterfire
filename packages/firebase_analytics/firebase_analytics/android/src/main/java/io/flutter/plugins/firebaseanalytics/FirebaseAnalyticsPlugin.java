@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
-
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -171,7 +170,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     if (map == null) {
       return null;
     }
-    
+
     Bundle bundle = new Bundle();
     for (Map.Entry<String, Object> jsonParam : map.entrySet()) {
       final Object value = jsonParam.getValue();
