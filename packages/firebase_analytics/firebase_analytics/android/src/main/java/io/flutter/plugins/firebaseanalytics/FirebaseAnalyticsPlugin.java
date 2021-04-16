@@ -7,6 +7,8 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -19,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import java.util.ArrayList;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
@@ -168,7 +171,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     if (map == null) {
       return null;
     }
-
+    
     Bundle bundle = new Bundle();
     for (Map.Entry<String, Object> jsonParam : map.entrySet()) {
       final Object value = jsonParam.getValue();
@@ -185,6 +188,24 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putBoolean(key, (Boolean) value);
       } else if (value == null) {
         bundle.putString(key, null);
+      } else if (value instanceof Iterable<?>) {
+        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+
+        for (Object item : (Iterable<?>) value) {
+          if (item instanceof Map) {
+            list.add(createBundleFromMap((Map<String, Object>) item));
+          } else {
+            throw new IllegalArgumentException(
+                "Unsupported value type: "
+                    + value.getClass().getCanonicalName()
+                    + " in list at key "
+                    + key);
+          }
+        }
+
+        bundle.putParcelableArrayList(key, list);
+      } else if (value instanceof Map<?, ?>) {
+        bundle.putParcelable(key, createBundleFromMap((Map<String, Object>) value));
       } else {
         throw new IllegalArgumentException(
             "Unsupported value type: " + value.getClass().getCanonicalName());

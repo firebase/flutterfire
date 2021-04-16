@@ -83,6 +83,16 @@ void main() {
       expect(result['path'], '1mbTestFile.gif');
     });
 
+    test('parses a un-encoded https url with special characters', () {
+      String url =
+          'https://firebasestorage.googleapis.com/v0/b/valid-url.appspot.com/o/foo+bar/file with  spaces .png?alt=media';
+
+      final result = partsFromHttpUrl(url)!;
+
+      expect(result['bucket'], 'valid-url.appspot.com');
+      expect(result['path'], 'foo+bar/file with  spaces .png');
+    });
+
     // TODO(helenaford): regexp can't handle no paths
     // test('sets path to default if null', () {
     //   String url =

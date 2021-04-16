@@ -1,3 +1,13 @@
+## 0.7.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Migrate firebase_performance to sound null safety (#5540).
+
+## 0.6.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.6.0+1
 
  - **DOCS**: remove incorrect ARCHS in ios examples (#5450).

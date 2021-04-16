@@ -74,9 +74,7 @@ jobs:
         run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
-    # Using macos instead of ubuntu as Web app can't connect to Firebase emulator
-    # when running on ubuntu.
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v1

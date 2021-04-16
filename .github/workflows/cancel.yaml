@@ -5,8 +5,10 @@ jobs:
     name: "Cancel Previous Runs"
     runs-on: ubuntu-latest
     timeout-minutes: 3
+    # temporarily use cancel-workflow-action fork pending upstream adoption of
+    # https://github.com/styfle/cancel-workflow-action/pull/62
     steps:
-      - uses: styfle/cancel-workflow-action@0.3.1
+      - uses: styfle/cancel-workflow-action@0.9.0
         with:
           # Ids in order:
           # all_plugins
@@ -38,4 +40,4 @@ jobs:
             2024659,
             2057970,
             1771737
-          access_token: ${{ github.token }}
+          all_but_latest: true
