@@ -47,34 +47,26 @@ class ReferenceWeb extends ReferencePlatform {
 
   /// Deletes the object at this reference's location.
   @override
-  Future<void> delete() async {
-    try {
-      await _ref.delete();
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<void> delete() {
+    return guard(_ref.delete);
   }
 
   /// Fetches a long lived download URL for this object.
   @override
-  Future<String> getDownloadURL() async {
-    try {
+  Future<String> getDownloadURL() {
+    return guard(() async {
       Uri uri = await _ref.getDownloadURL();
       return uri.toString();
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   /// Fetches metadata for the object at this location, if one exists.
   @override
-  Future<FullMetadata> getMetadata() async {
-    try {
+  Future<FullMetadata> getMetadata() {
+    return guard(() async {
       storage_interop.FullMetadata fullMetadata = await _ref.getMetadata();
       return fbFullMetadataToFullMetadata(fullMetadata);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   /// List items (files) and prefixes (folders) under this storage reference.
@@ -90,13 +82,12 @@ class ReferenceWeb extends ReferencePlatform {
   /// if there are too many unsupported objects in the bucket.
   @override
   Future<ListResultPlatform> list([ListOptions? options]) async {
-    try {
-      storage_interop.ListResult listResult =
-          await _ref.list(listOptionsToFbListOptions(options));
+    return guard(() async {
+      storage_interop.ListResult listResult = await _ref.list(
+        listOptionsToFbListOptions(options),
+      );
       return fbListResultToListResultWeb(storage, listResult);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   ///List all items (files) and prefixes (folders) under this storage reference.
@@ -110,13 +101,11 @@ class ReferenceWeb extends ReferencePlatform {
   /// Warning: [listAll] may potentially consume too many resources if there are
   /// too many results.
   @override
-  Future<ListResultPlatform> listAll() async {
-    try {
+  Future<ListResultPlatform> listAll() {
+    return guard(() async {
       storage_interop.ListResult listResult = await _ref.listAll();
       return fbListResultToListResultWeb(storage, listResult);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   /// Asynchronously downloads the object at the StorageReference to a list in memory.
@@ -136,12 +125,10 @@ class ReferenceWeb extends ReferencePlatform {
       }
     }
 
-    try {
+    return guard(() async {
       String url = await getDownloadURL();
-      return await readBytes(Uri.parse(url));
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+      return readBytes(Uri.parse(url));
+    });
   }
 
   /// Uploads data to this reference's location.
@@ -211,14 +198,13 @@ class ReferenceWeb extends ReferencePlatform {
 
   /// Updates the metadata on a storage object.
   @override
-  Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
-    try {
+  Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
+    return guard(() async {
       storage_interop.FullMetadata fullMetadata = await _ref.updateMetadata(
-          settableMetadataToFbSettableMetadata(_cache.store(metadata)));
+        settableMetadataToFbSettableMetadata(_cache.store(metadata)),
+      );
       return fbFullMetadataToFullMetadata(fullMetadata);
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+    });
   }
 
   // Purposefully left unimplemented because of lack of dart:io support in web:

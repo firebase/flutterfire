@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+
+import 'internals.dart';
 import 'utils/web_utils.dart';
 import 'utils/codec_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
@@ -26,12 +28,12 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
-    return guard(() {
-      return _delegate.set(
+    return guard(
+      () => _delegate.set(
         CodecUtility.encodeMapData(data)!,
         convertSetOptions(options),
-      );
-    });
+      ),
+    );
   }
 
   @override
@@ -42,8 +44,9 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   @override
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    firestore_interop.DocumentSnapshot documentSnapshot =
-        await guard(() => _delegate.get(convertGetOptions(options)));
+    firestore_interop.DocumentSnapshot documentSnapshot = await guard(
+      () => _delegate.get(convertGetOptions(options)),
+    );
 
     return convertWebDocumentSnapshot(firestore, documentSnapshot);
   }
@@ -62,11 +65,11 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
     if (includeMetadataChanges) {
       querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
-    return querySnapshots
-        .map(
-            (webSnapshot) => convertWebDocumentSnapshot(firestore, webSnapshot))
-        .handleError((e) {
-      throw getFirebaseException(e);
-    });
+
+    return guard(
+      () => querySnapshots.map((webSnapshot) {
+        return convertWebDocumentSnapshot(firestore, webSnapshot);
+      }),
+    );
   }
 }
