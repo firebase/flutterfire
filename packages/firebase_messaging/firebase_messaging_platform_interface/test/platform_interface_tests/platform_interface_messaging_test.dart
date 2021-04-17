@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,9 +12,9 @@ import '../mock.dart';
 void main() {
   setupFirebaseMessagingMocks();
 
-  TestFirebaseMessagingPlatform firebaseMessagingPlatform;
-  FirebaseApp app;
-  FirebaseApp secondaryApp;
+  late TestFirebaseMessagingPlatform firebaseMessagingPlatform;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   group('$FirebaseMessagingPlatform()', () {
     setUpAll(() async {
@@ -74,11 +72,6 @@ void main() {
         expect(FirebaseMessagingPlatform.instance,
             isA<FirebaseMessagingPlatform>());
         expect(FirebaseMessagingPlatform.instance.app.name, equals('testApp2'));
-      });
-
-      test('throws an [AssertionError] if instance is null', () {
-        expect(() => FirebaseMessagingPlatform.instance = null,
-            throwsAssertionError);
       });
     });
 
@@ -205,13 +198,13 @@ void main() {
 }
 
 class TestFirebaseMessagingPlatform extends FirebaseMessagingPlatform {
-  TestFirebaseMessagingPlatform(FirebaseApp app) : super(appInstance: app);
+  TestFirebaseMessagingPlatform(FirebaseApp? app) : super(appInstance: app);
 
-  FirebaseMessagingPlatform testDelegateFor({FirebaseApp app}) {
-    return this.delegateFor();
+  FirebaseMessagingPlatform testDelegateFor({FirebaseApp? app}) {
+    return delegateFor(app: app ?? Firebase.app());
   }
 
   FirebaseMessagingPlatform testSetInitialValues() {
-    return this.setInitialValues(isAutoInitEnabled: true);
+    return setInitialValues(isAutoInitEnabled: true);
   }
 }

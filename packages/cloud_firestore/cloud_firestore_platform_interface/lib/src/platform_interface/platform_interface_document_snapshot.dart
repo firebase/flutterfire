@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -27,16 +25,16 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentSnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentSnapshotPlatform instance) {
+  static void verifyExtends(DocumentSnapshotPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
   /// The [FirebaseFirestorePlatform] used to produce this [DocumentSnapshotPlatform].
-  final FirebaseFirestorePlatform /*!*/ _firestore;
+  final FirebaseFirestorePlatform _firestore;
 
   final Pointer _pointer;
 
-  final Map<String, dynamic> /*!*/ _data;
+  final Map<String, dynamic> _data;
 
   /// The database ID of the snapshot's document.
   String get id => _pointer.id;
@@ -57,7 +55,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   DocumentReferencePlatform get reference => _firestore.doc(_pointer.path);
 
   /// Contains all the data of this snapshot.
-  Map<String, dynamic> /*?*/ data() {
+  Map<String, dynamic>? data() {
     return exists ? Map<String, dynamic>.from(_data['data']) : null;
   }
 
@@ -69,7 +67,7 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   dynamic get(dynamic field) {
     assert(field != null);
     assert(field is String || field is FieldPath,
-        "Supported [field] types are [String] and [FieldPath]");
+        'Supported [field] types are [String] and [FieldPath]');
 
     if (!exists) {
       throw StateError(
@@ -94,12 +92,11 @@ class DocumentSnapshotPlatform extends PlatformInterface {
 
     List<String> components = fieldPath.components;
 
-    // We know snapshotData is not null because of the `exists` check
-    Map<String, dynamic> snapshotData = data() /*!*/;
+    Map<String, dynamic>? snapshotData = data();
 
-    _findComponent(int componentIndex, Map<String, dynamic> data) {
+    dynamic _findComponent(int componentIndex, Map<String, dynamic>? data) {
       bool isLast = componentIndex + 1 == components.length;
-      dynamic value = _findKeyValueInMap(components[componentIndex], data);
+      dynamic value = _findKeyValueInMap(components[componentIndex], data!);
 
       if (isLast) {
         return value;

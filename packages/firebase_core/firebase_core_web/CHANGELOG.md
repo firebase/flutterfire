@@ -1,3 +1,9 @@
+## 0.3.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **FIX**: Analysis error with firebase_core/web (#4836).
+ - **CHORE**: update PromiseJsImpl resolve/reject to match expected types.
+
 ## 0.3.0-1.0.nullsafety.0
 
  - Bump "firebase_core_web" to `0.3.0-1.0.nullsafety.0`.
