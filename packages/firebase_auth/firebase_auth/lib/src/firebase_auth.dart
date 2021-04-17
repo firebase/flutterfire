@@ -80,12 +80,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
   /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
-  Future<void> useEmulator(String origin) async {
+  Future<void> useEmulator(String origin, {bool mapLocalhost = true}) async {
     assert(origin.isNotEmpty);
     String mappedOrigin = origin;
 
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform == TargetPlatform.android && mapLocalhost) {
       if (mappedOrigin.startsWith('http://localhost')) {
         mappedOrigin =
             mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
