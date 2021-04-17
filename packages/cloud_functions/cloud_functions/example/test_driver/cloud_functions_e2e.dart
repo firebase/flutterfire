@@ -16,6 +16,7 @@ import 'sample.dart' as data;
 String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
 String kTestFunctionCustomRegion = 'testFunctionCustomRegion';
 String kTestFunctionTimeout = 'testFunctionTimeout';
+String kTestMapConvertType = 'testMapConvertType';
 
 void testsMain() {
   HttpsCallable callable;
@@ -81,6 +82,17 @@ void testsMain() {
         'inputData': data.deepList,
       });
       expect(result.data, equals(data.deepList));
+    });
+
+    test(
+        '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',
+        () async {
+      HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable(kTestMapConvertType);
+
+      var result = await callable();
+
+      expect(result.data, isA<Map<String, dynamic>>());
     });
   });
 

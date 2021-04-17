@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -19,8 +17,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseAnalyticsObserver', () {
-    FirebaseAnalytics analytics;
-    FirebaseAnalyticsObserver observer;
+    late MockFirebaseAnalytics analytics;
+    late FirebaseAnalyticsObserver observer;
     final List<String> printLog = <String>[];
 
     void overridePrint(void Function() func) {
@@ -118,12 +116,11 @@ void main() {
     });
 
     test('runs onError', () async {
-      PlatformException passedException;
+      PlatformException? passedException;
 
-      final void Function(PlatformException error) handleError =
-          (PlatformException error) {
+      void handleError(PlatformException error) {
         passedException = error;
-      };
+      }
 
       observer = FirebaseAnalyticsObserver(
         analytics: analytics,
@@ -148,6 +145,24 @@ void main() {
   });
 }
 
-class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {}
+class MockFirebaseAnalytics extends Mock implements FirebaseAnalytics {
+  @override
+  Future<void> setCurrentScreen(
+      {required String? screenName, String? screenClassOverride = 'Flutter'}) {
+    return super.noSuchMethod(
+      Invocation.method(#setCurrentScreen, [],
+          {#screenName: screenName, #screenClassOverride: screenClassOverride}),
+      returnValue: Future.value(),
+      returnValueForMissingStub: Future.value(),
+    );
+  }
+}
 
-class MockPageRoute extends Mock implements PageRoute<dynamic> {}
+class MockPageRoute extends Mock implements PageRoute<dynamic> {
+  @override
+  RouteSettings get settings => super.noSuchMethod(
+        Invocation.getter(#settings),
+        returnValue: const RouteSettings(),
+        returnValueForMissingStub: const RouteSettings(),
+      );
+}

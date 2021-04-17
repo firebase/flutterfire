@@ -29,7 +29,7 @@ void main() {
   const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
     'claim1': 'value1',
   };
-  final String kMockPhoneNumber = TEST_PHONE_NUMBER;
+  const String kMockPhoneNumber = TEST_PHONE_NUMBER;
   final int kMockIdTokenResultExpirationTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
   final int kMockIdTokenResultAuthTimestamp =
@@ -595,9 +595,10 @@ void main() {
     });
 
     group('updatePhoneNumber()', () {
-      PhoneAuthCredential phoneAuthCredential =
-          PhoneAuthProvider.credential(verificationId: 'test', smsCode: 'test')
-              as PhoneAuthCredential;
+      PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: 'test',
+        smsCode: 'test',
+      );
 
       test('gets result successfully', () async {
         await auth.currentUser!.updatePhoneNumber(phoneAuthCredential);

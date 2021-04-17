@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -19,24 +17,24 @@ import '../mock.dart';
 void main() {
   setupFirebaseStorageMocks();
 
-  /*late*/ FirebaseStoragePlatform storage;
-  /*late*/ MethodChannelReference ref;
-  /*late*/ FirebaseApp app;
+  FirebaseStoragePlatform? storage;
+  MethodChannelReference? ref;
+  FirebaseApp? app;
   final List<MethodCall> log = <MethodCall>[];
 
   // mock props
   bool mockPlatformExceptionThrown = false;
 
-  final kMockData = 'Hello World';
-  /*late*/ MethodChannelPutStringTask kMockTask;
+  const kMockData = 'Hello World';
+  late MethodChannelPutStringTask kMockTask;
 
-  final kMockExceptionMessage = 'a mock exception message';
+  const kMockExceptionMessage = 'a mock exception message';
 
   group('$MethodChannelTask', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();
-      storage = MethodChannelFirebaseStorage(app: app);
-      ref = MethodChannelReference(storage, '/');
+      storage = MethodChannelFirebaseStorage(app: app!, bucket: '');
+      ref = MethodChannelReference(storage!, '/');
 
       handleMethodCall((call) {
         log.add(call);
@@ -55,7 +53,7 @@ void main() {
             return {
               'status': true,
               'snapshot': {
-                'path': ref.fullPath,
+                'path': ref!.fullPath,
                 'bytesTransferred': 0,
                 'totalBytes': 1,
               }
@@ -65,7 +63,8 @@ void main() {
         }
       });
 
-      kMockTask = ref.putString(kMockData, PutStringFormat.raw);
+      kMockTask = ref!.putString(kMockData, PutStringFormat.raw)
+          as MethodChannelPutStringTask;
     });
 
     setUp(() {
@@ -98,7 +97,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.pause();
+        Function callMethod;
+        callMethod = () => kMockTask.pause();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -122,7 +122,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.resume();
+        Function callMethod;
+        callMethod = () => kMockTask.resume();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -146,7 +147,8 @@ void main() {
           'catch a [PlatformException] error and throws a [FirebaseException] error',
           () async {
         mockPlatformExceptionThrown = true;
-        Function callMethod = () => kMockTask.cancel();
+        Function callMethod;
+        callMethod = () => kMockTask.cancel();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });

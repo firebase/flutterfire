@@ -1,3 +1,43 @@
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
+## 1.0.4
+
+ - Update a dependency to the latest release.
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
+## 1.0.2
+
+ - Update a dependency to the latest release.
+
+## 1.0.1
+
+ - **FIX**: correct use of underlying useEmulator API, sync not async (#5171).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_auth_web" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.4.0-1.1.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-1.1.nullsafety.2
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0-1.1.nullsafety.1
 
  - **REFACTOR**: pubspec & dependency updates (#4932).

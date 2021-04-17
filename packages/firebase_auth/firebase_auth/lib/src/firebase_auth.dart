@@ -77,6 +77,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
+  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
   Future<void> useEmulator(String origin) async {
     assert(origin.isNotEmpty);
     String mappedOrigin = origin;
@@ -228,23 +231,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Internal helper which pipes internal [Stream] events onto
   /// a users own Stream.
   Stream<User?> _pipeStreamChanges(Stream<UserPlatform?> stream) {
-    Stream<User?> streamSync = stream.map((delegateUser) {
+    return stream.map((delegateUser) {
       if (delegateUser == null) {
         return null;
       }
 
       return User._(this, delegateUser);
-    });
-
-    StreamController<User?>? streamController;
-    streamController = StreamController<User?>.broadcast(onListen: () {
-      // Fire an event straight away
-      streamController!.add(currentUser);
-      // Pipe events of the broadcast stream into this stream
-      streamSync.pipe(streamController);
-    });
-
-    return streamController.stream;
+    }).asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
@@ -262,7 +255,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// This is a superset of both [authStateChanges] and [idTokenChanges]. It
   /// provides events on all user changes, such as when credentials are linked,
   /// unlinked and when updates to the user profile are made. The purpose of
-  /// this Stream is to for listening to realtime updates to the user without
+  /// this Stream is for listening to realtime updates to the user state
+  /// (signed-in, signed-out, different user & token refresh) without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
   Stream<User?> userChanges() => _pipeStreamChanges(_delegate.userChanges());

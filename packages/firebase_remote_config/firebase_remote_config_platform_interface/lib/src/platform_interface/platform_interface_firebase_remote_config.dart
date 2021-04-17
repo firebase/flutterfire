@@ -1,13 +1,12 @@
-// @dart=2.9
-
 import 'dart:async';
 
-import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
-import 'package:firebase_remote_config_platform_interface/src/method_channel/method_channel_firebase_remote_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+import '../../firebase_remote_config_platform_interface.dart';
+import '../method_channel/method_channel_firebase_remote_config.dart';
 
 /// The interface that implementations of `firebase_remote_config` must
 /// extend.
@@ -19,59 +18,50 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// `implements` this interface will be broken by newly added
 /// [FirebaseRemoteConfigPlatform] methods.
 abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
-  static final Object _token = Object();
-
-  /// The [FirebaseApp] this instance was initialized with.
-  @protected
-  final FirebaseApp appInstance;
-
   /// Create an instance using [app].
   FirebaseRemoteConfigPlatform({this.appInstance}) : super(token: _token);
 
-  /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app {
-    if (appInstance == null) {
-      return Firebase.app();
-    }
-    return appInstance;
+  /// Create instance using [app] using the existing implementation.
+  factory FirebaseRemoteConfigPlatform.instanceFor({
+    required FirebaseApp app,
+    Map<dynamic, dynamic>? pluginConstants,
+  }) {
+    return FirebaseRemoteConfigPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
+          remoteConfigValues: pluginConstants ?? <dynamic, dynamic>{},
+        );
   }
 
-  static FirebaseRemoteConfigPlatform _instance;
+  static final Object _token = Object();
+
+  static FirebaseRemoteConfigPlatform? _instance;
 
   /// The current default [FirebaseRemoteConfigPlatform] instance.
   ///
   /// It will always default to [MethodChannelFirebaseRemoteConfig]
   /// if no other implementation was provided.
   static FirebaseRemoteConfigPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseRemoteConfig.instance;
-    }
-
-    return _instance;
+    return _instance ??= MethodChannelFirebaseRemoteConfig.instance;
   }
 
   /// Sets the [FirebaseRemoteConfigPlatform] instance.
   static set instance(FirebaseRemoteConfigPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 
-  /// Create instance using [app] using the existing implementation.
-  factory FirebaseRemoteConfigPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
-    return FirebaseRemoteConfigPlatform.instance
-        .delegateFor(app: app)
-        .setInitialValues(
-            remoteConfigValues: pluginConstants == null
-                ? Map<dynamic, dynamic>()
-                : pluginConstants);
-  }
+  /// The [FirebaseApp] this instance was initialized with.
+  @protected
+  final FirebaseApp? appInstance;
+
+  /// Returns the [FirebaseApp] for the current instance.
+  late final FirebaseApp app = appInstance ?? Firebase.app();
 
   /// Enables delegates to create new instances of themselves if a none
   /// default [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+  FirebaseRemoteConfigPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -81,8 +71,9 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   /// available before the instance has initialized to prevent unnecessary
   /// async calls.
   @protected
-  FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic> remoteConfigValues}) {
+  FirebaseRemoteConfigPlatform setInitialValues({
+    required Map<dynamic, dynamic> remoteConfigValues,
+  }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 

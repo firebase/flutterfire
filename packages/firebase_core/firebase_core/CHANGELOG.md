@@ -1,3 +1,31 @@
+## 1.0.3
+
+ - **REFACTOR**: Remove deprecated gradle property android.enableR8=true (#5463).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+
+## 1.0.2
+
+ - Update a dependency to the latest release.
+
+## 1.0.1
+
+ - Update a dependency to the latest release.
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.8.0-1.0.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
 ## 0.8.0-1.0.nullsafety.1
 
  - **REFACTOR**: pubspec & dependency updates (#4932).

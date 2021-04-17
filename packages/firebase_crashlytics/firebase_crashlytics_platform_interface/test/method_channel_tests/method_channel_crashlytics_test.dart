@@ -12,7 +12,7 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseCrashlyticsMocks();
-
+  TestMethodChannelFirebaseCrashlytics? mockCrashlytics;
   FirebaseCrashlyticsPlatform? crashlytics;
   final List<MethodCall> logger = <MethodCall>[];
 
@@ -76,6 +76,7 @@ void main() {
       });
 
       crashlytics = MethodChannelFirebaseCrashlytics(app: app);
+      mockCrashlytics = TestMethodChannelFirebaseCrashlytics(app);
     });
 
     setUp(() async {
@@ -92,7 +93,7 @@ void main() {
     group('checkForUnsentReports', () {
       test('should call delegate method successfully', () async {
         kUnsentReports = true;
-        var isUnsentReports = await crashlytics!.checkForUnsentReports();
+        var isUnsentReports = await mockCrashlytics!.checkForUnsentReports();
 
         expect(isUnsentReports, isTrue);
 
@@ -113,7 +114,7 @@ void main() {
         mockPlatformExceptionThrown = true;
 
         await testExceptionHandling(
-            'PLATFORM', crashlytics!.checkForUnsentReports);
+            'PLATFORM', mockCrashlytics!.checkForUnsentReports);
       });
     });
 
@@ -339,4 +340,11 @@ void main() {
       });
     });
   });
+}
+
+class TestMethodChannelFirebaseCrashlytics
+    extends MethodChannelFirebaseCrashlytics {
+  TestMethodChannelFirebaseCrashlytics(FirebaseApp app) : super(app: app);
+  @override
+  bool get isCrashlyticsCollectionEnabled => false;
 }

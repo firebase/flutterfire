@@ -1,12 +1,10 @@
-// @dart=2.9
-
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
-setupFirebaseRemoteConfigMocks([Callback customHandlers]) {
+void setupFirebaseRemoteConfigMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

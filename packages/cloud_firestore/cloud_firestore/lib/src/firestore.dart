@@ -164,12 +164,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Specifies custom settings to be used to configure this [FirebaseFirestore] instance.
   ///
   /// You must set these before invoking any other methods on this [FirebaseFirestore] instance.
-  set settings(Settings? settings) {
+  set settings(Settings settings) {
     _delegate.settings = settings;
   }
 
   /// The current [Settings] for this [FirebaseFirestore] instance.
-  Settings? get settings {
+  Settings get settings {
     return _delegate.settings;
   }
 
@@ -207,7 +207,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is FirebaseFirestore && other.app.name == app.name;
 
   @override

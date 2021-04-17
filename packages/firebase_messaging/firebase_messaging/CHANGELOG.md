@@ -1,3 +1,32 @@
+## 9.1.1
+
+ - Update a dependency to the latest release.
+
+## 9.1.0
+
+ - **FEAT**: android.tag property on Notification (#5452).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
+## 9.0.1
+
+ - Update a dependency to the latest release.
+
+## 9.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 9.0.0-1.0.nullsafety.2
+
+ - **FIX**: fix unhandled exception  (#4676).
+
+## 9.0.0-1.0.nullsafety.1
+
+ - **TESTS**: update mockito API usage in tests
+
 ## 9.0.0-1.0.nullsafety.0
 
 > Note: This release has breaking changes.

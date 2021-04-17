@@ -2,9 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 
 /// Implementation for a [ListResultPlatform].
@@ -12,9 +10,9 @@ class MethodChannelListResult extends ListResultPlatform {
   // ignore: public_member_api_docs
   MethodChannelListResult(
     FirebaseStoragePlatform storage, {
-    String nextPageToken,
-    List<String> items,
-    List<String> prefixes,
+    String? nextPageToken,
+    List<String>? items,
+    List<String>? prefixes,
   })  : _items = items ?? [],
         _prefixes = prefixes ?? [],
         super(storage, nextPageToken);
@@ -25,13 +23,15 @@ class MethodChannelListResult extends ListResultPlatform {
 
   @override
   List<ReferencePlatform> get items {
-    return _items.map((path) => MethodChannelReference(storage, path)).toList();
+    return _items
+        .map((path) => MethodChannelReference(storage!, path))
+        .toList();
   }
 
   @override
   List<ReferencePlatform> get prefixes {
     return _prefixes
-        .map((path) => MethodChannelReference(storage, path))
+        .map((path) => MethodChannelReference(storage!, path))
         .toList();
   }
 }

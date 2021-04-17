@@ -53,7 +53,7 @@ class Settings {
   }
 
   @override
-  bool operator ==(dynamic other) =>
+  bool operator ==(Object other) =>
       other is Settings && other.asMap.toString() == asMap.toString();
 
   @override

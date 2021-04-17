@@ -60,17 +60,17 @@ void main() {
 
     test('fromMillisecondsSinceEpoch can handle 0', () {
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(0);
-      expect(t.toDate().year, 1970);
-      expect(t.toDate().month, 1);
-      expect(t.toDate().day, 1);
+      expect(t.toDate().toUtc().year, 1970);
+      expect(t.toDate().toUtc().month, 1);
+      expect(t.toDate().toUtc().day, 1);
     });
 
     test('fromMillisecondsSinceEpoch can handle negative millisecond values',
         () {
       Timestamp t = Timestamp.fromMillisecondsSinceEpoch(-9999999999);
 
-      expect(t.toDate().year, 1969);
-      expect(t.toDate().month, 9);
+      expect(t.toDate().toUtc().year, 1969);
+      expect(t.toDate().toUtc().month, 9);
     });
 
     test('millisecondsSinceEpoch returns correct negative epoch value', () {

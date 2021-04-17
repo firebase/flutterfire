@@ -32,7 +32,9 @@ void main() {
       const String kMockSmsCode = 'test-sms-code';
       test('creates a new [PhoneAuthCredential]', () {
         final result = PhoneAuthProvider.credential(
-            verificationId: kMockVerificationId, smsCode: kMockSmsCode);
+          verificationId: kMockVerificationId,
+          smsCode: kMockSmsCode,
+        );
 
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);

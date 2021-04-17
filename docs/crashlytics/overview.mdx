@@ -15,7 +15,52 @@ Crashlytics helps you to collect analytics and details about crashes and errors 
 
 ## Installation
 
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+Ensure you're using the Flutter `stable` channel:
+
+```bash
+$ flutter channel stable
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
 ### 1. Add dependency
+
+Add the [`firebase_crashlytics`](https://pub.dev/packages/firebase_crashlytics) dependency to your projects `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
 
 ```yaml {5} title="pubspec.yaml"
 dependencies:
@@ -24,6 +69,20 @@ dependencies:
   firebase_core: "^{{ plugins.firebase_core }}"
   firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  firebase_crashlytics: "^{{ plugins.firebase_crashlytics_ns }}"
+```
+
+</TabItem>
+</Tabs>
 
 ### 2. Download dependency
 
@@ -43,23 +102,30 @@ guides and remove any legacy Fabric integration steps from your project:
 
 1. Add the following classpaths to your `android/build.gradle` file.
 
-```groovy {3} title="android/build.gradle"
+```groovy {4} title="android/build.gradle"
 dependencies {
   // ... other dependencies
-  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'
+  classpath 'com.google.gms:google-services:4.3.5'
+  classpath 'com.google.firebase:firebase-crashlytics-gradle:2.5.1'
 }
 ```
 
 2. Apply the following to your `android/app/build.gradle` file.
 
-```groovy {3} title="android/app/build.gradle"
+```groovy {13} title="android/app/build.gradle"
 // ... other imports
-
-apply plugin: 'com.google.firebase.crashlytics'
 
 android {
   // ... your android config
 }
+
+dependencies {
+  // ... your dependencies
+}
+
+// This must appear at the bottom of the file
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 ```
 
 #### b. iOS

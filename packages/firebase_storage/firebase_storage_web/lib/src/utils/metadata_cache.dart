@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 
 /// This class remembers what SettableMetadata has already been set, so it can't be overwritten.
@@ -21,7 +19,7 @@ class SettableMetadataCache {
   ///
   /// Returns an updated SettableMetadata object, after merging the current cache
   /// with `incoming`.
-  SettableMetadata store(SettableMetadata incoming, {bool overwrite = false}) {
+  SettableMetadata store(SettableMetadata? incoming, {bool overwrite = false}) {
     if (overwrite) {
       // Prevent the internal cache from becoming null when store
       // is called with incoming = null and overwrite = true.

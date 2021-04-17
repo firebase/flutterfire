@@ -1,3 +1,31 @@
+## 8.0.3
+
+ - **FIX**: improve refFromURL http regex (#5682).
+
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
+## 8.0.1
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
+## 8.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 8.0.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 8.0.0-1.0.nullsafety.0
+
+ - **REFACTOR**: Migrate Firebase Storage to nnbd (#4753).
+
 ## 7.0.0
 
 > Note: This release has breaking changes.

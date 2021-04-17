@@ -30,16 +30,16 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
   static const int _kIncrementInteger = 138;
 
   @override
-  dynamic readValueOfType(int type, ReadBuffer buffer) {
+  Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       // The following cases are only used by unit tests, and not by actual application
       // code paths.
       case _kArrayUnion:
-        final List<dynamic> value = readValue(buffer);
+        final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.arrayUnion(value));
       case _kArrayRemove:
-        final List<dynamic> value = readValue(buffer);
+        final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.arrayRemove(value));
       case _kDelete:
@@ -48,20 +48,21 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.serverTimestamp());
       case _kIncrementDouble:
-        final double value = readValue(buffer);
+        final double value = readValue(buffer)! as double;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.increment(value));
       case _kIncrementInteger:
-        final int value = readValue(buffer);
+        final int value = readValue(buffer)! as int;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.increment(value));
       case _kFirestoreInstance:
-        String appName = readValue(buffer);
+        String appName = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
-        Map<dynamic, dynamic> values = readValue(buffer);
+        Map<dynamic, dynamic> values =
+            readValue(buffer)! as Map<dynamic, dynamic>;
         //ignore:
         return MethodChannelQuery(
             //ignore: avoid_redundant_argument_values
@@ -71,8 +72,9 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         readValue(buffer);
         return const Settings();
       case _kDocumentReference:
-        MethodChannelFirebaseFirestore firestore = readValue(buffer);
-        String path = readValue(buffer);
+        MethodChannelFirebaseFirestore firestore =
+            readValue(buffer)! as MethodChannelFirebaseFirestore;
+        String path = readValue(buffer)! as String;
         return firestore.doc(path);
       default:
         return super.readValueOfType(type, buffer);

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_performance;
 
 /// [Trace] allows you to set the beginning and end of a custom trace in your app.
@@ -49,12 +47,12 @@ class Trace extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStarted = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#start',
-      <String, dynamic>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -67,12 +65,12 @@ class Trace extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _hasStopped = true;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#stop',
-      <String, dynamic>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -83,14 +81,13 @@ class Trace extends PerformanceAttributes {
   /// taking action.
   Future<void> incrementMetric(String name, int value) {
     if (!_hasStarted || _hasStopped) {
-      return Future<void>.value(null);
+      return Future<void>.value();
     }
 
-    _metrics.putIfAbsent(name, () => 0);
-    _metrics[name] += value;
+    _metrics[name] = (_metrics[name] ?? 0) + value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#incrementMetric',
-      <String, dynamic>{'handle': _handle, 'name': name, 'value': value},
+      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
     );
   }
 
@@ -100,12 +97,12 @@ class Trace extends PerformanceAttributes {
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
   Future<void> setMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) return Future<void>.value(null);
+    if (!_hasStarted || _hasStopped) return Future<void>.value();
 
     _metrics[name] = value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'Trace#setMetric',
-      <String, dynamic>{'handle': _handle, 'name': name, 'value': value},
+      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
     );
   }
 
@@ -113,12 +110,13 @@ class Trace extends PerformanceAttributes {
   ///
   /// If a metric with the given name doesn't exist, it is NOT created and a 0
   /// is returned.
-  Future<int> getMetric(String name) {
+  Future<int> getMetric(String name) async {
     if (_hasStopped) return Future<int>.value(_metrics[name] ?? 0);
 
-    return FirebasePerformance.channel.invokeMethod<int>(
+    final metric = await FirebasePerformance.channel.invokeMethod<int>(
       'Trace#getMetric',
-      <String, dynamic>{'handle': _handle, 'name': name},
+      <String, Object?>{'handle': _handle, 'name': name},
     );
+    return metric ?? 0;
   }
 }

@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
@@ -19,14 +17,13 @@ MockFirebaseRemoteConfig mockRemoteConfigPlatform = MockFirebaseRemoteConfig();
 void main() {
   setupFirebaseRemoteConfigMocks();
 
-  RemoteConfig remoteConfig;
-
-  DateTime mockLastFetchTime;
-  RemoteConfigFetchStatus mockLastFetchStatus;
-  RemoteConfigSettings mockRemoteConfigSettings;
-  Map<String, RemoteConfigValue> mockParameters;
-  Map<String, dynamic> mockDefaultParameters;
-  RemoteConfigValue mockRemoteConfigValue;
+  late RemoteConfig remoteConfig;
+  late DateTime mockLastFetchTime;
+  late RemoteConfigFetchStatus mockLastFetchStatus;
+  late RemoteConfigSettings mockRemoteConfigSettings;
+  late Map<String, RemoteConfigValue> mockParameters;
+  late Map<String, dynamic> mockDefaultParameters;
+  late RemoteConfigValue mockRemoteConfigValue;
 
   group('$RemoteConfig', () {
     FirebaseRemoteConfigPlatform.instance = mockRemoteConfigPlatform;
@@ -35,11 +32,11 @@ void main() {
       await Firebase.initializeApp();
       remoteConfig = RemoteConfig.instance;
 
-      mockLastFetchTime = DateTime(2020, 1, 1);
+      mockLastFetchTime = DateTime(2020);
       mockLastFetchStatus = RemoteConfigFetchStatus.noFetchYet;
       mockRemoteConfigSettings = RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 10),
-        minimumFetchInterval: Duration(hours: 1),
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
       );
       mockParameters = <String, RemoteConfigValue>{};
       mockDefaultParameters = <String, dynamic>{};
@@ -71,7 +68,7 @@ void main() {
           .thenReturn(mockRemoteConfigSettings);
 
       when(mockRemoteConfigPlatform.setConfigSettings(any))
-          .thenAnswer((_) => null);
+          .thenAnswer((_) => Future.value());
 
       when(mockRemoteConfigPlatform.activate())
           .thenAnswer((_) => Future.value(true));
@@ -131,19 +128,12 @@ void main() {
 
       test('set settings', () async {
         final remoteConfigSettings = RemoteConfigSettings(
-          fetchTimeout: Duration(seconds: 8),
+          fetchTimeout: const Duration(seconds: 8),
           minimumFetchInterval: Duration.zero,
         );
         await remoteConfig.setConfigSettings(remoteConfigSettings);
         verify(
             mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings));
-      });
-
-      test('should throw if settings is null', () async {
-        expect(
-          () => remoteConfig.setConfigSettings(null),
-          throwsAssertionError,
-        );
       });
     });
 
@@ -187,20 +177,12 @@ void main() {
         remoteConfig.getBool('foo');
         verify(mockRemoteConfigPlatform.getBool('foo'));
       });
-
-      test('should throw if key is null', () {
-        expect(() => remoteConfig.getBool(null), throwsAssertionError);
-      });
     });
 
     group('getInt()', () {
       test('should call delegate method', () {
         remoteConfig.getInt('foo');
         verify(mockRemoteConfigPlatform.getInt('foo'));
-      });
-
-      test('should throw if key is null', () {
-        expect(() => remoteConfig.getInt(null), throwsAssertionError);
       });
     });
 
@@ -209,20 +191,12 @@ void main() {
         remoteConfig.getDouble('foo');
         verify(mockRemoteConfigPlatform.getDouble('foo'));
       });
-
-      test('should throw if key is null', () {
-        expect(() => remoteConfig.getDouble(null), throwsAssertionError);
-      });
     });
 
     group('getString()', () {
       test('should call delegate method', () {
         remoteConfig.getString('foo');
         verify(mockRemoteConfigPlatform.getString('foo'));
-      });
-
-      test('should throw if key is null', () {
-        expect(() => remoteConfig.getString(null), throwsAssertionError);
       });
     });
 
@@ -231,10 +205,6 @@ void main() {
         remoteConfig.getValue('foo');
         verify(mockRemoteConfigPlatform.getValue('foo'));
       });
-
-      test('should throw if key is null', () {
-        expect(() => remoteConfig.getValue(null), throwsAssertionError);
-      });
     });
 
     group('setDefaults()', () {
@@ -242,32 +212,195 @@ void main() {
         remoteConfig.setDefaults(mockParameters);
         verify(mockRemoteConfigPlatform.setDefaults(mockDefaultParameters));
       });
-
-      test('should throw if parameters are null', () {
-        expect(() => remoteConfig.setDefaults(null), throwsAssertionError);
-      });
     });
   });
 }
 
 class MockFirebaseRemoteConfig extends Mock
-    with MockPlatformInterfaceMixin
-    implements TestFirebaseRemoteConfigPlatform {
-  MockFirebaseRemoteConfig();
+    with
+        // ignore: prefer_mixin
+        MockPlatformInterfaceMixin
+    implements
+        TestFirebaseRemoteConfigPlatform {
+  MockFirebaseRemoteConfig() {
+    TestFirebaseRemoteConfigPlatform();
+  }
+
+  @override
+  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp? app}) {
+    return super.noSuchMethod(
+      Invocation.method(#delegateFor, [], {#app: app}),
+      returnValue: TestFirebaseRemoteConfigPlatform(),
+      returnValueForMissingStub: TestFirebaseRemoteConfigPlatform(),
+    );
+  }
+
+  @override
+  FirebaseRemoteConfigPlatform setInitialValues({Map? remoteConfigValues}) {
+    return super.noSuchMethod(
+      Invocation.method(
+          #setInitialValues, [], {#remoteConfigValues: remoteConfigValues}),
+      returnValue: TestFirebaseRemoteConfigPlatform(),
+      returnValueForMissingStub: TestFirebaseRemoteConfigPlatform(),
+    );
+  }
+
+  @override
+  Future<bool> activate() {
+    return super.noSuchMethod(Invocation.method(#activate, []),
+        returnValue: Future<bool>.value(true),
+        returnValueForMissingStub: Future<bool>.value(true));
+  }
+
+  @override
+  Future<void> ensureInitialized() {
+    return super.noSuchMethod(Invocation.method(#ensureInitialized, []),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
+  }
+
+  @override
+  Future<void> fetch() {
+    return super.noSuchMethod(Invocation.method(#fetch, []),
+        returnValue: Future<void>.value(),
+        returnValueForMissingStub: Future<void>.value());
+  }
+
+  @override
+  Future<bool> fetchAndActivate() {
+    return super.noSuchMethod(Invocation.method(#fetchAndActivate, []),
+        returnValue: Future<bool>.value(true),
+        returnValueForMissingStub: Future<bool>.value(true));
+  }
+
+  @override
+  Future<void> setConfigSettings(RemoteConfigSettings? remoteConfigSettings) {
+    return super.noSuchMethod(
+      Invocation.method(#setConfigSettings, [remoteConfigSettings]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Future<void> setDefaults(Map<String, dynamic>? defaultParameters) {
+    return super.noSuchMethod(
+      Invocation.method(#setDefaults, [defaultParameters]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Map<String, RemoteConfigValue> getAll() {
+    return super.noSuchMethod(
+      Invocation.method(#getAll, []),
+      returnValue: <String, RemoteConfigValue>{},
+      returnValueForMissingStub: <String, RemoteConfigValue>{},
+    );
+  }
+
+  @override
+  bool getBool(String key) {
+    return super.noSuchMethod(
+      Invocation.method(#getBool, [key]),
+      returnValue: true,
+      returnValueForMissingStub: true,
+    );
+  }
+
+  @override
+  int getInt(String key) {
+    return super.noSuchMethod(
+      Invocation.method(#getInt, [key]),
+      returnValue: 8,
+      returnValueForMissingStub: 8,
+    );
+  }
+
+  @override
+  String getString(String key) {
+    return super.noSuchMethod(
+      Invocation.method(#getString, [key]),
+      returnValue: 'foo',
+      returnValueForMissingStub: 'foo',
+    );
+  }
+
+  @override
+  double getDouble(String key) {
+    return super.noSuchMethod(
+      Invocation.method(#getDouble, [key]),
+      returnValue: 8.8,
+      returnValueForMissingStub: 8.8,
+    );
+  }
+
+  @override
+  RemoteConfigValue getValue(String key) {
+    return super.noSuchMethod(
+      Invocation.method(#getValue, [key]),
+      returnValue: RemoteConfigValue(
+        <int>[],
+        ValueSource.valueStatic,
+      ),
+      returnValueForMissingStub: RemoteConfigValue(
+        <int>[],
+        ValueSource.valueStatic,
+      ),
+    );
+  }
+
+  @override
+  RemoteConfigFetchStatus get lastFetchStatus {
+    return super.noSuchMethod(
+      Invocation.getter(#lastFetchStatus),
+      returnValue: RemoteConfigFetchStatus.success,
+      returnValueForMissingStub: RemoteConfigFetchStatus.success,
+    );
+  }
+
+  @override
+  DateTime get lastFetchTime {
+    return super.noSuchMethod(
+      Invocation.getter(#lastFetchTime),
+      returnValue: DateTime(2020),
+      returnValueForMissingStub: DateTime(2020),
+    );
+  }
+
+  @override
+  RemoteConfigSettings get settings {
+    return super.noSuchMethod(
+      Invocation.getter(#settings),
+      returnValue: RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+      returnValueForMissingStub: RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: const Duration(hours: 1),
+      ),
+    );
+  }
 }
 
 class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
   TestFirebaseRemoteConfigPlatform() : super();
 
-  instanceFor({FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {}
+  void instanceFor({
+    FirebaseApp? app,
+    Map<dynamic, dynamic>? pluginConstants,
+  }) {}
 
-  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp app}) {
+  @override
+  FirebaseRemoteConfigPlatform delegateFor({FirebaseApp? app}) {
     return this;
   }
 
   @override
   FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic> remoteConfigValues}) {
+      {Map<dynamic, dynamic>? remoteConfigValues}) {
     return this;
   }
 }

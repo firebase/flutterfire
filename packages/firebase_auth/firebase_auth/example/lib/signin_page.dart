@@ -491,7 +491,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
   // Example code of how to sign in with phone.
   Future<void> _signInWithPhoneNumber() async {
     try {
-      final AuthCredential credential = PhoneAuthProvider.credential(
+      final PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId,
         smsCode: _smsController.text,
       );

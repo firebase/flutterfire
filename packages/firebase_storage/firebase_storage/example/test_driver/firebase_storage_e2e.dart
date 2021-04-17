@@ -16,6 +16,7 @@ import 'reference_e2e.dart';
 import 'task_e2e.dart';
 
 // Requires that an emulator is running locally
+// ignore: non_constant_identifier_names
 bool USE_EMULATOR = false;
 
 void testsMain() {

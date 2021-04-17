@@ -1,3 +1,29 @@
+## 0.10.0-dev.0
+
+ - Migrate to null safety.
+
+## 0.9.0-dev.2
+
+ - Update a dependency to the latest release.
+
+## 0.9.0-dev.1
+
+ - **FIX**: ensureInitialized() task should ignore return value (fixes #5222) (#5467).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints for firebase_remote_config (#5232).
+ - **CHORE**: rm dev dependencies breaking CI (#5221).
+
+## 0.9.0-dev.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.8.0-dev.1
+
+ - Update a dependency to the latest release.
+
 ## 0.8.0-dev.0
 
 > Note: This release has breaking changes.
