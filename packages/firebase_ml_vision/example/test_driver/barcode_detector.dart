@@ -36,6 +36,20 @@ void barcodeDetectorTests() {
       expect(barcodes.length, 1);
     });
 
+    test('detectInImage rawBytes', () async {
+      final String tmpFilename = await _loadImage('assets/test_barcode.jpg');
+      final FirebaseVisionImage visionImage =
+          FirebaseVisionImage.fromFilePath(tmpFilename);
+
+      final List<Barcode> barcodes = await detector.detectInImage(
+        visionImage,
+      );
+
+      expect(barcodes.length, 1);
+      expect(barcodes.first.rawBytes,
+          Uint8List.fromList([54, 51, 50, 57, 51, 48, 51, 51, 52, 48, 51, 50]));
+    });
+
     test('detectInImage contactInfo', () async {
       final String tmpFilename = await _loadImage(
         'assets/test_contact_barcode.jpg',
