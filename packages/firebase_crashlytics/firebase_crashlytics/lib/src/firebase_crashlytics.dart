@@ -133,11 +133,14 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
 
     return recordError(
-        flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
-        reason: flutterErrorDetails.context,
-        information: flutterErrorDetails.informationCollector == null
-            ? []
-            : flutterErrorDetails.informationCollector!());
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
+    );
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
