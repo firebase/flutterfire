@@ -154,10 +154,12 @@ class _PictureScannerState extends State<PictureScanner> {
     return Container(
       constraints: const BoxConstraints.expand(),
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: Image.file(_imageFile).image,
-          fit: BoxFit.cover,
-        ),
+        image: _imageFile == null
+            ? null
+            : DecorationImage(
+                image: Image.file(_imageFile!).image,
+                fit: BoxFit.cover,
+              ),
       ),
       child: _imageSize == null || _scanResults == null
           ? const Center(
