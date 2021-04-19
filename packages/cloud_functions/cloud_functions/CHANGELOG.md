@@ -1,3 +1,9 @@
+## 1.0.4
+
+ - **FIX**: return correct type on native (#5709).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+ - **CHORE**: update drive dependency (#5740).
+
 ## 1.0.3
 
  - Update a dependency to the latest release.

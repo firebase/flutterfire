@@ -1,3 +1,7 @@
+## 0.10.0-dev.1
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0-dev.0
 
  - Migrate to null safety.

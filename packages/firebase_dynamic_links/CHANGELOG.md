@@ -1,3 +1,7 @@
+## 2.0.1
+
+ - **DOCS**: remove codelab link from readme.
+
 ## 2.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
