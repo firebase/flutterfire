@@ -116,10 +116,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     final StackTrace stackTrace = stack ?? StackTrace.current;
 
     // Report error.
-    final List<String> stackTraceLines =
-        Trace.format(stackTrace).trimRight().split('\n');
     final List<Map<String, String>> stackTraceElements =
-        getStackTraceElements(stackTraceLines);
+        getStackTraceElements(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
