@@ -36,7 +36,7 @@ class ActionCodeInfo {
   ActionCodeInfo({
     required int operation,
     required Map<String, dynamic> data,
-  })   : _operation = operation,
+  })  : _operation = operation,
         _data = data;
 
   int _operation;
