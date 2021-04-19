@@ -116,10 +116,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     final StackTrace stackTrace = stack ?? StackTrace.current;
 
     // Report error.
-    final List<String> stackTraceLines =
-        Trace.format(stackTrace).trimRight().split('\n');
     final List<Map<String, String>> stackTraceElements =
-        getStackTraceElements(stackTraceLines);
+        getStackTraceElements(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
@@ -135,11 +133,14 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
 
     return recordError(
-        flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
-        reason: flutterErrorDetails.context,
-        information: flutterErrorDetails.informationCollector == null
-            ? []
-            : flutterErrorDetails.informationCollector!());
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
+    );
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.

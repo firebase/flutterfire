@@ -185,6 +185,8 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putDouble(key, (Double) value);
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
+      } else if (value == null) {
+        bundle.putString(key, null);
       } else if (value instanceof Iterable<?>) {
         ArrayList<Parcelable> list = new ArrayList<Parcelable>();
 
