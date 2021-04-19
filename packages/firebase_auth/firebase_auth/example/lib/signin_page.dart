@@ -97,36 +97,35 @@ class _UserInfoCardState extends State<_UserInfoCard> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              padding: const EdgeInsets.only(bottom: 8),
+              alignment: Alignment.center,
               child: const Text(
-                "User info",
+                'User info',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              padding: EdgeInsets.only(bottom: 8.0),
-              alignment: Alignment.center,
             ),
             if (widget.user != null)
               if (widget.user.photoURL != null)
                 Container(
-                  child: Image.network(widget.user.photoURL),
                   alignment: Alignment.center,
-                  margin: EdgeInsets.only(bottom: 8.0),
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: Image.network(widget.user.photoURL),
                 )
               else
                 Align(
-                  alignment: Alignment.center,
                   child: Container(
-                    child: Text(
-                      "No image",
+                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(bottom: 8),
+                    color: Colors.black,
+                    child: const Text(
+                      'No image',
                       textAlign: TextAlign.center,
                     ),
-                    padding: EdgeInsets.all(8.0),
-                    margin: EdgeInsets.only(bottom: 8.0),
-                    color: Colors.black,
                   ),
                 ),
             Text(widget.user == null
@@ -148,12 +147,14 @@ class _UserInfoCardState extends State<_UserInfoCard> {
                     widget.user.providerData.isEmpty
                         ? 'No providers'
                         : 'Providers:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   for (var provider in widget.user.providerData)
                     Dismissible(
                       key: Key(provider.uid),
+                      onDismissed: (action) =>
+                          widget.user.unlink(provider.providerId),
                       child: Card(
                         color: Colors.grey[700],
                         child: ListTile(
@@ -171,15 +172,13 @@ class _UserInfoCardState extends State<_UserInfoCard> {
                               "${provider.displayName == null ? "" : "Name: ${provider.displayName}\n"}"),
                         ),
                       ),
-                      onDismissed: (action) =>
-                          widget.user.unlink(provider.providerId),
                     ),
                 ],
               ),
             Visibility(
               visible: widget.user != null,
               child: Container(
-                margin: EdgeInsets.only(top: 8.0),
+                margin: const EdgeInsets.only(top: 8),
                 alignment: Alignment.center,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -233,7 +232,7 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Update profile"),
+      title: const Text('Update profile'),
       content: SingleChildScrollView(
         child: ListBody(
           children: [
@@ -254,7 +253,7 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
                     //You can get the data with dart:io or http and check it here
                     return null;
                   }
-                  return "Faulty URL!";
+                  return 'Faulty URL!';
                 }
                 return null;
               },
@@ -270,7 +269,7 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
                 photoURL: _urlController.text);
             Navigator.of(context).pop();
           },
-          child: const Text("Update"),
+          child: const Text('Update'),
         )
       ],
     );
