@@ -9,9 +9,9 @@ class ListResultWeb extends ListResultPlatform {
   /// Build a ListResultWeb instance from a list of items and prefixes.
   ListResultWeb(
     FirebaseStoragePlatform storage, {
-    String nextPageToken,
-    List<String> items,
-    List<String> prefixes,
+    String? nextPageToken,
+    List<String>? items,
+    List<String>? prefixes,
   })  : _items = items ?? [],
         _prefixes = prefixes ?? [],
         super(storage, nextPageToken);
@@ -22,11 +22,11 @@ class ListResultWeb extends ListResultPlatform {
 
   @override
   List<ReferencePlatform> get items {
-    return _items.map((path) => storage.ref(path)).toList();
+    return _items.map(storage!.ref).toList();
   }
 
   @override
   List<ReferencePlatform> get prefixes {
-    return _prefixes.map((path) => storage.ref(path)).toList();
+    return _prefixes.map(storage!.ref).toList();
   }
 }

@@ -9,12 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
-typedef Callback(MethodCall call);
+typedef Callback = Function(MethodCall call);
 
 int mockHandleId = 0;
 int get nextMockHandleId => mockHandleId++;
 
-setupFirebaseFunctionsMocks([Callback customHandlers]) {
+void setupFirebaseFunctionsMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
@@ -63,8 +63,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: ${testMethod} threw unexpected FirebaseFunctionsException');
+        'testExceptionHandling: $testMethod threw unexpected FirebaseFunctionsException');
   } catch (e) {
-    fail('testExceptionHandling: ${testMethod} threw invalid exception ${e}');
+    fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }
 }

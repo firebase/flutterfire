@@ -7,7 +7,7 @@ part of 'firebase_ml_vision.dart';
 void documentTextRecognizerTests() {
   group('$DocumentTextRecognizer', () {
     final recognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
-    FirebaseVisionImage visionImage;
+    late FirebaseVisionImage visionImage;
 
     setUp(() async {
       final tmpFilename = await _loadImage('assets/test_text.png');

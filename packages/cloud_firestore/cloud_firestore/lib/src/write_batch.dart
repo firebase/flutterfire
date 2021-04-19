@@ -25,9 +25,8 @@ class WriteBatch {
 
   /// Deletes the document referred to by [document].
   void delete(DocumentReference document) {
-    assert(document != null);
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.delete(document.path);
   }
 
@@ -38,37 +37,20 @@ class WriteBatch {
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
   void set(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
-    assert(document != null);
-    assert(data != null);
+      [SetOptions? options]) {
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.set(document.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data), options);
-  }
-
-  @Deprecated("Deprecated in favor of `.set`")
-  // ignore: public_member_api_docs
-  void setData(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
-    return set(document, data, options);
+        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
   }
 
   /// Updates a given [document].
   ///
   /// If the document does not yet exist, an exception will be thrown.
   void update(DocumentReference document, Map<String, dynamic> data) {
-    assert(document != null);
-    assert(data != null);
     assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+        'the document provided is from a different Firestore instance');
     return _delegate.update(
-        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data));
-  }
-
-  @Deprecated("Deprecated in favor of `.update`")
-  // ignore: public_member_api_docs
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
-    return update(document, data);
+        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data)!);
   }
 }

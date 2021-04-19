@@ -90,7 +90,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     [self sendUnsentReportsWithMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#deleteUnsentReports" isEqualToString:call.method]) {
     [self deleteUnsentReportsWithMethodCallResult:methodCallResult];
-  } else if ([@"Crashlytics#didCrashDuringPreviousExecution" isEqualToString:call.method]) {
+  } else if ([@"Crashlytics#didCrashOnPreviousExecution" isEqualToString:call.method]) {
     [self didCrashOnPreviousExecutionWithMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);

@@ -12,19 +12,18 @@ part of firebase_dynamic_links;
 class DynamicLinkParameters {
   DynamicLinkParameters({
     this.androidParameters,
-    @required this.uriPrefix,
+    required this.uriPrefix,
     this.dynamicLinkParametersOptions,
     this.googleAnalyticsParameters,
     this.iosParameters,
     this.itunesConnectAnalyticsParameters,
-    @required this.link,
+    required this.link,
     this.navigationInfoParameters,
     this.socialMetaTagParameters,
-  })  : assert(uriPrefix != null),
-        assert(link != null);
+  });
 
   /// Android parameters for a generated Dynamic Link URL.
-  final AndroidParameters androidParameters;
+  final AndroidParameters? androidParameters;
 
   /// Domain URI Prefix of your App.
   // This value must be your assigned domain from the Firebase console.
@@ -34,16 +33,16 @@ class DynamicLinkParameters {
   final String uriPrefix;
 
   /// Defines behavior for generating Dynamic Link URLs.
-  final DynamicLinkParametersOptions dynamicLinkParametersOptions;
+  final DynamicLinkParametersOptions? dynamicLinkParametersOptions;
 
   /// Analytics parameters for a generated Dynamic Link URL.
-  final GoogleAnalyticsParameters googleAnalyticsParameters;
+  final GoogleAnalyticsParameters? googleAnalyticsParameters;
 
   /// iOS parameters for a generated Dynamic Link URL.
-  final IosParameters iosParameters;
+  final IosParameters? iosParameters;
 
   /// iTunes Connect parameters for a generated Dynamic Link URL.
-  final ItunesConnectAnalyticsParameters itunesConnectAnalyticsParameters;
+  final ItunesConnectAnalyticsParameters? itunesConnectAnalyticsParameters;
 
   /// The link the target app will open.
   ///
@@ -55,24 +54,24 @@ class DynamicLinkParameters {
   final Uri link;
 
   /// Navigation Info parameters for a generated Dynamic Link URL.
-  final NavigationInfoParameters navigationInfoParameters;
+  final NavigationInfoParameters? navigationInfoParameters;
 
   /// Social Meta Tag parameters for a generated Dynamic Link URL.
-  final SocialMetaTagParameters socialMetaTagParameters;
+  final SocialMetaTagParameters? socialMetaTagParameters;
 
   /// Shortens a Dynamic Link URL.
   ///
   /// This method may be used for shortening a custom URL that was not generated
   /// using [DynamicLinkParameters].
   static Future<ShortDynamicLink> shortenUrl(Uri url,
-      [DynamicLinkParametersOptions options]) async {
-    final Map<String, dynamic> reply = await FirebaseDynamicLinks.channel
+      [DynamicLinkParametersOptions? options]) async {
+    final Map<String, dynamic>? reply = await FirebaseDynamicLinks.channel
         .invokeMapMethod<String, dynamic>(
             'DynamicLinkParameters#shortenUrl', <String, dynamic>{
       'url': url.toString(),
       'dynamicLinkParametersOptions': options?._data,
     });
-    return _parseShortLink(reply);
+    return _parseShortLink(reply!);
   }
 
   Map<String, dynamic> get _data => <String, dynamic>{
@@ -90,21 +89,21 @@ class DynamicLinkParameters {
 
   /// Generate a long Dynamic Link URL.
   Future<Uri> buildUrl() async {
-    final String url = await FirebaseDynamicLinks.channel
+    final String? url = await FirebaseDynamicLinks.channel
         .invokeMethod<String>('DynamicLinkParameters#buildUrl', _data);
-    return Uri.parse(url);
+    return Uri.parse(url!);
   }
 
   /// Generate a short Dynamic Link.
   Future<ShortDynamicLink> buildShortLink() async {
-    final Map<String, dynamic> reply = await FirebaseDynamicLinks.channel
+    final Map<String, dynamic>? reply = await FirebaseDynamicLinks.channel
         .invokeMapMethod<String, dynamic>(
             'DynamicLinkParameters#buildShortLink', _data);
-    return _parseShortLink(reply);
+    return _parseShortLink(reply!);
   }
 
   static ShortDynamicLink _parseShortLink(Map<String, dynamic> reply) {
-    final List<dynamic> warnings = reply['warnings'];
+    final List<dynamic>? warnings = reply['warnings'];
     return ShortDynamicLink._(Uri.parse(reply['url']), warnings?.cast());
   }
 }
@@ -117,27 +116,26 @@ class ShortDynamicLink {
   final Uri shortUrl;
 
   /// Information about potential warnings on link creation.
-  final List<String> warnings;
+  final List<String>? warnings;
 }
 
 /// The Dynamic Link Android parameters.
 class AndroidParameters {
   AndroidParameters(
-      {this.fallbackUrl, this.minimumVersion, @required this.packageName})
-      : assert(packageName != null);
+      {this.fallbackUrl, this.minimumVersion, required this.packageName});
 
   /// The link to open when the app isn’t installed.
   ///
   /// Specify this to do something other than install the app from the Play
   /// Store when the app isn’t installed, such as open the mobile web version of
   /// the content, or display a promotional page for the app.
-  final Uri fallbackUrl;
+  final Uri? fallbackUrl;
 
   /// The version of the minimum version of your app that can open the link.
   ///
   /// If the installed app is an older version, the user is taken to the Play
   /// Store to upgrade the app.
-  final int minimumVersion;
+  final int? minimumVersion;
 
   /// The Android app’s package name.
   final String packageName;
@@ -157,7 +155,7 @@ class DynamicLinkParametersOptions {
   DynamicLinkParametersOptions({this.shortDynamicLinkPathLength});
 
   /// Specifies the length of the path component of a short Dynamic Link.
-  final ShortDynamicLinkPathLength shortDynamicLinkPathLength;
+  final ShortDynamicLinkPathLength? shortDynamicLinkPathLength;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'shortDynamicLinkPathLength': shortDynamicLinkPathLength?.index,
@@ -167,14 +165,12 @@ class DynamicLinkParametersOptions {
 /// The Dynamic Link analytics parameters.
 class GoogleAnalyticsParameters {
   GoogleAnalyticsParameters({
-    @required this.campaign,
+    required String this.campaign,
     this.content,
-    @required this.medium,
-    @required this.source,
+    required String this.medium,
+    required String this.source,
     this.term,
-  })  : assert(campaign != null),
-        assert(medium != null),
-        assert(source != null);
+  });
 
   GoogleAnalyticsParameters.empty()
       : campaign = null,
@@ -184,19 +180,19 @@ class GoogleAnalyticsParameters {
         term = null;
 
   /// The utm_campaign analytics parameter.
-  final String campaign;
+  final String? campaign;
 
   /// The utm_content analytics parameter.
-  final String content;
+  final String? content;
 
   /// The utm_medium analytics parameter.
-  final String medium;
+  final String? medium;
 
   /// The utm_source analytics parameter.
-  final String source;
+  final String? source;
 
   /// The utm_term analytics parameter.
-  final String term;
+  final String? term;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'campaign': campaign,
@@ -211,16 +207,16 @@ class GoogleAnalyticsParameters {
 class IosParameters {
   IosParameters({
     this.appStoreId,
-    @required this.bundleId,
+    required this.bundleId,
     this.customScheme,
     this.fallbackUrl,
     this.ipadBundleId,
     this.ipadFallbackUrl,
     this.minimumVersion,
-  }) : assert(bundleId != null);
+  });
 
   /// The appStore ID of the iOS app in AppStore.
-  final String appStoreId;
+  final String? appStoreId;
 
   /// The bundle ID of the iOS app to use to open the link.
   final String bundleId;
@@ -228,32 +224,32 @@ class IosParameters {
   /// The target app’s custom URL scheme.
   ///
   /// Defined to be something other than the app’s bundle ID.
-  final String customScheme;
+  final String? customScheme;
 
   /// The link to open when the app isn’t installed.
   ///
   /// Specify this to do something other than install the app from the App Store
   /// when the app isn’t installed, such as open the mobile web version of the
   /// content, or display a promotional page for the app.
-  final Uri fallbackUrl;
+  final Uri? fallbackUrl;
 
   /// The bundle ID of the iOS app to use on iPads to open the link.
   ///
   /// This is only required if there are separate iPhone and iPad applications.
-  final String ipadBundleId;
+  final String? ipadBundleId;
 
   /// The link to open on iPads when the app isn’t installed.
   ///
   /// Specify this to do something other than install the app from the App Store
   /// when the app isn’t installed, such as open the web version of the content,
   /// or display a promotional page for the app.
-  final Uri ipadFallbackUrl;
+  final Uri? ipadFallbackUrl;
 
   /// The the minimum version of your app that can open the link.
   ///
   /// It is app’s developer responsibility to open AppStore when received link
   /// declares higher [minimumVersion] than currently installed.
-  final String minimumVersion;
+  final String? minimumVersion;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'appStoreId': appStoreId,
@@ -272,13 +268,13 @@ class ItunesConnectAnalyticsParameters {
       {this.affiliateToken, this.campaignToken, this.providerToken});
 
   /// The iTunes Connect affiliate token.
-  final String affiliateToken;
+  final String? affiliateToken;
 
   /// The iTunes Connect campaign token.
-  final String campaignToken;
+  final String? campaignToken;
 
   /// The iTunes Connect provider token.
-  final String providerToken;
+  final String? providerToken;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'affiliateToken': affiliateToken,
@@ -300,7 +296,7 @@ class NavigationInfoParameters {
   /// where user tap will initiate navigation to the App (or AppStore if not
   /// installed). Disabled force redirect normally improves reliability of the
   /// click.
-  final bool forcedRedirectEnabled;
+  final bool? forcedRedirectEnabled;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'forcedRedirectEnabled': forcedRedirectEnabled,
@@ -312,13 +308,13 @@ class SocialMetaTagParameters {
   SocialMetaTagParameters({this.description, this.imageUrl, this.title});
 
   /// The description to use when the Dynamic Link is shared in a social post.
-  final String description;
+  final String? description;
 
   /// The URL to an image related to this link.
-  final Uri imageUrl;
+  final Uri? imageUrl;
 
   /// The title to use when the Dynamic Link is shared in a social post.
-  final String title;
+  final String? title;
 
   Map<String, dynamic> get _data => <String, dynamic>{
         'description': description,

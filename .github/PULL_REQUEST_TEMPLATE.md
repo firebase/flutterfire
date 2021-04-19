@@ -15,7 +15,7 @@ This will ensure a smooth and quick review process. Updating the `pubspec.yaml` 
 - [ ] My PR includes unit or integration tests for *all* changed/updated/fixed behaviors (See [Contributor Guide]).
 - [ ] All existing and new tests are passing.
 - [ ] I updated/added relevant documentation (doc comments with `///`).
-- [ ] The analyzer (`flutter analyze`) does not report any problems on my PR.
+- [ ] The analyzer (`melos run analyze`) does not report any problems on my PR.
 - [ ] I read and followed the [Flutter Style Guide].
 - [ ] I signed the [CLA].
 - [ ] I am willing to follow-up on review comments in a timely manner.
@@ -24,7 +24,7 @@ This will ensure a smooth and quick review process. Updating the `pubspec.yaml` 
 
 Does your PR require plugin users to manually update their apps to accommodate your change?
 
-- [ ] Yes, this is a breaking change (please indicate a breaking change in CHANGELOG.md and increment major revision).
+- [ ] Yes, this is a breaking change.
 - [ ] No, this is *not* a breaking change.
 
 <!-- Links -->

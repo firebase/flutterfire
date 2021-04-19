@@ -1,15 +1,18 @@
 // @dart = 2.9
 
-// Copyright 2020, the Chromium project messagingors.  Please see the MESSAGINGORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
+// @dart=2.9
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI', defaultValue: false);
+// ignore: do_not_use_environment
+const bool SKIP_MANUAL_TESTS = bool.fromEnvironment('CI');
 
 void runInstanceTests() {
   group('$FirebaseMessaging.instance', () {
@@ -41,7 +44,7 @@ void runInstanceTests() {
         expect(messaging.isAutoInitEnabled, isTrue);
         await messaging.setAutoInitEnabled(false);
         expect(messaging.isAutoInitEnabled, isFalse);
-      });
+      }, skip: kIsWeb);
     });
 
     group('requestPermission', () {
@@ -51,7 +54,17 @@ void runInstanceTests() {
         final result = await messaging.requestPermission();
         expect(result, isA<NotificationSettings>());
         expect(result.authorizationStatus, AuthorizationStatus.authorized);
-      }, skip: defaultTargetPlatform != TargetPlatform.android);
+      }, skip: defaultTargetPlatform != TargetPlatform.android || kIsWeb);
+    });
+
+    group('requestPermission', () {
+      test(
+          'authorizationStatus returns AuthorizationStatus.notDetermined on Web',
+          () async {
+        final result = await messaging.requestPermission();
+        expect(result, isA<NotificationSettings>());
+        expect(result.authorizationStatus, AuthorizationStatus.notDetermined);
+      }, skip: !kIsWeb);
     });
 
     group('getAPNSToken', () {
@@ -92,42 +105,16 @@ void runInstanceTests() {
 
     group('subscribeToTopic()', () {
       test('successfully subscribes from topic', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
         await messaging.subscribeToTopic(topic);
-      });
+      }, skip: kIsWeb);
     });
 
     group('unsubscribeFromTopic()', () {
       test('successfully unsubscribes from topic', () async {
-        final topic = 'test-topic';
+        const topic = 'test-topic';
         await messaging.unsubscribeFromTopic(topic);
-      });
-    });
-
-    // deprecated methods
-    group('FirebaseMessaging (deprecated)', () {
-      test('returns an instance with the current [FirebaseApp]', () async {
-        // ignore: deprecated_member_use
-        final testInstance = FirebaseMessaging();
-        expect(testInstance, isA<FirebaseMessaging>());
-        expect(testInstance.app, isA<FirebaseApp>());
-        expect(testInstance.app.name, defaultFirebaseAppName);
-      });
-    });
-
-    group('autoInitEnabled (deprecated)', () {
-      test('returns correct value', () async {
-        // should now be false due to previous setAutoInitEnabled test.
-        expect(messaging.isAutoInitEnabled, isFalse);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-
-        await messaging.setAutoInitEnabled(true);
-
-        expect(messaging.isAutoInitEnabled, isTrue);
-        // ignore: deprecated_member_use
-        expect(await messaging.autoInitEnabled(), messaging.isAutoInitEnabled);
-      });
+      }, skip: kIsWeb);
     });
   });
 }

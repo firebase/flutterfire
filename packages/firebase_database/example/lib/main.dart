@@ -3,33 +3,15 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp(
-    name: 'db2',
-    options: Platform.isIOS || Platform.isMacOS
-        ? FirebaseOptions(
-            appId: '1:297855924061:ios:c6de2b69b03a5be8',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            projectId: 'flutter-firebase-plugins',
-            messagingSenderId: '297855924061',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          )
-        : FirebaseOptions(
-            appId: '1:297855924061:android:669871c998cc21bd',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            messagingSenderId: '297855924061',
-            projectId: 'flutter-firebase-plugins',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          ),
-  );
+  final FirebaseApp app = await Firebase.initializeApp();
   runApp(MaterialApp(
     title: 'Flutter Database Example',
     home: MyHomePage(app: app),
@@ -37,7 +19,8 @@ Future<void> main() async {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({this.app});
+  const MyHomePage({Key? key, required this.app}) : super(key: key);
+
   final FirebaseApp app;
 
   @override
@@ -45,16 +28,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter;
-  DatabaseReference _counterRef;
-  DatabaseReference _messagesRef;
-  StreamSubscription<Event> _counterSubscription;
-  StreamSubscription<Event> _messagesSubscription;
+  int _counter = 0;
+  late DatabaseReference _counterRef;
+  late DatabaseReference _messagesRef;
+  late StreamSubscription<Event> _counterSubscription;
+  late StreamSubscription<Event> _messagesSubscription;
   bool _anchorToBottom = false;
 
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
-  DatabaseError _error;
+  DatabaseError? _error;
 
   @override
   void initState() {
@@ -76,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _counter = event.snapshot.value ?? 0;
       });
     }, onError: (Object o) {
-      final DatabaseError error = o;
+      final DatabaseError error = o as DatabaseError;
       setState(() {
         _error = error;
       });
@@ -85,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
         _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
       print('Child added: ${event.snapshot.value}');
     }, onError: (Object o) {
-      final DatabaseError error = o;
+      final DatabaseError error = o as DatabaseError;
       print('Error: ${error.code} ${error.message}');
     });
   }
@@ -106,13 +89,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     if (transactionResult.committed) {
-      _messagesRef.push().set(<String, String>{
-        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot.value}'
+      await _messagesRef.push().set(<String, String>{
+        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
       });
     } else {
       print('Transaction not committed.');
       if (transactionResult.error != null) {
-        print(transactionResult.error.message);
+        print(transactionResult.error!.message);
       }
     }
   }
@@ -133,16 +116,18 @@ class _MyHomePageState extends State<MyHomePage> {
                       'This includes all devices, ever.',
                     )
                   : Text(
-                      'Error retrieving button tap count:\n${_error.message}',
+                      'Error retrieving button tap count:\n${_error!.message}',
                     ),
             ),
           ),
           ListTile(
             leading: Checkbox(
-              onChanged: (bool value) {
-                setState(() {
-                  _anchorToBottom = value;
-                });
+              onChanged: (bool? value) {
+                if (value != null) {
+                  setState(() {
+                    _anchorToBottom = value;
+                  });
+                }
               },
               value: _anchorToBottom,
             ),
@@ -153,9 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
               key: ValueKey<bool>(_anchorToBottom),
               query: _messagesRef,
               reverse: _anchorToBottom,
-              sort: _anchorToBottom
-                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-                  : null,
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int index) {
                 return SizeTransition(
@@ -163,11 +145,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ListTile(
                     trailing: IconButton(
                       onPressed: () =>
-                          _messagesRef.child(snapshot.key).remove(),
-                      icon: Icon(Icons.delete),
+                          _messagesRef.child(snapshot.key!).remove(),
+                      icon: const Icon(Icons.delete),
                     ),
                     title: Text(
-                      "$index: ${snapshot.value.toString()}",
+                      '$index: ${snapshot.value.toString()}',
                     ),
                   ),
                 );

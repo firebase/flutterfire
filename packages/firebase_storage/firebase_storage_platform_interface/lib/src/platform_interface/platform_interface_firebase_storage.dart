@@ -6,7 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+
+import '../../firebase_storage_platform_interface.dart';
 import '../method_channel/method_channel_firebase_storage.dart';
 
 /// The Firebase Storage platform interface.
@@ -14,25 +15,25 @@ import '../method_channel/method_channel_firebase_storage.dart';
 /// This class should be extended by any classes implementing the plugin on
 /// other Flutter supported platforms.
 abstract class FirebaseStoragePlatform extends PlatformInterface {
+  /// Create an instance using [app]
+  FirebaseStoragePlatform({this.appInstance, required this.bucket})
+      : super(token: _token);
+
+  /// Returns a [FirebaseStoragePlatform] with the provided arguments.
+  factory FirebaseStoragePlatform.instanceFor(
+      {required FirebaseApp app, required String bucket}) {
+    return FirebaseStoragePlatform.instance
+        .delegateFor(app: app, bucket: bucket);
+  }
+
   @protected
   // ignore: public_member_api_docs
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// The storage bucket of this instance.
   final String bucket;
 
-  /// Create an instance using [app]
-  FirebaseStoragePlatform({this.appInstance, this.bucket})
-      : super(token: _token);
-
   static final Object _token = Object();
-
-  /// Returns a [FirebaseStoragePlatform] with the provided arguments.
-  factory FirebaseStoragePlatform.instanceFor(
-      {FirebaseApp app, String bucket}) {
-    return FirebaseStoragePlatform.instance
-        .delegateFor(app: app, bucket: bucket);
-  }
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
@@ -40,25 +41,21 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
       return Firebase.app();
     }
 
-    return appInstance;
+    return appInstance!;
   }
 
-  static FirebaseStoragePlatform _instance;
+  static FirebaseStoragePlatform? _instance;
 
   /// The current default [FirebaseStoragePlatform] instance.
   ///
   /// It will always default to [MethodChannelFirebaseStorage]
   /// if no other implementation was provided.
   static FirebaseStoragePlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseStorage.instance;
-    }
-    return _instance;
+    return _instance ??= MethodChannelFirebaseStorage.instance;
   }
 
   /// Sets the [FirebaseStoragePlatform.instance]
   static set instance(FirebaseStoragePlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -81,7 +78,8 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseStoragePlatform delegateFor({FirebaseApp app, String bucket}) {
+  FirebaseStoragePlatform delegateFor(
+      {required FirebaseApp app, required String bucket}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

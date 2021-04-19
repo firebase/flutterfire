@@ -6,13 +6,13 @@ sidebar_label: Usage
 To start using the Cloud Messaging package within your project, import it at the top of your project files:
 
 ```dart
-import 'package:cloud_messaging/cloud_messaging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 ```
 
 Before using Firebase Cloud Messaging, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
-To create a new Messaging instance, call the [`instance`](!cloud_messaging.FirebaseMessaging.instance) getter on
-[`FirebaseMessaging`](!cloud_messaging.FirebaseMessaging):
+To create a new Messaging instance, call the [`instance`](!firebase_messaging.FirebaseMessaging.instance) getter on
+[`FirebaseMessaging`](!firebase_messaging.FirebaseMessaging):
 
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -27,7 +27,7 @@ FCM via APNs does not work on iOS Simulators. To receive messages & notification
 :::
 
 The Cloud Messaging package connects applications to the [Firebase Cloud Messaging (FCM)](https://firebase.google.com/docs/cloud-messaging)
-service. You can send message payloads directly to devices at no cost. Each message payload can be up to 4KB in size, containing pre-defined
+service. You can send message payloads directly to devices at no cost. Each message payload can be up to 4 KB in size, containing pre-defined
 or custom data to suit your applications requirements.
 
 Common use-cases for using messages could be:
@@ -53,13 +53,14 @@ There are a few preconditions which must be met before the application can recei
 - On iOS, if the user swipes away the application from app Switcher, it must be manually reopened again for background messages to start working again.
 - On Android, if the user force quits the app from device settings, it must be manually reopened again for messages to start working.
 - On iOS & macOS, you must have [correctly setup your project](apple-integration.mdx) to integrate with FCM and APNs.
+- On web, you must have requested a token (via `getToken`) with the key of a "Web Push certificate".
 
-### Requesting permission (Apple)
+### Requesting permission (Apple & Web)
 
-On iOS, macOS & Web (coming soon), before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
+On iOS, macOS & web, before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
 to request permission.
 
-The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](!cloud_messaging.FirebaseMessaging.requestPermission) method.
+The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](!firebase_messaging.FirebaseMessaging.requestPermission) method.
 This API accepts a number of named arguments which define the type of permissions you'd like to request, such as whether
 messaging containing notification payloads can trigger a sound or read out messages via Siri. By default,
 the method requests sensible default permissions. The reference API provides full documentation on what each permission is for.
@@ -105,6 +106,23 @@ For further information, view the [Permissions](permissions.mdx) documentation.
 Once permission has been granted & the different types of device state have been understood, your application can now start to handle the incoming
 FCM payloads.
 
+### Web Tokens
+
+On the web, before a message can be sent to the browser you must have first created an initial handshake with Firebase. This can be carried out via the
+`getToken` method, passing in the public `vapidKey`. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be
+provided, which you can provide to the method:
+
+```dart
+FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+// use the returned token to send messages to users from your custom server
+String token = await messaging.getToken(
+  vapidKey: "BGpdLRs......",
+);
+```
+
+### Message types
+
 A message payload can be viewed as one of three types:
 
 1. Notification only message: The payload contains a `notification` property, which will be used to [present a visible notification to the user](notifications.mdx).
@@ -123,14 +141,14 @@ Data only messages are considered low priority by devices when your application 
 ignored. You can however explicitly increase the priority by sending additional properties on the FCM payload:
 
 - On Android, set the `priority` field to `high`.
-- On Apple (iOS & MacOS), set the `content-available` field to `true`.
+- On Apple (iOS & macOS), set the `content-available` field to `true`.
 
 Since the sending of FCM payloads is custom to your own setup, it is best to read the official [FCM API reference](https://firebase.google.com/docs/cloud-messaging/concept-options) for your chosen
 Firebase Admin SDK.
 
 ### Foreground messages
 
-To listen to messages whilst your application is in the foreground, listen to the [`onMessage`](!cloud_messaging.FirebaseMessaging.onMessage) stream.
+To listen to messages whilst your application is in the foreground, listen to the [`onMessage`](!firebase_messaging.FirebaseMessaging.onMessage) stream.
 
 ```dart
 FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -161,8 +179,20 @@ documentation.
 
 ### Background messages
 
+The process of handling background messages is currently different on Android/Apple & web based platforms. We're working to see if
+it's possible to align these flows.
+
+<Tabs
+  defaultValue="native"
+  values={[
+    { label: 'Android/Apple', value: 'native', },
+    { label: 'Web', value: 'web', },
+  ]
+}>
+<TabItem value="native">
+
 Handling messages whilst your application is in the background is a little different. Messages can
-be handled via the [`onBackgroundMessage`](!cloud_messaging.FirebaseMessaging.onBackgroundMessage) handler. When received, an
+be handled via the [`onBackgroundMessage`](!firebase_messaging.FirebaseMessaging.onBackgroundMessage) handler. When received, an
 isolate is spawned (Android only, iOS/macOS does not require a separate isolate) allowing you to handle messages even when your application is not running.
 
 There are a few things to keep in mind about your background message handler:
@@ -185,12 +215,68 @@ void main() {
 }
 ```
 
-Since the handler runs in it's own isolate outside of your applications context, it is not possible to update
+Since the handler runs in its own isolate outside your applications context, it is not possible to update
 application state or execute any UI impacting logic. You can however perform logic such as HTTP requests, IO operations
 (updating local storage), communicate with other plugins etc.
 
-It also also recommended to complete your logic as soon as possible. Running long intensive tasks impacts device performance
+It is also recommended to complete your logic as soon as possible. Running long intensive tasks impacts device performance
 and may cause the OS to terminate the process. If tasks run for longer than 30 seconds, the device may automatically kill the process.
+
+</TabItem>
+<TabItem value="web">
+
+Web requires you to register a JavaScript [Service Worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) which runs in the background.
+
+> Unfortunately we haven't yet been able to establish a proper way of communicating with the Service Worker and Flutter applications. Right now, all web
+background code must be executed in the JavaScript Service Worker file.
+
+To get started, create a new file in the your `web` directory, and call it `firebase-messaging-sw.js`:
+
+```js title=web/firebase-messaging-sw.js
+importScripts("https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-messaging.js");
+
+firebase.initializeApp({
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "...",
+});
+
+const messaging = firebase.messaging();
+
+// Optional:
+messaging.onBackgroundMessage((message) => {
+  console.log("onBackgroundMessage", message);
+});
+```
+
+The file must import both the app and messaging SDKs, initialize Firebase and expose the `messaging` variable.
+
+Next, the worker must be registered. Within the entry file, **after** the `main.dart.js` file has loaded, register your worker:
+
+```js {9} title=web/index.html
+<html>
+<body>
+  ...
+  <script src="main.dart.js" type="application/javascript"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/flutter_service_worker.js");
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+    }
+  </script>
+```
+
+Next restart your Flutter application, the worker will be registered and any background messages will be handled via this file.
+
+</TabItem>
+</Tabs>
 
 #### Notifications
 
@@ -211,9 +297,9 @@ system logs for your iOS device, including those from Flutter.
 #### Low priority messages
 
 As mentioned above, data only messages are classed as "low priority". Devices can throttle and ignore these messages if your
-application is in the background, terminated or a variety of other conditions such as low battery or currently high CPU usage.
+application is in the background, terminated, or a variety of other conditions such as low battery or currently high CPU usage.
 
-You should not rely data only messages to be delivered, they should only be used to
+You should not rely on data only messages to be delivered, they should only be used to
 support your applications non-critical functionality, e.g. pre-fetching data so the next time the user opens your app the
 data is ready to be displayed and if the message never gets delivered then your app still functions and fetches data on open.
 
@@ -261,7 +347,7 @@ descriptions on the use of the properties on the [official Firebase documentatio
 Apple has very strict undisclosed polices on data only messages, and are very frequently ignored. For example sending too many in a certain time period
 will cause the device to block messages, or if CPU consumption is high they will also be blocked.
 
-For Android you can view Logcat logs which will give a descriptive message on why a notification was not delivered. On Apple platforms the
+For Android, you can view Logcat logs which will give a descriptive message on why a notification was not delivered. On Apple platforms the
 "console.app" application will display "CANCELED" logs for those it chose to ignore, however doesn't provide a description as to why.
 
 ## Topics
@@ -275,14 +361,14 @@ Topics allow you to simplify FCM server integration as you do not need to keep a
 - Messages sent to topics should not contain sensitive or private information. Do not create a topic for a specific user to subscribe to.
 - Topic messaging supports unlimited subscriptions for each topic.
 - One app instance can be subscribed to no more than 2000 topics.
-- The frequency of new subscriptions is rate-limited per project. If you send too many subscription requests in a short period of time, FCM servers will respond with a 429 RESOURCE_EXHAUSTED ("quota exceeded") response. Retry with exponential backoff.
+- The frequency of new subscriptions is rate-limited per project. If you send too many subscription requests in a short period of time, FCM servers will respond with a 429 RESOURCE_EXHAUSTED ("quota exceeded") response. Retry with an exponential backoff.
 - A server integration can send a single message to multiple topics at once. This however is limited to 5 topics.
 
 To learn more about how to send messages to devices subscribed to topics, view the [Send messages to topics](server-integration#send-messages-to-topics) documentation.
 
 ### Subscribing to topics
 
-To subscribe a device, call the [`subscribeToTopic`](!cloud_messaging.FirebaseMessaging.subscribeToTopic) method with the topic name:
+To subscribe a device, call the [`subscribeToTopic`](!firebase_messaging.FirebaseMessaging.subscribeToTopic) method with the topic name:
 
 ```dart
 await FirebaseMessaging.instance.subscribeToTopic('weather');
@@ -290,7 +376,7 @@ await FirebaseMessaging.instance.subscribeToTopic('weather');
 
 ### Unsubscribing from topics
 
-To unsubscribe from a topic, call the [`unsubscribeFromTopic`](!cloud_messaging.FirebaseMessaging.unsubscribeFromTopic) method with the topic name:
+To unsubscribe from a topic, call the [`unsubscribeFromTopic`](!firebase_messaging.FirebaseMessaging.unsubscribeFromTopic) method with the topic name:
 
 ```dart
 await FirebaseMessaging.instance.unsubscribeFromTopic('weather');

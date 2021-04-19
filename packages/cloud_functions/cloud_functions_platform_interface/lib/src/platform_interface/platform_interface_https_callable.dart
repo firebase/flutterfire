@@ -4,8 +4,8 @@
 
 import 'dart:async';
 
-import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import '../../cloud_functions_platform_interface.dart';
 
 /// Interface for [HttpsCallable] implementations.
 ///
@@ -23,7 +23,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   /// This is used by the app-facing [HttpsCallable] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(HttpsCallablePlatform instance) {
+  static void verifyExtends(HttpsCallablePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -31,7 +31,7 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   final FirebaseFunctionsPlatform functions;
 
   /// The [origin] of the local emulator, such as "http://localhost:5001"
-  final String origin;
+  final String? origin;
 
   /// The name of the function
   final String name;
@@ -55,15 +55,5 @@ abstract class HttpsCallablePlatform extends PlatformInterface {
   /// the user is also automatically included.
   Future<dynamic> call([dynamic parameters]) {
     throw UnimplementedError('call() is not implemented');
-  }
-
-  /// Returns the timeout for this instance.
-  Duration get timeout {
-    return options?.timeout;
-  }
-
-  /// Changes the timeout for calls from this instances.
-  set timeout(Duration duration) {
-    options = HttpsCallableOptions(timeout: duration);
   }
 }

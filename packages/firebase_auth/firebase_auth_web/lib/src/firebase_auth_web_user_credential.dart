@@ -12,12 +12,14 @@ import 'utils/web_utils.dart';
 class UserCredentialWeb extends UserCredentialPlatform {
   /// Creates a new [UserCredentialWeb] instance.
   UserCredentialWeb(
-      FirebaseAuthPlatform auth, auth_interop.UserCredential webUserCredential)
-      : super(
+    FirebaseAuthPlatform auth,
+    auth_interop.UserCredential webUserCredential,
+  ) : super(
           auth: auth,
           additionalUserInfo: convertWebAdditionalUserInfo(
-              webUserCredential.additionalUserInfo),
+            webUserCredential.additionalUserInfo,
+          ),
           credential: convertWebOAuthCredential(webUserCredential.credential),
-          user: UserWeb(auth, webUserCredential.user),
+          user: UserWeb(auth, webUserCredential.user!),
         );
 }

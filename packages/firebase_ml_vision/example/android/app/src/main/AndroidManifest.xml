@@ -13,7 +13,6 @@
          additional functionality it is fine to subclass or reimplement
          FlutterApplication and put your custom class here. -->
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="firebase_ml_vision_example"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -38,5 +37,8 @@
         <meta-data
           android:name="com.google.firebase.ml.vision.DEPENDENCIES"
           android:value="barcode,face,label,ocr" />
+        <meta-data
+          android:name="flutterEmbedding"
+          android:value="2" />
     </application>
 </manifest>
