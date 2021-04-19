@@ -1,109 +1,66 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 part of cloud_firestore;
 
-typedef Future<dynamic> TransactionHandler(Transaction transaction);
+/// The [TransactionHandler] may be executed multiple times; it should be able
+/// to handle multiple executions.
+typedef TransactionHandler<T> = Future<T> Function(Transaction transaction);
 
+/// Transaction class which is created from a call to [runTransaction()].
 class Transaction {
-  @visibleForTesting
-  Transaction(this._transactionId, this._firestore);
+  final FirebaseFirestore _firestore;
+  final TransactionPlatform _delegate;
 
-  int _transactionId;
-  Firestore _firestore;
-  List<Future<dynamic>> _pendingResults = <Future<dynamic>>[];
-  Future<void> _finish() => Future.wait<void>(_pendingResults);
-
-  /// Reads the document referenced by the provided DocumentReference.
-  Future<DocumentSnapshot> get(DocumentReference documentReference) {
-    final Future<DocumentSnapshot> result = _get(documentReference);
-    _pendingResults.add(result);
-    return result;
+  Transaction._(this._firestore, this._delegate) {
+    TransactionPlatform.verifyExtends(_delegate);
   }
 
-  Future<DocumentSnapshot> _get(DocumentReference documentReference) async {
-    final Map<String, dynamic> result = await Firestore.channel
-        .invokeMapMethod<String, dynamic>('Transaction#get', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
-    if (result != null) {
-      return DocumentSnapshot._(
-          documentReference.path,
-          result['data']?.cast<String, dynamic>(),
-          SnapshotMetadata._(result['metadata']['hasPendingWrites'],
-              result['metadata']['isFromCache']),
-          _firestore);
-    } else {
-      return null;
-    }
+  /// Reads the document referenced by the provided [DocumentReference].
+  ///
+  /// If the document changes whilst the transaction is in progress, it will
+  /// be re-tried up to five times.
+  Future<DocumentSnapshot> get(DocumentReference documentReference) async {
+    DocumentSnapshotPlatform documentSnapshotPlatform =
+        await _delegate.get(documentReference.path);
+
+    return DocumentSnapshot._(_firestore, documentSnapshotPlatform);
   }
 
   /// Deletes the document referred to by the provided [documentReference].
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> delete(DocumentReference documentReference) {
-    final Future<void> result = _delete(documentReference);
-    _pendingResults.add(result);
-    return result;
-  }
+  Transaction delete(DocumentReference documentReference) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
-  Future<void> _delete(DocumentReference documentReference) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#delete', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-    });
+    return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
 
   /// Updates fields in the document referred to by [documentReference].
   /// The update will fail if applied to a document that does not exist.
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    final Future<void> result = _update(documentReference, data);
-    _pendingResults.add(result);
-    return result;
-  }
+  Transaction update(
+      DocumentReference documentReference, Map<String, dynamic> data) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
-  Future<void> _update(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#update', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
+    return Transaction._(
+        _firestore,
+        _delegate.update(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
   /// If the document does not exist yet, it will be created. If you pass
-  /// SetOptions, the provided data can be merged into the existing document.
-  ///
-  /// Awaiting the returned [Future] is optional and will be done automatically
-  /// when the transaction handler completes.
-  Future<void> set(
-      DocumentReference documentReference, Map<String, dynamic> data) {
-    final Future<void> result = _set(documentReference, data);
-    _pendingResults.add(result);
-    return result;
-  }
+  /// [SetOptions], the provided data can be merged into the existing document.
+  Transaction set(
+      DocumentReference documentReference, Map<String, dynamic> data,
+      [SetOptions? options]) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
-  Future<void> _set(
-      DocumentReference documentReference, Map<String, dynamic> data) async {
-    return Firestore.channel
-        .invokeMethod<void>('Transaction#set', <String, dynamic>{
-      'app': _firestore.app.name,
-      'transactionId': _transactionId,
-      'path': documentReference.path,
-      'data': data,
-    });
+    return Transaction._(
+        _firestore,
+        _delegate.set(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!, options));
   }
 }

@@ -1,42 +1,34 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 part of cloud_firestore;
 
-/// A QuerySnapshot contains zero or more DocumentSnapshot objects.
+/// Contains the results of a query.
+/// It can contain zero or more [DocumentSnapshot] objects.
 class QuerySnapshot {
-  QuerySnapshot._(Map<dynamic, dynamic> data, Firestore firestore)
-      : documents = List<DocumentSnapshot>.generate(data['documents'].length,
-            (int index) {
-          return DocumentSnapshot._(
-            data['paths'][index],
-            _asStringKeyedMap(data['documents'][index]),
-            SnapshotMetadata._(
-              data['metadatas'][index]['hasPendingWrites'],
-              data['metadatas'][index]['isFromCache'],
-            ),
-            firestore,
-          );
-        }),
-        documentChanges = List<DocumentChange>.generate(
-            data['documentChanges'].length, (int index) {
-          return DocumentChange._(
-            data['documentChanges'][index],
-            firestore,
-          );
-        }),
-        metadata = SnapshotMetadata._(
-          data['metadata']['hasPendingWrites'],
-          data['metadata']['isFromCache'],
-        );
+  final FirebaseFirestore _firestore;
+  final QuerySnapshotPlatform _delegate;
 
-  /// Gets a list of all the documents included in this snapshot
-  final List<DocumentSnapshot> documents;
+  QuerySnapshot._(this._firestore, this._delegate) {
+    QuerySnapshotPlatform.verifyExtends(_delegate);
+  }
+
+  /// Gets a list of all the documents included in this snapshot.
+  List<QueryDocumentSnapshot> get docs => _delegate.docs
+      .map((documentDelegate) =>
+          QueryDocumentSnapshot._(_firestore, documentDelegate))
+      .toList();
 
   /// An array of the documents that changed since the last snapshot. If this
   /// is the first snapshot, all documents will be in the list as Added changes.
-  final List<DocumentChange> documentChanges;
+  List<DocumentChange> get docChanges => _delegate.docChanges
+      .map((documentDelegate) => DocumentChange._(_firestore, documentDelegate))
+      .toList();
 
-  final SnapshotMetadata metadata;
+  /// Returns the [SnapshotMetadata] for this snapshot.
+  SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
+
+  /// Returns the size (number of documents) of this snapshot.
+  int get size => _delegate.size;
 }

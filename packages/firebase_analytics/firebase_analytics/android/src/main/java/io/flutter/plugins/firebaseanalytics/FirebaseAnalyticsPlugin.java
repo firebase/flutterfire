@@ -7,6 +7,7 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -19,24 +20,32 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import java.util.ArrayList;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
 public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
+  // Only set registrar for v1 embedder.
+  private PluginRegistry.Registrar registrar;
+  // Only set activity for v2 embedder. Always access activity from getActivity() method.
   private Activity activity;
 
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
-    instance.setActivity(registrar.activity());
+    instance.registrar = registrar;
     instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+  }
+
+  // Only access activity with this method.
+  private Activity getActivity() {
+    return registrar != null ? registrar.activity() : activity;
   }
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    onAttachedToEngine(
-        binding.getApplicationContext(), binding.getFlutterEngine().getDartExecutor());
+    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
   }
 
   private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
@@ -120,7 +129,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   private void handleSetCurrentScreen(MethodCall call, Result result) {
-    if (activity == null) {
+    if (getActivity() == null) {
       result.error("no_activity", "handleSetCurrentScreen requires a foreground activity", null);
       return;
     }
@@ -128,7 +137,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     final String screenName = call.argument("screenName");
     final String screenClassOverride = call.argument("screenClassOverride");
 
-    firebaseAnalytics.setCurrentScreen(activity, screenName, screenClassOverride);
+    firebaseAnalytics.setCurrentScreen(getActivity(), screenName, screenClassOverride);
     result.success(null);
   }
 
@@ -176,6 +185,24 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
         bundle.putDouble(key, (Double) value);
       } else if (value instanceof Boolean) {
         bundle.putBoolean(key, (Boolean) value);
+      } else if (value instanceof Iterable<?>) {
+        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+
+        for (Object item : (Iterable<?>) value) {
+          if (item instanceof Map) {
+            list.add(createBundleFromMap((Map<String, Object>) item));
+          } else {
+            throw new IllegalArgumentException(
+                "Unsupported value type: "
+                    + value.getClass().getCanonicalName()
+                    + " in list at key "
+                    + key);
+          }
+        }
+
+        bundle.putParcelableArrayList(key, list);
+      } else if (value instanceof Map<?, ?>) {
+        bundle.putParcelable(key, createBundleFromMap((Map<String, Object>) value));
       } else {
         throw new IllegalArgumentException(
             "Unsupported value type: " + value.getClass().getCanonicalName());

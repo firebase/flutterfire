@@ -4,6 +4,7 @@
 
 import 'dart:math';
 
+// ignore: avoid_classes_with_only_static_members
 /// Utility class for generating Firebase child node keys.
 ///
 /// Since the Flutter plugin API is asynchronous, there's no way for us
@@ -14,21 +15,22 @@ import 'dart:math';
 /// This code is based on a Firebase blog post and ported to Dart.
 /// https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
 class PushIdGenerator {
+  // ignore: constant_identifier_names
   static const String PUSH_CHARS =
       '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
 
   static final Random _random = Random();
 
-  static int _lastPushTime;
+  static int? _lastPushTime;
 
-  static final List<int> _lastRandChars = List<int>(12);
+  static final List<int> _lastRandChars = List.filled(12, 0);
 
   static String generatePushChildName() {
     int now = DateTime.now().millisecondsSinceEpoch;
-    final bool duplicateTime = (now == _lastPushTime);
+    final bool duplicateTime = now == _lastPushTime;
     _lastPushTime = now;
 
-    final List<String> timeStampChars = List<String>(8);
+    final List<String> timeStampChars = List.filled(8, '');
     for (int i = 7; i >= 0; i--) {
       timeStampChars[i] = PUSH_CHARS[now % 64];
       now = (now / 64).floor();

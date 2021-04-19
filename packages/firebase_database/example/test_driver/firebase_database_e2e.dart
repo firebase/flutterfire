@@ -1,14 +1,17 @@
-import 'package:e2e/e2e.dart';
-import 'package:flutter_test/flutter_test.dart';
+// @dart = 2.9
+import 'package:drive/drive.dart' as drive;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
+void testsMain() {
+  group('FirebaseDatabase', () {
+    setUp(() async {
+      await Firebase.initializeApp();
+    });
 
-  group('$FirebaseDatabase', () {
-    final FirebaseDatabase database = FirebaseDatabase.instance;
-
-    testWidgets('runTransaction', (WidgetTester tester) async {
+    test('runTransaction', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
       final DatabaseReference ref = database.reference().child('counter');
       final DataSnapshot snapshot = await ref.once();
       final int value = snapshot.value ?? 0;
@@ -20,5 +23,18 @@ void main() {
       expect(transactionResult.committed, true);
       expect(transactionResult.dataSnapshot.value > value, true);
     });
+
+    test('setPersistenceCacheSizeBytes Integer', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+
+      await database.setPersistenceCacheSizeBytes(2147483647);
+    });
+
+    test('setPersistenceCacheSizeBytes Long', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setPersistenceCacheSizeBytes(2147483648);
+    });
   });
 }
+
+void main() => drive.main(testsMain);

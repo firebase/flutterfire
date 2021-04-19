@@ -1,151 +1,102 @@
-// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 part of cloud_firestore;
 
-/// A [DocumentReference] refers to a document location in a Firestore database
+/// A [DocumentReference] refers to a document location in a [FirebaseFirestore] database
 /// and can be used to write, read, or listen to the location.
 ///
 /// The document at the referenced location may or may not exist.
 /// A [DocumentReference] can also be used to create a [CollectionReference]
 /// to a subcollection.
 class DocumentReference {
-  DocumentReference._(this.firestore, List<String> pathComponents)
-      : _pathComponents = pathComponents,
-        assert(firestore != null);
+  DocumentReferencePlatform _delegate;
 
-  /// The Firestore instance associated with this document reference
-  final Firestore firestore;
+  /// The Firestore instance associated with this document reference.
+  final FirebaseFirestore firestore;
 
-  final List<String> _pathComponents;
+  DocumentReference._(this.firestore, this._delegate) {
+    DocumentReferencePlatform.verifyExtends(_delegate);
+  }
 
-  @override
-  bool operator ==(dynamic o) =>
-      o is DocumentReference && o.firestore == firestore && o.path == path;
+  /// This document's given ID within the collection.
+  String get id => _delegate.id;
 
-  @override
-  int get hashCode => hashList(_pathComponents);
+  /// The parent [CollectionReference] of this document.
+  CollectionReference get parent =>
+      CollectionReference._(firestore, _delegate.parent);
 
-  /// Parent returns the containing [CollectionReference].
-  CollectionReference parent() {
+  /// A string representing the path of the referenced document (relative to the
+  /// root of the database).
+  String get path => _delegate.path;
+
+  /// Gets a [CollectionReference] instance that refers to the collection at the
+  /// specified path, relative from this [DocumentReference].
+  CollectionReference collection(String collectionPath) {
+    assert(collectionPath.isNotEmpty,
+        'a collectionPath path must be a non-empty string');
+    assert(!collectionPath.contains('//'),
+        'a collection path must not contain "//"');
+    assert(isValidCollectionPath(collectionPath),
+        'a collection path must point to a valid collection.');
+
     return CollectionReference._(
-      firestore,
-      (List<String>.from(_pathComponents)..removeLast()),
-    );
+        firestore, _delegate.collection(collectionPath));
   }
 
-  /// Slash-delimited path representing the database location of this query.
-  String get path => _pathComponents.join('/');
-
-  /// This document's given or generated ID in the collection.
-  String get documentID => _pathComponents.last;
-
-  /// Writes to the document referred to by this [DocumentReference].
-  ///
-  /// If the document does not yet exist, it will be created.
-  ///
-  /// If [merge] is true, the provided data will be merged into an
-  /// existing document instead of overwriting.
-  Future<void> setData(Map<String, dynamic> data, {bool merge = false}) {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#setData',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'data': data,
-        'options': <String, bool>{'merge': merge},
-      },
-    );
-  }
-
-  /// Updates fields in the document referred to by this [DocumentReference].
-  ///
-  /// Values in [data] may be of any supported Firestore type as well as
-  /// special sentinel [FieldValue] type.
-  ///
-  /// If no document exists yet, the update will fail.
-  Future<void> updateData(Map<String, dynamic> data) {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#updateData',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'data': data,
-      },
-    );
-  }
+  /// Deletes the current document from the collection.
+  Future<void> delete() => _delegate.delete();
 
   /// Reads the document referenced by this [DocumentReference].
   ///
-  /// If no document exists, the read will return null.
-  Future<DocumentSnapshot> get({Source source = Source.serverAndCache}) async {
-    final Map<String, dynamic> data =
-        await Firestore.channel.invokeMapMethod<String, dynamic>(
-      'DocumentReference#get',
-      <String, dynamic>{
-        'app': firestore.app.name,
-        'path': path,
-        'source': _getSourceString(source),
-      },
-    );
+  /// By providing [options], this method can be configured to fetch results only
+  /// from the server, only from the local cache or attempt to fetch results
+  /// from the server and fall back to the cache (which is the default).
+  Future<DocumentSnapshot> get([GetOptions? options]) async {
     return DocumentSnapshot._(
-      data['path'],
-      _asStringKeyedMap(data['data']),
-      SnapshotMetadata._(data['metadata']['hasPendingWrites'],
-          data['metadata']['isFromCache']),
-      firestore,
-    );
+        firestore, await _delegate.get(options ?? const GetOptions()));
   }
 
-  /// Deletes the document referred to by this [DocumentReference].
-  Future<void> delete() {
-    return Firestore.channel.invokeMethod<void>(
-      'DocumentReference#delete',
-      <String, dynamic>{'app': firestore.app.name, 'path': path},
-    );
+  /// Notifies of document updates at this location.
+  ///
+  /// An initial event is immediately sent, and further events will be
+  /// sent whenever the document is modified.
+  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) =>
+      _delegate.snapshots(includeMetadataChanges: includeMetadataChanges).map(
+          (delegateSnapshot) =>
+              DocumentSnapshot._(firestore, delegateSnapshot));
+
+  /// Sets data on the document, overwriting any existing data. If the document
+  /// does not yet exist, it will be created.
+  ///
+  /// If [SetOptions] are provided, the data will be merged into an existing
+  /// document instead of overwriting.
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
+    return _delegate.set(
+        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
   }
 
-  /// Returns the reference of a collection contained inside of this
-  /// document.
-  CollectionReference collection(String collectionPath) {
-    return firestore.collection(
-      <String>[path, collectionPath].join('/'),
-    );
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
+  Future<void> update(Map<String, dynamic> data) {
+    return _delegate
+        .update(_CodecUtility.replaceValueWithDelegatesInMap(data)!);
   }
 
-  /// Notifies of documents at this location
-  // TODO(jackson): Reduce code duplication with [Query]
-  Stream<DocumentSnapshot> snapshots({bool includeMetadataChanges = false}) {
-    assert(includeMetadataChanges != null);
-    Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    StreamController<DocumentSnapshot> controller; // ignore: close_sinks
-    controller = StreamController<DocumentSnapshot>.broadcast(
-      onListen: () {
-        _handle = Firestore.channel.invokeMethod<int>(
-          'DocumentReference#addSnapshotListener',
-          <String, dynamic>{
-            'app': firestore.app.name,
-            'path': path,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          Firestore._documentObservers[handle] = controller;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await Firestore.channel.invokeMethod<void>(
-            'removeListener',
-            <String, dynamic>{'handle': handle},
-          );
-          Firestore._documentObservers.remove(handle);
-        });
-      },
-    );
-    return controller.stream;
-  }
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) =>
+      other is DocumentReference &&
+      other.firestore == firestore &&
+      other.path == path;
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => hashValues(firestore, path);
+
+  @override
+  String toString() => '$DocumentReference($path)';
 }

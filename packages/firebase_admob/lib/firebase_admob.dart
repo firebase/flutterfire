@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 // ignore_for_file: deprecated_member_use_from_same_package
 
 // These are temporary ignores to allow us to land a new set of linter rules in
@@ -44,7 +46,7 @@ enum MobileAdGender {
 }
 
 /// Signature for a [MobileAd] status change callback.
-typedef void MobileAdListener(MobileAdEvent event);
+typedef MobileAdListener = void Function(MobileAdEvent event);
 
 /// Targeting info per the native AdMob API.
 ///
@@ -109,7 +111,9 @@ enum AnchorType { bottom, top }
 // The types of ad sizes supported for banners. The names of the values are used
 // in MethodChannel calls to iOS and Android, and should not be changed.
 enum AdSizeType {
+  // ignore: constant_identifier_names
   WidthAndHeight,
+  // ignore: constant_identifier_names
   SmartBanner,
 }
 
@@ -187,12 +191,12 @@ class AdSize {
 /// A valid [adUnitId] is required.
 abstract class MobileAd {
   /// Default constructor, used by subclasses.
-  MobileAd(
-      {@required this.adUnitId,
-      MobileAdTargetingInfo targetingInfo,
-      this.listener})
-      : _targetingInfo = targetingInfo ?? const MobileAdTargetingInfo() {
-    assert(adUnitId != null && adUnitId.isNotEmpty);
+  MobileAd({
+    @required this.adUnitId,
+    MobileAdTargetingInfo targetingInfo,
+    this.listener,
+  })  : _targetingInfo = targetingInfo ?? const MobileAdTargetingInfo(),
+        assert(adUnitId != null && adUnitId.isNotEmpty) {
     assert(_allAds[id] == null);
     _allAds[id] = this;
   }
@@ -233,7 +237,7 @@ abstract class MobileAd {
       {double anchorOffset = 0.0,
       double horizontalCenterOffset = 0.0,
       AnchorType anchorType = AnchorType.bottom}) {
-    return _invokeBooleanMethod("showAd", <String, dynamic>{
+    return _invokeBooleanMethod('showAd', <String, dynamic>{
       'id': id,
       'anchorOffset': anchorOffset.toString(),
       'horizontalCenterOffset': horizontalCenterOffset.toString(),
@@ -248,11 +252,11 @@ abstract class MobileAd {
   Future<bool> dispose() {
     assert(_allAds[id] != null);
     _allAds[id] = null;
-    return _invokeBooleanMethod("disposeAd", <String, dynamic>{'id': id});
+    return _invokeBooleanMethod('disposeAd', <String, dynamic>{'id': id});
   }
 
   Future<bool> isLoaded() {
-    return _invokeBooleanMethod("isAdLoaded", <String, dynamic>{
+    return _invokeBooleanMethod('isAdLoaded', <String, dynamic>{
       'id': id,
     });
   }
@@ -275,21 +279,80 @@ class BannerAd extends MobileAd {
 
   final AdSize size;
 
-  /// These are AdMob's test ad unit IDs, which always return test ads. You're
-  /// encouraged to use them for testing in your own apps.
+  /// {@template firebase_admob.testAdUnitId}
+  /// A platform-specific AdMob test ad unit ID. This ad unit
+  /// has been specially configured to always return test ads, and developers
+  /// are encouraged to use it while building and testing their apps.
+  /// {@endtemplate}
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
 
   @override
   Future<bool> load() {
-    return _invokeBooleanMethod("loadBannerAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadBannerAd', <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
       'width': size.width,
       'height': size.height,
       'adSizeType': size.adSizeType.toString(),
+    });
+  }
+}
+
+/// A NativeAd for the [FirebaseAdMobPlugin].
+///
+/// Native ads are ad assets that are presented to users via UI components that
+/// are native to the platform. (e.g. A
+/// [View](https://developer.android.com/reference/android/view/View) on Android
+/// or a
+/// [UIView](https://developer.apple.com/documentation/uikit/uiview?language=objc)
+/// on iOS). Using Flutter widgets to create native ads is NOT supported by
+/// this.
+///
+/// Using platform specific UI components, these ads can be formatted to match
+/// the visual design of the user experience in which they live. In coding
+/// terms, this means that when a native ad loads, your app receives a NativeAd
+/// object that contains its assets, and the app (rather than the Google Mobile
+/// Ads SDK) is then responsible for displaying them.
+///
+/// See the README for more details on using Native Ads.
+class NativeAd extends MobileAd {
+  NativeAd({
+    @required String adUnitId,
+    @required this.factoryId,
+    MobileAdTargetingInfo targetingInfo,
+    MobileAdListener listener,
+    this.customOptions,
+  }) : super(
+          adUnitId: adUnitId,
+          targetingInfo: targetingInfo,
+          listener: listener,
+        );
+
+  /// Optional options used to create the [NativeAd].
+  ///
+  /// These options are passed to the platform's `NativeAdFactory`.
+  final Map<String, dynamic> customOptions;
+
+  /// An identifier for the factory that creates the Platform view.
+  final String factoryId;
+
+  /// {@macro firebase_admob.testAdUnitId}
+  static final String testAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
+
+  @override
+  Future<bool> load() {
+    return _invokeBooleanMethod('loadNativeAd', <String, dynamic>{
+      'id': id,
+      'factoryId': factoryId,
+      'targetingInfo': targetingInfo?.toJson(),
+      'adUnitId': adUnitId,
+      'customOptions': customOptions,
     });
   }
 }
@@ -308,16 +371,14 @@ class InterstitialAd extends MobileAd {
             targetingInfo: targetingInfo,
             listener: listener);
 
-  /// A platform-specific AdMob test ad unit ID for interstitials. This ad unit
-  /// has been specially configured to always return test ads, and developers
-  /// are encouraged to use it while building and testing their apps.
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
 
   @override
   Future<bool> load() {
-    return _invokeBooleanMethod("loadInterstitialAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadInterstitialAd', <String, dynamic>{
       'id': id,
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
@@ -345,8 +406,11 @@ enum RewardedVideoAdEvent {
 /// is sent, when they'll contain the reward amount and reward type that were
 /// configured for the AdMob ad unit when it was created. They will be null for
 /// all other events.
-typedef void RewardedVideoAdListener(RewardedVideoAdEvent event,
-    {String rewardType, int rewardAmount});
+typedef RewardedVideoAdListener = void Function(
+  RewardedVideoAdEvent event, {
+  String rewardType,
+  int rewardAmount,
+});
 
 /// An AdMob rewarded video ad.
 ///
@@ -400,16 +464,42 @@ class RewardedVideoAd {
   /// Callback invoked for events in the rewarded video ad lifecycle.
   RewardedVideoAdListener listener;
 
+  String _userId;
+  String _customData;
+
+  /// The user id used in server-to-server reward callbacks
+  String get userId => _userId;
+
+  /// The custom data included in server-to-server reward callbacks
+  String get customData => _customData;
+
+  /// Sets the user id to be used in server-to-server reward callbacks.
+  set userId(String userId) {
+    _invokeBooleanMethod('setRewardedVideoAdUserId', <String, dynamic>{
+      'userId': userId,
+    });
+    _userId = userId;
+  }
+
+  /// Sets custom data to be included in server-to-server reward callbacks.
+  set customData(String customData) {
+    _invokeBooleanMethod('setRewardedVideoAdCustomData', <String, dynamic>{
+      'customData': customData,
+    });
+    _customData = customData;
+  }
+
   /// Shows a rewarded video ad if one has been loaded.
   Future<bool> show() {
-    return _invokeBooleanMethod("showRewardedVideoAd");
+    return _invokeBooleanMethod('showRewardedVideoAd');
   }
 
   /// Loads a rewarded video ad using the provided ad unit ID.
   Future<bool> load(
-      {@required String adUnitId, MobileAdTargetingInfo targetingInfo}) {
+      {@required String adUnitId,
+      MobileAdTargetingInfo targetingInfo = const MobileAdTargetingInfo()}) {
     assert(adUnitId.isNotEmpty);
-    return _invokeBooleanMethod("loadRewardedVideoAd", <String, dynamic>{
+    return _invokeBooleanMethod('loadRewardedVideoAd', <String, dynamic>{
       'adUnitId': adUnitId,
       'targetingInfo': targetingInfo?.toJson(),
     });
@@ -444,9 +534,7 @@ class FirebaseAdMob {
     _channel.setMethodCallHandler(_handleMethod);
   }
 
-  // A placeholder AdMob App ID for testing. AdMob App IDs and ad unit IDs are
-  // specific to a single operating system, so apps building for both Android and
-  // iOS will need a set for each platform.
+  /// {@macro firebase_admob.testAdUnitId}
   static final String testAppId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544~3347511713'
       : 'ca-app-pub-3940256099942544~1458002511';
@@ -490,7 +578,7 @@ class FirebaseAdMob {
       bool analyticsEnabled = false}) {
     assert(appId != null && appId.isNotEmpty);
     assert(analyticsEnabled != null);
-    return _invokeBooleanMethod("initialize", <String, dynamic>{
+    return _invokeBooleanMethod('initialize', <String, dynamic>{
       'appId': appId,
       'trackingId': trackingId,
       'analyticsEnabled': analyticsEnabled,
@@ -523,7 +611,7 @@ class FirebaseAdMob {
       }
     }
 
-    return Future<dynamic>.value(null);
+    return Future<dynamic>.value();
   }
 }
 

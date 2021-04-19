@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 #import <Flutter/Flutter.h>
-#import "GoogleMobileAds/GoogleMobileAds.h"
+#import <GoogleMobileAds/GoogleMobileAds.h>
 
 typedef enum : NSUInteger {
   FLTRewardedVideoAdStatusCreated,
@@ -17,4 +17,6 @@ typedef enum : NSUInteger {
 - (FLTRewardedVideoAdStatus)status;
 - (void)loadWithAdUnitId:(NSString *)adUnitId targetingInfo:(NSDictionary *)targetingInfo;
 - (void)show;
+- (void)setUserIdentifier:(NSString *)userIdentifier;
+- (void)setCustomRewardString:(NSString *)customRewardString;
 @end
