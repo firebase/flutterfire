@@ -34,7 +34,7 @@ class DocumentTextRecognizer {
   DocumentTextRecognizer._({
     required CloudDocumentRecognizerOptions cloudOptions,
     required int handle,
-  })   : _cloudOptions = cloudOptions,
+  })  : _cloudOptions = cloudOptions,
         _handle = handle;
 
   final int _handle;
