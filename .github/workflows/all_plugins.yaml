@@ -26,11 +26,11 @@ jobs:
         run: melos bootstrap
       - name: "Run Analyze"
         run: melos run analyze
-      # TODO(rrousselGit): re-enable dry-runs after the projects has been fully migrated to NNBD
-      # - name: "Pub Check"
-      #   run: |
-      #     melos exec -c 1 --no-private --ignore="*example*" -- \
-      #       pub publish --dry-run
+      # TODO ML Custom has not been migrated to NNBD yet, so ignore checking it.
+      - name: "Pub Check"
+        run: |
+          melos exec -c 1 --no-private --ignore="*example*" --ignore="*ml_custom*" -- \
+            pub publish --dry-run
 
   pub_get_check:
     timeout-minutes: 15
