@@ -1,19 +1,11 @@
-import * as assert from "assert";
+import * as assert from 'assert';
 import * as functions from 'firebase-functions';
 
 // For example app.
 // noinspection JSUnusedGlobalSymbols
 export const listFruit = functions.https.onCall(() => {
-  return [
-    "Apple",
-    "Banana",
-    "Cherry",
-    "Date",
-    "Fig",
-    "Grapes"
-  ];
+  return ['Apple', 'Banana', 'Cherry', 'Date', 'Fig', 'Grapes'];
 });
-
 
 // For e2e testing a custom region.
 // noinspection JSUnusedGlobalSymbols
@@ -22,25 +14,29 @@ export const testFunctionCustomRegion = functions
   .https.onCall(() => 'europe-west1');
 
 // For e2e testing timeouts.
-export const testFunctionTimeout = functions
-  .https.onCall(data => {
-    console.log(JSON.stringify({data}));
-    return new Promise((resolve, reject) => {
-      if (data && data.testTimeout) {
-        setTimeout(() => resolve({timeLimit: 'exceeded'}), parseInt(data.testTimeout, 10));
-      } else {
-        reject(new functions.https.HttpsError(
+export const testFunctionTimeout = functions.https.onCall((data) => {
+  console.log(JSON.stringify({ data }));
+  return new Promise((resolve, reject) => {
+    if (data && data.testTimeout) {
+      setTimeout(
+        () => resolve({ timeLimit: 'exceeded' }),
+        parseInt(data.testTimeout, 10)
+      );
+    } else {
+      reject(
+        new functions.https.HttpsError(
           'invalid-argument',
           'testTimeout must be provided.'
-        ));
-      }
-    });
+        )
+      );
+    }
   });
+});
 
 // For e2e testing errors & return values.
 // noinspection JSUnusedGlobalSymbols
-export const testFunctionDefaultRegion = functions.https.onCall(data => {
-  console.log(JSON.stringify({data}));
+export const testFunctionDefaultRegion = functions.https.onCall((data) => {
+  console.log(JSON.stringify({ data }));
   if (typeof data === 'undefined') {
     return 'undefined';
   }
@@ -66,12 +62,12 @@ export const testFunctionDefaultRegion = functions.https.onCall(data => {
   }
 
   const sampleData: {
-    [key: string]: any
+    [key: string]: any;
   } = {
     number: 1234,
     string: 'acde',
     boolean: true,
-    'null': null,
+    null: null,
     map: {
       number: 1234,
       string: 'acde',
@@ -85,8 +81,8 @@ export const testFunctionDefaultRegion = functions.https.onCall(data => {
       booleanTrue: true,
       booleanFalse: false,
       null: null,
-      'list': ['1', 2, true, false],
-      'map': {
+      list: ['1', 2, true, false],
+      map: {
         number: 123,
         string: 'foo',
         booleanTrue: true,
@@ -95,7 +91,10 @@ export const testFunctionDefaultRegion = functions.https.onCall(data => {
       },
     },
     deepList: [
-      '1', 2, true, false,
+      '1',
+      2,
+      true,
+      false,
       ['1', 2, true, false],
       {
         number: 123,
@@ -107,10 +106,14 @@ export const testFunctionDefaultRegion = functions.https.onCall(data => {
     ],
   };
 
-  const {type, asError, inputData}: {
-    type: string,
-    asError?: boolean,
-    inputData?: any,
+  const {
+    type,
+    asError,
+    inputData,
+  }: {
+    type: string;
+    asError?: boolean;
+    inputData?: any;
   } = data;
   if (!Object.hasOwnProperty.call(sampleData, type)) {
     throw new functions.https.HttpsError(
@@ -144,3 +147,6 @@ export const testFunctionDefaultRegion = functions.https.onCall(data => {
   return outputData;
 });
 
+export const testMapConvertType = functions.https.onCall((data) => ({
+  foo: 'bar',
+}));
