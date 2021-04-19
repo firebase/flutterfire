@@ -8,10 +8,10 @@ part of cloud_functions;
 class HttpsCallableResult<T> {
   HttpsCallableResult._(this._data);
 
-  final dynamic _data;
+  final T _data;
 
   /// Returns the data that was returned from the Callable HTTPS trigger.
   T get data {
-    return _data as T;
+    return _data;
   }
 }

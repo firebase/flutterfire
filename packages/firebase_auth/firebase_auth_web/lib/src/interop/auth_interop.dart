@@ -17,9 +17,13 @@ abstract class AuthJsImpl {
   external PromiseJsImpl<void> applyActionCode(String code);
   external PromiseJsImpl<ActionCodeInfo> checkActionCode(String code);
   external PromiseJsImpl<void> confirmPasswordReset(
-      String code, String newPassword);
+    String code,
+    String newPassword,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
-      String email, String password);
+    String email,
+    String password,
+  );
   external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
   external UserJsImpl get currentUser;
   external String get tenantId;
@@ -29,33 +33,53 @@ abstract class AuthJsImpl {
   external AuthSettings get settings;
   external String get languageCode;
   external set languageCode(String s);
-  external Func0 onAuthStateChanged(nextOrObserver,
-      [Func1 opt_error, Func0 opt_completed]);
-  external Func0 onIdTokenChanged(nextOrObserver,
-      [Func1 opt_error, Func0 opt_completed]);
-  external PromiseJsImpl<void> sendSignInLinkToEmail(String email,
-      [ActionCodeSettings actionCodeSettings]);
-  external PromiseJsImpl<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]);
+  external Func0 onAuthStateChanged(
+    dynamic nextOrObserver, [
+    Func1? opt_error,
+    Func0? opt_completed,
+  ]);
+  external Func0 onIdTokenChanged(
+    dynamic nextOrObserver, [
+    Func1? opt_error,
+    Func0? opt_completed,
+  ]);
+  external PromiseJsImpl<void> sendSignInLinkToEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]);
+  external PromiseJsImpl<void> sendPasswordResetEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]);
   external PromiseJsImpl<void> setPersistence(String persistence);
   external PromiseJsImpl<UserCredentialJsImpl> signInAnonymously();
 
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCredential(
-      OAuthCredential credential);
+    OAuthCredential credential,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> signInWithCustomToken(
-      String token);
+    String token,
+  );
   external PromiseJsImpl<UserCredentialJsImpl>
       signInAndRetrieveDataWithCustomToken(String token);
   external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailAndPassword(
-      String email, String password);
+    String email,
+    String password,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> signInWithEmailLink(
-      String email, String emailLink);
+    String email,
+    String emailLink,
+  );
   external PromiseJsImpl<ConfirmationResultJsImpl> signInWithPhoneNumber(
-      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+    String phoneNumber,
+    ApplicationVerifierJsImpl applicationVerifier,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> signInWithPopup(
-      AuthProviderJsImpl provider);
+    AuthProviderJsImpl provider,
+  );
   external PromiseJsImpl<void> signInWithRedirect(AuthProviderJsImpl provider);
   external PromiseJsImpl<void> signOut();
+  external PromiseJsImpl<void> useEmulator(String origin);
   external void useDeviceLanguage();
   external PromiseJsImpl<String> verifyPasswordResetCode(String code);
 }
@@ -93,37 +117,50 @@ abstract class UserJsImpl extends UserInfoJsImpl {
   external String get tenantId;
   external UserMetadata get metadata;
   external PromiseJsImpl<void> delete();
-  external PromiseJsImpl<String> getIdToken([bool opt_forceRefresh]);
+  external PromiseJsImpl<String> getIdToken([bool? opt_forceRefresh]);
   external PromiseJsImpl<UserCredentialJsImpl> linkWithCredential(
-      OAuthCredential credential);
+    OAuthCredential? credential,
+  );
   external PromiseJsImpl<ConfirmationResultJsImpl> linkWithPhoneNumber(
-      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+    String phoneNumber,
+    ApplicationVerifierJsImpl applicationVerifier,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> linkWithPopup(
-      AuthProviderJsImpl provider);
+    AuthProviderJsImpl provider,
+  );
   external PromiseJsImpl<void> linkWithRedirect(AuthProviderJsImpl provider);
 
   external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithCredential(
       OAuthCredential credential);
   external PromiseJsImpl<ConfirmationResultJsImpl>
       reauthenticateWithPhoneNumber(
-          String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+    String phoneNumber,
+    ApplicationVerifierJsImpl applicationVerifier,
+  );
   external PromiseJsImpl<UserCredentialJsImpl> reauthenticateWithPopup(
-      AuthProviderJsImpl provider);
+    AuthProviderJsImpl provider,
+  );
   external PromiseJsImpl<void> reauthenticateWithRedirect(
-      AuthProviderJsImpl provider);
+    AuthProviderJsImpl provider,
+  );
   external PromiseJsImpl<void> reload();
-  external PromiseJsImpl<void> sendEmailVerification(
-      [ActionCodeSettings actionCodeSettings]);
-  external PromiseJsImpl<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]);
+  external PromiseJsImpl<void> sendEmailVerification([
+    ActionCodeSettings? actionCodeSettings,
+  ]);
+  external PromiseJsImpl<void> verifyBeforeUpdateEmail(
+    String newEmail, [
+    ActionCodeSettings? actionCodeSettings,
+  ]);
   external PromiseJsImpl<UserJsImpl> unlink(String providerId);
   external PromiseJsImpl<void> updateEmail(String newEmail);
   external PromiseJsImpl<void> updatePassword(String newPassword);
   external PromiseJsImpl<void> updatePhoneNumber(
-      OAuthCredential phoneCredential);
+    OAuthCredential? phoneCredential,
+  );
   external PromiseJsImpl<void> updateProfile(UserProfile profile);
-  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult(
-      [bool forceRefresh]);
+  external PromiseJsImpl<IdTokenResultImpl> getIdTokenResult([
+    bool? forceRefresh,
+  ]);
   external Object toJSON();
 }
 
@@ -195,7 +232,9 @@ class EmailAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external static AuthCredential credential(String email, String password);
   external static AuthCredential credentialWithLink(
-      String email, String emailLink);
+    String email,
+    String emailLink,
+  );
 }
 
 @JS('FacebookAuthProvider')
@@ -204,7 +243,8 @@ class FacebookAuthProviderJsImpl extends AuthProviderJsImpl {
   external static String get PROVIDER_ID;
   external FacebookAuthProviderJsImpl addScope(String scope);
   external FacebookAuthProviderJsImpl setCustomParameters(
-      customOAuthParameters);
+    dynamic customOAuthParameters,
+  );
   external static OAuthCredential credential(String token);
 }
 
@@ -213,7 +253,9 @@ class GithubAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GithubAuthProviderJsImpl();
   external static String get PROVIDER_ID;
   external GithubAuthProviderJsImpl addScope(String scope);
-  external GithubAuthProviderJsImpl setCustomParameters(customOAuthParameters);
+  external GithubAuthProviderJsImpl setCustomParameters(
+    dynamic customOAuthParameters,
+  );
   external static OAuthCredential credential(String token);
 }
 
@@ -222,35 +264,45 @@ class GoogleAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory GoogleAuthProviderJsImpl();
   external static String get PROVIDER_ID;
   external GoogleAuthProviderJsImpl addScope(String scope);
-  external GoogleAuthProviderJsImpl setCustomParameters(customOAuthParameters);
+  external GoogleAuthProviderJsImpl setCustomParameters(
+    dynamic customOAuthParameters,
+  );
   external static OAuthCredential credential(
-      [String idToken, String accessToken]);
+      [String? idToken, String? accessToken]);
 }
 
 @JS('OAuthProvider')
 class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory OAuthProviderJsImpl(String providerId);
   external OAuthProviderJsImpl addScope(String scope);
-  external OAuthProviderJsImpl setCustomParameters(customOAuthParameters);
-  external OAuthCredential credential([String idToken, String accessToken]);
+  external OAuthProviderJsImpl setCustomParameters(
+    dynamic customOAuthParameters,
+  );
+  external OAuthCredential credential([String? idToken, String? accessToken]);
 }
 
 @JS('TwitterAuthProvider')
 class TwitterAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory TwitterAuthProviderJsImpl();
   external static String get PROVIDER_ID;
-  external TwitterAuthProviderJsImpl setCustomParameters(customOAuthParameters);
+  external TwitterAuthProviderJsImpl setCustomParameters(
+    dynamic customOAuthParameters,
+  );
   external static OAuthCredential credential(String token, String secret);
 }
 
 @JS('PhoneAuthProvider')
 class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
-  external factory PhoneAuthProviderJsImpl([AuthJsImpl auth]);
+  external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
-      String phoneNumber, ApplicationVerifierJsImpl applicationVerifier);
+    String phoneNumber,
+    ApplicationVerifierJsImpl applicationVerifier,
+  );
   external static AuthCredential credential(
-      String verificationId, String verificationCode);
+    String verificationId,
+    String verificationCode,
+  );
 }
 
 @JS('ApplicationVerifier')
@@ -261,8 +313,11 @@ abstract class ApplicationVerifierJsImpl {
 
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
-  external factory RecaptchaVerifierJsImpl(container,
-      [Object parameters, AppJsImpl app]);
+  external factory RecaptchaVerifierJsImpl(
+    container, [
+    Object? parameters,
+    AppJsImpl? app,
+  ]);
   external void clear();
   external PromiseJsImpl<num> render();
 }
@@ -304,7 +359,7 @@ class UserProfile {
   external String get photoURL;
   external set photoURL(String s);
 
-  external factory UserProfile({String displayName, String photoURL});
+  external factory UserProfile({String? displayName, String? photoURL});
 }
 
 /// An authentication error.
@@ -367,11 +422,12 @@ class ActionCodeSettings {
   external set android(AndroidSettings a);
   external bool get handleCodeInApp;
   external set handleCodeInApp(bool b);
-  external factory ActionCodeSettings(
-      {String url,
-      IosSettings iOS,
-      AndroidSettings android,
-      bool handleCodeInApp});
+  external factory ActionCodeSettings({
+    String? url,
+    IosSettings? iOS,
+    AndroidSettings? android,
+    bool? handleCodeInApp,
+  });
 }
 
 /// The iOS settings.
@@ -383,7 +439,7 @@ class ActionCodeSettings {
 class IosSettings {
   external String get bundleId;
   external set bundleId(String s);
-  external factory IosSettings({String bundleId});
+  external factory IosSettings({String? bundleId});
 }
 
 /// The Android settings.
@@ -408,8 +464,11 @@ class AndroidSettings {
   external set minimumVersion(String s);
   external bool get installApp;
   external set installApp(bool b);
-  external factory AndroidSettings(
-      {String packageName, String minimumVersion, bool installApp});
+  external factory AndroidSettings({
+    String? packageName,
+    String? minimumVersion,
+    bool? installApp,
+  });
 }
 
 /// https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential
@@ -437,6 +496,6 @@ class AdditionalUserInfoJsImpl {
 @anonymous
 class AuthSettings {
   external bool get appVerificationDisabledForTesting;
-  external set appVerificationDisabledForTesting(bool b);
+  external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }

@@ -2,32 +2,38 @@ name: firebase_ml_vision_example
 description: Demonstrates how to use the firebase_ml_vision plugin.
 author: Flutter Team <flutter-dev@googlegroups.com>
 
-dependencies:
-  flutter:
-    sdk: flutter
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.12.0"
 
-  image_picker: ^0.6.0
-  cupertino_icons: ^0.1.2
-  firebase_ml_vision:
-    path: ../
+dependencies:
+  camera: ^0.8.1
+  cupertino_icons: ^1.0.2
   firebase_core:
     path: ../../firebase_core/firebase_core
-  camera: ^0.5.6+1
+  firebase_ml_vision:
+    path: ../
+  flutter:
+    sdk: flutter
+  image_picker: ^0.7.3
 
 dependency_overrides:
   firebase_core:
     path: ../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
-  pedantic: ^1.8.0
-  e2e: ^0.6.1
-  flutter_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  path: ^1.8.0
+  path_provider: ^2.0.1
+  pedantic: ^1.11.0
   test: any
-  path: ^1.6.2
-  path_provider: ^1.6.11
 
 flutter:
   uses-material-design: true

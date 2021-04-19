@@ -6,12 +6,12 @@
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
-import 'core_interop.dart' as firebase_interop;
 import 'app.dart';
+import 'core_interop.dart' as firebase_interop;
 
-export 'core_interop.dart';
 export 'app.dart';
 export 'app_interop.dart';
+export 'core_interop.dart';
 
 List<App> get apps => firebase_interop.apps
     // explicitly typing the param as dynamic to work-around
@@ -20,37 +20,39 @@ List<App> get apps => firebase_interop.apps
     .map((dynamic e) => App.getInstance(e))
     .toList();
 
-App initializeApp(
-    {String apiKey,
-    String authDomain,
-    String databaseURL,
-    String projectId,
-    String storageBucket,
-    String messagingSenderId,
-    String name,
-    String measurementId,
-    String appId}) {
+App initializeApp({
+  String? apiKey,
+  String? authDomain,
+  String? databaseURL,
+  String? projectId,
+  String? storageBucket,
+  String? messagingSenderId,
+  String? name,
+  String? measurementId,
+  String? appId,
+}) {
   name ??= defaultFirebaseAppName;
 
-  try {
-    return App.getInstance(firebase_interop.initializeApp(
-        firebase_interop.FirebaseOptions(
-            apiKey: apiKey,
-            authDomain: authDomain,
-            databaseURL: databaseURL,
-            projectId: projectId,
-            storageBucket: storageBucket,
-            messagingSenderId: messagingSenderId,
-            measurementId: measurementId,
-            appId: appId),
-        name));
-  } catch (e) {
-    // TODO if error - firebase not loaded?
-    rethrow;
-  }
+  return App.getInstance(
+    firebase_interop.initializeApp(
+      firebase_interop.FirebaseOptions(
+        apiKey: apiKey,
+        authDomain: authDomain,
+        databaseURL: databaseURL,
+        projectId: projectId,
+        storageBucket: storageBucket,
+        messagingSenderId: messagingSenderId,
+        measurementId: measurementId,
+        appId: appId,
+      ),
+      name,
+    ),
+  );
+  // TODO if error - firebase not loaded?
 }
 
-App app([String name]) {
+App app([String? name]) {
   return App.getInstance(
-      name != null ? firebase_interop.app(name) : firebase_interop.app());
+    name != null ? firebase_interop.app(name) : firebase_interop.app(),
+  );
 }

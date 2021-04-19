@@ -1,6 +1,7 @@
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_firestore.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,16 +30,16 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
   static const int _kIncrementInteger = 138;
 
   @override
-  dynamic readValueOfType(int type, ReadBuffer buffer) {
+  Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       // The following cases are only used by unit tests, and not by actual application
       // code paths.
       case _kArrayUnion:
-        final List<dynamic> value = readValue(buffer);
+        final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.arrayUnion(value));
       case _kArrayRemove:
-        final List<dynamic> value = readValue(buffer);
+        final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.arrayRemove(value));
       case _kDelete:
@@ -47,28 +48,33 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.serverTimestamp());
       case _kIncrementDouble:
-        final double value = readValue(buffer);
+        final double value = readValue(buffer)! as double;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.increment(value));
       case _kIncrementInteger:
-        final int value = readValue(buffer);
+        final int value = readValue(buffer)! as int;
         return FieldValuePlatform(
             FieldValueFactoryPlatform.instance.increment(value));
       case _kFirestoreInstance:
-        String appName = readValue(buffer);
+        String appName = readValue(buffer)! as String;
         readValue(buffer);
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelFirebaseFirestore(app: app);
       case _kFirestoreQuery:
-        Map<dynamic, dynamic> values = readValue(buffer);
+        Map<dynamic, dynamic> values =
+            readValue(buffer)! as Map<dynamic, dynamic>;
+        //ignore:
         return MethodChannelQuery(
-            MethodChannelFirebaseFirestore(app: null), values['path']);
+            //ignore: avoid_redundant_argument_values
+            MethodChannelFirebaseFirestore(app: null),
+            values['path']);
       case _kFirestoreSettings:
         readValue(buffer);
-        return Settings();
+        return const Settings();
       case _kDocumentReference:
-        MethodChannelFirebaseFirestore firestore = readValue(buffer);
-        String path = readValue(buffer);
+        MethodChannelFirebaseFirestore firestore =
+            readValue(buffer)! as MethodChannelFirebaseFirestore;
+        String path = readValue(buffer)! as String;
         return firestore.doc(path);
       default:
         return super.readValueOfType(type, buffer);

@@ -6,35 +6,31 @@
 List<Map<String, String>> getStackTraceElements(List<String> lines) {
   final List<Map<String, String>> elements = <Map<String, String>>[];
 
-  for (String line in lines) {
-    final List<String> lineParts = line.split(RegExp('\\s+'));
+  for (final String line in lines) {
+    final List<String> lineParts = line.split(RegExp(r'\s+'));
 
-    try {
-      final String fileName = lineParts.first;
+    final String fileName = lineParts.first;
 
-      // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
-      final String lineNumber =
-          lineParts.length > 2 ? lineParts[1].split(":").first : "0";
+    // Sometimes the trace looks like [<file>,<methodField>] and doesn't contain a line field
+    final String lineNumber =
+        lineParts.length > 2 ? lineParts[1].split(':').first : '0';
 
-      final Map<String, String> element = <String, String>{
-        'file': fileName,
-        'line': lineNumber,
-      };
+    final Map<String, String> element = <String, String>{
+      'file': fileName,
+      'line': lineNumber,
+    };
 
-      final List<String> methodField = lineParts.last.split(".");
+    final List<String> methodField = lineParts.last.split('.');
 
-      final String methodName = methodField.last.trim();
-      element['method'] = methodName;
+    final String methodName = methodField.last.trim();
+    element['method'] = methodName;
 
-      if (methodField.length > 1) {
-        final String className = methodField.first.trim();
-        element['class'] = className;
-      }
-
-      elements.add(element);
-    } catch (e) {
-      print(e.toString());
+    if (methodField.length > 1) {
+      final String className = methodField.first.trim();
+      element['class'] = className;
     }
+
+    elements.add(element);
   }
 
   return elements;

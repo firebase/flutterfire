@@ -10,21 +10,21 @@ class UserMetadata {
   @protected
   UserMetadata(this._creationTimestamp, this._lastSignInTime);
 
-  final int _creationTimestamp;
-  final int _lastSignInTime;
+  final int? _creationTimestamp;
+  final int? _lastSignInTime;
 
   /// When this account was created as dictated by the server clock.
-  DateTime get creationTime => _creationTimestamp == null
+  DateTime? get creationTime => _creationTimestamp == null
       ? null
-      : DateTime.fromMillisecondsSinceEpoch(_creationTimestamp);
+      : DateTime.fromMillisecondsSinceEpoch(_creationTimestamp!);
 
   /// When the user last signed in as dictated by the server clock.
   ///
   /// This is only accurate up to a granularity of 2 minutes for consecutive
   /// sign-in attempts.
-  DateTime get lastSignInTime => _lastSignInTime == null
+  DateTime? get lastSignInTime => _lastSignInTime == null
       ? null
-      : DateTime.fromMillisecondsSinceEpoch(_lastSignInTime);
+      : DateTime.fromMillisecondsSinceEpoch(_lastSignInTime!);
 
   @override
   String toString() {

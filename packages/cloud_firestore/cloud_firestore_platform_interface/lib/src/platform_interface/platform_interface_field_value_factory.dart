@@ -35,7 +35,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// This is used by the app-facing [FieldValueFactory] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(FieldValueFactoryPlatform instance) {
+  static void verifyExtends(FieldValueFactoryPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -47,7 +47,7 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// will be overwritten with an array containing exactly the specified
   /// elements.
   dynamic arrayUnion(List<dynamic> elements) {
-    throw UnimplementedError("arrayUnion() is not implemented");
+    throw UnimplementedError('arrayUnion() is not implemented');
   }
 
   /// Returns a special value that tells the server to remove the given
@@ -57,23 +57,23 @@ abstract class FieldValueFactoryPlatform extends PlatformInterface {
   /// If the field being modified is not already an array it will be overwritten
   /// with an empty array.
   dynamic arrayRemove(List<dynamic> elements) {
-    throw UnimplementedError("arrayRemove() is not implemented");
+    throw UnimplementedError('arrayRemove() is not implemented');
   }
 
   /// Returns a sentinel for use with update() to mark a field for deletion.
   dynamic delete() {
-    throw UnimplementedError("delete() is not implemented");
+    throw UnimplementedError('delete() is not implemented');
   }
 
   /// Returns a sentinel for use with set() or update() to include a
   /// server-generated timestamp in the written data.
   dynamic serverTimestamp() {
-    throw UnimplementedError("serverTimestamp() is not implemented");
+    throw UnimplementedError('serverTimestamp() is not implemented');
   }
 
   /// Returns a special value for use with set() or update() that tells the
   /// server to increment the field’s current value by the given value.
   dynamic increment(num value) {
-    throw UnimplementedError("increment() is not implemented");
+    throw UnimplementedError('increment() is not implemented');
   }
 }

@@ -121,10 +121,10 @@ await auth.verifyPhoneNumber(
     String smsCode = 'xxxx';
 
     // Create a PhoneAuthCredential with the code
-    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
 
     // Sign the user in (or link) with the credential
-    await auth.signInWithCredential(phoneAuthCredential);
+    await auth.signInWithCredential(credential);
   },
 );
 ```

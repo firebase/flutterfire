@@ -56,7 +56,7 @@ enum FaceContourType {
 /// final List<Faces> faces = await faceDetector.processImage(image);
 /// ```
 class FaceDetector {
-  FaceDetector._(this.options, this._handle) : assert(options != null);
+  FaceDetector._(this.options, this._handle);
 
   /// The options for the face detector.
   final FaceDetectorOptions options;
@@ -67,10 +67,9 @@ class FaceDetector {
   /// Detects faces in the input image.
   Future<List<Face>> processImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-
     _hasBeenOpened = true;
-    final List<dynamic> reply =
-        await FirebaseVision.channel.invokeListMethod<dynamic>(
+
+    final reply = await FirebaseVision.channel.invokeListMethod<dynamic>(
       'FaceDetector#processImage',
       <String, dynamic>{
         'handle': _handle,
@@ -86,7 +85,7 @@ class FaceDetector {
     );
 
     final List<Face> faces = <Face>[];
-    for (dynamic data in reply) {
+    for (final dynamic data in reply!) {
       faces.add(Face._(data));
     }
 
@@ -96,7 +95,7 @@ class FaceDetector {
   /// Release resources used by this detector.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -167,10 +166,10 @@ class Face {
         rightEyeOpenProbability = data['rightEyeOpenProbability'],
         smilingProbability = data['smilingProbability'],
         trackingId = data['trackingId'],
-        _landmarks = Map<FaceLandmarkType, FaceLandmark>.fromIterables(
+        _landmarks = Map<FaceLandmarkType, FaceLandmark?>.fromIterables(
             FaceLandmarkType.values,
             FaceLandmarkType.values.map((FaceLandmarkType type) {
-          final List<dynamic> pos = data['landmarks'][_enumToString(type)];
+          final List<dynamic>? pos = data['landmarks'][_enumToString(type)];
           return (pos == null)
               ? null
               : FaceLandmark._(
@@ -178,11 +177,11 @@ class Face {
                   Offset(pos[0], pos[1]),
                 );
         })),
-        _contours = Map<FaceContourType, FaceContour>.fromIterables(
+        _contours = Map<FaceContourType, FaceContour?>.fromIterables(
             FaceContourType.values,
             FaceContourType.values.map((FaceContourType type) {
           /// added empty map to pass the tests
-          final List<dynamic> arr =
+          final List<dynamic>? arr =
               (data['contours'] ?? <String, dynamic>{})[_enumToString(type)];
           return (arr == null)
               ? null
@@ -194,8 +193,8 @@ class Face {
                 );
         }));
 
-  final Map<FaceLandmarkType, FaceLandmark> _landmarks;
-  final Map<FaceContourType, FaceContour> _contours;
+  final Map<FaceLandmarkType, FaceLandmark?> _landmarks;
+  final Map<FaceContourType, FaceContour?> _contours;
 
   /// The axis-aligned bounding rectangle of the detected face.
   ///
@@ -212,7 +211,7 @@ class Face {
   /// The Euler Y angle is guaranteed only when using the "accurate" mode
   /// setting of the face detector (as opposed to the "fast" mode setting, which
   /// takes some shortcuts to make detection faster).
-  final double headEulerAngleY;
+  final double? headEulerAngleY;
 
   /// The rotation of the face about the axis pointing out of the image.
   ///
@@ -222,40 +221,40 @@ class Face {
   /// to the camera.
   ///
   /// ML Kit always reports the Euler Z angle of a detected face.
-  final double headEulerAngleZ;
+  final double? headEulerAngleZ;
 
   /// Probability that the face's left eye is open.
   ///
   /// A value between 0.0 and 1.0 inclusive, or null if probability was not
   /// computed.
-  final double leftEyeOpenProbability;
+  final double? leftEyeOpenProbability;
 
   /// Probability that the face's right eye is open.
   ///
   /// A value between 0.0 and 1.0 inclusive, or null if probability was not
   /// computed.
-  final double rightEyeOpenProbability;
+  final double? rightEyeOpenProbability;
 
   /// Probability that the face is smiling.
   ///
   /// A value between 0.0 and 1.0 inclusive, or null if probability was not
   /// computed.
-  final double smilingProbability;
+  final double? smilingProbability;
 
   /// The tracking ID if the tracking is enabled.
   ///
   /// Null if tracking was not enabled.
-  final int trackingId;
+  final int? trackingId;
 
   /// Gets the landmark based on the provided [FaceLandmarkType].
   ///
   /// Null if landmark was not detected.
-  FaceLandmark getLandmark(FaceLandmarkType landmark) => _landmarks[landmark];
+  FaceLandmark? getLandmark(FaceLandmarkType landmark) => _landmarks[landmark];
 
   /// Gets the contour based on the provided [FaceContourType].
   ///
   /// Null if contour was not detected.
-  FaceContour getContour(FaceContourType contour) => _contours[contour];
+  FaceContour? getContour(FaceContourType contour) => _contours[contour];
 }
 
 /// Represent a face landmark.

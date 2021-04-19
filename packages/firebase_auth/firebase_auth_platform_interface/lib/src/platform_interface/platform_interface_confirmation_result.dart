@@ -17,9 +17,7 @@ abstract class ConfirmationResultPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Ensures that any delegate instances extend this class.
-  static verifyExtends(ConfirmationResultPlatform instance) {
-    assert(instance != null);
-
+  static void verifyExtends(ConfirmationResultPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -32,6 +30,6 @@ abstract class ConfirmationResultPlatform extends PlatformInterface {
   /// Finishes a phone number sign-in, link, or reauthentication, given the code
   /// that was sent to the user's mobile device.
   Future<UserCredentialPlatform> confirm(String verificationCode) async {
-    throw UnimplementedError("confirm() is not implemented");
+    throw UnimplementedError('confirm() is not implemented');
   }
 }

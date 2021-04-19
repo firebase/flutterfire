@@ -5,15 +5,16 @@ import 'package:flutter_test/flutter_test.dart';
 
 void runListResultTests() {
   group('$ListResult', () {
-    FirebaseStorage storage;
-    ListResult result;
+    /*late*/ FirebaseStorage storage;
+    /*late*/ ListResult result;
+
     setUpAll(() async {
       storage = FirebaseStorage.instance;
       Reference ref = storage.ref('/list');
       // Needs to be > half of the # of items in the storage,
       // so there's a chance of picking up some items and some
       // prefixes.
-      result = await ref.list(ListOptions(maxResults: 3));
+      result = await ref.list(const ListOptions(maxResults: 3));
     });
 
     test('items', () async {

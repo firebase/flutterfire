@@ -3,15 +3,37 @@ title: Using Firebase Crashlytics
 sidebar_label: Usage
 ---
 
+## Getting started
+
+Enable Firebase Crashytlics in the Firebase console.
+
+<Image src="enable-firebase-crashlytics.png" alt="Enable in the console" />
+
+Until an error has been reported, you will see this screen.
+
+<Image src="crashlytics-init.png" alt="Crashytlics init screen" />
+
 To start using Firebase Crashlytics within your project, import it at the top of your project files:
 
 ```dart
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 ```
 
+Run an example, such as...
+
+```dart
+// Initialize Firebase.
+await Firebase.initializeApp();
+
+// Elsewhere in your code
+FirebaseCrashlytics.instance.crash();
+```
+
+This will crash the currently running application. You will then need to manually re-run your application on your emulator for Crashlytics to submit the crash report to the Firebase Console.
+
 ## Sending reports to Crashlytics
 
-To send report data to Crashlytics, the **application must be restarted**.  Crashlytics automatically sends any crash reports
+To send report data to Crashlytics, the **application must be restarted**. Crashlytics automatically sends any crash reports
 to Firebase the next time the application is launched.
 
 ## Toggle Crashlytics collection
@@ -58,6 +80,35 @@ Firebase Crashlytics will upload the crash report to the Firebase Console.
 The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
 `This is a test crash caused by calling .crash() in Dart.`
 
+## Crash types
+
+### Fatal crash
+
+If you would like to record a fatal error, you may pass in a `fatal` argument as `true`.
+The crash report will appear in your Crashlytics dashboard with the event type `Crash`, the event summary stack trace will also be referenced as a `Fatal Exception`.
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a fatal error',
+  // Pass in 'fatal' argument
+  fatal: true
+);
+```
+
+### Non-Fatal crash
+
+By default non-fatal errors are recorded. The crash report will appear in your Crashlytics dashboard with the event type `Non-fatal`, the event summary stack trace will also be referenced as a `Non-fatal Exception`.
+
+```dart
+await FirebaseCrashlytics.instance.recordError(
+  error, 
+  stackTrace,
+  reason: 'a non-fatal error'
+);
+```
+
 ## Add custom keys
 
 To associate key/value pairs with your crash reports, you can use the `setCustomKey` method
@@ -82,7 +133,7 @@ FirebaseCrashlytics.instance.setCustomKey("float_key", 1.0f);
 FirebaseCrashlytics.instance.setCustomKey("double_key", 1.0);
 ```
 
->   This accepts a maximum of 64 key/value pairs. New keys beyond that limit are ignored. Keys or values that exceed 1024 characters are truncated.
+> This accepts a maximum of 64 key/value pairs. New keys beyond that limit are ignored. Keys or values that exceed 1024 characters are truncated.
 
 ## Add custom log messages
 
@@ -94,7 +145,7 @@ FirebaseCrashlytics.instance.log("Higgs-Boson detected! Bailing out");
 
 ## Set user identifiers
 
-To add user IDs to your reports, assign each user with a unique ID.  This can be an ID number, token or hashed value:
+To add user IDs to your reports, assign each user with a unique ID. This can be an ID number, token or hashed value:
 
 ```dart
 FirebaseCrashlytics.instance.setUserIdentifier("12345");
@@ -106,13 +157,18 @@ By overriding `FlutterError.onError` with `FirebaseCrashlytics.instance.recordFl
 catch all errors that are thrown within the Flutter framework.
 
 ```dart
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await Firebase.initializeApp();
+
   // Pass all uncaught errors from the framework to Crashlytics.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   runApp(MyApp());
 }
 ```
+
 ### Zoned Errors
 
 If you want to catch errors that occur in zones, you can pass `FirebaseCrashlytics.instance.recordError` to the second
@@ -122,7 +178,7 @@ parameter of `runZonedGuarded`
 runZonedGuarded<Future<void>>(() async {
     // ...
   }, FirebaseCrashlytics.instance.recordError);
-  ```
+```
 
 ### Errors outside of Flutter
 
@@ -140,7 +196,7 @@ Isolate.current.addErrorListener(RawReceivePort((pair) async {
 
 ## Enable opt-in reporting
 
-By default, Crashlytics will automatically collect crash reports for all your app's users.  To give users more control over
+By default, Crashlytics will automatically collect crash reports for all your app's users. To give users more control over
 the data they send, you can enable opt-in reporting by disabling automatic collection and initializing Crashlytics only for selected users:
 
 1. Turn off automatic collection natively:
@@ -161,12 +217,10 @@ Add a new key to your `Info.plist` file.
 - Key: `FirebaseCrashlyticsCollectionEnabled`
 - Value: `false`
 
-2. Enable collection for select users by calling the Crashlytics data collection override at runtime.  To opt out of automatic
-crash reporting, pass `false` as the override value.  When set to `false`, the new value does not apply until the next run
-of the app.
+2. Enable collection for select users by calling the Crashlytics data collection override at runtime. To opt out of automatic
+   crash reporting, pass `false` as the override value. When set to `false`, the new value does not apply until the next run
+   of the app.
 
 ```dart
 FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
 ```
-
-
