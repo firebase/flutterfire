@@ -1,3 +1,9 @@
+## 7.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: Migrate to sound null-safety (#5441).
+
 ## 6.1.2
 
  - **DOCS**: add example for connecting to the default database (#1306).

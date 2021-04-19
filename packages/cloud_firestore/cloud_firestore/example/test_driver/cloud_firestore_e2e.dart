@@ -28,7 +28,7 @@ void testsMain() {
     await Firebase.initializeApp();
 
     if (kUseFirestoreEmulator) {
-      String host = defaultTargetPlatform == TargetPlatform.android
+      String host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
           ? '10.0.2.2:8080'
           : 'localhost:8080';
       FirebaseFirestore.instance.settings =

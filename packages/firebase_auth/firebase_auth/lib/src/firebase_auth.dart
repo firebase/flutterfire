@@ -231,23 +231,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Internal helper which pipes internal [Stream] events onto
   /// a users own Stream.
   Stream<User?> _pipeStreamChanges(Stream<UserPlatform?> stream) {
-    Stream<User?> streamSync = stream.map((delegateUser) {
+    return stream.map((delegateUser) {
       if (delegateUser == null) {
         return null;
       }
 
       return User._(this, delegateUser);
-    });
-
-    StreamController<User?>? streamController;
-    streamController = StreamController<User?>.broadcast(onListen: () {
-      // Fire an event straight away
-      streamController!.add(currentUser);
-      // Pipe events of the broadcast stream into this stream
-      streamSync.pipe(streamController);
-    });
-
-    return streamController.stream;
+    }).asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
