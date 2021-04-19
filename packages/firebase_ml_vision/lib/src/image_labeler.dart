@@ -30,7 +30,7 @@ class ImageLabeler {
     required Object options,
     required this.modelType,
     required int handle,
-  })   : _options = options,
+  })  : _options = options,
         _handle = handle;
 
   /// Indicates whether this labeler is ran on device or in the cloud.
