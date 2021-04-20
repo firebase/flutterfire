@@ -1030,7 +1030,7 @@ void main() {
 
       test('emits the latest user available', () async {
         Stream<UserPlatform?> stream = auth.idTokenChanges();
-        
+
         await injectEventChannelResponse('idTokenChannel', {'user': null});
         await injectEventChannelResponse('idTokenChannel', {'user': user});
 
