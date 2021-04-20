@@ -212,9 +212,9 @@ void main() {
       };
 
       AppleNotificationSound iosSound = AppleNotificationSound(
-          critical: appleSoundMap!['critical'],
-          name: appleSoundMap!['name'],
-          volume: appleSoundMap!['volume']);
+          critical: appleSoundMap['critical'],
+          name: appleSoundMap['name'],
+          volume: appleSoundMap['volume']);
       expect(iosSound.critical, appleSoundMap['critical']);
       expect(iosSound.name, appleSoundMap['name']);
       expect(iosSound.volume, appleSoundMap['volume']);
