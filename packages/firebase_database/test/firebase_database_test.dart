@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -15,7 +13,7 @@ import 'test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  FirebaseApp app;
+  late FirebaseApp app;
 
   setUpAll(() async {
     app = await Firebase.initializeApp(
@@ -37,7 +35,7 @@ void main() {
     final List<MethodCall> log = <MethodCall>[];
 
     const String databaseURL = 'https://fake-database-url2.firebaseio.com';
-    FirebaseDatabase database;
+    late FirebaseDatabase database;
 
     setUp(() async {
       database = FirebaseDatabase(app: app, databaseURL: databaseURL);
@@ -52,28 +50,30 @@ void main() {
           case 'FirebaseDatabase#setPersistenceCacheSizeBytes':
             return true;
           case 'DatabaseReference#runTransaction':
-            Map<String, dynamic> updatedValue;
+            late Map<String, dynamic> updatedValue;
             Future<void> simulateEvent(
                 int transactionKey, final MutableData mutableData) async {
-              await ServicesBinding.instance.defaultBinaryMessenger
+              await ServicesBinding.instance!.defaultBinaryMessenger
                   .handlePlatformMessage(
-                      channel.name,
-                      channel.codec.encodeMethodCall(
-                        MethodCall(
-                          'DoTransaction',
-                          <String, dynamic>{
-                            'transactionKey': transactionKey,
-                            'snapshot': <String, dynamic>{
-                              'key': mutableData.key,
-                              'value': mutableData.value,
-                            },
-                          },
-                        ),
-                      ), (_) {
-                updatedValue = channel.codec
-                    .decodeEnvelope(_)['value']
-                    .cast<String, dynamic>();
-              });
+                channel.name,
+                channel.codec.encodeMethodCall(
+                  MethodCall(
+                    'DoTransaction',
+                    <String, dynamic>{
+                      'transactionKey': transactionKey,
+                      'snapshot': <String, dynamic>{
+                        'key': mutableData.key,
+                        'value': mutableData.value,
+                      },
+                    },
+                  ),
+                ),
+                (data) {
+                  updatedValue = channel.codec
+                      .decodeEnvelope(data!)['value']
+                      .cast<String, dynamic>();
+                },
+              );
             }
 
             await simulateEvent(
@@ -88,8 +88,9 @@ void main() {
               'committed': true,
               'snapshot': <String, dynamic>{
                 'key': 'fakeKey',
-                'value': updatedValue,
-              }
+                'value': updatedValue
+              },
+              'childKeys': ['fakeKey']
             };
           default:
             return null;
@@ -302,14 +303,9 @@ void main() {
           ],
         );
         expect(transactionResult.committed, equals(true));
-        expect(transactionResult.dataSnapshot.value,
-            equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}));
         expect(
-          database.reference().child('foo').runTransaction(
-                (MutableData mutableData) async => null,
-                timeout: const Duration(),
-              ),
-          throwsA(isInstanceOf<AssertionError>()),
+          transactionResult.dataSnapshot!.value,
+          equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}),
         );
       });
     });
@@ -486,7 +482,7 @@ void main() {
         const String errorDetails = 'Some details';
         final Query query = database.reference().child('some path');
         Future<void> simulateError(String errorMessage) async {
-          await ServicesBinding.instance.defaultBinaryMessenger
+          await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
                   channel.name,
                   channel.codec.encodeMethodCall(
@@ -528,7 +524,7 @@ void main() {
         const String path = 'foo';
         final Query query = database.reference().child(path);
         Future<void> simulateEvent(String value) async {
-          await ServicesBinding.instance.defaultBinaryMessenger
+          await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
                   channel.name,
                   channel.codec.encodeMethodCall(
@@ -609,7 +605,7 @@ class AsyncQueue<T> {
 
   Completer<T> _completer(int index) {
     if (_completers.containsKey(index)) {
-      return _completers.remove(index);
+      return _completers.remove(index)!;
     } else {
       return _completers[index] = Completer<T>();
     }

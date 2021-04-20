@@ -5,9 +5,39 @@ jobs:
     name: "Cancel Previous Runs"
     runs-on: ubuntu-latest
     timeout-minutes: 3
+    # temporarily use cancel-workflow-action fork pending upstream adoption of
+    # https://github.com/styfle/cancel-workflow-action/pull/62
     steps:
-      - uses: styfle/cancel-workflow-action@0.3.1
+      - uses: styfle/cancel-workflow-action@0.9.0
         with:
-          # TODO(Salakar): Update ids once on master.
-          workflow_id: 1411321,1411322,1414417,1414454,1414624,1414626,1414627
-          access_token: ${{ github.token }}
+          # Ids in order:
+          # all_plugins
+          # docs
+          # firebase_admob
+          # firebase_analytics
+          # firebase_auth
+          # firebase_core
+          # firebase_crashlytics
+          # firebase_database
+          # firebase_firestore
+          # firebase_functions
+          # firebase_messaging
+          # firebase_performance
+          # firebase_remote_config
+          # firebase_storage
+          workflow_id: >-
+            1771730,
+            2111945,
+            2330763,
+            2025925,
+            1771732,
+            1771733,
+            2393802,
+            1771734,
+            1771735,
+            1771736,
+            2063778,
+            2024659,
+            2057970,
+            1771737
+          all_but_latest: true

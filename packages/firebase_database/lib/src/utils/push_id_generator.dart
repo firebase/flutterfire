@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:math';
 
 // ignore: avoid_classes_with_only_static_members
@@ -23,16 +21,16 @@ class PushIdGenerator {
 
   static final Random _random = Random();
 
-  static int _lastPushTime;
+  static int? _lastPushTime;
 
-  static final List<int> _lastRandChars = []..length = 12;
+  static final List<int> _lastRandChars = List.filled(12, 0);
 
   static String generatePushChildName() {
     int now = DateTime.now().millisecondsSinceEpoch;
     final bool duplicateTime = now == _lastPushTime;
     _lastPushTime = now;
 
-    final List<String> timeStampChars = []..length = 8;
+    final List<String> timeStampChars = List.filled(8, '');
     for (int i = 7; i >= 0; i--) {
       timeStampChars[i] = PUSH_CHARS[now % 64];
       now = (now / 64).floor();

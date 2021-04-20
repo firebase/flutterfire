@@ -220,14 +220,14 @@ Once initialized, you're ready to get started using FlutterFire!
 
 Currently the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in XCode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
 
-`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'`
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '7.3.0'`
 
 Add this line inside your target 'Runner' do block in your Podfile, e.g.:
 
 ```
 # ...
 target 'Runner' do
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '7.3.0'
 # ...
 end
 ```
@@ -281,4 +281,4 @@ get started:
 | **Cloud Storage**   | Cloud Storage is designed to help you quickly and easily store and serve user-generated content, such as photos and videos. <br /><br /> [View documentation &raquo;](storage/overview.mdx)                                                                                                                                             |   [firebase_storage](https://pub.dev/packages/firebase_storage)      |
 | **Crashlytics**     | Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. <br /><br /> [View documentation &raquo;](crashlytics/overview.mdx)                                                                                                                                                             |   [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics)                |
 | **Cloud Messaging** | Firebase Cloud Messaging (FCM) is a cross-platform messaging solution that lets you reliably send messages at no cost. <br /><br /> [View documentation &raquo;](messaging/overview.mdx)                                                                                                                                                |   [firebase_messaging](https://pub.dev/packages/firebase_messaging)  |
-| **Cloud Funtions**  | Cloud Functions for Firebase let you automatically run backend code in response to events triggered by Firebase features and HTTPS requests.  <br /><br /> [View documentation &raquo;](functions/overview.mdx)                                                                                                                         |   [cloud_functions](https://pub.dev/packages/cloud_functions)        |
+| **Cloud Functions**  | Cloud Functions for Firebase let you automatically run backend code in response to events triggered by Firebase features and HTTPS requests.  <br /><br /> [View documentation &raquo;](functions/overview.mdx)                                                                                                                         |   [cloud_functions](https://pub.dev/packages/cloud_functions)        |

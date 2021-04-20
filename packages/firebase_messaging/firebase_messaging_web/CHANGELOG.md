@@ -1,3 +1,11 @@
+## 1.0.5
+
+ - **REFACTOR**: Share guard functions accross plugins (#5783).
+
+## 1.0.4
+
+ - Update a dependency to the latest release.
+
 ## 1.0.3
 
  - **FIX**: Fix broken homepage link (#4713).

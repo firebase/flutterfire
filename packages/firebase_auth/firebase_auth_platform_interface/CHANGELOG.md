@@ -1,3 +1,22 @@
+## 4.1.1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: uid can be null (#5834).
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **CI**: review changes.
+
+## 4.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+
+## 4.0.2
+
+ - **DOCS**: userChanges clarification (#5698).
+
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
 ## 4.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
