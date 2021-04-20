@@ -220,7 +220,7 @@ void main() {
       expect(iosSound.volume, appleSoundMap['volume']);
     });
 
-    test('Provide no arguments', (){
+    test('Provide no arguments', () {
       AppleNotificationSound iosSound = const AppleNotificationSound();
 
       expect(iosSound.critical, false);
