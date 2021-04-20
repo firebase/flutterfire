@@ -1,3 +1,7 @@
+## 7.0.0-dev.1
+
+ - **FIX**: return ordered data (#5765).
+
 ## 7.0.0-dev.0
 
 > Note: This release has breaking changes.
