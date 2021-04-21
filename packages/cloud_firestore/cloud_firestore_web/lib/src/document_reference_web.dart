@@ -3,64 +3,73 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:firebase/firestore.dart' as web;
 
-import 'package:cloud_firestore_web/src/collection_reference_web.dart';
-import 'package:cloud_firestore_web/src/utils/document_reference_utils.dart';
-import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
+import 'internals.dart';
+import 'utils/web_utils.dart';
+import 'utils/codec_utility.dart';
+import 'interop/firestore.dart' as firestore_interop;
 
-/// Web implementation for firestore [DocumentReferencePlatform]
+/// Web implementation for Firestore [DocumentReferencePlatform].
 class DocumentReferenceWeb extends DocumentReferencePlatform {
   /// instance of Firestore from the web plugin
-  final web.Firestore firestoreWeb;
+  final firestore_interop.Firestore firestoreWeb;
 
   /// instance of DocumentReference from the web plugin
-  final web.DocumentReference delegate;
+  final firestore_interop.DocumentReference _delegate;
 
-  /// Creates an instance of [CollectionReferenceWeb] which represents path
+  /// Creates an instance of [DocumentReferenceWeb] which represents path
   /// at [pathComponents] and uses implementation of [firestoreWeb]
   DocumentReferenceWeb(
+    FirebaseFirestorePlatform firestore,
     this.firestoreWeb,
-    FirestorePlatform firestore,
-    List<String> pathComponents,
-  )   : delegate = firestoreWeb.doc(pathComponents.join("/")),
-        super(firestore, pathComponents);
+    String path,
+  )   : _delegate = firestoreWeb.doc(path),
+        super(firestore, path);
 
   @override
-  Future<void> setData(
-    Map<String, dynamic> data, {
-    bool merge = false,
-  }) =>
-      delegate.set(
-        CodecUtility.encodeMapData(data),
-        web.SetOptions(merge: merge),
-      );
-
-  @override
-  Future<void> updateData(Map<String, dynamic> data) =>
-      delegate.update(data: CodecUtility.encodeMapData(data));
-
-  @override
-  Future<DocumentSnapshotPlatform> get({
-    Source source = Source.serverAndCache,
-  }) async {
-    return fromWebDocumentSnapshotToPlatformDocumentSnapshot(
-        await delegate.get(), this.firestore);
+  Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
+    return guard(
+      () => _delegate.set(
+        CodecUtility.encodeMapData(data)!,
+        convertSetOptions(options),
+      ),
+    );
   }
 
   @override
-  Future<void> delete() => delegate.delete();
+  Future<void> update(Map<String, dynamic> data) {
+    return guard(() => _delegate.update(CodecUtility.encodeMapData(data)!));
+  }
+
+  @override
+  Future<DocumentSnapshotPlatform> get(
+      [GetOptions options = const GetOptions()]) async {
+    firestore_interop.DocumentSnapshot documentSnapshot = await guard(
+      () => _delegate.get(convertGetOptions(options)),
+    );
+
+    return convertWebDocumentSnapshot(firestore, documentSnapshot);
+  }
+
+  @override
+  Future<void> delete() {
+    return guard(_delegate.delete);
+  }
 
   @override
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    Stream<web.DocumentSnapshot> querySnapshots = delegate.onSnapshot;
+    Stream<firestore_interop.DocumentSnapshot> querySnapshots =
+        _delegate.onSnapshot;
     if (includeMetadataChanges) {
-      querySnapshots = delegate.onMetadataChangesSnapshot;
+      querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
-    return querySnapshots.map((webSnapshot) =>
-        fromWebDocumentSnapshotToPlatformDocumentSnapshot(
-            webSnapshot, this.firestore));
+
+    return guard(
+      () => querySnapshots.map((webSnapshot) {
+        return convertWebDocumentSnapshot(firestore, webSnapshot);
+      }),
+    );
   }
 }

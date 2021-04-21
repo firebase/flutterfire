@@ -1,0 +1,57 @@
+---
+title: MacOS Installation
+---
+
+Before using FlutterFire on MacOS, you must first connect to your Firebase project with your MacOS application.
+
+## Generating a Firebase project configuration file
+
+On the [Firebase Console](https://console.firebase.google.com/project/_/overview), add a new iOS app or select an
+existing iOS app for your Firebase project. The "iOS bundle ID" must match your local project bundle ID for your MacOS application. The bundle ID
+can be found within the "General" tab when opening `macos/Runner.xcworkspace` with Xcode.
+
+Download the `GoogleService-Info.plist` file for the Firebase app.
+
+## Installing your Firebase configuration file
+
+Next you must add the file to the project using Xcode (adding manually via the filesystem won't link the file to the
+project). Using Xcode, open the project's `macos/{projectName}.xcworkspace` file. Right click `Runner` from the left-hand
+side project navigation within Xcode and select "Add files", as seen below:
+
+<Image
+  src="ios-xcode-copy-items.png"
+  alt="Add files via Xcode"
+  caption={false}
+/>
+
+Select the `GoogleService-Info.plist` file you downloaded, and ensure the "Copy items if needed" checkbox is enabled:
+
+<Image
+  src="ios-xcode-copy-items.png"
+  alt="Add files via Xcode"
+  caption={false}
+/>
+
+## Enabling use of Firebase Emulator Suite
+
+The [Firebase Emulator Suite](https://firebase.google.com/docs/emulator-suite) uses un-encrypted networking connections in order to enable fast, uncomplicated setup. However macOS by default requires encrypted networking connections. If you would like to use any part of the Firebase Emulator Suite to emulate firebase services on your local machine during development, you must allow your macOS app to connect to local network services over insecure connections.
+
+To allow insecure connections, we recommend adding the [`NSAllowsLocalNetworking`](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity/nsallowslocalnetworking) key to the [`NSAppTransportSecurity`](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity) dictionary in your application's plist file.
+
+Specifically if your app is named 'MyApp', and are sharing your configuration between iOS and macOS you might add these keys in `ios/MyApp/Info.plist`:
+
+```xml
+<key>NSAppTransportSecurity</key>
+<dict>
+    <key>NSAllowsLocalNetworking</key>
+    <true/>
+</dict>
+```
+
+## Initializing FlutterFire
+
+Once complete follow the instructions on [Initializing FlutterFire](../overview.mdx#initializing-flutterfire).
+
+## macOS Supported Versions
+
+FlutterFire supports a macOS deployment target of 10.12 or higher, in line with the requirements of the underlying [firebase-ios-sdk](https://firebase.google.com/docs/ios/setup).

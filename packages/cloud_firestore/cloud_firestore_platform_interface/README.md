@@ -6,15 +6,15 @@ This interface allows platform-specific implementations of the `cloud_firestore`
 plugin, as well as the plugin itself, to ensure they are supporting the
 same interface.
 
-# Usage
+## Usage
 
 To implement a new platform-specific implementation of `cloud_firestore`, extend
-[`FirestorePlatform`][2] with an implementation that performs the
+[`FirebaseFirestorePlatform`][2] with an implementation that performs the
 platform-specific behavior, and when you register your plugin, set the default
-`FirestorePlatform` by calling
-`FirestorePlatform.instance = MyFirestore()`.
+`FirebaseFirestorePlatform` by calling
+`FirebaseFirestorePlatform.instance = MyFirestore()`.
 
-# Note on breaking changes
+## Note on breaking changes
 
 Strongly prefer non-breaking changes (such as adding a method to the interface)
 over breaking changes for this package.

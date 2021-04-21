@@ -5,6 +5,7 @@
 part of firebase_performance;
 
 /// Valid HttpMethods for manual network APIs.
+// ignore: constant_identifier_names
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
 /// The Firebase Performance API.
@@ -14,7 +15,7 @@ class FirebasePerformance {
   FirebasePerformance._(this._handle) {
     channel.invokeMethod<bool>(
       'FirebasePerformance#instance',
-      <String, dynamic>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
   }
 
@@ -35,11 +36,12 @@ class FirebasePerformance {
   /// True if performance monitoring is enabled and false if performance
   /// monitoring is disabled. This is for dynamic enable/disable state. This
   /// does not reflect whether instrumentation is enabled/disabled.
-  Future<bool> isPerformanceCollectionEnabled() {
-    return channel.invokeMethod<bool>(
+  Future<bool> isPerformanceCollectionEnabled() async {
+    final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
       'FirebasePerformance#isPerformanceCollectionEnabled',
-      <String, dynamic>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
+    return isPerformanceCollectionEnabled!;
   }
 
   /// Enables or disables performance monitoring.
@@ -49,7 +51,7 @@ class FirebasePerformance {
   Future<void> setPerformanceCollectionEnabled(bool enable) {
     return channel.invokeMethod<void>(
       'FirebasePerformance#setPerformanceCollectionEnabled',
-      <String, dynamic>{'handle': _handle, 'enable': enable},
+      <String, Object?>{'handle': _handle, 'enable': enable},
     );
   }
 
@@ -63,7 +65,7 @@ class FirebasePerformance {
 
     FirebasePerformance.channel.invokeMethod<void>(
       'FirebasePerformance#newTrace',
-      <String, dynamic>{'handle': _handle, 'traceHandle': handle, 'name': name},
+      <String, Object?>{'handle': _handle, 'traceHandle': handle, 'name': name},
     );
 
     return Trace._(handle, name);
@@ -75,7 +77,7 @@ class FirebasePerformance {
 
     FirebasePerformance.channel.invokeMethod<void>(
       'FirebasePerformance#newHttpMetric',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'httpMetricHandle': handle,
         'url': url,

@@ -1,4 +1,4 @@
-// Copyright 2019, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -6,12 +6,14 @@ part of cloud_functions;
 
 /// A reference to a particular Callable HTTPS trigger in Cloud Functions.
 ///
-/// You can get an instance by calling [CloudFunctions.instance.getHTTPSCallable].
+/// You can get an instance by calling [FirebaseFunctions.instance.httpsCallable].
 class HttpsCallable {
-  HttpsCallable._(this._cloudFunctions, this._functionName);
+  HttpsCallable._(this.delegate);
 
-  final CloudFunctions _cloudFunctions;
-  final String _functionName;
+  /// Returns the underlying [HttpsCallablePlatform] delegate for this
+  /// [HttpsCallable] instance. This is useful for testing purposes only.
+  @visibleForTesting
+  final HttpsCallablePlatform delegate;
 
   /// Executes this Callable HTTPS trigger asynchronously.
   ///
@@ -27,32 +29,39 @@ class HttpsCallable {
   /// automatically includes a Firebase Instance ID token to identify the app
   /// instance. If a user is logged in with Firebase Auth, an auth ID token for
   /// the user is also automatically included.
-  Future<HttpsCallableResult> call([dynamic parameters]) {
-    try {
-      return CloudFunctionsPlatform.instance
-          .callCloudFunction(
-            appName: _cloudFunctions._app.name,
-            region: _cloudFunctions._region,
-            origin: _cloudFunctions._origin,
-            timeout: timeout,
-            functionName: _functionName,
-            parameters: parameters,
-          )
-          .then((response) => HttpsCallableResult._(response));
-    } on PlatformException catch (e) {
-      if (e.code == 'functionsError') {
-        final String code = e.details['code'];
-        final String message = e.details['message'];
-        final dynamic details = e.details['details'];
-        throw CloudFunctionsException._(code, message, details);
-      } else {
-        throw Exception('Unable to call function ' + _functionName);
+  Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
+    assert(_debugIsValidParameterType(parameters));
+    return HttpsCallableResult<T>._(await delegate.call(parameters));
+  }
+}
+
+/// Whether a given call parameter is a valid type.
+bool _debugIsValidParameterType(dynamic parameter, [bool isRoot = true]) {
+  if (parameter is List) {
+    for (final element in parameter) {
+      if (!_debugIsValidParameterType(element, false)) {
+        return false;
       }
-    } catch (e) {
-      rethrow;
     }
+    return true;
   }
 
-  /// The timeout to use when calling the function. Defaults to 60 seconds.
-  Duration timeout;
+  if (parameter is Map) {
+    for (final key in parameter.keys) {
+      if (key is! String) {
+        return false;
+      }
+    }
+    for (final value in parameter.values) {
+      if (!_debugIsValidParameterType(value, false)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  return parameter == null ||
+      parameter is String ||
+      parameter is num ||
+      parameter is bool;
 }
