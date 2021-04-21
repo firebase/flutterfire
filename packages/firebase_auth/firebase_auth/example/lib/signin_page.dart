@@ -985,13 +985,13 @@ class _OtherProvidersSignInSectionState
       UserCredential userCredential;
 
       if (kIsWeb) {
-        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        var googleProvider = GoogleAuthProvider();
         userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
         final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        final GoogleAuthCredential googleAuthCredential =
+        final googleAuthCredential =
             GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,

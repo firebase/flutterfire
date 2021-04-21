@@ -14,7 +14,7 @@ const _kProviderId = 'twitter.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// TwitterAuthProvider twitterProvider = TwitterAuthProvider();
+/// var twitterProvider = TwitterAuthProvider();
 /// twitterProvider.setCustomParameters({
 ///   'lang': 'es'
 /// });
@@ -30,7 +30,7 @@ const _kProviderId = 'twitter.com';
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
 /// String secret = '...'; // From 3rd party provider
-/// TwitterAuthCredential twitterAuthCredential = TwitterAuthCredential.credential(accessToken: accessToken, secret: secret);
+/// var twitterAuthCredential = TwitterAuthCredential.credential(accessToken: accessToken, secret: secret);
 ///
 /// FirebaseAuth.instance.signInWithCredential(twitterAuthCredential)
 ///   .then(...);
@@ -38,6 +38,18 @@ const _kProviderId = 'twitter.com';
 class TwitterAuthProvider extends AuthProvider {
   /// Creates a new instance.
   TwitterAuthProvider() : super(_kProviderId);
+
+  /// Create a new [TwitterAuthCredential] from a provided [accessToken] and
+  /// [secret];
+  static OAuthCredential credential({
+    required String accessToken,
+    required String secret,
+  }) {
+    return TwitterAuthCredential._credential(
+      accessToken: accessToken,
+      secret: secret,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get TWITTER_SIGN_IN_METHOD {
@@ -63,18 +75,6 @@ class TwitterAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [TwitterAuthCredential] from a provided [accessToken] and
-  /// [secret];
-  static OAuthCredential credential({
-    required String accessToken,
-    required String secret,
-  }) {
-    return TwitterAuthCredential._credential(
-      accessToken: accessToken,
-      secret: secret,
-    );
   }
 }
 
