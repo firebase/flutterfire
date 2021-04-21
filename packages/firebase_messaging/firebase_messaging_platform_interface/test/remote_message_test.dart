@@ -59,10 +59,14 @@ void main() {
       expect(message.mutableContent, mockMessageMap!['mutableContent']);
 
       expect(message.notification, isA<RemoteNotification>());
-      expect(message.notification!.title,
-          mockMessageMap!['notification']['title'],);
       expect(
-          message.notification!.body, mockMessageMap!['notification']['body'],);
+        message.notification!.title,
+        mockMessageMap!['notification']['title'],
+      );
+      expect(
+        message.notification!.body,
+        mockMessageMap!['notification']['body'],
+      );
 
       expect(message.sentTime, isA<DateTime>());
       expect(message.threadId, mockMessageMap!['threadId']);
@@ -94,19 +98,20 @@ void main() {
       DateTime date = DateTime.now();
 
       final message = RemoteMessage(
-          senderId: mockMessageMap!['senderId'],
-          category: mockMessageMap!['category'],
-          collapseKey: mockMessageMap!['collapseKey'],
-          contentAvailable: mockMessageMap!['contentAvailable'],
-          data: mockMessageMap!['data'],
-          from: mockMessageMap!['from'],
-          messageId: mockMessageMap!['messageId'],
-          messageType: mockMessageMap!['messageType'],
-          mutableContent: mockMessageMap!['mutableContent'],
-          notification: RemoteNotification.fromMap({}),
-          sentTime: date,
-          threadId: mockMessageMap!['threadId'],
-          ttl: mockMessageMap!['ttl'],);
+        senderId: mockMessageMap!['senderId'],
+        category: mockMessageMap!['category'],
+        collapseKey: mockMessageMap!['collapseKey'],
+        contentAvailable: mockMessageMap!['contentAvailable'],
+        data: mockMessageMap!['data'],
+        from: mockMessageMap!['from'],
+        messageId: mockMessageMap!['messageId'],
+        messageType: mockMessageMap!['messageType'],
+        mutableContent: mockMessageMap!['mutableContent'],
+        notification: RemoteNotification.fromMap({}),
+        sentTime: date,
+        threadId: mockMessageMap!['threadId'],
+        ttl: mockMessageMap!['ttl'],
+      );
 
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
