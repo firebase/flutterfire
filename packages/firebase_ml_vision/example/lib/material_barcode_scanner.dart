@@ -214,7 +214,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       imageSize = Size(imageSize.height, imageSize.width);
     }
 
-    final double imageScale = imageHeight / maxLogicalHeight;
+    final double imageScale = imageSize.height / maxLogicalHeight;
     final double halfWidth = imageScale * widget.validRectangle.width! / 2;
     final double halfHeight = imageScale * widget.validRectangle.height! / 2;
 
