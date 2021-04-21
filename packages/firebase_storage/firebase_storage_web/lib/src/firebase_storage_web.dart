@@ -90,7 +90,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
     return guard(() {
       ReferenceBuilder refBuilderFunction = refBuilder ?? _createReference;
       ReferencePlatform ref = refBuilderFunction(this, path);
-      print("RRRRRR: " + ref.bucket.toString());
+
       return ref;
     });
   }
