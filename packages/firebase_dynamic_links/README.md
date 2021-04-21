@@ -107,7 +107,8 @@ Remember not to include `https://` or any slashes or paths in your prefix
 </array>
 ```
 5. If you want to open android app directly without redirecting to Chrome or Any other Browser you can put an intent-filter in your ```AndroidManifest.xml```. It will open system dialogue to open link with your app or other browsers. Users can directly open link in your app.
-Note:-This step is optional and in case we do not implement this then link will open in chrome at first and then will eventually open your application.
+
+Note: This step is optional and in case we do not implement this then link will open in chrome at first and then will eventually open your application.
 ```xml
 <intent-filter>
   <action android:name="android.intent.action.VIEW" />
