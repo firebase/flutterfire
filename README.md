@@ -19,7 +19,7 @@
 FlutterFire is a set of [Flutter plugins](https://flutter.io/platform-plugins/)
 that enable Flutter apps to use [Firebase](https://firebase.google.com/) services. You can follow an example that shows
 how to use these plugins in
-the [Firebase for Flutter](https://codelabs.developers.google.com/codelabs/flutter-firebase/index.html#0) codelab.
+the [Firebase for Flutter](https://firebase.google.com/codelabs/firebase-get-to-know-flutter) codelab.
 
 [Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile,
 web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free
@@ -32,7 +32,6 @@ and open source.
 
 **Table of contents:**
 
-- [AdMob (`firebase_admob`)](#firebase_admob)
 - [Analytics (`firebase_analytics`)](#firebase_analytics)
 - [Authentication (`firebase_auth`)](#firebase_auth)
 - [Cloud Firestore (`cloud_firestore`)](#cloud_firestore)
@@ -51,23 +50,6 @@ and open source.
 - [Remote Config (`firebase_remote_config`)](#firebase_remote_config)
 
 ---
-
-### `firebase_admob`
-
-> [![firebase_admob][admob_badge_pub]][admob_pub] [![pub points][admob_badge_pub_points]][admob_pub_points]
-
-Google AdMob is a mobile advertising platform that you can use to generate revenue from your app. Using AdMob with
-Firebase provides you with additional app usage data and analytics capabilities. [[Learn More][admob_product]]
-
-[[View Source][admob_code]]
-
-#### Platform Support
-
-| Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
-
-----
 
 ### `firebase_analytics`
 
@@ -347,19 +329,6 @@ and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls)
 
 This repository is maintained by Googlers but is not a supported Firebase product. Issues here are answered by
 maintainers and other community members on GitHub on a best-effort basis.
-
-
-[admob_pub]: https://pub.dev/packages/firebase_admob
-
-[admob_product]: https://firebase.google.com/docs/admob/
-
-[admob_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob
-
-[admob_pub_points]: https://pub.dev/packages/firebase_admob/score
-
-[admob_badge_pub_points]: https://badges.bar/firebase_admob/pub%20points
-
-[admob_badge_pub]: https://img.shields.io/pub/v/firebase_admob.svg
 
 [analytics_pub]: https://pub.dev/packages/firebase_analytics
 

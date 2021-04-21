@@ -7,6 +7,7 @@ on:
       - master
     paths-ignore:
       - "docs/**"
+      - "**.md"
 
 jobs:
   analyze:
@@ -21,16 +22,14 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter --suppress-analytics pub global activate tuneup
       - name: "Bootstrap Workspace"
         run: melos bootstrap
-      - name: "Dart Analyze"
-        run: |
-          melos exec -c 3 -- \
-            tuneup check
+      - name: "Run Analyze"
+        run: melos run analyze
+      # TODO ML Custom has not been migrated to NNBD yet, so ignore checking it.
       - name: "Pub Check"
         run: |
-          melos exec -c 1 --no-private --ignore="*example*" -- \
+          melos exec -c 1 --no-private --ignore="*example*" --ignore="*ml_custom*" -- \
             pub publish --dry-run
 
   pub_get_check:
@@ -48,7 +47,7 @@ jobs:
       - name: "Flutter Pub Get"
         run: |
           melos exec -c 1 --scope="*example*" -- \
-            "flutter --suppress-analytics pub get"
+            "flutter pub get"
 
   format:
     runs-on: ubuntu-latest
@@ -68,7 +67,7 @@ jobs:
       - name: "Dart"
         run: |
           melos exec -c 1 -- \
-            "flutter --suppress-analytics format ."
+            "flutter format ."
           ./.github/workflows/scripts/validate-formatting.sh
       - name: "Objective-C"
         if: ${{ success() || failure() }}
@@ -93,13 +92,15 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-web
       - name: "Bootstrap Workspace"
         run: melos bootstrap
-      - name: "Build Example Snapshots"
+      - name: "Build Examples"
         run: |
-          melos exec -c 1 --scope="*example*" -- \
-            "flutter --suppress-analytics build aot"
+          melos exec -c 1 --scope="*example*" --dir-exists="web" -- \
+            "flutter build web --no-pub"
 
   test:
     runs-on: ubuntu-latest
@@ -115,6 +116,6 @@ jobs:
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Flutter Test"
-        run: |
-          melos exec -c 3 --dir-exists=test --ignore="*example*" --ignore="*web*" -- \
-            "flutter --suppress-analytics test"
+        run: melos run test --no-select
+      - name: "Flutter Test - Web"
+        run: melos run test:web --no-select

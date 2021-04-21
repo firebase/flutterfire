@@ -15,7 +15,7 @@ class TestWriteBatch extends WriteBatchPlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$WriteBatchPlatform()", () {
+  group('$WriteBatchPlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp(
         name: 'testApp',
@@ -28,56 +28,56 @@ void main() {
       );
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final batch = TestWriteBatch._();
       expect(batch, isInstanceOf<WriteBatchPlatform>());
     });
 
-    test("verifyExtends()", () {
+    test('verifyExtends()', () {
       final batch = TestWriteBatch._();
       WriteBatchPlatform.verifyExtends(batch);
       expect(batch, isInstanceOf<WriteBatchPlatform>());
     });
 
-    test("throws if .commit", () async {
+    test('throws if .commit', () async {
       final batch = TestWriteBatch._();
       try {
         await batch.commit();
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("commit() is not implemented"));
+        expect(e.message, equals('commit() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .delete", () {
+    test('throws if .delete', () {
       final batch = TestWriteBatch._();
       try {
         batch.delete('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("delete() is not implemented"));
+        expect(e.message, equals('delete() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .set", () {
+    test('throws if .set', () {
       final batch = TestWriteBatch._();
       try {
         batch.set('foo', {});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("set() is not implemented"));
+        expect(e.message, equals('set() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .update", () {
+    test('throws if .update', () {
       final batch = TestWriteBatch._();
       try {
         batch.update('foo', {});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("update() is not implemented"));
+        expect(e.message, equals('update() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

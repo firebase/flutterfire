@@ -4,28 +4,24 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
+import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
-import 'utils/exception.dart';
 import 'utils/codec_utility.dart';
 
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {
   final firestore_interop.Firestore _webFirestoreDelegate;
-  /*late*/ firestore_interop.WriteBatch /*!*/ _webWriteBatchDelegate;
+  firestore_interop.WriteBatch _webWriteBatchDelegate;
 
   /// Constructor.
   WriteBatchWeb(this._webFirestoreDelegate)
-      : _webWriteBatchDelegate = _webFirestoreDelegate.batch() /*!*/,
+      : _webWriteBatchDelegate = _webFirestoreDelegate.batch()!,
         super();
 
   @override
-  Future<void> commit() async {
-    try {
-      await _webWriteBatchDelegate.commit();
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<void> commit() {
+    return guard(_webWriteBatchDelegate.commit);
   }
 
   @override
@@ -35,9 +31,9 @@ class WriteBatchWeb extends WriteBatchPlatform {
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions /*?*/ options]) {
+      [SetOptions? options]) {
     _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
-        CodecUtility.encodeMapData(data), convertSetOptions(options));
+        CodecUtility.encodeMapData(data)!, convertSetOptions(options));
   }
 
   @override
@@ -46,6 +42,6 @@ class WriteBatchWeb extends WriteBatchPlatform {
     Map<String, dynamic> data,
   ) {
     _webWriteBatchDelegate.update(_webFirestoreDelegate.doc(documentPath),
-        data: CodecUtility.encodeMapData(data));
+        CodecUtility.encodeMapData(data)!);
   }
 }

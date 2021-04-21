@@ -10,6 +10,7 @@ on:
       - master
     paths-ignore:
       - "docs/**"
+      - "**.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_performance*"

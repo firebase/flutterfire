@@ -16,7 +16,7 @@ void main() {
   final List<MethodCall> log = <MethodCall>[];
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
-  /*late*/ FirebaseAuthPlatform auth;
+  late FirebaseAuthPlatform auth;
   const String kMockProviderId = 'firebase';
   const String kMockUid = '12345';
   const String kMockDisplayName = 'Flutter Test User';
@@ -29,7 +29,7 @@ void main() {
   const Map<dynamic, dynamic> kMockIdTokenResultClaims = <dynamic, dynamic>{
     'claim1': 'value1',
   };
-  final String kMockPhoneNumber = TEST_PHONE_NUMBER;
+  const String kMockPhoneNumber = TEST_PHONE_NUMBER;
   final int kMockIdTokenResultExpirationTimestamp =
       DateTime.now().subtract(const Duration(days: 1)).millisecondsSinceEpoch;
   final int kMockIdTokenResultAuthTimestamp =
@@ -79,8 +79,8 @@ void main() {
   }
 
   group('$MethodChannelUser', () {
-    /*late*/ Map<String, dynamic> user;
-    /*late*/ List kMockProviderData;
+    late Map<String, dynamic> user;
+    late List kMockProviderData;
 
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
@@ -95,8 +95,14 @@ void main() {
         }
 
         switch (call.method) {
-          case 'Auth#registerChangeListeners':
-            return {};
+          case 'Auth#registerIdTokenListener':
+            const String name = 'idTokenChannel';
+            handleEventChannel(name, log);
+            return name;
+          case 'Auth#registerAuthStateListener':
+            const String name = 'authStateChannel';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#signInAnonymously':
             return <String, dynamic>{'user': user};
           case 'Auth#signInWithEmailAndPassword':
@@ -157,71 +163,71 @@ void main() {
     });
     group('User.displayName', () {
       test('should return null', () async {
-        expect(auth.currentUser.displayName, isNull);
+        expect(auth.currentUser!.displayName, isNull);
       });
       test('should return correct value', () async {
         // Setup
         user =
             generateUser(user, <String, dynamic>{'displayName': 'updatedName'});
-        await auth.currentUser.reload();
+        await auth.currentUser!.reload();
 
-        expect(auth.currentUser.displayName, equals('updatedName'));
+        expect(auth.currentUser!.displayName, equals('updatedName'));
       });
     });
 
     group('User.email', () {
       test('should return null', () async {
-        expect(auth.currentUser.email, isNull);
+        expect(auth.currentUser!.email, isNull);
       });
       test('should return correct value', () async {
         const updatedEmail = 'updated@email.com';
         user = generateUser(user, <String, dynamic>{'email': updatedEmail});
-        await auth.currentUser.reload();
+        await auth.currentUser!.reload();
 
-        expect(auth.currentUser.email, equals(updatedEmail));
+        expect(auth.currentUser!.email, equals(updatedEmail));
       });
     });
 
     group('User.emailVerified', () {
       test('should return false', () async {
-        expect(auth.currentUser.emailVerified, isFalse);
+        expect(auth.currentUser!.emailVerified, isFalse);
       });
       test('should return true', () async {
         user = generateUser(user, <String, dynamic>{'emailVerified': true});
-        await auth.currentUser.reload();
+        await auth.currentUser!.reload();
 
-        expect(auth.currentUser.emailVerified, isTrue);
+        expect(auth.currentUser!.emailVerified, isTrue);
       });
     });
 
     group('User.isAnonymous', () {
       test('should return true', () async {
-        expect(auth.currentUser.isAnonymous, isTrue);
+        expect(auth.currentUser!.isAnonymous, isTrue);
       });
       test('should return false', () async {
         user = generateUser(user, <String, dynamic>{'isAnonymous': false});
-        await auth.currentUser.reload();
+        await auth.currentUser!.reload();
 
-        expect(auth.currentUser.isAnonymous, isFalse);
+        expect(auth.currentUser!.isAnonymous, isFalse);
       });
     });
 
     test('User.metadata', () async {
-      final metadata = auth.currentUser.metadata;
+      final metadata = auth.currentUser!.metadata;
 
       expect(metadata, isA<UserMetadata>());
-      expect(
-          metadata.creationTime.millisecondsSinceEpoch, kMockCreationTimestamp);
-      expect(metadata.lastSignInTime.millisecondsSinceEpoch,
+      expect(metadata.creationTime!.millisecondsSinceEpoch,
+          kMockCreationTimestamp);
+      expect(metadata.lastSignInTime!.millisecondsSinceEpoch,
           kMockLastSignInTimestamp);
     });
 
     test('User.photoURL', () async {
-      expect(auth.currentUser.photoURL, equals(kMockPhotoURL));
+      expect(auth.currentUser!.photoURL, equals(kMockPhotoURL));
     });
 
     test('User.providerData', () async {
-      final providerData = auth.currentUser.providerData;
+      final providerData = auth.currentUser!.providerData;
       expect(providerData, isA<List<UserInfo>>());
 
       expect(providerData[0].displayName, equals(kMockDisplayName));
@@ -233,19 +239,20 @@ void main() {
     });
 
     test('User.refreshToken', () async {
-      expect(auth.currentUser.refreshToken, isNull);
+      expect(auth.currentUser!.refreshToken, isNull);
     });
 
     test('User.tenantId', () async {
-      expect(auth.currentUser.tenantId, isNull);
+      expect(auth.currentUser!.tenantId, isNull);
     });
+
     test('User.uid', () async {
-      expect(auth.currentUser.uid, equals(kMockUid));
+      expect(auth.currentUser!.uid, equals(kMockUid));
     });
 
     group('delete()', () {
       test('should run successfully', () async {
-        await auth.currentUser.delete();
+        await auth.currentUser!.delete();
 
         expect(
           log,
@@ -263,14 +270,14 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.delete();
+        void callMethod() => auth.currentUser!.delete();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
 
     group('getIdToken()', () {
       test('should run successfully', () async {
-        final token = await auth.currentUser.getIdToken(true);
+        final token = await auth.currentUser!.getIdToken(true);
 
         expect(
           log,
@@ -294,13 +301,13 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.getIdToken(true);
+        void callMethod() => auth.currentUser!.getIdToken(true);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
     group('getIdTokenResult()', () {
       test('should run successfully', () async {
-        final idTokenResult = await auth.currentUser.getIdTokenResult(true);
+        final idTokenResult = await auth.currentUser!.getIdTokenResult(true);
 
         expect(
           log,
@@ -316,12 +323,12 @@ void main() {
           ],
         );
         expect(idTokenResult, isA<IdTokenResult>());
-        expect(idTokenResult.authTime.millisecondsSinceEpoch,
+        expect(idTokenResult.authTime!.millisecondsSinceEpoch,
             equals(kMockIdTokenResultAuthTimestamp));
         expect(idTokenResult.claims, equals(kMockIdTokenResultClaims));
-        expect(idTokenResult.expirationTime.millisecondsSinceEpoch,
+        expect(idTokenResult.expirationTime!.millisecondsSinceEpoch,
             equals(kMockIdTokenResultExpirationTimestamp));
-        expect(idTokenResult.issuedAtTime.millisecondsSinceEpoch,
+        expect(idTokenResult.issuedAtTime!.millisecondsSinceEpoch,
             equals(kMockIdTokenResultIssuedAtTimestamp));
         expect(idTokenResult.token, equals(kMockIdToken));
       });
@@ -331,7 +338,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.getIdTokenResult(true);
+        void callMethod() => auth.currentUser!.getIdTokenResult(true);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -339,7 +346,8 @@ void main() {
     group('linkWithCredential()', () {
       String newEmail = 'new@email.com';
       EmailAuthCredential credential =
-          EmailAuthProvider.credential(email: newEmail, password: 'test');
+          EmailAuthProvider.credential(email: newEmail, password: 'test')
+              as EmailAuthCredential;
 
       test('should run successfully', () async {
         kMockProviderData.add(<String, String>{
@@ -349,7 +357,7 @@ void main() {
           'displayName': kMockDisplayName,
           'photoURL': kMockPhotoURL,
         });
-        final result = await auth.currentUser.linkWithCredential(credential);
+        final result = await auth.currentUser!.linkWithCredential(credential);
 
         expect(
           log,
@@ -364,11 +372,11 @@ void main() {
           ],
         );
         expect(result, isA<UserCredentialPlatform>());
-        expect(result.user.providerData.length, equals(2));
+        expect(result.user!.providerData.length, equals(2));
 
         // check currentUser updated
-        expect(auth.currentUser.providerData.length, equals(2));
-        expect(auth.currentUser.providerData[1].email, equals(newEmail));
+        expect(auth.currentUser!.providerData.length, equals(2));
+        expect(auth.currentUser!.providerData[1].email, equals(newEmail));
       });
 
       test(
@@ -376,8 +384,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => auth.currentUser.linkWithCredential(credential);
+        void callMethod() => auth.currentUser!.linkWithCredential(credential);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -385,7 +392,8 @@ void main() {
     group('reauthenticateWithCredential()', () {
       String newEmail = 'new@email.com';
       EmailAuthCredential credential =
-          EmailAuthProvider.credential(email: newEmail, password: 'test');
+          EmailAuthProvider.credential(email: newEmail, password: 'test')
+              as EmailAuthCredential;
 
       test('should run successfully', () async {
         kMockProviderData.add(<String, String>{
@@ -396,7 +404,7 @@ void main() {
           'photoURL': kMockPhotoURL,
         });
         final result =
-            await auth.currentUser.reauthenticateWithCredential(credential);
+            await auth.currentUser!.reauthenticateWithCredential(credential);
 
         expect(
           log,
@@ -411,11 +419,11 @@ void main() {
           ],
         );
         expect(result, isA<UserCredentialPlatform>());
-        expect(result.user.providerData.length, equals(2));
+        expect(result.user!.providerData.length, equals(2));
 
         // check currentUser updated
-        expect(auth.currentUser.providerData.length, equals(2));
-        expect(auth.currentUser.providerData[1].email, equals(newEmail));
+        expect(auth.currentUser!.providerData.length, equals(2));
+        expect(auth.currentUser!.providerData[1].email, equals(newEmail));
       });
 
       test(
@@ -423,8 +431,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => auth.currentUser.reauthenticateWithCredential(credential);
+        void callMethod() =>
+            auth.currentUser!.reauthenticateWithCredential(credential);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -432,12 +440,12 @@ void main() {
     group('reload()', () {
       test('should run successfully', () async {
         // Setup
-        expect(auth.currentUser.displayName, isNull);
+        expect(auth.currentUser!.displayName, isNull);
         user = generateUser(
             user, <String, dynamic>{'displayName': 'test'}); // change mock user
 
         // Test
-        await auth.currentUser.reload();
+        await auth.currentUser!.reload();
 
         // Assumptions
         expect(
@@ -451,7 +459,7 @@ void main() {
             )
           ],
         );
-        expect(auth.currentUser.displayName, 'test');
+        expect(auth.currentUser!.displayName, 'test');
       });
 
       test(
@@ -459,7 +467,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.reload();
+        void callMethod() => auth.currentUser!.reload();
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -468,7 +476,7 @@ void main() {
 
       test('should run successfully', () async {
         // Test
-        await auth.currentUser.sendEmailVerification(actionCodeSettings);
+        await auth.currentUser!.sendEmailVerification(actionCodeSettings);
 
         // Assumptions
         expect(
@@ -490,16 +498,16 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => auth.currentUser.sendEmailVerification(actionCodeSettings);
+        void callMethod() =>
+            auth.currentUser!.sendEmailVerification(actionCodeSettings);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
 
     group('unlink()', () {
       test('should run successfully', () async {
-        expect(auth.currentUser.providerData.length, equals(1));
-        final unlinkedUser = await auth.currentUser.unlink(kMockProviderId);
+        expect(auth.currentUser!.providerData.length, equals(1));
+        final unlinkedUser = await auth.currentUser!.unlink(kMockProviderId);
 
         expect(
           log,
@@ -518,7 +526,7 @@ void main() {
         expect(unlinkedUser.providerData.length, equals(0));
 
         // check currentUser updated
-        expect(auth.currentUser.providerData.length, equals(0));
+        expect(auth.currentUser!.providerData.length, equals(0));
       });
 
       test(
@@ -526,7 +534,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.unlink(kMockProviderId);
+        void callMethod() => auth.currentUser!.unlink(kMockProviderId);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -535,7 +543,7 @@ void main() {
       const newEmail = 'new@email.com';
 
       test('should run successfully', () async {
-        await auth.currentUser.updateEmail(newEmail);
+        await auth.currentUser!.updateEmail(newEmail);
 
         expect(
           log,
@@ -550,8 +558,8 @@ void main() {
           ],
         );
 
-        await auth.currentUser.reload();
-        expect(auth.currentUser.email, equals(newEmail));
+        await auth.currentUser!.reload();
+        expect(auth.currentUser!.email, equals(newEmail));
       });
 
       test(
@@ -559,7 +567,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.updateEmail(newEmail);
+        void callMethod() => auth.currentUser!.updateEmail(newEmail);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -568,7 +576,7 @@ void main() {
       const newPassword = 'newPassword';
 
       test('gets result successfully', () async {
-        await auth.currentUser.updatePassword(newPassword);
+        await auth.currentUser!.updatePassword(newPassword);
 
         expect(
           log[0],
@@ -587,18 +595,19 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => auth.currentUser.updatePassword(newPassword);
+        void callMethod() => auth.currentUser!.updatePassword(newPassword);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
 
     group('updatePhoneNumber()', () {
-      PhoneAuthCredential phoneAuthCredential =
-          PhoneAuthProvider.credential(verificationId: 'test', smsCode: 'test');
+      PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: 'test',
+        smsCode: 'test',
+      );
 
       test('gets result successfully', () async {
-        await auth.currentUser.updatePhoneNumber(phoneAuthCredential);
+        await auth.currentUser!.updatePhoneNumber(phoneAuthCredential);
 
         expect(
           log,
@@ -619,8 +628,8 @@ void main() {
           ],
         );
 
-        await auth.currentUser.reload();
-        expect(auth.currentUser.phoneNumber, kMockNewPhoneNumber);
+        await auth.currentUser!.reload();
+        expect(auth.currentUser!.phoneNumber, kMockNewPhoneNumber);
       });
 
       test(
@@ -628,8 +637,8 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod =
-            () => auth.currentUser.updatePhoneNumber(phoneAuthCredential);
+        void callMethod() =>
+            auth.currentUser!.updatePhoneNumber(phoneAuthCredential);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -642,7 +651,7 @@ void main() {
         'photoURL': newPhotoURL
       };
       test('updateProfile()', () async {
-        await auth.currentUser.updateProfile(data);
+        await auth.currentUser!.updateProfile(data);
 
         expect(
           log,
@@ -660,9 +669,9 @@ void main() {
           ],
         );
 
-        await auth.currentUser.reload();
-        expect(auth.currentUser.displayName, equals(newDisplayName));
-        expect(auth.currentUser.photoURL, equals(newPhotoURL));
+        await auth.currentUser!.reload();
+        expect(auth.currentUser!.displayName, equals(newDisplayName));
+        expect(auth.currentUser!.photoURL, equals(newPhotoURL));
       });
 
       test(
@@ -670,7 +679,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser.updateProfile(data);
+        void callMethod() => auth.currentUser!.updateProfile(data);
         await testExceptionHandling('PLATFORM', callMethod);
       });
     });
@@ -678,12 +687,10 @@ void main() {
     group('verifyBeforeUpdateEmail()', () {
       final ActionCodeSettings actionCodeSettings = ActionCodeSettings(
         url: 'test',
-        dynamicLinkDomain: null,
-        handleCodeInApp: null,
       );
       const newEmail = 'new@email.com';
       test('verifyBeforeUpdateEmail()', () async {
-        await auth.currentUser
+        await auth.currentUser!
             .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
         expect(
           log,
@@ -705,7 +712,7 @@ void main() {
           () async {
         mockPlatformExceptionThrown = true;
 
-        Function callMethod = () => auth.currentUser
+        void callMethod() => auth.currentUser!
             .verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
         await testExceptionHandling('PLATFORM', callMethod);
       });

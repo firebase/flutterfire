@@ -16,7 +16,7 @@ const String _kInvisibleElementId = '__ff-recaptcha-container';
 /// This factory class is implemented to the user facing code has no underlying knowledge
 /// of the delegate implementation.
 class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
-  auth_interop.RecaptchaVerifier _delegate;
+  late auth_interop.RecaptchaVerifier _delegate;
 
   /// Returns a stub instance of the class.
   ///
@@ -31,12 +31,12 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
   /// Creates a new [RecaptchaVerifierFactoryWeb] with a container and parameters.
   RecaptchaVerifierFactoryWeb({
-    String container,
+    String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
-    RecaptchaVerifierOnSuccess onSuccess,
-    RecaptchaVerifierOnError onError,
-    RecaptchaVerifierOnExpired onExpired,
+    RecaptchaVerifierOnSuccess? onSuccess,
+    RecaptchaVerifierOnError? onError,
+    RecaptchaVerifierOnExpired? onExpired,
   }) : super() {
     String element;
     Map<String, dynamic> parameters = {};
@@ -61,14 +61,14 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
     if (container == null || container.isEmpty) {
       parameters['size'] = 'invisible';
-      Element /*?*/ el = window.document.getElementById(_kInvisibleElementId);
+      Element? el = window.document.getElementById(_kInvisibleElementId);
 
       // If an existing element exists, something may have already been rendered.
       if (el != null) {
         el.remove();
       }
 
-      window.document.documentElement.children
+      window.document.documentElement!.children
           .add(DivElement()..id = _kInvisibleElementId);
 
       element = _kInvisibleElementId;
@@ -76,9 +76,10 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
       parameters['size'] = convertRecaptchaVerifierSize(size);
       parameters['theme'] = convertRecaptchaVerifierTheme(theme);
 
-      Element el = window.document.getElementById(container);
-      assert(el != null,
-          'An exception was thrown whilst creating a RecaptchaVerifier instance. No DOM element with an ID of $container could be found.');
+      assert(
+        window.document.getElementById(container) != null,
+        'An exception was thrown whilst creating a RecaptchaVerifier instance. No DOM element with an ID of $container could be found.',
+      );
 
       // If the provided string container ID has been found, assign it.
       element = container;
@@ -88,13 +89,14 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  RecaptchaVerifierFactoryPlatform delegateFor(
-      {String container,
-      RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
-      RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
-      RecaptchaVerifierOnSuccess onSuccess,
-      RecaptchaVerifierOnError onError,
-      RecaptchaVerifierOnExpired onExpired}) {
+  RecaptchaVerifierFactoryPlatform delegateFor({
+    String? container,
+    RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
+    RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
+    RecaptchaVerifierOnSuccess? onSuccess,
+    RecaptchaVerifierOnError? onError,
+    RecaptchaVerifierOnExpired? onExpired,
+  }) {
     return RecaptchaVerifierFactoryWeb(
         container: container,
         size: size,
@@ -105,7 +107,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   }
 
   @override
-  auth_interop.ApplicationVerifier /*!*/ get delegate {
+  auth_interop.ApplicationVerifier get delegate {
     return _delegate;
   }
 
@@ -129,7 +131,7 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   @override
   Future<int> render() async {
     try {
-      return (await _delegate.render()) as int;
+      return await _delegate.render() as int;
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

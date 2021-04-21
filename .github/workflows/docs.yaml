@@ -2,11 +2,8 @@ name: publish_docs
 
 on:
   push:
-    branches:
-    - master
-    paths:
-    - "docs/**"
-    - "website/**"
+    tags:
+      - '**'
   workflow_dispatch:
 
 jobs:

@@ -5,10 +5,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
-final String kMockProviderId = 'test.com';
+const String kMockProviderId = 'test.com';
 
 void main() {
-  /*late*/ TestOAuthProvider oAuthProvider;
+  late TestOAuthProvider oAuthProvider;
 
   setUpAll(() {
     oAuthProvider = TestOAuthProvider(kMockProviderId);
@@ -18,10 +18,6 @@ void main() {
     group('Constructor', () {
       test('returns an instance of [OAuthProvider]', () {
         expect(oAuthProvider, isA<OAuthProvider>());
-      });
-
-      test('throws [AssertionError] when providerId is null', () {
-        expect(() => TestOAuthProvider(null), throwsAssertionError);
       });
     });
 
@@ -35,10 +31,6 @@ void main() {
       expect(oAuthProvider.scopes.length, 0);
     });
 
-    test('parameters', () {
-      expect(oAuthProvider.parameters, isA<Object>());
-    });
-
     group('addScope()', () {
       test('adds a new scope', () {
         String kMockScope = 'repo';
@@ -48,10 +40,6 @@ void main() {
         expect(result.scopes, isA<List<String>>());
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
-      });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => oAuthProvider.addScope(null), throwsAssertionError);
       });
     });
 
@@ -63,20 +51,15 @@ void main() {
         final result =
             oAuthProvider.setCustomParameters(kCustomOAuthParameters);
         expect(result, isA<OAuthProvider>());
-        expect(result.parameters['allow_signup'], isA<String>());
-        expect(result.parameters['allow_signup'], equals('false'));
-      });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => oAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
+        expect(result.parameters!['allow_signup'], isA<String>());
+        expect(result.parameters!['allow_signup'], equals('false'));
       });
     });
 
     group('credential()', () {
-      final String kMockAccessToken = 'test-token';
-      final String kMockIdToken = 'id';
-      final String kMockRawNonce = 'test-raw-nonce';
+      const String kMockAccessToken = 'test-token';
+      const String kMockIdToken = 'id';
+      const String kMockRawNonce = 'test-raw-nonce';
       test('creates a new [OAuthCredential]', () {
         final result = oAuthProvider.credential(
             accessToken: kMockAccessToken,
@@ -96,5 +79,5 @@ void main() {
 }
 
 class TestOAuthProvider extends OAuthProvider {
-  TestOAuthProvider(providerId) : super(providerId);
+  TestOAuthProvider(String providerId) : super(providerId);
 }

@@ -12,7 +12,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, add `firebase_dynamic_links` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase dynamic links for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
+To use this plugin, add `firebase_dynamic_links` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase dynamic links for each platform project: Android and iOS (see the example folder for details).
 
 ## Create Dynamic Links
 

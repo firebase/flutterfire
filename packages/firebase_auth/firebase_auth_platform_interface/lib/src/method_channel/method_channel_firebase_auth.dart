@@ -4,31 +4,20 @@
 
 import 'dart:async';
 
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_platform_interface/src/firebase_auth_exception.dart';
-import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
-import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_user_credential.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../firebase_auth_platform_interface.dart';
+import '../firebase_auth_exception.dart';
+import '../platform_interface/platform_interface_user_credential.dart';
+import 'method_channel_user.dart';
 import 'method_channel_user_credential.dart';
 import 'utils/exception.dart';
-import 'utils/phone_auth_callbacks.dart';
 
 /// Method Channel delegate for [FirebaseAuthPlatform].
 class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
-  /// Keep an internal reference to whether the [MethodChannelFirebaseAuth]
-  /// class has already been initialized.
-  static bool _initialized = false;
-
-  /// Keeps an internal handle ID for the channel.
-  static int _methodChannelHandleId = 0;
-
-  /// Increments and returns the next channel ID handler for Auth.
-  static int get nextMethodChannelHandleId => _methodChannelHandleId++;
-
   /// The [MethodChannelFirebaseAuth] method channel.
   static const MethodChannel channel = MethodChannel(
     'plugins.flutter.io/firebase_auth',
@@ -38,16 +27,17 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
 
-  static Map<String, StreamController<UserPlatform>>
-      _authStateChangesListeners = <String, StreamController<UserPlatform>>{};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _authStateChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
-  static Map<String, StreamController<UserPlatform>> _idTokenChangesListeners =
-      <String, StreamController<UserPlatform>>{};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _idTokenChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
-  static Map<String, StreamController<UserPlatform>> _userChangesListeners =
-      <String, StreamController<UserPlatform>>{};
-
-  static Map<int, PhoneAuthCallbacks> _phoneAuthCallbacks = {};
+  static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
+      _userChangesListeners =
+      <String, StreamController<_ValueWrapper<UserPlatform>>>{};
 
   StreamController<T> _createBroadcastStream<T>() {
     return StreamController<T>.broadcast();
@@ -66,90 +56,73 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   MethodChannelFirebaseAuth._() : super(appInstance: null);
 
   /// Creates a new instance with a given [FirebaseApp].
-  MethodChannelFirebaseAuth({/*required*/ FirebaseApp app})
+  MethodChannelFirebaseAuth({required FirebaseApp app})
       : super(appInstance: app) {
-    // Send a request to start listening to change listeners straight away
-    channel
-        .invokeMethod<void>('Auth#registerChangeListeners', <String, dynamic>{
+    channel.invokeMethod<String>('Auth#registerIdTokenListener', {
       'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName!, channel.codec);
+      events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleIdTokenChangesListener(app.name, arguments);
+        },
+      );
+    });
+
+    channel.invokeMethod<String>('Auth#registerAuthStateListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName!, channel.codec);
+      events.receiveBroadcastStream().listen(
+        (arguments) {
+          _handleAuthStateChangesListener(app.name, arguments);
+        },
+      );
     });
 
     // Create a app instance broadcast stream for native listener events
     _authStateChangesListeners[app.name] =
-        _createBroadcastStream<UserPlatform>();
-    _idTokenChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
-    _userChangesListeners[app.name] = _createBroadcastStream<UserPlatform>();
-
-    // The channel setMethodCallHandler callback is not app specific, so there
-    // is no need to register the caller more than once.
-    if (_initialized) return;
-
-    channel.setMethodCallHandler((MethodCall call) async {
-      Map<dynamic, dynamic> /*!*/ arguments = call.arguments;
-
-      switch (call.method) {
-        case 'Auth#authStateChanges':
-          return _handleAuthStateChangesListener(arguments);
-        case 'Auth#idTokenChanges':
-          return _handleIdTokenChangesListener(arguments);
-        case 'Auth#phoneVerificationCompleted':
-          return _handlePhoneVerificationCompleted(arguments);
-        case 'Auth#phoneVerificationFailed':
-          return _handlePhoneVerificationFailed(arguments);
-        case 'Auth#phoneCodeSent':
-          return _handlePhoneCodeSent(arguments);
-        case 'Auth#phoneCodeAutoRetrievalTimeout':
-          return _handlePhoneCodeAutoRetrievalTimeout(arguments);
-        default:
-          throw UnimplementedError("${call.method} has not been implemented");
-      }
-    });
-
-    _initialized = true;
-  }
-
-  UserPlatform _currentUser;
-
-  @override
-  UserPlatform get currentUser {
-    return _currentUser;
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+    _idTokenChangesListeners[app.name] =
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
+    _userChangesListeners[app.name] =
+        _createBroadcastStream<_ValueWrapper<UserPlatform>>();
   }
 
   @override
-  set currentUser(UserPlatform userPlatform) {
-    _currentUser = userPlatform;
-  }
-
-  String languageCode;
+  UserPlatform? currentUser;
 
   @override
-  void sendAuthChangesEvent(String appName, UserPlatform userPlatform) {
-    assert(appName != null);
+  String? languageCode;
+
+  @override
+  void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
     assert(_userChangesListeners[appName] != null);
 
-    _userChangesListeners[appName].add(userPlatform);
+    _userChangesListeners[appName]!.add(_ValueWrapper(userPlatform));
   }
 
   /// Handles any incoming [authChanges] listener events.
   // Duplicate setting of [currentUser] in [_handleAuthStateChangesListener] & [_handleIdTokenChangesListener]
   // as iOS & Android do not guarantee correct ordering
   Future<void> _handleAuthStateChangesListener(
-      Map<dynamic, dynamic> arguments) async {
-    String /*!*/ appName = arguments['appName'];
-    StreamController<UserPlatform> /*!*/ streamController =
-        _authStateChangesListeners[appName];
-    MethodChannelFirebaseAuth /*!*/ instance =
-        _methodChannelFirebaseAuthInstances[appName];
+      String appName, Map<dynamic, dynamic> arguments) async {
+    // ignore: close_sinks
+    final streamController = _authStateChangesListeners[appName]!;
+    MethodChannelFirebaseAuth instance =
+        _methodChannelFirebaseAuthInstances[appName]!;
 
-    if (arguments['user'] == null) {
+    final userMap = arguments['user'];
+    if (userMap == null) {
       instance.currentUser = null;
-      streamController.add(null);
+      streamController.add(const _ValueWrapper.absent());
     } else {
-      final Map<String, dynamic> userMap =
-          Map<String, dynamic>.from(arguments['user']);
-      MethodChannelUser user = MethodChannelUser(instance, userMap);
+      final MethodChannelUser user =
+          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+
+      // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
-      streamController.add(MethodChannelUser(instance, userMap));
+      streamController.add(_ValueWrapper(instance.currentUser));
     }
   }
 
@@ -158,74 +131,30 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// This handler also manages the [currentUser] along with sending events
   /// to any [userChanges] stream subscribers.
   Future<void> _handleIdTokenChangesListener(
-      Map<dynamic, dynamic> arguments) async {
-    String /*!*/ appName = arguments['appName'];
-    StreamController<UserPlatform> /*!*/ idTokenStreamController =
-        _idTokenChangesListeners[appName];
-    StreamController<UserPlatform> /*!*/ userChangesStreamController =
-        _userChangesListeners[appName];
-    MethodChannelFirebaseAuth /*!*/ instance =
-        _methodChannelFirebaseAuthInstances[appName];
+      String appName, Map<dynamic, dynamic> arguments) async {
+    final StreamController<_ValueWrapper<UserPlatform>>
+        // ignore: close_sinks
+        idTokenStreamController = _idTokenChangesListeners[appName]!;
+    final StreamController<_ValueWrapper<UserPlatform>>
+        // ignore: close_sinks
+        userChangesStreamController = _userChangesListeners[appName]!;
+    MethodChannelFirebaseAuth instance =
+        _methodChannelFirebaseAuthInstances[appName]!;
 
-    if (arguments['user'] == null) {
+    final userMap = arguments['user'];
+    if (userMap == null) {
       instance.currentUser = null;
-      idTokenStreamController.add(null);
-      userChangesStreamController.add(null);
+      idTokenStreamController.add(const _ValueWrapper.absent());
+      userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
-      final Map<String, dynamic> userMap =
-          Map<String, dynamic>.from(arguments['user']);
+      final MethodChannelUser user =
+          MethodChannelUser(instance, userMap.cast<String, dynamic>());
 
-      MethodChannelUser user = MethodChannelUser(instance, userMap);
+      // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
-      idTokenStreamController.add(user);
-      userChangesStreamController.add(user);
+      idTokenStreamController.add(_ValueWrapper(user));
+      userChangesStreamController.add(_ValueWrapper(user));
     }
-  }
-
-  Future<void> _handlePhoneVerificationCompleted(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final int token = arguments['token'];
-    final String /*!*/ smsCode = arguments['smsCode'];
-
-    PhoneAuthCredential phoneAuthCredential =
-        PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.verificationCompleted(phoneAuthCredential);
-  }
-
-  Future<void> _handlePhoneVerificationFailed(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final Map<dynamic, dynamic> error = arguments['error'];
-    final Map<dynamic, dynamic> details = error['details'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-
-    FirebaseAuthException exception = FirebaseAuthException(
-      message: details != null ? details['message'] : error['message'],
-      code: details != null ? details['code'] : 'unknown',
-    );
-
-    callbacks.verificationFailed(exception);
-  }
-
-  Future<void> _handlePhoneCodeSent(Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final String verificationId = arguments['verificationId'];
-    final int forceResendingToken = arguments['forceResendingToken'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.codeSent(verificationId, forceResendingToken);
-  }
-
-  Future<void> _handlePhoneCodeAutoRetrievalTimeout(
-      Map<dynamic, dynamic> arguments) async {
-    final int /*!*/ handle = arguments['handle'];
-    final String verificationId = arguments['verificationId'];
-
-    PhoneAuthCallbacks callbacks = _phoneAuthCallbacks[handle];
-    callbacks.codeAutoRetrievalTimeout(verificationId);
   }
 
   /// Gets a [FirebaseAuthPlatform] with specific arguments such as a different
@@ -233,19 +162,16 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   ///
   /// Instances are cached and reused for incoming event handlers.
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp /*!*/ app}) {
-    if (!_methodChannelFirebaseAuthInstances.containsKey(app.name)) {
-      _methodChannelFirebaseAuthInstances[app.name] =
-          MethodChannelFirebaseAuth(app: app);
-    }
-
-    return _methodChannelFirebaseAuthInstances[app.name];
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+    return _methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
+      return MethodChannelFirebaseAuth(app: app);
+    });
   }
 
   @override
   MethodChannelFirebaseAuth setInitialValues({
-    Map<String, dynamic> currentUser,
-    String languageCode,
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
   }) {
     if (currentUser != null) {
       this.currentUser = MethodChannelUser(this, currentUser);
@@ -253,6 +179,19 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
     this.languageCode = languageCode;
     return this;
+  }
+
+  @override
+  Future<void> useEmulator(String host, int port) async {
+    try {
+      await channel.invokeMethod<void>('Auth#useEmulator', <String, dynamic>{
+        'appName': app.name,
+        'host': host,
+        'port': port,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -271,12 +210,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
     try {
-      Map<String, dynamic> result = await channel
+      Map<String, dynamic> result = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#checkActionCode', <String, dynamic>{
         'appName': app.name,
         'code': code,
-      });
+      }))!;
 
       return ActionCodeInfo(
         operation: result['operation'],
@@ -305,13 +244,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
       String email, String password) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#createUserWithEmailAndPassword', <String, dynamic>{
         'appName': app.name,
         'email': email,
         'password': password,
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -326,12 +265,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#fetchSignInMethodsForEmail', <String, dynamic>{
         'appName': app.name,
         'email': email,
-      });
+      }))!;
 
       return List<String>.from(data['providers']);
     } catch (e) {
@@ -340,19 +279,32 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Stream<UserPlatform> authStateChanges() =>
-      _authStateChangesListeners[app.name].stream;
+  Stream<UserPlatform?> authStateChanges() async* {
+    yield currentUser;
+    yield* _authStateChangesListeners[app.name]!
+        .stream
+        .map((event) => event.value);
+  }
 
   @override
-  Stream<UserPlatform> idTokenChanges() =>
-      _idTokenChangesListeners[app.name].stream;
+  Stream<UserPlatform?> idTokenChanges() async* {
+    yield currentUser;
+    yield* _idTokenChangesListeners[app.name]!
+        .stream
+        .map((event) => event.value);
+  }
 
   @override
-  Stream<UserPlatform> userChanges() => _userChangesListeners[app.name].stream;
+  Stream<UserPlatform?> userChanges() async* {
+    yield currentUser;
+    yield* _userChangesListeners[app.name]!.stream.map((event) => event.value);
+  }
 
   @override
-  Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings /*?*/ actionCodeSettings]) async {
+  Future<void> sendPasswordResetEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     try {
       await channel
           .invokeMethod<void>('Auth#sendPasswordResetEmail', <String, dynamic>{
@@ -367,7 +319,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<void> sendSignInLinkToEmail(
-      String email, ActionCodeSettings actionCodeSettings) async {
+    String email,
+    ActionCodeSettings actionCodeSettings,
+  ) async {
     try {
       await channel
           .invokeMethod<void>('Auth#sendSignInLinkToEmail', <String, dynamic>{
@@ -383,12 +337,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<void> setLanguageCode(String languageCode) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#setLanguageCode', <String, dynamic>{
         'appName': app.name,
         'languageCode': languageCode,
-      });
+      }))!;
 
       this.languageCode = data['languageCode'];
     } catch (e) {
@@ -397,8 +351,10 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setSettings(
-      {bool appVerificationDisabledForTesting, String userAccessGroup}) async {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+  }) async {
     try {
       await channel.invokeMethod('Auth#setSettings', <String, dynamic>{
         'appName': app.name,
@@ -419,11 +375,11 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#signInAnonymously', <String, dynamic>{
         'appName': app.name,
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -437,14 +393,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<UserCredentialPlatform> signInWithCredential(
-      AuthCredential credential) async {
+    AuthCredential credential,
+  ) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithCredential', <String, dynamic>{
         'appName': app.name,
         'credential': credential.asMap(),
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -459,12 +416,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithCustomToken', <String, dynamic>{
         'appName': app.name,
         'token': token,
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -480,13 +437,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
       String email, String password) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithEmailAndPassword', <String, dynamic>{
         'appName': app.name,
         'email': email,
         'password': password,
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -502,13 +459,13 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithEmailLink(
       String email, String emailLink) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#signInWithEmailLink', <String, dynamic>{
         'appName': app.name,
         'email': email,
         'emailLink': emailLink,
-      });
+      }))!;
 
       MethodChannelUserCredential userCredential =
           MethodChannelUserCredential(this, data);
@@ -523,15 +480,18 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) {
     throw UnimplementedError(
-        'signInWithPopup() is only supported on web based platforms');
+      'signInWithPopup() is only supported on web based platforms',
+    );
   }
 
   @override
   Future<void> signInWithRedirect(AuthProvider provider) {
     throw UnimplementedError(
-        'signInWithRedirect() is only supported on web based platforms');
+      'signInWithRedirect() is only supported on web based platforms',
+    );
   }
 
+  @override
   Future<void> signOut() async {
     try {
       await channel.invokeMethod<void>('Auth#signOut', <String, dynamic>{
@@ -544,14 +504,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
-  Future<String /*!*/ > verifyPasswordResetCode(String code) async {
+  @override
+  Future<String> verifyPasswordResetCode(String code) async {
     try {
-      Map<String, dynamic> data = await channel
+      Map<String, dynamic> data = (await channel
           .invokeMapMethod<String, dynamic>(
               'Auth#verifyPasswordResetCode', <String, dynamic>{
         'appName': app.name,
         'code': code,
-      });
+      }))!;
 
       return data['email'];
     } catch (e) {
@@ -559,38 +520,76 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     }
   }
 
+  @override
   Future<void> verifyPhoneNumber({
-    String /*!*/ phoneNumber,
-    /*required*/ PhoneVerificationCompleted verificationCompleted,
-    /*required*/ PhoneVerificationFailed verificationFailed,
-    /*required*/ PhoneCodeSent codeSent,
-    /*required*/ PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-    String autoRetrievedSmsCodeForTesting,
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
-    int forceResendingToken,
+    int? forceResendingToken,
   }) async {
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       throw UnimplementedError(
-          "verifyPhoneNumber() is not available on MacOS platforms.");
+        'verifyPhoneNumber() is not available on MacOS platforms.',
+      );
     }
 
-    int handle = MethodChannelFirebaseAuth.nextMethodChannelHandleId;
-
-    _phoneAuthCallbacks[handle] = PhoneAuthCallbacks(verificationCompleted,
-        verificationFailed, codeSent, codeAutoRetrievalTimeout);
-
     try {
-      await channel
-          .invokeMethod<void>('Auth#verifyPhoneNumber', <String, dynamic>{
+      final eventChannelName = await channel
+          .invokeMethod<String>('Auth#verifyPhoneNumber', <String, dynamic>{
         'appName': app.name,
-        'handle': handle,
         'phoneNumber': phoneNumber,
         'timeout': timeout.inMilliseconds,
         'forceResendingToken': forceResendingToken,
         'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
       });
+
+      EventChannel(eventChannelName!)
+          .receiveBroadcastStream()
+          .listen((arguments) {
+        final name = arguments['name'];
+        if (name == 'Auth#phoneVerificationCompleted') {
+          final int token = arguments['token'];
+          final String? smsCode = arguments['smsCode'];
+
+          PhoneAuthCredential phoneAuthCredential =
+              PhoneAuthProvider.credentialFromToken(token, smsCode: smsCode);
+          verificationCompleted(phoneAuthCredential);
+        } else if (name == 'Auth#phoneVerificationFailed') {
+          final Map<dynamic, dynamic>? error = arguments['error'];
+          final Map<dynamic, dynamic>? details = error?['details'];
+
+          FirebaseAuthException exception = FirebaseAuthException(
+            message: details != null ? details['message'] : error?['message'],
+            code: details != null ? details['code'] : 'unknown',
+          );
+
+          verificationFailed(exception);
+        } else if (name == 'Auth#phoneCodeSent') {
+          final String verificationId = arguments['verificationId'];
+          final int forceResendingToken = arguments['forceResendingToken'];
+
+          codeSent(verificationId, forceResendingToken);
+        } else if (name == 'Auth#phoneCodeAutoRetrievalTimeout') {
+          final String verificationId = arguments['verificationId'];
+
+          codeAutoRetrievalTimeout(verificationId);
+        }
+      });
     } catch (e) {
       throw convertPlatformException(e);
     }
   }
+}
+
+/// Simple helper class to make nullable values transferable through StreamControllers.
+class _ValueWrapper<T> {
+  const _ValueWrapper(this.value);
+
+  const _ValueWrapper.absent() : value = null;
+
+  final T? value;
 }

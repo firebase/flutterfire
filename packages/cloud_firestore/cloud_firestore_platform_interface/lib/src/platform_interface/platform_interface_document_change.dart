@@ -1,6 +1,7 @@
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -40,7 +41,7 @@ class DocumentChangePlatform extends PlatformInterface {
   /// This is used by the app-facing [DocumentChange] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(DocumentChangePlatform instance) {
+  static void verifyExtends(DocumentChangePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 
@@ -52,15 +53,15 @@ class DocumentChangePlatform extends PlatformInterface {
   /// have been applied).
   ///
   /// -1 for [DocumentChangeType.added] events.
-  final int /*!*/ oldIndex;
+  final int oldIndex;
 
   /// The index of the changed document in the result set immediately after this
   /// DocumentChange (i.e. supposing that all prior [DocumentChangePlatform] objects
   /// and the current [DocumentChangePlatform] object have been applied).
   ///
   /// -1 for [DocumentChangeType.removed] events.
-  final int /*!*/ newIndex;
+  final int newIndex;
 
   /// The document affected by this change.
-  final DocumentSnapshotPlatform /*!*/ document;
+  final DocumentSnapshotPlatform document;
 }

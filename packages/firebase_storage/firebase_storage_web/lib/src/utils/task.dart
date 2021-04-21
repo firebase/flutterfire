@@ -17,19 +17,11 @@ Map<storage_interop.TaskState, TaskState> _fbTaskStateToTaskState = {
 
 /// Converts TaskStates from the JS interop layer to TaskStates for the plugin
 TaskState fbTaskStateToTaskState(storage_interop.TaskState state) {
-  if (state == null) {
-    return null;
-  }
-
-  return _fbTaskStateToTaskState[state];
+  return _fbTaskStateToTaskState[state]!;
 }
 
 /// Converts UploadTaskSnapshot from the JS interop layer to TaskSnapshotWeb for the plugin.
 TaskSnapshotWeb fbUploadTaskSnapshotToTaskSnapshot(
     ReferencePlatform reference, storage_interop.UploadTaskSnapshot snapshot) {
-  if (snapshot == null) {
-    return null;
-  }
-
   return TaskSnapshotWeb(reference, snapshot);
 }

@@ -1,1 +1,0 @@
-../../ios/Classes/FirebaseRemoteConfigPlugin.m

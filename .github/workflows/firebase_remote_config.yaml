@@ -11,6 +11,7 @@ on:
       - master
     paths-ignore:
       - "docs/**"
+      - "**.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_remote_config*"
@@ -47,7 +48,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh

@@ -47,9 +47,8 @@ void main() {
       String url =
           'http://firebasestorage.googleapis.com/v0/b/valid-url.appspot.com/o/path';
 
-      final result = partsFromHttpUrl(url);
+      final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -58,9 +57,8 @@ void main() {
       String url =
           'https://firebasestorage.googleapis.com/v0/b/valid-url.appspot.com/o/path';
 
-      final result = partsFromHttpUrl(url);
+      final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -69,9 +67,8 @@ void main() {
       String url =
           'https://storage.cloud.google.com/v0/b/valid-url.appspot.com/o/path';
 
-      final result = partsFromHttpUrl(url);
+      final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
       expect(result['bucket'], 'valid-url.appspot.com');
       expect(result['path'], 'path');
     });
@@ -80,11 +77,20 @@ void main() {
       String url =
           'https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Freact-native-firebase-testing.appspot.com%2Fo%2F1mbTestFile.gif%3Falt%3Dmedia';
 
-      final result = partsFromHttpUrl(url);
+      final result = partsFromHttpUrl(url)!;
 
-      expect(result, isA<Map<String, String>>());
       expect(result['bucket'], 'react-native-firebase-testing.appspot.com');
       expect(result['path'], '1mbTestFile.gif');
+    });
+
+    test('parses a un-encoded https url with special characters', () {
+      String url =
+          'https://firebasestorage.googleapis.com/v0/b/valid-url.appspot.com/o/foo+bar/file with  spaces .png?alt=media';
+
+      final result = partsFromHttpUrl(url)!;
+
+      expect(result['bucket'], 'valid-url.appspot.com');
+      expect(result['path'], 'foo+bar/file with  spaces .png');
     });
 
     // TODO(helenaford): regexp can't handle no paths

@@ -27,15 +27,15 @@ abstract class QueryPlatform extends PlatformInterface {
   Map<String, dynamic> parameters;
 
   /// Create a [QueryPlatform] instance
-  QueryPlatform(this.firestore, Map<String, dynamic> /*?*/ parameters)
-      : this.parameters = parameters ?? _initialParameters,
+  QueryPlatform(this.firestore, Map<String, dynamic>? params)
+      : parameters = params ?? _initialParameters,
         super(token: _token);
 
   static final Object _token = Object();
 
   /// Returns whether the current query is targetted at a collection group.
   bool get isCollectionGroupQuery {
-    throw UnimplementedError("isCollectionGroupQuery is not implemented");
+    throw UnimplementedError('isCollectionGroupQuery is not implemented');
   }
 
   /// Throws an [AssertionError] if [instance] does not extend
@@ -44,7 +44,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// This is used by the app-facing [Query] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(QueryPlatform instance) {
+  static void verifyExtends(QueryPlatform instance) {
     if (instance is! CollectionReferencePlatform) {
       PlatformInterface.verifyToken(instance, _token);
     }
@@ -65,7 +65,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   QueryPlatform endAtDocument(List<dynamic> orders, List<dynamic> values) {
-    throw UnimplementedError("endAtDocument() is not implemented");
+    throw UnimplementedError('endAtDocument() is not implemented');
   }
 
   /// Takes a list of [fields], creates and returns a new [QueryPlatform] that ends at the
@@ -77,7 +77,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// [endAtDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
   QueryPlatform endAt(List<dynamic> fields) {
-    throw UnimplementedError("endAt() is not implemented");
+    throw UnimplementedError('endAt() is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] that ends before the provided document
@@ -95,31 +95,31 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   QueryPlatform endBeforeDocument(List<dynamic> orders, List<dynamic> values) {
-    throw UnimplementedError("endBeforeDocument() is not implemented");
+    throw UnimplementedError('endBeforeDocument() is not implemented');
   }
 
-  /// Takes a list of [values], creates and returns a new [QueryPlatform] that ends before
+  /// Takes a list of [fields], creates and returns a new [QueryPlatform] that ends before
   /// the provided fields relative to the order of the query.
   ///
-  /// The [values] must be in order of [orderBy] filters.
+  /// The [fields] must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [endAt], [endBeforeDocument], or
   /// [endBeforeDocument], but can be used in combination with [startAt],
   /// [startAfter], [startAtDocument] and [startAfterDocument].
-  QueryPlatform endBefore(List<dynamic> values) {
-    throw UnimplementedError("endBefore() is not implemented");
+  QueryPlatform endBefore(List<dynamic> fields) {
+    throw UnimplementedError('endBefore() is not implemented');
   }
 
   /// Performs a query and returns a [QuerySnapshotPlatform] containing
   /// all documents which match the query.
-  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) {
-    throw UnimplementedError("get() is not implemented");
+  Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) {
+    throw UnimplementedError('get() is not implemented');
   }
 
   /// Creates and returns a new Query that's additionally limited to only return up
   /// to the specified number of documents.
   QueryPlatform limit(int limit) {
-    throw UnimplementedError("limit() is not implemented");
+    throw UnimplementedError('limit() is not implemented');
   }
 
   /// Creates and returns a new Query that only returns the last matching documents.
@@ -127,14 +127,14 @@ abstract class QueryPlatform extends PlatformInterface {
   /// You must specify at least one orderBy clause for limitToLast queries,
   /// otherwise an exception will be thrown during execution.
   QueryPlatform limitToLast(int limit) {
-    throw UnimplementedError("limitToLast() is not implemented");
+    throw UnimplementedError('limitToLast() is not implemented');
   }
 
   /// Notifies of query results at this location
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    throw UnimplementedError("snapshots() is not implemented");
+    throw UnimplementedError('snapshots() is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] that's additionally sorted by the specified
@@ -148,7 +148,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   QueryPlatform orderBy(List<List<dynamic>> orders) {
-    throw UnimplementedError("orderBy() is not implemented");
+    throw UnimplementedError('orderBy() is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] that starts after the provided document
@@ -166,19 +166,19 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   QueryPlatform startAfterDocument(List<dynamic> orders, List<dynamic> values) {
-    throw UnimplementedError("startAfterDocument() is not implemented");
+    throw UnimplementedError('startAfterDocument() is not implemented');
   }
 
-  /// Takes a list of [values], creates and returns a new [QueryPlatform] that starts
+  /// Takes a list of [fields], creates and returns a new [QueryPlatform] that starts
   /// after the provided fields relative to the order of the query.
   ///
-  /// The [values] must be in order of [orderBy] filters.
+  /// The [fields] must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [startAt], [startAfterDocument], or
   /// [startAtDocument], but can be used in combination with [endAt],
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
-  QueryPlatform startAfter(List<dynamic> values) {
-    throw UnimplementedError("startAfter() is not implemented");
+  QueryPlatform startAfter(List<dynamic> fields) {
+    throw UnimplementedError('startAfter() is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] that starts at the provided document
@@ -196,19 +196,19 @@ abstract class QueryPlatform extends PlatformInterface {
   ///  * [endAtDocument] for a query that ends at a document.
   ///  * [endBeforeDocument] for a query that ends before a document.
   QueryPlatform startAtDocument(List<dynamic> orders, List<dynamic> values) {
-    throw UnimplementedError("startAtDocument() is not implemented");
+    throw UnimplementedError('startAtDocument() is not implemented');
   }
 
-  /// Takes a list of [values], creates and returns a new [QueryPlatform] that starts at
+  /// Takes a list of [fields], creates and returns a new [QueryPlatform] that starts at
   /// the provided fields relative to the order of the query.
   ///
-  /// The [values] must be in order of [orderBy] filters.
+  /// The [fields] must be in order of [orderBy] filters.
   ///
   /// Cannot be used in combination with [startAfter], [startAfterDocument],
   /// or [startAtDocument], but can be used in combination with [endAt],
   /// [endBefore], [endAtDocument] and [endBeforeDocument].
-  QueryPlatform startAt(List<dynamic> values) {
-    throw UnimplementedError("startAt() is not implemented");
+  QueryPlatform startAt(List<dynamic> fields) {
+    throw UnimplementedError('startAt() is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] with additional filter on specified
@@ -223,6 +223,6 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Only documents satisfying provided condition are included in the result
   /// set.
   QueryPlatform where(List<List<dynamic>> conditions) {
-    throw UnimplementedError("where() is not implemented");
+    throw UnimplementedError('where() is not implemented');
   }
 }

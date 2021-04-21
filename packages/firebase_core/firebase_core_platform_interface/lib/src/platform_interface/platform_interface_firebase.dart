@@ -34,20 +34,22 @@ abstract class FirebasePlatform extends PlatformInterface {
   }
 
   /// Returns all initialized [FirebaseApp] instances.
-  List<FirebaseAppPlatform> /*!*/ get apps {
+  List<FirebaseAppPlatform> get apps {
     throw UnimplementedError('apps has not been implemented.');
   }
 
   /// Initializes a new [FirebaseApp] with the given [name] and [FirebaseOptions].
-  Future<FirebaseAppPlatform> /*!*/ initializeApp(
-      {String /*?*/ name, FirebaseOptions /*?*/ options}) {
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) {
     throw UnimplementedError('initializeApp() has not been implemented.');
   }
 
   /// Returns a Firebase app with the given [name].
   ///
   /// If there is no such app, returns null.
-  FirebaseAppPlatform /*!*/ app([String name = defaultFirebaseAppName]) {
+  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
     throw UnimplementedError('app() has not been implemented.');
   }
 }

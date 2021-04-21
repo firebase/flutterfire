@@ -4,8 +4,8 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_web/src/utils/codec_utility.dart';
-import 'package:cloud_firestore_web/src/utils/exception.dart';
 
+import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
 
@@ -16,6 +16,7 @@ class QueryWeb extends QueryPlatform {
   final String _path;
 
   /// Flags whether the current query is for a collection group.
+  @override
   final bool isCollectionGroupQuery;
 
   /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
@@ -24,7 +25,7 @@ class QueryWeb extends QueryPlatform {
     this._firestore,
     this._path,
     this._webQuery, {
-    /*required*/ Map<String, dynamic> parameters,
+    Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
   }) : super(_firestore, parameters);
 
@@ -40,7 +41,7 @@ class QueryWeb extends QueryPlatform {
   firestore_interop.Query _buildWebQueryWithParameters() {
     firestore_interop.Query query = _webQuery;
 
-    for (List<dynamic> order in parameters['orderBy']) {
+    for (final List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
           CodecUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
     }
@@ -73,7 +74,7 @@ class QueryWeb extends QueryPlatform {
       query = query.limitToLast(parameters['limitToLast']);
     }
 
-    for (List<dynamic> condition in parameters['where']) {
+    for (final List<dynamic> condition in parameters['where']) {
       dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
       String opStr = condition[1];
       dynamic value = CodecUtility.valueEncode(condition[2]);
@@ -119,13 +120,13 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> get([GetOptions /*?*/ options]) async {
-    try {
-      return convertWebQuerySnapshot(firestore,
-          await _buildWebQueryWithParameters().get(convertGetOptions(options)));
-    } catch (e) {
-      throw getFirebaseException(e);
-    }
+  Future<QuerySnapshotPlatform> get([GetOptions options = const GetOptions()]) {
+    return guard(() async {
+      return convertWebQuerySnapshot(
+        firestore,
+        await _buildWebQueryWithParameters().get(convertGetOptions(options)),
+      );
+    });
   }
 
   @override
@@ -154,12 +155,12 @@ class QueryWeb extends QueryPlatform {
     } else {
       querySnapshots = _buildWebQueryWithParameters().onSnapshot;
     }
-    return querySnapshots
-        .map((webQuerySnapshot) =>
-            convertWebQuerySnapshot(firestore, webQuerySnapshot))
-        .handleError((e) {
-      throw getFirebaseException(e);
-    });
+
+    return guard(
+      () => querySnapshots.map((webQuerySnapshot) {
+        return convertWebQuerySnapshot(firestore, webQuerySnapshot);
+      }),
+    );
   }
 
   @override
