@@ -35,7 +35,7 @@ void main() {
       expect(notification.carPlay, AppleNotificationSetting.notSupported);
       expect(notification.lockScreen, AppleNotificationSetting.notSupported);
       expect(notification.notificationCenter,
-          AppleNotificationSetting.notSupported);
+          AppleNotificationSetting.notSupported,);
       expect(notification.showPreviews, AppleShowPreviewSetting.notSupported);
       expect(notification.sound, AppleNotificationSetting.notSupported);
 
@@ -47,11 +47,11 @@ void main() {
           getNotificationSettings('random string');
 
       expect(
-          deniedNotification.authorizationStatus, AuthorizationStatus.denied);
+          deniedNotification.authorizationStatus, AuthorizationStatus.denied,);
       expect(defaultNotification.authorizationStatus,
-          AuthorizationStatus.notDetermined);
+          AuthorizationStatus.notDetermined,);
       expect(randomNotification.authorizationStatus,
-          AuthorizationStatus.notDetermined);
+          AuthorizationStatus.notDetermined,);
     });
   });
 }

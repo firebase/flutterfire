@@ -6,8 +6,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Map<String, dynamic>? mockNotificationMap;
-  Map<String, dynamic>? mockNullNotificationMap;
+  late Map<String, dynamic> mockNotificationMap;
+  late Map<String, dynamic> mockNullNotificationMap;
 
   group('RemoteNotification', () {
     setUp(() {
@@ -31,6 +31,7 @@ void main() {
         'apple': null,
       };
     });
+
     test('"RemoteNotification.fromMap" with every possible property expected',
         () {
       RemoteNotification notification =
@@ -73,7 +74,7 @@ void main() {
           titleLocKey: mockNotificationMap!['titleLocKey'],
           body: mockNotificationMap!['body'],
           bodyLocArgs: mockNotificationMap!['bodyLocArgs'],
-          bodyLocKey: mockNotificationMap!['bodyLocKey']);
+          bodyLocKey: mockNotificationMap!['bodyLocKey'],);
 
       expect(notification.title, mockNotificationMap!['title']);
       expect(notification.titleLocArgs, mockNotificationMap!['titleLocArgs']);
@@ -129,11 +130,11 @@ void main() {
           smallIcon: mockAndroidNotificationMap['smallIcon'],
           sound: mockAndroidNotificationMap['sound'],
           ticker: mockAndroidNotificationMap['ticker'],
-          visibility: mockAndroidNotificationMap['visibility']);
+          visibility: mockAndroidNotificationMap['visibility'],);
 
       expect(notification.channelId, mockAndroidNotificationMap['channelId']);
       expect(
-          notification.clickAction, mockAndroidNotificationMap['clickAction']);
+          notification.clickAction, mockAndroidNotificationMap['clickAction'],);
       expect(notification.color, mockAndroidNotificationMap['color']);
       expect(notification.count, mockAndroidNotificationMap['count']);
       expect(notification.imageUrl, mockAndroidNotificationMap['imageUrl']);

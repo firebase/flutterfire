@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Map<String, dynamic>? mockMessageMap;
 
-  Map<String, dynamic>? mockNullableMessageMap;
+  late Map<String, dynamic> mockNullableMessageMap;
+
   group('RemoteMessage', () {
     setUp(() {
       mockMessageMap = {
@@ -59,9 +60,9 @@ void main() {
 
       expect(message.notification, isA<RemoteNotification>());
       expect(message.notification!.title,
-          mockMessageMap!['notification']['title']);
+          mockMessageMap!['notification']['title'],);
       expect(
-          message.notification!.body, mockMessageMap!['notification']['body']);
+          message.notification!.body, mockMessageMap!['notification']['body'],);
 
       expect(message.sentTime, isA<DateTime>());
       expect(message.threadId, mockMessageMap!['threadId']);
@@ -105,7 +106,7 @@ void main() {
           notification: RemoteNotification.fromMap({}),
           sentTime: date,
           threadId: mockMessageMap!['threadId'],
-          ttl: mockMessageMap!['ttl']);
+          ttl: mockMessageMap!['ttl'],);
 
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
