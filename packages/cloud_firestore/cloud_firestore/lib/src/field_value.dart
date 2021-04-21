@@ -10,6 +10,8 @@ part of cloud_firestore;
 /// This class serves as a static factory for [FieldValuePlatform] instances, but also
 /// as a facade for the [FieldValue] type, so plugin users don't need to worry about
 /// the actual internal implementation of their [FieldValue]s after they're created.
+@immutable
+// ignore: must_be_immutable
 class FieldValue extends FieldValuePlatform {
   static final FieldValueFactoryPlatform _factory =
       FieldValueFactoryPlatform.instance;
@@ -51,13 +53,14 @@ class FieldValue extends FieldValuePlatform {
   dynamic _delegate;
 
   @override
-  String toString() => '$runtimeType($_delegate)';
+  String toString() => '$FieldValue($_delegate)';
 
   @override
-  bool operator ==(Object o) {
-    return o is FieldValue && o._delegate == _delegate;
+  bool operator ==(Object other) {
+    return other is FieldValue && other._delegate == _delegate;
   }
 
   @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => _delegate.hashCode;
 }

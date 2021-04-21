@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  /*late*/ TestGoogleAuthProvider googleAuthProvider;
-  final String kMockProviderId = 'google.com';
+  late TestGoogleAuthProvider googleAuthProvider;
+  const String kMockProviderId = 'google.com';
   setUpAll(() {
     googleAuthProvider = TestGoogleAuthProvider();
   });
@@ -47,10 +47,6 @@ void main() {
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
       });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => googleAuthProvider.addScope(null), throwsAssertionError);
-      });
     });
 
     group('setCustomParameters()', () {
@@ -64,16 +60,11 @@ void main() {
         expect(result.parameters['login_hint'], isA<String>());
         expect(result.parameters['login_hint'], equals('user@example.com'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => googleAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('GoogleAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-access-token';
-      final String kMockIdToken = 'test-id-token';
+      const String kMockAccessToken = 'test-access-token';
+      const String kMockIdToken = 'test-id-token';
       test('creates a new [GoogleAuthCredential]', () {
         final result =
             GoogleAuthProvider.credential(accessToken: kMockAccessToken);
@@ -88,7 +79,6 @@ void main() {
       test('allows accessToken to be null', () {
         expect(
             GoogleAuthProvider.credential(
-              accessToken: null,
               idToken: kMockIdToken,
             ),
             isA<OAuthCredential>());
@@ -98,17 +88,13 @@ void main() {
         expect(
             GoogleAuthProvider.credential(
               accessToken: kMockAccessToken,
-              idToken: null,
             ),
             isA<OAuthCredential>());
       });
 
       test('throws [AssertionError] when accessToken and idTokenResult is null',
           () {
-        expect(
-            () =>
-                GoogleAuthProvider.credential(accessToken: null, idToken: null),
-            throwsAssertionError);
+        expect(GoogleAuthProvider.credential, throwsAssertionError);
       });
     });
   });

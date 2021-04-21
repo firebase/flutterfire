@@ -1,3 +1,47 @@
+## 0.12.0+1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: fixed image distortion in example (#4221).
+ - **DOCS**: remove link to code lab.
+ - **CI**: fix formatting in ml_vision.
+
+## 0.12.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Migrate firebase_ml_vision to sound null safety (#5474).
+
+## 0.11.0+2
+
+ - **REFACTOR**: android embedding v2 (#5539).
+ - **FIX**: add additional null validations (#1645).
+
+## 0.11.0+1
+
+ - **DOCS**: update ml_vision model pods documentation.
+ - **DOCS**: Upgrading to camera plugin 0.8.1 (#5520).
+ - **DOCS**: Disable audio for camera controller. (#5502).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints on firebase_ml_vision (#5234).
+
+## 0.11.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.10.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **FIX**: build fixes for android BoM 25.13.0.
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
 ## 0.9.10
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

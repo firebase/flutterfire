@@ -15,16 +15,16 @@ class RemoteNotification {
       {this.android,
       this.apple,
       this.title,
-      this.titleLocArgs,
+      this.titleLocArgs = const <String>[],
       this.titleLocKey,
       this.body,
-      this.bodyLocArgs,
+      this.bodyLocArgs = const <String>[],
       this.bodyLocKey});
 
   /// Constructs a [RemoteNotification] from a raw Map.
   factory RemoteNotification.fromMap(Map<String, dynamic> map) {
-    AndroidNotification _android;
-    AppleNotification _apple;
+    AndroidNotification? _android;
+    AppleNotification? _apple;
 
     if (map['android'] != null) {
       _android = AndroidNotification(
@@ -39,6 +39,7 @@ class RemoteNotification {
         smallIcon: map['android']['smallIcon'],
         sound: map['android']['sound'],
         ticker: map['android']['ticker'],
+        tag: map['android']['tag'],
         visibility: convertToAndroidNotificationVisibility(
             map['android']['visibility']),
       );
@@ -54,9 +55,9 @@ class RemoteNotification {
           sound: map['apple']['sound'] == null
               ? null
               : AppleNotificationSound(
-                  critical: map['apple']['criticalSound']['critical'],
-                  name: map['apple']['criticalSound']['name'],
-                  volume: map['apple']['criticalSound']['volume']));
+                  critical: map['apple']['sound']['critical'],
+                  name: map['apple']['sound']['name'],
+                  volume: map['apple']['sound']['volume']));
     }
 
     return RemoteNotification(
@@ -72,28 +73,28 @@ class RemoteNotification {
   }
 
   /// Android specific notification properties.
-  final AndroidNotification android;
+  final AndroidNotification? android;
 
   /// Apple specific notification properties.
-  final AppleNotification apple;
+  final AppleNotification? apple;
 
   /// The notification title.
-  final String title;
+  final String? title;
 
   /// Any arguments that should be formatted into the resource specified by titleLocKey.
   final List<String> titleLocArgs;
 
   /// The native localization key for the notification title.
-  final String titleLocKey;
+  final String? titleLocKey;
 
   /// The notification body content.
-  final String body;
+  final String? body;
 
   /// Any arguments that should be formatted into the resource specified by bodyLocKey.
   final List<String> bodyLocArgs;
 
   /// The native localization key for the notification body content.
-  final String bodyLocKey;
+  final String? bodyLocKey;
 }
 
 /// Android specific properties of a [RemoteNotification].
@@ -108,33 +109,34 @@ class AndroidNotification {
       this.count,
       this.imageUrl,
       this.link,
-      this.priority,
+      this.priority = AndroidNotificationPriority.defaultPriority,
       this.smallIcon,
       this.sound,
       this.ticker,
-      this.visibility});
+      this.tag,
+      this.visibility = AndroidNotificationVisibility.private});
 
   /// The channel the notification is delivered on.
-  final String channelId;
+  final String? channelId;
 
   /// A spcific click action was defined for the notification.
   ///
   /// This property is not required to handle user interaction.
-  final String clickAction;
+  final String? clickAction;
 
   /// The color of the notification.
-  final String color;
+  final String? color;
 
   /// The current notification count for the application.
-  final int count;
+  final int? count;
 
   /// The image URL for the notification.
   ///
   /// Will be `null` if the notification did not include an image.
-  final String imageUrl;
+  final String? imageUrl;
 
   // ignore: public_member_api_docs
-  final String link;
+  final String? link;
 
   /// The priority for the notifcation.
   ///
@@ -143,16 +145,19 @@ class AndroidNotification {
   final AndroidNotificationPriority priority;
 
   /// The resource file name of the small icon shown in the notification.
-  final String smallIcon;
+  final String? smallIcon;
 
   /// The resource file name of the sound used to alert users to the incoming notification.
-  final String sound;
+  final String? sound;
 
   /// Ticker text for the notification, used for accessibility purposes.
-  final String ticker;
+  final String? ticker;
 
   /// The visibility level of the notification.
   final AndroidNotificationVisibility visibility;
+
+  /// The tag of the notification.
+  final String? tag;
 }
 
 /// Apple specific properties of a [RemoteNotification].
@@ -165,40 +170,41 @@ class AppleNotification {
       this.sound,
       this.imageUrl,
       this.subtitle,
-      this.subtitleLocArgs,
+      this.subtitleLocArgs = const <String>[],
       this.subtitleLocKey});
 
   /// The value which sets the application badge.
-  final String badge;
+  final String? badge;
 
   /// Sound values for the incoming notification.
-  final AppleNotificationSound sound;
+  final AppleNotificationSound? sound;
 
   /// The image URL for the notification.
   ///
   /// Will be `null` if the notification did not include an image.
-  final String imageUrl;
+  final String? imageUrl;
 
   /// Any subtile text on the notification.
-  final String subtitle;
+  final String? subtitle;
 
   /// Any arguments that should be formatted into the resource specified by subtitleLocKey.
   final List<String> subtitleLocArgs;
 
   /// The native localization key for the notification subtitle.
-  final String subtitleLocKey;
+  final String? subtitleLocKey;
 }
 
 /// Represents the sound property for [AppleNotification]
 class AppleNotificationSound {
   // ignore: public_member_api_docs
-  const AppleNotificationSound({this.critical, this.name, this.volume});
+  const AppleNotificationSound(
+      {this.critical = false, this.name, this.volume = 0});
 
   /// Whether or not the notification sound was critical.
   final bool critical;
 
   /// The resource name of the sound played.
-  final String name;
+  final String? name;
 
   /// The volume of the sound.
   ///

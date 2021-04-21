@@ -10,10 +10,13 @@ on:
       - master
     paths-ignore:
       - "docs/**"
+      - "**.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_database*"
   FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_database_example*"
+  # TODO(Salakar): `flutter_driver` does not yet support NNBD
+  FLUTTER_COMMAND_FLAGS: "--no-sound-null-safety"
 
 jobs:
   android:
@@ -49,7 +52,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh

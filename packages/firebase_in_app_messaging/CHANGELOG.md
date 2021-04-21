@@ -1,3 +1,26 @@
+## 0.5.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.5.0
+
+ - Migrate to null safety.
+
+## 0.4.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.3.0
+
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
 ## 0.2.3
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
@@ -27,7 +50,7 @@
 
 ## 0.2.0+1
 
-* Fixed issue #3227 (Invalid podspec). 
+* Fixed issue #3227 (Invalid podspec).
 
 ## 0.2.0
 

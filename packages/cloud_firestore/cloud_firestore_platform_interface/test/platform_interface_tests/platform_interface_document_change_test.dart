@@ -15,22 +15,22 @@ const _kNewIndex = 1;
 class TestDocumentChange extends DocumentChangePlatform {
   TestDocumentChange._()
       : super(
-          _kDocumentChangeType,
-          _kOldIndex,
-          _kNewIndex,
-          null,
-        );
+            _kDocumentChangeType,
+            _kOldIndex,
+            _kNewIndex,
+            DocumentSnapshotPlatform(FirebaseFirestorePlatform.instance,
+                '$kCollectionId/$kDocumentId', {}));
 }
 
 void main() {
   initializeMethodChannel();
 
-  group("$DocumentChangePlatform()", () {
+  group('$DocumentChangePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final testDocumentChangePlatform = TestDocumentChange._();
       expect(
           testDocumentChangePlatform, isInstanceOf<DocumentChangePlatform>());

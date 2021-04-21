@@ -4,6 +4,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +22,7 @@ void runInstanceTests() {
     // generate unique email address for test run
     String regularTestEmail = generateRandomEmail();
 
-    void commonSuccessCallback(currentUserCredential) async {
+    Future<void> commonSuccessCallback(currentUserCredential) async {
       var currentUser = currentUserCredential.user;
 
       expect(currentUser, isInstanceOf<Object>());
@@ -57,7 +59,7 @@ void runInstanceTests() {
         await ensureSignedOut();
 
         if (subscription2 != null) {
-          await Future.delayed(Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 5));
           await subscription2.cancel();
         }
       });
@@ -80,9 +82,9 @@ void runInstanceTests() {
             expect(user.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 3, reason: "Stream should only have been called 3 times"));
+        }, count: 3, reason: 'Stream should only have been called 3 times'));
 
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
@@ -99,7 +101,7 @@ void runInstanceTests() {
         await ensureSignedOut();
 
         if (subscription2 != null) {
-          await Future.delayed(Duration(seconds: 5));
+          await Future.delayed(const Duration(seconds: 5));
           await subscription2.cancel();
         }
       });
@@ -122,9 +124,9 @@ void runInstanceTests() {
             expect(user.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 3, reason: "Stream should only have been called 3 times"));
+        }, count: 3, reason: 'Stream should only have been called 3 times'));
 
         // Prevent race condition where signOut is called before the stream hits
         await auth.signOut();
@@ -151,9 +153,9 @@ void runInstanceTests() {
           } else if (call == 2) {
             expect(user.displayName, equals('updatedName')); // updated profile
           } else {
-            fail("Should not have been called");
+            fail('Should not have been called');
           }
-        }, count: 2, reason: "Stream should only have been called 2 times"));
+        }, count: 2, reason: 'Stream should only have been called 2 times'));
 
         await auth.currentUser.updateProfile(displayName: 'updatedName');
 
@@ -174,9 +176,9 @@ void runInstanceTests() {
       test('throws if invalid code', () async {
         try {
           await auth.applyActionCode('!!!!!!');
-          fail("Should have thrown");
+          fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -189,7 +191,7 @@ void runInstanceTests() {
           await auth.checkActionCode('!!!!!!');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -203,9 +205,9 @@ void runInstanceTests() {
               code: '!!!!!!', newPassword: 'thingamajig');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
@@ -242,7 +244,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: regularTestEmail, password: '123456');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('email-already-in-use'));
         } catch (e) {
@@ -255,7 +257,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: '!!!!!', password: '123456');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('invalid-email'));
         } catch (e) {
@@ -268,7 +270,7 @@ void runInstanceTests() {
         try {
           await auth.createUserWithEmailAndPassword(
               email: generateRandomEmail(), password: '1');
-          fail("Should have thrown FirebaseAuthException");
+          fail('Should have thrown FirebaseAuthException');
         } on FirebaseAuthException catch (e) {
           expect(e.code, equals('weak-password'));
         } catch (e) {
@@ -297,7 +299,7 @@ void runInstanceTests() {
           await auth.fetchSignInMethodsForEmail('foobar');
           fail('Should have thrown');
         } on FirebaseAuthException catch (e) {
-          expect(e.code, equals("invalid-email"));
+          expect(e.code, equals('invalid-email'));
         } catch (e) {
           fail(e.toString());
         }
@@ -318,10 +320,6 @@ void runInstanceTests() {
         expect(auth.isSignInWithEmailLink(emailLink2), equals(false));
         expect(auth.isSignInWithEmailLink(emailLink3), equals(false));
         expect(auth.isSignInWithEmailLink(emailLink4), equals(true));
-      });
-
-      test('throws if email link is null', () {
-        expect(() => auth.isSignInWithEmailLink(null), throwsAssertionError);
       });
     });
 
@@ -471,13 +469,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-disabled"));
+          expect(e.code, equals('user-disabled'));
           expect(
               e.message,
               equals(
-                  "The user account has been disabled by an administrator."));
+                  'The user account has been disabled by an administrator.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -488,13 +486,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("wrong-password"));
+          expect(e.code, equals('wrong-password'));
           expect(
               e.message,
               equals(
-                  "The password is invalid or the user does not have a password."));
+                  'The password is invalid or the user does not have a password.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -505,13 +503,13 @@ void runInstanceTests() {
           await auth.signInWithCredential(credential);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-not-found"));
+          expect(e.code, equals('user-not-found'));
           expect(
               e.message,
               equals(
-                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+                  'There is no user record corresponding to this identifier. The user may have been deleted.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
@@ -560,13 +558,13 @@ void runInstanceTests() {
               email: email, password: password);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-disabled"));
+          expect(e.code, equals('user-disabled'));
           expect(
               e.message,
               equals(
-                  "The user account has been disabled by an administrator."));
+                  'The user account has been disabled by an administrator.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -576,13 +574,13 @@ void runInstanceTests() {
               email: regularTestEmail, password: 'sowrong');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("wrong-password"));
+          expect(e.code, equals('wrong-password'));
           expect(
               e.message,
               equals(
-                  "The password is invalid or the user does not have a password."));
+                  'The password is invalid or the user does not have a password.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
 
@@ -592,13 +590,13 @@ void runInstanceTests() {
               email: generateRandomEmail(), password: TEST_PASSWORD);
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("user-not-found"));
+          expect(e.code, equals('user-not-found'));
           expect(
               e.message,
               equals(
-                  "There is no user record corresponding to this identifier. The user may have been deleted."));
+                  'There is no user record corresponding to this identifier. The user may have been deleted.'));
         } catch (e) {
-          fail((e.toString()));
+          fail(e.toString());
         }
       });
     });
@@ -649,7 +647,7 @@ void runInstanceTests() {
           await auth.verifyPasswordResetCode('!!!!!!');
           fail('Should have thrown');
         } on FirebaseException catch (e) {
-          expect(e.code, equals("invalid-action-code"));
+          expect(e.code, equals('invalid-action-code'));
         } catch (e) {
           fail(e.toString());
         }
@@ -665,18 +663,18 @@ void runInstanceTests() {
               phoneNumber: 'foo',
               verificationCompleted: (PhoneAuthCredential credential) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               verificationFailed: (FirebaseAuthException e) {
                 completer.complete(e);
               },
               codeSent: (String verificationId, int resetToken) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               }));
 
           return completer.future;
@@ -703,22 +701,22 @@ void runInstanceTests() {
               verificationCompleted: (PhoneAuthCredential credential) {
                 if (credential.smsCode != testSmsCode) {
                   return completer
-                      .completeError(Exception("SMS code did not match"));
+                      .completeError(Exception('SMS code did not match'));
                 }
 
                 completer.complete(credential);
               },
               verificationFailed: (FirebaseException e) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeSent: (String verificationId, int resetToken) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               },
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
-                    .completeError(Exception("Should not have been called"));
+                    .completeError(Exception('Should not have been called'));
               }));
 
           return completer.future;

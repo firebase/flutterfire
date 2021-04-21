@@ -9,7 +9,7 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-
+import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/interop/notification.dart';
 import 'src/utils.dart' as utils;
@@ -18,23 +18,27 @@ import 'src/utils.dart' as utils;
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// Instance of Messaging from the web plugin
-  final messaging_interop.Messaging _webMessaging;
+  late messaging_interop.Messaging _webMessaging;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 
-  Stream<String> _noopOnTokenRefreshStream;
+  Stream<String>? _noopOnTokenRefreshStream;
 
   static bool _initialized = false;
 
   /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseMessagingWeb({FirebaseApp app})
-      : _webMessaging =
-            messaging_interop.getMessagingInstance(core_interop.app(app?.name)),
-        super(appInstance: app) {
+  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app) {
+    if (!messaging_interop.isSupported()) {
+      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
+      return;
+    }
+
+    _webMessaging =
+        messaging_interop.getMessagingInstance(core_interop.app(app?.name));
     if (app != null && _initialized) return;
 
     _webMessaging.onMessage
@@ -48,17 +52,15 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  void registerBackgroundMessageHandler(handler) {
-    // no-op
-  }
+  void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 
   @override
-  FirebaseMessagingPlatform delegateFor({FirebaseApp app}) {
+  FirebaseMessagingPlatform delegateFor({required FirebaseApp app}) {
     return FirebaseMessagingWeb(app: app);
   }
 
   @override
-  FirebaseMessagingPlatform setInitialValues({bool isAutoInitEnabled}) {
+  FirebaseMessagingPlatform setInitialValues({bool? isAutoInitEnabled}) {
     // Not required on web, but prevents UnimplementedError being thrown.
     return this;
   }
@@ -71,31 +73,35 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<RemoteMessage> getInitialMessage() {
+  Future<RemoteMessage?> getInitialMessage() async {
     return null;
   }
 
   @override
-  Future<void> deleteToken({String senderId}) async {
-    try {
-      await _webMessaging.deleteToken();
-    } catch (e) {
-      throw utils.getFirebaseException(e);
+  Future<void> deleteToken({String? senderId}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return;
     }
+
+    return guard(_webMessaging.deleteToken);
   }
 
   @override
-  Future<String> getAPNSToken() async {
+  Future<String?> getAPNSToken() async {
     return null;
   }
 
   @override
-  Future<String> getToken({String senderId, String vapidKey}) async {
-    try {
-      return await _webMessaging.getToken(vapidKey: vapidKey);
-    } catch (e) {
-      throw utils.getFirebaseException(e);
+  Future<String?> getToken({String? senderId, String? vapidKey}) async {
+    if (!_initialized) {
+      // no-op for unsupported browsers
+      return null;
     }
+
+    return guard(
+      () => _webMessaging.getToken(vapidKey: vapidKey),
+    );
   }
 
   @override
@@ -113,20 +119,19 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<NotificationSettings> requestPermission(
-      {bool alert = true,
-      bool announcement = false,
-      bool badge = true,
-      bool carPlay = false,
-      bool criticalAlert = false,
-      bool provisional = false,
-      bool sound = true}) async {
-    try {
+  Future<NotificationSettings> requestPermission({
+    bool alert = true,
+    bool announcement = false,
+    bool badge = true,
+    bool carPlay = false,
+    bool criticalAlert = false,
+    bool provisional = false,
+    bool sound = true,
+  }) {
+    return guard(() async {
       String status = await WindowNotification.requestPermission();
       return utils.getNotificationSettings(status);
-    } catch (e) {
-      throw utils.getFirebaseException(e);
-    }
+    });
   }
 
   @override
@@ -136,8 +141,12 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> setForegroundNotificationPresentationOptions(
-      {bool alert, bool badge, bool sound}) async {
+  Future<void> setForegroundNotificationPresentationOptions({
+    required bool alert,
+    required bool badge,
+    required bool sound,
+  }) async {
+    // TODO(rrousselGit) dead code? Should this throw an UnimplementedError?
     return;
   }
 

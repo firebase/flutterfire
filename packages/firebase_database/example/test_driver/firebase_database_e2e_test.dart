@@ -1,3 +1,4 @@
-import 'package:e2e/e2e_driver.dart' as e2e;
+// @dart = 2.9
+import 'package:drive/drive_driver.dart' as drive;
 
-void main() => e2e.main();
+void main() => drive.main();

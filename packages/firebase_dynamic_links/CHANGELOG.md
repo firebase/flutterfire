@@ -1,3 +1,37 @@
+## 2.0.1
+
+ - **DOCS**: remove codelab link from readme.
+
+## 2.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 2.0.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 2.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints for firebase_dynamic_links (#5256).
+ - **BREAKING** **FEAT**: Migrate firebase_dynamic_links to sound null safety (#5368).
+
+## 0.8.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.7.0
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
 ## 0.6.3
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

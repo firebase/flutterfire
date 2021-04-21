@@ -27,13 +27,11 @@ part of firebase_ml_vision;
 /// ```
 class ImageLabeler {
   ImageLabeler._({
-    @required dynamic options,
-    @required this.modelType,
-    @required int handle,
-  })  : _options = options,
-        _handle = handle,
-        assert(options != null),
-        assert(modelType != null);
+    required Object options,
+    required this.modelType,
+    required int handle,
+  })   : _options = options,
+        _handle = handle;
 
   /// Indicates whether this labeler is ran on device or in the cloud.
   final ModelType modelType;
@@ -47,10 +45,9 @@ class ImageLabeler {
   /// Finds entities in the input image.
   Future<List<ImageLabel>> processImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-
     _hasBeenOpened = true;
-    final List<dynamic> reply =
-        await FirebaseVision.channel.invokeListMethod<dynamic>(
+
+    final reply = await FirebaseVision.channel.invokeListMethod<dynamic>(
       'ImageLabeler#processImage',
       <String, dynamic>{
         'handle': _handle,
@@ -62,7 +59,7 @@ class ImageLabeler {
     );
 
     final List<ImageLabel> labels = <ImageLabel>[];
-    for (dynamic data in reply) {
+    for (final dynamic data in reply!) {
       labels.add(ImageLabel._(data));
     }
 
@@ -72,7 +69,7 @@ class ImageLabeler {
   /// Release resources used by this labeler.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -127,23 +124,22 @@ class CloudImageLabelerOptions {
 /// Represents an entity label detected by [ImageLabeler] and [CloudImageLabeler].
 class ImageLabel {
   ImageLabel._(dynamic data)
-      : confidence =
-            data['confidence'] == null ? null : data['confidence'].toDouble(),
+      : confidence = data['confidence']?.toDouble(),
         entityId = data['entityId'],
         text = data['text'];
 
   /// The overall confidence of the result. Range [0.0, 1.0].
-  final double confidence;
+  final double? confidence;
 
   /// The opaque entity ID.
   ///
   /// IDs are available in Google Knowledge Graph Search API
   /// https://developers.google.com/knowledge-graph/
-  final String entityId;
+  final String? entityId;
 
   /// A detected label from the given image.
   ///
   /// The label returned here is in English only. The end developer should use
   /// [entityId] to retrieve unique id.
-  final String text;
+  final String? text;
 }

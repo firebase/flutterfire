@@ -149,6 +149,10 @@ class FlutterFirebaseMessagingUtils {
       androidNotificationMap.put("visibility", notification.getVisibility());
     }
 
+    if (notification.getTag() != null) {
+      androidNotificationMap.put("tag", notification.getTag());
+    }
+
     notificationMap.put("android", androidNotificationMap);
     return notificationMap;
   }

@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: constant_identifier_names
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
@@ -20,14 +21,14 @@ class FirebaseAnalytics {
   ///
   ///     FirebaseAnalytics analytics = FirebaseAnalytics();
   ///     analytics.android?.setSessionTimeoutDuration(true);
-  final FirebaseAnalyticsAndroid android =
+  final FirebaseAnalyticsAndroid? android =
       defaultTargetPlatform == TargetPlatform.android && !kIsWeb
           ? FirebaseAnalyticsAndroid()
           : null;
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent(
-      {@required String name, Map<String, dynamic> parameters}) async {
+      {required String name, Map<String, Object?>? parameters}) async {
     if (_reservedEventNames.contains(name)) {
       throw ArgumentError.value(
           name, 'name', 'Event name is reserved and cannot be used');
@@ -47,18 +48,17 @@ class FirebaseAnalytics {
   ///
   /// This setting is persisted across app sessions. By default it is enabled.
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    if (enabled == null) {
-      throw ArgumentError.notNull('enabled');
-    }
     await _platformInstance.setAnalyticsCollectionEnabled(enabled);
   }
 
   /// Sets the user ID property.
   ///
+  /// Setting a null [id] removes the user id.
+  ///
   /// This feature must be used in accordance with [Google's Privacy Policy][1].
   ///
   /// [1]: https://www.google.com/policies/privacy/
-  Future<void> setUserId(String id) async {
+  Future<void> setUserId(String? id) async {
     await _platformInstance.setUserId(id);
   }
 
@@ -75,25 +75,23 @@ class FirebaseAnalytics {
   /// current `Activity` (in Android) or `UIViewController` (in iOS) changes or
   /// a new call to [setCurrentScreen] is made.
   ///
+  /// Setting a null [screenName] clears the current screen name.
+  ///
   /// See also:
   ///
   ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
   ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
   Future<void> setCurrentScreen(
-      {@required String screenName,
+      {required String? screenName,
       String screenClassOverride = 'Flutter'}) async {
-    if (screenName == null) {
-      throw ArgumentError.notNull('screenName');
-    }
-
     await _platformInstance.setCurrentScreen(
       screenName: screenName,
       screenClassOverride: screenClassOverride,
     );
   }
 
-  static final RegExp _nonAlphaNumeric = RegExp(r'[^a-zA-Z0-9_]');
-  static final RegExp _alpha = RegExp(r'[a-zA-Z]');
+  static final RegExp _nonAlphaNumeric = RegExp('[^a-zA-Z0-9_]');
+  static final RegExp _alpha = RegExp('[a-zA-Z]');
 
   /// Sets a user property to a given value.
   ///
@@ -104,21 +102,21 @@ class FirebaseAnalytics {
   /// alphanumeric characters or underscores and must start with an alphabetic
   /// character. The "firebase_" prefix is reserved and should not be used for
   /// user property names.
+  ///
+  /// Setting a null [value] removes the user property.
   Future<void> setUserProperty(
-      {@required String name, @required String value}) async {
-    if (name == null) {
-      throw ArgumentError.notNull('name');
-    }
-
+      {required String name, required String? value}) async {
     if (name.isEmpty ||
         name.length > 24 ||
         name.indexOf(_alpha) != 0 ||
-        name.contains(_nonAlphaNumeric))
+        name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
           name, 'name', 'must contain 1 to 24 alphanumeric characters.');
+    }
 
-    if (name.startsWith('firebase_'))
+    if (name.startsWith('firebase_')) {
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
+    }
 
     await _platformInstance.setUserProperty(name: name, value: value);
   }
@@ -148,24 +146,24 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_CART
   Future<void> logAddToCart({
-    @required String itemId,
-    @required String itemName,
-    @required String itemCategory,
-    @required int quantity,
-    double price,
-    double value,
-    String currency,
-    String origin,
-    String itemLocationId,
-    String destination,
-    String startDate,
-    String endDate,
+    required String itemId,
+    required String itemName,
+    required String itemCategory,
+    required int quantity,
+    double? price,
+    double? value,
+    String? currency,
+    String? origin,
+    String? itemLocationId,
+    String? destination,
+    String? startDate,
+    String? endDate,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'add_to_cart',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -191,20 +189,20 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_WISHLIST
   Future<void> logAddToWishlist({
-    @required String itemId,
-    @required String itemName,
-    @required String itemCategory,
-    @required int quantity,
-    double price,
-    double value,
-    String currency,
-    String itemLocationId,
+    required String itemId,
+    required String itemName,
+    required String itemCategory,
+    required int quantity,
+    double? price,
+    double? value,
+    String? currency,
+    String? itemLocationId,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'add_to_wishlist',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -234,23 +232,23 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#BEGIN_CHECKOUT
   Future<void> logBeginCheckout({
-    double value,
-    String currency,
-    String transactionId,
-    int numberOfNights,
-    int numberOfRooms,
-    int numberOfPassengers,
-    String origin,
-    String destination,
-    String startDate,
-    String endDate,
-    String travelClass,
+    double? value,
+    String? currency,
+    String? transactionId,
+    int? numberOfNights,
+    int? numberOfRooms,
+    int? numberOfPassengers,
+    String? origin,
+    String? destination,
+    String? startDate,
+    String? endDate,
+    String? travelClass,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'begin_checkout',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _VALUE: value,
         _CURRENCY: currency,
         _TRANSACTION_ID: transactionId,
@@ -272,17 +270,17 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#CAMPAIGN_DETAILS
   Future<void> logCampaignDetails({
-    @required String source,
-    @required String medium,
-    @required String campaign,
-    String term,
-    String content,
-    String aclid,
-    String cp1,
+    required String source,
+    required String medium,
+    required String campaign,
+    String? term,
+    String? content,
+    String? aclid,
+    String? cp1,
   }) {
     return logEvent(
       name: 'campaign_details',
-      parameters: filterOutNulls(<String, String>{
+      parameters: filterOutNulls(<String, String?>{
         _SOURCE: source,
         _MEDIUM: medium,
         _CAMPAIGN: campaign,
@@ -302,12 +300,12 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#EARN_VIRTUAL_CURRENCY
   Future<void> logEarnVirtualCurrency({
-    @required String virtualCurrencyName,
-    @required num value,
+    required String virtualCurrencyName,
+    required num value,
   }) {
     return logEvent(
       name: 'earn_virtual_currency',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
       }),
@@ -324,27 +322,27 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ECOMMERCE_PURCHASE
   Future<void> logEcommercePurchase({
-    String currency,
-    double value,
-    String transactionId,
-    double tax,
-    double shipping,
-    String coupon,
-    String location,
-    int numberOfNights,
-    int numberOfRooms,
-    int numberOfPassengers,
-    String origin,
-    String destination,
-    String startDate,
-    String endDate,
-    String travelClass,
+    String? currency,
+    double? value,
+    String? transactionId,
+    double? tax,
+    double? shipping,
+    String? coupon,
+    String? location,
+    int? numberOfNights,
+    int? numberOfRooms,
+    int? numberOfPassengers,
+    String? origin,
+    String? destination,
+    String? startDate,
+    String? endDate,
+    String? travelClass,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'ecommerce_purchase',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
         _TRANSACTION_ID: transactionId,
@@ -373,14 +371,14 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#GENERATE_LEAD
   Future<void> logGenerateLead({
-    String currency,
-    double value,
+    String? currency,
+    double? value,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'generate_lead',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
       }),
@@ -395,11 +393,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#JOIN_GROUP
   Future<void> logJoinGroup({
-    @required String groupId,
+    required String groupId,
   }) {
     return logEvent(
       name: 'join_group',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _GROUP_ID: groupId,
       }),
     );
@@ -413,12 +411,12 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_UP
   Future<void> logLevelUp({
-    @required int level,
-    String character,
+    required int level,
+    String? character,
   }) {
     return logEvent(
       name: 'level_up',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL: level,
         _CHARACTER: character,
       }),
@@ -429,11 +427,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_START
   Future<void> logLevelStart({
-    @required String levelName,
+    required String levelName,
   }) {
     return logEvent(
       name: 'level_start',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
       }),
     );
@@ -443,12 +441,12 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_END
   Future<void> logLevelEnd({
-    @required String levelName,
-    int success,
+    required String levelName,
+    int? success,
   }) {
     return logEvent(
       name: 'level_end',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
       }),
@@ -461,10 +459,10 @@ class FirebaseAnalytics {
   /// has logged in.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LOGIN
-  Future<void> logLogin({String loginMethod}) {
+  Future<void> logLogin({String? loginMethod}) {
     return logEvent(
       name: 'login',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _METHOD: loginMethod,
       }),
     );
@@ -479,13 +477,13 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#POST_SCORE
   Future<void> logPostScore({
-    @required int score,
-    int level,
-    String character,
+    required int score,
+    int? level,
+    String? character,
   }) {
     return logEvent(
       name: 'post_score',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SCORE: score,
         _LEVEL: level,
         _CHARACTER: character,
@@ -503,20 +501,20 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PRESENT_OFFER
   Future<void> logPresentOffer({
-    @required String itemId,
-    @required String itemName,
-    @required String itemCategory,
-    @required int quantity,
-    double price,
-    double value,
-    String currency,
-    String itemLocationId,
+    required String itemId,
+    required String itemName,
+    required String itemCategory,
+    required int quantity,
+    double? price,
+    double? value,
+    String? currency,
+    String? itemLocationId,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'present_offer',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -537,15 +535,15 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PURCHASE_REFUND
   Future<void> logPurchaseRefund({
-    String currency,
-    double value,
-    String transactionId,
+    String? currency,
+    double? value,
+    String? transactionId,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'purchase_refund',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
         _VALUE: value,
         _TRANSACTION_ID: transactionId,
@@ -556,24 +554,24 @@ class FirebaseAnalytics {
   /// Logs the standard `remove_from_cart` event.
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#REMOVE_FROM_CART
   Future<void> logRemoveFromCart({
-    @required String itemId,
-    @required String itemName,
-    @required String itemCategory,
-    @required int quantity,
-    double price,
-    double value,
-    String currency,
-    String origin,
-    String itemLocationId,
-    String destination,
-    String startDate,
-    String endDate,
+    required String itemId,
+    required String itemName,
+    required String itemCategory,
+    required int quantity,
+    double? price,
+    double? value,
+    String? currency,
+    String? origin,
+    String? itemLocationId,
+    String? destination,
+    String? startDate,
+    String? endDate,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'remove_from_cart',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _QUANTITY: quantity,
         _ITEM_CATEGORY: itemCategory,
         _ITEM_NAME: itemName,
@@ -598,19 +596,19 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SEARCH
   Future<void> logSearch({
-    @required String searchTerm,
-    int numberOfNights,
-    int numberOfRooms,
-    int numberOfPassengers,
-    String origin,
-    String destination,
-    String startDate,
-    String endDate,
-    String travelClass,
+    required String searchTerm,
+    int? numberOfNights,
+    int? numberOfRooms,
+    int? numberOfPassengers,
+    String? origin,
+    String? destination,
+    String? startDate,
+    String? endDate,
+    String? travelClass,
   }) {
     return logEvent(
       name: 'search',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
         _NUMBER_OF_NIGHTS: numberOfNights,
         _NUMBER_OF_ROOMS: numberOfRooms,
@@ -633,12 +631,12 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SELECT_CONTENT
   Future<void> logSelectContent({
-    @required String contentType,
-    @required String itemId,
+    required String contentType,
+    required String itemId,
   }) {
     return logEvent(
       name: 'select_content',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
       }),
@@ -648,12 +646,12 @@ class FirebaseAnalytics {
   /// Logs the standard `set_checkout_option` event.
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SET_CHECKOUT_OPTION
   Future<void> logSetCheckoutOption({
-    @required int checkoutStep,
-    @required String checkoutOption,
+    required int checkoutStep,
+    required String checkoutOption,
   }) {
     return logEvent(
       name: 'set_checkout_option',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CHECKOUT_STEP: checkoutStep,
         _CHECKOUT_OPTION: checkoutOption,
       }),
@@ -667,13 +665,13 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SHARE
   Future<void> logShare({
-    @required String contentType,
-    @required String itemId,
-    @required String method,
+    required String contentType,
+    required String itemId,
+    required String method,
   }) {
     return logEvent(
       name: 'share',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
         _METHOD: method,
@@ -690,11 +688,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SIGN_UP
   Future<void> logSignUp({
-    @required String signUpMethod,
+    required String signUpMethod,
   }) {
     return logEvent(
       name: 'sign_up',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _METHOD: signUpMethod,
       }),
     );
@@ -707,13 +705,13 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SPEND_VIRTUAL_CURRENCY
   Future<void> logSpendVirtualCurrency({
-    @required String itemName,
-    @required String virtualCurrencyName,
-    @required num value,
+    required String itemName,
+    required String virtualCurrencyName,
+    required num value,
   }) {
     return logEvent(
       name: 'spend_virtual_currency',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_NAME: itemName,
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
@@ -753,11 +751,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#UNLOCK_ACHIEVEMENT
   Future<void> logUnlockAchievement({
-    @required String id,
+    required String id,
   }) {
     return logEvent(
       name: 'unlock_achievement',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ACHIEVEMENT_ID: id,
       }),
     );
@@ -774,30 +772,30 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_ITEM
   Future<void> logViewItem({
-    @required String itemId,
-    @required String itemName,
-    @required String itemCategory,
-    String itemLocationId,
-    double price,
-    int quantity,
-    String currency,
-    double value,
-    String flightNumber,
-    int numberOfPassengers,
-    int numberOfNights,
-    int numberOfRooms,
-    String origin,
-    String destination,
-    String startDate,
-    String endDate,
-    String searchTerm,
-    String travelClass,
+    required String itemId,
+    required String itemName,
+    required String itemCategory,
+    String? itemLocationId,
+    double? price,
+    int? quantity,
+    String? currency,
+    double? value,
+    String? flightNumber,
+    int? numberOfPassengers,
+    int? numberOfNights,
+    int? numberOfRooms,
+    String? origin,
+    String? destination,
+    String? startDate,
+    String? endDate,
+    String? searchTerm,
+    String? travelClass,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'view_item',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_ID: itemId,
         _ITEM_NAME: itemName,
         _ITEM_CATEGORY: itemCategory,
@@ -827,11 +825,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_ITEM_LIST
   Future<void> logViewItemList({
-    @required String itemCategory,
+    required String itemCategory,
   }) {
     return logEvent(
       name: 'view_item_list',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _ITEM_CATEGORY: itemCategory,
       }),
     );
@@ -844,11 +842,11 @@ class FirebaseAnalytics {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_SEARCH_RESULTS
   Future<void> logViewSearchResults({
-    @required String searchTerm,
+    required String searchTerm,
   }) {
     return logEvent(
       name: 'view_search_results',
-      parameters: filterOutNulls(<String, dynamic>{
+      parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
       }),
     );
@@ -863,9 +861,6 @@ class FirebaseAnalyticsAndroid {
   ///
   /// The default value is 1800000 (30 minutes).
   Future<void> setSessionTimeoutDuration(int milliseconds) async {
-    if (milliseconds == null) {
-      throw ArgumentError.notNull('milliseconds');
-    }
     await _platformInstance.setSessionTimeoutDuration(milliseconds);
   }
 }
@@ -873,9 +868,9 @@ class FirebaseAnalyticsAndroid {
 /// Creates a new map containing all of the key/value pairs from [parameters]
 /// except those whose value is `null`.
 @visibleForTesting
-Map<String, dynamic> filterOutNulls(Map<String, dynamic> parameters) {
-  final Map<String, dynamic> filtered = <String, dynamic>{};
-  parameters.forEach((String key, dynamic value) {
+Map<String, Object> filterOutNulls(Map<String, Object?> parameters) {
+  final Map<String, Object> filtered = <String, Object>{};
+  parameters.forEach((String key, Object? value) {
     if (value != null) {
       filtered[key] = value;
     }
@@ -887,7 +882,7 @@ Map<String, dynamic> filterOutNulls(Map<String, dynamic> parameters) {
 const String valueAndCurrencyMustBeTogetherError = 'If you supply the "value" '
     'parameter, you must also supply the "currency" parameter.';
 
-void _requireValueAndCurrencyTogether(double value, String currency) {
+void _requireValueAndCurrencyTogether(double? value, String? currency) {
   if (value != null && currency == null) {
     throw ArgumentError(valueAndCurrencyMustBeTogetherError);
   }
@@ -915,7 +910,6 @@ const List<String> _reservedEventNames = <String>[
   'notification_open',
   'notification_receive',
   'os_update',
-  'screen_view',
   'session_start',
   'user_engagement',
 ];

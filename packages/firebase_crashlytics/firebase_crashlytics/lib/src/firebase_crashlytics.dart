@@ -1,19 +1,23 @@
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 part of firebase_crashlytics;
 
 /// The entry point for accessing a [FirebaseCrashlytics].
 ///
 /// You can get an instance by calling [FirebaseCrashlytics.instance].
 class FirebaseCrashlytics extends FirebasePluginPlatform {
+  FirebaseCrashlytics._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+
   /// Cached instance of [FirebaseCrashlytics];
-  static /*late*/ FirebaseCrashlytics _instance;
+  static FirebaseCrashlytics? _instance;
 
   // Cached and lazily loaded instance of [FirebaseCrashlyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseCrashlytics] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseCrashlyticsPlatform _delegatePackingProperty;
+  FirebaseCrashlyticsPlatform? _delegatePackingProperty;
 
   FirebaseCrashlyticsPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseCrashlyticsPlatform.instanceFor(
@@ -23,30 +27,11 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseCrashlytics] instance.
   FirebaseApp app;
 
-  FirebaseCrashlytics._({this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
-
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseCrashlytics get instance {
-    return _instance ??= FirebaseCrashlytics._(app: Firebase.app());
-  }
+    _instance ??= FirebaseCrashlytics._(app: Firebase.app());
 
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  ///
-  /// See [setCrashlyticsCollectionEnabled] for toggling collection status.
-  @Deprecated(
-      "enableInDevMode getter is deprecated, use 'isCrashlyticsCollectionEnabled' instead")
-  bool get enableInDevMode {
-    return _delegate.isCrashlyticsCollectionEnabled;
-  }
-
-  /// Whether the current Crashlytics instance is collecting reports. If false,
-  /// then no crash reporting data is sent to Firebase.
-  @Deprecated(
-      "enableInDevMode setter is deprecated, use 'setCrashlyticsCollectionEnabled(bool)' instead")
-  set enableInDevMode(bool enabled) {
-    _delegate.setCrashlyticsCollectionEnabled(enabled).then((value) => null);
+    return _instance!;
   }
 
   /// Whether the current Crashlytics instance is collecting reports. If false,
@@ -90,67 +75,72 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   }
 
   /// Submits a Crashlytics report of a caught error.
-  Future<void> recordError(dynamic exception, StackTrace stack,
+  Future<void> recordError(dynamic exception, StackTrace? stack,
       {dynamic reason,
-      Iterable<DiagnosticsNode> information,
-      bool /*?*/ printDetails}) async {
-    // If [null] is provided, use the debug flag instead.
+      Iterable<DiagnosticsNode> information = const [],
+      bool? printDetails,
+      bool fatal = false}) async {
+    // Use the debug flag if printDetails is not provided
     printDetails ??= kDebugMode;
 
-    final String _information = (information == null || information.isEmpty)
+    final String _information = information.isEmpty
         ? ''
         : (StringBuffer()..writeAll(information, '\n')).toString();
 
     if (printDetails) {
+      // ignore: avoid_print
       print('----------------FIREBASE CRASHLYTICS----------------');
 
       // If available, give a reason to the exception.
       if (reason != null) {
+        // ignore: avoid_print
         print('The following exception was thrown $reason:');
       }
 
       // Need to print the exception to explain why the exception was thrown.
+      // ignore: avoid_print
       print(exception);
 
       // Print information provided by the Flutter framework about the exception.
+      // ignore: avoid_print
       if (_information.isNotEmpty) print('\n$_information');
 
       // Not using Trace.format here to stick to the default stack trace format
       // that Flutter developers are used to seeing.
+      // ignore: avoid_print
       if (stack != null) print('\n$stack');
+      // ignore: avoid_print
       print('----------------------------------------------------');
     }
 
-    // The stack trace can be null. To avoid the following exception:
-    // Invalid argument(s): Cannot create a Trace from null.
-    // We can check for null and provide an empty stack trace.
-    stack ??= StackTrace.current ?? StackTrace.fromString('');
+    final StackTrace stackTrace = stack ?? StackTrace.current;
 
     // Report error.
-    final List<String> stackTraceLines =
-        Trace.format(stack).trimRight().split('\n');
     final List<Map<String, String>> stackTraceElements =
-        getStackTraceElements(stackTraceLines);
+        getStackTraceElements(stackTrace);
 
     return _delegate.recordError(
       exception: exception.toString(),
-      reason: reason?.toString(),
+      reason: reason.toString(),
       information: _information,
       stackTraceElements: stackTraceElements,
+      fatal: fatal,
     );
   }
 
   /// Submits a Crashlytics report of a non-fatal error caught by the Flutter framework.
   Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails) {
-    assert(flutterErrorDetails != null);
     FlutterError.dumpErrorToConsole(flutterErrorDetails, forceReport: true);
+
     return recordError(
-        flutterErrorDetails.exceptionAsString(), flutterErrorDetails.stack,
-        reason: flutterErrorDetails.context,
-        printDetails: false,
-        information: flutterErrorDetails.informationCollector == null
-            ? null
-            : flutterErrorDetails.informationCollector());
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
+    );
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
@@ -161,7 +151,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// The maximum log size is 64k. If exceeded, the log rolls such that messages
   /// are removed, starting from the oldest.
   Future<void> log(String message) async {
-    assert(message != null);
     return _delegate.log(message);
   }
 
@@ -183,7 +172,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// data collection is disabled. Use [deleteUnsentReports] to delete any reports
   /// stored on the device without sending them to Crashlytics.
   Future<void> setCrashlyticsCollectionEnabled(bool enabled) {
-    assert(enabled != null);
     return _delegate.setCrashlyticsCollectionEnabled(enabled);
   }
 
@@ -196,7 +184,6 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// Ensure you have collected permission to store any personal identifiable information
   /// from the user if required.
   Future<void> setUserIdentifier(String identifier) {
-    assert(identifier != null);
     return _delegate.setUserIdentifier(identifier);
   }
 
@@ -212,28 +199,8 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
   /// ignored. Keys or values that exceed 1024 characters are truncated.
   ///
   /// The value can only be a type [int], [num], [String] or [bool].
-  Future<void> setCustomKey(String key, dynamic value) async {
-    assert(key != null);
-    assert(value != null);
+  Future<void> setCustomKey(String key, Object value) async {
     assert(value is int || value is num || value is String || value is bool);
     return _delegate.setCustomKey(key, value.toString());
   }
-}
-
-/// Extends the [FirebaseCrashlytics] class to allow for deprecated usage of
-/// using [Crashlytics] directly.
-@Deprecated(
-    "Class Crashlytics is deprecated. Use 'FirebaseCrashlytics' instead.")
-class Crashlytics extends FirebaseCrashlytics {
-  // ignore: public_member_api_docs
-  @Deprecated(
-      "Constructing Crashlytics is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  factory Crashlytics() {
-    return FirebaseCrashlytics.instance;
-  }
-
-  @Deprecated(
-      "Accessing Crashlytics.instance is deprecated, use 'FirebaseCrashlytics.instance' instead")
-  // ignore: public_member_api_docs
-  static FirebaseCrashlytics get instance => FirebaseCrashlytics.instance;
 }

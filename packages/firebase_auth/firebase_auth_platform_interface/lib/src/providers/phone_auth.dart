@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:meta/meta.dart';
 
 const _kProviderId = 'phone';
 
@@ -28,36 +27,28 @@ class PhoneAuthProvider extends AuthProvider {
 
   /// Create a new [PhoneAuthCredential] from a provided [verificationId] and
   /// [smsCode].
-  static AuthCredential credential(
-      {@required String verificationId, @required String smsCode}) {
-    assert(verificationId != null);
-    assert(smsCode != null);
+  static PhoneAuthCredential credential({
+    required String verificationId,
+    required String smsCode,
+  }) {
     return PhoneAuthCredential._credential(verificationId, smsCode);
   }
 
   /// Create a [PhoneAuthCredential] from an internal token, where the ID
   /// relates to a natively stored credential.
-  static AuthCredential credentialFromToken(int token, {String smsCode}) {
-    assert(token != null);
+  static PhoneAuthCredential credentialFromToken(int token, {String? smsCode}) {
     return PhoneAuthCredential._credentialFromToken(token, smsCode: smsCode);
-  }
-
-  @Deprecated('Deprecated in favor of `PhoneAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential({
-    @required String verificationId,
-    @required String smsCode,
-  }) {
-    return PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: smsCode);
   }
 }
 
 /// The auth credential returned from calling
 /// [PhoneAuthProvider.credential].
 class PhoneAuthCredential extends AuthCredential {
-  PhoneAuthCredential._({this.verificationId, this.smsCode, this.token})
-      : super(
+  PhoneAuthCredential._({
+    this.verificationId,
+    this.smsCode,
+    int? token,
+  }) : super(
           providerId: _kProviderId,
           signInMethod: _kProviderId,
           token: token,
@@ -69,19 +60,18 @@ class PhoneAuthCredential extends AuthCredential {
         verificationId: verificationId, smsCode: smsCode);
   }
 
-  factory PhoneAuthCredential._credentialFromToken(int token,
-      {String smsCode}) {
+  factory PhoneAuthCredential._credentialFromToken(
+    int token, {
+    String? smsCode,
+  }) {
     return PhoneAuthCredential._(token: token, smsCode: smsCode);
   }
 
   /// The phone auth verification ID.
-  final String verificationId;
+  final String? verificationId;
 
   /// The SMS code sent to and entered by the user.
-  final String smsCode;
-
-  /// An token relating to a internally stored credential.
-  final int token;
+  final String? smsCode;
 
   /// Returns the credential as a serialized [Map].
   @override

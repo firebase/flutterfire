@@ -1,3 +1,78 @@
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
+## 1.0.4
+
+ - **FIX**: made QueryDocumentSnapshot.data() non-nullable (#5476).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
+## 1.0.3
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+
+## 1.0.2
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+
+## 1.0.1
+
+ - Update a dependency to the latest release.
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.17.0-1.0.nullsafety.2
+
+ - **FIX**: Fix type issue. (#5081).
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
+## 0.17.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 0.17.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
+## 0.16.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: add missing symlinks (fixes #4628).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **CHORE**: add missing file license headers.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.15.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside example pubspec.yaml (#4604).
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **FEAT**: Move Snapshot handling into a EventChannel (#4209).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
 ## 0.14.4
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

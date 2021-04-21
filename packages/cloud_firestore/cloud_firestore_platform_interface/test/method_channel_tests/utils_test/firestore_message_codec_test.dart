@@ -16,7 +16,7 @@ import '../../utils/test_common.dart';
 
 void main() {
   initializeMethodChannel();
-  /*late*/ MethodChannelFirebaseFirestore firestore;
+  MethodChannelFirebaseFirestore? firestore;
 
   setUpAll(() async {
     firestore = MethodChannelFirebaseFirestore();
@@ -31,13 +31,13 @@ void main() {
       _checkEncodeDecode<dynamic>(codec, timestamp);
       _checkEncodeDecode<dynamic>(
           codec, const GeoPoint(37.421939, -122.083509));
-      _checkEncodeDecode<dynamic>(codec, firestore.doc('foo/bar'));
+      _checkEncodeDecode<dynamic>(codec, firestore!.doc('foo/bar'));
     });
     test('should encode and decode composite message', () {
       final List<dynamic> message = <dynamic>[
         testTime,
         const GeoPoint(37.421939, -122.083509),
-        firestore.doc('foo/bar'),
+        firestore!.doc('foo/bar'),
       ];
       _checkEncodeDecode<dynamic>(codec, message);
     });
@@ -102,23 +102,23 @@ void main() {
 }
 
 void _checkEncodeDecode<T>(
-  MessageCodec<T> codec,
-  T /*?*/ message, {
-  MessageCodec<T> /*?*/ decodingCodec,
+  MessageCodec<T?> codec,
+  T? message, {
+  MessageCodec<T>? decodingCodec,
 }) {
-  MessageCodec<T> decoder = decodingCodec ?? codec;
+  MessageCodec<T?> decoder = decodingCodec ?? codec;
 
-  final ByteData /*?*/ encoded = codec.encodeMessage(message);
-  final T /*?*/ decoded = decoder.decodeMessage(encoded);
+  final ByteData? encoded = codec.encodeMessage(message);
+  final T? decoded = decoder.decodeMessage(encoded);
   if (message == null) {
     expect(encoded, isNull);
     expect(decoded, isNull);
   } else {
     expect(_deepEquals(message, decoded), isTrue);
-    final ByteData encodedAgain = codec.encodeMessage(decoded) /*!*/;
+    final ByteData encodedAgain = codec.encodeMessage(decoded)!;
     expect(
       encodedAgain.buffer.asUint8List(),
-      orderedEquals(encoded /*!*/ .buffer.asUint8List()),
+      orderedEquals(encoded!.buffer.asUint8List()),
     );
   }
 }

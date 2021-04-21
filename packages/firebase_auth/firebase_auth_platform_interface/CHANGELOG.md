@@ -1,3 +1,66 @@
+## 4.1.1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: uid can be null (#5834).
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **CI**: review changes.
+
+## 4.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+
+## 4.0.2
+
+ - **DOCS**: userChanges clarification (#5698).
+
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.0.0-1.1.nullsafety.3
+
+ - **FIX**: Fix email link signin on Android (#4973).
+
+## 4.0.0-1.1.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
+## 4.0.0-1.1.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 4.0.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 4.0.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 4.0.0-nullsafety.1
+
+Bump firebase_core to v0.8.0-nullsafety.1
+
+
+## 4.0.0-nullsafety.0
+
+Migrated to null safety (#4633)
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: bubble exceptions (#3700).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4590).
+
 ## 2.1.4
 
  - Update a dependency to the latest release.

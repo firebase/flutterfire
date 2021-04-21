@@ -6,9 +6,9 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final int kMockOperation = 2;
-  final String kMockEmail = 'test@test.com';
-  final String kMockPreviousEmail = 'previous@test.com';
+  const int kMockOperation = 2;
+  const String kMockEmail = 'test@test.com';
+  const String kMockPreviousEmail = 'previous@test.com';
   final Map<String, dynamic> kMockData = <String, dynamic>{
     'email': kMockEmail,
     'previousEmail': kMockPreviousEmail

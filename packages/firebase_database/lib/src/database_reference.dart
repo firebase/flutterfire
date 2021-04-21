@@ -27,12 +27,14 @@ class DatabaseReference extends Query {
   /// Gets a DatabaseReference for the parent location. If this instance
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
-  DatabaseReference parent() {
+  DatabaseReference? parent() {
     if (_pathComponents.isEmpty) {
       return null;
     }
     return DatabaseReference._(
-        _database, (List<String>.from(_pathComponents)..removeLast()));
+      _database,
+      List<String>.from(_pathComponents)..removeLast(),
+    );
   }
 
   /// Gets a FIRDatabaseReference for the root location.
@@ -159,17 +161,21 @@ class DatabaseReference extends Query {
     FirebaseDatabase._transactions[transactionKey] = transactionHandler;
 
     TransactionResult toTransactionResult(Map<dynamic, dynamic> map) {
-      final DatabaseError databaseError =
+      final DatabaseError? databaseError =
           map['error'] != null ? DatabaseError._(map['error']) : null;
       final bool committed = map['committed'];
-      final DataSnapshot dataSnapshot =
-          map['snapshot'] != null ? DataSnapshot._(map['snapshot']) : null;
+      final DataSnapshot? dataSnapshot = map['snapshot'] != null
+          ? DataSnapshot._fromJson(map['snapshot'], map['childKeys'])
+          : null;
 
       FirebaseDatabase._transactions.remove(transactionKey);
 
       return TransactionResult._(databaseError, committed, dataSnapshot);
     }
 
+    // TODO(rrousselGit) refactor to async/await
+    // TODO(rrousselGit) what if invokeMethod fails?
+    // ignore: unawaited_futures
     _database._channel.invokeMethod<void>(
         'DatabaseReference#runTransaction', <String, dynamic>{
       'app': _database.app?.name,
@@ -203,11 +209,13 @@ class ServerValue {
   }
 }
 
-typedef Future<MutableData> TransactionHandler(MutableData mutableData);
+typedef TransactionHandler = Future<MutableData> Function(
+  MutableData mutableData,
+);
 
 class TransactionResult {
   const TransactionResult._(this.error, this.committed, this.dataSnapshot);
-  final DatabaseError error;
+  final DatabaseError? error;
   final bool committed;
-  final DataSnapshot dataSnapshot;
+  final DataSnapshot? dataSnapshot;
 }

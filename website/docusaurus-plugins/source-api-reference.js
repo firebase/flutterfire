@@ -1,7 +1,7 @@
 const fs = require('fs');
 const webpack = require('webpack');
 const plugins = require('../plugins');
-const { fetchPluginVersion, fetchPluginApiReference } = require('../api');
+const { fetchPluginVersions, fetchPluginApiReference } = require('../api');
 
 module.exports = function sourceApiReference() {
   return {
@@ -17,8 +17,8 @@ module.exports = function sourceApiReference() {
         const platformName = `${pub}_platform_interface`;
 
         const versions = {
-          [pub]: await fetchPluginVersion(pub),
-          [platformName]: await fetchPluginVersion(`${pub}_platform_interface`),
+          [pub]: await fetchPluginVersions(pub)[0],
+          [platformName]: await fetchPluginVersions(`${pub}_platform_interface`)[0],
         };
 
         promises.push(fetchPluginApiReference(pub, versions[pub]));

@@ -24,7 +24,7 @@ abstract class FunctionsAppJsImpl extends AppJsImpl {
 abstract class FunctionsJsImpl {
   external FunctionsAppJsImpl get app;
   external HttpsCallableJsImpl httpsCallable(String name,
-      [HttpsCallableOptions options]);
+      [HttpsCallableOptions? options]);
   external void useFunctionsEmulator(String url);
 }
 
@@ -43,10 +43,9 @@ abstract class HttpsCallableJsImpl {
 @JS('HttpsCallableOptions')
 @anonymous
 abstract class HttpsCallableOptions {
+  external factory HttpsCallableOptions({int? timeout});
   external int get timeout;
   external set timeout(int t);
-
-  external factory HttpsCallableOptions({int timeout});
 }
 
 /// An HttpsCallableResult wraps a single result from a function call.
@@ -66,8 +65,8 @@ abstract class HttpsCallableResultJsImpl {
 abstract class HttpsErrorJsImpl {
   external ErrorJsImpl get error;
   external set error(ErrorJsImpl e);
-  external dynamic get code;
-  external set code(v);
+  external String get code;
+  external set code(String v);
   external dynamic get details;
   external set details(dynamic d);
   external String get message;

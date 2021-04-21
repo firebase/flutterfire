@@ -42,13 +42,13 @@ abstract class PerformanceAttributes {
         name.length > maxAttributeKeyLength ||
         value.length > maxAttributeValueLength ||
         _attributes.length == maxCustomAttributes) {
-      return Future<void>.value(null);
+      return Future<void>.value();
     }
 
     _attributes[name] = value;
     return FirebasePerformance.channel.invokeMethod<void>(
       'PerformanceAttributes#putAttribute',
-      <String, dynamic>{
+      <String, Object?>{
         'handle': _handle,
         'name': name,
         'value': value,
@@ -61,31 +61,33 @@ abstract class PerformanceAttributes {
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
   Future<void> removeAttribute(String name) {
-    if (_hasStopped) return Future<void>.value(null);
+    if (_hasStopped) return Future<void>.value();
 
     _attributes.remove(name);
     return FirebasePerformance.channel.invokeMethod<void>(
       'PerformanceAttributes#removeAttribute',
-      <String, dynamic>{'handle': _handle, 'name': name},
+      <String, Object?>{'handle': _handle, 'name': name},
     );
   }
 
   /// Returns the value of an attribute.
   ///
   /// Returns `null` if an attribute with this [name] has not been added.
-  String getAttribute(String name) => _attributes[name];
+  String? getAttribute(String name) => _attributes[name];
 
   /// All attributes added.
-  Future<Map<String, String>> getAttributes() {
+  Future<Map<String, String>> getAttributes() async {
     if (_hasStopped) {
       return Future<Map<String, String>>.value(
         Map<String, String>.unmodifiable(_attributes),
       );
     }
 
-    return FirebasePerformance.channel.invokeMapMethod<String, String>(
+    final attributes =
+        await FirebasePerformance.channel.invokeMapMethod<String, String>(
       'PerformanceAttributes#getAttributes',
-      <String, dynamic>{'handle': _handle},
+      <String, Object?>{'handle': _handle},
     );
+    return attributes ?? {};
   }
 }

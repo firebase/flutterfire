@@ -5,7 +5,7 @@
 part of firebase_dynamic_links;
 
 typedef OnLinkSuccessCallback = Future<dynamic> Function(
-    PendingDynamicLinkData linkData);
+    PendingDynamicLinkData? linkData);
 typedef OnLinkErrorCallback = Future<dynamic> Function(
     OnLinkErrorException error);
 
@@ -22,36 +22,36 @@ class FirebaseDynamicLinks {
   /// Singleton of [FirebaseDynamicLinks].
   static final FirebaseDynamicLinks instance = FirebaseDynamicLinks._();
 
-  OnLinkSuccessCallback _onLinkSuccess;
-  OnLinkErrorCallback _onLinkError;
+  OnLinkSuccessCallback? _onLinkSuccess;
+  OnLinkErrorCallback? _onLinkError;
 
   /// Attempts to retrieve the dynamic link which launched the app.
   ///
   /// This method always returns a Future. That Future completes to null if
   /// there is no pending dynamic link or any call to this method after the
   /// the first attempt.
-  Future<PendingDynamicLinkData> getInitialLink() async {
-    final Map<String, dynamic> linkData =
+  Future<PendingDynamicLinkData?> getInitialLink() async {
+    final Map<String, dynamic>? linkData =
         await channel.invokeMapMethod<String, dynamic>(
             'FirebaseDynamicLinks#getInitialLink');
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
-  Future<PendingDynamicLinkData> getDynamicLink(Uri url) async {
-    final Map<String, dynamic> linkData = await FirebaseDynamicLinks.channel
+  Future<PendingDynamicLinkData?> getDynamicLink(Uri url) async {
+    final Map<String, dynamic>? linkData = await FirebaseDynamicLinks.channel
         .invokeMapMethod<String, dynamic>('FirebaseDynamicLinks#getDynamicLink',
             <String, dynamic>{'url': url.toString()});
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
-  PendingDynamicLinkData getPendingDynamicLinkDataFromMap(
-      Map<dynamic, dynamic> linkData) {
+  PendingDynamicLinkData? getPendingDynamicLinkDataFromMap(
+      Map<dynamic, dynamic>? linkData) {
     if (linkData == null) return null;
 
     final link = linkData['link'];
     if (link == null) return null;
 
-    PendingDynamicLinkDataAndroid androidData;
+    PendingDynamicLinkDataAndroid? androidData;
     if (linkData['android'] != null) {
       final Map<dynamic, dynamic> data = linkData['android'];
       androidData = PendingDynamicLinkDataAndroid._(
@@ -60,7 +60,7 @@ class FirebaseDynamicLinks {
       );
     }
 
-    PendingDynamicLinkDataIOS iosData;
+    PendingDynamicLinkDataIOS? iosData;
     if (linkData['ios'] != null) {
       final Map<dynamic, dynamic> data = linkData['ios'];
       iosData = PendingDynamicLinkDataIOS._(data['minimumVersion']);
@@ -75,8 +75,8 @@ class FirebaseDynamicLinks {
 
   /// Configures onLink listeners: it has two methods for success and failure.
   void onLink({
-    OnLinkSuccessCallback onSuccess,
-    OnLinkErrorCallback onError,
+    OnLinkSuccessCallback? onSuccess,
+    OnLinkErrorCallback? onError,
   }) {
     _onLinkSuccess = onSuccess;
     _onLinkError = onError;
@@ -85,20 +85,20 @@ class FirebaseDynamicLinks {
 
   Future<dynamic> _handleMethod(MethodCall call) async {
     switch (call.method) {
-      case "onLinkSuccess":
-        PendingDynamicLinkData linkData;
+      case 'onLinkSuccess':
+        PendingDynamicLinkData? linkData;
         if (call.arguments != null) {
-          final Map<dynamic, dynamic> data =
+          final Map<dynamic, dynamic>? data =
               call.arguments.cast<dynamic, dynamic>();
           linkData = getPendingDynamicLinkDataFromMap(data);
         }
-        return _onLinkSuccess(linkData);
-      case "onLinkError":
+        return _onLinkSuccess!(linkData);
+      case 'onLinkError':
         final Map<dynamic, dynamic> data =
             call.arguments.cast<dynamic, dynamic>();
         final OnLinkErrorException e = OnLinkErrorException._(
             data['code'], data['message'], data['details']);
-        return _onLinkError(e);
+        return _onLinkError!(e);
     }
   }
 }
@@ -111,13 +111,13 @@ class PendingDynamicLinkData {
   ///
   /// Can be null if [link] equals null or dynamic link was not received on an
   /// Android device.
-  final PendingDynamicLinkDataAndroid android;
+  final PendingDynamicLinkDataAndroid? android;
 
   /// Provides iOS specific data from received dynamic link.
   ///
   /// Can be null if [link] equals null or dynamic link was not received on an
   /// iOS device.
-  final PendingDynamicLinkDataIOS ios;
+  final PendingDynamicLinkDataIOS? ios;
 
   /// Deep link parameter of the dynamic link.
   final Uri link;
@@ -133,7 +133,7 @@ class PendingDynamicLinkDataAndroid {
   /// The time the user clicked on the dynamic link.
   ///
   /// Equals the number of milliseconds that have elapsed since January 1, 1970.
-  final int clickTimestamp;
+  final int? clickTimestamp;
 
   /// The minimum version of your app that can open the link.
   ///
@@ -142,7 +142,7 @@ class PendingDynamicLinkDataAndroid {
   ///
   /// If the installed app is an older version, the user is taken to the Play
   /// Store to upgrade the app.
-  final int minimumVersion;
+  final int? minimumVersion;
 }
 
 /// Provides iOS specific data from received dynamic link.
@@ -153,11 +153,11 @@ class PendingDynamicLinkDataIOS {
   ///
   /// It is app developer's responsibility to open AppStore when received link
   /// declares higher [minimumVersion] than currently installed.
-  final String minimumVersion;
+  final String? minimumVersion;
 }
 
 /// This object is returned by the handler when an error occurs.
 class OnLinkErrorException extends PlatformException {
-  OnLinkErrorException._(String code, String message, dynamic details)
+  OnLinkErrorException._(String code, String? message, dynamic details)
       : super(code: code, message: message, details: details);
 }

@@ -1,3 +1,71 @@
+## 2.0.1
+
+ - **FIX**: Avoid duplicate prints (#5718).
+ - **FIX**: Include obfuscated stack traces (#4407).
+ - **CHORE**: update drive dependency (#5740).
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add Flutter dependency to podspec (#5455).
+ - **FEAT**: fatal error crash report (#5427).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **BREAKING** **FIX**: `checkForUnsentReports` should error if `isCrashlyticsCollectionEnabled` is false (#5187).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_crashlytics" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.5.0-1.0.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 0.5.0-1.0.nullsafety.2
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+
+## 0.5.0-1.0.nullsafety.1
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.5.0-1.0.nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
+## 0.4.0+1
+
+ - **REFACTOR**: updated crashlytics e2e test library.
+ - **FIX**: updated didCrashOnPreviousExecution call.
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.3.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: bubble exceptions (#4419).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
 ## 0.2.4
 
  - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).

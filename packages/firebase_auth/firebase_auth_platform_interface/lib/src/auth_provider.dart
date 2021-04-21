@@ -8,7 +8,7 @@ abstract class AuthProvider {
   AuthProvider(this.providerId);
 
   /// The provider ID.
-  final String /*!*/ providerId;
+  final String providerId;
 
   @override
   String toString() {

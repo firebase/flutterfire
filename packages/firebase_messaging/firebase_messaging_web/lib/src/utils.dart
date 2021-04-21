@@ -2,31 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 
 import 'interop/messaging.dart';
-
-/// Returns a [FirebaseException] from a thrown web error.
-FirebaseException getFirebaseException(Object object) {
-  if (object is! core_interop.FirebaseError) {
-    return FirebaseException(
-        plugin: 'firebase_messaging',
-        code: 'unknown',
-        message: object.toString());
-  }
-
-  core_interop.FirebaseError firebaseError =
-      object as core_interop.FirebaseError;
-
-  String code = firebaseError.code.replaceFirst('messaging/', '');
-  String message =
-      firebaseError.message.replaceFirst('(${firebaseError.code})', '');
-  return FirebaseException(
-      plugin: 'firebase_messaging', code: code, message: message);
-}
 
 /// Converts an [String] into it's [AuthorizationStatus] representation.
 ///
@@ -62,18 +40,18 @@ NotificationSettings getNotificationSettings(String status) {
 
 /// Converts a messaging [MessagePayload] into a Map.
 Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
-  String senderId;
-  int sentTime;
+  String? senderId;
+  int? sentTime;
   Map<String, dynamic> data = {};
 
   if (messagePayload.data != null) {
-    messagePayload.data.forEach((key, value) {
+    messagePayload.data!.forEach((key, value) {
       if (key == 'google.c.a.c_id') {
         senderId = value as String;
       }
 
       if (key == 'google.c.a.ts') {
-        int seconds = int.tryParse(value as String);
+        int seconds = int.tryParse(value as String)!;
         sentTime = seconds * 1000; // sentTime is ms
       }
 
@@ -98,7 +76,7 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
     'notification': messagePayload.notification == null
         ? null
         : notificationPayloadToMap(
-            messagePayload.notification, messagePayload.fcmOptions),
+            messagePayload.notification!, messagePayload.fcmOptions),
     'sentTime': sentTime,
     'threadId': null,
     'ttl': null,
@@ -110,7 +88,7 @@ Map<String, dynamic> messagePayloadToMap(MessagePayload messagePayload) {
 /// Since [FcmOptions] are web specific, we pass these down to the upper layer
 /// as web properties.
 Map<String, dynamic> notificationPayloadToMap(
-    NotificationPayload notificationPayload, FcmOptions fcmOptions) {
+    NotificationPayload notificationPayload, FcmOptions? fcmOptions) {
   return <String, dynamic>{
     'title': notificationPayload.title,
     'body': notificationPayload.body,
