@@ -20,10 +20,12 @@ export 'storage_interop.dart';
 enum TaskState { RUNNING, PAUSED, SUCCESS, CANCELED, ERROR }
 
 /// Given an AppJSImp, return the Storage instance.
-Storage getStorageInstance([App? app]) {
-  return Storage.getInstance(app != null
-      ? firebase_interop.storage(app.jsObject)
-      : firebase_interop.storage());
+Storage getStorageInstance([App? app, String? bucket]) {
+  firebase_interop.AppStorageJsImpl appImpl =
+      app != null ? firebase_interop.app(app.name) : firebase_interop.app();
+
+  return Storage.getInstance(
+      bucket != null ? appImpl.storage(bucket) : appImpl.storage());
 }
 
 /// A service for uploading and downloading large objects to and from the
