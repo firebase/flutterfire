@@ -169,7 +169,7 @@ void runTaskTests() {
 
         String url = await snapshot.ref.getDownloadURL();
 
-        expect(url, contains("/$secondaryBucket/"));
+        expect(url, contains('/$secondaryBucket/'));
       });
     });
 
