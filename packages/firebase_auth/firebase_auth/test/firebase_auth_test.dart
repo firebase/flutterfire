@@ -496,7 +496,6 @@ void main() {
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
-        expect(captured.providerId, isA<OAuthCredential>());
         expect(captured.providerId, equals('apple.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
