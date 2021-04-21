@@ -76,21 +76,21 @@ void main() {
     test(
         '"RemoteMessage.fromMap" with nullable properties mapped as null & default values invoked',
         () {
-      final message = RemoteMessage.fromMap(mockNullableMessageMap!);
+      final message = RemoteMessage.fromMap(mockNullableMessageMap);
 
-      expect(message.senderId, mockNullableMessageMap!['senderId']);
-      expect(message.category, mockNullableMessageMap!['category']);
-      expect(message.collapseKey, mockNullableMessageMap!['collapseKey']);
+      expect(message.senderId, mockNullableMessageMap['senderId']);
+      expect(message.category, mockNullableMessageMap['category']);
+      expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
       expect(message.contentAvailable, false);
       expect(message.data, {});
-      expect(message.from, mockNullableMessageMap!['from']);
-      expect(message.messageId, mockNullableMessageMap!['messageId']);
-      expect(message.messageType, mockNullableMessageMap!['messageType']);
+      expect(message.from, mockNullableMessageMap['from']);
+      expect(message.messageId, mockNullableMessageMap['messageId']);
+      expect(message.messageType, mockNullableMessageMap['messageType']);
       expect(message.mutableContent, false);
-      expect(message.notification, mockNullableMessageMap!['notification']);
+      expect(message.notification, mockNullableMessageMap['notification']);
       expect(message.sentTime, null);
-      expect(message.threadId, mockNullableMessageMap!['threadId']);
-      expect(message.ttl, mockNullableMessageMap!['ttl']);
+      expect(message.threadId, mockNullableMessageMap['threadId']);
+      expect(message.ttl, mockNullableMessageMap['ttl']);
     });
 
     test('Use RemoteMessage constructor to create every available property',
@@ -148,19 +148,19 @@ void main() {
 
       RemoteMessage message = const RemoteMessage();
 
-      expect(message.senderId, mockNullableMessageMap!['senderId']);
-      expect(message.category, mockNullableMessageMap!['category']);
-      expect(message.collapseKey, mockNullableMessageMap!['collapseKey']);
+      expect(message.senderId, mockNullableMessageMap['senderId']);
+      expect(message.category, mockNullableMessageMap['category']);
+      expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
       expect(message.contentAvailable, false);
       expect(message.data, {});
-      expect(message.from, mockNullableMessageMap!['from']);
-      expect(message.messageId, mockNullableMessageMap!['messageId']);
-      expect(message.messageType, mockNullableMessageMap!['messageType']);
+      expect(message.from, mockNullableMessageMap['from']);
+      expect(message.messageId, mockNullableMessageMap['messageId']);
+      expect(message.messageType, mockNullableMessageMap['messageType']);
       expect(message.mutableContent, false);
-      expect(message.notification, mockNullableMessageMap!['notification']);
+      expect(message.notification, mockNullableMessageMap['notification']);
       expect(message.sentTime, null);
-      expect(message.threadId, mockNullableMessageMap!['threadId']);
-      expect(message.ttl, mockNullableMessageMap!['ttl']);
+      expect(message.threadId, mockNullableMessageMap['threadId']);
+      expect(message.ttl, mockNullableMessageMap['ttl']);
     });
   });
 }
