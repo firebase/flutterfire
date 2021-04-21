@@ -6,12 +6,10 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  Map<String, dynamic>? mockNotificationMap;
-  Map<String, dynamic>? mockNullNotificationMap;
-
   group('RemoteNotification', () {
-    setUp(() {
-      mockNotificationMap = {
+    test('"RemoteNotification.fromMap" with every possible property expected',
+        () {
+      Map<String, dynamic> mockNotificationMap = {
         'title': 'title',
         'titleLocArgs': ['titleLocArgs'],
         'titleLocKey': 'titleLocKey',
@@ -22,26 +20,15 @@ void main() {
         'apple': {},
       };
 
-      mockNullNotificationMap = {
-        'title': null,
-        'titleLocKey': null,
-        'body': null,
-        'bodyLocKey': null,
-        'android': null,
-        'apple': null,
-      };
-    });
-    test('"RemoteNotification.fromMap" with every possible property expected',
-        () {
       RemoteNotification notification =
-          RemoteNotification.fromMap(mockNotificationMap!);
+          RemoteNotification.fromMap(mockNotificationMap);
 
-      expect(notification.title, mockNotificationMap!['title']);
-      expect(notification.titleLocArgs, mockNotificationMap!['titleLocArgs']);
-      expect(notification.titleLocKey, mockNotificationMap!['titleLocKey']);
-      expect(notification.body, mockNotificationMap!['body']);
-      expect(notification.bodyLocArgs, mockNotificationMap!['bodyLocArgs']);
-      expect(notification.bodyLocKey, mockNotificationMap!['bodyLocKey']);
+      expect(notification.title, mockNotificationMap['title']);
+      expect(notification.titleLocArgs, mockNotificationMap['titleLocArgs']);
+      expect(notification.titleLocKey, mockNotificationMap['titleLocKey']);
+      expect(notification.body, mockNotificationMap['body']);
+      expect(notification.bodyLocArgs, mockNotificationMap['bodyLocArgs']);
+      expect(notification.bodyLocKey, mockNotificationMap['bodyLocKey']);
       expect(notification.android, isA<AndroidNotification>());
       expect(notification.apple, isA<AppleNotification>());
     });
@@ -49,15 +36,23 @@ void main() {
     test(
         '"RemoteNotification.fromMap" with nullable properties mapped as null & default values invoked',
         () {
+      Map<String, dynamic> mockNullNotificationMap = {
+        'title': null,
+        'titleLocKey': null,
+        'body': null,
+        'bodyLocKey': null,
+        'android': null,
+        'apple': null,
+      };
       RemoteNotification notification =
-          RemoteNotification.fromMap(mockNullNotificationMap!);
+          RemoteNotification.fromMap(mockNullNotificationMap);
 
-      expect(notification.title, mockNullNotificationMap!['title']);
+      expect(notification.title, mockNullNotificationMap['title']);
       expect(notification.titleLocArgs, []);
-      expect(notification.titleLocKey, mockNullNotificationMap!['titleLocKey']);
-      expect(notification.body, mockNullNotificationMap!['body']);
+      expect(notification.titleLocKey, mockNullNotificationMap['titleLocKey']);
+      expect(notification.body, mockNullNotificationMap['body']);
       expect(notification.bodyLocArgs, []);
-      expect(notification.bodyLocKey, mockNullNotificationMap!['bodyLocKey']);
+      expect(notification.bodyLocKey, mockNullNotificationMap['bodyLocKey']);
       expect(notification.android, null);
       expect(notification.apple, null);
     });
@@ -65,22 +60,33 @@ void main() {
     test(
         'Use RemoteMessage.fromMap constructor to create every available property',
         () {
+      Map<String, dynamic> mockNotificationMap = {
+        'title': 'title',
+        'titleLocArgs': ['titleLocArgs'],
+        'titleLocKey': 'titleLocKey',
+        'body': 'body',
+        'bodyLocArgs': ['bodyLocArgs'],
+        'bodyLocKey': 'bodyLocKey',
+        'android': {},
+        'apple': {},
+      };
+
       RemoteNotification notification = RemoteNotification(
           android: const AndroidNotification(),
           apple: const AppleNotification(),
-          title: mockNotificationMap!['title'],
-          titleLocArgs: mockNotificationMap!['titleLocArgs'],
-          titleLocKey: mockNotificationMap!['titleLocKey'],
-          body: mockNotificationMap!['body'],
-          bodyLocArgs: mockNotificationMap!['bodyLocArgs'],
-          bodyLocKey: mockNotificationMap!['bodyLocKey']);
+          title: mockNotificationMap['title'],
+          titleLocArgs: mockNotificationMap['titleLocArgs'],
+          titleLocKey: mockNotificationMap['titleLocKey'],
+          body: mockNotificationMap['body'],
+          bodyLocArgs: mockNotificationMap['bodyLocArgs'],
+          bodyLocKey: mockNotificationMap['bodyLocKey']);
 
-      expect(notification.title, mockNotificationMap!['title']);
-      expect(notification.titleLocArgs, mockNotificationMap!['titleLocArgs']);
-      expect(notification.titleLocKey, mockNotificationMap!['titleLocKey']);
-      expect(notification.body, mockNotificationMap!['body']);
-      expect(notification.bodyLocArgs, mockNotificationMap!['bodyLocArgs']);
-      expect(notification.bodyLocKey, mockNotificationMap!['bodyLocKey']);
+      expect(notification.title, mockNotificationMap['title']);
+      expect(notification.titleLocArgs, mockNotificationMap['titleLocArgs']);
+      expect(notification.titleLocKey, mockNotificationMap['titleLocKey']);
+      expect(notification.body, mockNotificationMap['body']);
+      expect(notification.bodyLocArgs, mockNotificationMap['bodyLocArgs']);
+      expect(notification.bodyLocKey, mockNotificationMap['bodyLocKey']);
       expect(notification.android, isA<AndroidNotification>());
       expect(notification.apple, isA<AppleNotification>());
     });
