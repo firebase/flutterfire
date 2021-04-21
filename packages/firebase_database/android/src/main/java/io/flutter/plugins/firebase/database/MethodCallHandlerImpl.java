@@ -25,6 +25,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -182,8 +183,21 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         arguments.put("handle", handle);
         arguments.put("snapshot", snapshotMap);
         arguments.put("previousSiblingKey", previousChildName);
+        arguments.put("childKeys", getChildKeys(snapshot));
         channel.invokeMethod("Event", arguments);
       }
+    }
+
+    private ArrayList<String> getChildKeys(DataSnapshot snapshot) {
+      ArrayList<String> childKeys = new ArrayList<>();
+
+      if (snapshot.hasChildren()) {
+        for (DataSnapshot child : snapshot.getChildren()) {
+          childKeys.add(child.getKey());
+        }
+      }
+
+      return childKeys;
     }
 
     @Override
@@ -272,9 +286,17 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
       case "FirebaseDatabase#setPersistenceCacheSizeBytes":
         {
-          Long cacheSize = call.argument("cacheSize");
+          Object value = call.argument("cacheSize");
+          Long cacheSizeBytes = 10485760L; // 10mb default
+
+          if (value instanceof Long) {
+            cacheSizeBytes = (Long) value;
+          } else if (value instanceof Integer) {
+            cacheSizeBytes = Long.valueOf((Integer) value);
+          }
+
           try {
-            database.setPersistenceCacheSizeBytes(cacheSize);
+            database.setPersistenceCacheSizeBytes(cacheSizeBytes);
             result.success(true);
           } catch (DatabaseException e) {
             // Database is already in use, e.g. after hot reload/restart.

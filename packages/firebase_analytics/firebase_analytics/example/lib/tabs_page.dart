@@ -2,25 +2,27 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/observer.dart';
 
 class TabsPage extends StatefulWidget {
-  TabsPage(this.observer);
+  const TabsPage(this.observer, {Key key}) : super(key: key);
 
   final FirebaseAnalyticsObserver observer;
 
   static const String routeName = '/tab';
 
   @override
-  State<StatefulWidget> createState() => _TabsPageState(observer);
+  State<StatefulWidget> createState() => _TabsPageState();
 }
 
 class _TabsPageState extends State<TabsPage>
-    with SingleTickerProviderStateMixin, RouteAware {
-  _TabsPageState(this.observer);
-
-  final FirebaseAnalyticsObserver observer;
+    with
+        SingleTickerProviderStateMixin,
+        // ignore: prefer_mixin
+        RouteAware {
   TabController _controller;
   int selectedIndex = 0;
 
@@ -32,12 +34,12 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    observer.subscribe(this, ModalRoute.of(context));
+    widget.observer.subscribe(this, ModalRoute.of(context));
   }
 
   @override
   void dispose() {
-    observer.unsubscribe(this);
+    widget.observer.unsubscribe(this);
     super.dispose();
   }
 
@@ -88,7 +90,7 @@ class _TabsPageState extends State<TabsPage>
   }
 
   void _sendCurrentTabToAnalytics() {
-    observer.analytics.setCurrentScreen(
+    widget.observer.analytics.setCurrentScreen(
       screenName: '${TabsPage.routeName}/tab$selectedIndex',
     );
   }

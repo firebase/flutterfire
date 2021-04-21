@@ -1,0 +1,118 @@
+---
+title: Cloud Firestore
+sidebar_label: Overview
+---
+
+##  What does it do?
+
+Firestore is a flexible, scalable NoSQL cloud database to store and sync data.
+It keeps your data in sync across client apps through realtime listeners and offers offline support so you can build responsive apps that work regardless of network latency or Internet connectivity.
+
+<YouTube id="QcsAb2RR52c"/>
+
+## Installation
+
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+Ensure you're using the Flutter `stable` channel:
+
+```bash
+$ flutter channel stable
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
+
+### 1. Add dependency
+
+Add the [`cloud_firestore`](https://pub.dev/packages/cloud_firestore) dependency to your projects `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  cloud_firestore: "^{{ plugins.cloud_firestore }}"
+```
+
+</TabItem>
+<TabItem value="null-safe">
+
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  cloud_firestore: "^{{ plugins.cloud_firestore_ns }}"
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-firestore` JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-firestore.js"></script>
+  </body>
+</html>
+```
+
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Cloud Firestore in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.

@@ -1,3 +1,166 @@
+## 1.0.4
+
+ - **FIX**: return correct type on native (#5709).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+ - **CHORE**: update drive dependency (#5740).
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
+## 1.0.2
+
+ - **FIX**: use `kIsWeb` to check platform is Web (#5369).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+
+## 1.0.1
+
+ - **FIX**: use `kIsWeb` to check platform is Web (#5369).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.1
+
+ - Update platform interface and web dependencies.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_functions" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.9.1-1.0.nullsafety.2
+
+ - Update a dependency to the latest release.
+
+## 0.9.1-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 0.9.1-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.9.1-nullsafety.1
+
+ - **FIX**: bump `firebase_core` dependencies to resolve versioning issue when releasing.
+
+## 0.9.1-nullsafety.0
+
+- **REFACTOR**: migrate to NNBD.
+
+## 0.9.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.8.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
+## 0.7.2
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+
+## 0.7.1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FEAT**: migrate interop files (#4191).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.7.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.7.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.7.0-dev.3
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.7.0-dev.2
+
+ - **DOCS**: update package readme.
+ - **DOCS**: update pubspec description to meet minumum length requirement.
+
+## 0.7.0-dev.1
+
+Along with the below changes, the plugin has been reworked to bring it inline with the federated plugin setup along with documentation and additional unit and end-to-end tests. The API has mainly been kept the same, however there are some breaking changes.
+
+ - **`FirebaseFunctions`**:
+   - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
+   - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated. Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.
+   - **DEPRECATED**: Calling `getHttpsCallable(functionName: functionName)` is deprecated in favor of `httpsCallable(functionName)`
+   - **DEPRECATED**: `CloudFunctionsException` is deprecated in favor of `FirebaseFunctionsException`.
+   - **NEW**: `FirebaseFunctionsException` now exposes a `details` property to retrieve any additional data provided with the exception returned by a HTTPS callable function.
+   - **NEW**: Internally, instances of `FirebaseFunctions` are now cached and lazily loaded.
+   - **NEW**: `httpsCallable` accepts an instance of `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallable`**:
+   - **DEPRECATED**: Setting `timeout` is deprecated in favor of using `HttpsCallableOptions` (see below).
+
+
+ - **`HttpsCallableResult`**:
+   - **BREAKING**: `data` is now read-only, only its getter is exposed.
+   - **FIX**: `HttpsCallableResult`'s `data` property can now return a Map, List or a primitive value. Previously the Web implementation incorrectly assumed that a Map was always returned by the HTTPS callable function.
+
+
+ - **`HttpsCallableOptions`**:
+   - **NEW**: This new class has been created to support setting options for `httpsCallable` instances.
+
+## 0.6.0+1
+
+ - **FIX**: local dependencies in example apps (#3319).
+
+## 0.6.0
+
+* Fix HttpsCallable#call not working with parameters of non-Map type.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+* Allow iOS & MacOS plugins to be imported as modules.
+* Update to depend on `firebase_core` plugin.
+
+## 0.5.0
+
+* Fix example app build failure on CI (missing AndroidX Gradle properties).
+* Change environment SDK requirement from `>=2.0.0-dev.28.0` to `>=2.0.0` to fix 'publishable' CI stage.
+
+## 0.4.2+3
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.4.2+2
+
+* Fix method channel on darwin
+
+## 0.4.2+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.4.2
+
+* Add macOS support
+
 ## 0.4.1+9
 
 * Depends on `cloud_functions_web` so that projects importing this plugin will get web support.

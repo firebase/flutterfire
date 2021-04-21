@@ -11,10 +11,10 @@ static NSDictionary *rewardedStatusToString = nil;
 @interface FLTRewardedVideoAdWrapper () <GADRewardBasedVideoAdDelegate>
 @end
 
-@implementation FLTRewardedVideoAdWrapper
-
-FlutterMethodChannel *_rewardedChannel;
-FLTRewardedVideoAdStatus _rewardedStatus;
+@implementation FLTRewardedVideoAdWrapper {
+  FlutterMethodChannel *_rewardedChannel;
+  FLTRewardedVideoAdStatus _rewardedStatus;
+}
 
 + (void)initialize {
   if (rewardedStatusToString == nil) {
@@ -62,6 +62,14 @@ FLTRewardedVideoAdStatus _rewardedStatus;
       presentFromRootViewController:[FLTRewardedVideoAdWrapper rootViewController]];
 }
 
+- (void)setUserIdentifier:(NSString *)userIdentifier {
+  [[GADRewardBasedVideoAd sharedInstance] setUserIdentifier:userIdentifier];
+}
+
+- (void)setCustomRewardString:(NSString *)customRewardString {
+  [[GADRewardBasedVideoAd sharedInstance] setCustomRewardString:customRewardString];
+}
+
 - (NSString *)description {
   NSString *statusString =
       (NSString *)rewardedStatusToString[[NSNumber numberWithInt:_rewardedStatus]];
@@ -71,10 +79,8 @@ FLTRewardedVideoAdStatus _rewardedStatus;
 
 - (void)rewardBasedVideoAd:(nonnull GADRewardBasedVideoAd *)rewardBasedVideoAd
     didRewardUserWithReward:(nonnull GADAdReward *)reward {
-  NSDictionary *arguments = @{
-    @"rewardAmount" : [NSNumber numberWithInt:[reward.amount intValue]],
-    @"rewardType" : reward.type
-  };
+  NSDictionary *arguments =
+      @{@"rewardAmount" : @(reward.amount.intValue), @"rewardType" : reward.type};
   [_rewardedChannel invokeMethod:@"onRewarded" arguments:arguments];
 }
 

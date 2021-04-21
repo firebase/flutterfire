@@ -9,7 +9,7 @@ import '../firebase_database.dart';
 import 'firebase_list.dart';
 import 'firebase_sorted_list.dart';
 
-typedef Widget FirebaseAnimatedListItemBuilder(
+typedef FirebaseAnimatedListItemBuilder = Widget Function(
   BuildContext context,
   DataSnapshot snapshot,
   Animation<double> animation,
@@ -20,9 +20,9 @@ typedef Widget FirebaseAnimatedListItemBuilder(
 class FirebaseAnimatedList extends StatefulWidget {
   /// Creates a scrolling container that animates items when they are inserted or removed.
   FirebaseAnimatedList({
-    Key key,
-    @required this.query,
-    @required this.itemBuilder,
+    Key? key,
+    required this.query,
+    required this.itemBuilder,
     this.sort,
     this.defaultChild,
     this.scrollDirection = Axis.vertical,
@@ -33,9 +33,7 @@ class FirebaseAnimatedList extends StatefulWidget {
     this.shrinkWrap = false,
     this.padding,
     this.duration = const Duration(milliseconds: 300),
-  }) : super(key: key) {
-    assert(itemBuilder != null);
-  }
+  }) : super(key: key);
 
   /// A Firebase query to use to populate the animated list
   final Query query;
@@ -43,11 +41,11 @@ class FirebaseAnimatedList extends StatefulWidget {
   /// Optional function used to compare snapshots when sorting the list
   ///
   /// The default is to sort the snapshots by key.
-  final Comparator<DataSnapshot> sort;
+  final Comparator<DataSnapshot>? sort;
 
   /// A widget to display while the query is loading. Defaults to an empty
   /// Container().
-  final Widget defaultChild;
+  final Widget? defaultChild;
 
   /// Called, as needed, to build list item widgets.
   ///
@@ -83,7 +81,7 @@ class FirebaseAnimatedList extends StatefulWidget {
   /// view is scrolled.
   ///
   /// Must be null if [primary] is true.
-  final ScrollController controller;
+  final ScrollController? controller;
 
   /// Whether this is the primary scroll view associated with the parent
   /// [PrimaryScrollController].
@@ -93,7 +91,7 @@ class FirebaseAnimatedList extends StatefulWidget {
   ///
   /// Defaults to true when [scrollDirection] is [Axis.vertical] and
   /// [controller] is null.
-  final bool primary;
+  final bool? primary;
 
   /// How the scroll view should respond to user input.
   ///
@@ -101,7 +99,7 @@ class FirebaseAnimatedList extends StatefulWidget {
   /// user stops dragging the scroll view.
   ///
   /// Defaults to matching platform conventions.
-  final ScrollPhysics physics;
+  final ScrollPhysics? physics;
 
   /// Whether the extent of the scroll view in the [scrollDirection] should be
   /// determined by the contents being viewed.
@@ -120,7 +118,7 @@ class FirebaseAnimatedList extends StatefulWidget {
   final bool shrinkWrap;
 
   /// The amount of space by which to inset the children.
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// The duration of the insert and remove animation.
   ///
@@ -134,7 +132,7 @@ class FirebaseAnimatedList extends StatefulWidget {
 class FirebaseAnimatedListState extends State<FirebaseAnimatedList> {
   final GlobalKey<AnimatedListState> _animatedListKey =
       GlobalKey<AnimatedListState>();
-  List<DataSnapshot> _model;
+  late List<DataSnapshot> _model;
   bool _loaded = false;
 
   @override
@@ -142,7 +140,7 @@ class FirebaseAnimatedListState extends State<FirebaseAnimatedList> {
     if (widget.sort != null) {
       _model = FirebaseSortedList(
         query: widget.query,
-        comparator: widget.sort,
+        comparator: widget.sort!,
         onChildAdded: _onChildAdded,
         onChildRemoved: _onChildRemoved,
         onChildChanged: _onChildChanged,
@@ -173,13 +171,13 @@ class FirebaseAnimatedListState extends State<FirebaseAnimatedList> {
     if (!_loaded) {
       return; // AnimatedList is not created yet
     }
-    _animatedListKey.currentState.insertItem(index, duration: widget.duration);
+    _animatedListKey.currentState?.insertItem(index, duration: widget.duration);
   }
 
   void _onChildRemoved(int index, DataSnapshot snapshot) {
     // The child should have already been removed from the model by now
     assert(index >= _model.length || _model[index].key != snapshot.key);
-    _animatedListKey.currentState.removeItem(
+    _animatedListKey.currentState?.removeItem(
       index,
       (BuildContext context, Animation<double> animation) {
         return widget.itemBuilder(context, snapshot, animation, index);

@@ -1,3 +1,113 @@
+## 0.12.0+1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: fixed image distortion in example (#4221).
+ - **DOCS**: remove link to code lab.
+ - **CI**: fix formatting in ml_vision.
+
+## 0.12.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: Migrate firebase_ml_vision to sound null safety (#5474).
+
+## 0.11.0+2
+
+ - **REFACTOR**: android embedding v2 (#5539).
+ - **FIX**: add additional null validations (#1645).
+
+## 0.11.0+1
+
+ - **DOCS**: update ml_vision model pods documentation.
+ - **DOCS**: Upgrading to camera plugin 0.8.1 (#5520).
+ - **DOCS**: Disable audio for camera controller. (#5502).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: publish packages.
+ - **CHORE**: enable lints on firebase_ml_vision (#5234).
+
+## 0.11.0
+
+ - This version is not null-safe but has been created to allow compatibility with other null-safe FlutterFire packages such as `firebase_core`.
+
+## 0.10.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside pubspec.yaml (#4604).
+ - **FIX**: build fixes for android BoM 25.13.0.
+ - **FEAT**: bump firebase-android-sdk BoM to 25.13.0.
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.9.10
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.9.9
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.9.8
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+
+## 0.9.7
+
+ - **FEAT**: rework (#3612).
+ - **DOCS**: fix typo in the documentation of firebase_ml_vision(#3603).
+
+## 0.9.6+3
+
+ - **FIX**: local dependencies in example apps (#3319).
+
+## 0.9.6+2
+
+* Add options for cloud document text recognition.
+
+## 0.9.6+1
+
+* Add options for cloud text recognition.
+
+## 0.9.6
+
+* Add recognition of text in document images through `DocumentTextRecognizer`. See `README.md` for more information.
+
+## 0.9.5+1
+
+* Add options for cloud text recognition.
+
+## 0.9.5
+
+* Fix for error if confidence is 1 or 0.
+
+## 0.9.4
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.9.3+9
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.9.3+8
+
+* Replace deprecated `getFlutterEngine` call on Android.
+
+## 0.9.3+7
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.9.3+6
+
+* Replace deprecated text theme fields in example app.
+
 ## 0.9.3+5
 
 * Remove the deprecated `author:` field from pubspec.yaml
@@ -118,7 +228,7 @@ You should now call `detector.close()` when a detector will no longer be used.
 * **Breaking Change** Removed on-device model dependencies from plugin.
   `Android` now requires adding the on-device label detector dependency manually.
   `iOS` now requires adding the on-device barcode/face/label/text detector dependencies manually.
-  See the `README.md` for more details. https://pub.dartlang.org/packages/firebase_ml_vision#-readme-tab-
+  See the `README.md` for more details. https://pub.dev/packages/firebase_ml_vision#-readme-tab-
 
 ## 0.5.1+2
 

@@ -1,3 +1,271 @@
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
+## 1.0.4
+
+ - **FIX**: made QueryDocumentSnapshot.data() non-nullable (#5476).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
+## 1.0.3
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+
+## 1.0.2
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+
+## 1.0.1
+
+ - Update a dependency to the latest release.
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "cloud_firestore" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.17.0-1.0.nullsafety.2
+
+ - **FIX**: Fix type issue. (#5081).
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
+## 0.17.0-1.0.nullsafety.1
+
+ - Update a dependency to the latest release.
+
+## 0.17.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
+## 0.16.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: add missing symlinks (fixes #4628).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **CHORE**: add missing file license headers.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.15.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add missing sdk version constraints inside example pubspec.yaml (#4604).
+ - **FIX**: ensure web FieldValue types are converted (#4247).
+ - **FEAT**: Move Snapshot handling into a EventChannel (#4209).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+ - **CHORE**: harmonize dependencies and version handling.
+
+## 0.14.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: Migrate iOS example projects (#4222).
+
+## 0.14.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.14.3
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT**: add not-in & != query support (#3748).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **FEAT** [WEB] `FirebaseFirestore.enablePersistence` now accepts `PersistenceSettings`
+ - **FEAT** [WEB] adds `PersistenceSettings` class
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.clearPersistence`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.terminate`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.waitForPendingWrites`
+ - **FEAT** [WEB] adds support for `SetOptions.mergeFields`
+ - **FEAT** [WEB] adds `GetOptions` support for querying against server/cache
+ - **FEAT** [WEB] adds support for `Query.limitToLast`
+ - **FEAT** [WEB] adds support for `FirebaseFirestore.snapshotsInSync`
+
+## 0.14.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+ - **CHORE**: update Firestore example app podfile.
+
+## 0.14.1+3
+
+ - **FIX**: remove unused dart:async import (#3611).
+ - **FIX**: fix returning of transaction result (#3747).
+
+## 0.14.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.14.1+1
+
+ - **FIX**: remove listener if available (#3452).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
+## 0.14.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: add missing deprecated static methods (#3278).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
+## 0.14.0+2
+
+* Added missing deprecated `Firestore` static methods.
+
+## 0.14.0+1
+
+* Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
+* Fixed issue #3237 (`DocumentReference` not being parsed correctly).
+* Bump `cloud_firestore_web` dependency.
+* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+
+## 0.14.0
+
+Along with the below changes, the plugin has undergone a quality of life update to better support exceptions thrown. Any Firestore specific errors now return a `FirebaseException`, allowing you to directly access the code (e.g. `permission-denied`) and message.
+
+**`Firestore`**:
+- **BREAKING**: `settings()` is now a synchronous setter that accepts a `Settings` instance.
+  - **NEW**: This change allows us to support changing Firestore settings (such as using the Firestore emulator) without having to quit the application, e.g. Hot Restarts.
+- **BREAKING**: `enablePersistence()` is now a Web only method, use `[Settings.persistenceEnabled]` instead for other platforms.
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+- **DEPRECATED**: Class `Firestore` is now deprecated. Use `FirebaseFirestore` instead.
+- **DEPRECATED**: Calling `Firestore(app: app)` is now deprecated. Use `FirebaseFirestore.instance` or `FirebaseFirestore.instanceFor(app: app)` instead.
+- **NEW**: Added `clearPersistence()` support.
+- **NEW**: Added `disableNetwork()` support.
+- **NEW**: Added `enableNetwork()` support.
+- **NEW**: Added `snapshotInSync()` listener support.
+- **NEW**: Added `terminate()` support.
+- **NEW**: Added `waitForPendingWrites()` support.
+- **FIX**: All document/query listeners & currently in progress transactions are now correctly torn down between Hot Restarts.
+
+**`CollectionReference`**:
+- **BREAKING**: Getting a collection parent document via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the collection `path` now always returns the `path` without leading and trailing slashes.
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+- **FIX**: Equality checking of `CollectionReference` now does not depend on the original path used to create the `CollectionReference`.
+
+**`Query`**:
+- **BREAKING**: The internal query logic has been overhauled to better assert invalid queries locally.
+- **DEPRECATED**: Calling `getDocuments()` is deprecated in favor of `get()`.
+- **BREAKING**: `getDocuments`/`get` has been updated to accept an instance of `GetOptions` (see below).
+- **NEW**: Query methods can now be chained.
+- **NEW**: It is now possible to call same-point cursor based queries without throwing (e.g. calling `endAt()` and then `endBefore()` will replace the "end" cursor query with the `endBefore`).
+- **NEW**: Added support for the `limitToLast` query modifier.
+
+**`QuerySnapshot`**:
+- **DEPRECATED**: `documents` has been deprecated in favor of `docs`.
+- **DEPRECATED**: `documentChanges` has been deprecated in favor of `docChanges`.
+- **NEW**: `docs` now returns a `List<QueryDocumentSnapshot>` vs `List<DocumentSnapshot>`. This doesn't break existing functionality.
+
+**`DocumentReference`**:
+- **BREAKING**: `setData`/`set` has been updated to accept an instance of `SetOptions` (see below, supports `mergeFields`).
+- **BREAKING**: `get()` has been updated to accept an instance of `GetOptions` (see below).
+- **BREAKING**: Getting a document parent collection via `parent()` has been changed to a getter `parent`.
+- **BREAKING**: Getting the document `path` now always returns the `path` without leading and trailing slashes.
+- **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+- **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+- **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+- **FIX**: Equality checking of `DocumentReference` now does not depend on the original path used to create the `DocumentReference`.
+
+**`DocumentChange`**:
+- **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
+
+**`DocumentSnapshot`**:
+- **BREAKING**: The `get data` getter is now a `data()` method instead.
+- **DEPRECATED**: `documentID` has been deprecated in favor of `id`.
+- **NEW**: Added support for fetching nested snapshot data via the `get()` method. If no data exists at the given path, a `StateError` will be thrown.
+- **FIX**: `NaN` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+- **FIX**: `INFINITY` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+- **FIX**: `-INFINITY` values stored in your Firestore instance are now correctly parsed when reading & writing data.
+
+**`WriteBatch`**:
+- **DEPRECATED**: `setData()` has been deprecated in favor of `set()`.
+- **DEPRECATED**: `updateData()` has been deprecated in favor of `update()`.
+- **BREAKING**: `setData`/`set` now supports `SetOptions` to merge data/fields (previously this accepted a `Map`).
+
+**`Transaction`**:
+- **BREAKING**: Transactions have been overhauled to address a number of critical issues:
+  - Values returned from the transaction will now be returned from the Future. Previously, only JSON serializable values were supported. It is now possible to return any value from your transaction handler, e.g. a `DocumentSnapshot`.
+  - When manually throwing an exception, the context was lost and a generic `PlatformException` was thrown. You can now throw & catch on any exceptions.
+  - The modify methods on a transaction (`set`, `delete`, `update`) were previously Futures. These have been updated to better reflect how transactions should behave - they are now synchronous and are executed atomically once the transaction handler block has finished executing.
+- **FIX**: Timeouts will now function correctly.
+- **FIX**: iOS: transaction completion block incorrectly resolving a `FlutterResult` multiple times.
+
+See the new [transactions documentation](https://firebase.flutter.dev/docs/firestore/usage#transactions) to learn more.
+
+**`FieldPath`**:
+- **NEW**: The constructor has now been made public to accept a `List` of `String` values. Previously field paths were accessible only via a dot-notated string path. This meant attempting to access a field in a document with a `.` in the name (e.g. `foo.bar@gmail.com`) was impossible.
+
+**`GetOptions`**: New class created to support how data is fetched from Firestore (`server`, `cache`, `serverAndCache`).
+
+**`SetOptions`**: New class created to both `merge` and `mergeFields` when setting data on documents.
+
+**`GeoPoint`**:
+- **BREAKING**: Add latitude and longitude validation when constructing a new `GeoPoint` instance.
+
+## 0.13.7+1
+
+* Fix crash where listeners are not removed when app quits.
+
+## 0.13.7
+
+* Clean up snapshot listeners when Android Activity is destroyed.
+
+## 0.13.6
+
+* Update lower bound of dart dependency to 2.0.0.
+
+## 0.13.5
+
+* Migrate cloud_firestore to android v2 embedding.
+
+## 0.13.4+2
+
+* Fix for missing UserAgent.h compilation failures.
+
+## 0.13.4+1
+
+* Fix crash with pagination with `DocumentReference` (#2044)
+* Minor tweaks to integ tests.
+
+## 0.13.4
+
+* Support equality comparison on `FieldValue` instances.
+* Updated version of endorsed web implementation.
+
+## 0.13.3+1
+
+* Make the pedantic dev_dependency explicit.
+
+## 0.13.3
+
+* Add macOS support
+
+## 0.13.2+3
+
+* Fixed decoding & encoding platform interface instances in nested maps
+
+## 0.13.2+2
+
+* Fixed crashes when using `FieldValue.arrayUnion` & `FieldValue.arrayRemove` with `DocumentReference` objects
+
 ## 0.13.2+1
 
 * Add Web integration documentation to README.
@@ -28,7 +296,7 @@
 
 ## 0.13.0
 
-* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean)) 
+* **Breaking change** Remove use of [deprecated](https://firebase.google.com/docs/reference/android/com/google/firebase/firestore/FirebaseFirestoreSettings.Builder.html#setTimestampsInSnapshotsEnabled(boolean))
   setting `setTimestampsInSnapshotsEnabled`. If you are already setting it to true, just remove the setting. If you are
   setting it to false, you should update your code to expect Timestamps.
 

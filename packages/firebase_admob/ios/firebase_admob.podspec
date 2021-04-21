@@ -1,24 +1,31 @@
 #
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
+require 'yaml'
+
+pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
+library_version = pubspec['version'].gsub('+', '-')
+
 Pod::Spec.new do |s|
-  s.name             = 'firebase_admob'
-  s.version          = '0.0.1'
-  s.summary          = 'Firebase Admob plugin for Flutter.'
-  s.description      = <<-DESC
-Firebase Admob plugin for Flutter.
-                       DESC
-  s.homepage         = 'https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob'
+  s.name             = pubspec['name']
+  s.version          = library_version
+  s.summary          = pubspec['description']
+  s.description      = pubspec['description']
+  s.homepage         = pubspec['homepage']
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Flutter Team' => 'flutter-dev@googlegroups.com' }
+  s.author           = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Firebase/Core'
-  s.dependency 'Firebase/AdMob'
+  s.dependency 'firebase_core'
+  s.dependency 'Google-Mobile-Ads-SDK'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '10.0'
 
   s.static_framework = true
+
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES'
+  }
 end
