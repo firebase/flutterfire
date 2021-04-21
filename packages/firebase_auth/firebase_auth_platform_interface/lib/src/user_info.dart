@@ -48,8 +48,8 @@ class UserInfo {
   }
 
   /// The user's unique ID.
-  String get uid {
-    return _data['uid']!;
+  String? get uid {
+    return _data['uid'];
   }
 
   @override

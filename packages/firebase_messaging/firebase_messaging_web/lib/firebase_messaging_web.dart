@@ -9,7 +9,7 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-
+import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/interop/notification.dart';
 import 'src/utils.dart' as utils;
@@ -83,11 +83,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       // no-op for unsupported browsers
       return;
     }
-    try {
-      _webMessaging.deleteToken();
-    } catch (e) {
-      throw utils.getFirebaseException(e);
-    }
+
+    return guard(_webMessaging.deleteToken);
   }
 
   @override
@@ -101,11 +98,10 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       // no-op for unsupported browsers
       return null;
     }
-    try {
-      return await _webMessaging.getToken(vapidKey: vapidKey);
-    } catch (e) {
-      throw utils.getFirebaseException(e);
-    }
+
+    return guard(
+      () => _webMessaging.getToken(vapidKey: vapidKey),
+    );
   }
 
   @override
@@ -123,20 +119,19 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<NotificationSettings> requestPermission(
-      {bool alert = true,
-      bool announcement = false,
-      bool badge = true,
-      bool carPlay = false,
-      bool criticalAlert = false,
-      bool provisional = false,
-      bool sound = true}) async {
-    try {
+  Future<NotificationSettings> requestPermission({
+    bool alert = true,
+    bool announcement = false,
+    bool badge = true,
+    bool carPlay = false,
+    bool criticalAlert = false,
+    bool provisional = false,
+    bool sound = true,
+  }) {
+    return guard(() async {
       String status = await WindowNotification.requestPermission();
       return utils.getNotificationSettings(status);
-    } catch (e) {
-      throw utils.getFirebaseException(e);
-    }
+    });
   }
 
   @override
@@ -146,8 +141,12 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> setForegroundNotificationPresentationOptions(
-      {required bool alert, required bool badge, required bool sound}) async {
+  Future<void> setForegroundNotificationPresentationOptions({
+    required bool alert,
+    required bool badge,
+    required bool sound,
+  }) async {
+    // TODO(rrousselGit) dead code? Should this throw an UnimplementedError?
     return;
   }
 

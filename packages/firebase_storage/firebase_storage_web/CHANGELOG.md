@@ -1,3 +1,11 @@
+## 1.0.4
+
+ - **REFACTOR**: Share guard functions accross plugins (#5783).
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
 ## 1.0.2
 
  - Update a dependency to the latest release.

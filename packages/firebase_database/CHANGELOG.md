@@ -1,3 +1,18 @@
+## 7.0.0-dev.1
+
+ - **FIX**: return ordered data (#5765).
+
+## 7.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: Migrate to sound null-safety (#5441).
+
+## 6.1.2
+
+ - **DOCS**: add example for connecting to the default database (#1306).
+ - **CHORE**: add repository urls to pubspecs (#5542).
+
 ## 6.1.1
 
  - **DOCS**: remove incorrect ARCHS in ios examples (#5450).

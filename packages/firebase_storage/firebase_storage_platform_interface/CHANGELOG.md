@@ -1,3 +1,11 @@
+## 2.0.2
+
+ - Update a dependency to the latest release.
+
+## 2.0.1
+
+ - Update a dependency to the latest release.
+
 ## 2.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

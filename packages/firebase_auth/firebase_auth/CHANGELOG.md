@@ -1,3 +1,23 @@
+## 1.1.1
+
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **DOCS**: Add UserInfoCard widget in auth example SignInPage (#4635).
+ - **CI**: fix analyzer issues in example.
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 1.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+ - **CHORE**: update drive dependency (#5740).
+
+## 1.0.3
+
+ - **DOCS**: userChanges clarification (#5698).
+
+## 1.0.2
+
+ - Update a dependency to the latest release.
+
 ## 1.0.1
 
  - **DOCS**: note that auth emulator is not supported for web (#5169).
