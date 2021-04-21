@@ -991,8 +991,7 @@ class _OtherProvidersSignInSectionState
         final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-        final googleAuthCredential =
-            GoogleAuthProvider.credential(
+        final googleAuthCredential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
