@@ -15,7 +15,16 @@
     if ([@"onDevice" isEqualToString:options[@"modelType"]]) {
       _recognizer = [vision onDeviceTextRecognizer];
     } else if ([@"cloud" isEqualToString:options[@"modelType"]]) {
-      _recognizer = [vision cloudTextRecognizer];
+      FIRVisionCloudTextRecognizerOptions *cloudTextRecognizerOptions =
+          [[FIRVisionCloudTextRecognizerOptions alloc] init];
+      if (options[@"hintedLanguages"] != [NSNull null]) {
+        NSArray<NSString *> *languageHints = options[@"hintedLanguages"];
+        cloudTextRecognizerOptions.languageHints = languageHints;
+      }
+      if ([@"dense" isEqualToString:options[@"textModelType"]]) {
+        cloudTextRecognizerOptions.modelType = FIRVisionCloudTextModelTypeDense;
+      }
+      _recognizer = [vision cloudTextRecognizerWithOptions:cloudTextRecognizerOptions];
     } else {
       NSString *reason =
           [NSString stringWithFormat:@"Invalid model type: %@", options[@"modelType"]];

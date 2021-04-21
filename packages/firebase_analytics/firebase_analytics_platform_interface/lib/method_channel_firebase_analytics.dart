@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart' show required;
 
 import 'firebase_analytics_platform_interface.dart';
 
@@ -16,10 +15,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> logEvent({
-    @required String name,
-    Map<String, dynamic> parameters,
+    required String name,
+    Map<String, Object?>? parameters,
   }) {
-    return _channel.invokeMethod<void>('logEvent', <String, dynamic>{
+    return _channel.invokeMethod<void>('logEvent', <String, Object?>{
       'name': name,
       'parameters': parameters,
     });
@@ -34,16 +33,16 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setUserId(String id) {
+  Future<void> setUserId(String? id) {
     return _channel.invokeMethod<void>('setUserId', id);
   }
 
   @override
   Future<void> setCurrentScreen({
-    @required String screenName,
-    String screenClassOverride,
+    required String? screenName,
+    String? screenClassOverride,
   }) {
-    return _channel.invokeMethod<void>('setCurrentScreen', <String, String>{
+    return _channel.invokeMethod<void>('setCurrentScreen', <String, String?>{
       'screenName': screenName,
       'screenClassOverride': screenClassOverride,
     });
@@ -51,10 +50,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setUserProperty({
-    @required String name,
-    @required String value,
+    required String name,
+    required String? value,
   }) {
-    return _channel.invokeMethod<void>('setUserProperty', <String, String>{
+    return _channel.invokeMethod<void>('setUserProperty', <String, String?>{
       'name': name,
       'value': value,
     });

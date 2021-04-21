@@ -1,0 +1,123 @@
+---
+title: Cloud Functions for Firebase
+sidebar_label: Overview
+---
+
+## What does it do?
+
+Cloud Functions for Firebase let you automatically run backend code in response to events
+triggered by Firebase features and HTTPS requests. Your code is stored in Google's cloud
+and runs in a managed environment. There's no need to manage and scale your own servers.
+
+
+<YouTube id="vr0Gfvp5v1A" />
+
+## Installation
+
+Before installing the Cloud Functions for Firebase plugin, ensure that you have followed the [Getting Started](../overview.mdx) documentation
+and have initialized FlutterFire.
+
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+</TabItem>
+<TabItem value="null-safe">
+
+Ensure you're using the Flutter `stable` channel:
+
+```bash
+$ flutter channel stable
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase_analytics/firebase_analytics.dart';
+```
+
+</TabItem>
+</Tabs>
+
+### 1. Add dependency
+
+Add the [`cloud_functions`](https://pub.dev/packages/cloud_functions) dependency to your projects `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core }}"
+  cloud_functions: "^{{ plugins.cloud_functions }}"
+```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  cloud_functions: "^{{ plugins.cloud_functions_ns }}"
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Download dependency
+
+Download the dependency by running the following command in your project:
+
+```bash
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the [`firebase-functions`](!cloud_functions) JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-functions.js"></script>
+  </body>
+</html>
+```
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Cloud Functions for Firebase in your Flutter Project. View
+the [Usage documentation](usage.mdx) to get started.

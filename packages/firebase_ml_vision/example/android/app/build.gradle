@@ -24,8 +24,21 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def firebaseCoreProject = findProject(':firebase_core')
+if (firebaseCoreProject == null) {
+  throw new GradleException('Could not find the firebase_core FlutterFire plugin, have you added it as a dependency in your pubspec?')
+} else if (!firebaseCoreProject.properties['FirebaseSDKVersion']) {
+  throw new GradleException('A newer version of the firebase_core FlutterFire plugin is required, please update your firebase_core pubspec dependency.')
+}
+
+def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
+  if (!rootProject.ext.has('FlutterFire')) return firebaseCoreProject.properties[name]
+  if (!rootProject.ext.get('FlutterFire')[name]) return firebaseCoreProject.properties[name]
+  return rootProject.ext.get('FlutterFire').get(name)
+}
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'
@@ -47,8 +60,17 @@ android {
     }
 
     dependencies {
-        api 'com.google.firebase:firebase-ml-vision-image-label-model:17.0.2'
-        api 'com.google.firebase:firebase-ml-vision-face-model:17.0.2'
+
+        implementation platform("com.google.firebase:firebase-bom:25.13.0")
+        implementation "com.google.firebase:firebase-ml-vision"
+
+        implementation 'com.google.android.gms:play-services-vision:20.1.1'
+        implementation 'com.google.android.gms:play-services-vision-common:19.1.1'
+        implementation 'com.google.android.gms:play-services-vision-face-contour-internal:16.0.3'
+        implementation 'com.google.android.gms:play-services-vision-image-labeling-internal:16.0.5'
+        implementation 'com.google.android.gms:play-services-vision-image-label:18.0.5'
+        implementation 'com.google.firebase:firebase-ml-vision-face-model:20.0.2'
+        implementation 'com.google.firebase:firebase-ml-model-interpreter:22.0.4'
         androidTestImplementation 'androidx.test:runner:1.2.0'
         androidTestImplementation 'androidx.test:rules:1.2.0'
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
