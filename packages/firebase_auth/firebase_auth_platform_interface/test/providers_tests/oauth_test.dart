@@ -51,8 +51,8 @@ void main() {
         final result =
             oAuthProvider.setCustomParameters(kCustomOAuthParameters);
         expect(result, isA<OAuthProvider>());
-        expect(result.parameters!['allow_signup'], isA<String>());
-        expect(result.parameters!['allow_signup'], equals('false'));
+        expect(result.parameters['allow_signup'], isA<String>());
+        expect(result.parameters['allow_signup'], equals('false'));
       });
     });
 
