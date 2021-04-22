@@ -4,7 +4,7 @@
 
 #import "FLTFirebaseDynamicLinksPlugin.h"
 
-#import "Firebase/Firebase.h"
+#import <Firebase/Firebase.h>
 
 static FlutterError *getFlutterError(NSError *error) {
   return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %d", (int)error.code]

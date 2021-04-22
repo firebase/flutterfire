@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
-#import "Firebase/Firebase.h"
+#import <Firebase/Firebase.h>
 
 #import "Private/FLTAuthStateChannelStreamHandler.h"
 #import "Private/FLTIdTokenChannelStreamHandler.h"
