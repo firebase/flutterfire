@@ -2,23 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+
 import '../../../cloud_functions_platform_interface.dart';
 
-/// Catches a [PlatformException] and converts it into a [FirebaseFunctionsException]
-/// if it was intentionally caught on the native platform.
-FutureOr<Map<String, dynamic>> catchPlatformException(Object exception,
-    [StackTrace? stackTrace]) async {
+/// Catches a [PlatformException] and returns an [Exception].
+///
+/// If the [Exception] is a [PlatformException], a [FirebaseFunctionsException] is returned.
+Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
   if (exception is! Exception || exception is! PlatformException) {
-    // TODO(Salakar): Is this dead code?
-    // ignore: only_throw_errors
     throw exception;
   }
 
-  throw platformExceptionToFirebaseFunctionsException(exception, stackTrace);
+  return platformExceptionToFirebaseFunctionsException(exception, stackTrace);
 }
 
 /// Converts a [PlatformException] into a [FirebaseFunctionsException].
@@ -43,5 +40,8 @@ FirebaseException platformExceptionToFirebaseFunctionsException(
   }
 
   return FirebaseFunctionsException(
-      code: code, message: message!, details: additionalData);
+      code: code,
+      message: message!,
+      details: additionalData,
+      stackTrace: stackTrace);
 }

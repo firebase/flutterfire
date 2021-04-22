@@ -7,6 +7,7 @@ import 'dart:js_util' as util;
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart' show dartify;
+
 import 'interop/functions.dart' as functions_interop;
 import 'utils.dart';
 
@@ -41,7 +42,7 @@ class HttpsCallableWeb extends HttpsCallablePlatform {
     try {
       response = await util.promiseToFuture(jsPromise);
     } catch (e, s) {
-      throw throwFirebaseFunctionsException(e, s);
+      throw convertFirebaseFunctionsException(e, s);
     }
 
     return dartify(util.getProperty(response, 'data'));
