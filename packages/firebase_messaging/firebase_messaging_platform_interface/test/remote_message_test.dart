@@ -61,11 +61,11 @@ void main() {
       expect(message.notification, isA<RemoteNotification>());
       expect(
         message.notification!.title,
-        mockMessageMap!['notification']['title'],
+        (mockMessageMap!['notification'] as Map)['title'],
       );
       expect(
         message.notification!.body,
-        mockMessageMap!['notification']['body'],
+        (mockMessageMap!['notification'] as Map)['body'],
       );
 
       expect(message.sentTime, isA<DateTime>());

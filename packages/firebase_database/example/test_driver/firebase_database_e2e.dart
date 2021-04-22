@@ -39,7 +39,9 @@ void testsMain() {
       final ordered = testDocuments.map((doc) => doc['value'] as int).toList();
       ordered.sort();
 
-      final documents = event.snapshot.value.values
+      final documents = (event.snapshot.value as Map)
+          .values
+          .cast<Map>()
           .map((doc) => doc['value'] as int)
           .toList();
 

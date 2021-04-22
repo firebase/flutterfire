@@ -112,13 +112,15 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
-    final userMap = arguments['user'];
+    final userMap = arguments['user'] as Map<Object?, Object?>?;
     if (userMap == null) {
       instance.currentUser = null;
       streamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+        instance,
+        userMap.cast<String, dynamic>(),
+      );
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -141,14 +143,16 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
-    final userMap = arguments['user'];
+    final userMap = arguments['user'] as Map<Object?, Object?>?;
     if (userMap == null) {
       instance.currentUser = null;
       idTokenStreamController.add(const _ValueWrapper.absent());
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+        instance,
+        userMap.cast<String, dynamic>(),
+      );
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -549,6 +553,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
       EventChannel(eventChannelName!)
           .receiveBroadcastStream()
+          .map((arguments) => arguments as Map)
           .listen((arguments) {
         final name = arguments['name'];
         if (name == 'Auth#phoneVerificationCompleted') {

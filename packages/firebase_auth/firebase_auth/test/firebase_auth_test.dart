@@ -431,7 +431,7 @@ void main() {
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as GithubAuthCredential;
         expect(captured, isA<GithubAuthCredential>());
         expect(captured.providerId, equals('github.com'));
         expect(captured.accessToken, equals(kMockGithubToken));
@@ -462,7 +462,7 @@ void main() {
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as TwitterAuthCredential;
         expect(captured, isA<TwitterAuthCredential>());
         expect(captured.providerId, equals('twitter.com'));
         expect(captured.accessToken, equals(kMockIdToken));
@@ -478,7 +478,7 @@ void main() {
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as GoogleAuthCredential;
         expect(captured, isA<GoogleAuthCredential>());
         expect(captured.providerId, equals('google.com'));
         expect(captured.idToken, equals(kMockIdToken));
@@ -495,7 +495,7 @@ void main() {
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as OAuthCredential;
         expect(captured.providerId, equals('apple.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
@@ -523,7 +523,7 @@ void main() {
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
-                .single;
+                .single as FacebookAuthCredential;
         expect(captured, isA<FacebookAuthCredential>());
         expect(captured.providerId, equals('facebook.com'));
         expect(captured.accessToken, equals(kMockAccessToken));
