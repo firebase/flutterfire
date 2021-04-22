@@ -53,7 +53,7 @@ Future<UserCredential> signInWithGoogle() async {
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
   // Create a new credential
-  final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+  final credential = GoogleAuthProvider.credential(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
   );
@@ -141,8 +141,7 @@ Future<UserCredential> signInWithFacebook() async {
   final AccessToken result = await FacebookAuth.instance.login();
 
   // Create a credential from the access token
-  final FacebookAuthCredential facebookAuthCredential =
-    FacebookAuthProvider.credential(result.token);
+  final facebookAuthCredential = FacebookAuthProvider.credential(result.token);
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
@@ -360,8 +359,10 @@ Future<UserCredential> signInWithTwitter() async {
   final TwitterSession twitterSession = loginResult.session;
 
   // Create a credential from the access token
-  final AuthCredential twitterAuthCredential =
-    TwitterAuthProvider.credential(accessToken: twitterSession.token, secret: twitterSession.secret);
+  final twitterAuthCredential = TwitterAuthProvider.credential(
+    accessToken: twitterSession.token,
+    secret: twitterSession.secret,
+  );
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
@@ -441,7 +442,7 @@ Future<UserCredential> signInWithGitHub() async {
   final result = await gitHubSignIn.signIn(context);
 
   // Create a credential from the access token
-  final AuthCredential githubAuthCredential = GithubAuthProvider.credential(result.token);
+  final githubAuthCredential = GithubAuthProvider.credential(result.token);
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);

@@ -115,17 +115,7 @@ public class FlutterFirebaseFirestorePlugin
     channel.setMethodCallHandler(null);
     channel = null;
 
-    for (String identifier : eventChannels.keySet()) {
-      eventChannels.get(identifier).setStreamHandler(null);
-    }
-    eventChannels.clear();
-
-    for (String identifier : streamHandlers.keySet()) {
-      streamHandlers.get(identifier).onCancel(null);
-    }
-    streamHandlers.clear();
-
-    transactionHandlers.clear();
+    removeEventListeners();
 
     binaryMessenger = null;
   }
@@ -507,6 +497,9 @@ public class FlutterFirebaseFirestorePlugin
             FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
                 app.getName());
           }
+
+          removeEventListeners();
+
           return null;
         });
   }
@@ -551,5 +544,19 @@ public class FlutterFirebaseFirestorePlugin
     streamHandlers.put(identifier, handler);
 
     return identifier;
+  }
+
+  private void removeEventListeners() {
+    for (String identifier : eventChannels.keySet()) {
+      eventChannels.get(identifier).setStreamHandler(null);
+    }
+    eventChannels.clear();
+
+    for (String identifier : streamHandlers.keySet()) {
+      streamHandlers.get(identifier).onCancel(null);
+    }
+    streamHandlers.clear();
+
+    transactionHandlers.clear();
   }
 }

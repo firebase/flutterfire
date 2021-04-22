@@ -14,7 +14,7 @@ const _kProviderId = 'github.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// GithubAuthProvider githubProvider = GithubAuthProvider();
+/// var githubProvider = GithubAuthProvider();
 /// githubProvider.addScope('repo');
 /// githubProvider.setCustomParameters({
 ///   'allow_signup': 'false',
@@ -30,7 +30,7 @@ const _kProviderId = 'github.com';
 ///
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
-/// GithubAuthCredential githubAuthCredential = GithubAuthProvider.credential(accessToken);
+/// var githubAuthCredential = GithubAuthProvider.credential(accessToken);
 ///
 /// FirebaseAuth.instance.signInWithCredential(githubAuthCredential)
 ///   .then(...);
@@ -38,6 +38,13 @@ const _kProviderId = 'github.com';
 class GithubAuthProvider extends AuthProvider {
   /// Creates a new instance.
   GithubAuthProvider() : super(_kProviderId);
+
+  /// Create a new [GithubAuthCredential] from a provided [accessToken];
+  static OAuthCredential credential(String accessToken) {
+    return GithubAuthCredential._credential(
+      accessToken,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get GITHUB_SIGN_IN_METHOD {
@@ -75,13 +82,6 @@ class GithubAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [GithubAuthCredential] from a provided [accessToken];
-  static OAuthCredential credential(String accessToken) {
-    return GithubAuthCredential._credential(
-      accessToken,
-    );
   }
 }
 

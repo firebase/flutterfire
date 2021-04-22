@@ -330,9 +330,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {
     try {
       return UserCredentialWeb(
-          this,
-          await _webAuth!
-              .signInWithPopup(convertPlatformAuthProvider(provider)!));
+        this,
+        await _webAuth!.signInWithPopup(convertPlatformAuthProvider(provider)),
+      );
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -342,7 +342,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> signInWithRedirect(AuthProvider provider) async {
     try {
       return _webAuth!
-          .signInWithRedirect(convertPlatformAuthProvider(provider)!);
+          .signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }

@@ -97,8 +97,14 @@ void main() {
         final arguments = call.arguments as Map<Object?, Object?>;
 
         switch (call.method) {
-          case 'Auth#registerChangeListeners':
-            return {};
+          case 'Auth#registerIdTokenListener':
+            const String name = 'idTokenChannel';
+            handleEventChannel(name, log);
+            return name;
+          case 'Auth#registerAuthStateListener':
+            const String name = 'authStateChannel';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#signInAnonymously':
             return <String, dynamic>{'user': user};
           case 'Auth#signInWithEmailAndPassword':

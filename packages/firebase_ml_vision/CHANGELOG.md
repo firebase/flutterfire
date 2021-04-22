@@ -1,3 +1,10 @@
+## 0.12.0+1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: fixed image distortion in example (#4221).
+ - **DOCS**: remove link to code lab.
+ - **CI**: fix formatting in ml_vision.
+
 ## 0.12.0
 
 > Note: This release has breaking changes.

@@ -1,3 +1,7 @@
+## 0.7.0+1
+
+ - **FIX**: allow null values for `requestPayloadSize` and `responsePayloadSize` (#1711).
+
 ## 0.7.0
 
 > Note: This release has breaking changes.

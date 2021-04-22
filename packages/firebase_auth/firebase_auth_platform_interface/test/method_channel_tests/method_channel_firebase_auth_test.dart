@@ -112,8 +112,14 @@ void main() {
         final arguments = call.arguments as Map<Object?, Object?>;
 
         switch (call.method) {
-          case 'Auth#registerChangeListeners':
-            return {};
+          case 'Auth#registerIdTokenListener':
+            const String name = 'idTokenChannel';
+            handleEventChannel(name, log);
+            return name;
+          case 'Auth#registerAuthStateListener':
+            const String name = 'authStateChannel';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#signInAnonymously':
             user = generateUser(user, <String, dynamic>{
               'isAnonymous': true,
@@ -149,7 +155,9 @@ void main() {
           case 'Auth#verifyPasswordResetCode':
             return <String, dynamic>{'email': arguments['code']};
           case 'Auth#verifyPhoneNumber':
-            return null;
+            const String name = 'phoneNumberVerifier';
+            handleEventChannel(name, log);
+            return name;
           case 'Auth#checkActionCode':
             return <String, dynamic>{
               'operation': 2,
@@ -886,12 +894,6 @@ void main() {
     });
 
     group('verifyPhoneNumber()', () {
-      late int handle;
-
-      setUp(() {
-        handle = nextMockHandleId;
-      });
-
       const String testPhoneNumber = '+1 555 555 555';
       const String testSmsCode = '12345';
       const Duration testTimeout = Duration(seconds: 5);
@@ -913,13 +915,13 @@ void main() {
             'Auth#verifyPhoneNumber',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
-              'handle': handle,
               'phoneNumber': testPhoneNumber,
               'timeout': testTimeout.inMilliseconds,
               'forceResendingToken': null,
               'autoRetrievedSmsCodeForTesting': testSmsCode,
             },
           ),
+          isMethodCall('listen', arguments: null),
         ]);
       });
 
@@ -973,7 +975,7 @@ void main() {
         await expectLater(stream, emits(isNull));
         expect(auth.currentUser, equals(isNull));
 
-        await simulateEvent('Auth#authStateChanges', user);
+        await injectEventChannelResponse('authStateChannel', {'user': user});
 
         await expectLater(
           stream,
@@ -986,7 +988,8 @@ void main() {
 
       test('emits the latest user available', () async {
         Stream<UserPlatform?> stream = auth.authStateChanges();
-        await simulateEvent('Auth#authStateChanges', user);
+
+        await injectEventChannelResponse('authStateChannel', {'user': user});
 
         await expectLater(
           stream,
@@ -1017,7 +1020,7 @@ void main() {
         await expectLater(stream, emits(isNull));
         expect(auth.currentUser, equals(isNull));
 
-        await simulateEvent('Auth#idTokenChanges', user);
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         await expectLater(
           stream,
@@ -1030,7 +1033,9 @@ void main() {
 
       test('emits the latest user available', () async {
         Stream<UserPlatform?> stream = auth.idTokenChanges();
-        await simulateEvent('Auth#idTokenChanges', user);
+
+        await injectEventChannelResponse('idTokenChannel', {'user': null});
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         await expectLater(
           stream,
@@ -1060,7 +1065,7 @@ void main() {
         await expectLater(stream, emits(isNull));
         expect(auth.currentUser, equals(isNull));
 
-        await simulateEvent('Auth#idTokenChanges', user);
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         await expectLater(
           stream,
@@ -1073,7 +1078,10 @@ void main() {
 
       test('emits the latest user available', () async {
         Stream<UserPlatform?> stream = auth.userChanges();
-        await simulateEvent('Auth#idTokenChanges', user);
+        // id token change events will trigger setCurrentUser()
+        // and hence userChange events
+        await injectEventChannelResponse('idTokenChannel', {'user': null});
+        await injectEventChannelResponse('idTokenChannel', {'user': user});
 
         await expectLater(
           stream,

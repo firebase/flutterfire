@@ -89,8 +89,9 @@ void main() {
               'committed': true,
               'snapshot': <String, dynamic>{
                 'key': 'fakeKey',
-                'value': updatedValue,
-              }
+                'value': updatedValue
+              },
+              'childKeys': ['fakeKey']
             };
           default:
             return null;

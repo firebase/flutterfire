@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,24 +11,7 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp(
-    name: 'db2',
-    options: Platform.isIOS || Platform.isMacOS
-        ? const FirebaseOptions(
-            appId: '1:297855924061:ios:c6de2b69b03a5be8',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            projectId: 'flutter-firebase-plugins',
-            messagingSenderId: '297855924061',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          )
-        : const FirebaseOptions(
-            appId: '1:297855924061:android:669871c998cc21bd',
-            apiKey: 'AIzaSyD_shO5mfO9lhy2TVWhfo1VUmARKlG4suk',
-            messagingSenderId: '297855924061',
-            projectId: 'flutter-firebase-plugins',
-            databaseURL: 'https://flutterfire-cd2f7.firebaseio.com',
-          ),
-  );
+  final FirebaseApp app = await Firebase.initializeApp();
   runApp(MaterialApp(
     title: 'Flutter Database Example',
     home: MyHomePage(app: app),
@@ -156,9 +138,6 @@ class _MyHomePageState extends State<MyHomePage> {
               key: ValueKey<bool>(_anchorToBottom),
               query: _messagesRef,
               reverse: _anchorToBottom,
-              sort: _anchorToBottom
-                  ? (DataSnapshot a, DataSnapshot b) => b.key.compareTo(a.key)
-                  : null,
               itemBuilder: (BuildContext context, DataSnapshot snapshot,
                   Animation<double> animation, int index) {
                 return SizeTransition(
@@ -166,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ListTile(
                     trailing: IconButton(
                       onPressed: () =>
-                          _messagesRef.child(snapshot.key).remove(),
+                          _messagesRef.child(snapshot.key!).remove(),
                       icon: const Icon(Icons.delete),
                     ),
                     title: Text(

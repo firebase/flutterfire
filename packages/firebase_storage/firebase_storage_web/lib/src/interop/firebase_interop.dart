@@ -13,4 +13,9 @@ import 'package:js/js.dart';
 import 'storage_interop.dart';
 
 @JS()
-external StorageJsImpl storage([AppJsImpl? app]);
+abstract class AppStorageJsImpl extends AppJsImpl {
+  external StorageJsImpl storage([String? bucket]);
+}
+
+@JS()
+external AppStorageJsImpl app([String? name]);
