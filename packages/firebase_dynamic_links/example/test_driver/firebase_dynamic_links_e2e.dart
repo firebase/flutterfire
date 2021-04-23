@@ -10,26 +10,60 @@ import 'package:flutter_test/flutter_test.dart';
 void testsMain() {
   group('DynamicLinks', () {
     test('buildUrl', () async {
+      const String androidPackageName =
+          'io.flutter.plugins.firebasedynamiclinksexample';
+      const String iosBundleId =
+          'com.google.FirebaseCppDynamicLinksTestApp.dev';
+      const String urlHost = 'cx4k7.app.goo.gl';
+      const String link = 'https://dynamic.link.example/helloworld';
+
       final DynamicLinkParameters parameters = DynamicLinkParameters(
-        uriPrefix: 'https://cx4k7.app.goo.gl',
-        link: Uri.parse('https://dynamic.link.example/helloworld'),
+        uriPrefix: 'https://$urlHost',
+        link: Uri.parse(link),
         androidParameters: AndroidParameters(
-          packageName: 'io.flutter.plugins.firebasedynamiclinksexample',
-          minimumVersion: 0,
+          packageName: androidPackageName,
+          minimumVersion: 1,
         ),
         dynamicLinkParametersOptions: DynamicLinkParametersOptions(
           shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
         ),
         iosParameters: IosParameters(
-          bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
-          minimumVersion: '0',
+          bundleId: iosBundleId,
+          minimumVersion: '2',
         ),
       );
 
       final Uri uri = await parameters.buildUrl();
+
+      // androidParameters.minimumVersion
       expect(
-        uri.toString(),
-        'https://cx4k7.app.goo.gl?amv=0&apn=io.flutter.plugins.firebasedynamiclinksexample&ibi=com.google.FirebaseCppDynamicLinksTestApp.dev&imv=0&link=https%3A%2F%2Fdynamic.link.example%2Fhelloworld',
+        uri.queryParameters['amv'],
+        '1',
+      );
+      // iosParameters.minimumVersion
+      expect(
+        uri.queryParameters['imv'],
+        '2',
+      );
+      // androidParameters.packageName
+      expect(
+        uri.queryParameters['apn'],
+        androidPackageName,
+      );
+      // iosParameters.bundleId
+      expect(
+        uri.queryParameters['ibi'],
+        iosBundleId,
+      );
+      // link
+      expect(
+        uri.queryParameters['link'],
+        Uri.encodeFull(link),
+      );
+      // uriPrefix
+      expect(
+        uri.host,
+        urlHost,
       );
     });
   });
