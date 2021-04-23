@@ -150,25 +150,59 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
-  return [self checkForDynamicLink:url];
+  [self checkForDynamicLink:url];
+  // results of this are ORed and NO doesn't affect other delegate interceptors' result
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application
               openURL:(NSURL *)url
     sourceApplication:(NSString *)sourceApplication
            annotation:(id)annotation {
-  return [self checkForDynamicLink:url];
+  [self checkForDynamicLink:url];
+  // results of this are ORed and NO doesn't affect other delegate interceptors' result
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application
     continueUserActivity:(NSUserActivity *)userActivity
-      restorationHandler:(void (^)(NSArray *))restorationHandler {
-  BOOL handled = [[FIRDynamicLinks dynamicLinks]
-      handleUniversalLink:userActivity.webpageURL
-               completion:^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
-                 [self onDeepLinkResult:dynamicLink error:error];
-               }];
-  return handled;
+      restorationHandler:
+#if defined(__IPHONE_12_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0)
+          (nonnull void (^)(NSArray<id<UIUserActivityRestoring>> *_Nullable))restorationHandler {
+#else
+          (nonnull void (^)(NSArray *_Nullable))restorationHandler {
+#endif  // __IPHONE_12_0
+  __block BOOL retried = NO;
+
+  id completion =
+      ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
+        if (!error && dynamicLink && dynamicLink.url) {
+          [self onDeepLinkResult:dynamicLink error:nil];
+        }
+      }
+      // Per Apple Tech Support, a network failure could occur when returning from background on
+      // iOS 12. https://github.com/AFNetworking/AFNetworking/issues/4279#issuecomment-447108981 So
+      // we'll retry the request once
+      if (error && !retried && [NSPOSIXErrorDomain isEqualToString:error.domain] &&
+          error.code == 53) {
+    retried = YES;
+    [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
+                                             completion:completion];
+  }
+  // We could send this to Dart and maybe have a onDynamicLinkError stream but there's also
+  // a good chance the `userActivity.webpageURL` might not be for a Firebase dynamic link,
+  // which needs consideration - so we'll log this for now, logging will get picked up by
+  // Crashlytics automatically if its integrated.
+  if (error)
+    NSLog(@"FLTFirebaseDynamicLinks: Unknown error occurred when attempting to handle a universal "
+          @"link: %@",
+          error);
+};
+
+[[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL completion:completion];
+
+// results of this are ORed and NO doesn't affect other delegate interceptors' result
+return NO;
 }
 
 - (FIRDynamicLinkShortenerCompletion)createShortLinkCompletion:(FlutterResult)result {
