@@ -41,7 +41,7 @@ class WelcomeWidget extends AnimatedWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Welcome ${remoteConfig.getString('welcome')}'),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Text('(${remoteConfig.getValue('welcome').source})'),
@@ -51,35 +51,36 @@ class WelcomeWidget extends AnimatedWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.refresh),
-          onPressed: () async {
-            try {
-              // Using zero duration to force fetching from remote server.
-              await remoteConfig.setConfigSettings(RemoteConfigSettings(
-                fetchTimeout: Duration(seconds: 10),
-                minimumFetchInterval: Duration.zero,
-              ));
-              await remoteConfig.fetchAndActivate();
-            } on PlatformException catch (exception) {
-              // Fetch exception.
-              print(exception);
-            } catch (exception) {
-              print(
-                  'Unable to fetch remote config. Cached or default values will be '
-                  'used');
-              print(exception);
-            }
-          }),
+        onPressed: () async {
+          try {
+            // Using zero duration to force fetching from remote server.
+            await remoteConfig.setConfigSettings(RemoteConfigSettings(
+              fetchTimeout: const Duration(seconds: 10),
+              minimumFetchInterval: Duration.zero,
+            ));
+            await remoteConfig.fetchAndActivate();
+          } on PlatformException catch (exception) {
+            // Fetch exception.
+            print(exception);
+          } catch (exception) {
+            print(
+                'Unable to fetch remote config. Cached or default values will be '
+                'used');
+            print(exception);
+          }
+        },
+        child: const Icon(Icons.refresh),
+      ),
     );
   }
 }
 
 Future<RemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp();
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  final RemoteConfig remoteConfig = RemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
-    fetchTimeout: Duration(seconds: 10),
-    minimumFetchInterval: Duration(hours: 1),
+    fetchTimeout: const Duration(seconds: 10),
+    minimumFetchInterval: const Duration(hours: 1),
   ));
   await remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',
