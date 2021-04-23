@@ -17,7 +17,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.11.0
   url_launcher: ^6.0.2
 
 flutter:
