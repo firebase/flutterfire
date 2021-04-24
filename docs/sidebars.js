@@ -100,5 +100,6 @@ module.exports = {
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],
+    "Testing": ["testing/testing"],
   },
 };
