@@ -140,13 +140,24 @@ Once returned, you can subscribe to updates via the `listen()` method. The below
 which helps automatically manage the streams state and disposal of the stream when it's no longer used within your app:
 
 ```dart
-class UserInformation extends StatelessWidget {
+class UserInformation extends StatefulWidget {
+  @override
+    _UsetInfomation createState() => _UserInfomationState();
+}
+
+class _UserInformationState extends State<UserInformation> {
+  Stream<QuerySnapshot> _subscribe;
+  
+  @override
+  initState() {
+    super.initState();
+    _subscribe = FirebaseFirestore.instance.collection('users').snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     return StreamBuilder<QuerySnapshot>(
-      stream: users.snapshots(),
+      stream: _subscribe,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
