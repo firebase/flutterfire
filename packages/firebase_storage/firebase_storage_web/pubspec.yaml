@@ -1,7 +1,7 @@
 name: firebase_storage_web
 description: The web implementation of firebase_storage
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage/firebase_storage_web
-version: 1.0.4
+version: 1.0.5
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -9,9 +9,9 @@ environment:
 
 dependencies:
   async: ^2.5.0
-  firebase_core: ^1.0.4
+  firebase_core: ^1.1.0
   firebase_core_web: ^1.0.2
-  firebase_storage_platform_interface: ^2.0.2
+  firebase_storage_platform_interface: ^2.0.3
   flutter:
     sdk: flutter
   flutter_web_plugins:

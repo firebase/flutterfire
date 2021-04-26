@@ -1,3 +1,9 @@
+## 0.10.0-dev.2
+
+ - **REFACTOR**: upgrade example to v2 Android embedding.
+ - **REFACTOR**: switch e2e tests to use `drive` package + fix analyzer issues.
+ - **REFACTOR**: fix analyzer config and issues.
+
 ## 0.10.0-dev.1
 
  - Update a dependency to the latest release.
