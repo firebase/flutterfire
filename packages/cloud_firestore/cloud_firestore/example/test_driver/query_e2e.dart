@@ -1289,7 +1289,7 @@ void runQueryTests() {
                 ])),
           ),
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('get', () async {
         final collection = await initializeTest('foo');
@@ -1312,7 +1312,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 42)
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('orderBy', () async {
         final collection = await initializeTest('foo');
@@ -1334,7 +1334,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 42)
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('limit', () async {
         final collection = await initializeTest('foo');
@@ -1354,7 +1354,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 21),
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('limitToLast', () async {
         final collection = await initializeTest('foo');
@@ -1378,7 +1378,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 42),
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('endAt', () async {
         final collection = await initializeTest('foo');
@@ -1428,7 +1428,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 2),
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('startAt', () async {
         final collection = await initializeTest('foo');
@@ -1455,7 +1455,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 3),
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
 
       test('startAtDocument', () async {
         final collection = await initializeTest('foo');
@@ -1482,7 +1482,7 @@ void runQueryTests() {
                 .having((e) => e.data(), 'data', 3),
           ],
         );
-      });
+      }, timeout: const Timeout.factor(3));
     });
   });
 }

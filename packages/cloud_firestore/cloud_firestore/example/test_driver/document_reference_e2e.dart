@@ -396,7 +396,7 @@ void runDocumentReferenceTests() {
                 .having((e) => e.data(), 'data', 21),
           ),
         );
-      });
+      }, timeout: const Timeout.factor(3));
     });
   });
 }

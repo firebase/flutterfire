@@ -121,7 +121,7 @@ void runCollectionReferenceTests() {
                 ])),
           ),
         );
-      });
+      }, timeout: const Timeout.factor(3));
     });
   });
 }
