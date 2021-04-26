@@ -15,13 +15,15 @@ import 'user_e2e.dart';
 
 // Requires that an emulator is running locally
 // `melos run firebase:emulator`
-bool USE_EMULATOR = true;
+bool useEmulator = true;
 
 void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp();
-    await FirebaseAuth.instance
-        .useEmulator('http://$testEmulatorHost:$testEmulatorPort');
+    if (useEmulator) {
+      await FirebaseAuth.instance
+          .useEmulator('http://$testEmulatorHost:$testEmulatorPort');
+    }
   });
 
   setUp(() async {
