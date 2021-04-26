@@ -19,7 +19,7 @@ if [[ ! -d "functions/node_modules" ]]; then
   cd functions && npm i && cd ..
 fi
 
-EMU_START_COMMAND="firebase emulators:start --only auth,firestore,functions,storage --project react-native-firebase-testing"
+EMU_START_COMMAND="firebase emulators:start --only auth,firestore,functions --project react-native-firebase-testing"
 
 IS_CI="${CI}${CONTINUOUS_INTEGRATION}${BUILD_NUMBER}${RUN_ID}"
 if [[ -n "${IS_CI}" ]]; then
