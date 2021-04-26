@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:math';
 import 'dart:async';
 
@@ -13,7 +11,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -1247,6 +1245,243 @@ void runQueryTests() {
 
         expect(snapshot.docs.length, equals(1));
         expect(snapshot.docs[0].get('foo'), equals(ref));
+      });
+    });
+
+    group('withConverter', () {
+      test('snapshots', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(42);
+        await converted.add(-1);
+
+        final snapshot = converted.where('value', isGreaterThan: 0).snapshots();
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<WithConverterQuerySnapshot<int>>()
+                .having((e) => e.docs, 'docs', [
+              isA<WithConverterQueryDocumentSnapshot<int>>()
+                  .having((e) => e.data(), 'data', 42)
+            ]),
+          ),
+        );
+
+        await converted.add(21);
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<WithConverterQuerySnapshot<int>>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals([
+                  isA<WithConverterQueryDocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 42),
+                  isA<WithConverterQueryDocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 21)
+                ])),
+          ),
+        );
+      });
+
+      test('get', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(42);
+        await converted.add(-1);
+
+        expect(
+          await converted
+              .where('value', isGreaterThan: 0)
+              .get()
+              .then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42)
+          ],
+        );
+      });
+
+      test('orderBy', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(42);
+        await converted.add(21);
+
+        expect(
+          await converted.orderBy('value').get().then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 21),
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42)
+          ],
+        );
+      });
+
+      test('limit', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(42);
+        await converted.add(21);
+
+        expect(
+          await converted.orderBy('value').limit(1).get().then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 21),
+          ],
+        );
+      });
+
+      test('limitToLast', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(42);
+        await converted.add(21);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .limitToLast(1)
+              .get()
+              .then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42),
+          ],
+        );
+      });
+
+      test('endAt', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted.orderBy('value').endAt([2]).get().then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 1),
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 2),
+          ],
+        );
+      });
+
+      test('endAtDocument', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(1);
+        final doc2 = await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .endAtDocument(await doc2.get())
+              .get()
+              .then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 1),
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 2),
+          ],
+        );
+      });
+
+      test('startAt', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .startAt([2])
+              .get()
+              .then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 2),
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 3),
+          ],
+        );
+      });
+
+      test('startAtDocument', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirebase: (map) => map['value']! as int,
+          toFirebase: (value) => {'value': value},
+        );
+
+        await converted.add(1);
+        final doc2 = await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .startAtDocument(await doc2.get())
+              .get()
+              .then((d) => d.docs),
+          [
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 2),
+            isA<WithConverterQueryDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 3),
+          ],
+        );
       });
     });
   });

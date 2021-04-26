@@ -16,19 +16,6 @@ part of cloud_firestore;
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
-  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
-  // creating a [MethodChannelFirestore] when not needed or creating an
-  // instance with the default app before a user specifies an app.
-  FirebaseFirestorePlatform? _delegatePackingProperty;
-
-  FirebaseFirestorePlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseFirestorePlatform.instanceFor(app: app);
-  }
-
-  /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
-  FirebaseApp app;
-
   FirebaseFirestore._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
@@ -52,6 +39,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
     return newInstance;
   }
+
+  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
+  // creating a [MethodChannelFirestore] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  FirebaseFirestorePlatform? _delegatePackingProperty;
+
+  FirebaseFirestorePlatform get _delegate {
+    return _delegatePackingProperty ??=
+        FirebaseFirestorePlatform.instanceFor(app: app);
+  }
+
+  /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
+  FirebaseApp app;
 
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
