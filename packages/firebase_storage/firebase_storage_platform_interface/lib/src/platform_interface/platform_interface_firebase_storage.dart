@@ -92,6 +92,17 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
     throw UnimplementedError('ref() is not implemented');
   }
 
+  /// Changes this instance to point to a Storage emulator running locally.
+  ///
+  /// Set the [host] and [port] of the local emulator, such as "http://localhost"
+  /// with port 5001
+  ///
+  /// Note: Must be called immediately, prior to accessing storage methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  Future<void> useEmulator(String host, int port) {
+    throw UnimplementedError('useEmulator() is not implemented');
+  }
+
   /// The new maximum operation retry time in milliseconds.
   void setMaxOperationRetryTime(int time) {
     throw UnimplementedError('setMaxOperationRetryTime() is not implemented');

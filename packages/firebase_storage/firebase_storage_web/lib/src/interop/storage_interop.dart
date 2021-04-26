@@ -22,6 +22,7 @@ abstract class StorageJsImpl {
   external ReferenceJsImpl refFromURL(String url);
   external void setMaxOperationRetryTime(int time);
   external void setMaxUploadRetryTime(int time);
+  external PromiseJsImpl<void> useStorageEmulator(String origin);
 }
 
 @JS('Reference')

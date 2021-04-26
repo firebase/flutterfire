@@ -165,6 +165,14 @@ class StorageReference
     return UploadTask.getInstance(taskImpl);
   }
 
+  /// Configures the Storage instance to work with a local emulator
+  ///
+  /// Call with [origin] like 'http://localhost:5001'
+  ///
+  /// Note: must be called before using storage methods, do not use
+  /// with production credentials as local connections are unencrypted
+  void useEmulator(String origin) => jsObject.useStorageEmulator(origin);
+
   /// Uploads String [data] to the actual location with optional String [format]
   /// and [metadata].
   ///

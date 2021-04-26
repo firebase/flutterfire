@@ -118,4 +118,12 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   void setMaxDownloadRetryTime(int time) {
     _maxDownloadRetryTime = time;
   }
+
+  @override
+  Future<void> useEmulator(String host, int port) async {
+    // The generic platform interface is with host and port split to
+    // centralize logic between android/ios native, but web takes the
+    // origin as a single string
+    return guard(webStorage!.useEmulator('http://$host:$port'));
+  }
 }
