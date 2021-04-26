@@ -37,6 +37,39 @@ void runCollectionReferenceTests() {
       expect(randNum, equals(snapshot.data()!['value']));
     });
 
+    test('snapshots() can be reused', () async {
+      final foo = await initializeTest('foo');
+
+      final snapshot = foo.snapshots();
+      final snapshot2 = foo.snapshots();
+
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', []),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', []),
+      );
+
+      await foo.add({'value': 42});
+
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+          isA<QueryDocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        ]),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+          isA<QueryDocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        ]),
+      );
+    });
+
     group('withConverter', () {
       test('add/snapshot', () async {
         final foo = await initializeTest('foo');

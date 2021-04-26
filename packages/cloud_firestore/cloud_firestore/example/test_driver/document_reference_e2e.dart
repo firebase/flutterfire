@@ -29,6 +29,35 @@ void runDocumentReferenceTests() {
         expect(stream, isA<Stream<DocumentSnapshot>>());
       });
 
+      test('can be reused', () async {
+        final foo = await initializeTest('foo');
+
+        final snapshot = foo.snapshots();
+        final snapshot2 = foo.snapshots();
+
+        expect(
+          await snapshot.first,
+          isA<DocumentSnapshot>().having((e) => e.exists, 'exists', false),
+        );
+        expect(
+          await snapshot2.first,
+          isA<DocumentSnapshot>().having((e) => e.exists, 'exists', false),
+        );
+
+        await foo.set({'value': 42});
+
+        expect(
+          await snapshot.first,
+          isA<DocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        );
+        expect(
+          await snapshot2.first,
+          isA<DocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        );
+      });
+
       test('listens to a single response', () async {
         DocumentReference document = await initializeTest('document-snapshot');
         Stream<DocumentSnapshot> stream = document.snapshots();
