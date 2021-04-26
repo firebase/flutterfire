@@ -173,8 +173,6 @@ class StorageReference
     return UploadTask.getInstance(taskImpl);
   }
 
-  
-
   /// Uploads String [data] to the actual location with optional String [format]
   /// and [metadata].
   ///
