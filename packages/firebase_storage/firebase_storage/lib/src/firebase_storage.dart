@@ -149,6 +149,15 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
   }
 
+  /// Changes this instance to point to an Auth emulator running locally.
+  ///
+  /// Set the [origin] of the local emulator, such as "http://localhost:5001"
+  ///
+  /// Note: Must be called immediately, prior to accessing storage methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
+  /// storage.useStorageEmulator until v9
   // Future<void> useEmulator(String origin) async {
   //   assert(origin.isNotEmpty);
   //   String mappedOrigin = origin;
@@ -158,9 +167,15 @@ class FirebaseStorage extends FirebasePluginPlatform {
   //     if (mappedOrigin.startsWith('http://localhost')) {
   //       mappedOrigin =
   //           mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
+  //       // ignore: avoid_print
+  //       print(
+  //           'Mapping auth host "localhost" to "10.0.2.2" for android emulators. Use real IP on real devices.');
   //     } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
   //       mappedOrigin =
   //           mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+  //       // ignore: avoid_print
+  //       print(
+  //           'Mapping auth host "127.0.0.1" to "10.0.2.2" for android emulators. Use real IP on real devices.');
   //     }
   //   }
 
