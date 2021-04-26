@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'instance_e2e.dart';
+import 'test_utils.dart';
 import 'user_e2e.dart';
 
 // Requires that an emulator is running locally
@@ -19,7 +20,29 @@ bool USE_EMULATOR = true;
 void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp();
-    await FirebaseAuth.instance.useEmulator('http://localhost:9099');
+    await FirebaseAuth.instance
+        .useEmulator('http://$testEmulatorHost:$testEmulatorPort');
+  });
+
+  setUp(() async {
+    // Reset users on emulator.
+    await emulatorClearAllUsers();
+
+    // Create a generic testing user account.
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: testEmail,
+      password: testPassword,
+    );
+
+    // Create a disabled user account.
+    final disabledUserCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: testDisabledEmail,
+      password: testPassword,
+    );
+    await emulatorDisableUser(disabledUserCredential.user.uid);
+
+    await ensureSignedOut();
   });
 
   runInstanceTests();
