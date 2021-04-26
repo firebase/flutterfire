@@ -124,6 +124,6 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
     // The generic platform interface is with host and port split to
     // centralize logic between android/ios native, but web takes the
     // origin as a single string
-    return guard(webStorage!.useEmulator('http://$host:$port'));
+    guard(() => webStorage!.useEmulator('http://$host:$port'));
   }
 }
