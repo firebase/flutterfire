@@ -412,7 +412,7 @@ Finally, we can use our new `moviesRef` variable to perform read and write opera
 Future<void> main() async {
   // Obtain science-fiction movies
   List<Movie> movies = await moviesRef
-      .where('genre', ['Sci-fi'])
+      .where('genre', isEqualTo: 'Sci-fi')
       .get()
       .then((snapshot) => snapshot.docs);
 
