@@ -130,21 +130,21 @@ class DocumentReference
   /// This makes both read and write operations type-safe.
   ///
   /// ```dart
-  /// final johnRef = FirebaseFirestore
+  /// final modelRef = FirebaseFirestore
   ///     .instance
-  ///     .collection('users')
-  ///     .doc('john')
-  ///     .withConverter<User>(
-  ///       fromFirebase: (json) => User.fromJson(json),
-  ///       toFirebase: (user) => user.toJson(),
+  ///     .collection('models')
+  ///     .doc('123')
+  ///     .withConverter<Model>(
+  ///       fromFirebase: (json) => Model.fromJson(json),
+  ///       toFirebase: (model) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
-  ///   // Writes now take a User as parameter instead of a Map
-  ///   await johnRef.set(User(name: 'John'));
+  ///   // Writes now take a Model as parameter instead of a Map
+  ///   await johnRef.set(Model());
   ///
-  ///   // Reads now return a User instead of a Map
-  ///   final User user = await johnRef.get().then((s) => s.data());
+  ///   // Reads now return a Model instead of a Map
+  ///   final Model model = await modelRef.get().then((s) => s.data());
   /// }
   /// ```
   WithConverterDocumentReference<T> withConverter<T>({

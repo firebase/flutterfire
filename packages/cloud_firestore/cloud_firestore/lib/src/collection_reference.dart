@@ -98,20 +98,20 @@ class CollectionReference extends Query
   /// This makes both read and write operations type-safe.
   ///
   /// ```dart
-  /// final usersRef = FirebaseFirestore
+  /// final modelsRef = FirebaseFirestore
   ///     .instance
-  ///     .collection('users')
-  ///     .withConverter<User>(
-  ///       fromFirebase: (json) => User.fromJson(json),
-  ///       toFirebase: (user) => user.toJson(),
+  ///     .collection('models')
+  ///     .withConverter<Model>(
+  ///       fromFirebase: (json) => <Model>.fromJson(json),
+  ///       toFirebase: (model) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
-  ///   // Writes now take a User as parameter instead of a Map
-  ///   await usersRef.add(User(name: 'John'));
+  ///   // Writes now take a Model as parameter instead of a Map
+  ///   await modelsRef.add(Model());
   ///
-  ///   // Reads now return a User instead of a Map
-  ///   final User user = await usersRef.doc('123').get().then((s) => s.data());
+  ///   // Reads now return a Model instead of a Map
+  ///   final Model model = await modelsRef.doc('123').get().then((s) => s.data());
   /// }
   /// ```
   WithConverterCollectionReference<T> withConverter<T>({
