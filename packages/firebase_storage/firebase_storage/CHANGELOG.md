@@ -1,3 +1,7 @@
+## 8.0.5
+
+ - **FIX**: secondary storage buckets now work as expected on Web (#5863).
+
 ## 8.0.4
 
  - Update a dependency to the latest release.
