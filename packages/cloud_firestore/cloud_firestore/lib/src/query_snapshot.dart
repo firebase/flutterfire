@@ -51,10 +51,15 @@ class QuerySnapshot implements _QuerySnapshot<QueryDocumentSnapshot> {
 /// It can contain zero or more [DocumentSnapshot] objects.
 class WithConverterQuerySnapshot<T>
     implements _QuerySnapshot<WithConverterQueryDocumentSnapshot<T>> {
-  WithConverterQuerySnapshot._(this._originalQuerySnapshot, this._fromFirebase);
+  WithConverterQuerySnapshot._(
+    this._originalQuerySnapshot,
+    this._fromFirestore,
+    this._toFirestore,
+  );
 
   final QuerySnapshot _originalQuerySnapshot;
-  final FromFirebase<T> _fromFirebase;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
 
   @override
   List<WithConverterQueryDocumentSnapshot<T>> get docs {
@@ -62,7 +67,8 @@ class WithConverterQuerySnapshot<T>
       for (final snapshot in _originalQuerySnapshot.docs)
         WithConverterQueryDocumentSnapshot<T>._(
           snapshot,
-          _fromFirebase,
+          _fromFirestore,
+          _toFirestore,
         ),
     ];
   }

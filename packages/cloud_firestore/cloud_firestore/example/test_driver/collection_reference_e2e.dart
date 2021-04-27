@@ -74,8 +74,8 @@ void runCollectionReferenceTests() {
       test('add/snapshot', () async {
         final foo = await initializeTest('foo');
         final fooConverter = foo.withConverter<int>(
-          fromFirebase: (json) => json['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         final fooSnapshot = foo.snapshots();

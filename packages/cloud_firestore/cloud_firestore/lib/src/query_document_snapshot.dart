@@ -18,7 +18,7 @@ class QueryDocumentSnapshot extends DocumentSnapshot {
   bool get exists => true;
 
   @override
-  Map<String, dynamic> data() => super.data()!;
+  Map<String, dynamic> data([SnapshotOptions? options]) => super.data(options)!;
 }
 
 /// A [QueryDocumentSnapshot] contains data read from a document in your [FirebaseFirestore]
@@ -31,12 +31,13 @@ class WithConverterQueryDocumentSnapshot<T>
     extends WithConverterDocumentSnapshot<T> {
   WithConverterQueryDocumentSnapshot._(
     QueryDocumentSnapshot originalQueryDocumentSnapshot,
-    FromFirebase<T> fromFirebase,
-  ) : super._(originalQueryDocumentSnapshot, fromFirebase);
+    FromFirestore<T> fromFirestore,
+    ToFirestore<T> toFirestore,
+  ) : super._(originalQueryDocumentSnapshot, fromFirestore, toFirestore);
 
   @override
   bool get exists => true;
 
   @override
-  T data() => super.data()!;
+  T data([SnapshotOptions? options]) => super.data(options)!;
 }

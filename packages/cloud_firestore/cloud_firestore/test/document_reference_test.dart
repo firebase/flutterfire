@@ -110,15 +110,15 @@ void main() {
 
     group('withConverter', () {
       test('implements ==', () {
-        int fromFirebase(Map json) => 42;
-        Map<String, dynamic> toFirebase(Object value) => {};
+        int fromFirestore(DocumentSnapshot snapshot, SnapshotOptions? _) => 42;
+        Map<String, dynamic> toFirestore(Object value, SetOptions? _) => {};
 
         final foo = firestore.doc('foo/42');
         final bar = firestore.doc('bar/42');
 
         final intFoo = foo.withConverter<int>(
-          fromFirebase: fromFirebase,
-          toFirebase: toFirebase,
+          fromFirestore: fromFirestore,
+          toFirestore: toFirestore,
         );
 
         // utilities to check == in both directions as it is possible that
@@ -136,40 +136,40 @@ void main() {
 
         expectEqual(
           foo.withConverter<int>(
-            fromFirebase: fromFirebase,
-            toFirebase: toFirebase,
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
           ),
           intFoo,
         );
 
         expectNotEqual(
           bar.withConverter<int>(
-            fromFirebase: fromFirebase,
-            toFirebase: toFirebase,
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
           ),
           intFoo,
         );
 
         expectNotEqual(
           foo.withConverter<Object>(
-            fromFirebase: fromFirebase,
-            toFirebase: toFirebase,
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
           ),
           intFoo,
         );
 
         expectNotEqual(
           foo.withConverter<int>(
-            fromFirebase: (_) => 42,
-            toFirebase: toFirebase,
+            fromFirestore: (_, __) => 42,
+            toFirestore: toFirestore,
           ),
           intFoo,
         );
 
         expectNotEqual(
           foo.withConverter<int>(
-            fromFirebase: fromFirebase,
-            toFirebase: (_) => {},
+            fromFirestore: fromFirestore,
+            toFirestore: (_, __) => {},
           ),
           intFoo,
         );
@@ -181,8 +181,8 @@ void main() {
         expect(
           foo
               .withConverter<int>(
-                fromFirebase: (map) => 42,
-                toFirebase: (value) => {},
+                fromFirestore: (map, _) => 42,
+                toFirestore: (value, _) => {},
               )
               .toString(),
           'WithConverterDocumentReference<int>(foo/42)',
@@ -191,8 +191,8 @@ void main() {
         expect(
           foo
               .withConverter<double>(
-                fromFirebase: (map) => 42,
-                toFirebase: (value) => {},
+                fromFirestore: (map, _) => 42,
+                toFirestore: (value, _) => {},
               )
               .toString(),
           'WithConverterDocumentReference<double>(foo/42)',
@@ -203,7 +203,12 @@ void main() {
         final foo = firestore.doc('foo/42');
 
         expect(
-          foo.withConverter(fromFirebase: (_) => 42, toFirebase: (_) => {}).id,
+          foo
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
+              .id,
           foo.id,
         );
       });
@@ -214,7 +219,10 @@ void main() {
 
         expect(
           subCollection
-              .withConverter(fromFirebase: (_) => 42, toFirebase: (_) => {})
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
               .path,
           subCollection.path,
         );
@@ -226,7 +234,10 @@ void main() {
 
         expect(
           subCollection
-              .withConverter(fromFirebase: (_) => 42, toFirebase: (_) => {})
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
               .parent,
           subCollection.parent,
         );

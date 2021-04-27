@@ -1253,8 +1253,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(42);
@@ -1295,8 +1295,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(42);
@@ -1318,8 +1318,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(42);
@@ -1340,8 +1340,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(42);
@@ -1360,8 +1360,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(42);
@@ -1384,8 +1384,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(1);
@@ -1407,8 +1407,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(1);
@@ -1434,8 +1434,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(1);
@@ -1461,8 +1461,8 @@ void runQueryTests() {
         final collection = await initializeTest('foo');
 
         final converted = collection.withConverter<int>(
-          fromFirebase: (map) => map['value']! as int,
-          toFirebase: (value) => {'value': value},
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
         );
 
         await converted.add(1);

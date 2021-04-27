@@ -4,12 +4,28 @@
 
 part of cloud_firestore;
 
-abstract class _DocumentSnapshotInterface<T> {
+typedef FromFirestore<T> = T Function(
+  DocumentSnapshot snapshot,
+  SnapshotOptions? options,
+);
+typedef ToFirestore<T> = Map<String, Object?> Function(
+  T value,
+  SetOptions? options,
+);
+
+/// Options that configure how data is retrieved from a DocumentSnapshot
+/// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
+///
+/// Currently unsupported by FlutterFire, but exposed to avoid breaking changes
+/// in the future once this class is supported.
+class SnapshotOptions {}
+
+abstract class _DocumentSnapshotInterface<T, DocumentReferenceType> {
   /// This document's given ID for this snapshot.
   String get id;
 
-  /// Returns the [DocumentReference] of this snapshot.
-  DocumentReference get reference;
+  /// Returns the reference of this snapshot.
+  DocumentReferenceType get reference;
 
   /// Metadata about this document concerning its source and if it has local
   /// modifications.
@@ -19,7 +35,7 @@ abstract class _DocumentSnapshotInterface<T> {
   bool get exists;
 
   /// Contains all the data of this document snapshot.
-  T? data();
+  T? data([SnapshotOptions? options]);
 }
 
 /// A [DocumentSnapshot] contains data read from a document in your [FirebaseFirestore]
@@ -28,7 +44,8 @@ abstract class _DocumentSnapshotInterface<T> {
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class DocumentSnapshot
-    implements _DocumentSnapshotInterface<Map<String, dynamic>> {
+    implements
+        _DocumentSnapshotInterface<Map<String, dynamic>, DocumentReference> {
   DocumentSnapshot._(this._firestore, this._delegate) {
     DocumentSnapshotPlatform.verifyExtends(_delegate);
   }
@@ -50,7 +67,7 @@ class DocumentSnapshot
   bool get exists => _delegate.exists;
 
   @override
-  Map<String, dynamic>? data() {
+  Map<String, dynamic>? data([SnapshotOptions? options]) {
     // TODO(rrousselGit): can we cache the result, to avoid deserializing it on every read?
     return _CodecUtility.replaceDelegatesWithValueInMap(
       _delegate.data(),
@@ -79,21 +96,23 @@ class DocumentSnapshot
 /// The data can be extracted with the data property or by using subscript
 /// syntax to access a specific field.
 class WithConverterDocumentSnapshot<T>
-    implements _DocumentSnapshotInterface<T> {
+    implements
+        _DocumentSnapshotInterface<T, WithConverterDocumentReference<T>> {
   WithConverterDocumentSnapshot._(
     this._originalDocumentSnapshot,
-    this._fromFirebase,
+    this._fromFirestore,
+    this._toFirestore,
   );
 
   final DocumentSnapshot _originalDocumentSnapshot;
-  final FromFirebase<T> _fromFirebase;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
 
   @override
-  T? data() {
-    final json = _originalDocumentSnapshot.data();
+  T? data([SnapshotOptions? options]) {
+    if (!_originalDocumentSnapshot.exists) return null;
 
-    if (json == null) return null;
-    return _fromFirebase(json);
+    return _fromFirestore(_originalDocumentSnapshot, options);
   }
 
   @override
@@ -106,5 +125,10 @@ class WithConverterDocumentSnapshot<T>
   SnapshotMetadata get metadata => _originalDocumentSnapshot.metadata;
 
   @override
-  DocumentReference get reference => _originalDocumentSnapshot.reference;
+  WithConverterDocumentReference<T> get reference =>
+      WithConverterDocumentReference<T>._(
+        _originalDocumentSnapshot.reference,
+        _fromFirestore,
+        _toFirestore,
+      );
 }

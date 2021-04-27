@@ -564,16 +564,16 @@ class WithConverterQuery<T>
             WithConverterDocumentSnapshot<T>> {
   WithConverterQuery._(
     this._originalQuery,
-    this._fromFirebase,
-    this._toFirebase,
+    this._fromFirestore,
+    this._toFirestore,
   );
 
   final Query _originalQuery;
-  final FromFirebase<T> _fromFirebase;
-  final ToFirebase<T> _toFirebase;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
 
   WithConverterQuery<T> _mapQuery(Query query) {
-    return WithConverterQuery._(query, _fromFirebase, _toFirebase);
+    return WithConverterQuery._(query, _fromFirestore, _toFirestore);
   }
 
   @override
@@ -608,7 +608,11 @@ class WithConverterQuery<T>
   @override
   Future<WithConverterQuerySnapshot<T>> get([GetOptions? options]) {
     return _originalQuery.get(options).then((snapshot) {
-      return WithConverterQuerySnapshot<T>._(snapshot, _fromFirebase);
+      return WithConverterQuerySnapshot<T>._(
+        snapshot,
+        _fromFirestore,
+        _toFirestore,
+      );
     });
   }
 
@@ -633,8 +637,11 @@ class WithConverterQuery<T>
   }) {
     return _originalQuery
         .snapshots(includeMetadataChanges: includeMetadataChanges)
-        .map((snapshot) =>
-            WithConverterQuerySnapshot<T>._(snapshot, _fromFirebase));
+        .map((snapshot) => WithConverterQuerySnapshot<T>._(
+              snapshot,
+              _fromFirestore,
+              _toFirestore,
+            ));
   }
 
   @override

@@ -4,9 +4,6 @@
 
 part of cloud_firestore;
 
-typedef FromFirebase<T> = T Function(Map<String, Object?> json);
-typedef ToFirebase<T> = Map<String, Object?> Function(T value);
-
 /// A [CollectionReference] object can be used for adding documents, getting
 /// [DocumentReference]s, and querying for documents (using the methods
 /// inherited from [Query]).
@@ -102,8 +99,8 @@ class CollectionReference extends Query
   ///     .instance
   ///     .collection('models')
   ///     .withConverter<Model>(
-  ///       fromFirebase: (json) => <Model>.fromJson(json),
-  ///       toFirebase: (model) => model.toJson(),
+  ///       fromFirestore: (snapshot, _) => Model.fromJson(snapshot.data()!),
+  ///       toFirestore: (model, _) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
@@ -115,10 +112,10 @@ class CollectionReference extends Query
   /// }
   /// ```
   WithConverterCollectionReference<T> withConverter<T>({
-    required FromFirebase<T> fromFirebase,
-    required ToFirebase<T> toFirebase,
+    required FromFirestore<T> fromFirestore,
+    required ToFirestore<T> toFirestore,
   }) {
-    return WithConverterCollectionReference._(this, fromFirebase, toFirebase);
+    return WithConverterCollectionReference._(this, fromFirestore, toFirestore);
   }
 
   @override
@@ -142,9 +139,9 @@ class WithConverterCollectionReference<T> extends WithConverterQuery<T>
     implements _CollectionReference<T, WithConverterDocumentReference<T>> {
   WithConverterCollectionReference._(
     CollectionReference collectionReference,
-    FromFirebase<T> fromFirebase,
-    ToFirebase<T> toFirebase,
-  ) : super._(collectionReference, fromFirebase, toFirebase);
+    FromFirestore<T> fromFirestore,
+    ToFirestore<T> toFirestore,
+  ) : super._(collectionReference, fromFirestore, toFirestore);
 
   CollectionReference get _originalCollectionReferenceQuery =>
       super._originalQuery as CollectionReference;
@@ -160,13 +157,14 @@ class WithConverterCollectionReference<T> extends WithConverterQuery<T>
 
   @override
   Future<WithConverterDocumentReference<T>> add(T data) async {
-    final snapshot =
-        await _originalCollectionReferenceQuery.add(_toFirebase(data));
+    final snapshot = await _originalCollectionReferenceQuery.add(
+      _toFirestore(data, null),
+    );
 
     return WithConverterDocumentReference<T>._(
       snapshot,
-      _fromFirebase,
-      _toFirebase,
+      _fromFirestore,
+      _toFirestore,
     );
   }
 
@@ -174,8 +172,8 @@ class WithConverterCollectionReference<T> extends WithConverterQuery<T>
   WithConverterDocumentReference<T> doc([String? path]) {
     return WithConverterDocumentReference<T>._(
       _originalCollectionReferenceQuery.doc(path),
-      _fromFirebase,
-      _toFirebase,
+      _fromFirestore,
+      _toFirestore,
     );
   }
 
@@ -185,15 +183,15 @@ class WithConverterCollectionReference<T> extends WithConverterQuery<T>
       other.runtimeType == runtimeType &&
       other._originalCollectionReferenceQuery ==
           _originalCollectionReferenceQuery &&
-      other._fromFirebase == _fromFirebase &&
-      other._toFirebase == _toFirebase;
+      other._fromFirestore == _fromFirestore &&
+      other._toFirestore == _toFirestore;
 
   @override
   int get hashCode => hashValues(
         runtimeType,
         _originalCollectionReferenceQuery,
-        _fromFirebase,
-        _toFirebase,
+        _fromFirestore,
+        _toFirestore,
       );
 
   @override

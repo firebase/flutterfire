@@ -4,8 +4,12 @@
 
 part of cloud_firestore;
 
+/// A document reference that can be either a [DocumentReference] or a [WithConverterDocumentReference].
 @immutable
-abstract class _DocumentReference<T, Snapshot> {
+abstract class AnyDocumentReference {
+  /// The Firestore instance associated with this document reference.
+  FirebaseFirestore get firestore;
+
   /// This document's given ID within the collection.
   String get id;
 
@@ -23,6 +27,15 @@ abstract class _DocumentReference<T, Snapshot> {
   /// Deletes the current document from the collection.
   Future<void> delete();
 
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
+  Future<void> update(Map<String, Object?> data);
+}
+
+@immutable
+abstract class _DocumentReference<T, Snapshot> implements AnyDocumentReference {
   /// Reads the document referenced by this [DocumentReference].
   ///
   /// By providing [options], this method can be configured to fetch results only
@@ -42,12 +55,6 @@ abstract class _DocumentReference<T, Snapshot> {
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
   Future<void> set(T data, [SetOptions? options]);
-
-  /// Updates data on the document. Data will be merged with any existing
-  /// document data.
-  ///
-  /// If no document exists yet, the update will fail.
-  Future<void> update(Map<String, Object?> data);
 }
 
 /// A [DocumentReference] refers to a document location in a [FirebaseFirestore] database
@@ -65,7 +72,7 @@ class DocumentReference
 
   final DocumentReferencePlatform _delegate;
 
-  /// The Firestore instance associated with this document reference.
+  @override
   final FirebaseFirestore firestore;
 
   @override
@@ -135,8 +142,8 @@ class DocumentReference
   ///     .collection('models')
   ///     .doc('123')
   ///     .withConverter<Model>(
-  ///       fromFirebase: (json) => Model.fromJson(json),
-  ///       toFirebase: (model) => model.toJson(),
+  ///       fromFirestore: (json) => Model.fromJson(json),
+  ///       toFirestore: (model) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
@@ -148,10 +155,10 @@ class DocumentReference
   /// }
   /// ```
   WithConverterDocumentReference<T> withConverter<T>({
-    required FromFirebase<T> fromFirebase,
-    required ToFirebase<T> toFirebase,
+    required FromFirestore<T> fromFirestore,
+    required ToFirestore<T> toFirestore,
   }) {
-    return WithConverterDocumentReference._(this, fromFirebase, toFirebase);
+    return WithConverterDocumentReference._(this, fromFirestore, toFirestore);
   }
 
   @override
@@ -178,13 +185,13 @@ class WithConverterDocumentReference<T>
     implements _DocumentReference<T, WithConverterDocumentSnapshot<T>> {
   WithConverterDocumentReference._(
     this._originalDocumentReference,
-    this._fromFirebase,
-    this._toFirebase,
+    this._fromFirestore,
+    this._toFirestore,
   );
 
   final DocumentReference _originalDocumentReference;
-  final FromFirebase<T> _fromFirebase;
-  final ToFirebase<T> _toFirebase;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
 
   @override
   CollectionReference collection(String collectionPath) {
@@ -199,9 +206,16 @@ class WithConverterDocumentReference<T>
   @override
   Future<WithConverterDocumentSnapshot<T>> get([GetOptions? options]) {
     return _originalDocumentReference.get(options).then((snapshot) {
-      return WithConverterDocumentSnapshot<T>._(snapshot, _fromFirebase);
+      return WithConverterDocumentSnapshot<T>._(
+        snapshot,
+        _fromFirestore,
+        _toFirestore,
+      );
     });
   }
+
+  @override
+  FirebaseFirestore get firestore => _originalDocumentReference.firestore;
 
   @override
   String get id => _originalDocumentReference.id;
@@ -215,7 +229,7 @@ class WithConverterDocumentReference<T>
   @override
   Future<void> set(T data, [SetOptions? options]) {
     return _originalDocumentReference.set(
-      _toFirebase(data),
+      _toFirestore(data, options),
       options,
     );
   }
@@ -227,7 +241,11 @@ class WithConverterDocumentReference<T>
     return _originalDocumentReference
         .snapshots(includeMetadataChanges: includeMetadataChanges)
         .map((snapshot) {
-      return WithConverterDocumentSnapshot<T>._(snapshot, _fromFirebase);
+      return WithConverterDocumentSnapshot<T>._(
+        snapshot,
+        _fromFirestore,
+        _toFirestore,
+      );
     });
   }
 
@@ -241,12 +259,12 @@ class WithConverterDocumentReference<T>
       other is WithConverterDocumentReference<T> &&
       other.runtimeType == runtimeType &&
       other._originalDocumentReference == _originalDocumentReference &&
-      other._fromFirebase == _fromFirebase &&
-      other._toFirebase == _toFirebase;
+      other._fromFirestore == _fromFirestore &&
+      other._toFirestore == _toFirestore;
 
   @override
   int get hashCode => hashValues(
-      runtimeType, _originalDocumentReference, _fromFirebase, _toFirebase);
+      runtimeType, _originalDocumentReference, _fromFirestore, _toFirestore);
 
   @override
   String toString() => 'WithConverterDocumentReference<$T>($path)';
