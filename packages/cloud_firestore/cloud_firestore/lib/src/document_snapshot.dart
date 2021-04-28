@@ -18,6 +18,7 @@ typedef ToFirestore<T> = Map<String, Object?> Function(
 ///
 /// Currently unsupported by FlutterFire, but exposed to avoid breaking changes
 /// in the future once this class is supported.
+@sealed
 class SnapshotOptions {}
 
 abstract class _DocumentSnapshotInterface<T, DocumentReferenceType> {
