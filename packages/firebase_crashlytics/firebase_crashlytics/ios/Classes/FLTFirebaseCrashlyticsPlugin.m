@@ -140,8 +140,9 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   if (fatal) {
     NSTimeInterval timeInterval = [NSDate date].timeIntervalSince1970;
     id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager analytics];
-    [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval * 1000.0))
+    [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
                                           forKey:@"com.firebase.crashlytics.flutter.fatal"];
+    
     [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval toAnalytics:analytics];
   }
 
