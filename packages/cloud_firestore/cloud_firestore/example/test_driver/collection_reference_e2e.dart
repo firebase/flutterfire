@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runCollectionReferenceTests() {
   group('$CollectionReference', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -36,7 +34,127 @@ void runCollectionReferenceTests() {
         'value': randNum,
       });
       DocumentSnapshot snapshot = await doc.get();
-      expect(randNum, equals(snapshot.data()['value']));
+      expect(randNum, equals(snapshot.data()!['value']));
+    });
+
+    test('snapshots() can be reused', () async {
+      final foo = await initializeTest('foo');
+
+      final snapshot = foo.snapshots();
+      final snapshot2 = foo.snapshots();
+
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', []),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', []),
+      );
+
+      await foo.add({'value': 42});
+
+      expect(
+        await snapshot.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+          isA<QueryDocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        ]),
+      );
+      expect(
+        await snapshot2.first,
+        isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+          isA<QueryDocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        ]),
+      );
+    });
+
+    group('withConverter', () {
+      test('add/snapshot', () async {
+        final foo = await initializeTest('foo');
+        final fooConverter = foo.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        final fooSnapshot = foo.snapshots();
+        final fooConverterSnapshot = fooConverter.snapshots();
+
+        await expectLater(
+          fooSnapshot,
+          emits(isA<QuerySnapshot>().having((e) => e.docs, 'docs', [])),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<WithConverterQuerySnapshot<int>>()
+                .having((e) => e.docs, 'docs', []),
+          ),
+        );
+
+        final newDocument = await fooConverter.add(42);
+
+        await expectLater(
+          newDocument.get(),
+          completion(
+            isA<WithConverterDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42),
+          ),
+        );
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<QuerySnapshot>().having((e) => e.docs, 'docs', [
+              isA<QueryDocumentSnapshot>()
+                  .having((e) => e.data(), 'data', {'value': 42})
+            ]),
+          ),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<WithConverterQuerySnapshot<int>>()
+                .having((e) => e.docs, 'docs', [
+              isA<WithConverterQueryDocumentSnapshot<int>>()
+                  .having((e) => e.data(), 'data', 42)
+            ]),
+          ),
+        );
+
+        await foo.add({'value': 21});
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<QuerySnapshot>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals([
+                  isA<QueryDocumentSnapshot>()
+                      .having((e) => e.data(), 'data', {'value': 42}),
+                  isA<QueryDocumentSnapshot>()
+                      .having((e) => e.data(), 'data', {'value': 21})
+                ])),
+          ),
+        );
+
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<WithConverterQuerySnapshot<int>>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals([
+                  isA<WithConverterQueryDocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 42),
+                  isA<WithConverterQueryDocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 21)
+                ])),
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
     });
   });
 }

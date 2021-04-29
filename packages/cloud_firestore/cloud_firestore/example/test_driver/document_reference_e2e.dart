@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -12,7 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runDocumentReferenceTests() {
   group('$DocumentReference', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -29,6 +27,35 @@ void runDocumentReferenceTests() {
         DocumentReference document = await initializeTest('document-snapshot');
         Stream<DocumentSnapshot> stream = document.snapshots();
         expect(stream, isA<Stream<DocumentSnapshot>>());
+      });
+
+      test('can be reused', () async {
+        final foo = await initializeTest('foo');
+
+        final snapshot = foo.snapshots();
+        final snapshot2 = foo.snapshots();
+
+        expect(
+          await snapshot.first,
+          isA<DocumentSnapshot>().having((e) => e.exists, 'exists', false),
+        );
+        expect(
+          await snapshot2.first,
+          isA<DocumentSnapshot>().having((e) => e.exists, 'exists', false),
+        );
+
+        await foo.set({'value': 42});
+
+        expect(
+          await snapshot.first,
+          isA<DocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        );
+        expect(
+          await snapshot2.first,
+          isA<DocumentSnapshot>()
+              .having((e) => e.data(), 'data', {'value': 42}),
+        );
       });
 
       test('listens to a single response', () async {
@@ -53,8 +80,8 @@ void runDocumentReferenceTests() {
         await doc1.set({'test': 'value1'});
         await doc2.set({'test': 'value2'});
 
-        final value1 = doc1.snapshots().first.then((s) => s.data()['test']);
-        final value2 = doc2.snapshots().first.then((s) => s.data()['test']);
+        final value1 = doc1.snapshots().first.then((s) => s.data()!['test']);
+        final value2 = doc2.snapshots().first.then((s) => s.data()!['test']);
 
         await expectLater(value1, completion('value1'));
         await expectLater(value2, completion('value2'));
@@ -73,15 +100,15 @@ void runDocumentReferenceTests() {
             expect(snapshot.exists, isFalse);
           } else if (call == 2) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['bar'], equals('baz'));
+            expect(snapshot.data()!['bar'], equals('baz'));
           } else if (call == 3) {
             expect(snapshot.exists, isFalse);
           } else if (call == 4) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('bar'));
+            expect(snapshot.data()!['foo'], equals('bar'));
           } else if (call == 5) {
             expect(snapshot.exists, isTrue);
-            expect(snapshot.data()['foo'], equals('baz'));
+            expect(snapshot.data()!['foo'], equals('baz'));
           } else {
             fail('Should not have been called');
           }
@@ -273,7 +300,7 @@ void runDocumentReferenceTests() {
         });
 
         DocumentSnapshot snapshot = await document.get();
-        Map<String, dynamic> data = snapshot.data();
+        Map<String, dynamic> data = snapshot.data()!;
 
         expect(data['string'], equals('foo bar'));
         expect(data['number_32'], equals(123));
@@ -326,10 +353,79 @@ void runDocumentReferenceTests() {
           await document.update({'foo': 'bar'});
           fail('Should have thrown');
         } catch (e) {
-          expect(e, isA<FirebaseException>());
-          expect(e.code, equals('not-found'));
+          expect(
+            e,
+            isA<FirebaseException>().having((e) => e.code, 'code', 'not-found'),
+          );
         }
       });
+    });
+
+    group('withConverter', () {
+      test('set/snapshot/get', () async {
+        final foo = await initializeTest('foo');
+        final fooConverter = foo.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        final fooSnapshot = foo.snapshots();
+        final fooConverterSnapshot = fooConverter.snapshots();
+
+        await expectLater(
+          fooSnapshot,
+          emits(isA<DocumentSnapshot>().having((e) => e.data(), 'data', null)),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<WithConverterDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', null),
+          ),
+        );
+
+        await fooConverter.set(42);
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<DocumentSnapshot>()
+                .having((e) => e.data(), 'data', {'value': 42}),
+          ),
+        );
+        await expectLater(
+          fooConverterSnapshot,
+          emits(
+            isA<WithConverterDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42),
+          ),
+        );
+        await expectLater(
+          fooConverter.get(),
+          completion(
+            isA<WithConverterDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 42),
+          ),
+        );
+
+        await foo.set({'value': 21});
+
+        await expectLater(
+          fooSnapshot,
+          emits(
+            isA<DocumentSnapshot>()
+                .having((e) => e.data(), 'data', {'value': 21}),
+          ),
+        );
+
+        await expectLater(
+          fooConverter.get(),
+          completion(
+            isA<WithConverterDocumentSnapshot<int>>()
+                .having((e) => e.data(), 'data', 21),
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
     });
   });
 }

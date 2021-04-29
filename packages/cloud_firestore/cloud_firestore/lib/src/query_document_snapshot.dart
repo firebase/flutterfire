@@ -18,5 +18,26 @@ class QueryDocumentSnapshot extends DocumentSnapshot {
   bool get exists => true;
 
   @override
-  Map<String, dynamic> data() => super.data()!;
+  Map<String, dynamic> data([SnapshotOptions? options]) => super.data(options)!;
+}
+
+/// A [QueryDocumentSnapshot] contains data read from a document in your [FirebaseFirestore]
+/// database as part of a query.
+///
+/// A [QueryDocumentSnapshot] offers the same API surface as a [DocumentSnapshot].
+/// Since query results contain only existing documents, the exists property
+/// will always be `true` and [data()] will never return `null`.
+class WithConverterQueryDocumentSnapshot<T>
+    extends WithConverterDocumentSnapshot<T> {
+  WithConverterQueryDocumentSnapshot._(
+    QueryDocumentSnapshot originalQueryDocumentSnapshot,
+    FromFirestore<T> fromFirestore,
+    ToFirestore<T> toFirestore,
+  ) : super._(originalQueryDocumentSnapshot, fromFirestore, toFirestore);
+
+  @override
+  bool get exists => true;
+
+  @override
+  T data([SnapshotOptions? options]) => super.data(options)!;
 }

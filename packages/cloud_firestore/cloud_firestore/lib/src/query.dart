@@ -4,27 +4,159 @@
 
 part of cloud_firestore;
 
-/// Represents a [Query] over the data at a particular location.
-///
-/// Can construct refined [Query] objects by adding filters and ordering.
-class Query {
-  /// The [FirebaseFirestore] instance of this query.
-  final FirebaseFirestore firestore;
-
-  final QueryPlatform _delegate;
-
-  Query._(this.firestore, this._delegate) {
-    QueryPlatform.verifyExtends(_delegate);
-  }
-
+abstract class _Query<QueryType, CollectionSnapshotType, DocumentSnapshotType> {
   /// Exposes the [parameters] on the query delegate.
   ///
   /// This should only be used for testing to ensure that all
   /// query modifiers are correctly set on the underlying delegate
   /// when being tested from a different package.
-  Map<String, dynamic> get parameters {
-    return _delegate.parameters;
+  Map<String, dynamic> get parameters;
+
+  /// Creates and returns a new query that ends at the provided document
+  /// (inclusive). The end position is relative to the order of the query.
+  /// The document must contain all of the fields provided in the orderBy of
+  /// this query.
+  ///
+  /// Cannot be used in combination with [endBefore], [endBeforeDocument], or
+  /// [endAt], but can be used in combination with [startAt],
+  /// [startAfter], [startAtDocument] and [startAfterDocument].
+  ///
+  /// See also:
+  ///
+  ///  * [startAfterDocument] for a query that starts after a document.
+  ///  * [startAtDocument] for a query that starts at a document.
+  ///  * [endBeforeDocument] for a query that ends before a document.
+  QueryType endAtDocument(DocumentSnapshotType documentSnapshot);
+
+  /// Takes a list of [values], creates and returns a new query that ends at the
+  /// provided fields relative to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Calling this method will replace any existing cursor "end" query modifiers.
+  QueryType endAt(List<Object?> values);
+
+  /// Creates and returns a new query that ends before the provided document
+  /// snapshot (exclusive). The end position is relative to the order of the query.
+  /// The document must contain all of the fields provided in the orderBy of
+  /// this query.
+  ///
+  /// Calling this method will replace any existing cursor "end" query modifiers.
+  QueryType endBeforeDocument(DocumentSnapshotType documentSnapshot);
+
+  /// Takes a list of [values], creates and returns a new query that ends before
+  /// the provided fields relative to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Calling this method will replace any existing cursor "end" query modifiers.
+  QueryType endBefore(List<Object?> values);
+
+  /// Fetch the documents for this query.
+  ///
+  /// To modify how the query is fetched, the [options] parameter can be provided
+  /// with a [GetOptions] instance.
+  Future<CollectionSnapshotType> get([GetOptions? options]);
+
+  /// Creates and returns a new query that's additionally limited to only return up
+  /// to the specified number of documents.
+  QueryType limit(int limit);
+
+  /// Creates and returns a new query that only returns the last matching documents.
+  ///
+  /// You must specify at least one orderBy clause for limitToLast queries,
+  /// otherwise an exception will be thrown during execution.
+  QueryType limitToLast(int limit);
+
+  /// Notifies of query results at this location.
+  Stream<CollectionSnapshotType> snapshots({
+    bool includeMetadataChanges = false,
+  });
+
+  /// Creates and returns a new query that's additionally sorted by the specified
+  /// [field].
+  /// The field may be a [String] representing a single field name or a [FieldPath].
+  ///
+  /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
+  /// calls.
+  ///
+  /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
+  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// or [endAtDocument] because the order by clause on the document id
+  /// is added by these methods implicitly.
+  QueryType orderBy(Object field, {bool descending = false});
+
+  /// Creates and returns a new query that starts after the provided document
+  /// (exclusive). The starting position is relative to the order of the query.
+  /// The [documentSnapshot] must contain all of the fields provided in the orderBy of
+  /// this query.
+  ///
+  /// Calling this method will replace any existing cursor "start" query modifiers.
+  QueryType startAfterDocument(DocumentSnapshotType documentSnapshot);
+
+  /// Takes a list of [values], creates and returns a new query that starts
+  /// after the provided fields relative to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Calling this method will replace any existing cursor "start" query modifiers.
+  QueryType startAfter(List<Object?> values);
+
+  /// Creates and returns a new query that starts at the provided document
+  /// (inclusive). The starting position is relative to the order of the query.
+  /// The document must contain all of the fields provided in the orderBy of
+  /// this query.
+  ///
+  /// Calling this method will replace any existing cursor "start" query modifiers.
+  QueryType startAtDocument(DocumentSnapshotType documentSnapshot);
+
+  /// Takes a list of [values], creates and returns a new query that starts at
+  /// the provided fields relative to the order of the query.
+  ///
+  /// The [values] must be in order of [orderBy] filters.
+  ///
+  /// Calling this method will replace any existing cursor "start" query modifiers.
+  QueryType startAt(List<Object?> values);
+
+  /// Creates and returns a new query with additional filter on specified
+  /// [field]. [field] refers to a field in a document.
+  ///
+  /// The [field] may be a [String] consisting of a single field name
+  /// (referring to a top level field in the document),
+  /// or a series of field names separated by dots '.'
+  /// (referring to a nested field in the document).
+  /// Alternatively, the [field] can also be a [FieldPath].
+  ///
+  /// Only documents satisfying provided condition are included in the result
+  /// set.
+  QueryType where(
+    Object field, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+}
+
+/// Represents a [Query] over the data at a particular location.
+///
+/// Can construct refined [Query] objects by adding filters and ordering.
+class Query implements _Query<Query, QuerySnapshot, QueryDocumentSnapshot> {
+  Query._(this.firestore, this._delegate) {
+    QueryPlatform.verifyExtends(_delegate);
   }
+
+  /// The [FirebaseFirestore] instance of this query.
+  final FirebaseFirestore firestore;
+
+  final QueryPlatform _delegate;
 
   /// Returns whether the current query has a "start" cursor query.
   bool _hasStartCursor() {
@@ -52,7 +184,8 @@ class Query {
   /// database calls, any ordered values are extracted from the document and
   /// passed to the query.
   Map<String, dynamic> _assertQueryCursorSnapshot(
-      DocumentSnapshot documentSnapshot) {
+    DocumentSnapshot documentSnapshot,
+  ) {
     assert(documentSnapshot.exists,
         'a document snapshot must exist to be used within a query');
 
@@ -108,87 +241,58 @@ class Query {
   }
 
   /// Asserts that the query [field] is either a String or a [FieldPath].
-  void _assertValidFieldType(dynamic field) {
+  void _assertValidFieldType(Object field) {
     assert(
-        field is String || field is FieldPath || field == FieldPath.documentId,
-        'Supported [field] types are [String] and [FieldPath].');
+      field is String || field is FieldPath || field == FieldPath.documentId,
+      'Supported [field] types are [String] and [FieldPath].',
+    );
   }
 
-  /// Creates and returns a new [Query] that ends at the provided document
-  /// (inclusive). The end position is relative to the order of the query.
-  /// The document must contain all of the fields provided in the orderBy of
-  /// this query.
-  ///
-  /// Cannot be used in combination with [endBefore], [endBeforeDocument], or
-  /// [endAt], but can be used in combination with [startAt],
-  /// [startAfter], [startAtDocument] and [startAfterDocument].
-  ///
-  /// See also:
-  ///
-  ///  * [startAfterDocument] for a query that starts after a document.
-  ///  * [startAtDocument] for a query that starts at a document.
-  ///  * [endBeforeDocument] for a query that ends before a document.
+  @override
+  Map<String, dynamic> get parameters {
+    return _delegate.parameters;
+  }
+
+  @override
   Query endAtDocument(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> results = _assertQueryCursorSnapshot(documentSnapshot);
     return Query._(firestore,
         _delegate.endAtDocument(results['orders'], results['values']));
   }
 
-  /// Takes a list of [values], creates and returns a new [Query] that ends at the
-  /// provided fields relative to the order of the query.
-  ///
-  /// The [values] must be in order of [orderBy] filters.
-  ///
-  /// Calling this method will replace any existing cursor "end" query modifiers.
-  Query endAt(List<dynamic> values) {
+  @override
+  Query endAt(List<Object?> values) {
     _assertQueryCursorValues(values);
     return Query._(firestore, _delegate.endAt(values));
   }
 
-  /// Creates and returns a new [Query] that ends before the provided document
-  /// snapshot (exclusive). The end position is relative to the order of the query.
-  /// The document must contain all of the fields provided in the orderBy of
-  /// this query.
-  ///
-  /// Calling this method will replace any existing cursor "end" query modifiers.
+  @override
   Query endBeforeDocument(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> results = _assertQueryCursorSnapshot(documentSnapshot);
     return Query._(firestore,
         _delegate.endBeforeDocument(results['orders'], results['values']));
   }
 
-  /// Takes a list of [values], creates and returns a new [Query] that ends before
-  /// the provided fields relative to the order of the query.
-  ///
-  /// The [values] must be in order of [orderBy] filters.
-  ///
-  /// Calling this method will replace any existing cursor "end" query modifiers.
+  @override
   Query endBefore(List<dynamic> values) {
     _assertQueryCursorValues(values);
     return Query._(firestore, _delegate.endBefore(values));
   }
 
-  /// Fetch the documents for this query.
-  ///
-  /// To modify how the query is fetched, the [options] parameter can be provided
-  /// with a [GetOptions] instance.
+  @override
   Future<QuerySnapshot> get([GetOptions? options]) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.get(options ?? const GetOptions());
     return QuerySnapshot._(firestore, snapshotDelegate);
   }
 
-  /// Creates and returns a new Query that's additionally limited to only return up
-  /// to the specified number of documents.
+  @override
   Query limit(int limit) {
     assert(limit > 0, 'limit must be a positive number greater than 0');
     return Query._(firestore, _delegate.limit(limit));
   }
 
-  /// Creates and returns a new Query that only returns the last matching documents.
-  ///
-  /// You must specify at least one orderBy clause for limitToLast queries,
-  /// otherwise an exception will be thrown during execution.
+  @override
   Query limitToLast(int limit) {
     assert(limit > 0, 'limit must be a positive number greater than 0');
     List<List<dynamic>> orders = List.from(parameters['orderBy']);
@@ -197,27 +301,17 @@ class Query {
     return Query._(firestore, _delegate.limitToLast(limit));
   }
 
-  /// Notifies of query results at this location.
-  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) =>
-      _delegate
-          .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map((item) {
-        return QuerySnapshot._(firestore, item);
-      });
+  @override
+  Stream<QuerySnapshot> snapshots({bool includeMetadataChanges = false}) {
+    return _delegate
+        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .map((item) {
+      return QuerySnapshot._(firestore, item);
+    });
+  }
 
-  /// Creates and returns a new [Query] that's additionally sorted by the specified
-  /// [field].
-  /// The field may be a [String] representing a single field name or a [FieldPath].
-  ///
-  /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
-  /// calls.
-  ///
-  /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
-  /// or [endAtDocument] because the order by clause on the document id
-  /// is added by these methods implicitly.
-  Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null);
+  @override
+  Query orderBy(Object field, {bool descending = false}) {
     _assertValidFieldType(field);
     assert(!_hasStartCursor(),
         'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()');
@@ -234,7 +328,7 @@ class Query {
       orders.add([field, descending]);
     } else {
       FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field;
+          field is String ? FieldPath.fromString(field) : field as FieldPath;
       orders.add([fieldPath, descending]);
     }
 
@@ -274,75 +368,45 @@ class Query {
     return Query._(firestore, _delegate.orderBy(orders));
   }
 
-  /// Creates and returns a new [Query] that starts after the provided document
-  /// (exclusive). The starting position is relative to the order of the query.
-  /// The [documentSnapshot] must contain all of the fields provided in the orderBy of
-  /// this query.
-  ///
-  /// Calling this method will replace any existing cursor "start" query modifiers.
+  @override
   Query startAfterDocument(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> results = _assertQueryCursorSnapshot(documentSnapshot);
     return Query._(firestore,
         _delegate.startAfterDocument(results['orders'], results['values']));
   }
 
-  /// Takes a list of [values], creates and returns a new [Query] that starts
-  /// after the provided fields relative to the order of the query.
-  ///
-  /// The [values] must be in order of [orderBy] filters.
-  ///
-  /// Calling this method will replace any existing cursor "start" query modifiers.
-  Query startAfter(List<dynamic> values) {
+  @override
+  Query startAfter(List<Object?> values) {
     _assertQueryCursorValues(values);
     return Query._(firestore, _delegate.startAfter(values));
   }
 
-  /// Creates and returns a new [Query] that starts at the provided document
-  /// (inclusive). The starting position is relative to the order of the query.
-  /// The document must contain all of the fields provided in the orderBy of
-  /// this query.
-  ///
-  /// Calling this method will replace any existing cursor "start" query modifiers.
+  @override
   Query startAtDocument(DocumentSnapshot documentSnapshot) {
     Map<String, dynamic> results = _assertQueryCursorSnapshot(documentSnapshot);
     return Query._(firestore,
         _delegate.startAtDocument(results['orders'], results['values']));
   }
 
-  /// Takes a list of [values], creates and returns a new [Query] that starts at
-  /// the provided fields relative to the order of the query.
-  ///
-  /// The [values] must be in order of [orderBy] filters.
-  ///
-  /// Calling this method will replace any existing cursor "start" query modifiers.
-  Query startAt(List<dynamic> values) {
+  @override
+  Query startAt(List<Object?> values) {
     _assertQueryCursorValues(values);
     return Query._(firestore, _delegate.startAt(values));
   }
 
-  /// Creates and returns a new [Query] with additional filter on specified
-  /// [field]. [field] refers to a field in a document.
-  ///
-  /// The [field] may be a [String] consisting of a single field name
-  /// (referring to a top level field in the document),
-  /// or a series of field names separated by dots '.'
-  /// (referring to a nested field in the document).
-  /// Alternatively, the [field] can also be a [FieldPath].
-  ///
-  /// Only documents satisfying provided condition are included in the result
-  /// set.
+  @override
   Query where(
-    dynamic field, {
-    dynamic isEqualTo,
-    dynamic isNotEqualTo,
-    dynamic isLessThan,
-    dynamic isLessThanOrEqualTo,
-    dynamic isGreaterThan,
-    dynamic isGreaterThanOrEqualTo,
-    dynamic arrayContains,
-    List<dynamic>? arrayContainsAny,
-    List<dynamic>? whereIn,
-    List<dynamic>? whereNotIn,
+    Object field, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
   }) {
     _assertValidFieldType(field);
@@ -488,5 +552,152 @@ class Query {
     }
 
     return Query._(firestore, _delegate.where(conditions));
+  }
+}
+
+/// Represents a [Query] over the data at a particular location.
+///
+/// Can construct refined [Query] objects by adding filters and ordering.
+class WithConverterQuery<T>
+    implements
+        _Query<WithConverterQuery<T>, WithConverterQuerySnapshot<T>,
+            WithConverterDocumentSnapshot<T>> {
+  WithConverterQuery._(
+    this._originalQuery,
+    this._fromFirestore,
+    this._toFirestore,
+  );
+
+  final Query _originalQuery;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
+
+  WithConverterQuery<T> _mapQuery(Query query) {
+    return WithConverterQuery._(query, _fromFirestore, _toFirestore);
+  }
+
+  @override
+  Map<String, dynamic> get parameters => _originalQuery.parameters;
+
+  @override
+  WithConverterQuery<T> endAt(List<Object?> values) {
+    return _mapQuery(_originalQuery.endAt(values));
+  }
+
+  @override
+  WithConverterQuery<T> endAtDocument(
+    WithConverterDocumentSnapshot<T> documentSnapshot,
+  ) {
+    return _mapQuery(_originalQuery
+        .endAtDocument(documentSnapshot._originalDocumentSnapshot));
+  }
+
+  @override
+  WithConverterQuery<T> endBefore(List<Object?> values) {
+    return _mapQuery(_originalQuery.endBefore(values));
+  }
+
+  @override
+  WithConverterQuery<T> endBeforeDocument(
+    WithConverterDocumentSnapshot<T> documentSnapshot,
+  ) {
+    return _mapQuery(_originalQuery
+        .endBeforeDocument(documentSnapshot._originalDocumentSnapshot));
+  }
+
+  @override
+  Future<WithConverterQuerySnapshot<T>> get([GetOptions? options]) {
+    return _originalQuery.get(options).then((snapshot) {
+      return WithConverterQuerySnapshot<T>._(
+        snapshot,
+        _fromFirestore,
+        _toFirestore,
+      );
+    });
+  }
+
+  @override
+  WithConverterQuery<T> limit(int limit) {
+    return _mapQuery(_originalQuery.limit(limit));
+  }
+
+  @override
+  WithConverterQuery<T> limitToLast(int limit) {
+    return _mapQuery(_originalQuery.limitToLast(limit));
+  }
+
+  @override
+  WithConverterQuery<T> orderBy(Object field, {bool descending = false}) {
+    return _mapQuery(_originalQuery.orderBy(field, descending: descending));
+  }
+
+  @override
+  Stream<WithConverterQuerySnapshot<T>> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
+    return _originalQuery
+        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .map((snapshot) => WithConverterQuerySnapshot<T>._(
+              snapshot,
+              _fromFirestore,
+              _toFirestore,
+            ));
+  }
+
+  @override
+  WithConverterQuery<T> startAfter(List<Object?> values) {
+    return _mapQuery(_originalQuery.startAfter(values));
+  }
+
+  @override
+  WithConverterQuery<T> startAfterDocument(
+    WithConverterDocumentSnapshot<T> documentSnapshot,
+  ) {
+    return _mapQuery(_originalQuery
+        .startAfterDocument(documentSnapshot._originalDocumentSnapshot));
+  }
+
+  @override
+  WithConverterQuery<T> startAt(List<Object?> values) {
+    return _mapQuery(_originalQuery.startAt(values));
+  }
+
+  @override
+  WithConverterQuery<T> startAtDocument(
+    WithConverterDocumentSnapshot<T> documentSnapshot,
+  ) {
+    return _mapQuery(_originalQuery
+        .startAtDocument(documentSnapshot._originalDocumentSnapshot));
+  }
+
+  @override
+  WithConverterQuery<T> where(
+    Object field, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _mapQuery(_originalQuery.where(
+      field,
+      isEqualTo: isEqualTo,
+      isNotEqualTo: isNotEqualTo,
+      isLessThan: isLessThan,
+      isLessThanOrEqualTo: isLessThanOrEqualTo,
+      isGreaterThan: isGreaterThan,
+      isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+      arrayContains: arrayContains,
+      arrayContainsAny: arrayContainsAny,
+      whereIn: whereIn,
+      whereNotIn: whereNotIn,
+      isNull: isNull,
+    ));
   }
 }
