@@ -9,8 +9,8 @@ environment:
   flutter: ">=1.12.13+hotfix.4"
 
 dependencies:
-  firebase_app_check_platform_interface: ^4.2.0
-#  firebase_app_check_web: ^1.1.0
+  firebase_app_check_platform_interface: ^1.0.0
+  firebase_app_check_web: ^1.0.0
   firebase_core: ^1.1.0
   firebase_core_platform_interface: ^4.0.0
   flutter:

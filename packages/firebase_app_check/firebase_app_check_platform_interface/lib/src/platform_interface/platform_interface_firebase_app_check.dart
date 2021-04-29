@@ -9,7 +9,7 @@ import '../method_channel/method_channel_firebase_app_check.dart';
 
 abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
-  FirebaseAppCheckPlatform({required this.appInstance}) : super(token: _token);
+  FirebaseAppCheckPlatform({this.appInstance}) : super(token: _token);
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAppCheckPlatform.instanceFor(
@@ -23,14 +23,18 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
   static final Object _token = Object();
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
-    return appInstance;
+    if (appInstance == null) {
+      return Firebase.app();
+    }
+
+    return appInstance!;
   }
 
   static FirebaseAppCheckPlatform? _instance;
