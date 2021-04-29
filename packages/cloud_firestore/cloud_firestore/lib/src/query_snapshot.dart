@@ -4,81 +4,31 @@
 
 part of cloud_firestore;
 
-abstract class _QuerySnapshot<DocumentSnapshot> {
-  /// Gets a list of all the documents included in this snapshot.
-  List<DocumentSnapshot> get docs;
-
-  /// An array of the documents that changed since the last snapshot. If this
-  /// is the first snapshot, all documents will be in the list as Added changes.
-  List<DocumentChange> get docChanges;
-
-  /// Returns the [SnapshotMetadata] for this snapshot.
-  SnapshotMetadata get metadata;
-
-  /// Returns the size (number of documents) of this snapshot.
-  int get size;
-}
-
 /// Contains the results of a query.
 /// It can contain zero or more [DocumentSnapshot] objects.
-class QuerySnapshot implements _QuerySnapshot<QueryDocumentSnapshot> {
+class QuerySnapshot {
+  final FirebaseFirestore _firestore;
+  final QuerySnapshotPlatform _delegate;
+
   QuerySnapshot._(this._firestore, this._delegate) {
     QuerySnapshotPlatform.verifyExtends(_delegate);
   }
 
-  final FirebaseFirestore _firestore;
-  final QuerySnapshotPlatform _delegate;
-
-  @override
+  /// Gets a list of all the documents included in this snapshot.
   List<QueryDocumentSnapshot> get docs => _delegate.docs
       .map((documentDelegate) =>
           QueryDocumentSnapshot._(_firestore, documentDelegate))
       .toList();
 
-  @override
+  /// An array of the documents that changed since the last snapshot. If this
+  /// is the first snapshot, all documents will be in the list as Added changes.
   List<DocumentChange> get docChanges => _delegate.docChanges
       .map((documentDelegate) => DocumentChange._(_firestore, documentDelegate))
       .toList();
 
-  @override
+  /// Returns the [SnapshotMetadata] for this snapshot.
   SnapshotMetadata get metadata => SnapshotMetadata._(_delegate.metadata);
 
-  @override
+  /// Returns the size (number of documents) of this snapshot.
   int get size => _delegate.size;
-}
-
-/// Contains the results of a query.
-/// It can contain zero or more [DocumentSnapshot] objects.
-class WithConverterQuerySnapshot<T>
-    implements _QuerySnapshot<WithConverterQueryDocumentSnapshot<T>> {
-  WithConverterQuerySnapshot._(
-    this._originalQuerySnapshot,
-    this._fromFirestore,
-    this._toFirestore,
-  );
-
-  final QuerySnapshot _originalQuerySnapshot;
-  final FromFirestore<T> _fromFirestore;
-  final ToFirestore<T> _toFirestore;
-
-  @override
-  List<WithConverterQueryDocumentSnapshot<T>> get docs {
-    return [
-      for (final snapshot in _originalQuerySnapshot.docs)
-        WithConverterQueryDocumentSnapshot<T>._(
-          snapshot,
-          _fromFirestore,
-          _toFirestore,
-        ),
-    ];
-  }
-
-  @override
-  List<DocumentChange> get docChanges => _originalQuerySnapshot.docChanges;
-
-  @override
-  SnapshotMetadata get metadata => _originalQuerySnapshot.metadata;
-
-  @override
-  int get size => _originalQuerySnapshot.size;
 }

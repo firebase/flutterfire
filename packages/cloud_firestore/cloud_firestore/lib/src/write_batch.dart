@@ -11,12 +11,12 @@ part of cloud_firestore;
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
 class WriteBatch {
+  final FirebaseFirestore _firestore;
+  final WriteBatchPlatform _delegate;
+
   WriteBatch._(this._firestore, this._delegate) {
     WriteBatchPlatform.verifyExtends(_delegate);
   }
-
-  final FirebaseFirestore _firestore;
-  final WriteBatchPlatform _delegate;
 
   /// Commits all of the writes in this write batch as a single atomic unit.
   ///
@@ -24,11 +24,9 @@ class WriteBatch {
   Future<void> commit() => _delegate.commit();
 
   /// Deletes the document referred to by [document].
-  void delete(AnyDocumentReference document) {
-    assert(
-      document.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+  void delete(DocumentReference document) {
+    assert(document.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
     return _delegate.delete(document.path);
   }
 
@@ -38,15 +36,10 @@ class WriteBatch {
   ///
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
-  void set(
-    AnyDocumentReference document,
-    Map<String, dynamic> data, [
-    SetOptions? options,
-  ]) {
-    assert(
-      document.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+  void set(DocumentReference document, Map<String, dynamic> data,
+      [SetOptions? options]) {
+    assert(document.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
     return _delegate.set(document.path,
         _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
   }
@@ -54,14 +47,10 @@ class WriteBatch {
   /// Updates a given [document].
   ///
   /// If the document does not yet exist, an exception will be thrown.
-  void update(AnyDocumentReference document, Map<String, dynamic> data) {
-    assert(
-      document.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+  void update(DocumentReference document, Map<String, dynamic> data) {
+    assert(document.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
     return _delegate.update(
-      document.path,
-      _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-    );
+        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data)!);
   }
 }

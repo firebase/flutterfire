@@ -368,67 +368,6 @@ database.
 For more information on what is possible when writing data to Firestore, please refer to
 this [documentation](https://firebase.google.com/docs/firestore/manage-data/add-data)
 
-## Typing CollectionReference and DocumentReference
-
-By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.  
-One solution is to use `withConverter`, which will modify methods like `CollectionReference.add` or `Query.where` to be type-safe.
-
-A common usage of `withConverter` is when combined with a serializable class, such as:
-
-```dart
-class Movie {
-  Movie({required this.title, required this.genre});
-
-  Movie.fromJson(Map<String, Object?> json)
-    : this(
-        title: json['title']! as String,
-        genre: json['genre']! as String,
-      );
-
-  final String title;
-  final String genre;
-
-  Map<String, Object?> toJson() {
-    return {
-      'title': title,
-      'genre': genre,
-    };
-  }
-}
-```
-
-We can then use `withConverter` to manipulate a collection of movies like so:
-
-```dart
-final moviesRef = Firestore.instance.collection('movies').withConverter(
-      fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-      toFirestore: (movie, _) => movie.toJson(),
-    );
-```
-
-Finally, we can use our new `moviesRef` variable to perform read and write operations:
-
-```dart
-Future<void> main() async {
-  // Obtain science-fiction movies
-  List<Movie> movies = await moviesRef
-      .where('genre', isEqualTo: 'Sci-fi')
-      .get()
-      .then((snapshot) => snapshot.docs);
-
-  // Add a movie
-  await moviesRef.add(
-    Movie(
-      title: 'Star Wars: A New Hope (Episode IV)',
-      genre: 'Sci-fi'
-    ),
-  );
-
-  // Get a movie with the id 42
-  Movie movie42 = await moviesRef.doc('42').get().then((snapshot) => snapshot.data()!);
-}
-```
-
 ## Adding Documents
 
 To add a new document to a collection, use the [`add`](!cloud_firestore.CollectionReference.add) method

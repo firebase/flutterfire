@@ -173,19 +173,14 @@ class DocumentReference
   }
 
   /// Attaches a listener for [DocumentSnapshot] events.
-  Stream<DocumentSnapshot> get onSnapshot => _createSnapshotStream().stream;
+  Stream<DocumentSnapshot> get onSnapshot => _createStream();
 
-  Stream<DocumentSnapshot> get onMetadataChangesSnapshot {
-    return _createSnapshotStream(
-      firestore_interop.DocumentListenOptions(includeMetadataChanges: true),
-    ).stream;
-  }
+  Stream<DocumentSnapshot> get onMetadataChangesSnapshot => _createStream(
+      firestore_interop.DocumentListenOptions(includeMetadataChanges: true));
 
-  StreamController<DocumentSnapshot> _createSnapshotStream([
-    firestore_interop.DocumentListenOptions? options,
-  ]) {
+  Stream<DocumentSnapshot> _createStream(
+      [firestore_interop.DocumentListenOptions? options]) {
     late ZoneCallback onSnapshotUnsubscribe;
-    // ignore: close_sinks, the controler is returned
     late StreamController<DocumentSnapshot> controller;
 
     final nextWrapper =
@@ -203,13 +198,13 @@ class DocumentReference
 
     void stopListen() {
       onSnapshotUnsubscribe();
+      controller.close();
     }
 
-    return controller = StreamController<DocumentSnapshot>.broadcast(
-      onListen: startListen,
-      onCancel: stopListen,
-      sync: true,
-    );
+    controller = StreamController<DocumentSnapshot>.broadcast(
+        onListen: startListen, onCancel: stopListen, sync: true);
+
+    return controller.stream;
   }
 
   Future<Null> set(Map<String, dynamic> data,
@@ -248,17 +243,12 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query limitToLast(num limit) =>
       Query.fromJsObject(jsObject.limitToLast(limit));
 
-  late final Stream<QuerySnapshot> onSnapshot =
-      _createSnapshotStream(false).stream;
+  Stream<QuerySnapshot> get onSnapshot => _createStream(false);
 
-  late final Stream<QuerySnapshot> onSnapshotMetadata =
-      _createSnapshotStream(true).stream;
+  Stream<QuerySnapshot> get onSnapshotMetadata => _createStream(true);
 
-  StreamController<QuerySnapshot> _createSnapshotStream(
-    bool includeMetadataChanges,
-  ) {
+  Stream<QuerySnapshot> _createStream(bool includeMetadataChanges) {
     late ZoneCallback onSnapshotUnsubscribe;
-    // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
 
     final nextWrapper =
@@ -276,13 +266,13 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
     void stopListen() {
       onSnapshotUnsubscribe();
+      controller.close();
     }
 
-    return controller = StreamController<QuerySnapshot>.broadcast(
-      onListen: startListen,
-      onCancel: stopListen,
-      sync: true,
-    );
+    controller = StreamController<QuerySnapshot>.broadcast(
+        onListen: startListen, onCancel: stopListen, sync: true);
+
+    return controller.stream;
   }
 
   Query orderBy(/*String|FieldPath*/ dynamic fieldPath,

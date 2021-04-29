@@ -8,48 +8,20 @@ part of cloud_firestore;
 /// [DocumentReference]s, and querying for documents (using the methods
 /// inherited from [Query]).
 @immutable
-abstract class _CollectionReference<T, DocRef> {
+class CollectionReference extends Query {
+  @override
+  // ignore: overridden_fields
+  final CollectionReferencePlatform _delegate;
+
+  CollectionReference._(FirebaseFirestore firestore, this._delegate)
+      : super._(firestore, _delegate);
+
   /// Returns the ID of the referenced collection.
-  String get id;
+  String get id => _delegate.id;
 
   /// Returns the parent [DocumentReference] of this collection or `null`.
   ///
   /// If this collection is a root collection, `null` is returned.
-  // This always returns a DocumentReference even when using withConverter
-  // because we do not know what is the correct type for the parent doc.
-  DocumentReference? get parent;
-
-  /// A string containing the slash-separated path to this  CollectionReference
-  /// (relative to the root of the database).
-  String get path;
-
-  /// Returns a `DocumentReference` with an auto-generated ID, after
-  /// populating it with provided [data].
-  ///
-  /// The unique key generated is prefixed with a client-generated timestamp
-  /// so that the resulting list will be chronologically-sorted.
-  Future<DocRef> add(T data);
-}
-
-/// A [CollectionReference] object can be used for adding documents, getting
-/// [DocumentReference]s, and querying for documents (using the methods
-/// inherited from [Query]).
-@immutable
-class CollectionReference extends Query
-    implements _CollectionReference<Map<String, dynamic>, DocumentReference> {
-  CollectionReference._(
-    FirebaseFirestore firestore,
-    CollectionReferencePlatform _delegate,
-  ) : super._(firestore, _delegate);
-
-  @override
-  CollectionReferencePlatform get _delegate =>
-      super._delegate as CollectionReferencePlatform;
-
-  @override
-  String get id => _delegate.id;
-
-  @override
   DocumentReference? get parent {
     DocumentReferencePlatform? _documentReferencePlatform = _delegate.parent;
 
@@ -61,24 +33,27 @@ class CollectionReference extends Query
     return DocumentReference._(firestore, _documentReferencePlatform);
   }
 
-  @override
+  /// A string containing the slash-separated path to this  CollectionReference
+  /// (relative to the root of the database).
   String get path => _delegate.path;
 
-  @override
+  /// Returns a `DocumentReference` with an auto-generated ID, after
+  /// populating it with provided [data].
+  ///
+  /// The unique key generated is prefixed with a client-generated timestamp
+  /// so that the resulting list will be chronologically-sorted.
   Future<DocumentReference> add(Map<String, dynamic> data) async {
     final DocumentReference newDocument = doc();
     await newDocument.set(data);
     return newDocument;
   }
 
-  /// {@template cloud_firestore.collection_reference.doc}
   /// Returns a `DocumentReference` with the provided path.
   ///
   /// If no [path] is provided, an auto-generated ID is used.
   ///
   /// The unique key generated is prefixed with a client-generated timestamp
   /// so that the resulting list will be chronologically-sorted.
-  /// {@endtemplate}
   DocumentReference doc([String? path]) {
     if (path != null) {
       assert(path.isNotEmpty, 'a document path must be a non-empty string');
@@ -87,35 +62,6 @@ class CollectionReference extends Query
     }
 
     return DocumentReference._(firestore, _delegate.doc(path));
-  }
-
-  /// Transforms a [CollectionReference] to manipulate a custom object instead
-  /// of a `Map<String, dynamic>`.
-  ///
-  /// This makes both read and write operations type-safe.
-  ///
-  /// ```dart
-  /// final modelsRef = FirebaseFirestore
-  ///     .instance
-  ///     .collection('models')
-  ///     .withConverter<Model>(
-  ///       fromFirestore: (snapshot, _) => Model.fromJson(snapshot.data()!),
-  ///       toFirestore: (model, _) => model.toJson(),
-  ///     );
-  ///
-  /// Future<void> main() async {
-  ///   // Writes now take a Model as parameter instead of a Map
-  ///   await modelsRef.add(Model());
-  ///
-  ///   // Reads now return a Model instead of a Map
-  ///   final Model model = await modelsRef.doc('123').get().then((s) => s.data());
-  /// }
-  /// ```
-  WithConverterCollectionReference<T> withConverter<T>({
-    required FromFirestore<T> fromFirestore,
-    required ToFirestore<T> toFirestore,
-  }) {
-    return WithConverterCollectionReference._(this, fromFirestore, toFirestore);
   }
 
   @override
@@ -129,71 +75,4 @@ class CollectionReference extends Query
 
   @override
   String toString() => '$CollectionReference($path)';
-}
-
-/// A [CollectionReference] object can be used for adding documents, getting
-/// [DocumentReference]s, and querying for documents (using the methods
-/// inherited from [Query]).
-@immutable
-class WithConverterCollectionReference<T> extends WithConverterQuery<T>
-    implements _CollectionReference<T, WithConverterDocumentReference<T>> {
-  WithConverterCollectionReference._(
-    CollectionReference collectionReference,
-    FromFirestore<T> fromFirestore,
-    ToFirestore<T> toFirestore,
-  ) : super._(collectionReference, fromFirestore, toFirestore);
-
-  CollectionReference get _originalCollectionReferenceQuery =>
-      super._originalQuery as CollectionReference;
-
-  @override
-  String get id => _originalCollectionReferenceQuery.id;
-
-  @override
-  DocumentReference? get parent => _originalCollectionReferenceQuery.parent;
-
-  @override
-  String get path => _originalCollectionReferenceQuery.path;
-
-  @override
-  Future<WithConverterDocumentReference<T>> add(T data) async {
-    final snapshot = await _originalCollectionReferenceQuery.add(
-      _toFirestore(data, null),
-    );
-
-    return WithConverterDocumentReference<T>._(
-      snapshot,
-      _fromFirestore,
-      _toFirestore,
-    );
-  }
-
-  /// {@macro cloud_firestore.collection_reference.doc}
-  WithConverterDocumentReference<T> doc([String? path]) {
-    return WithConverterDocumentReference<T>._(
-      _originalCollectionReferenceQuery.doc(path),
-      _fromFirestore,
-      _toFirestore,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      other is WithConverterCollectionReference<T> &&
-      other.runtimeType == runtimeType &&
-      other._originalCollectionReferenceQuery ==
-          _originalCollectionReferenceQuery &&
-      other._fromFirestore == _fromFirestore &&
-      other._toFirestore == _toFirestore;
-
-  @override
-  int get hashCode => hashValues(
-        runtimeType,
-        _originalCollectionReferenceQuery,
-        _fromFirestore,
-        _toFirestore,
-      );
-
-  @override
-  String toString() => 'WithConverterCollectionReference<$T>($path)';
 }

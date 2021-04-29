@@ -28,87 +28,39 @@ class Transaction {
     return DocumentSnapshot._(_firestore, documentSnapshotPlatform);
   }
 
-  /// Writes to the document referred to by the provided [DocumentReference].
-  /// If the document does not exist yet, it will be created. If you pass
-  /// [SetOptions], the provided data can be merged into the existing document.
-  Future<WithConverterDocumentSnapshot<T>> converterGet<T>(
-    WithConverterDocumentReference<T> documentReference,
-  ) async {
-    return WithConverterDocumentSnapshot<T>._(
-      await get(documentReference._originalDocumentReference),
-      documentReference._fromFirestore,
-      documentReference._toFirestore,
-    );
-  }
-
   /// Deletes the document referred to by the provided [documentReference].
-  Transaction delete(AnyDocumentReference documentReference) {
-    assert(
-      documentReference.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+  Transaction delete(DocumentReference documentReference) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
-    return Transaction._(
-      _firestore,
-      _delegate.delete(documentReference.path),
-    );
+    return Transaction._(_firestore, _delegate.delete(documentReference.path));
   }
 
   /// Updates fields in the document referred to by [documentReference].
   /// The update will fail if applied to a document that does not exist.
   Transaction update(
-    AnyDocumentReference documentReference,
-    Map<String, dynamic> data,
-  ) {
-    assert(
-      documentReference.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+      DocumentReference documentReference, Map<String, dynamic> data) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
-      _firestore,
-      _delegate.update(
-        documentReference.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-      ),
-    );
+        _firestore,
+        _delegate.update(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!));
   }
 
   /// Writes to the document referred to by the provided [DocumentReference].
   /// If the document does not exist yet, it will be created. If you pass
   /// [SetOptions], the provided data can be merged into the existing document.
   Transaction set(
-    DocumentReference documentReference,
-    Map<String, dynamic> data, [
-    SetOptions? options,
-  ]) {
-    assert(
-      documentReference.firestore == _firestore,
-      'the document provided is from a different Firestore instance',
-    );
+      DocumentReference documentReference, Map<String, dynamic> data,
+      [SetOptions? options]) {
+    assert(documentReference.firestore == _firestore,
+        'the document provided is from a different Firestore instance');
 
     return Transaction._(
-      _firestore,
-      _delegate.set(
-        documentReference.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!,
-        options,
-      ),
-    );
-  }
-
-  /// Writes to the document referred to by the provided [DocumentReference].
-  /// If the document does not exist yet, it will be created. If you pass
-  /// [SetOptions], the provided data can be merged into the existing document.
-  Transaction converterSet<T>(
-    WithConverterDocumentReference<T> documentReference,
-    T data, [
-    SetOptions? options,
-  ]) {
-    return set(
-      documentReference._originalDocumentReference,
-      documentReference._toFirestore(data, options),
-      options,
-    );
+        _firestore,
+        _delegate.set(documentReference.path,
+            _CodecUtility.replaceValueWithDelegatesInMap(data)!, options));
   }
 }
