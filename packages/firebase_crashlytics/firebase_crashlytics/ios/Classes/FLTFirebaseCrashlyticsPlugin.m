@@ -142,7 +142,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager analytics];
     [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
                                           forKey:@"com.firebase.crashlytics.flutter.fatal"];
-    
+
     [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval toAnalytics:analytics];
   }
 

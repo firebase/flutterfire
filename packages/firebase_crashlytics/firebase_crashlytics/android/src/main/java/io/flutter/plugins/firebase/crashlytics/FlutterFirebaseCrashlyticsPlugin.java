@@ -9,17 +9,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.analytics.connector.AnalyticsConnector;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.firebase.crashlytics.internal.analytics.CrashlyticsOriginAnalyticsEventLogger;
-import com.google.firebase.analytics.connector.AnalyticsConnector;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -28,24 +24,19 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * FlutterFirebaseCrashlyticsPlugin
- */
+/** FlutterFirebaseCrashlyticsPlugin */
 public class FlutterFirebaseCrashlyticsPlugin
-  implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
 
-  /**
-   * Plugin registration.
-   */
+  /** Plugin registration. */
   public static void registerWith(Registrar registrar) {
     FlutterFirebaseCrashlyticsPlugin instance = new FlutterFirebaseCrashlyticsPlugin();
     instance.initInstance(registrar.messenger());
@@ -73,170 +64,171 @@ public class FlutterFirebaseCrashlyticsPlugin
 
   private Task<Map<String, Object>> checkForUnsentReports() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final boolean unsentReports =
-          Tasks.await(FirebaseCrashlytics.getInstance().checkForUnsentReports());
+        cachedThreadPool,
+        () -> {
+          final boolean unsentReports =
+              Tasks.await(FirebaseCrashlytics.getInstance().checkForUnsentReports());
 
-        return new HashMap<String, Object>() {
-          {
-            put(Constants.UNSENT_REPORTS, unsentReports);
-          }
-        };
-      });
+          return new HashMap<String, Object>() {
+            {
+              put(Constants.UNSENT_REPORTS, unsentReports);
+            }
+          };
+        });
   }
 
   private void crash() {
     new Handler()
-      .postDelayed(
-        () -> {
-          throw new FirebaseCrashlyticsTestCrash();
-        },
-        50);
+        .postDelayed(
+            () -> {
+              throw new FirebaseCrashlyticsTestCrash();
+            },
+            50);
   }
 
   private Task<Void> deleteUnsentReports() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseCrashlytics.getInstance().deleteUnsentReports();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseCrashlytics.getInstance().deleteUnsentReports();
+          return null;
+        });
   }
 
   private Task<Map<String, Object>> didCrashOnPreviousExecution() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final boolean didCrashOnPreviousExecution =
-          FirebaseCrashlytics.getInstance().didCrashOnPreviousExecution();
+        cachedThreadPool,
+        () -> {
+          final boolean didCrashOnPreviousExecution =
+              FirebaseCrashlytics.getInstance().didCrashOnPreviousExecution();
 
-        return new HashMap<String, Object>() {
-          {
-            put(Constants.DID_CRASH_ON_PREVIOUS_EXECUTION, didCrashOnPreviousExecution);
-          }
-        };
-      });
+          return new HashMap<String, Object>() {
+            {
+              put(Constants.DID_CRASH_ON_PREVIOUS_EXECUTION, didCrashOnPreviousExecution);
+            }
+          };
+        });
   }
 
   private Task<Void> recordError(final Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        cachedThreadPool,
+        () -> {
+          FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
 
-        final String dartExceptionMessage =
-          (String) Objects.requireNonNull(arguments.get(Constants.EXCEPTION));
-        final String reason = (String) arguments.get(Constants.REASON);
-        final String information =
-          (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
-        final boolean fatal = (boolean) arguments.get(Constants.FATAL);
+          final String dartExceptionMessage =
+              (String) Objects.requireNonNull(arguments.get(Constants.EXCEPTION));
+          final String reason = (String) arguments.get(Constants.REASON);
+          final String information =
+              (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
+          final boolean fatal = (boolean) arguments.get(Constants.FATAL);
 
-        Exception exception;
-        if (reason != null) {
-          // Set a "reason" (to match iOS) to show where the exception was thrown.
-          crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
-          exception =
-            new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
-        } else {
-          exception = new FlutterError(dartExceptionMessage);
-        }
-
-        if (fatal) {
-          AnalyticsConnector connector = FirebaseApp.getInstance().get(AnalyticsConnector.class);
-          CrashlyticsOriginAnalyticsEventLogger analyticsEventLogger = new CrashlyticsOriginAnalyticsEventLogger(connector);
-
-          Bundle params = new Bundle();
-          long unixTime = System.currentTimeMillis() / 1000;
-
-          params.putInt(Constants.FATAL, 1);
-          params.putLong(Constants.TIMESTAMP, unixTime);
-
-          crashlytics.setCustomKey(Constants.CRASH_EVENT_KEY, unixTime);
-          analyticsEventLogger.logEvent(Constants.FIREBASE_APPLICATION_EXCEPTION, params);
-        }
-
-
-        crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage);
-
-        final List<StackTraceElement> elements = new ArrayList<>();
-        @SuppressWarnings("unchecked") final List<Map<String, String>> errorElements =
-          (List<Map<String, String>>)
-            Objects.requireNonNull(arguments.get(Constants.STACK_TRACE_ELEMENTS));
-
-        for (Map<String, String> errorElement : errorElements) {
-          final StackTraceElement stackTraceElement = generateStackTraceElement(errorElement);
-          if (stackTraceElement != null) {
-            elements.add(stackTraceElement);
+          Exception exception;
+          if (reason != null) {
+            // Set a "reason" (to match iOS) to show where the exception was thrown.
+            crashlytics.setCustomKey(Constants.FLUTTER_ERROR_REASON, "thrown " + reason);
+            exception =
+                new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
+          } else {
+            exception = new FlutterError(dartExceptionMessage);
           }
-        }
-        exception.setStackTrace(elements.toArray(new StackTraceElement[0]));
 
-        // Log information.
-        if (!information.isEmpty()) {
-          crashlytics.log(information);
-        }
+          if (fatal) {
+            AnalyticsConnector connector = FirebaseApp.getInstance().get(AnalyticsConnector.class);
+            CrashlyticsOriginAnalyticsEventLogger analyticsEventLogger =
+                new CrashlyticsOriginAnalyticsEventLogger(connector);
 
-        crashlytics.recordException(exception);
-        return null;
-      });
+            Bundle params = new Bundle();
+            long unixTime = System.currentTimeMillis() / 1000;
+
+            params.putInt(Constants.FATAL, 1);
+            params.putLong(Constants.TIMESTAMP, unixTime);
+
+            crashlytics.setCustomKey(Constants.CRASH_EVENT_KEY, unixTime);
+            analyticsEventLogger.logEvent(Constants.FIREBASE_APPLICATION_EXCEPTION, params);
+          }
+
+          crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage);
+
+          final List<StackTraceElement> elements = new ArrayList<>();
+          @SuppressWarnings("unchecked")
+          final List<Map<String, String>> errorElements =
+              (List<Map<String, String>>)
+                  Objects.requireNonNull(arguments.get(Constants.STACK_TRACE_ELEMENTS));
+
+          for (Map<String, String> errorElement : errorElements) {
+            final StackTraceElement stackTraceElement = generateStackTraceElement(errorElement);
+            if (stackTraceElement != null) {
+              elements.add(stackTraceElement);
+            }
+          }
+          exception.setStackTrace(elements.toArray(new StackTraceElement[0]));
+
+          // Log information.
+          if (!information.isEmpty()) {
+            crashlytics.log(information);
+          }
+
+          crashlytics.recordException(exception);
+          return null;
+        });
   }
 
   private Task<Void> log(final Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        String message = (String) Objects.requireNonNull(arguments.get(Constants.MESSAGE));
-        FirebaseCrashlytics.getInstance().log(message);
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          String message = (String) Objects.requireNonNull(arguments.get(Constants.MESSAGE));
+          FirebaseCrashlytics.getInstance().log(message);
+          return null;
+        });
   }
 
   private Task<Void> sendUnsentReports() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseCrashlytics.getInstance().sendUnsentReports();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseCrashlytics.getInstance().sendUnsentReports();
+          return null;
+        });
   }
 
   private Task<Map<String, Object>> setCrashlyticsCollectionEnabled(
-    final Map<String, Object> arguments) {
+      final Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled);
-        return new HashMap<String, Object>() {
-          {
-            put(
-              Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
-              isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
-          }
-        };
-      });
+        cachedThreadPool,
+        () -> {
+          Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
+          FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enabled);
+          return new HashMap<String, Object>() {
+            {
+              put(
+                  Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
+                  isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
+            }
+          };
+        });
   }
 
   private Task<Void> setUserIdentifier(final Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        String identifier = (String) Objects.requireNonNull(arguments.get(Constants.IDENTIFIER));
-        FirebaseCrashlytics.getInstance().setUserId(identifier);
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          String identifier = (String) Objects.requireNonNull(arguments.get(Constants.IDENTIFIER));
+          FirebaseCrashlytics.getInstance().setUserId(identifier);
+          return null;
+        });
   }
 
   private Task<Void> setCustomKey(final Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        String key = (String) Objects.requireNonNull(arguments.get(Constants.KEY));
-        String value = (String) Objects.requireNonNull(arguments.get(Constants.VALUE));
-        FirebaseCrashlytics.getInstance().setCustomKey(key, value);
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          String key = (String) Objects.requireNonNull(arguments.get(Constants.KEY));
+          String value = (String) Objects.requireNonNull(arguments.get(Constants.VALUE));
+          FirebaseCrashlytics.getInstance().setCustomKey(key, value);
+          return null;
+        });
   }
 
   @Override
@@ -280,16 +272,16 @@ public class FlutterFirebaseCrashlyticsPlugin
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          String message =
-            exception != null ? exception.getMessage() : "An unknown error occurred";
-          result.error("firebase_crashlytics", message, null);
-        }
-      });
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            String message =
+                exception != null ? exception.getMessage() : "An unknown error occurred";
+            result.error("firebase_crashlytics", message, null);
+          }
+        });
   }
 
   /**
@@ -306,10 +298,10 @@ public class FlutterFirebaseCrashlyticsPlugin
       String methodName = errorElement.get(Constants.METHOD);
 
       return new StackTraceElement(
-        className == null ? "" : className,
-        methodName,
-        fileName,
-        Integer.parseInt(Objects.requireNonNull(lineNumber)));
+          className == null ? "" : className,
+          methodName,
+          fileName,
+          Integer.parseInt(Objects.requireNonNull(lineNumber)));
     } catch (Exception e) {
       Log.e(TAG, "Unable to generate stack trace element from Dart error.");
       return null;
@@ -329,7 +321,7 @@ public class FlutterFirebaseCrashlyticsPlugin
   private boolean isCrashlyticsCollectionEnabled(FirebaseApp app) {
     boolean enabled;
     SharedPreferences crashlyticsSharedPrefs =
-      getCrashlyticsSharedPrefs(app.getApplicationContext());
+        getCrashlyticsSharedPrefs(app.getApplicationContext());
 
     if (crashlyticsSharedPrefs.contains("firebase_crashlytics_collection_enabled")) {
       enabled = crashlyticsSharedPrefs.getBoolean("firebase_crashlytics_collection_enabled", true);
@@ -348,14 +340,14 @@ public class FlutterFirebaseCrashlyticsPlugin
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
     return Tasks.call(
-      () ->
-        new HashMap<String, Object>() {
-          {
-            put(
-              Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
-              isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
-          }
-        });
+        () ->
+            new HashMap<String, Object>() {
+              {
+                put(
+                    Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
+                    isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
+              }
+            });
   }
 
   @Override
