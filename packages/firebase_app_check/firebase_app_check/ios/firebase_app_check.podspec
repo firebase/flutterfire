@@ -1,23 +1,48 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint firebase_app_check.podspec` to validate before publishing.
-#
-Pod::Spec.new do |s|
-  s.name             = 'firebase_app_check'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
-  s.description      = <<-DESC
-A new flutter plugin project.
-                       DESC
-  s.homepage         = 'http://example.com'
-  s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
-  s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
-  s.dependency 'Flutter'
-  s.platform = :ios, '8.0'
+require 'yaml'
+pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
+library_version = pubspec['version'].gsub('+', '-')
 
-  # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
+if defined?($FirebaseSDKVersion)
+  Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
+  firebase_sdk_version = $FirebaseSDKVersion
+else
+  firebase_core_script = File.join(File.expand_path('..', File.expand_path('..', File.dirname(__FILE__))), 'firebase_core/ios/firebase_sdk_version.rb')
+  if File.exist?(firebase_core_script)
+    require firebase_core_script
+    firebase_sdk_version = firebase_sdk_version!
+    Pod::UI.puts "#{pubspec['name']}: Using Firebase SDK version '#{firebase_sdk_version}' defined in 'firebase_core'"
+  end
 end
+
+Pod::Spec.new do |s|
+  s.name             = pubspec['name']
+  s.version          = library_version
+  s.summary          = pubspec['description']
+  s.description      = pubspec['description']
+  s.homepage         = pubspec['homepage']
+
+  s.license          = { :file => '../LICENSE' }
+  s.authors           = 'The Chromium Authors'
+  s.source           = { :path => '.' }
+  s.source_files     = 'Classes/**/*.{h,m}'
+  s.public_header_files = 'Classes/*.h'
+  s.ios.deployment_target = '10.0'
+
+  # Flutter dependencies
+  s.dependency 'Flutter'
+
+  # Firebase dependencies
+  s.dependency 'firebase_core'
+  # TODO switch to this once iOS SDK v8.0.0 is published
+  # s.dependency 'FirebaseAppCheck', firebase_sdk_version
+  s.dependency 'FirebaseAppCheck'
+
+  s.static_framework = true
+  s.pod_target_xcconfig = {
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-appcheck\\\"",
+    'DEFINES_MODULE' => 'YES',
+    # Flutter.framework does not contain a i386 slice.
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
+  }
+end
+

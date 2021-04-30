@@ -5,7 +5,7 @@
   FlutterMethodChannel* channel =
       [FlutterMethodChannel methodChannelWithName:@"firebase_app_check"
                                   binaryMessenger:[registrar messenger]];
-  FirebaseAppCheckPlugin* instance = [[FirebaseAppCheckPlugin alloc] init];
+  FLTFirebaseAppCheckPlugin* instance = [[FLTFirebaseAppCheckPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
