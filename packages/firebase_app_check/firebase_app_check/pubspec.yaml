@@ -29,7 +29,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.firebase.app_check
+        package: io.flutter.plugins.firebase.appcheck
         pluginClass: FlutterFirebaseAppCheckPlugin
       ios:
         pluginClass: FLTFirebaseAppCheckPlugin
