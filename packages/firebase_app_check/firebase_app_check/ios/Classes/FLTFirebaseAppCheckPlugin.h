@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface FLTFirebaseAppCheckPlugin : NSObject<FlutterPlugin>
+@interface FLTFirebaseAppCheckPlugin : NSObject <FlutterPlugin>
 @end

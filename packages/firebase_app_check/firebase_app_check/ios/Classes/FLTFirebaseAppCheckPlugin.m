@@ -2,9 +2,9 @@
 
 @implementation FLTFirebaseAppCheckPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
-      methodChannelWithName:@"firebase_app_check"
-            binaryMessenger:[registrar messenger]];
+  FlutterMethodChannel* channel =
+      [FlutterMethodChannel methodChannelWithName:@"firebase_app_check"
+                                  binaryMessenger:[registrar messenger]];
   FirebaseAppCheckPlugin* instance = [[FirebaseAppCheckPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 }

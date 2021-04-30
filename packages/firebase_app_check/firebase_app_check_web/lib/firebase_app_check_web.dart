@@ -37,7 +37,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
     return this;
   }
 
-
   @override
   Future<void> activate() async {
     try {
