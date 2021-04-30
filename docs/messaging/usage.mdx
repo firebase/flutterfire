@@ -192,7 +192,7 @@ it's possible to align these flows.
 <TabItem value="native">
 
 Handling messages whilst your application is in the background is a little different. Messages can
-be handled via the [`onBackgroundMessage`](!firebase_messaging.FirebaseMessaging.onBackgroundMessage) handler (only Android supports background handler) When received, an isolate is spawned (Android only, iOS/macOS does not require a separate isolate) allowing you to handle messages even when your application is not running.
+be handled via the [`onBackgroundMessage`](!firebase_messaging.FirebaseMessaging.onBackgroundMessage) handler (only Android supports `onBackgroundMessage` Handler) When received, an isolate is spawned (Android only, iOS/macOS does not require a separate isolate) allowing you to handle messages even when your application is not running.
 
 There are a few things to keep in mind about your background message handler:
 
