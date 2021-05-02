@@ -110,7 +110,6 @@ void main() {
     group('.get()', () {
       test('throws if field is invalid', () async {
         DocumentSnapshot ds = await firestore!.doc('doc/exists').get();
-        expect(() => ds.get(null), throwsAssertionError);
         expect(() => ds.get(123), throwsAssertionError);
         expect(() => ds.get({}), throwsAssertionError);
       });
@@ -192,7 +191,6 @@ void main() {
     group('[]', () {
       test('throws if field is invalid', () async {
         DocumentSnapshot ds = await firestore!.doc('doc/exists').get();
-        expect(() => ds[null], throwsAssertionError);
         expect(() => ds[123], throwsAssertionError);
         expect(() => ds[{}], throwsAssertionError);
       });
