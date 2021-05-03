@@ -65,7 +65,6 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
   dynamic get(dynamic field) {
-    assert(field != null);
     assert(field is String || field is FieldPath,
         'Supported [field] types are [String] and [FieldPath]');
 
