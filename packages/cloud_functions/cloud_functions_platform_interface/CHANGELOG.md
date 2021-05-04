@@ -1,3 +1,11 @@
+## 5.0.3
+
+ - **FIX**: bubble exceptions (#5869).
+
+## 5.0.2
+
+ - **FIX**: return correct type on native (#5709).
+
 ## 5.0.1
 
  - Update a dependency to the latest release.

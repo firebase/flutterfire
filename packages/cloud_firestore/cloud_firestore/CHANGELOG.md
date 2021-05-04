@@ -1,3 +1,15 @@
+## 1.0.7
+
+ - **FIX**: Clear event listeners when firebase core is reinitialised (#5852).
+
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
 ## 1.0.4
 
  - **FIX**: made QueryDocumentSnapshot.data() non-nullable (#5476).

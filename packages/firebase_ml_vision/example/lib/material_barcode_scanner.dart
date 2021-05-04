@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' show lerpDouble;
@@ -13,7 +11,6 @@ import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'colors.dart';
 import 'scanner_utils.dart';
@@ -22,7 +19,7 @@ enum AnimationState { search, barcodeNear, barcodeFound, endSearch }
 
 class MaterialBarcodeScanner extends StatefulWidget {
   const MaterialBarcodeScanner({
-    Key key,
+    Key? key,
     this.validRectangle = const Rectangle(width: 320, height: 144),
     this.frameColor = kShrineScrim,
     this.traceMultiplier = 1.2,
@@ -38,14 +35,14 @@ class MaterialBarcodeScanner extends StatefulWidget {
 
 class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     with TickerProviderStateMixin {
-  CameraController _cameraController;
-  AnimationController _animationController;
-  String _scannerHint;
+  CameraController? _cameraController;
+  AnimationController? _animationController;
+  String? _scannerHint;
   bool _closeWindow = false;
-  XFile _barcodePictureFile;
-  Size _previewSize;
+  String? _barcodePictureFilePath;
+  Size? _previewSize;
   AnimationState _currentState = AnimationState.search;
-  CustomPainter _animationPainter;
+  CustomPainter? _animationPainter;
   int _animationStart = DateTime.now().millisecondsSinceEpoch;
   final BarcodeDetector _barcodeDetector =
       FirebaseVision.instance.barcodeDetector();
@@ -92,18 +89,18 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
             color: Colors.white,
           ),
           Rectangle(
-            width: widget.validRectangle.width * widget.traceMultiplier,
-            height: widget.validRectangle.height * widget.traceMultiplier,
+            width: widget.validRectangle.width! * widget.traceMultiplier,
+            height: widget.validRectangle.height! * widget.traceMultiplier,
             color: Colors.transparent,
           ),
-        ).animate(_animationController),
+        ).animate(_animationController!),
       );
 
-      _animationController.addStatusListener((AnimationStatus status) {
+      _animationController!.addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) {
           Future<void>.delayed(const Duration(milliseconds: 1600), () {
             if (_currentState == AnimationState.search) {
-              _animationController.forward(from: 0);
+              _animationController!.forward(from: 0);
             }
           });
         }
@@ -111,9 +108,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     } else if (newState == AnimationState.barcodeNear ||
         newState == AnimationState.barcodeFound ||
         newState == AnimationState.endSearch) {
-      double begin;
+      double? begin;
       if (_currentState == AnimationState.barcodeNear) {
-        begin = lerpDouble(0.0, 0.5, _animationController.value);
+        begin = lerpDouble(0.0, 0.5, _animationController!.value);
       } else if (_currentState == AnimationState.search) {
         _initAnimation(const Duration(milliseconds: 500));
         begin = 0.0;
@@ -130,11 +127,11 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         animation: Tween<double>(
           begin: begin,
           end: newState == AnimationState.barcodeNear ? 0.5 : 1.0,
-        ).animate(_animationController),
+        ).animate(_animationController!),
       );
 
       if (newState == AnimationState.barcodeFound) {
-        _animationController.addStatusListener((AnimationStatus status) {
+        _animationController!.addStatusListener((AnimationStatus status) {
           if (status == AnimationStatus.completed) {
             Future<void>.delayed(const Duration(milliseconds: 300), () {
               if (_currentState != AnimationState.endSearch) {
@@ -150,7 +147,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
 
     _currentState = newState;
     if (newState != AnimationState.endSearch) {
-      _animationController.forward(from: 0);
+      _animationController!.forward(from: 0);
       _animationStart = DateTime.now().millisecondsSinceEpoch;
     }
   }
@@ -158,12 +155,12 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   Future<void> _openCamera(CameraDescription camera) async {
     final ResolutionPreset preset =
         defaultTargetPlatform == TargetPlatform.android
-            ? ResolutionPreset.medium
+            ? ResolutionPreset.high
             : ResolutionPreset.low;
 
     _cameraController = CameraController(camera, preset, enableAudio: false);
-    await _cameraController.initialize();
-    _previewSize = _cameraController.value.previewSize;
+    await _cameraController!.initialize();
+    _previewSize = _cameraController!.value.previewSize;
     setState(() {});
   }
 
@@ -171,7 +168,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     bool isDetecting = false;
     final MediaQueryData data = MediaQuery.of(context);
 
-    await _cameraController.startImageStream((CameraImage image) {
+    await _cameraController!.startImageStream((CameraImage image) {
       if (isDetecting) {
         return;
       }
@@ -200,11 +197,11 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   }
 
   void _handleResult({
-    @required List<Barcode> barcodes,
-    @required MediaQueryData data,
-    @required Size imageSize,
+    required List<Barcode>? barcodes,
+    required MediaQueryData data,
+    required Size imageSize,
   }) {
-    if (!_cameraController.value.isStreamingImages) {
+    if (!_cameraController!.value.isStreamingImages) {
       return;
     }
 
@@ -218,8 +215,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
         : imageSize.width;
 
     final double imageScale = imageHeight / maxLogicalHeight;
-    final double halfWidth = imageScale * widget.validRectangle.width / 2;
-    final double halfHeight = imageScale * widget.validRectangle.height / 2;
+    final double halfWidth = imageScale * widget.validRectangle.width! / 2;
+    final double halfHeight = imageScale * widget.validRectangle.height! / 2;
 
     final Offset center = imageSize.center(Offset.zero);
     final Rect validRect = Rect.fromLTRB(
@@ -229,13 +226,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       center.dy + halfHeight,
     );
 
-    for (final Barcode barcode in barcodes) {
-      final Rect intersection = validRect.intersect(barcode.boundingBox);
+    for (final Barcode barcode in barcodes!) {
+      final Rect intersection = validRect.intersect(barcode.boundingBox!);
 
       final bool doesContain = intersection == barcode.boundingBox;
 
       if (doesContain) {
-        _cameraController.stopImageStream().then((_) => _takePicture());
+        _cameraController!.stopImageStream().then((_) => _takePicture());
 
         if (_currentState != AnimationState.barcodeFound) {
           _closeWindow = true;
@@ -244,7 +241,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
           setState(() {});
         }
         return;
-      } else if (barcode.boundingBox.overlaps(validRect)) {
+      } else if (barcode.boundingBox!.overlaps(validRect)) {
         if (_currentState != AnimationState.barcodeNear) {
           _scannerHint = 'Move closer to the barcode';
           _switchAnimationState(AnimationState.barcodeNear);
@@ -268,8 +265,9 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   void dispose() {
     _currentState = AnimationState.endSearch;
-    _cameraController?.stopImageStream();
-    _cameraController?.dispose();
+    _cameraController
+        ?.stopImageStream()
+        .then((_) => _cameraController?.dispose());
     _animationController?.dispose();
     _barcodeDetector.close();
 
@@ -283,23 +281,21 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   }
 
   Future<void> _takePicture() async {
-    final Directory extDir = await getApplicationDocumentsDirectory();
+    XFile? pic;
 
-    final String dirPath = '${extDir.path}/Pictures/barcodePics';
-    await Directory(dirPath).create(recursive: true);
-
-    XFile pictureFile;
     try {
-      pictureFile = await _cameraController.takePicture();
+      pic = await _cameraController!.takePicture();
     } on CameraException catch (e) {
       print(e);
     }
 
-    await _cameraController.dispose();
+    await _cameraController!.dispose();
     _cameraController = null;
 
+    if (!mounted) return;
+
     setState(() {
-      _barcodePictureFile = pictureFile;
+      _barcodePictureFilePath = pic?.path;
     });
   }
 
@@ -309,10 +305,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
       child: Transform.scale(
         scale: _getImageZoom(MediaQuery.of(context)),
         child: Center(
-          child: AspectRatio(
-            aspectRatio: _cameraController.value.aspectRatio,
-            child: CameraPreview(_cameraController),
-          ),
+          child: CameraPreview(_cameraController!),
         ),
       ),
     );
@@ -320,7 +313,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
 
   double _getImageZoom(MediaQueryData data) {
     final double logicalWidth = data.size.width;
-    final double logicalHeight = _previewSize.aspectRatio * logicalWidth;
+    final double logicalHeight = _previewSize!.aspectRatio * logicalWidth;
 
     final EdgeInsets padding = data.padding;
     final double maxLogicalHeight =
@@ -348,9 +341,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                   padding: const EdgeInsets.all(16),
                   child: Text(
                     '1 result found',
-                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                    // ignore: deprecated_member_use
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 ),
               ),
@@ -378,16 +369,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
                                   margin: const EdgeInsets.only(bottom: 4),
                                   child: Text(
                                     'SPAN Reader',
-                                    // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                                    // ignore: deprecated_member_use
-                                    style: Theme.of(context).textTheme.body2,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ),
                                 Text(
                                   'Vol. 2',
-                                  // TODO(bmparr): Switch body2 -> bodyText1 once https://github.com/flutter/flutter/pull/48547 makes it to stable.
-                                  // ignore: deprecated_member_use
-                                  style: Theme.of(context).textTheme.body2,
+                                  style: Theme.of(context).textTheme.bodyText1,
                                 ),
                                 Expanded(
                                   child: Column(
@@ -455,7 +443,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _initCameraAndScanner();
     setState(() {
       _closeWindow = false;
-      _barcodePictureFile = null;
+      _barcodePictureFilePath = null;
       _scannerHint = null;
       _switchAnimationState(AnimationState.search);
     });
@@ -464,21 +452,21 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   @override
   Widget build(BuildContext context) {
     Widget background;
-    if (_barcodePictureFile != null) {
+    if (_barcodePictureFilePath != null) {
       background = Container(
         color: Colors.black,
         child: Transform.scale(
           scale: _getImageZoom(MediaQuery.of(context)),
           child: Center(
             child: Image.file(
-              File(_barcodePictureFile.path),
+              File(_barcodePictureFilePath!),
               fit: BoxFit.fitWidth,
             ),
           ),
         ),
       );
     } else if (_cameraController != null &&
-        _cameraController.value.isInitialized) {
+        _cameraController!.value.isInitialized) {
       background = _buildCameraPreview();
     } else {
       background = Container(
@@ -495,8 +483,8 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
               constraints: const BoxConstraints.expand(),
               child: CustomPaint(
                 painter: WindowPainter(
-                  windowSize: Size(widget.validRectangle.width,
-                      widget.validRectangle.height),
+                  windowSize: Size(widget.validRectangle.width!,
+                      widget.validRectangle.height!),
                   outerFrameColor: widget.frameColor,
                   closeWindow: _closeWindow,
                   innerFrameColor: _currentState == AnimationState.endSearch
@@ -574,7 +562,7 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
 
 class WindowPainter extends CustomPainter {
   WindowPainter({
-    @required this.windowSize,
+    required this.windowSize,
     this.outerFrameColor = Colors.white54,
     this.innerFrameColor = const Color(0xFF442C2E),
     this.innerFrameStrokeWidth = 3,
@@ -642,12 +630,12 @@ class WindowPainter extends CustomPainter {
 class Rectangle {
   const Rectangle({this.width, this.height, this.color});
 
-  final double width;
-  final double height;
-  final Color color;
+  final double? width;
+  final double? height;
+  final Color? color;
 
   static Rectangle lerp(Rectangle begin, Rectangle end, double t) {
-    Color color;
+    Color? color;
     if (t > .5) {
       color = Color.lerp(begin.color, end.color, (t - .5) / .25);
     } else {
@@ -667,12 +655,12 @@ class RectangleTween extends Tween<Rectangle> {
       : super(begin: begin, end: end);
 
   @override
-  Rectangle lerp(double t) => Rectangle.lerp(begin, end, t);
+  Rectangle lerp(double t) => Rectangle.lerp(begin!, end!, t);
 }
 
 class RectangleOutlinePainter extends CustomPainter {
   RectangleOutlinePainter({
-    @required this.animation,
+    required this.animation,
     this.strokeWidth = 3,
   }) : super(repaint: animation);
 
@@ -685,12 +673,12 @@ class RectangleOutlinePainter extends CustomPainter {
 
     final Paint paint = Paint()
       ..strokeWidth = strokeWidth
-      ..color = rectangle.color
+      ..color = rectangle.color!
       ..style = PaintingStyle.stroke;
 
     final Offset center = size.center(Offset.zero);
-    final double halfWidth = rectangle.width / 2;
-    final double halfHeight = rectangle.height / 2;
+    final double halfWidth = rectangle.width! / 2;
+    final double halfHeight = rectangle.height! / 2;
 
     final Rect rect = Rect.fromLTRB(
       center.dx - halfWidth,
@@ -708,8 +696,8 @@ class RectangleOutlinePainter extends CustomPainter {
 
 class RectangleTracePainter extends CustomPainter {
   RectangleTracePainter({
-    @required this.animation,
-    @required this.rectangle,
+    required this.animation,
+    required this.rectangle,
     this.strokeWidth = 3,
   }) : super(repaint: animation);
 
@@ -722,8 +710,8 @@ class RectangleTracePainter extends CustomPainter {
     final double value = animation.value;
 
     final Offset center = size.center(Offset.zero);
-    final double halfWidth = rectangle.width / 2;
-    final double halfHeight = rectangle.height / 2;
+    final double halfWidth = rectangle.width! / 2;
+    final double halfHeight = rectangle.height! / 2;
 
     final Rect rect = Rect.fromLTRB(
       center.dx - halfWidth,
@@ -734,7 +722,7 @@ class RectangleTracePainter extends CustomPainter {
 
     final Paint paint = Paint()
       ..strokeWidth = strokeWidth
-      ..color = rectangle.color;
+      ..color = rectangle.color!;
 
     final double halfStrokeWidth = strokeWidth / 2;
 

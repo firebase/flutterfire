@@ -1,3 +1,20 @@
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
+## 8.0.1
+
+ - **FIX**: null values for events (#5563).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 8.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 8.0.0-dev.2
+
+ - **FIX**: support complex data structures like list and map on Android (#4394).
+
 ## 8.0.0-dev.1
 
  - **FIX**: remove screen_view from reservedEventNames (#4251).

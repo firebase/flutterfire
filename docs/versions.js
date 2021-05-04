@@ -22,10 +22,8 @@ export default {
     firebase_database_ns: PUB_NS_FIREBASE_DATABASE,
     firebase_dynamic_links: PUB_FIREBASE_DYNAMIC_LINKS,
     firebase_dynamic_links_ns: PUB_NS_FIREBASE_DYNAMIC_LINKS,
-    // firebase_iid: PUB_FIREBASE_IID,
     firebase_in_app_messaging: PUB_FIREBASE_IN_APP_MESSAGING,
     firebase_in_app_messaging_ns: PUB_NS_FIREBASE_IN_APP_MESSAGING,
-    // firebase_mlkit_language: PUB_FIREBASE_ML_LANGUAGE,
     firebase_ml_vision: PUB_FIREBASE_ML_VISION,
     firebase_performance: PUB_FIREBASE_PERFORMANCE,
     firebase_performance_ns: PUB_NS_FIREBASE_PERFORMANCE,
@@ -37,7 +35,7 @@ export default {
     google_services: "4.3.3", // com.google.gms:google-services
   },
   web: {
-    firebase_cdn: "7.20.0", // https://firebase.google.com/docs/web/setup#expandable-8-label
+    firebase_cdn: "8.4.1", // https://firebase.google.com/docs/web/setup#expandable-8-label
   },
   external: {
     google_sign_in: "^4.5.1",

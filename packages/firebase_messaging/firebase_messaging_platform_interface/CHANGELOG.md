@@ -1,3 +1,11 @@
+## 2.1.3
+
+ - Update a dependency to the latest release.
+
+## 2.1.2
+
+ - Update a dependency to the latest release.
+
 ## 2.1.1
 
  - **FIX**: APN message with critical sound causing a hidden error (#5653).

@@ -1,3 +1,11 @@
+## 1.0.5
+
+ - **FIX**: secondary storage buckets now work as expected on Web (#5863).
+
+## 1.0.4
+
+ - **REFACTOR**: Share guard functions accross plugins (#5783).
+
 ## 1.0.3
 
  - Update a dependency to the latest release.

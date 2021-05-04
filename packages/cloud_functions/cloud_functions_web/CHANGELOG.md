@@ -1,3 +1,11 @@
+## 4.0.5
+
+ - **FIX**: bubble exceptions (#5869).
+
+## 4.0.4
+
+ - Update a dependency to the latest release.
+
 ## 4.0.3
 
  - Update a dependency to the latest release.

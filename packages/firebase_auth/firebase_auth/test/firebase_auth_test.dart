@@ -449,10 +449,11 @@ void main() {
         final AuthCredential credential =
             GithubAuthProvider.credential(kMockGithubToken);
         await auth!.signInWithCredential(credential);
-        final GithubAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
+        expect(captured, isA<GithubAuthCredential>());
         expect(captured.providerId, equals('github.com'));
         expect(captured.accessToken, equals(kMockGithubToken));
       });
@@ -479,25 +480,27 @@ void main() {
           secret: kMockAccessToken,
         );
         await auth!.signInWithCredential(credential);
-        final TwitterAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
+        expect(captured, isA<TwitterAuthCredential>());
         expect(captured.providerId, equals('twitter.com'));
         expect(captured.accessToken, equals(kMockIdToken));
         expect(captured.secret, equals(kMockAccessToken));
       });
 
       test('GoogleAuthProvider signInWithCredential', () async {
-        final AuthCredential credential = GoogleAuthProvider.credential(
+        final credential = GoogleAuthProvider.credential(
           idToken: kMockIdToken,
           accessToken: kMockAccessToken,
         );
         await auth!.signInWithCredential(credential);
-        final GoogleAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
+        expect(captured, isA<GoogleAuthCredential>());
         expect(captured.providerId, equals('google.com'));
         expect(captured.idToken, equals(kMockIdToken));
         expect(captured.accessToken, equals(kMockAccessToken));
@@ -510,7 +513,7 @@ void main() {
           accessToken: kMockAccessToken,
         );
         await auth!.signInWithCredential(credential);
-        final OAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
@@ -520,7 +523,7 @@ void main() {
       });
 
       test('PhoneAuthProvider signInWithCredential', () async {
-        final AuthCredential credential = PhoneAuthProvider.credential(
+        final PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: kMockVerificationId,
           smsCode: kMockSmsCode,
         );
@@ -538,10 +541,11 @@ void main() {
         final AuthCredential credential =
             FacebookAuthProvider.credential(kMockAccessToken);
         await auth!.signInWithCredential(credential);
-        final FacebookAuthCredential captured =
+        final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
                 .captured
                 .single;
+        expect(captured, isA<FacebookAuthCredential>());
         expect(captured.providerId, equals('facebook.com'));
         expect(captured.accessToken, equals(kMockAccessToken));
       });

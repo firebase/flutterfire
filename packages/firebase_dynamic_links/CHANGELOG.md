@@ -1,3 +1,20 @@
+## 2.0.2
+
+ - **TEST**: rewrite integration test to test for parameters explicitly.
+ - **REFACTOR**: upgrade example to v2 Android embedding.
+ - **FIX**: fix broken ios code from #4354.
+ - **FIX**: retry handling iOS universal link on network failure (#4354).
+ - **DOCS**: Open Android App directly without opening link in Browser. (#3127).
+ - **CI**: setup `firebase_dynamic_links` ci workflow.
+
+## 2.0.1
+
+ - **DOCS**: remove codelab link from readme.
+
+## 2.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 2.0.0-dev.1
 
  - Update a dependency to the latest release.

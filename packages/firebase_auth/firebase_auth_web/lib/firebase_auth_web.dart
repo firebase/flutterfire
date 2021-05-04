@@ -25,6 +25,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       : _webAuth = null,
         super(appInstance: null);
 
+  Completer<void> _initialized = Completer();
+
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({required FirebaseApp app})
       : _webAuth = auth_interop.getAuthInstance(core_interop.app(app.name)),
@@ -39,6 +41,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
     // TODO(rrousselGit): close StreamSubscription
     _webAuth!.onAuthStateChanged.map((auth_interop.User? webUser) {
+      if (!_initialized.isCompleted) {
+        _initialized.complete();
+      }
+
       if (webUser == null) {
         return null;
       } else {
@@ -187,16 +193,25 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Stream<UserPlatform?> authStateChanges() =>
-      _authStateChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> authStateChanges() async* {
+    await _initialized.future;
+    yield currentUser;
+    yield* _authStateChangesListeners[app.name]!.stream;
+  }
 
   @override
-  Stream<UserPlatform?> idTokenChanges() =>
-      _idTokenChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> idTokenChanges() async* {
+    await _initialized.future;
+    yield currentUser;
+    yield* _idTokenChangesListeners[app.name]!.stream;
+  }
 
   @override
-  Stream<UserPlatform?> userChanges() =>
-      _userChangesListeners[app.name]!.stream;
+  Stream<UserPlatform?> userChanges() async* {
+    await _initialized.future;
+    yield currentUser;
+    yield* _userChangesListeners[app.name]!.stream;
+  }
 
   @override
   Future<void> sendPasswordResetEmail(
@@ -325,9 +340,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithPopup(AuthProvider provider) async {
     try {
       return UserCredentialWeb(
-          this,
-          await _webAuth!
-              .signInWithPopup(convertPlatformAuthProvider(provider)!));
+        this,
+        await _webAuth!.signInWithPopup(convertPlatformAuthProvider(provider)),
+      );
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -337,7 +352,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<void> signInWithRedirect(AuthProvider provider) async {
     try {
       return _webAuth!
-          .signInWithRedirect(convertPlatformAuthProvider(provider)!);
+          .signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
