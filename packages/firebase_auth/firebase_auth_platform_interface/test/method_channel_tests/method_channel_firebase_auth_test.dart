@@ -930,7 +930,6 @@ void main() {
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
               'tenantId': null,
-              'handle': handle,F
               'phoneNumber': testPhoneNumber,
               'timeout': testTimeout.inMilliseconds,
               'forceResendingToken': null,
