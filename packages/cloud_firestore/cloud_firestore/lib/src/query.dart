@@ -758,7 +758,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   Query<T> _mapQuery(Query<Map<String, dynamic>> newOriginalQuery) {
     return _WithConverterQuery<T>(
-      _originalQuery,
+      newOriginalQuery,
       _fromFirestore,
       _toFirestore,
     );
