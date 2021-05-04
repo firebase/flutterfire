@@ -1,3 +1,11 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#5938).
+ - **BREAKING** **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#6015).
+ - **BREAKING** **FEAT**: convert FieldPath parameters from dynamic to Object (#5997).
+
 ## 1.0.7
 
  - **FIX**: Clear event listeners when firebase core is reinitialised (#5852).

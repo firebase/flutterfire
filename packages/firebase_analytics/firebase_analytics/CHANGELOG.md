@@ -1,3 +1,7 @@
+## 8.0.3
+
+ - **DOCS**: remove invalid codelabs link.
+
 ## 8.0.2
 
  - Update a dependency to the latest release.

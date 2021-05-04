@@ -1,3 +1,10 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#5938).
+ - **BREAKING** **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#6015).
+
 ## 1.0.7
 
  - Update a dependency to the latest release.
