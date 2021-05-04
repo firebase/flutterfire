@@ -4,16 +4,16 @@ description:
   live synchronization and offline support on Android and iOS.
 homepage: https://firebase.flutter.dev/docs/firestore/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 1.0.6
+version: 1.0.7
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.4"
 
 dependencies:
-  cloud_firestore_platform_interface: ^4.0.2
-  cloud_firestore_web: ^1.0.6
-  firebase_core: ^1.0.4
+  cloud_firestore_platform_interface: ^4.0.3
+  cloud_firestore_web: ^1.0.7
+  firebase_core: ^1.1.0
   firebase_core_platform_interface: ^4.0.0
   flutter:
     sdk: flutter

@@ -41,7 +41,7 @@ class DocumentSnapshot {
   /// Data can be accessed by providing a dot-notated path or [FieldPath]
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
-  dynamic get(dynamic field) =>
+  dynamic get(Object field) =>
       _CodecUtility.valueDecode(_delegate.get(field), _firestore);
 
   /// Gets a nested field by [String] or [FieldPath] from this [DocumentSnapshot].
@@ -49,5 +49,5 @@ class DocumentSnapshot {
   /// Data can be accessed by providing a dot-notated path or [FieldPath]
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
-  dynamic operator [](dynamic field) => get(field);
+  dynamic operator [](Object field) => get(field);
 }

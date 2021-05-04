@@ -17,23 +17,32 @@ void main() {
     });
 
     test('throws if merge is set with mergeFields', () {
-      expect(() => SetOptions(merge: true, mergeFields: ['123']),
-          throwsAssertionError);
-      expect(() => SetOptions(merge: false, mergeFields: ['123']),
-          throwsAssertionError);
+      expect(
+        () => SetOptions(merge: true, mergeFields: ['123']),
+        throwsAssertionError,
+      );
+      expect(
+        () => SetOptions(merge: false, mergeFields: ['123']),
+        throwsAssertionError,
+      );
     });
 
     test('mergeFields are set as a [FieldPath] & preserve current FieldPaths',
         () {
       expect(
-          SetOptions(mergeFields: [
+        SetOptions(
+          mergeFields: [
             'foo.bar',
             FieldPath(const ['foo', 'bar', 'baz'])
-          ]).mergeFields,
-          equals([
+          ],
+        ).mergeFields,
+        equals(
+          [
             FieldPath(const ['foo', 'bar']),
             FieldPath(const ['foo', 'bar', 'baz']),
-          ]));
+          ],
+        ),
+      );
     });
   });
 }

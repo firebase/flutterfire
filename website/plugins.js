@@ -25,6 +25,7 @@ module.exports = [
     name: 'Authentication',
     pub: 'firebase_auth',
     firebase: 'auth',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/auth/overview',
     support: {
       web: true,
@@ -36,6 +37,7 @@ module.exports = [
     name: 'Cloud Firestore',
     pub: 'cloud_firestore',
     firebase: 'firestore',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/firestore/overview',
     support: {
       web: true,
@@ -47,6 +49,7 @@ module.exports = [
     name: 'Cloud Functions',
     pub: 'cloud_functions',
     firebase: 'functions',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/functions/overview',
     support: {
       web: true,
@@ -58,6 +61,7 @@ module.exports = [
     name: 'Cloud Messaging',
     pub: 'firebase_messaging',
     firebase: 'cloud-messaging',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/messaging/overview',
     support: {
       web: true,
@@ -69,6 +73,7 @@ module.exports = [
     name: 'Cloud Storage',
     pub: 'firebase_storage',
     firebase: 'storage',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/storage/overview',
     support: {
       web: true,
@@ -80,6 +85,7 @@ module.exports = [
     name: 'Core',
     pub: 'firebase_core',
     firebase: '',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/core/usage',
     support: {
       web: true,
@@ -91,6 +97,7 @@ module.exports = [
     name: 'Crashlytics',
     pub: 'firebase_crashlytics',
     firebase: 'crashlytics',
+    production: true,
     documentation: 'https://firebase.flutter.dev/docs/crashlytics/overview',
     support: {
       web: false,

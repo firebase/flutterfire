@@ -16,6 +16,7 @@ interface Plugin {
   pub: string;
   documentation: string;
   firebase: string;
+  production?: boolean;
   remoteSource?: string;
   support: {
     web: boolean;
@@ -78,75 +79,80 @@ function Home() {
         </div>
       </section>
       <main>
-          {/* Temporary. remove note when admob fully deprecated */}
-          <div style={{display:'flex', justifyContent:'center', paddingTop:'10px'}}>
-            The FlutterFire AdMob package is deprecated and will be removed in the future. We recommend switching to the official &nbsp;<a href="https://pub.dev/packages/google_mobile_ads" target="_blank">google_mobile_ads</a>&nbsp; package by Google. A migration guide is available &nbsp;<a href="https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob#deprecation-of-firebase_admob-plugin" target="_blank">here</a>.
-          </div>
         <div className={styles.plugins}>
           <table className={styles.table}>
             <thead>
-              <tr>
-                <th>Plugin</th>
-                <th>Version</th>
-                <th>pub.dev</th>
-                <th>Firebase</th>
-                <th>Documentation</th>
-                <th>View Source</th>
-                <th>Mobile</th>
-                <th>Web</th>
-                <th>MacOS</th>
-              </tr>
+            <tr>
+              <th>Plugin</th>
+              <th>pub.dev</th>
+              <th>Firebase</th>
+              <th>Documentation</th>
+              <th>View Source</th>
+              <th>Package quality</th>
+              <th>Mobile</th>
+              <th>Web</th>
+              <th>MacOS</th>
+            </tr>
             </thead>
             <tbody>
-              {plugins.map((plugin: Plugin) => (
-                <tr key={plugin.pub}>
-                  <td>
-                    <strong>{plugin.name}</strong>
-                  </td>
-                  <td style={{ minWidth: 150 }}>
+            {plugins.map((plugin: Plugin) => (
+              <tr key={plugin.pub}>
+                <td>
+                  <strong>{plugin.name}</strong>
+                </td>
+                <td style={{minWidth: 150}}>
+                  <a href={`https://pub.dev/packages/${plugin.pub}`}>
                     <img
                       src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
                       alt={`${plugin.name} Badge`}
                     />
-                  </td>
-                  <td>
-                    <a href={`https://pub.dev/packages/${plugin.pub}`}>
-                      <img width={25} src={useBaseUrl('img/dart-logo.png')} alt="Pub" />
+                  </a>
+                </td>
+                <td>
+                  <a
+                    href={
+                      plugin.firebase
+                        ? `https://firebase.google.com/products/${plugin.firebase}`
+                        : 'https://firebase.google.com'
+                    }
+                  >
+                    <img width={25} src={useBaseUrl('img/firebase-logo.png')} alt="Firebase"/>
+                  </a>
+                </td>
+                <td>
+                  {plugin.documentation.length ? (
+                    <a href={plugin.documentation} target="_blank">
+                      📖
                     </a>
-                  </td>
-                  <td>
-                    <a
-                      href={
-                        plugin.firebase
-                          ? `https://firebase.google.com/products/${plugin.firebase}`
-                          : 'https://firebase.google.com'
-                      }
-                    >
-                      <img width={25} src={useBaseUrl('img/firebase-logo.png')} alt="Firebase" />
-                    </a>
-                  </td>
-                  <td>
-                    {plugin.documentation.length ? (
-                      <a href={plugin.documentation} target="_blank">
-                        📖
-                      </a>
-                    ) : null}
-                  </td>
-                  <td>
-                    <a
-                      href={plugin.remoteSource ? plugin.remoteSource : `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
-                      target="_blank"
-                    >
-                      <code>{plugin.pub}</code>
-                    </a>
-                  </td>
-                  <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
-                  <td>{plugin.support.web ? <Check /> : <Cross />}</td>
-                  <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
-                </tr>
-              ))}
+                  ) : null}
+                </td>
+                <td>
+                  <a
+                    href={plugin.remoteSource ? plugin.remoteSource : `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
+                    target="_blank"
+                  >
+                    <code>{plugin.pub}</code>
+                  </a>
+                </td>
+                <td>
+                  {plugin.production ? <b>Stable</b> : <i>Beta</i>}
+                </td>
+                <td className="icon">{plugin.support.mobile ? <Check/> : <Cross/>}</td>
+                <td>{plugin.support.web ? <Check/> : <Cross/>}</td>
+                <td>{plugin.support.macos ? <Check/> : <Cross/>}</td>
+              </tr>
+            ))}
             </tbody>
           </table>
+        </div>
+        {/* TODO Temporary. remove note when admob fully deprecated */}
+        <div style={{display: 'flex', justifyContent: 'center', padding: '20px'}}>
+          The FlutterFire AdMob package is deprecated and will be removed in the future. We recommend switching to the
+          official &nbsp;<a href="https://pub.dev/packages/google_mobile_ads"
+                            target="_blank">google_mobile_ads</a>&nbsp; package by Google. A migration guide is
+          available &nbsp;<a
+          href="https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob#deprecation-of-firebase_admob-plugin"
+          target="_blank">here</a>.
         </div>
       </main>
     </Layout>

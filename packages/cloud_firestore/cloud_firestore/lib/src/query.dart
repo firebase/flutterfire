@@ -108,10 +108,11 @@ class Query {
   }
 
   /// Asserts that the query [field] is either a String or a [FieldPath].
-  void _assertValidFieldType(dynamic field) {
+  void _assertValidFieldType(Object field) {
     assert(
-        field is String || field is FieldPath || field == FieldPath.documentId,
-        'Supported [field] types are [String] and [FieldPath].');
+      field is String || field is FieldPath || field == FieldPath.documentId,
+      'Supported [field] types are [String] and [FieldPath].',
+    );
   }
 
   /// Creates and returns a new [Query] that ends at the provided document
@@ -216,25 +217,34 @@ class Query {
   /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
-  Query orderBy(dynamic field, {bool descending = false}) {
-    assert(field != null);
+  Query orderBy(Object field, {bool descending = false}) {
     _assertValidFieldType(field);
-    assert(!_hasStartCursor(),
-        'Invalid query. You must not call startAt(), startAtDocument(), startAfter() or startAfterDocument() before calling orderBy()');
-    assert(!_hasEndCursor(),
-        'Invalid query. You must not call endAt(), endAtDocument(), endBefore() or endBeforeDocument() before calling orderBy()');
+    assert(
+      !_hasStartCursor(),
+      'Invalid query. '
+      'You must not call startAt(), startAtDocument(), '
+      'startAfter() or startAfterDocument() before calling orderBy()',
+    );
+    assert(
+      !_hasEndCursor(),
+      'Invalid query. '
+      'You must not call endAt(), endAtDocument(), '
+      'endBefore() or endBeforeDocument() before calling orderBy()',
+    );
 
     final List<List<dynamic>> orders =
         List<List<dynamic>>.from(parameters['orderBy']);
 
-    assert(orders.where((List<dynamic> item) => field == item[0]).isEmpty,
-        'OrderBy field "$field" already exists in this query');
+    assert(
+      orders.where((List<dynamic> item) => field == item[0]).isEmpty,
+      'OrderBy field "$field" already exists in this query',
+    );
 
     if (field == FieldPath.documentId) {
       orders.add([field, descending]);
     } else {
       FieldPath fieldPath =
-          field is String ? FieldPath.fromString(field) : field;
+          field is String ? FieldPath.fromString(field) : field as FieldPath;
       orders.add([fieldPath, descending]);
     }
 
@@ -249,8 +259,11 @@ class Query {
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
         // inequality operator is invoked
         if (_isInequality(operator)) {
-          assert(field == orders[0][0],
-              'The initial orderBy() field "$orders[0][0]" has to be the same as the where() field parameter "$field" when an inequality operator is invoked.');
+          assert(
+            field == orders[0][0],
+            'The initial orderBy() field "$orders[0][0]" has to be the same as '
+            'the where() field parameter "$field" when an inequality operator is invoked.',
+          );
         }
 
         for (final dynamic order in orders) {
@@ -259,13 +272,17 @@ class Query {
           // Any where() fieldPath parameter cannot match any orderBy() parameter when
           // '==' operand is invoked
           if (operator == '==') {
-            assert(field != orderField,
-                "The '$orderField' cannot be the same as your where() field parameter '$field'.");
+            assert(
+              field != orderField,
+              "The '$orderField' cannot be the same as your where() field parameter '$field'.",
+            );
           }
 
           if (field == FieldPath.documentId) {
-            assert(orderField == FieldPath.documentId,
-                "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.");
+            assert(
+              orderField == FieldPath.documentId,
+              "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
+            );
           }
         }
       }
@@ -332,17 +349,17 @@ class Query {
   /// Only documents satisfying provided condition are included in the result
   /// set.
   Query where(
-    dynamic field, {
-    dynamic isEqualTo,
-    dynamic isNotEqualTo,
-    dynamic isLessThan,
-    dynamic isLessThanOrEqualTo,
-    dynamic isGreaterThan,
-    dynamic isGreaterThanOrEqualTo,
-    dynamic arrayContains,
-    List<dynamic>? arrayContainsAny,
-    List<dynamic>? whereIn,
-    List<dynamic>? whereNotIn,
+    Object field, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
     bool? isNull,
   }) {
     _assertValidFieldType(field);
@@ -365,10 +382,11 @@ class Query {
       }
 
       assert(
-          conditions
-              .where((List<dynamic> item) => equality.equals(condition, item))
-              .isEmpty,
-          'Condition $condition already exists in this query.');
+        conditions
+            .where((List<dynamic> item) => equality.equals(condition, item))
+            .isEmpty,
+        'Condition $condition already exists in this query.',
+      );
       conditions.add(condition);
     }
 
@@ -416,8 +434,11 @@ class Query {
       // inequality operator is invoked
       List<List<dynamic>> orders = List.from(parameters['orderBy']);
       if (_isInequality(operator) && orders.isNotEmpty) {
-        assert(field == orders[0][0],
-            "The initial orderBy() field '$orders[0][0]' has to be the same as the where() field parameter '$field' when an inequality operator is invoked.");
+        assert(
+          field == orders[0][0],
+          "The initial orderBy() field '$orders[0][0]' has to be the same as "
+          "the where() field parameter '$field' when an inequality operator is invoked.",
+        );
       }
 
       if (value == null) {
@@ -428,14 +449,22 @@ class Query {
       if (operator == 'in' ||
           operator == 'array-contains-any' ||
           operator == 'not-in') {
-        assert(value is List,
-            "A non-empty [List] is required for '$operator' filters.");
-        assert((value as List).length <= 10,
-            "'$operator' filters support a maximum of 10 elements in the value [List].");
-        assert((value as List).isNotEmpty,
-            "'$operator' filters require a non-empty [List].");
-        assert((value as List).where((value) => value == null).isEmpty,
-            "'$operator' filters cannot contain 'null' in the [List].");
+        assert(
+          value is List,
+          "A non-empty [List] is required for '$operator' filters.",
+        );
+        assert(
+          (value as List).length <= 10,
+          "'$operator' filters support a maximum of 10 elements in the value [List].",
+        );
+        assert(
+          (value as List).isNotEmpty,
+          "'$operator' filters require a non-empty [List].",
+        );
+        assert(
+          (value as List).where((value) => value == null).isEmpty,
+          "'$operator' filters cannot contain 'null' in the [List].",
+        );
       }
 
       if (operator == '!=') {
@@ -446,8 +475,10 @@ class Query {
 
       if (operator == 'not-in') {
         assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
-        assert(!hasNotEqualTo,
-            "You cannot use 'not-in' filters with '!=' filters.");
+        assert(
+          !hasNotEqualTo,
+          "You cannot use 'not-in' filters with '!=' filters.",
+        );
       }
 
       if (operator == 'in') {
@@ -456,14 +487,18 @@ class Query {
       }
 
       if (operator == 'array-contains') {
-        assert(!hasArrayContains,
-            "You cannot use 'array-contains' filters more than once.");
+        assert(
+          !hasArrayContains,
+          "You cannot use 'array-contains' filters more than once.",
+        );
         hasArrayContains = true;
       }
 
       if (operator == 'array-contains-any') {
-        assert(!hasArrayContainsAny,
-            "You cannot use 'array-contains-any' filters more than once.");
+        assert(
+          !hasArrayContainsAny,
+          "You cannot use 'array-contains-any' filters more than once.",
+        );
         hasArrayContainsAny = true;
       }
 
@@ -473,16 +508,21 @@ class Query {
       }
 
       if (operator == 'array-contains' || operator == 'array-contains-any') {
-        assert(!(hasArrayContains && hasArrayContainsAny),
-            "You cannot use both 'array-contains-any' or 'array-contains' filters together.");
+        assert(
+          !(hasArrayContains && hasArrayContainsAny),
+          "You cannot use both 'array-contains-any' or 'array-contains' filters together.",
+        );
       }
 
       if (_isInequality(operator)) {
         if (hasInequality == null) {
           hasInequality = field;
         } else {
-          assert(hasInequality == field,
-              "All where filters with an inequality (<, <=, >, or >=) must be on the same field. But you have inequality filters on '$hasInequality' and '$field'.");
+          assert(
+            hasInequality == field,
+            'All where filters with an inequality (<, <=, >, or >=) must be '
+            "on the same field. But you have inequality filters on '$hasInequality' and '$field'.",
+          );
         }
       }
     }
