@@ -3,8 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -57,11 +59,27 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
   }
 
+  /// The [EventChannel] used for loadBundle
+  static EventChannel loadBundleChannel(String id) {
+    return EventChannel(
+      'plugins.flutter.io/firebase_firestore/loadBundle/$id',
+      const StandardMethodCodec(FirestoreMessageCodec()),
+    );
+  }
+
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
   FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseFirestore(app: app);
+  }
+
+  @override
+  LoadBundleTaskPlatform loadBundle(Uint8 bundle) {
+    return MethodChannelLoadBundleTask(MethodChannelFirebaseFirestore.channel
+        .invokeMethod<String>('LoadBundle#snapshots', <String, dynamic>{
+      'bundle': bundle,
+    }));
   }
 
   @override

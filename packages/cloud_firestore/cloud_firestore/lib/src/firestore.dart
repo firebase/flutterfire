@@ -53,6 +53,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return newInstance;
   }
 
+  LoadBundleTask loadBundle(Uint8 bundle){
+    return LoadBundleTask._(_delegate.loadBundle(bundle));
+  }
+
   /// Gets a [CollectionReference] for the specified Firestore path.
   CollectionReference collection(String collectionPath) {
     assert(collectionPath.isNotEmpty,

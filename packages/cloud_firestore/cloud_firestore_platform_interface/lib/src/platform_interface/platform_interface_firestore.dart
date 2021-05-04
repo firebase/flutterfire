@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -109,6 +110,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// have been synchronised.
   Stream<void> snapshotsInSync() {
     throw UnimplementedError('snapshotsInSync() is not implemented');
+  }
+
+  /// Loads a Firestore bundle into the local cache. Returns a [LoadBundleTask]
+  /// which notifies callers with progress updates, and completion or error events.
+  LoadBundleTaskPlatform loadBundle(Uint8 bundle) {
+    throw UnimplementedError('loadBundle() is not implemented');
   }
 
   /// Executes the given [TransactionHandler] and then attempts to commit the
