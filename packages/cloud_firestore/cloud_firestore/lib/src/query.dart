@@ -590,10 +590,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       assert(
-          conditions
-              .where((List<dynamic> item) => equality.equals(condition, item))
-              .isEmpty,
-          'Condition $condition already exists in this query.');
+        conditions
+            .where((List<dynamic> item) => equality.equals(condition, item))
+            .isEmpty,
+        'Condition $condition already exists in this query.',
+      );
       conditions.add(condition);
     }
 
@@ -641,8 +642,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       // inequality operator is invoked
       List<List<dynamic>> orders = List.from(parameters['orderBy']);
       if (_isInequality(operator) && orders.isNotEmpty) {
-        assert(field == orders[0][0],
-            "The initial orderBy() field '$orders[0][0]' has to be the same as the where() field parameter '$field' when an inequality operator is invoked.");
+        assert(
+          field == orders[0][0],
+          "The initial orderBy() field '$orders[0][0]' has to be the same as "
+          "the where() field parameter '$field' when an inequality operator is invoked.",
+        );
       }
 
       if (value == null) {
@@ -653,14 +657,22 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (operator == 'in' ||
           operator == 'array-contains-any' ||
           operator == 'not-in') {
-        assert(value is List,
-            "A non-empty [List] is required for '$operator' filters.");
-        assert((value as List).length <= 10,
-            "'$operator' filters support a maximum of 10 elements in the value [List].");
-        assert((value as List).isNotEmpty,
-            "'$operator' filters require a non-empty [List].");
-        assert((value as List).where((value) => value == null).isEmpty,
-            "'$operator' filters cannot contain 'null' in the [List].");
+        assert(
+          value is List,
+          "A non-empty [List] is required for '$operator' filters.",
+        );
+        assert(
+          (value as List).length <= 10,
+          "'$operator' filters support a maximum of 10 elements in the value [List].",
+        );
+        assert(
+          (value as List).isNotEmpty,
+          "'$operator' filters require a non-empty [List].",
+        );
+        assert(
+          (value as List).where((value) => value == null).isEmpty,
+          "'$operator' filters cannot contain 'null' in the [List].",
+        );
       }
 
       if (operator == '!=') {
@@ -671,8 +683,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
       if (operator == 'not-in') {
         assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
-        assert(!hasNotEqualTo,
-            "You cannot use 'not-in' filters with '!=' filters.");
+        assert(
+          !hasNotEqualTo,
+          "You cannot use 'not-in' filters with '!=' filters.",
+        );
       }
 
       if (operator == 'in') {
@@ -681,14 +695,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'array-contains') {
-        assert(!hasArrayContains,
-            "You cannot use 'array-contains' filters more than once.");
+        assert(
+          !hasArrayContains,
+          "You cannot use 'array-contains' filters more than once.",
+        );
         hasArrayContains = true;
       }
 
       if (operator == 'array-contains-any') {
-        assert(!hasArrayContainsAny,
-            "You cannot use 'array-contains-any' filters more than once.");
+        assert(
+          !hasArrayContainsAny,
+          "You cannot use 'array-contains-any' filters more than once.",
+        );
         hasArrayContainsAny = true;
       }
 
@@ -698,16 +716,21 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'array-contains' || operator == 'array-contains-any') {
-        assert(!(hasArrayContains && hasArrayContainsAny),
-            "You cannot use both 'array-contains-any' or 'array-contains' filters together.");
+        assert(
+          !(hasArrayContains && hasArrayContainsAny),
+          "You cannot use both 'array-contains-any' or 'array-contains' filters together.",
+        );
       }
 
       if (_isInequality(operator)) {
         if (hasInequality == null) {
           hasInequality = field;
         } else {
-          assert(hasInequality == field,
-              "All where filters with an inequality (<, <=, >, or >=) must be on the same field. But you have inequality filters on '$hasInequality' and '$field'.");
+          assert(
+            hasInequality == field,
+            'All where filters with an inequality (<, <=, >, or >=) must be '
+            "on the same field. But you have inequality filters on '$hasInequality' and '$field'.",
+          );
         }
       }
     }

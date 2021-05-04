@@ -570,7 +570,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
           verificationFailed(exception);
         } else if (name == 'Auth#phoneCodeSent') {
           final String verificationId = arguments['verificationId'];
-          final int forceResendingToken = arguments['forceResendingToken'];
+          final int? forceResendingToken = arguments['forceResendingToken'];
 
           codeSent(verificationId, forceResendingToken);
         } else if (name == 'Auth#phoneCodeAutoRetrievalTimeout') {
