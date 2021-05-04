@@ -16,19 +16,6 @@ part of cloud_firestore;
 /// FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: secondaryApp);
 /// ```
 class FirebaseFirestore extends FirebasePluginPlatform {
-  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
-  // creating a [MethodChannelFirestore] when not needed or creating an
-  // instance with the default app before a user specifies an app.
-  FirebaseFirestorePlatform? _delegatePackingProperty;
-
-  FirebaseFirestorePlatform get _delegate {
-    return _delegatePackingProperty ??=
-        FirebaseFirestorePlatform.instanceFor(app: app);
-  }
-
-  /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
-  FirebaseApp app;
-
   FirebaseFirestore._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_firestore');
 
@@ -53,16 +40,35 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return newInstance;
   }
 
-  /// Gets a [CollectionReference] for the specified Firestore path.
-  CollectionReference collection(String collectionPath) {
-    assert(collectionPath.isNotEmpty,
-        'a collectionPath path must be a non-empty string');
-    assert(!collectionPath.contains('//'),
-        'a collection path must not contain "//"');
-    assert(isValidCollectionPath(collectionPath),
-        'a collection path must point to a valid collection.');
+  // Cached and lazily loaded instance of [FirestorePlatform] to avoid
+  // creating a [MethodChannelFirestore] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  FirebaseFirestorePlatform? _delegatePackingProperty;
 
-    return CollectionReference._(this, _delegate.collection(collectionPath));
+  FirebaseFirestorePlatform get _delegate {
+    return _delegatePackingProperty ??=
+        FirebaseFirestorePlatform.instanceFor(app: app);
+  }
+
+  /// The [FirebaseApp] for this current [FirebaseFirestore] instance.
+  FirebaseApp app;
+
+  /// Gets a [CollectionReference] for the specified Firestore path.
+  CollectionReference<Map<String, dynamic>> collection(String collectionPath) {
+    assert(
+      collectionPath.isNotEmpty,
+      'a collectionPath path must be a non-empty string',
+    );
+    assert(
+      !collectionPath.contains('//'),
+      'a collection path must not contain "//"',
+    );
+    assert(
+      isValidCollectionPath(collectionPath),
+      'a collection path must point to a valid collection.',
+    );
+
+    return _JsonCollectionReference(this, _delegate.collection(collectionPath));
   }
 
   /// Returns a [WriteBatch], used for performing multiple writes as a single
@@ -82,19 +88,24 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// Enable persistence of Firestore data.
   ///
   /// This is a web-only method. Use [Settings.persistenceEnabled] for non-web platforms.
-  Future<void> enablePersistence(
-      [PersistenceSettings? persistenceSettings]) async {
+  Future<void> enablePersistence([
+    PersistenceSettings? persistenceSettings,
+  ]) async {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
   /// Gets a [Query] for the specified collection group.
-  Query collectionGroup(String collectionPath) {
-    assert(collectionPath.isNotEmpty,
-        'a collection path must be a non-empty string');
-    assert(!collectionPath.contains('/'),
-        'a collection path passed to collectionGroup() cannot contain "/"');
+  Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
+    assert(
+      collectionPath.isNotEmpty,
+      'a collection path must be a non-empty string',
+    );
+    assert(
+      !collectionPath.contains('/'),
+      'a collection path passed to collectionGroup() cannot contain "/"',
+    );
 
-    return Query._(this, _delegate.collectionGroup(collectionPath));
+    return _JsonQuery(this, _delegate.collectionGroup(collectionPath));
   }
 
   /// Instructs [FirebaseFirestore] to disable the network for the instance.
@@ -107,15 +118,21 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   }
 
   /// Gets a [DocumentReference] for the specified Firestore path.
-  DocumentReference doc(String documentPath) {
+  DocumentReference<Map<String, dynamic>> doc(String documentPath) {
     assert(
-        documentPath.isNotEmpty, 'a document path must be a non-empty string');
-    assert(!documentPath.contains('//'),
-        'a collection path must not contain "//"');
-    assert(isValidDocumentPath(documentPath),
-        'a document path must point to a valid document.');
+      documentPath.isNotEmpty,
+      'a document path must be a non-empty string',
+    );
+    assert(
+      !documentPath.contains('//'),
+      'a collection path must not contain "//"',
+    );
+    assert(
+      isValidDocumentPath(documentPath),
+      'a document path must point to a valid document.',
+    );
 
-    return DocumentReference._(this, _delegate.doc(documentPath));
+    return _JsonDocumentReference(this, _delegate.doc(documentPath));
   }
 
   /// Enables the network for this instance. Any pending local-only writes
