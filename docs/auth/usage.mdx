@@ -205,12 +205,10 @@ if (!user.emailVerified) {
 var actionCodeSettings = ActionCodeSettings(
         url: 'https://www.example.com/?email=${user.email}',
         dynamicLinkDomain: "example.page.link",
-        android: {
-          "packageName": "com.example.android",
-          "installApp": true,
-          "minimumVersion": "12"
-        },
-        iOS: {"bundleId": "com.example.ios"},
+        androidPackageName: "com.example.android",
+        androidInstallApp: true,
+        androidMinimumVersion: "12",
+        iOSBundleId: "com.example.ios",
         handleCodeInApp: true);
 
 await user.sendEmailVerification(actionCodeSettings);
