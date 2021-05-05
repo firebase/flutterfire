@@ -1259,11 +1259,10 @@ NSString *const kErrMsgInvalidCredential =
   userData[@"emailVerified"] = @(user.isEmailVerified);
 
   if (user.tenantID != nil) {
-    userData[@"tenantId"] = @(user.tenantID);
+    userData[@"tenantId"] = user.tenantID;
   } else {
     userData[@"tenantId"] = [NSNull null];
   }
-
 
   // native does not provide refresh tokens
   userData[@"refreshToken"] = @"";
