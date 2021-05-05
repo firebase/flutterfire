@@ -15,24 +15,31 @@ void runDocumentChangeTests() {
       firestore = FirebaseFirestore.instance;
     });
 
-    Future<CollectionReference> initializeTest(String id) async {
-      CollectionReference collection =
+    Future<CollectionReference<Map<String, dynamic>>> initializeTest(
+      String id,
+    ) async {
+      CollectionReference<Map<String, dynamic>> collection =
           firestore.collection('flutter-tests/$id/query-tests');
-      QuerySnapshot snapshot = await collection.get();
-      await Future.forEach(snapshot.docs, (DocumentSnapshot documentSnapshot) {
+
+      QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
+
+      await Future.forEach(snapshot.docs,
+          (DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
         return documentSnapshot.reference.delete();
       });
       return collection;
     }
 
     test('can add/update values to null in the document', () async {
-      CollectionReference collection = await initializeTest('null-test');
-      DocumentReference doc1 = collection.doc('doc1');
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('null-test');
+      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
 
       await expectLater(
         doc1.snapshots(),
         emits(
-          isA<DocumentSnapshot>().having((q) => q.exists, 'exists', false),
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
+              .having((q) => q.exists, 'exists', false),
         ),
       );
 
@@ -44,7 +51,7 @@ void runDocumentChangeTests() {
       await expectLater(
         doc1.snapshots(),
         emits(
-          isA<DocumentSnapshot>()
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
               .having((q) => q.exists, 'exists', true)
               .having((q) => q.data(), 'data()', <String, Object?>{
             'key': null,
@@ -61,7 +68,7 @@ void runDocumentChangeTests() {
       await expectLater(
         doc1.snapshots(),
         emits(
-          isA<DocumentSnapshot>()
+          isA<DocumentSnapshot<Map<String, dynamic>>>()
               .having((q) => q.exists, 'exists', true)
               .having((q) => q.data(), 'data()', <String, Object?>{
             'key': null,
@@ -72,24 +79,25 @@ void runDocumentChangeTests() {
     }, timeout: const Timeout.factor(8));
 
     test('returns the correct metadata when adding and removing', () async {
-      CollectionReference collection =
+      CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('add-remove-document');
-      DocumentReference doc1 = collection.doc('doc1');
+      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
 
       // Set something in the database
       await doc1.set({'name': 'doc1'});
 
-      Stream<QuerySnapshot> stream = collection.snapshots();
+      Stream<QuerySnapshot<Map<String, dynamic>>> stream =
+          collection.snapshots();
       int call = 0;
 
-      StreamSubscription subscription =
-          stream.listen(expectAsync1((QuerySnapshot snapshot) {
+      StreamSubscription subscription = stream
+          .listen(expectAsync1((QuerySnapshot<Map<String, dynamic>> snapshot) {
         call++;
         if (call == 1) {
           expect(snapshot.docs.length, equals(1));
           expect(snapshot.docChanges.length, equals(1));
           expect(snapshot.docChanges[0], isA<DocumentChange>());
-          DocumentChange change = snapshot.docChanges[0];
+          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
           expect(change.newIndex, equals(0));
           expect(change.oldIndex, equals(-1));
           expect(change.type, equals(DocumentChangeType.added));
@@ -98,7 +106,7 @@ void runDocumentChangeTests() {
           expect(snapshot.docs.length, equals(0));
           expect(snapshot.docChanges.length, equals(1));
           expect(snapshot.docChanges[0], isA<DocumentChange>());
-          DocumentChange change = snapshot.docChanges[0];
+          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
           expect(change.newIndex, equals(-1));
           expect(change.oldIndex, equals(0));
           expect(change.type, equals(DocumentChangeType.removed));
@@ -115,27 +123,27 @@ void runDocumentChangeTests() {
     });
 
     test('returns the correct metadata when modifying', () async {
-      CollectionReference collection =
+      CollectionReference<Map<String, dynamic>> collection =
           await initializeTest('add-modify-document');
-      DocumentReference doc1 = collection.doc('doc1');
-      DocumentReference doc2 = collection.doc('doc2');
-      DocumentReference doc3 = collection.doc('doc3');
+      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
+      DocumentReference<Map<String, dynamic>> doc2 = collection.doc('doc2');
+      DocumentReference<Map<String, dynamic>> doc3 = collection.doc('doc3');
 
       await doc1.set({'value': 1});
       await doc2.set({'value': 2});
       await doc3.set({'value': 3});
-      Stream<QuerySnapshot> stream = collection.orderBy('value').snapshots();
+      Stream<QuerySnapshot<Map<String, dynamic>>> stream =
+          collection.orderBy('value').snapshots();
 
       int call = 0;
-      StreamSubscription subscription =
-          stream.listen(expectAsync1((QuerySnapshot snapshot) {
+      StreamSubscription subscription = stream
+          .listen(expectAsync1((QuerySnapshot<Map<String, dynamic>> snapshot) {
         call++;
         if (call == 1) {
           expect(snapshot.docs.length, equals(3));
           expect(snapshot.docChanges.length, equals(3));
-          snapshot.docChanges
-              .asMap()
-              .forEach((int index, DocumentChange change) {
+          snapshot.docChanges.asMap().forEach(
+              (int index, DocumentChange<Map<String, dynamic>> change) {
             expect(change.oldIndex, equals(-1));
             expect(change.newIndex, equals(index));
             expect(change.type, equals(DocumentChangeType.added));
@@ -144,7 +152,7 @@ void runDocumentChangeTests() {
         } else if (call == 2) {
           expect(snapshot.docs.length, equals(3));
           expect(snapshot.docChanges.length, equals(1));
-          DocumentChange change = snapshot.docChanges[0];
+          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
           expect(change.oldIndex, equals(0));
           expect(change.newIndex, equals(2));
           expect(change.type, equals(DocumentChangeType.modified));
