@@ -33,6 +33,7 @@ import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import io.flutter.plugins.firebase.firestore.streamhandler.DocumentSnapshotsStreamHandler;
+import io.flutter.plugins.firebase.firestore.streamhandler.LoadBundleStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.OnTransactionResultListener;
 import io.flutter.plugins.firebase.firestore.streamhandler.QuerySnapshotsStreamHandler;
 import io.flutter.plugins.firebase.firestore.streamhandler.SnapshotsInSyncStreamHandler;
@@ -48,7 +49,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class FlutterFirebaseFirestorePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
-
   protected static final HashMap<String, FirebaseFirestore> firestoreInstanceCache =
       new HashMap<>();
 
@@ -415,7 +415,11 @@ public class FlutterFirebaseFirestorePlugin
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
         return;
-
+      case "LoadBundle#snapshots":
+        result.success(registerEventChannel(
+          METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler()
+        ));
+        return;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;

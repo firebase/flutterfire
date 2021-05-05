@@ -53,7 +53,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return newInstance;
   }
 
-  LoadBundleTask loadBundle(Uint8 bundle){
+  LoadBundleTask loadBundle(Uint8List bundle){
     return LoadBundleTask._(_delegate.loadBundle(bundle));
   }
 

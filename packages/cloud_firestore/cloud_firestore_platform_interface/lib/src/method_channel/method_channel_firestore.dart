@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
@@ -75,11 +75,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  LoadBundleTaskPlatform loadBundle(Uint8 bundle) {
-    return MethodChannelLoadBundleTask(MethodChannelFirebaseFirestore.channel
-        .invokeMethod<String>('LoadBundle#snapshots', <String, dynamic>{
-      'bundle': bundle,
-    }));
+  LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
+    return MethodChannelLoadBundleTask(channel
+        .invokeMethod<String>('LoadBundle#snapshots'), bundle);
   }
 
   @override
