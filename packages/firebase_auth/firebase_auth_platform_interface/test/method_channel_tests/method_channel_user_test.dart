@@ -259,7 +259,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#delete',
-              arguments: <String, String>{
+              arguments: <String, String?>{
                 'appName': '[DEFAULT]',
                 'tenantId': null
               },
