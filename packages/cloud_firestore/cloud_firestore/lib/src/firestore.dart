@@ -94,6 +94,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
+  LoadBundleTask loadBundle(Uint8List bundle){
+    return LoadBundleTask._(_delegate.loadBundle(bundle));
+  }
+
   /// Gets a [Query] for the specified collection group.
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
     assert(
