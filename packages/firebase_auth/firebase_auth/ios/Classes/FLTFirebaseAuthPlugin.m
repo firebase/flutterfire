@@ -1258,7 +1258,7 @@ NSString *const kErrMsgInvalidCredential =
   userData[@"isAnonymous"] = @(user.isAnonymous);
   userData[@"emailVerified"] = @(user.isEmailVerified);
 
-  if (user.tenantID != nil {
+  if (user.tenantID != nil) {
     userData[@"tenantId"] = @(user.tenantID);
   } else {
     userData[@"tenantId"] = [NSNull null];
