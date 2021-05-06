@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:collection/collection.dart';
 
 part 'src/firebase_core_exceptions.dart';
 part 'src/firebase_exception.dart';

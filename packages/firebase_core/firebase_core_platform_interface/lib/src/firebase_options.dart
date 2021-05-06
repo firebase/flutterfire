@@ -168,28 +168,11 @@ class FirebaseOptions {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseOptions) return false;
-    return other.asMap.toString() == asMap.toString();
+    return const MapEquality().equals(asMap, other.asMap);
   }
 
   @override
-  int get hashCode {
-    return hashValues(
-      apiKey,
-      appId,
-      messagingSenderId,
-      projectId,
-      authDomain,
-      databaseURL,
-      storageBucket,
-      measurementId,
-      trackingId,
-      deepLinkURLScheme,
-      androidClientId,
-      iosClientId,
-      iosBundleId,
-      appGroupId,
-    );
-  }
+  int get hashCode => const MapEquality().hash(asMap);
 
   @override
   String toString() => asMap.toString();
