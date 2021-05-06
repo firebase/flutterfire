@@ -9,6 +9,14 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 ## Usage
 To use this plugin, add `firebase_analytics` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase analytics for each platform project: Android and iOS (see the example folder for details).
 
+## iOS [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency)
+
+In order to avoid any user tracking you should add following line into ios/Podfile
+
+```
+$FirebaseAnalyticsWithoutAdIdSupport = true
+```
+
 ## Track PageRoute Transitions
 
 To track `PageRoute` transitions, add a `FirebaseAnalyticsObserver` to the list of `NavigatorObservers` on your
