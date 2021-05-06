@@ -24,6 +24,11 @@ Steps to reproduce the behavior:
 
 A clear and concise description of what you expected to happen.
 
+### Sample project
+
+Providing a minimal example project which demonstrates the bug in isolation from your main App _greatly_ enhances the chance of a timely fix.
+Please link to the public repository URL.
+
 ---
 
 ## Additional context

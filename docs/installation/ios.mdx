@@ -38,7 +38,7 @@ The [Firebase Emulator Suite](https://firebase.google.com/docs/emulator-suite) u
 
 To allow insecure connections, we recommend adding the [`NSAllowsLocalNetworking`](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity/nsallowslocalnetworking) key to the [`NSAppTransportSecurity`](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity) dictionary in your application's plist file.
 
-Specifically if your app is named 'MyApp', you might add these keys in `ios/MyApp/Info.plist`:
+Add these keys to your `ios/Runner/Info.plist` file:
 
 ```xml
 <key>NSAppTransportSecurity</key>

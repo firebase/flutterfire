@@ -19,7 +19,7 @@ void runInstanceTests() {
     });
 
     test('snapshotsInSync()', () async {
-      DocumentReference documentReference =
+      DocumentReference<Map<String, dynamic>> documentReference =
           firestore.doc('flutter-tests/insync');
 
       // Ensure deleted
@@ -65,7 +65,7 @@ void runInstanceTests() {
 
       // Write some data while online
       await firestore.enableNetwork();
-      DocumentReference documentReference =
+      DocumentReference<Map<String, dynamic>> documentReference =
           firestore.doc('flutter-tests/enable-network');
       await documentReference.set({'foo': 'bar'});
 
@@ -93,7 +93,7 @@ void runInstanceTests() {
 
       // Write some data while online
       await firestore.enableNetwork();
-      DocumentReference documentReference =
+      DocumentReference<Map<String, dynamic>> documentReference =
           firestore.doc('flutter-tests/disable-network');
       await documentReference.set({'foo': 'bar'});
 
@@ -101,7 +101,8 @@ void runInstanceTests() {
       await firestore.disableNetwork();
 
       // Get data from cache
-      DocumentSnapshot documentSnapshot = await documentReference.get();
+      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+          await documentReference.get();
       expect(documentSnapshot.metadata.isFromCache, isTrue);
       expect(documentSnapshot.data()['foo'], equals('bar'));
 
