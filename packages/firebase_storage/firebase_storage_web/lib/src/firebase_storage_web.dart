@@ -21,10 +21,9 @@ typedef ReferenceBuilder = ReferencePlatform Function(
 /// The Web implementation of the FirebaseStoragePlatform.
 class FirebaseStorageWeb extends FirebaseStoragePlatform {
   /// Construct the plugin.
-  /// (Web doesn't use the `bucket`, since the init happens in index.html)
   FirebaseStorageWeb({FirebaseApp? app, required String bucket})
-      : webStorage =
-            storage_interop.getStorageInstance(core_interop.app(app?.name)),
+      : webStorage = storage_interop.getStorageInstance(
+            core_interop.app(app?.name), bucket),
         super(appInstance: app, bucket: bucket);
 
   // Empty constructor. This is only used by the registerWith method.
@@ -91,6 +90,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
     return guard(() {
       ReferenceBuilder refBuilderFunction = refBuilder ?? _createReference;
       ReferencePlatform ref = refBuilderFunction(this, path);
+
       return ref;
     });
   }

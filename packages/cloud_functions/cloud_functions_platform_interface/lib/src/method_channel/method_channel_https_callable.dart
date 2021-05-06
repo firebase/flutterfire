@@ -18,20 +18,24 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
 
   @override
   Future<dynamic> call([Object? parameters]) async {
-    Object? result = await MethodChannelFirebaseFunctions.channel
-        .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
-      'appName': functions.app!.name,
-      'functionName': name,
-      'origin': origin,
-      'region': functions.region,
-      'timeout': options.timeout.inMilliseconds,
-      'parameters': parameters,
-    }).catchError(catchPlatformException);
+    try {
+      Object? result = await MethodChannelFirebaseFunctions.channel
+          .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
+        'appName': functions.app!.name,
+        'functionName': name,
+        'origin': origin,
+        'region': functions.region,
+        'timeout': options.timeout.inMilliseconds,
+        'parameters': parameters,
+      });
 
-    if (result is Map) {
-      return Map<String, dynamic>.from(result);
-    } else {
-      return result;
+      if (result is Map) {
+        return Map<String, dynamic>.from(result);
+      } else {
+        return result;
+      }
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 }

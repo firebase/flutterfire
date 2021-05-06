@@ -13,7 +13,7 @@ const _kProviderId = 'google.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// GoogleAuthProvider googleProvider = GoogleAuthProvider();
+/// var googleProvider = GoogleAuthProvider();
 /// googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
 /// googleProvider.setCustomParameters({
 ///   'login_hint': 'user@example.com'
@@ -28,7 +28,7 @@ const _kProviderId = 'google.com';
 ///
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
-/// GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(accessToken: accessToken);
+/// var googleAuthCredential = GoogleAuthProvider.credential(accessToken: accessToken);
 ///
 /// FirebaseAuth.instance.signInWithCredential(googleAuthCredential)
 ///   .then(...);
@@ -36,6 +36,16 @@ const _kProviderId = 'google.com';
 class GoogleAuthProvider extends AuthProvider {
   /// Creates a new instance.
   GoogleAuthProvider() : super(_kProviderId);
+
+  /// Create a new [GoogleAuthCredential] from a provided [accessToken].
+  static OAuthCredential credential({String? idToken, String? accessToken}) {
+    assert(accessToken != null || idToken != null,
+        'At least one of ID token and access token is required');
+    return GoogleAuthCredential._credential(
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get GOOGLE_SIGN_IN_METHOD {
@@ -73,16 +83,6 @@ class GoogleAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [GoogleAuthCredential] from a provided [accessToken].
-  static OAuthCredential credential({String? idToken, String? accessToken}) {
-    assert(accessToken != null || idToken != null,
-        'At least one of ID token and access token is required');
-    return GoogleAuthCredential._credential(
-      idToken: idToken,
-      accessToken: accessToken,
-    );
   }
 }
 

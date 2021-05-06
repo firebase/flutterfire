@@ -1,0 +1,87 @@
+---
+title: Migration to cloud_firestore 2.0.0
+---
+
+With the release of [withConverter](!cloud_firestore.FirebaseFirestore.collection.withConverter),
+numerous classes/functions take an extra generic parameter.  
+In most cases, type inference should take care of the migration for you. But in some cases,
+you may have to specify that generic parameter yourself.
+
+You may need to update your code if:
+
+- you are using the [`always_specify_types`](https://dart-lang.github.io/linter/lints/always_specify_types.html)
+  lint, in which case there is almost no type-inference in your project
+
+- you wrote custom Firestore utilities that interact with classes such as `DocumentReference`/`CollectionReference`
+  or `DocumentSnapshot`/`QuerySnapshot`. (For example, a widget that takes a `DocumentReference` as parameter).
+
+- you are using `StreamBuilder` where the stream is from a collection/document.
+
+## Migration
+
+The migration involves adding a `<Map<String, dynamic>>` in numerous places.
+
+Here is a collection of migration examples:
+
+- `StreamBuilder`:
+
+  ```diff
+  - StreamBuilder<DocumentSnapshot>(
+  + StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+    stream: FirebaseFirestore.instance.collection('movies').doc('star-wars').snapshots(),
+  -  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+  +  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+      // ...
+    }
+  )
+  ```
+
+- References as function/class parameters:
+
+  ```diff
+  Future<void> example(
+  -  DocumentReference documentReference,
+  +  DocumentReference<Map<String, dynamic>> documentReference,
+  -  CollectionReference collectionReference,
+  +  CollectionReference<Map<String, dynamic>> collectionReference,
+  -  Query query,
+  +  Query<Map<String, dynamic>> query,
+  ) {
+    // ...
+  }
+  ```
+
+- `get` and `set` transactions:
+
+
+  ```diff
+  final starWarsReference = FirebaseFirestore.instance.collection('movies').doc('star-wars');
+
+  FirebaseFirestore.instance.runTransaction<void>((transaction) async {
+  -  var starWarsSnapshot = await transaction.get(
+  +  var starWarsSnapshot = await transaction.get<Map<String, dynamic>>(
+      starWarsReference,
+    );
+
+  -  transaction.set(
+  +  transaction.set<Map<String, dynamic>>(
+      starWarsReference,
+      {
+        'title': 'Star wars',
+      },
+    );
+  });
+  ```
+
+- `set` batches:
+
+  ```diff
+  final batch = FirebaseFirestore.instance.batch();
+
+  - batch.set(
+  + batch.set<Map<String, dynamic>>(
+    FirebaseFirestore.instance.collection('movies').doc('star-wars'),
+    {
+      'title': 'Star wars',
+    },
+  );

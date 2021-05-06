@@ -65,6 +65,7 @@ NSString *const kErrMsgInvalidCredential =
 - (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
   self = [super init];
   if (self) {
+    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _credentials = [NSMutableDictionary<NSNumber *, FIRAuthCredential *> dictionary];
     _binaryMessenger = messenger;
     _eventChannels = [NSMutableDictionary dictionary];

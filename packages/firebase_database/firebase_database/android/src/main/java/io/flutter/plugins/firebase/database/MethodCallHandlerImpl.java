@@ -53,10 +53,27 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     this.channel = channel;
   }
 
+  void cleanup() {
+    final int size = observers.size();
+    for (int i = 0; i < size; i++) {
+      final EventObserver observer = observers.valueAt(i);
+      final Query query = observer.query;
+      if (observer.requestedEventType.equals(EVENT_TYPE_VALUE)) {
+        query.removeEventListener((ValueEventListener) observer);
+      } else {
+        query.removeEventListener((ChildEventListener) observer);
+      }
+    }
+
+    observers.clear();
+  }
+
   private DatabaseReference getReference(FirebaseDatabase database, Map<String, Object> arguments) {
     String path = (String) arguments.get("path");
     DatabaseReference reference = database.getReference();
-    if (path != null) reference = reference.child(path);
+    if (path != null) {
+      reference = reference.child(path);
+    }
     return reference;
   }
 
@@ -64,7 +81,9 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     Query query = getReference(database, arguments);
     @SuppressWarnings("unchecked")
     Map<String, Object> parameters = (Map<String, Object>) arguments.get("parameters");
-    if (parameters == null) return query;
+    if (parameters == null) {
+      return query;
+    }
     Object orderBy = parameters.get("orderBy");
     if ("child".equals(orderBy)) {
       query = query.orderByChild((String) parameters.get("orderByChildKey"));
@@ -148,6 +167,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
   }
 
   private class DefaultCompletionListener implements DatabaseReference.CompletionListener {
+
     private final MethodChannel.Result result;
 
     DefaultCompletionListener(MethodChannel.Result result) {
@@ -164,12 +184,17 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     }
   }
 
-  private class EventObserver implements ChildEventListener, ValueEventListener {
+  private static class EventObserver implements ChildEventListener, ValueEventListener {
+
+    private MethodChannel channel;
     private String requestedEventType;
+    private Query query;
     private int handle;
 
-    EventObserver(String requestedEventType, int handle) {
+    EventObserver(MethodChannel channel, String requestedEventType, Query query, int handle) {
+      this.channel = channel;
       this.requestedEventType = requestedEventType;
+      this.query = query;
       this.handle = handle;
     }
 
@@ -249,6 +274,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
     } else {
       database = FirebaseDatabase.getInstance();
     }
+
     switch (call.method) {
       case "FirebaseDatabase#goOnline":
         {
@@ -347,7 +373,8 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
                 @NonNull
                 @Override
                 public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                  // Tasks are used to allow native execution of doTransaction to wait while Snapshot is
+                  // Tasks are used to allow native execution of doTransaction to wait while
+                  // Snapshot is
                   // processed by logic on the Dart side.
                   final TaskCompletionSource<Map<String, Object>> updateMutableDataTCS =
                       new TaskCompletionSource<>();
@@ -514,13 +541,14 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
         {
           String eventType = call.argument("eventType");
           int handle = nextHandle++;
+          Query query = getQuery(database, arguments);
           MethodCallHandlerImpl.EventObserver observer =
-              new MethodCallHandlerImpl.EventObserver(eventType, handle);
+              new MethodCallHandlerImpl.EventObserver(channel, eventType, query, handle);
           observers.put(handle, observer);
           if (EVENT_TYPE_VALUE.equals(eventType)) {
-            getQuery(database, arguments).addValueEventListener(observer);
+            query.addValueEventListener(observer);
           } else {
-            getQuery(database, arguments).addChildEventListener(observer);
+            query.addChildEventListener(observer);
           }
           result.success(handle);
           break;
@@ -528,10 +556,10 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
       case "Query#removeObserver":
         {
-          Query query = getQuery(database, arguments);
           Integer handle = call.argument("handle");
           MethodCallHandlerImpl.EventObserver observer = observers.get(handle);
           if (observer != null) {
+            final Query query = observer.query;
             if (observer.requestedEventType.equals(EVENT_TYPE_VALUE)) {
               query.removeEventListener((ValueEventListener) observer);
             } else {

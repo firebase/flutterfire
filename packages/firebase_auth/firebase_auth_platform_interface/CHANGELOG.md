@@ -1,3 +1,13 @@
+## 4.2.1
+
+ - **FIX**: authentication forceResendingToken int can be null on iOS (#5944).
+
+## 4.2.0
+
+ - **FIX**: Move communication to EventChannels (#4643).
+ - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).
+ - **DOCS**: remove implicit-cast in the doc of AuthProviders (#5862).
+
 ## 4.1.1
 
  - **REFACTOR**: fix formatting (#5835).

@@ -123,8 +123,9 @@ String convertPlatformPersistence(Persistence persistence) {
 }
 
 /// Converts a [AuthProvider] into a [auth_interop.AuthProvider].
-auth_interop.AuthProvider? convertPlatformAuthProvider(
-    AuthProvider authProvider) {
+auth_interop.AuthProvider convertPlatformAuthProvider(
+  AuthProvider authProvider,
+) {
   if (authProvider is EmailAuthProvider) {
     return auth_interop.EmailAuthProvider();
   }
@@ -133,10 +134,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.FacebookAuthProvider facebookAuthProvider =
         auth_interop.FacebookAuthProvider();
 
-    authProvider.scopes
-        .forEach((String scope) => facebookAuthProvider.addScope(scope));
-    facebookAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    authProvider.scopes.forEach(facebookAuthProvider.addScope);
+    facebookAuthProvider.setCustomParameters(authProvider.parameters);
     return facebookAuthProvider;
   }
 
@@ -144,10 +143,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.GithubAuthProvider githubAuthProvider =
         auth_interop.GithubAuthProvider();
 
-    authProvider.scopes
-        .forEach((String scope) => githubAuthProvider.addScope(scope));
-    githubAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    authProvider.scopes.forEach(githubAuthProvider.addScope);
+    githubAuthProvider.setCustomParameters(authProvider.parameters);
     return githubAuthProvider;
   }
 
@@ -155,10 +152,8 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.GoogleAuthProvider googleAuthProvider =
         auth_interop.GoogleAuthProvider();
 
-    authProvider.scopes
-        .forEach((String scope) => googleAuthProvider.addScope(scope));
-    googleAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    authProvider.scopes.forEach(googleAuthProvider.addScope);
+    googleAuthProvider.setCustomParameters(authProvider.parameters);
     return googleAuthProvider;
   }
 
@@ -166,8 +161,7 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.TwitterAuthProvider twitterAuthProvider =
         auth_interop.TwitterAuthProvider();
 
-    twitterAuthProvider.setCustomParameters(
-        Map<String, dynamic>.from(authProvider.parameters));
+    twitterAuthProvider.setCustomParameters(authProvider.parameters);
     return twitterAuthProvider;
   }
 
@@ -179,15 +173,12 @@ auth_interop.AuthProvider? convertPlatformAuthProvider(
     auth_interop.OAuthProvider oAuthProvider =
         auth_interop.OAuthProvider(authProvider.providerId);
 
-    authProvider.scopes
-        .forEach((String scope) => oAuthProvider.addScope(scope));
-    oAuthProvider.setCustomParameters(
-      Map<String, dynamic>.from(authProvider.parameters!),
-    );
+    authProvider.scopes.forEach(oAuthProvider.addScope);
+    oAuthProvider.setCustomParameters(authProvider.parameters);
     return oAuthProvider;
   }
 
-  return null;
+  throw FallThroughError();
 }
 
 /// Converts a [auth_interop.AuthCredential] into a [AuthCredential].

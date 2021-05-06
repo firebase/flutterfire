@@ -1,3 +1,11 @@
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
+## 1.1.0
+
+ - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).
+
 ## 1.0.7
 
  - **FIX**: ensure web is initialized before sending stream events (#5766).

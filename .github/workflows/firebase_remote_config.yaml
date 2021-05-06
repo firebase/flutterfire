@@ -16,6 +16,8 @@ on:
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_remote_config*"
   FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_remote_config_example*"
+  # TODO(Salakar): `flutter_driver` does not yet support NNBD
+  FLUTTER_COMMAND_FLAGS: "--no-sound-null-safety"
 
 jobs:
   android:

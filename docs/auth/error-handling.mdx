@@ -41,7 +41,7 @@ To complete the sign-in flow to the intended provider, the user has to first sig
 FirebaseAuth auth = FirebaseAuth.instance;
 
 // Create a credential from a Google Sign-in Request
-GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(accessToken: 'xxxx');
+var googleAuthCredential = GoogleAuthProvider.credential(accessToken: 'xxxx');
 
 try {
   // Attempt to sign in the user in with Google
@@ -79,7 +79,7 @@ try {
     if (userSignInMethods.first == 'facebook.com') {
       // Create a new Facebook credential
       String accessToken = await triggerFacebookAuthentication();
-      FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+      var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
 
       // Sign the user in with the credential
       UserCredential userCredential = await auth.signInWithCredential(facebookAuthCredential);

@@ -1,3 +1,7 @@
+## 7.0.0-dev.2
+
+ - **REFACTOR**: move `packages/firebase_database` to `packages/firebase_database/firebase_database` (#5887).
+
 ## 7.0.0-dev.1
 
  - **FIX**: return ordered data (#5765).
