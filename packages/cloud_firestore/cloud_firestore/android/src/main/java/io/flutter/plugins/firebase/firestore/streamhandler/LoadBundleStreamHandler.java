@@ -19,8 +19,8 @@ public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
     @SuppressWarnings("unchecked")
     Map<String, Object> argumentsMap = (Map<String, Object>) arguments;
     byte[] bundle = (byte[]) Objects.requireNonNull(argumentsMap.get("bundle"));
-
-    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    FirebaseFirestore firestore =
+      (FirebaseFirestore) Objects.requireNonNull(argumentsMap.get("firestore"));
 
     LoadBundleTask task = firestore.loadBundle(bundle);
 
