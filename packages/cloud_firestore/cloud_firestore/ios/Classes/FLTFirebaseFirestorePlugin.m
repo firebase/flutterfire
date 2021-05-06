@@ -10,7 +10,7 @@
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "Private/FLTTransactionStreamHandler.h"
-
+#import "Private/FLTLoadBundleStreamHandler.h"
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
@@ -22,6 +22,10 @@ NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
     @"plugins.flutter.io/firebase_firestore/snapshotsInSync";
 NSString *const kFLTFirebaseFirestoreTransactionChannelName =
     @"plugins.flutter.io/firebase_firestore/transaction";
+NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
+    @"plugins.flutter.io/firebase_firestore/loadBundle";
+
+
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) NSMutableDictionary *transactions;
@@ -218,6 +222,9 @@ FlutterStandardMethodCodec *_codec;
   } else if ([@"DocumentReference#snapshots" isEqualToString:call.method]) {
     [self setupDocumentReferenceSnapshotsListener:call.arguments
                              withMethodCallResult:methodCallResult];
+  } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
+    [self setupLoadBundleListener:call.arguments
+                             withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -253,6 +260,14 @@ FlutterStandardMethodCodec *_codec;
       registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
                        streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
 }
+
+- (void)setupLoadBundleListener:(id)arguments
+                withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self
+      registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
+                       streamHandler:[FLTLoadBundleStreamHandler new]]);
+}
+
 
 - (void)setupDocumentReferenceSnapshotsListener:(id)arguments
                            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
