@@ -42,8 +42,8 @@ void main() {
 
       expect(ref.hashCode, ref.hashCode);
       expect(ref, ref);
-      expect(ref.hashCode, ref2.hashCode);
-      expect(ref == ref2, isFalse);
+      expect(ref.hashCode, isNot(ref2.hashCode));
+      expect(ref, isNot(ref2));
     });
 
     test('toString', () async {
