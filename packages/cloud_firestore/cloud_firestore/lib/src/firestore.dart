@@ -94,7 +94,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
-  LoadBundleTask loadBundle(Uint8List bundle){
+  LoadBundleTask loadBundle(Uint8List bundle) {
     return LoadBundleTask._(_delegate.loadBundle(bundle));
   }
 

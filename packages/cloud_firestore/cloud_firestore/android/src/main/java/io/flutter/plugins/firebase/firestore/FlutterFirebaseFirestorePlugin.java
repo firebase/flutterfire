@@ -416,9 +416,9 @@ public class FlutterFirebaseFirestorePlugin
                 METHOD_CHANNEL_NAME + "/snapshotsInSync", new SnapshotsInSyncStreamHandler()));
         return;
       case "LoadBundle#snapshots":
-        result.success(registerEventChannel(
-          METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler()
-        ));
+        result.success(
+            registerEventChannel(
+                METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler()));
         return;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());

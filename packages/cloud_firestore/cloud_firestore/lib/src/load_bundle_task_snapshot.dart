@@ -10,6 +10,7 @@ class LoadBundleTaskSnapshot {
     LoadBundleTaskSnapshotPlatform.verifyExtends(_delegate);
   }
   LoadBundleTaskSnapshotPlatform _delegate;
+
   /// How many bytes have been loaded.
   int get bytesLoaded => _delegate.bytesLoaded;
 

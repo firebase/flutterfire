@@ -8,7 +8,8 @@ import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
 
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
-  MethodChannelLoadBundleTask(this._task, this._bundle, this._firestore) : super() {
+  MethodChannelLoadBundleTask(this._task, this._bundle, this._firestore)
+      : super() {
     _controller = StreamController<LoadBundleTaskSnapshotPlatform>.broadcast(
         onCancel: () {
       nativePlatformStream?.cancel();
@@ -48,6 +49,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
     throw StateError(
         'LoadBundleTaskState ought to be one of three values: "running", "success", "error" from native platforms');
   }
+
   final MethodChannelFirebaseFirestore _firestore;
   final Uint8List _bundle;
   final Future<String?> _task;

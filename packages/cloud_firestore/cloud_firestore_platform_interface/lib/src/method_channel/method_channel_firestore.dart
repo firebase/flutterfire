@@ -76,8 +76,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
-    return MethodChannelLoadBundleTask(channel
-        .invokeMethod<String>('LoadBundle#snapshots'), bundle, this);
+    return MethodChannelLoadBundleTask(
+        channel.invokeMethod<String>('LoadBundle#snapshots'), bundle, this);
   }
 
   @override

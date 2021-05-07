@@ -142,7 +142,7 @@
 }
 
 - (NSDictionary *)FIRLoadBundleTaskProgress:(FIRLoadBundleTaskProgress *)progress {
-  NSString * state;
+  NSString *state;
 
   switch (progress.state) {
     case FIRLoadBundleTaskStateError:

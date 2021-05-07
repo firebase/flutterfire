@@ -32,7 +32,7 @@ import java.util.Objects;
 
 class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
   public static final FlutterFirebaseFirestoreMessageCodec INSTANCE =
-    new FlutterFirebaseFirestoreMessageCodec();
+      new FlutterFirebaseFirestoreMessageCodec();
   private static final byte DATA_TYPE_DATE_TIME = (byte) 128;
   private static final byte DATA_TYPE_GEO_POINT = (byte) 129;
   private static final byte DATA_TYPE_DOCUMENT_REFERENCE = (byte) 130;
@@ -154,7 +154,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     writeValue(stream, querySnapshotMap);
   }
 
-  private void writeLoadBundleTaskProgress(ByteArrayOutputStream stream, LoadBundleTaskProgress snapshot) {
+  private void writeLoadBundleTaskProgress(
+      ByteArrayOutputStream stream, LoadBundleTaskProgress snapshot) {
     Map<String, Object> snapshotMap = new HashMap<>();
 
     snapshotMap.put("bytesLoaded", snapshot.getBytesLoaded());
@@ -262,7 +263,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     synchronized (FlutterFirebaseFirestorePlugin.firestoreInstanceCache) {
       if (FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName)
-        != null) {
+          != null) {
         return FlutterFirebaseFirestorePlugin.getCachedFirebaseFirestoreInstanceForKey(appName);
       }
 
@@ -284,7 +285,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
     if (settingsMap.get("persistenceEnabled") != null) {
       settingsBuilder.setPersistenceEnabled(
-        (Boolean) Objects.requireNonNull(settingsMap.get("persistenceEnabled")));
+          (Boolean) Objects.requireNonNull(settingsMap.get("persistenceEnabled")));
     }
 
     if (settingsMap.get("host") != null) {
@@ -292,7 +293,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       // Only allow changing ssl if host is also specified.
       if (settingsMap.get("sslEnabled") != null) {
         settingsBuilder.setSslEnabled(
-          (Boolean) Objects.requireNonNull(settingsMap.get("sslEnabled")));
+            (Boolean) Objects.requireNonNull(settingsMap.get("sslEnabled")));
       }
     }
 
@@ -321,7 +322,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       @SuppressWarnings("unchecked")
       Map<String, Object> values = (Map<String, Object>) readValue(buffer);
       FirebaseFirestore firestore =
-        (FirebaseFirestore) Objects.requireNonNull(values.get("firestore"));
+          (FirebaseFirestore) Objects.requireNonNull(values.get("firestore"));
 
       String path = (String) Objects.requireNonNull(values.get("path"));
       boolean isCollectionGroup = (boolean) values.get("isCollectionGroup");
@@ -340,7 +341,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       // "where" filters
       @SuppressWarnings("unchecked")
       List<List<Object>> filters =
-        (List<List<Object>>) Objects.requireNonNull(parameters.get("where"));
+          (List<List<Object>>) Objects.requireNonNull(parameters.get("where"));
       for (List<Object> condition : filters) {
         FieldPath fieldPath = (FieldPath) condition.get(0);
         String operator = (String) condition.get(1);
@@ -374,8 +375,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
           query = query.whereNotIn(fieldPath, listValues);
         } else {
           Log.w(
-            "FLTFirestoreMsgCodec",
-            "An invalid query operator " + operator + " was received but not handled.");
+              "FLTFirestoreMsgCodec",
+              "An invalid query operator " + operator + " was received but not handled.");
         }
       }
 
@@ -396,7 +397,7 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
         boolean descending = (boolean) order.get(1);
 
         Query.Direction direction =
-          descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
+            descending ? Query.Direction.DESCENDING : Query.Direction.ASCENDING;
 
         query = query.orderBy(fieldPath, direction);
       }
@@ -422,9 +423,9 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       return query;
     } catch (Exception exception) {
       Log.e(
-        "FLTFirestoreMsgCodec",
-        "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
-        exception);
+          "FLTFirestoreMsgCodec",
+          "An error occurred while parsing query arguments, this is most likely an error with this SDK.",
+          exception);
       return null;
     }
   }
