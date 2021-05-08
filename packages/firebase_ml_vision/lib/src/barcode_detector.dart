@@ -292,7 +292,7 @@ class Barcode {
   /// Barcode bytes as they were encoded in the barcode.
   ///
   /// Null if nothing found.
-  final Uint8List rawBytes;
+  final Uint8List? rawBytes;
 
   /// Barcode value as it was encoded in the barcode.
   ///
