@@ -36,6 +36,7 @@ public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
           events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
           onCancel(null);
         });
+
     task.addOnSuccessListener(
         (OnSuccessListener)
             o -> {
