@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> getImageLabels() async {
     try {
       final pickedFile =
-          await ImagePicker.pickImage(source: ImageSource.gallery);
+          await ImagePicker().getImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;
