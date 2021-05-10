@@ -6,7 +6,6 @@ import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
 import io.flutter.plugins.firebasemlcustom.FirebaseMLCustomPlugin;
 import io.flutter.plugins.imagepicker.ImagePickerPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
-import sq.flutter.tflite.TflitePlugin;
 
 public class MainActivity extends FlutterActivity {
   @Override
@@ -18,6 +17,5 @@ public class MainActivity extends FlutterActivity {
         shimPluginRegistry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
     ImagePickerPlugin.registerWith(
         shimPluginRegistry.registrarFor("io.flutter.plugins.imagepicker.ImagePickerPlugin"));
-    TflitePlugin.registerWith(shimPluginRegistry.registrarFor("sq.flutter.tflite.TflitePlugin"));
   }
 }
