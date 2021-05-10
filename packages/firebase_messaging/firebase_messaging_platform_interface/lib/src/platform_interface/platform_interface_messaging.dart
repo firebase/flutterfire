@@ -13,12 +13,24 @@ import '../method_channel/method_channel_messaging.dart';
 
 /// Defines an interface to work with Messaging on web and mobile.
 abstract class FirebaseMessagingPlatform extends PlatformInterface {
+  /// Create an instance using [app].
+  FirebaseMessagingPlatform({this.appInstance}) : super(token: _token);
+
+  /// Create an instance with a [FirebaseApp] using an existing instance.
+  factory FirebaseMessagingPlatform.instanceFor({
+    required FirebaseApp app,
+    required Map<dynamic, dynamic> pluginConstants,
+  }) {
+    return FirebaseMessagingPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues(
+          isAutoInitEnabled: pluginConstants['AUTO_INIT_ENABLED'],
+        );
+  }
+
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp? appInstance;
-
-  /// Create an instance using [app].
-  FirebaseMessagingPlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
@@ -30,17 +42,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   }
 
   static final Object _token = Object();
-
-  /// Create an instance with a [FirebaseApp] using an existing instance.
-  factory FirebaseMessagingPlatform.instanceFor(
-      {required FirebaseApp app,
-      required Map<dynamic, dynamic> pluginConstants}) {
-    return FirebaseMessagingPlatform.instance
-        .delegateFor(app: app)
-        .setInitialValues(
-          isAutoInitEnabled: pluginConstants['AUTO_INIT_ENABLED'],
-        );
-  }
 
   static FirebaseMessagingPlatform? _instance;
 
@@ -58,21 +59,14 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  // ignore: close_sinks
-  static StreamController<RemoteMessage>? _onMessageStreamController;
-
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static StreamController<RemoteMessage> get onMessage {
-    return _onMessageStreamController ??=
-        StreamController<RemoteMessage>.broadcast();
-  }
-
-  // ignore: close_sinks
-  static StreamController<RemoteMessage>? _onMessageOpenedAppStreamController;
+  // ignore: close_sinks, never closed
+  static final StreamController<RemoteMessage> onMessage =
+      StreamController<RemoteMessage>.broadcast();
 
   /// Returns a [Stream] that is called when a user presses a notification displayed
   /// via FCM.
@@ -82,10 +76,9 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   ///
   /// If your app is opened via a notification whilst the app is terminated,
   /// see [getInitialMessage].
-  static StreamController<RemoteMessage> get onMessageOpenedApp {
-    return _onMessageOpenedAppStreamController ??=
-        StreamController<RemoteMessage>.broadcast();
-  }
+  // ignore: close_sinks, never closed
+  static final StreamController<RemoteMessage> onMessageOpenedApp =
+      StreamController<RemoteMessage>.broadcast();
 
   static BackgroundMessageHandler? _onBackgroundMessageHandler;
 
