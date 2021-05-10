@@ -22,10 +22,15 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
               .receiveBroadcastStream(<String, Object>{
         'bundle': _bundle,
         'firestore': _firestore
-      }).listen((snapshot) {
+      }).listen((snapshot) async {
         _controller.add(LoadBundleTaskSnapshotPlatform(
             _convertToTaskState(snapshot['taskState']),
             Map<String, dynamic>.from(snapshot)));
+
+        if (snapshot['taskState'] == 'success') {
+          await _controller.close();
+          nativePlatformStream?.cancel();
+        }
       }, onError: (error, stack) {
         _controller.addError(convertPlatformException(error), stack);
         _controller.close();

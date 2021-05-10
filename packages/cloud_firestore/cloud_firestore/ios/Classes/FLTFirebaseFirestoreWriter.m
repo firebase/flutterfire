@@ -155,7 +155,6 @@
       state = @"running";
       break;
   }
-
   return @{
     @"bytesLoaded" : @(progress.bytesLoaded),
     @"documentsLoaded" : @(progress.documentsLoaded),

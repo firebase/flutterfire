@@ -12,7 +12,7 @@
 #import "Private/FLTLoadBundleStreamHandler.h"
 
 @interface FLTLoadBundleStreamHandler ()
-@property(readwrite, strong) id<FIRListenerRegistration> listenerRegistration;
+@property(readwrite, retain) FIRLoadBundleTask task;
 @end
 
 @implementation FLTLoadBundleStreamHandler
@@ -22,36 +22,20 @@
   FlutterStandardTypedData *bundle = arguments[@"bundle"];
   FIRFirestore *firestore = arguments[@"firestore"];
 
-  id listener = ^(FIRLoadBundleTaskProgress *_Nullable progress, NSError *_Nullable error) {
-    if (error) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
-      NSString *code = codeAndMessage[0];
-      NSString *message = codeAndMessage[1];
-      NSDictionary *details = @{
-        @"code" : code,
-        @"message" : message,
-      };
-      dispatch_async(dispatch_get_main_queue(), ^{
-        events([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                     message:message
-                                             optionalDetails:details
-                                          andOptionalNSError:error]);
-      });
-    } else {
-      dispatch_async(dispatch_get_main_queue(), ^{
-        events(progress);
-      });
-    }
-  };
+  self.task = [firestore loadBundle:bundle.data];
 
-  self.listenerRegistration = [firestore loadBundle:bundle.data completion:listener];
+  [self.task addObserver:^(FIRLoadBundleTaskProgress *_Nullable progress) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      events(progress);
+    });
+  }];
 
   return nil;
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  [self.listenerRegistration remove];
-  self.listenerRegistration = nil;
+  [self.task removeAllObservers];
+  self.task = nil;
 
   return nil;
 }

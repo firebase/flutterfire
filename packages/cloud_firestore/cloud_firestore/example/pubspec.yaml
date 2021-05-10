@@ -12,6 +12,7 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   flutter:
     sdk: flutter
+  http: ^0.13.3
 
 dependency_overrides:
   cloud_firestore_platform_interface:

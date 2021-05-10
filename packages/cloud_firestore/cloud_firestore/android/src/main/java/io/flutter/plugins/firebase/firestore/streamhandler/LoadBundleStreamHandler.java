@@ -2,6 +2,7 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.LoadBundleTask;
 import io.flutter.plugin.common.EventChannel;
@@ -35,6 +36,11 @@ public class LoadBundleStreamHandler implements EventChannel.StreamHandler {
           events.error(DEFAULT_ERROR_CODE, exception.getMessage(), exceptionDetails);
           onCancel(null);
         });
+    task.addOnSuccessListener(
+        (OnSuccessListener)
+            o -> {
+              onCancel(null);
+            });
   }
 
   @Override
