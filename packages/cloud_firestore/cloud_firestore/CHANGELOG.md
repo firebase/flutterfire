@@ -1,3 +1,11 @@
+## 2.1.0
+
+ - **FIX**: Fix FirebaseOptions hashCode (#3263).
+ - **FEAT**: Add withConverter for Query (#6065).
+ - **DOCS**: add QueryDocumentSnapshot to the list of classes that received a breaking change (#6092).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

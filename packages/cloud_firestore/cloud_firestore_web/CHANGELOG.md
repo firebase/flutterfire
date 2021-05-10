@@ -1,3 +1,9 @@
+## 2.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 2.0.0
 
  - **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#6015).

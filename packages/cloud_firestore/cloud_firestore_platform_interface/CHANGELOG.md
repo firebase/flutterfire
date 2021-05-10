@@ -1,3 +1,9 @@
+## 5.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 5.0.0
 
 > Note: This release has breaking changes.
