@@ -1284,6 +1284,49 @@ void runQueryTests() {
     });
 
     group('withConverter', () {
+      test('from a query instead of collection', () async {
+        final collection = await initializeTest('foo');
+
+        final query = collection //
+            .where('value', isGreaterThan: 0)
+            .withConverter<int>(
+              fromFirestore: (snapshots, _) =>
+                  snapshots.data()!['value']! as int,
+              toFirestore: (value, _) => {'value': value},
+            );
+
+        await collection.add({'value': 42});
+        await collection.add({'value': -1});
+
+        final snapshot = query.snapshots();
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42)
+            ]),
+          ),
+        );
+
+        await collection.add({'value': 21});
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals([
+                  isA<DocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 42),
+                  isA<DocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 21)
+                ])),
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
+
       test('snapshots', () async {
         final collection = await initializeTest('foo');
 
