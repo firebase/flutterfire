@@ -22,8 +22,8 @@
     ```
 
  - **BREAKING** **REFACTOR**: `DocumentReference`, `CollectionReference`, `Query`, `DocumentSnapshot`,
-   `CollectionSnapshot`, `QuerySnapshot`, `Transaction.get`, `Transaction.set` and `WriteBatch.set`
-   now take an extra generic parameter.  (#6015).
+   `CollectionSnapshot`, `QuerySnapshot`, `QueryDocumentSnapshot`, `Transaction.get`, `Transaction.set`
+   and `WriteBatch.set` now take an extra generic parameter.  (#6015).
 
    See the [migration guide](https://firebase.flutter.dev/docs/firestore/2.0.0_migration) for more
    information on how to update your code.
