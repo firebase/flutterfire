@@ -25,6 +25,6 @@ abstract class LoadBundleTaskPlatform extends PlatformInterface {
   }
 
   Stream<LoadBundleTaskSnapshotPlatform> get stream {
-    throw UnimplementedError('onProgress is not implemented');
+    throw UnimplementedError('stream getter is not implemented');
   }
 }
