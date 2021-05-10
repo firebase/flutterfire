@@ -146,13 +146,7 @@ class UserInformation extends StatefulWidget {
 }
 
 class _UserInformationState extends State<UserInformation> {
-  Stream<QuerySnapshot> _subscribe;
-  
-  @override
-  initState() {
-    super.initState();
-    _subscribe = FirebaseFirestore.instance.collection('users').snapshots();
-  }
+  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('users').snapshots();
 
   @override
   Widget build(BuildContext context) {
