@@ -190,6 +190,8 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getNotificationSettings() is not implemented');
   }
 
+  /// isSupported() api is for web users who want to understand if the
+  /// browser running on supports firebase messaging
   bool isSupported() {
     throw UnimplementedError('isSupported() is not implemented');
   }
