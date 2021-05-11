@@ -14,7 +14,7 @@ void runLoadBundleTests() {
     late FirebaseFirestore firestore;
     late Uri url;
     late Uint8List buffer;
-    final String collection = 'firestore-bundle-tests';
+    const String collection = 'firestore-bundle-tests';
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
       // endpoint serves a bundle with 3 documents each containing
@@ -22,7 +22,7 @@ void runLoadBundleTests() {
       url = Uri.https('api.rnfirebase.io', '/firestore/bundle');
       final response = await http.get(url);
       String string = response.body;
-      buffer = new Uint8List.fromList(string.codeUnits);
+      buffer = Uint8List.fromList(string.codeUnits);
     });
 
     group('FirebaseFirestore.loadBundle()', () {
@@ -34,7 +34,7 @@ void runLoadBundleTests() {
         QuerySnapshot snapshot = await firestore
             .collection(collection)
             .orderBy('number')
-            .get(GetOptions(source: Source.cache));
+            .get(const GetOptions(source: Source.cache));
 
         expect(snapshot.docs[0]['number'], 1);
         expect(snapshot.docs[1]['number'], 2);
