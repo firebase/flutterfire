@@ -149,6 +149,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.onTokenRefresh;
   }
 
+  bool isSupported() {
+    return _delegate.isSupported();
+  }
+
   /// Returns the current [NotificationSettings].
   ///
   /// To request permissions, call [requestPermission].

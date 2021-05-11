@@ -52,6 +52,11 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   }
 
   @override
+  bool isSupported() {
+    return messaging_interop.isSupported();
+  }
+
+  @override
   void registerBackgroundMessageHandler(BackgroundMessageHandler handler) {}
 
   @override

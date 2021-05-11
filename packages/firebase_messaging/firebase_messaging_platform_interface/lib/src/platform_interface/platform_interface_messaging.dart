@@ -190,6 +190,10 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
     throw UnimplementedError('getNotificationSettings() is not implemented');
   }
 
+  bool isSupported() {
+    throw UnimplementedError('isSupported() is not implemented');
+  }
+
   /// Prompts the user for notification permissions.
   ///
   /// On iOS, a dialog is shown requesting the users permission.

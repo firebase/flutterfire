@@ -141,6 +141,11 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
+  bool isSupported() {
+    return true;
+  }
+
+  @override
   Future<RemoteMessage?> getInitialMessage() async {
     try {
       Map<String, dynamic>? remoteMessageMap = await channel
