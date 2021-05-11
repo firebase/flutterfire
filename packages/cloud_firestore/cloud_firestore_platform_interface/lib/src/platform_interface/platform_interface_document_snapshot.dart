@@ -67,14 +67,16 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// Data can be accessed by providing a dot-notated path or [FieldPath]
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
-  dynamic get(dynamic field) {
-    assert(field != null);
-    assert(field is String || field is FieldPath,
-        'Supported [field] types are [String] and [FieldPath]');
+  dynamic get(Object field) {
+    assert(
+      field is String || field is FieldPath,
+      'Supported [field] types are [String] and [FieldPath]',
+    );
 
     if (!exists) {
       throw StateError(
-          'cannot get a field on a $DocumentSnapshotPlatform which does not exist');
+        'cannot get a field on a $DocumentSnapshotPlatform which does not exist',
+      );
     }
 
     dynamic _findKeyValueInMap(String key, Map<String, dynamic> map) {
@@ -83,14 +85,15 @@ class DocumentSnapshotPlatform extends PlatformInterface {
       }
 
       throw StateError(
-          'field does not exist within the $DocumentSnapshotPlatform');
+        'field does not exist within the $DocumentSnapshotPlatform',
+      );
     }
 
     FieldPath fieldPath;
     if (field is String) {
       fieldPath = FieldPath.fromString(field);
     } else {
-      fieldPath = field;
+      fieldPath = field as FieldPath;
     }
 
     List<String> components = fieldPath.components;
@@ -110,7 +113,8 @@ class DocumentSnapshotPlatform extends PlatformInterface {
             componentIndex + 1, Map<String, dynamic>.from(value));
       } else {
         throw StateError(
-            'field does not exist within the $DocumentSnapshotPlatform');
+          'field does not exist within the $DocumentSnapshotPlatform',
+        );
       }
     }
 
@@ -122,5 +126,5 @@ class DocumentSnapshotPlatform extends PlatformInterface {
   /// Data can be accessed by providing a dot-notated path or [FieldPath]
   /// which recursively finds the specified data. If no data could be found
   /// at the specified path, a [StateError] will be thrown.
-  dynamic operator [](dynamic field) => get(field);
+  dynamic operator [](Object field) => get(field);
 }

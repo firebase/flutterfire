@@ -16,8 +16,8 @@ enum Source {
 
   /// Causes Firestore to immediately return a value from the cache, ignoring the server completely
   /// (implying that the returned value may be stale with respect to the value on the server). If
-  /// there is no data in the cache to satisfy the [get()] or [getDocuments()] call,
-  /// [DocumentReference.get()] will return an error and [Query.getDocuments()] will return an empty
-  /// [QuerySnapshotPlatform] with no documents.
+  /// there is no data in the cache to satisfy the `get` call,
+  /// [DocumentReference.get] will throw a [FirebaseException] and
+  /// [Query.get] will return an empty [QuerySnapshotPlatform] with no documents.
   cache,
 }

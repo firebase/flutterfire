@@ -1,3 +1,11 @@
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
+## 1.1.0
+
+ - **FEAT**: update iOS Firebase SDK from 7.3 to 7.11 (#5896).
+
 ## 1.0.4
 
  - **REFACTOR**: Share guard functions accross plugins (#5783).
