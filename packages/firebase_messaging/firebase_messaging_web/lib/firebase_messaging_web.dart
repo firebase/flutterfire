@@ -51,7 +51,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     _initialized = true;
   }
 
-  /// Updates user on browser support
+  /// Updates user on browser support for Firebase.Messaging
   @override
   bool isSupported() {
     return messaging_interop.isSupported();
