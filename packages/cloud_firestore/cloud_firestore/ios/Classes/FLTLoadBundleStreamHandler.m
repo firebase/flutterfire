@@ -12,7 +12,7 @@
 #import "Private/FLTLoadBundleStreamHandler.h"
 
 @interface FLTLoadBundleStreamHandler ()
-@property(readwrite, retain) FIRLoadBundleTask task;
+@property(readwrite, strong) FIRLoadBundleTask *task;
 @end
 
 @implementation FLTLoadBundleStreamHandler
