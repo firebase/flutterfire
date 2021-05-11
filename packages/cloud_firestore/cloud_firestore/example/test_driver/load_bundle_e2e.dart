@@ -14,6 +14,7 @@ void runLoadBundleTests() {
     late FirebaseFirestore firestore;
     late Uri url;
     late Uint8List buffer;
+    final String collection = 'firestore-bundle-tests';
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
       // endpoint serves a bundle with 3 documents each containing
@@ -31,7 +32,7 @@ void runLoadBundleTests() {
         await task.stream.last;
 
         QuerySnapshot snapshot = await firestore
-            .collection('flutter-tests')
+            .collection(collection)
             .orderBy('number')
             .get(GetOptions(source: Source.cache));
 
