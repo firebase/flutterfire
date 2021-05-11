@@ -48,7 +48,7 @@ void runInstanceTests() {
     });
 
     group('isSupported()', () {
-      test('returns boolean "true" value', () {
+      test('returns "true" value', () {
         expect(messaging.isSupported(), isTrue);
       });
     });

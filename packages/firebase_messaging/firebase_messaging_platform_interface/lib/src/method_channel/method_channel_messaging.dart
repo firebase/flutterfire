@@ -140,7 +140,7 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
     return _autoInitEnabled;
   }
 
-  /// Returns "true" as this API is used to inform users of browser support
+  /// Returns "true" as this API is used to inform users of web browser support
   @override
   bool isSupported() {
     return true;
