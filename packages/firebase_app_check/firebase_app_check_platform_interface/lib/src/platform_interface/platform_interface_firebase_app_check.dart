@@ -53,7 +53,12 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<void> activate() {
+  /// Activates the Firebase App Check service.
+  ///
+  /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
+  /// Firebase Console. For more information, see
+  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
+  Future<void> activate({String? webRecaptchaSiteKey}) {
     throw UnimplementedError('activate() is not implemented');
   }
 

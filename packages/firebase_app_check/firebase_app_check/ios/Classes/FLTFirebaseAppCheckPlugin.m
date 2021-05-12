@@ -47,18 +47,16 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
     return;
   }
 
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
-        NSString *errorCode = [NSString stringWithFormat:@"%ld", error.code];
-        NSString *errorMessage = error.localizedDescription;
-        errorDetails[@"code"] = errorCode;
-        errorDetails[@"message"] = errorMessage;
-        flutterResult([FlutterError errorWithCode:errorCode
-                                          message:errorMessage
-                                          details:errorDetails]);
-      };
+  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+      NSError *_Nullable error) {
+    NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
+    NSString *errorCode = [NSString stringWithFormat:@"%ld", error.code];
+    NSString *errorMessage = error.localizedDescription;
+    errorDetails[@"code"] = errorCode;
+    errorDetails[@"message"] = errorMessage;
+    flutterResult([FlutterError errorWithCode:errorCode message:errorMessage details:errorDetails]);
+  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
@@ -67,15 +65,16 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 #pragma mark - Firebase Functions API
 
-- (void)activateDefaultProvider:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-//  BOOL debug = [arguments[@"debug"] boolValue];
-//  id<FIRAppCheckProviderFactory> provider;
-//  if (debug) {
-//    provider = [FIRAppCheckDebugProviderFactory alloc];
-//  } else {
-//    provider = [FIRDeviceCheckProviderFactory alloc];
-//  }
-//  [FIRAppCheck setAppCheckProviderFactory:provider];
+- (void)activateDefaultProvider:(id)arguments
+           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  //  BOOL debug = [arguments[@"debug"] boolValue];
+  //  id<FIRAppCheckProviderFactory> provider;
+  //  if (debug) {
+  //    provider = [FIRAppCheckDebugProviderFactory alloc];
+  //  } else {
+  //    provider = [FIRDeviceCheckProviderFactory alloc];
+  //  }
+  //  [FIRAppCheck setAppCheckProviderFactory:provider];
   result.success(nil);
 }
 

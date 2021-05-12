@@ -25,5 +25,5 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   AppCheck._fromJsObject(app_check_interop.AppCheckJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  void activate(String recaptchaKey) => jsObject.activate(recaptchaKey);
+  void activate(String? recaptchaKey) => jsObject.activate(recaptchaKey);
 }
