@@ -179,12 +179,10 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   }
 
   @override
-  Future<void> deleteToken({
-    String? senderId,
-  }) async {
+  Future<void> deleteToken() async {
     try {
-      await channel.invokeMapMethod(
-          'Messaging#deleteToken', {'appName': app.name, 'senderId': senderId});
+      await channel
+          .invokeMapMethod('Messaging#deleteToken', {'appName': app.name});
     } catch (e) {
       throw convertPlatformException(e);
     }
@@ -211,14 +209,12 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   @override
   Future<String?> getToken({
-    String? senderId,
     String? vapidKey, // not used yet; web only property
   }) async {
     try {
       Map<String, String?>? data =
           await channel.invokeMapMethod<String, String>('Messaging#getToken', {
         'appName': app.name,
-        'senderId': senderId,
       });
 
       return data?['token'];
