@@ -7,24 +7,13 @@ environment:
 dependencies:
   firebase_admob:
     path: ../
-  firebase_core:
-    path: ../../firebase_core/firebase_core
   flutter:
     sdk: flutter
-
-dependency_overrides:
-  firebase_core:
-    path: ../../firebase_core/firebase_core
-  firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface
-  firebase_core_web:
-    path: ../../firebase_core/firebase_core_web
 
 dev_dependencies:
   e2e: ^0.6.1
   flutter_driver:
     sdk: flutter
-  pedantic: ^1.8.0
 
 flutter:
   uses-material-design: true

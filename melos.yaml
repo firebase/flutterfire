@@ -4,9 +4,12 @@ packages:
   - packages/**
 
 ignore:
-  # TODO Excluded pending CI fixes
-  - firebase_admob
-  - firebase_admob_example
+  # TODO Excluded - pending rewrite to use latest SDKs.
+  - firebase_ml_custom
+  - firebase_ml_custom_example
+  # TODO Deprecated - excluded pending removal.
+  - firebase_ml_vision
+  - firebase_ml_vision_example
 
 scripts:
   lint:all:
