@@ -41,6 +41,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({String? webRecaptchaSiteKey}) async {
-    return guard(() => _webAppCheck!.activate(webRecaptchaSiteKey));
+    return guard<Future<void>>(
+        () async => _webAppCheck!.activate(webRecaptchaSiteKey));
   }
 }
