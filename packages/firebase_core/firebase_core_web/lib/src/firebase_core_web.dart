@@ -31,6 +31,24 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }) async {
     firebase.App? app;
 
+    assert(() {
+      if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
+        // ignore: avoid_print
+        print(
+          'WARNING: FlutterFire for Web is explicitly tested against Firebase JS SDK version "$supportedFirebaseJsSdkVersion" '
+          'but your currently imported Firebase JS SDKs in your web/index.html file are using version "${firebase.SDK_VERSION}" '
+          '- this may lead to unexpected issues in your application. It is recommended that you upgrade the versions of all the '
+          'Firebase JS SDK scripts in your web/index.html file to use version "$supportedFirebaseJsSdkVersion", e.g.; \n'
+          'change:\n'
+          '  <script src="https://www.gstatic.com/firebasejs/${firebase.SDK_VERSION}/firebase-app.js"></script> \n'
+          'to: \n'
+          '  <script src="https://www.gstatic.com/firebasejs/$supportedFirebaseJsSdkVersion/firebase-app.js"></script> \n',
+        );
+      }
+
+      return true;
+    }());
+
     if (name == defaultFirebaseAppName) {
       throw noDefaultAppInitialization();
     }
