@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.embedding.engine.plugins.activity.ActivityAware;
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -24,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
+public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
   // Only set registrar for v1 embedder.
@@ -36,134 +34,6 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
     instance.registrar = registrar;
     instance.onAttachedToEngine(registrar.context(), registrar.messenger());
-  }
-
-  // Only access activity with this method.
-  private Activity getActivity() {
-    return registrar != null ? registrar.activity() : activity;
-  }
-
-  @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
-  }
-
-  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
-    FirebaseApp.initializeApp(applicationContext);
-    firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
-    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
-    methodChannel.setMethodCallHandler(this);
-  }
-
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    firebaseAnalytics = null;
-    methodChannel = null;
-  }
-
-  @Override
-  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-    setActivity(binding.getActivity());
-  }
-
-  @Override
-  public void onDetachedFromActivityForConfigChanges() {
-    setActivity(null);
-  }
-
-  @Override
-  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-    setActivity(binding.getActivity());
-  }
-
-  @Override
-  public void onDetachedFromActivity() {}
-
-  @Override
-  public void onMethodCall(MethodCall call, Result result) {
-    switch (call.method) {
-      case "logEvent":
-        handleLogEvent(call, result);
-        break;
-      case "setUserId":
-        handleSetUserId(call, result);
-        break;
-      case "setCurrentScreen":
-        handleSetCurrentScreen(call, result);
-        break;
-      case "setAnalyticsCollectionEnabled":
-        handleSetAnalyticsCollectionEnabled(call, result);
-        break;
-      case "setSessionTimeoutDuration":
-        handleSetSessionTimeoutDuration(call, result);
-        break;
-      case "setUserProperty":
-        handleSetUserProperty(call, result);
-        break;
-      case "resetAnalyticsData":
-        handleResetAnalyticsData(result);
-        break;
-      default:
-        result.notImplemented();
-        break;
-    }
-  }
-
-  private void setActivity(Activity activity) {
-    this.activity = activity;
-  }
-
-  private void handleLogEvent(MethodCall call, Result result) {
-
-    final String eventName = call.argument("name");
-    final Map<String, Object> map = call.argument("parameters");
-    final Bundle parameterBundle = createBundleFromMap(map);
-    firebaseAnalytics.logEvent(eventName, parameterBundle);
-    result.success(null);
-  }
-
-  private void handleSetUserId(MethodCall call, Result result) {
-    final String id = (String) call.arguments;
-    firebaseAnalytics.setUserId(id);
-    result.success(null);
-  }
-
-  private void handleSetCurrentScreen(MethodCall call, Result result) {
-    if (getActivity() == null) {
-      result.error("no_activity", "handleSetCurrentScreen requires a foreground activity", null);
-      return;
-    }
-
-    final String screenName = call.argument("screenName");
-    final String screenClassOverride = call.argument("screenClassOverride");
-
-    firebaseAnalytics.setCurrentScreen(getActivity(), screenName, screenClassOverride);
-    result.success(null);
-  }
-
-  private void handleSetAnalyticsCollectionEnabled(MethodCall call, Result result) {
-    final Boolean enabled = call.arguments();
-    firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
-    result.success(null);
-  }
-
-  private void handleSetSessionTimeoutDuration(MethodCall call, Result result) {
-    final Integer milliseconds = call.arguments();
-    firebaseAnalytics.setSessionTimeoutDuration(milliseconds);
-    result.success(null);
-  }
-
-  private void handleSetUserProperty(MethodCall call, Result result) {
-    final String name = call.argument("name");
-    final String value = call.argument("value");
-
-    firebaseAnalytics.setUserProperty(name, value);
-    result.success(null);
-  }
-
-  private void handleResetAnalyticsData(Result result) {
-    firebaseAnalytics.resetAnalyticsData();
-    result.success(null);
   }
 
   private static Bundle createBundleFromMap(Map<String, Object> map) {
@@ -211,5 +81,102 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
       }
     }
     return bundle;
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
+  }
+
+  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
+    FirebaseApp.initializeApp(applicationContext);
+    firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
+    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
+    methodChannel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    firebaseAnalytics = null;
+    methodChannel = null;
+  }
+
+  @Override
+  public void onMethodCall(MethodCall call, @NonNull Result result) {
+    switch (call.method) {
+      case "logEvent":
+        handleLogEvent(call, result);
+        break;
+      case "setUserId":
+        handleSetUserId(call, result);
+        break;
+      case "setCurrentScreen":
+        handleSetCurrentScreen(call, result);
+        break;
+      case "setAnalyticsCollectionEnabled":
+        handleSetAnalyticsCollectionEnabled(call, result);
+        break;
+      case "setSessionTimeoutDuration":
+        handleSetSessionTimeoutDuration(call, result);
+        break;
+      case "setUserProperty":
+        handleSetUserProperty(call, result);
+        break;
+      case "resetAnalyticsData":
+        handleResetAnalyticsData(result);
+        break;
+      default:
+        result.notImplemented();
+        break;
+    }
+  }
+
+  private void handleLogEvent(MethodCall call, Result result) {
+    final String eventName = call.argument("name");
+    final Map<String, Object> map = call.argument("parameters");
+    final Bundle parameterBundle = createBundleFromMap(map);
+    firebaseAnalytics.logEvent(eventName, parameterBundle);
+    result.success(null);
+  }
+
+  private void handleSetUserId(MethodCall call, Result result) {
+    final String id = (String) call.arguments;
+    firebaseAnalytics.setUserId(id);
+    result.success(null);
+  }
+
+  private void handleSetCurrentScreen(MethodCall call, Result result) {
+    final String screenName = call.argument("screenName");
+    final String screenClassOverride = call.argument("screenClassOverride");
+    Bundle parameterBundle = new Bundle();
+    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
+    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
+    result.success(null);
+  }
+
+  private void handleSetAnalyticsCollectionEnabled(MethodCall call, Result result) {
+    final Boolean enabled = call.arguments();
+    firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+    result.success(null);
+  }
+
+  private void handleSetSessionTimeoutDuration(MethodCall call, Result result) {
+    final Integer milliseconds = call.arguments();
+    firebaseAnalytics.setSessionTimeoutDuration(milliseconds);
+    result.success(null);
+  }
+
+  private void handleSetUserProperty(MethodCall call, Result result) {
+    final String name = call.argument("name");
+    final String value = call.argument("value");
+
+    firebaseAnalytics.setUserProperty(name, value);
+    result.success(null);
+  }
+
+  private void handleResetAnalyticsData(Result result) {
+    firebaseAnalytics.resetAnalyticsData();
+    result.success(null);
   }
 }
