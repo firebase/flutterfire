@@ -226,7 +226,7 @@ void runTransactionTests() {
           DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
               await transaction.get(documentReference);
           transaction.update(documentReference, {
-            'bar': (documentSnapshot.data()['bar'] as num) + 1,
+            'bar': (documentSnapshot.data()!['bar'] as num) + 1,
           });
         });
 
@@ -249,7 +249,7 @@ void runTransactionTests() {
           DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
               await transaction.get(documentReference);
           transaction.set(documentReference, {
-            'bar': (documentSnapshot.data()['bar'] as num) + 1,
+            'bar': (documentSnapshot.data()!['bar'] as num) + 1,
           });
         });
 
@@ -275,7 +275,7 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': (documentSnapshot.data()['bar'] as num) + 1,
+                'bar': (documentSnapshot.data()!['bar'] as num) + 1,
               },
               SetOptions(merge: true));
         });
@@ -299,7 +299,7 @@ void runTransactionTests() {
           transaction.set(
               documentReference,
               {
-                'bar': (documentSnapshot.data()['bar'] as num) + 1,
+                'bar': (documentSnapshot.data()!['bar'] as num) + 1,
                 'baz': 'ben',
               },
               SetOptions(mergeFields: ['bar']));
@@ -329,7 +329,7 @@ void runTransactionTests() {
             await transaction.get(documentReference);
 
         transaction.set(documentReference, {
-          'foo': (documentSnapshot.data()['foo'] as num) + 1,
+          'foo': (documentSnapshot.data()!['foo'] as num) + 1,
         });
 
         transaction.update(documentReference, {'bar': 'baz'});

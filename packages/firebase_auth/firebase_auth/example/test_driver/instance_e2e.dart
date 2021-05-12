@@ -16,7 +16,8 @@ import './test_utils.dart';
 
 void runInstanceTests() {
   group('FirebaseAuth.instance', () {
-    Future<void> commonSuccessCallback(currentUserCredential) async {
+    Future<void> commonSuccessCallback(
+        UserCredential currentUserCredential) async {
       var currentUser = currentUserCredential.user;
 
       expect(currentUser, isInstanceOf<Object>());
@@ -529,9 +530,12 @@ void runInstanceTests() {
         final idTokenResult =
             await FirebaseAuth.instance.currentUser.getIdTokenResult();
 
-        expect(idTokenResult.claims['roles'], isA<List>());
-        expect(idTokenResult.claims['roles'][0], isA<Map>());
-        expect(idTokenResult.claims['roles'][0]['role'], 'member');
+        final roles = idTokenResult.claims['roles'] as List;
+
+        expect(
+          roles.first,
+          isA<Map>().having((e) => e['role'], '["role"]', 'member'),
+        );
       });
     });
 

@@ -262,12 +262,15 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   Map<String, RemoteConfigValue> _parseParameters(
-      Map<dynamic, dynamic> rawParameters) {
+    Map<dynamic, dynamic> rawParameters,
+  ) {
     var parameters = <String, RemoteConfigValue>{};
     for (final key in rawParameters.keys) {
-      final rawValue = rawParameters[key];
+      final rawValue = rawParameters[key] as Map;
       parameters[key] = RemoteConfigValue(
-          rawValue['value'], _parseValueSource(rawValue['source']));
+        rawValue['value'],
+        _parseValueSource(rawValue['source']),
+      );
     }
     return parameters;
   }
