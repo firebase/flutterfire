@@ -256,7 +256,7 @@ abstract class LoadBundleTaskJsImpl {
 @JS()
 @anonymous
 abstract class LoadBundleTaskProgressJsImpl {
-  external int get bytesLoaded;
+  external String get bytesLoaded;
 
   external int get documentsLoaded;
 

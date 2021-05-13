@@ -144,7 +144,7 @@ class LoadBundleTaskProgress
         LoadBundleTaskProgress._fromJsObject(jsObject);
   }
 
-  int get bytesLoaded => jsObject.bytesLoaded;
+  int get bytesLoaded => int.parse(jsObject.bytesLoaded);
 
   int get documentsLoaded => jsObject.documentsLoaded;
 
