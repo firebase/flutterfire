@@ -24,7 +24,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
         'firestore': _firestore
       }).listen((snapshot) {
         _controller.add(LoadBundleTaskSnapshotPlatform(
-            _convertToTaskState(snapshot['taskState']),
+            convertToTaskState(snapshot['taskState']),
             Map<String, dynamic>.from(snapshot)));
 
         if (snapshot['taskState'] == 'success') {
@@ -37,22 +37,6 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
         nativePlatformStream?.cancel();
       });
     });
-  }
-
-  static LoadBundleTaskState _convertToTaskState(String state) {
-    if (state == 'running') {
-      return LoadBundleTaskState.running;
-    }
-    if (state == 'error') {
-      return LoadBundleTaskState.error;
-    }
-
-    if (state == 'success') {
-      return LoadBundleTaskState.success;
-    }
-
-    throw StateError(
-        'LoadBundleTaskState ought to be one of three values: "running", "success", "error" from native platforms');
   }
 
   final MethodChannelFirebaseFirestore _firestore;

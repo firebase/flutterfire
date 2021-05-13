@@ -7,6 +7,7 @@
 @JS('firebase.firestore')
 library firebase_interop.firestore;
 
+import 'package:cloud_firestore_web/src/interop/firestore.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'dart:typed_data' show Uint8List;
 
@@ -62,6 +63,8 @@ abstract class FirestoreJsImpl {
 
 // ignore: prefer_void_to_null
   external PromiseJsImpl<Null> waitForPendingWrites();
+
+  external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
 }
 
 @JS('WriteBatch')
@@ -242,6 +245,26 @@ abstract class DocumentReferenceJsImpl {
 
 //ignore: prefer_void_to_null
   external PromiseJsImpl<Null> update(dynamic dataOrFieldsAndValues);
+}
+
+@JS('LoadBundleTask')
+abstract class LoadBundleTaskJsImpl {
+  external void Function() onProgress(
+      void Function(LoadBundleTaskProgressJsImpl) progress);
+}
+
+@JS()
+@anonymous
+abstract class LoadBundleTaskProgressJsImpl {
+  external int get bytesLoaded;
+
+  external int get documentsLoaded;
+
+  external String get taskState;
+
+  external String get totalBytes;
+
+  external int get totalDocuments;
 }
 
 @JS('DocumentSnapshot')
@@ -544,6 +567,7 @@ abstract class SetOptions {
   external bool get merge;
 
   external set merge(bool v);
+
 //ignore: avoid_setters_without_getters
   external set mergeFields(List<String> v);
 

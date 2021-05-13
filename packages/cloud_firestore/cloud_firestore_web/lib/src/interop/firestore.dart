@@ -6,6 +6,7 @@
 // ignore_for_file: prefer_void_to_null
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -103,6 +104,55 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   Future<Null> waitForPendingWrites() =>
       handleThenable(jsObject.waitForPendingWrites());
+
+  LoadBundleTask loadBundle(Uint8List bundle) {
+    return LoadBundleTask.getInstance(jsObject.loadBundle(bundle));
+  }
+}
+
+class LoadBundleTask
+    extends JsObjectWrapper<firestore_interop.LoadBundleTaskJsImpl> {
+  LoadBundleTask._fromJsObject(firestore_interop.LoadBundleTaskJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+  static final _expando = Expando<LoadBundleTask>();
+
+  /// Creates a new LoadBundleTask from a [jsObject].
+  static LoadBundleTask getInstance(
+      firestore_interop.LoadBundleTaskJsImpl jsObject) {
+    return _expando[jsObject] ??= LoadBundleTask._fromJsObject(jsObject);
+  }
+
+  onProgress(Function(LoadBundleTaskProgress) callback) {
+    jsObject.onProgress(
+        allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
+      callback(LoadBundleTaskProgress._fromJsObject(data));
+    }));
+  }
+}
+
+class LoadBundleTaskProgress
+    extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
+  LoadBundleTaskProgress._fromJsObject(
+      firestore_interop.LoadBundleTaskProgressJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+  static final _expando = Expando<LoadBundleTaskProgress>();
+
+  /// Creates a new LoadBundleTaskProgress from a [jsObject].
+  static LoadBundleTaskProgress getInstance(
+      firestore_interop.LoadBundleTaskProgressJsImpl jsObject) {
+    return _expando[jsObject] ??=
+        LoadBundleTaskProgress._fromJsObject(jsObject);
+  }
+
+  int get bytesLoaded => jsObject.bytesLoaded;
+
+  int get documentsLoaded => jsObject.documentsLoaded;
+
+  String get taskState => jsObject.taskState;
+
+  int get totalBytes => int.parse(jsObject.totalBytes);
+
+  int get totalDocuments => jsObject.totalDocuments;
 }
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>

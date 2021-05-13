@@ -67,6 +67,6 @@ void runLoadBundleTests() {
 
         expect(lastSnapshot, isInstanceOf<LoadBundleTaskSnapshot>());
       });
-    }, skip: kIsWeb);
+    });
   });
 }
