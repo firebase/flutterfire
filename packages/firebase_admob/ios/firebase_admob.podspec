@@ -18,8 +18,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'firebase_core'
-  s.dependency 'Google-Mobile-Ads-SDK'
+  s.dependency 'Google-Mobile-Ads-SDK', '7.49.0'
 
   s.ios.deployment_target = '10.0'
 

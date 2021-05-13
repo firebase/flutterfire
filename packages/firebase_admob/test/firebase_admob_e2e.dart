@@ -7,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:e2e/e2e.dart';
 
 import 'package:firebase_admob/firebase_admob.dart';
-import 'package:pedantic/pedantic.dart';
 
 void main() {
   E2EWidgetsFlutterBinding.ensureInitialized();
@@ -65,8 +64,10 @@ void main() {
       },
     );
 
-    unawaited(bannerAd1.load());
-    unawaited(bannerAd2.load());
+    // ignore: unawaited_futures
+    bannerAd1.load();
+    // ignore: unawaited_futures
+    bannerAd2.load();
 
     await expectLater(adCompleter1.future, completes);
     await expectLater(adCompleter2.future, completes);

@@ -332,7 +332,7 @@ abstract class QueryJsImpl {
       /*DocumentSnapshot|List<dynamic>*/
       dynamic snapshotOrFieldValues);
 
-  external PromiseJsImpl<QuerySnapshotJsImpl> get();
+  external PromiseJsImpl<QuerySnapshotJsImpl> get([GetOptions? options]);
 
   external QueryJsImpl limit(num? limit);
 
