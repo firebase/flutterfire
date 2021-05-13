@@ -1,3 +1,7 @@
+## 0.10.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0-dev.2
 
  - **REFACTOR**: upgrade example to v2 Android embedding.

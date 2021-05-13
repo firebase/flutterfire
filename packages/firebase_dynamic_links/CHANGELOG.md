@@ -1,3 +1,7 @@
+## 2.0.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 2.0.2
 
  - **TEST**: rewrite integration test to test for parameters explicitly.

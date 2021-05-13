@@ -161,6 +161,30 @@ abstract class Query<T extends Object?> {
     List<Object?>? whereNotIn,
     bool? isNull,
   });
+
+  /// Transforms a [Query] to manipulate a custom object instead
+  /// of a `Map<String, dynamic>`.
+  ///
+  /// This makes both read and write operations type-safe.
+  ///
+  /// ```dart
+  /// final personsRef = FirebaseFirestore
+  ///     .instance
+  ///     .collection('persons')
+  ///     .where('age', isGreaterThan: 0)
+  ///     .withConverter<Person>(
+  ///       fromFirestore: (json) => Person.fromJson(json),
+  ///       toFirestore: (model) => Person.toJson(),
+  ///     );
+  ///
+  /// Future<void> main() async {
+  ///   List<QuerySnapshot<Person>> persons = await personsRef.get().then((s) => s.docs);
+  /// }
+  /// ```
+  Query<R> withConverter<R>({
+    required FromFirestore<R> fromFirestore,
+    required ToFirestore<R> toFirestore,
+  });
 }
 
 /// Represents a [Query] over the data at a particular location.
@@ -737,6 +761,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     return _JsonQuery(firestore, _delegate.where(conditions));
   }
+
+  @override
+  Query<R> withConverter<R extends Object?>({
+    required FromFirestore<R> fromFirestore,
+    required ToFirestore<R> toFirestore,
+  }) {
+    return _WithConverterQuery(
+      this,
+      fromFirestore,
+      toFirestore,
+    );
+  }
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -870,6 +906,18 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
+    );
+  }
+
+  @override
+  Query<R> withConverter<R extends Object?>({
+    required FromFirestore<R> fromFirestore,
+    required ToFirestore<R> toFirestore,
+  }) {
+    return _WithConverterQuery(
+      _originalQuery,
+      fromFirestore,
+      toFirestore,
     );
   }
 }

@@ -1,3 +1,9 @@
+## 4.2.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 4.2.1
 
  - **FIX**: authentication forceResendingToken int can be null on iOS (#5944).

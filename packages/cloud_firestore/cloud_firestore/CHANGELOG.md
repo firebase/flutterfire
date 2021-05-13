@@ -1,3 +1,11 @@
+## 2.1.0
+
+ - **FIX**: Fix FirebaseOptions hashCode (#3263).
+ - **FEAT**: Add withConverter for Query (#6065).
+ - **DOCS**: add QueryDocumentSnapshot to the list of classes that received a breaking change (#6092).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 2.0.0
 
 > Note: This release has breaking changes.
@@ -22,8 +30,8 @@
     ```
 
  - **BREAKING** **REFACTOR**: `DocumentReference`, `CollectionReference`, `Query`, `DocumentSnapshot`,
-   `CollectionSnapshot`, `QuerySnapshot`, `Transaction.get`, `Transaction.set` and `WriteBatch.set`
-   now take an extra generic parameter.  (#6015).
+   `CollectionSnapshot`, `QuerySnapshot`, `QueryDocumentSnapshot`, `Transaction.get`, `Transaction.set`
+   and `WriteBatch.set` now take an extra generic parameter.  (#6015).
 
    See the [migration guide](https://firebase.flutter.dev/docs/firestore/2.0.0_migration) for more
    information on how to update your code.
