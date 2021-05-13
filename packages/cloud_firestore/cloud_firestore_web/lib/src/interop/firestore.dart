@@ -122,7 +122,8 @@ class LoadBundleTask
     return _expando[jsObject] ??= LoadBundleTask._fromJsObject(jsObject);
   }
 
-  onProgress(Function(LoadBundleTaskProgress) callback) {
+  ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
+  onProgress(void Function(LoadBundleTaskProgress) callback) {
     jsObject.onProgress(
         allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
       callback(LoadBundleTaskProgress._fromJsObject(data));
