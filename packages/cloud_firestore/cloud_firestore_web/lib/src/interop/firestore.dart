@@ -123,7 +123,8 @@ class LoadBundleTask
   }
 
   ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
-  onProgress(void Function(LoadBundleTaskProgress) callback) {
+  void onProgress(void Function(LoadBundleTaskProgress) callback) {
+    /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
     jsObject.onProgress(
         allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
       callback(LoadBundleTaskProgress._fromJsObject(data));
