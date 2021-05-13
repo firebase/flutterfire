@@ -2,12 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:math';
 import 'dart:async';
+import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
   group('$Query', () {
@@ -76,7 +75,7 @@ void runQueryTests() {
             await collection.get(const GetOptions(source: Source.cache));
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
         expect(qs.metadata.isFromCache, isTrue);
-      }, skip: kIsWeb);
+      });
 
       test('uses [GetOptions] server', () async {
         CollectionReference<Map<String, dynamic>> collection =

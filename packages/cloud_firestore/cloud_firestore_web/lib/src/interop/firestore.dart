@@ -167,9 +167,9 @@ class DocumentReference
   Future<Null> delete() => handleThenable(jsObject.delete());
 
   Future<DocumentSnapshot> get([firestore_interop.GetOptions? options]) {
-    var jsObjectSet =
+    var jsObjectGet =
         (options != null) ? jsObject.get(options) : jsObject.get();
-    return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance);
+    return handleThenable(jsObjectGet).then(DocumentSnapshot.getInstance);
   }
 
   /// Attaches a listener for [DocumentSnapshot] events.
@@ -239,9 +239,12 @@ class Query<T extends firestore_interop.QueryJsImpl>
       Query.fromJsObject(
           _wrapPaginatingFunctionCall('endBefore', snapshot, fieldValues));
 
-  Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) =>
-      handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObject.get())
-          .then(QuerySnapshot.getInstance);
+  Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) {
+    var jsObjectGet =
+        (options != null) ? jsObject.get(options) : jsObject.get();
+    return handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObjectGet)
+        .then(QuerySnapshot.getInstance);
+  }
 
   Query limit(num limit) => Query.fromJsObject(jsObject.limit(limit));
 
