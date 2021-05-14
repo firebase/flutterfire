@@ -25,7 +25,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({String? webRecaptchaSiteKey}) async {
     try {
-      await channel.invokeMethod<void>('AppCheck#activate');
+      await channel.invokeMethod<void>('FirebaseAppCheck#activate');
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }

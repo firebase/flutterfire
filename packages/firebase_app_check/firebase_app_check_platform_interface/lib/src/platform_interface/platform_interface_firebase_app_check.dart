@@ -13,11 +13,9 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAppCheckPlatform.instanceFor(
-      {required FirebaseApp app,
-      required Map<dynamic, dynamic> pluginConstants}) {
-    // TODO(salakar): Confirm if the default app is the only app?
-    // // Only the default app is supported on App Check.
-    // assert(app.name == defaultFirebaseAppName);
+      {required FirebaseApp app}) {
+    // Only the default app is supported on App Check.
+    assert(app.name == defaultFirebaseAppName);
     return FirebaseAppCheckPlatform.instance.setInitialValues();
   }
 

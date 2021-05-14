@@ -7,8 +7,6 @@
 @JS('firebase')
 library firebase_interop.firebase;
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
-
 import 'package:js/js.dart';
 import 'app_check_interop.dart';
 

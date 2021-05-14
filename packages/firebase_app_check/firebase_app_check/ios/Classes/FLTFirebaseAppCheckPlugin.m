@@ -4,9 +4,7 @@
 
 #import "FLTFirebaseAppCheckPlugin.h"
 
-// TODO swap to Firebase.h header once v8.0.0 ios sdk published
-#import <FirebaseAppCheck/FirebaseAppCheck.h>
-//#import <Firebase/Firebase.h>
+#import <Firebase/Firebase.h>
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
@@ -42,7 +40,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  if (![@"FirebaseAppCheck#activateDefaultProvider" isEqualToString:call.method]) {
+  // Only a single method implemented.
+  if (![@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
     flutterResult(FlutterMethodNotImplemented);
     return;
   }
@@ -60,13 +59,17 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-  [self activateDefaultProvider:call.arguments withMethodCallResult:methodCallResult];
+  [self activate:call.arguments withMethodCallResult:methodCallResult];
 }
 
 #pragma mark - Firebase Functions API
 
-- (void)activateDefaultProvider:(id)arguments
+- (void)activate:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  // TODO the App Check Firebase iOS SDK doesn't allow us to set a provider
+  // TODO after Firebase core has been initialized, which means we can't currently
+  // TODO support changing providers in FlutterFire. So for now we'll do nothing.
+
   //  BOOL debug = [arguments[@"debug"] boolValue];
   //  id<FIRAppCheckProviderFactory> provider;
   //  if (debug) {

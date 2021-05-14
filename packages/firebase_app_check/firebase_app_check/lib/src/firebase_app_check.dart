@@ -26,7 +26,6 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   FirebaseAppCheckPlatform get _delegate {
     _delegatePackingProperty ??= FirebaseAppCheckPlatform.instanceFor(
       app: app,
-      pluginConstants: pluginConstants,
     );
 
     return _delegatePackingProperty!;

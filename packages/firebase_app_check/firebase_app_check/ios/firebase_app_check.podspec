@@ -26,16 +26,14 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*.{h,m}'
   s.public_header_files = 'Classes/*.h'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
 
   # Flutter dependencies
   s.dependency 'Flutter'
 
   # Firebase dependencies
   s.dependency 'firebase_core'
-  # TODO switch to this once iOS SDK v8.0.0 is published
-  # s.dependency 'FirebaseAppCheck', firebase_sdk_version
-  s.dependency 'FirebaseAppCheck'
+  s.dependency 'Firebase/AppCheck', firebase_sdk_version
 
   s.static_framework = true
   s.pod_target_xcconfig = {

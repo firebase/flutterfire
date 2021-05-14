@@ -9,9 +9,9 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  cupertino_icons: ^0.1.2
   firebase_app_check:
     path: ../
-  cupertino_icons: ^0.1.2
   firebase_core:
     path: ../../../firebase_core/firebase_core
   flutter:
