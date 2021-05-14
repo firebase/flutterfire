@@ -125,12 +125,20 @@ class LoadBundleTask
   }
 
   ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
-  void onProgress(void Function(LoadBundleTaskProgress) callback) {
-    /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
-    jsObject.onProgress(
-        allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
-      callback(LoadBundleTaskProgress._fromJsObject(data));
-    }));
+  Stream<LoadBundleTaskProgress> stream() {
+    late StreamController<LoadBundleTaskProgress> controller;
+    controller =
+        StreamController<LoadBundleTaskProgress>.broadcast(onListen: () {
+      /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
+      jsObject.onProgress(
+          allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
+        controller.add(LoadBundleTaskProgress._fromJsObject(data));
+      }));
+    }, onCancel: () {
+      controller.close();
+    });
+
+    return controller.stream;
   }
 }
 

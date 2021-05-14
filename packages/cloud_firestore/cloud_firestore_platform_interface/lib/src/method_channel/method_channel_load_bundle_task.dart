@@ -2,51 +2,44 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 
 import 'utils/exception.dart';
 
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
-  MethodChannelLoadBundleTask(this._task, this._bundle, this._firestore)
+  MethodChannelLoadBundleTask(Future<String?> task, Uint8List bundle,
+      MethodChannelFirebaseFirestore firestore)
       : super() {
-    _controller = StreamController<LoadBundleTaskSnapshotPlatform>.broadcast(
-        onCancel: () {
-      nativePlatformStream?.cancel();
-    });
+    Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
+      final observerId = await task;
 
-    _task.then((observerId) {
-      StreamSubscription<dynamic>? nativePlatformStream;
-      nativePlatformStream =
+      final nativePlatformStream =
           MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
-              .receiveBroadcastStream(<String, Object>{
-        'bundle': _bundle,
-        'firestore': _firestore
-      }).listen((snapshot) {
-        _controller.add(LoadBundleTaskSnapshotPlatform(
-            convertToTaskState(snapshot['taskState']),
-            Map<String, dynamic>.from(snapshot)));
+              .receiveBroadcastStream(
+        <String, Object>{'bundle': bundle, 'firestore': firestore},
+      ).handleError(
+        convertPlatformException,
+        test: (err) => err is PlatformException,
+      );
 
-        if (snapshot['taskState'] == 'success') {
-          _controller.close();
-          nativePlatformStream?.cancel();
+      await for (final snapshot in nativePlatformStream) {
+        final taskState = convertToTaskState(snapshot['taskState']);
+
+        yield LoadBundleTaskSnapshotPlatform(
+            taskState, Map<String, dynamic>.from(snapshot));
+
+        if (taskState == LoadBundleTaskState.success) {
+          // this will close the stream and stop listening to nativePlatformStream
+          return;
         }
-      }, onError: (error, stack) {
-        _controller.addError(convertPlatformException(error), stack);
-        _controller.close();
-        nativePlatformStream?.cancel();
-      });
-    });
+      }
+    }
+
+    stream =
+        mapNativeStream().asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
-  final MethodChannelFirebaseFirestore _firestore;
-  final Uint8List _bundle;
-  final Future<String?> _task;
-  StreamSubscription<dynamic>? nativePlatformStream;
-  late StreamController<LoadBundleTaskSnapshotPlatform> _controller;
-
-  @override
-  Stream<LoadBundleTaskSnapshotPlatform> get stream {
-    return _controller.stream;
-  }
+  late final Stream stream;
 }

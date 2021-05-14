@@ -4,35 +4,31 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'interop/firestore.dart';
 
 class LoadBundleTaskWeb extends LoadBundleTaskPlatform {
-  LoadBundleTaskWeb(this._task) : super() {
-    _controller = StreamController<LoadBundleTaskSnapshotPlatform>.broadcast(
-        onListen: () {
-      _task.onProgress((LoadBundleTaskProgress progress) {
+  LoadBundleTaskWeb(LoadBundleTask task) : super() {
+    Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
+      await for (final snapshot in task.stream()) {
         Map<String, dynamic> data = {
-          'bytesLoaded': progress.bytesLoaded,
-          'documentsLoaded': progress.documentsLoaded,
-          'totalBytes': progress.totalBytes,
-          'totalDocuments': progress.totalDocuments
+          'bytesLoaded': snapshot.bytesLoaded,
+          'documentsLoaded': snapshot.documentsLoaded,
+          'totalBytes': snapshot.totalBytes,
+          'totalDocuments': snapshot.totalDocuments
         };
-        LoadBundleTaskState taskState =
-            convertToTaskState(progress.taskState.toLowerCase());
 
-        _controller.add(LoadBundleTaskSnapshotPlatform(taskState, data));
+        LoadBundleTaskState taskState =
+            convertToTaskState(snapshot.taskState.toLowerCase());
+
+        yield LoadBundleTaskSnapshotPlatform(taskState, data);
 
         if (taskState == LoadBundleTaskState.success) {
-          _controller.close();
+          //closes stream
+          return;
         }
-      });
-    }, onCancel: () {
-      _controller.close();
-    });
+      }
+    }
+
+    stream =
+        mapNativeStream().asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
-  final LoadBundleTask _task;
-  late StreamController<LoadBundleTaskSnapshotPlatform> _controller;
-
-  @override
-  Stream<LoadBundleTaskSnapshotPlatform> get stream {
-    return _controller.stream;
-  }
+  late final Stream stream;
 }

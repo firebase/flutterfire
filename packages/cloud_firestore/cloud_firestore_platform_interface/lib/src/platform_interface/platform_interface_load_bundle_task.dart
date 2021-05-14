@@ -24,7 +24,5 @@ abstract class LoadBundleTaskPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  Stream<LoadBundleTaskSnapshotPlatform> get stream {
-    throw UnimplementedError('stream getter is not implemented');
-  }
+  late Stream stream;
 }
