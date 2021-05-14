@@ -114,13 +114,13 @@ public class FlutterFirebaseFunctionsPlugin implements FlutterFirebasePlugin, Me
       additionalData = functionsException.getDetails();
 
       if (functionsException.getCause() instanceof IOException
-          && functionsException.getCause().getMessage().equals("Canceled")) {
+          && "Canceled".equals(functionsException.getCause().getMessage())) {
         // return DEADLINE_EXCEEDED for IOException cancel errors, to match iOS & Web
         code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
       } else if (functionsException.getCause() instanceof InterruptedIOException
           // return DEADLINE_EXCEEDED for InterruptedIOException errors, to match iOS & Web
-          && functionsException.getCause().getMessage().equals("timeout")) {
+          && "timeout".equals(functionsException.getCause().getMessage())) {
         code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
       } else if (functionsException.getCause() instanceof IOException) {

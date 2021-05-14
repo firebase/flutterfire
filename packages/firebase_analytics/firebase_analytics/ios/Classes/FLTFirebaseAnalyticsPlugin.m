@@ -46,7 +46,11 @@
   } else if ([@"setCurrentScreen" isEqualToString:call.method]) {
     NSString *screenName = call.arguments[@"screenName"];
     NSString *screenClassOverride = call.arguments[@"screenClassOverride"];
-    [FIRAnalytics setScreenName:screenName screenClass:screenClassOverride];
+    [FIRAnalytics logEventWithName:@"screen_view"
+                        parameters:@{
+                          @"screen_name" : screenName,
+                          @"screen_class" : screenClassOverride,
+                        }];
     result(nil);
   } else if ([@"setUserProperty" isEqualToString:call.method]) {
     NSString *name = call.arguments[@"name"];

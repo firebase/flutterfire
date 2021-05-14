@@ -1,3 +1,7 @@
+## 0.7.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.7.0+1
 
  - **FIX**: allow null values for `requestPayloadSize` and `responsePayloadSize` (#1711).

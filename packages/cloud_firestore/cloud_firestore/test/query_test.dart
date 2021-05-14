@@ -11,7 +11,7 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore? firestore;
+  late FirebaseFirestore firestore;
   Query? query;
 
   group('$Query', () {
@@ -32,7 +32,7 @@ void main() {
 
     setUp(() {
       // Reset the query before each test
-      query = firestore!.collection('foo');
+      query = firestore.collection('foo');
     });
 
     test('.limit() throws if limit is negative', () {

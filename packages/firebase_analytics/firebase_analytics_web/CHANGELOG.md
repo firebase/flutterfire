@@ -1,3 +1,8 @@
+## 0.3.0+1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
 ## 0.3.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

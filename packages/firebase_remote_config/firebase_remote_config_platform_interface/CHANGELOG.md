@@ -1,3 +1,11 @@
+## 0.3.0-dev.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
+## 0.3.0-dev.2
+
+ - Update a dependency to the latest release.
+
 ## 0.3.0-dev.1
 
  - Update a dependency to the latest release.

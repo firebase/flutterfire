@@ -158,9 +158,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// Removes access to an FCM token previously authorized with optional [senderId].
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken({
-    String? senderId,
-  }) {
+  Future<void> deleteToken() {
     throw UnimplementedError('deleteToken() is not implemented');
   }
 
@@ -172,7 +170,6 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   /// Returns the default FCM token for this device and optionally [senderId].
   Future<String?> getToken({
-    String? senderId,
     String? vapidKey,
   }) {
     throw UnimplementedError('getToken() is not implemented');
@@ -188,6 +185,12 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
   /// To request permissions, call [requestPermission].
   Future<NotificationSettings> getNotificationSettings() {
     throw UnimplementedError('getNotificationSettings() is not implemented');
+  }
+
+  /// isSupported() informs web users whether
+  /// the browser supports Firebase.Messaging
+  bool isSupported() {
+    throw UnimplementedError('isSupported() is not implemented');
   }
 
   /// Prompts the user for notification permissions.

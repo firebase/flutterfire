@@ -4,7 +4,7 @@
 
 #import <Flutter/Flutter.h>
 
-#import "Firebase/Firebase.h"
+#import "GoogleMobileAds/GoogleMobileAds.h"
 
 #define FLTLogWarning(format, ...) NSLog((@"FirebaseAdMobPlugin <warning> " format), ##__VA_ARGS__)
 
