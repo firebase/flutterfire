@@ -250,7 +250,8 @@ abstract class DocumentReferenceJsImpl {
 @JS('LoadBundleTask')
 abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
-      void Function(LoadBundleTaskProgressJsImpl) progress);
+    void Function(LoadBundleTaskProgressJsImpl) progress,
+  );
 }
 
 @JS()

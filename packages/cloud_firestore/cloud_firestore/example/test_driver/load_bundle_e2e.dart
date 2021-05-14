@@ -31,7 +31,7 @@ void runLoadBundleTests() {
 
         await task.stream.last;
 
-        QuerySnapshot snapshot = await firestore
+        QuerySnapshot<Map<String, Object?>> snapshot = await firestore
             .collection(collection)
             .orderBy('number')
             .get(const GetOptions(source: Source.cache));

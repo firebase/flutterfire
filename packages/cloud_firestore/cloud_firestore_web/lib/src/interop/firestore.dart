@@ -114,11 +114,13 @@ class LoadBundleTask
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskJsImpl> {
   LoadBundleTask._fromJsObject(firestore_interop.LoadBundleTaskJsImpl jsObject)
       : super.fromJsObject(jsObject);
+
   static final _expando = Expando<LoadBundleTask>();
 
   /// Creates a new LoadBundleTask from a [jsObject].
   static LoadBundleTask getInstance(
-      firestore_interop.LoadBundleTaskJsImpl jsObject) {
+    firestore_interop.LoadBundleTaskJsImpl jsObject,
+  ) {
     return _expando[jsObject] ??= LoadBundleTask._fromJsObject(jsObject);
   }
 
@@ -137,11 +139,13 @@ class LoadBundleTaskProgress
   LoadBundleTaskProgress._fromJsObject(
       firestore_interop.LoadBundleTaskProgressJsImpl jsObject)
       : super.fromJsObject(jsObject);
+
   static final _expando = Expando<LoadBundleTaskProgress>();
 
   /// Creates a new LoadBundleTaskProgress from a [jsObject].
   static LoadBundleTaskProgress getInstance(
-      firestore_interop.LoadBundleTaskProgressJsImpl jsObject) {
+    firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
+  ) {
     return _expando[jsObject] ??=
         LoadBundleTaskProgress._fromJsObject(jsObject);
   }
