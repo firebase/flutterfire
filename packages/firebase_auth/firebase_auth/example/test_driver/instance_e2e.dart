@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pedantic/pedantic.dart';
 
 import './test_utils.dart';
 
@@ -615,79 +616,77 @@ void runInstanceTests() {
       });
     });
 
-    // TODO latest android SDK broken;
-    // TODO java.lang.IncompatibleClassChangeError: Found class com.google.android.gms.auth.api.phone.SmsRetrieverClient...
-    // group('verifyPhoneNumber()', () {
-    //   test('should fail with an invalid phone number', () async {
-    //     Future<Exception> getError() async {
-    //       Completer completer = Completer<FirebaseAuthException>();
-    //
-    //       unawaited(FirebaseAuth.instance.verifyPhoneNumber(
-    //           phoneNumber: 'foo',
-    //           verificationCompleted: (PhoneAuthCredential credential) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           },
-    //           verificationFailed: (FirebaseAuthException e) {
-    //             completer.complete(e);
-    //           },
-    //           codeSent: (String verificationId, int resetToken) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           },
-    //           codeAutoRetrievalTimeout: (String foo) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           }));
-    //
-    //       return completer.future;
-    //     }
-    //
-    //     Exception e = await getError();
-    //     expect(e, isA<FirebaseAuthException>());
-    //     FirebaseAuthException exception = e as FirebaseAuthException;
-    //     expect(exception.code, equals('invalid-phone-number'));
-    //   });
-    //
-    //   test('should auto verify phone number', () async {
-    //     String testPhoneNumber = '+447444555666';
-    //     String testSmsCode = '123456';
-    //     await FirebaseAuth.instance.signInAnonymously();
-    //
-    //     Future<PhoneAuthCredential> getCredential() async {
-    //       Completer completer = Completer<PhoneAuthCredential>();
-    //
-    //       unawaited(FirebaseAuth.instance.verifyPhoneNumber(
-    //           phoneNumber: testPhoneNumber,
-    //           // ignore: invalid_use_of_visible_for_testing_member
-    //           autoRetrievedSmsCodeForTesting: testSmsCode,
-    //           verificationCompleted: (PhoneAuthCredential credential) {
-    //             if (credential.smsCode != testSmsCode) {
-    //               return completer
-    //                   .completeError(Exception('SMS code did not match'));
-    //             }
-    //
-    //             completer.complete(credential);
-    //           },
-    //           verificationFailed: (FirebaseException e) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           },
-    //           codeSent: (String verificationId, int resetToken) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           },
-    //           codeAutoRetrievalTimeout: (String foo) {
-    //             return completer
-    //                 .completeError(Exception('Should not have been called'));
-    //           }));
-    //
-    //       return completer.future;
-    //     }
-    //
-    //     PhoneAuthCredential credential = await getCredential();
-    //     expect(credential, isA<PhoneAuthCredential>());
-    //   }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
-    // }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
+    group('verifyPhoneNumber()', () {
+      test('should fail with an invalid phone number', () async {
+        Future<Exception> getError() async {
+          Completer completer = Completer<FirebaseAuthException>();
+
+          unawaited(FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: 'foo',
+              verificationCompleted: (PhoneAuthCredential credential) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              },
+              verificationFailed: (FirebaseAuthException e) {
+                completer.complete(e);
+              },
+              codeSent: (String verificationId, int resetToken) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              },
+              codeAutoRetrievalTimeout: (String foo) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              }));
+
+          return completer.future;
+        }
+
+        Exception e = await getError();
+        expect(e, isA<FirebaseAuthException>());
+        FirebaseAuthException exception = e as FirebaseAuthException;
+        expect(exception.code, equals('invalid-phone-number'));
+      });
+
+      test('should auto verify phone number', () async {
+        String testPhoneNumber = '+447444555666';
+        String testSmsCode = '123456';
+        await FirebaseAuth.instance.signInAnonymously();
+
+        Future<PhoneAuthCredential> getCredential() async {
+          Completer completer = Completer<PhoneAuthCredential>();
+
+          unawaited(FirebaseAuth.instance.verifyPhoneNumber(
+              phoneNumber: testPhoneNumber,
+              // ignore: invalid_use_of_visible_for_testing_member
+              autoRetrievedSmsCodeForTesting: testSmsCode,
+              verificationCompleted: (PhoneAuthCredential credential) {
+                if (credential.smsCode != testSmsCode) {
+                  return completer
+                      .completeError(Exception('SMS code did not match'));
+                }
+
+                completer.complete(credential);
+              },
+              verificationFailed: (FirebaseException e) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              },
+              codeSent: (String verificationId, int resetToken) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              },
+              codeAutoRetrievalTimeout: (String foo) {
+                return completer
+                    .completeError(Exception('Should not have been called'));
+              }));
+
+          return completer.future;
+        }
+
+        PhoneAuthCredential credential = await getCredential();
+        expect(credential, isA<PhoneAuthCredential>());
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+    }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
   });
 }
