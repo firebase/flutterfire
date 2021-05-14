@@ -12,24 +12,29 @@ import 'package:http/http.dart' as http;
 void runLoadBundleTests() {
   group('$DocumentReference', () {
     late FirebaseFirestore firestore;
-    late Uri url;
+    final url = Uri.https('api.rnfirebase.io', '/firestore/bundle');
     late Uint8List buffer;
     const String collection = 'firestore-bundle-tests';
-    setUpAll(() async {
-      firestore = FirebaseFirestore.instance;
+
+    loadBundleSetup() async {
       // endpoint serves a bundle with 3 documents each containing
       // a 'number' property that increments in value 1-3.
-      url = Uri.https('api.rnfirebase.io', '/firestore/bundle');
       final response = await http.get(url);
       String string = response.body;
       buffer = Uint8List.fromList(string.codeUnits);
+    }
+
+    setUp(() {
+      firestore = FirebaseFirestore.instance;
     });
 
     group('FirebaseFirestore.loadBundle()', () {
       test('loadBundle()', () async {
+        await loadBundleSetup();
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        await task.stream.last;
+        // ensure the bundle has been completely cached
+        await task.stream().last;
 
         QuerySnapshot<Map<String, Object?>> snapshot = await firestore
             .collection(collection)
@@ -42,29 +47,23 @@ void runLoadBundleTests() {
       });
 
       test('loadBundle(): LoadBundleTaskProgress stream snapshots', () async {
+        await loadBundleSetup();
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        List<LoadBundleTaskSnapshot> list = [];
+        final list = await task.stream().toList();
 
-        task.stream.listen((event) {
-          list.add(event);
-        });
+        expect(list.map((e) => e.totalDocuments), everyElement(isNonNegative));
+        expect(list.map((e) => e.bytesLoaded), everyElement(isNonNegative));
+        expect(list.map((e) => e.documentsLoaded), everyElement(isNonNegative));
+        expect(list.map((e) => e.totalBytes), everyElement(isNonNegative));
+        expect(list, everyElement(isInstanceOf<LoadBundleTaskSnapshot>()));
+        expect(
+            list.map((e) => e.taskState),
+            everyElement(anyOf(
+                LoadBundleTaskState.running, LoadBundleTaskState.success)));
 
-        LoadBundleTaskSnapshot lastSnapshot = await task.stream.last;
-
-        if (list.length > 1) {
-          expect(list.first.taskState, LoadBundleTaskState.running);
-          expect(lastSnapshot.taskState, LoadBundleTaskState.success);
-        } else {
-          expect(lastSnapshot.taskState, LoadBundleTaskState.success);
-        }
-
-        expect(lastSnapshot.bytesLoaded, isNonNegative);
-        expect(lastSnapshot.documentsLoaded, isNonNegative);
-        expect(lastSnapshot.totalBytes, isNonNegative);
-        expect(lastSnapshot.totalDocuments, isNonNegative);
-
-        expect(lastSnapshot, isInstanceOf<LoadBundleTaskSnapshot>());
+        LoadBundleTaskSnapshot lastSnapshot = list.last;
+        expect(lastSnapshot.taskState, LoadBundleTaskState.success);
       });
     });
   });

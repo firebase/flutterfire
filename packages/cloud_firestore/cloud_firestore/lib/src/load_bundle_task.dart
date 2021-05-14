@@ -7,7 +7,7 @@ class LoadBundleTask {
 
   final LoadBundleTaskPlatform _delegate;
 
-  Stream<LoadBundleTaskSnapshot> get stream {
+  Stream<LoadBundleTaskSnapshot> stream() {
     return _delegate.stream.map((event) => LoadBundleTaskSnapshot._(event));
   }
 }
