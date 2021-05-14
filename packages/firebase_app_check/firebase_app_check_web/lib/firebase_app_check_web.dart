@@ -3,9 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
-import 'src/interop/app_check.dart' as app_check_interop;
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
+import 'src/internals.dart';
+import 'src/interop/app_check.dart' as app_check_interop;
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   /// Stub initializer to allow the [registerWith] to create an instance without
@@ -38,12 +40,8 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<void> activate() async {
-    try {
-      _webAppCheck!.activate('todo');
-    } catch (e, s) {
-      // TODO guard
-      throw e;
-    }
+  Future<void> activate({String? webRecaptchaSiteKey}) async {
+    return guard<Future<void>>(
+        () async => _webAppCheck!.activate(webRecaptchaSiteKey));
   }
 }

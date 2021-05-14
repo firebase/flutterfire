@@ -12,5 +12,5 @@ import 'package:js/js.dart';
 
 @JS('AppCheck')
 abstract class AppCheckJsImpl {
-  external void activate(String recaptchaKey);
+  external void activate(String? recaptchaKey);
 }
