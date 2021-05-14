@@ -22,11 +22,34 @@
   FlutterStandardTypedData *bundle = arguments[@"bundle"];
   FIRFirestore *firestore = arguments[@"firestore"];
 
-  self.task = [firestore loadBundle:bundle.data];
+  // use completion handler to inform user of platform error.
+  self.task = [firestore
+      loadBundle:bundle.data
+      completion:^(FIRLoadBundleTaskProgress *_Nullable snapshot, NSError *_Nullable error) {
+        if (error != nil) {
+          NSArray *codeAndMessage =
+              [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+          NSString *code = codeAndMessage[0];
+          NSString *message = codeAndMessage[1];
+          NSDictionary *details = @{
+            @"code" : code,
+            @"message" : message,
+          };
 
+          dispatch_async(dispatch_get_main_queue(), ^{
+            events([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                         message:message
+                                                 optionalDetails:details
+                                              andOptionalNSError:error]);
+          });
+        }
+      }];
+  // use addObserver to update user with snapshot progress
   [self.task addObserver:^(FIRLoadBundleTaskProgress *_Nullable progress) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      events(progress);
+      if (progress.state != FIRLoadBundleTaskStateError) {
+        events(progress);
+      }
     });
   }];
 
