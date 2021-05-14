@@ -1,18 +1,14 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
 LoadBundleTaskState convertToTaskState(String state) {
-  if (state == 'running') {
-    return LoadBundleTaskState.running;
+  switch (state) {
+    case 'running':
+      return LoadBundleTaskState.running;
+    case 'success':
+      return LoadBundleTaskState.success;
+    case 'error':
+      return LoadBundleTaskState.error;
+    default:
+      throw FallThroughError();
   }
-
-  if (state == 'error') {
-    return LoadBundleTaskState.error;
-  }
-
-  if (state == 'success') {
-    return LoadBundleTaskState.success;
-  }
-
-  throw StateError(
-      'LoadBundleTaskState ought to be one of three values: "running", "success", "error" from native platforms');
 }
