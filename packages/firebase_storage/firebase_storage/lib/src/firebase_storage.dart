@@ -165,7 +165,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
     String mappedHost = host;
 
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-    if (defaultTargetPlatform == TargetPlatform.android) {
+    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
       if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
         // ignore: avoid_print
         print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2".');
