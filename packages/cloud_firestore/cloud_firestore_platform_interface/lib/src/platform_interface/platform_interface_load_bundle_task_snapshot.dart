@@ -9,13 +9,13 @@ import '../../cloud_firestore_platform_interface.dart';
 class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
   LoadBundleTaskSnapshotPlatform(this.taskState, this._data)
-      : super(token: _token);
+      : bytesLoaded = _data['bytesLoaded'],
+        documentsLoaded = _data['documentsLoaded'],
+        totalBytes = _data['totalBytes'],
+        totalDocuments = _data['totalDocuments'],
+        super(token: _token);
 
   static final Object _token = Object();
-
-  final Map<String, dynamic> _data;
-
-  final LoadBundleTaskState taskState;
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [LoadBundleTaskSnapshotPlatform].
@@ -27,15 +27,19 @@ class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
+  final Map<String, dynamic> _data;
+
+  final LoadBundleTaskState taskState;
+
   /// The current bytes loaded of this task.
-  int get bytesLoaded => _data['bytesLoaded'];
+  final int bytesLoaded;
 
   /// How many documents have been loaded.
-  int get documentsLoaded => _data['documentsLoaded'];
+  final int documentsLoaded;
 
   /// Total amount of bytes in the bundle being loaded.
-  int get totalBytes => _data['totalBytes'];
+  final int totalBytes;
 
   /// How many documents are in the bundle being loaded.
-  int get totalDocuments => _data['totalDocuments'];
+  final int totalDocuments;
 }
