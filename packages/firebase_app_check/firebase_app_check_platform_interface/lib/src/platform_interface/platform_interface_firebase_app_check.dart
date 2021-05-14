@@ -12,8 +12,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   FirebaseAppCheckPlatform({this.appInstance}) : super(token: _token);
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAppCheckPlatform.instanceFor(
-      {required FirebaseApp app}) {
+  factory FirebaseAppCheckPlatform.instanceFor({required FirebaseApp app}) {
     // Only the default app is supported on App Check.
     assert(app.name == defaultFirebaseAppName);
     return FirebaseAppCheckPlatform.instance.setInitialValues();

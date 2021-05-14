@@ -64,8 +64,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 #pragma mark - Firebase Functions API
 
-- (void)activate:(id)arguments
-           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   // TODO the App Check Firebase iOS SDK doesn't allow us to set a provider
   // TODO after Firebase core has been initialized, which means we can't currently
   // TODO support changing providers in FlutterFire. So for now we'll do nothing.

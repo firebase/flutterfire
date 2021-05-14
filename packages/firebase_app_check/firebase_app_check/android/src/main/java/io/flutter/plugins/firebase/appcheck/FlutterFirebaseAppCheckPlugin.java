@@ -9,36 +9,42 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.appcheck.FirebaseAppCheck;
+import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-import java.io.IOException;
-import java.io.InterruptedIOException;
+import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-public class FlutterFirebaseAppCheckPlugin implements FlutterFirebasePlugin, MethodCallHandler {
-
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-      new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_app_check");
-    channel.setMethodCallHandler(
-      new FlutterFirebaseAppCheckPlugin());
+public class FlutterFirebaseAppCheckPlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    final String channelName = "plugins.flutter.io/firebase_app_check";
+    final MethodChannel channel = new MethodChannel(binding.getBinaryMessenger(), channelName);
+    channel.setMethodCallHandler(this);
+    FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }
 
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    // Nothing to cleanup.
+  }
 
-  private Task<Void> activate(Map<String, Object> arguments) {
+  private Task<Void> activate() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        // TODO
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseAppCheck firebaseAppCheck = FirebaseAppCheck.getInstance();
+          firebaseAppCheck.installAppCheckProviderFactory(
+              SafetyNetAppCheckProviderFactory.getInstance());
+          return null;
+        });
   }
 
   @Override
@@ -48,38 +54,29 @@ public class FlutterFirebaseAppCheckPlugin implements FlutterFirebasePlugin, Met
       return;
     }
 
-    activate(call.arguments())
-      .addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
-            result.error(
-              "firebase_app_check",
-              exception != null ? exception.getMessage() : null,
-              getExceptionDetails(exception));
-          }
-        });
+    activate()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(task.getResult());
+              } else {
+                Exception exception = task.getException();
+                result.error(
+                    "firebase_app_check",
+                    exception != null ? exception.getMessage() : null,
+                    getExceptionDetails(exception));
+              }
+            });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
     Map<String, Object> details = new HashMap<>();
-
-    if (exception == null) {
-      return details;
+    details.put("code", "unknown");
+    if (exception != null) {
+      details.put("message", exception.getMessage());
+    } else {
+      details.put("message", "An unknown error has occurred.");
     }
-
-    String code = "UNKNOWN";
-    String message = exception.getMessage();
-
-    // TODO
-
-    details.put("code", code.replace("_", "-").toLowerCase());
-    details.put("message", message);
-
-
-
     return details;
   }
 
