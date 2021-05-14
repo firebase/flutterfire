@@ -15,6 +15,7 @@ void runListResultTests() {
       // so there's a chance of picking up some items and some
       // prefixes.
       result = await ref.list(const ListOptions(maxResults: 3));
+      print(result);
     });
 
     test('items', () async {

@@ -198,9 +198,11 @@ class StorageReference
 
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
-  Future<FullMetadata> updateMetadata(SettableMetadata metadata) =>
-      handleThenable(jsObject.updateMetadata(metadata.jsObject))
-          .then(FullMetadata.getInstance);
+  Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
+    print('>>>> $metadata');
+    return handleThenable(jsObject.updateMetadata(metadata.jsObject))
+        .then(FullMetadata.getInstance);
+  }
 }
 
 /// The full set of object metadata, including read-only properties.

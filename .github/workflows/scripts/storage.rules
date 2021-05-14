@@ -5,6 +5,11 @@ service firebase.storage {
       allow read, write: if false;
     }
 
+    match /writeOnly.txt {
+      allow read: if false;
+      allow write: if true;
+    }
+
     match /flutter-tests/{document=**} {
       allow read, write: if true;
     }
