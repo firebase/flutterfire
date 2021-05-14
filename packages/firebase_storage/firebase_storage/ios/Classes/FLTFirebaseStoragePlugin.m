@@ -152,7 +152,9 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
 
-  if ([@"Reference#delete" isEqualToString:call.method]) {
+  if ([@"Storage#useEmulator" isEqualToString:call.method]) {
+    [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Reference#delete" isEqualToString:call.method]) {
     [self referenceDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Reference#getDownloadURL" isEqualToString:call.method]) {
     [self referenceGetDownloadUrl:call.arguments withMethodCallResult:methodCallResult];
@@ -186,6 +188,12 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 }
 
 #pragma mark - Firebase Storage API
+
+- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRStorage *storage = [self FIRStorageForArguments:arguments];
+  [storage useEmulatorWithHost:arguments[@"host"] port:[arguments[@"port"] integerValue]];
+  result.success(nil);
+}
 
 - (void)referenceDelete:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];

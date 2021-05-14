@@ -149,48 +149,31 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
   }
 
-  /// Changes this instance to point to an Auth emulator running locally.
+  /// Changes this instance to point to a Storage emulator running locally.
   ///
-  /// Set the [origin] of the local emulator, such as "http://localhost:5001"
+  /// Set the [host] (ex: localhost) and [port] (ex: 5001) of the local emulator.
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
   ///
   /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
   /// storage.useStorageEmulator until v9
-  // Future<void> useEmulator(String origin) async {
-  //   assert(origin.isNotEmpty);
-  //   String mappedOrigin = origin;
+  Future<void> useEmulator({required String host, required int port}) async {
+    assert(host.isNotEmpty);
+    assert(!port.isNegative);
 
-  //   // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-  //   if (defaultTargetPlatform == TargetPlatform.android) {
-  //     if (mappedOrigin.startsWith('http://localhost')) {
-  //       mappedOrigin =
-  //           mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
-  //       // ignore: avoid_print
-  //       print(
-  //           'Mapping auth host "localhost" to "10.0.2.2" for android emulators. Use real IP on real devices.');
-  //     } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
-  //       mappedOrigin =
-  //           mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
-  //       // ignore: avoid_print
-  //       print(
-  //           'Mapping auth host "127.0.0.1" to "10.0.2.2" for android emulators. Use real IP on real devices.');
-  //     }
-  //   }
+    String mappedHost = host;
 
-  //   // Native calls take the host and port split out
-  //   final hostPortRegex = RegExp(r'^http:\/\/([\w\d.]+):(\d+)$');
-  //   final RegExpMatch? match = hostPortRegex.firstMatch(mappedOrigin);
-  //   if (match == null) {
-  //     throw ArgumentError(
-  //         'firebase.storage().useEmulator() origin format error');
-  //   }
-  //   // Two non-empty groups in RegExp match - which is null-tested - these are non-null now
-  //   final String host = match.group(1)!;
-  //   final int port = int.parse(match.group(2)!);
-  //   await _delegate.useEmulator(host, port);
-  // }
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+        // ignore: avoid_print
+        print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2"');
+      }
+    }
+
+    await _delegate.useEmulator(host, port);
+  }
 
   @override
   bool operator ==(Object other) =>

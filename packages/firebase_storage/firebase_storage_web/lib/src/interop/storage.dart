@@ -69,13 +69,11 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   /// Sets the maximum upload retry time to a value of [time].
   void setMaxUploadRetryTime(int time) => jsObject.setMaxUploadRetryTime(time);
 
-  /// Configures the Storage instance to work with a local emulator
-  ///
-  /// Call with [origin] like 'http://localhost:5001'
+  /// Configures the Storage instance to work with a local emulator.
   ///
   /// Note: must be called before using storage methods, do not use
   /// with production credentials as local connections are unencrypted
-  void useEmulator(String origin) => jsObject.useStorageEmulator(origin);
+  void useEmulator(String host, int port) => jsObject.useEmulator(host, port);
 }
 
 /// StorageReference is a reference to a Google Cloud Storage object.
