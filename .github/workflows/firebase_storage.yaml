@@ -32,7 +32,10 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
+          firebase --open-sesame storageemulator || true
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: Start Firebase Emulator
@@ -61,6 +64,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
+          sudo npm i -g firebase-tools
+          firebase --open-sesame storageemulator || true
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: Start Firebase Emulator
@@ -85,6 +90,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
+          sudo npm i -g firebase-tools
+          firebase --open-sesame storageemulator || true
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
