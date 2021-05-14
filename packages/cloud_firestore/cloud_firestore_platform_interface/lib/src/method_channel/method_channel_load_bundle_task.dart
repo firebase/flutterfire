@@ -16,24 +16,24 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
       final observerId = await task;
 
       final nativePlatformStream =
-          MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
-              .receiveBroadcastStream(
+      MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
+          .receiveBroadcastStream(
         <String, Object>{'bundle': bundle, 'firestore': firestore},
-      ).handleError(
-        convertPlatformException,
-        test: (err) => err is PlatformException,
       );
+      try {
+        await for (final snapshot in nativePlatformStream) {
+          final taskState = convertToTaskState(snapshot['taskState']);
 
-      await for (final snapshot in nativePlatformStream) {
-        final taskState = convertToTaskState(snapshot['taskState']);
+          yield LoadBundleTaskSnapshotPlatform(
+              taskState, Map<String, dynamic>.from(snapshot));
 
-        yield LoadBundleTaskSnapshotPlatform(
-            taskState, Map<String, dynamic>.from(snapshot));
-
-        if (taskState == LoadBundleTaskState.success) {
-          // this will close the stream and stop listening to nativePlatformStream
-          return;
+          if (taskState == LoadBundleTaskState.success) {
+            // this will close the stream and stop listening to nativePlatformStream
+            return;
+          }
         }
+      } catch (e) {
+       throw convertPlatformException(e);
       }
     }
 
