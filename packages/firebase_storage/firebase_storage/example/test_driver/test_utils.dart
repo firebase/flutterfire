@@ -14,6 +14,15 @@ Random _random = Random();
 String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_random.nextInt(_chars.length))));
 
+String get testEmulatorHost {
+  if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+    return '10.0.2.2';
+  }
+  return 'localhost';
+}
+
+const int testEmulatorPort = 9080;
+
 // Creates a test file with a specified name to
 // a locally directory
 Future<File> createFile(String name) async {
