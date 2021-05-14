@@ -31,5 +31,5 @@ flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirebaseAppCheckhWeb
+        pluginClass: FirebaseAppCheckWeb
         fileName: firebase_app_check_web.dart
