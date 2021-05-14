@@ -134,6 +134,10 @@ class LoadBundleTask
           allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
         controller.add(LoadBundleTaskProgress._fromJsObject(data));
       }));
+      //todo(russellwheatley): implement error handling for loadBundle
+      // jsObject.JS$catch(allowInterop((firestore_interop.FirestoreError error) {
+      //   controller.addError(error);
+      // }));
     }, onCancel: () {
       controller.close();
     });

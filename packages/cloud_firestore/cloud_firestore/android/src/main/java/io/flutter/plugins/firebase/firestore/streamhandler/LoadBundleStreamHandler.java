@@ -2,7 +2,6 @@ package io.flutter.plugins.firebase.firestore.streamhandler;
 
 import static io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestorePlugin.DEFAULT_ERROR_CODE;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.LoadBundleTask;
 import io.flutter.plugin.common.EventChannel;

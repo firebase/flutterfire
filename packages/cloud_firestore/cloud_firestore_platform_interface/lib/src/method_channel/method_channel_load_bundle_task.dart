@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
-import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 
@@ -16,8 +15,8 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
       final observerId = await task;
 
       final nativePlatformStream =
-      MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
-          .receiveBroadcastStream(
+          MethodChannelFirebaseFirestore.loadBundleChannel(observerId!)
+              .receiveBroadcastStream(
         <String, Object>{'bundle': bundle, 'firestore': firestore},
       );
       try {
@@ -33,7 +32,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
           }
         }
       } catch (e) {
-       throw convertPlatformException(e);
+        throw convertPlatformException(e);
       }
     }
 
@@ -41,5 +40,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
         mapNativeStream().asBroadcastStream(onCancel: (sub) => sub.cancel());
   }
 
-  late final Stream stream;
+  @override
+  // ignore: overridden_fields
+  late Stream stream;
 }

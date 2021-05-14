@@ -2,10 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_platform_interface/src/platform_interface/platform_interface_load_bundle_task_snapshot.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-
-import '../../cloud_firestore_platform_interface.dart';
 
 /// The interface a load bundle task must implement.
 abstract class LoadBundleTaskPlatform extends PlatformInterface {

@@ -8,11 +8,11 @@ import '../../cloud_firestore_platform_interface.dart';
 /// The interface a load bundle task snapshot must extend.
 class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  LoadBundleTaskSnapshotPlatform(this.taskState, this._data)
-      : bytesLoaded = _data['bytesLoaded'],
-        documentsLoaded = _data['documentsLoaded'],
-        totalBytes = _data['totalBytes'],
-        totalDocuments = _data['totalDocuments'],
+  LoadBundleTaskSnapshotPlatform(this.taskState, data)
+      : bytesLoaded = data['bytesLoaded'],
+        documentsLoaded = data['documentsLoaded'],
+        totalBytes = data['totalBytes'],
+        totalDocuments = data['totalDocuments'],
         super(token: _token);
 
   static final Object _token = Object();
@@ -26,8 +26,6 @@ class LoadBundleTaskSnapshotPlatform extends PlatformInterface {
   static void verifyExtends(LoadBundleTaskSnapshotPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
-
-  final Map<String, dynamic> _data;
 
   final LoadBundleTaskState taskState;
 

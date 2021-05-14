@@ -44,6 +44,7 @@ abstract class FirestoreJsImpl {
       [PersistenceSettings? settings]);
 
   external void Function() onSnapshotsInSync(dynamic observer);
+
 // ignore: prefer_void_to_null
   external PromiseJsImpl<Null> clearPersistence();
 
@@ -229,6 +230,7 @@ abstract class DocumentReferenceJsImpl {
   external set path(String v);
 
   external CollectionReferenceJsImpl collection(String collectionPath);
+
 //ignore: prefer_void_to_null
   external PromiseJsImpl<Null> delete();
 
@@ -252,6 +254,8 @@ abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
     void Function(LoadBundleTaskProgressJsImpl) progress,
   );
+//todo(russellwheatley): implement error handling
+//   external void Function() JS$catch(void Function(FirestoreError) errorHandler);
 }
 
 @JS()
