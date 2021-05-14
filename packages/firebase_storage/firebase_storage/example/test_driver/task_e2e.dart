@@ -20,7 +20,7 @@ void runTaskTests() {
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      uploadRef = storage.ref('/playground').child('flt-ok.txt');
+      uploadRef = storage.ref('flutter-tests').child('flt-ok.txt');
       downloadRef = storage.ref('/smallFileTest.png'); // 15mb
     });
 
@@ -161,7 +161,8 @@ void runTaskTests() {
       test('upload task to a custom bucket', () async {
         String secondaryBucket = 'react-native-firebase-testing';
         Reference storageReference =
-            FirebaseStorage.instanceFor(bucket: secondaryBucket).ref('/ok.txt');
+            FirebaseStorage.instanceFor(bucket: secondaryBucket)
+                .ref('flutter-tests/ok.txt');
 
         UploadTask task = storageReference.putString('test second bucket');
 

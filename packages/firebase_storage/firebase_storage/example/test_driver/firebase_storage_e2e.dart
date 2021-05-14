@@ -28,6 +28,22 @@ void testsMain() {
       await FirebaseStorage.instance
           .useEmulator(host: testEmulatorHost, port: testEmulatorPort);
     }
+
+    // Setup a directory of files used within the "list" tests
+    await Future.wait([
+      FirebaseStorage.instance
+          .ref('flutter-tests/list/file1.txt')
+          .putString('File 1'),
+      FirebaseStorage.instance
+          .ref('flutter-tests/list/file2.txt')
+          .putString('File 2'),
+      FirebaseStorage.instance
+          .ref('flutter-tests/list/file3.txt')
+          .putString('File 3'),
+      FirebaseStorage.instance
+          .ref('flutter-tests/list/nested/file4.txt')
+          .putString('File 4'),
+    ]);
   });
 
   runInstanceTests();
