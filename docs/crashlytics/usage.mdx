@@ -171,13 +171,32 @@ void main() async {
 
 ### Zoned Errors
 
-If you want to catch errors that occur in zones, you can pass `FirebaseCrashlytics.instance.recordError` to the second
-parameter of `runZonedGuarded`
+Not all errors are caught by Flutter. Sometimes, errors are instead caught by Zones.  
+A common case were `FlutterError` would not be enough is when an exception happen
+inside the `onPressed` of a button:
 
 ```dart
-runZonedGuarded<Future<void>>(() async {
-    // ...
+ElevatedButton(
+  onPressed: () {
+    throw Error();
+  }
+  ...
+)
+```
+
+To catch such errors, you can use `runZonedGuarded` like do:
+
+```dart
+void main() {
+  runZonedGuarded<Future<void>>(() async {
+    // The following lines are the same as previously explained in "Handling uncaught errors"
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+
+    runApp(MyApp());
   }, FirebaseCrashlytics.instance.recordError);
+}
 ```
 
 ### Errors outside of Flutter

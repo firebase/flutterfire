@@ -1,3 +1,7 @@
+## 5.0.4
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 5.0.3
 
  - **FIX**: bubble exceptions (#5869).

@@ -1,3 +1,9 @@
+## 0.12.0+2
+
+ - **DOCS**: add discontinuation message and list alternatives (#6100).
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages.
+
 ## 0.12.0+1
 
  - **REFACTOR**: fix formatting (#5835).
