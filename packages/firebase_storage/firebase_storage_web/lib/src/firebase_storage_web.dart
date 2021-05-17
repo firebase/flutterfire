@@ -121,9 +121,6 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   @override
   Future<void> useEmulator(String host, int port) async {
-    // The generic platform interface is with host and port split to
-    // centralize logic between android/ios native, but web takes the
-    // origin as a single string
     guard(() => webStorage!.useEmulator(host, port));
   }
 }
