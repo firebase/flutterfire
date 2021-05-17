@@ -8,7 +8,7 @@ type Props = {
   rotate?: number;
 };
 
-function Triangle({ zIndex = 0, light, dark, style = {}, rotate = 0 }: Props) {
+function Triangle({ zIndex = 0, light, dark, style = {}, rotate = 0 }: Props): JSX.Element {
   return (
     <svg
       width={500}
