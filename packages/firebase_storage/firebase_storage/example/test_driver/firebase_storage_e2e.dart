@@ -32,6 +32,8 @@ void testsMain() {
     // Add a write only file
     await FirebaseStorage.instance.ref('writeOnly.txt').putString('Write Only');
 
+    await FirebaseStorage.instance.ref('flutter-tests/ok.txt').putString('Ok!');
+
     // Setup list items - Future.wait not working...
     await FirebaseStorage.instance
         .ref('flutter-tests/list/file1.txt')
