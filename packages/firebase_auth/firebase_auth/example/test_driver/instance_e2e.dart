@@ -688,5 +688,20 @@ void runInstanceTests() {
         expect(credential, isA<PhoneAuthCredential>());
       }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
+
+    group('tenantId', () {
+      test('it sets and claims the tenantId', () async {
+        final userCredential = await FirebaseAuth.instance.signInAnonymously();
+        final uid = userCredential.user.uid;
+        const String tenantId = 'foobar';
+
+        final customToken = emulatorCreateCustomToken(uid, tenantId: tenantId);
+
+        final customTokenUserCredential =
+            await FirebaseAuth.instance.signInWithCustomToken(customToken);
+
+        expect(customTokenUserCredential.user.tenantId, tenantId);
+      });
+    });
   });
 }
