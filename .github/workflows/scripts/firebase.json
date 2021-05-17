@@ -14,7 +14,7 @@
       "port": "9099"
     },
     "storage": {
-      "port": "9080"
+      "port": "9199"
     },
     "ui": {
       "enabled": true,

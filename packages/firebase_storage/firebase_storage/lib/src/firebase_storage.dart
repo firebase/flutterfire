@@ -151,7 +151,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
 
   /// Changes this instance to point to a Storage emulator running locally.
   ///
-  /// Set the [host] (ex: localhost) and [port] (ex: 5001) of the local emulator.
+  /// Set the [host] (ex: localhost) and [port] (ex: 9199) of the local emulator.
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.

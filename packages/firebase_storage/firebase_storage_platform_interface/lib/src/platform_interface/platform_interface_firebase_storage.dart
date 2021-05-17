@@ -94,11 +94,13 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
 
   /// Changes this instance to point to a Storage emulator running locally.
   ///
-  /// Set the [host] and [port] of the local emulator, such as "http://localhost"
-  /// with port 5001
+  /// Set the [host] (ex: localhost) and [port] (ex: 9199) of the local emulator.
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
+  /// storage.useStorageEmulator until v9
   Future<void> useEmulator(String host, int port) {
     throw UnimplementedError('useEmulator() is not implemented');
   }

@@ -21,7 +21,7 @@ String get testEmulatorHost {
   return 'localhost';
 }
 
-const int testEmulatorPort = 9080;
+const int testEmulatorPort = 9199;
 
 // Creates a test file with a specified name to
 // a locally directory
