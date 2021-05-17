@@ -14,14 +14,17 @@ import './test_utils.dart';
 void runTaskTests() {
   group('Task', () {
     /*late*/ FirebaseStorage storage;
-    /*late*/ File file;
-    /*late*/ Reference uploadRef;
-    /*late*/ Reference downloadRef;
+    /*late*/
+    File file;
+    /*late*/
+    Reference uploadRef;
+    /*late*/
+    Reference downloadRef;
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;
-      uploadRef = storage.ref('flutter-tests').child('flt-ok.txt');
-      downloadRef = storage.ref('/smallFileTest.png'); // 15mb
+      uploadRef = storage.ref('flutter-tests').child('ok.txt');
+      downloadRef = storage.ref('flutter-tests/ok.txt'); // 15mb
     });
 
     group('pause() resume() onComplete()', () {
@@ -107,17 +110,10 @@ void runTaskTests() {
           streamError = error;
         }, cancelOnError: true);
 
-        try {
-          await task;
-          fail('Should have thrown an error');
-        } on FirebaseException catch (error) {
-          expect(error.plugin, 'firebase_storage');
-          expect(error.code, 'unauthorized');
-          expect(error.message,
-              'User is not authorized to perform the desired action.');
-        } catch (_) {
-          fail('Should have thrown an [FirebaseException] error');
-        }
+        await expectLater(
+            task,
+            throwsA(isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'unauthorized')));
 
         expect(streamError.plugin, 'firebase_storage');
         expect(streamError.code, 'unauthorized');
@@ -193,16 +189,12 @@ void runTaskTests() {
         expect(canceled, isTrue);
         expect(task.snapshot.state, TaskState.canceled);
 
-        try {
-          await task;
-          return Future.error('Task did not error & cancel.');
-        } on FirebaseException catch (e) {
-          expect(e.code, 'canceled');
-          expect(task.snapshot.state, TaskState.canceled);
-        } catch (e) {
-          return Future.error(
-              'Task did not error with a FirebaseException instance.');
-        }
+        await expectLater(
+            task,
+            throwsA(isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'canceled')));
+
+        expect(task.snapshot.state, TaskState.canceled);
 
         expect(streamError, isNotNull);
         expect(streamError.code, 'canceled');
