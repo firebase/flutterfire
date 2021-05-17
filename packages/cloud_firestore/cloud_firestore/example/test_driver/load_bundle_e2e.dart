@@ -16,7 +16,7 @@ void runLoadBundleTests() {
     late Uint8List buffer;
     const String collection = 'firestore-bundle-tests';
 
-    loadBundleSetup() async {
+    Future<void> loadBundleSetup() async {
       // endpoint serves a bundle with 3 documents each containing
       // a 'number' property that increments in value 1-3.
       final response = await http.get(url);
