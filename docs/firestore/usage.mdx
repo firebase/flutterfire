@@ -823,6 +823,6 @@ query snapshot by calling the `namedQueryGet()` API:
 // assuming you've loaded a data bundle that includes a named query called 'sports-teams':
 
 //query snapshot loaded from cache
-QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', const GetOptions(source: Source.cache));
+QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
 
 ```
