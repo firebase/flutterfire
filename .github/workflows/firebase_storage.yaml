@@ -34,7 +34,8 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          sudo npm i -g firebase-tools
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools && npm i && sudo npm link --local
           firebase --open-sesame storageemulator || true
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
@@ -64,7 +65,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
-          sudo npm i -g firebase-tools
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools && npm i && sudo npm link --local
           firebase --open-sesame storageemulator || true
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
@@ -90,7 +92,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
-          sudo npm i -g firebase-tools
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools && npm i && sudo npm link --local
           firebase --open-sesame storageemulator || true
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh

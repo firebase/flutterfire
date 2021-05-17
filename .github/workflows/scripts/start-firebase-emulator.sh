@@ -19,6 +19,7 @@ if [[ ! -d "functions/node_modules" ]]; then
   cd functions && npm i && cd ..
 fi
 
+export STORAGE_EMULATOR_DEBUG=true
 EMU_START_COMMAND="firebase emulators:start --only auth,firestore,functions,storage --project react-native-firebase-testing"
 
 IS_CI="${CI}${CONTINUOUS_INTEGRATION}${BUILD_NUMBER}${RUN_ID}"
