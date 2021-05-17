@@ -85,8 +85,10 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<QuerySnapshotPlatform> namedQueryGet(String name,
-      {GetOptions options = const GetOptions()}) async {
+  Future<QuerySnapshotPlatform> namedQueryGet(
+    String name, {
+    GetOptions options = const GetOptions(),
+  }) async {
     try {
       final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
           .channel
@@ -100,7 +102,9 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       );
 
       return MethodChannelQuerySnapshot(
-          FirebaseFirestorePlatform.instance, data!);
+        FirebaseFirestorePlatform.instance,
+        data!,
+      );
     } catch (e) {
       throw convertPlatformException(e);
     }

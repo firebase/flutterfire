@@ -8,11 +8,11 @@ import 'method_channel_firestore.dart';
 import 'utils/exception.dart';
 
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
-  MethodChannelLoadBundleTask(
-      {required Future<String?> task,
-      required Uint8List bundle,
-      required MethodChannelFirebaseFirestore firestore})
-      : super() {
+  MethodChannelLoadBundleTask({
+    required Future<String?> task,
+    required Uint8List bundle,
+    required MethodChannelFirebaseFirestore firestore,
+  })  : super() {
     Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
       final observerId = await task;
 
@@ -44,5 +44,5 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
 
   @override
   // ignore: overridden_fields
-  late Stream stream;
+  late final Stream<LoadBundleTaskSnapshotPlatform> stream;
 }

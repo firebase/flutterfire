@@ -35,14 +35,16 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().last;
+        await task.stream().done;
 
         QuerySnapshot<Map<String, Object?>> snapshot = await firestore
             .collection(collection)
             .get(const GetOptions(source: Source.cache));
 
-        expect(snapshot.docs.map((document) => document['number']),
-            everyElement(anyOf(1, 2, 3)));
+        expect(
+          snapshot.docs.map((document) => document['number']),
+          everyElement(anyOf(1, 2, 3)),
+        );
       });
 
       test('loadBundle(): LoadBundleTaskProgress stream snapshots', () async {
@@ -57,9 +59,11 @@ void runLoadBundleTests() {
         expect(list.map((e) => e.totalBytes), everyElement(isNonNegative));
         expect(list, everyElement(isInstanceOf<LoadBundleTaskSnapshot>()));
         expect(
-            list.map((e) => e.taskState),
-            everyElement(anyOf(
-                LoadBundleTaskState.running, LoadBundleTaskState.success)));
+          list.map((e) => e.taskState),
+          everyElement(
+            anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
+          ),
+        );
 
         LoadBundleTaskSnapshot lastSnapshot = list.last;
         expect(lastSnapshot.taskState, LoadBundleTaskState.success);
@@ -74,7 +78,7 @@ void runLoadBundleTests() {
         // ensure the bundle has been completely cached
         await task.stream().last;
 
-        //namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
+        // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
         QuerySnapshot<Map<String, Object?>> snapshot =
             await firestore.namedQueryGet('named-bundle-test',
@@ -89,7 +93,7 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().last;
+        await task.stream().done;
 
         try {
           await firestore.namedQueryGet('wrong-name',
