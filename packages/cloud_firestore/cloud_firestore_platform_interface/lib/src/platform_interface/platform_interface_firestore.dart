@@ -120,7 +120,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
 
   /// Reads a Firestore Query which has been loaded using [loadBundle()]
   Future<QuerySnapshotPlatform> namedQueryGet(String name,
-  {GetOptions options = const GetOptions()}) {
+      {GetOptions options = const GetOptions()}) {
     throw UnimplementedError('namedQueryGet() is not implemented');
   }
 
