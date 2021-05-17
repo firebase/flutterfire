@@ -66,6 +66,8 @@ abstract class FirestoreJsImpl {
   external PromiseJsImpl<Null> waitForPendingWrites();
 
   external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
+
+  external PromiseJsImpl<QueryJsImpl> namedQuery(String name);
 }
 
 @JS('WriteBatch')
