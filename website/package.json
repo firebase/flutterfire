@@ -10,7 +10,8 @@
     "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\"",
     "check:linting": "eslint . --max-warnings=0",
     "check:formatting": "prettier --check \"**/*.{js,jsx,json,md,mdx}\"",
-    "check:typescript": "tsc"
+    "check:typescript": "tsc",
+    "check:spelling": "cd .. && website/node_modules/.bin/spellchecker --quiet --files=\"docs/**/*.{md,mdx}\" --dictionaries=\"./website/dictionary.js\" --reports=\"website/spelling.json\" --plugins spell indefinite-article repeated-words syntax-mentions syntax-urls frontmatter"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-beta.0",
@@ -53,6 +54,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "prettier": "^2.3.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "spellchecker-cli": "^4.4.0"
   }
 }
