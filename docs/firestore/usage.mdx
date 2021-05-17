@@ -103,7 +103,7 @@ class GetUserName extends StatelessWidget {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-        
+
         if (snapshot.hasData && !snapshot.data.exists) {
           return Text("Document does not exist");
         }
@@ -375,7 +375,7 @@ this [documentation](https://firebase.google.com/docs/firestore/manage-data/add-
 
 ## Typing CollectionReference and DocumentReference
 
-By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.  
+By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.
 One solution is to use `withConverter`, which will modify methods like `CollectionReference.add` or `Query.where` to be type-safe.
 
 A common usage of `withConverter` is when combined with a serializable class, such as:
@@ -493,7 +493,7 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`set`](!cloud_firestore.DocumentReference.set) with a id that already exists on the collection will replace all the document data.
+Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.
 
 ### Updating documents
 

@@ -196,7 +196,7 @@ Future<UserCredential> signInWithFacebook() async {
 :::caution
 Firebase will not set the `User.emailVerified` property
 to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
-For futher information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
+For further information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
 :::
 
 
@@ -257,7 +257,7 @@ String sha256ofString(String input) {
 
 Future<UserCredential> signInWithApple() async {
   // To prevent replay attacks with the credential returned from Apple, we
-  // include a nonce in the credential request. When signing in in with
+  // include a nonce in the credential request. When signing in with
   // Firebase, the nonce in the id token returned by Apple, is expected to
   // match the sha256 hash of `rawNonce`.
   final rawNonce = generateNonce();
