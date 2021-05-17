@@ -416,7 +416,7 @@ Finally, we can use our new `moviesRef` variable to perform read and write opera
 ```dart
 Future<void> main() async {
   // Obtain science-fiction movies
-  List<Movie> movies = await moviesRef
+  List<QueryDocumentSnapshot<Movie>> movies = await moviesRef
       .where('genre', isEqualTo: 'Sci-fi')
       .get()
       .then((snapshot) => snapshot.docs);
