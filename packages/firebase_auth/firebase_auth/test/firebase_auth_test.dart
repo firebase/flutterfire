@@ -216,7 +216,9 @@ void main() {
             FakeFirebaseAuthPlatform(tenantId: 'foo');
         auth = FirebaseAuth.instanceFor(app: app);
         expect(auth!.tenantId, 'foo');
+
         auth!.tenantId = 'bar';
+
         expect(auth!.tenantId, 'bar');
         expect(FirebaseAuthPlatform.instance.tenantId, 'bar');
       });
