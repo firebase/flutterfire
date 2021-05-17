@@ -30,6 +30,7 @@ module.exports = [
   'classpath',
   'classpaths',
   'cocoapods',
+  'codelab',
   'config',
   'const',
   'crashlytics',
