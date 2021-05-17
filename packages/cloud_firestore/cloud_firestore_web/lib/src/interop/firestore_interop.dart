@@ -7,7 +7,7 @@
 @JS('firebase.firestore')
 library firebase_interop.firestore;
 
-import 'package:cloud_firestore_web/src/interop/firestore.dart';
+import './firestore.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'dart:typed_data' show Uint8List;
 
