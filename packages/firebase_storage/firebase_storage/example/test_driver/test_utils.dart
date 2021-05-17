@@ -6,7 +6,8 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-final String kTestString = ([]..length = pow(2, 12)).join(_getRandomString(8));
+final String kTestString =
+    ([]..length = pow(2, 12)).join(_getRandomString(8)) * 100;
 const String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';

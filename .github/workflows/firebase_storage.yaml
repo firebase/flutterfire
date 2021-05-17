@@ -32,9 +32,14 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
         run: |
           ./.github/workflows/scripts/install-tools.sh
           git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools
+          npm i
+          npm uninstall -g firebase-tools
+          npm link --local
           cd firebase-tools && npm i && sudo npm link --local
           firebase --open-sesame storageemulator || true
       - name: "Build Example"
@@ -62,6 +67,7 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
@@ -89,6 +95,7 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
