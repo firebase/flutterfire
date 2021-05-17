@@ -1,3 +1,11 @@
+## 1.0.7
+
+ - Update a dependency to the latest release.
+
+## 1.0.6
+
+ - **FIX**: possible null pointer exception when comparing error codes (#6008).
+
 ## 1.0.5
 
  - Update a dependency to the latest release.

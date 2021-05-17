@@ -129,7 +129,7 @@ await auth.verifyPhoneNumber(
 );
 ```
 
-By default, Firebase will not re-send a new SMS message if it has been recently sent. You can however override this behaviour
+By default, Firebase will not re-send a new SMS message if it has been recently sent. You can however override this behavior
 by re-calling the `verifyPhoneNumber` method with the resend token to the `forceResendingToken` argument.
 If successful, the SMS message will be resent.
 
@@ -165,7 +165,7 @@ To get started, call the `signInWithPhoneNumber` method with the phone number.
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
 
-// Wait for the user to complete the reCAPTCHA & for a SMS code to be sent.
+// Wait for the user to complete the reCAPTCHA & for an SMS code to be sent.
 ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber('+44 7123 123 456');
 ```
 

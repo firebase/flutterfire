@@ -419,8 +419,8 @@ Future<void> handleTaskExample3(String filePath) async {
   print('resumed, $resumed');
 
   // Cancel the upload.
-  bool cancelled = await task.cancel();
-  print('cancelled, $cancelled');
+  bool canceled = await task.cancel();
+  print('canceled, $canceled');
 
   // ...
 }
@@ -443,7 +443,7 @@ Future<void> handleTaskExample4(String filePath) async {
   task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
     // Handle your snapshot events...
   }, onError: (e) {
-    // Check if cancelled by checking error code.
+    // Check if canceled by checking error code.
     if (e.code == 'canceled') {
       print('The task has been canceled');
     }
@@ -456,14 +456,14 @@ Future<void> handleTaskExample4(String filePath) async {
   });
 
   // Cancel the upload.
-  bool cancelled = await task.cancel();
-  print('cancelled? $cancelled');
+  bool canceled = await task.cancel();
+  print('canceled? $canceled');
 
   // Or a Task Future (or both).
   try {
     await task;
   } on firebase_core.FirebaseException catch (e) {
-    // Check if cancelled by checking error code.
+    // Check if canceled by checking error code.
     if (e.code == 'canceled') {
       print('The task has been canceled');
     }

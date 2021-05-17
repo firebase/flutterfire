@@ -4,9 +4,8 @@
 
 // import 'package:flutter/services.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:firebase_storage_web/src/utils/metadata_cache.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 final someMetadata = SettableMetadata(contentLanguage: 'es', customMetadata: {
   'testing': '123',

@@ -32,6 +32,7 @@ void main() {
 
     test('equality', () {
       expect(firestore, equals(FirebaseFirestore.instance));
+      expect(firestore.hashCode, firestore.hashCode);
       expect(firestoreSecondary,
           equals(FirebaseFirestore.instanceFor(app: secondaryApp!)));
     });

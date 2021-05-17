@@ -34,13 +34,14 @@ void main() {
     });
 
     test('.apps', () {
-      js.context['firebase']['apps'] = js.JsArray<dynamic>();
+      (js.context['firebase'] as js.JsObject)['apps'] = js.JsArray<dynamic>();
       final List<FirebaseApp> apps = Firebase.apps;
       expect(apps, hasLength(0));
     });
 
     test('.app()', () async {
-      js.context['firebase']['app'] = js.allowInterop((String name) {
+      (js.context['firebase'] as js.JsObject)['app'] =
+          js.allowInterop((String name) {
         return js.JsObject.jsify(<String, dynamic>{
           'name': name,
           'options': <String, String>{
@@ -65,7 +66,8 @@ void main() {
     test('.initializeApp()', () async {
       bool appConfigured = false;
 
-      js.context['firebase']['app'] = js.allowInterop((String name) {
+      (js.context['firebase'] as js.JsObject)['app'] =
+          js.allowInterop((String name) {
         if (appConfigured) {
           return js.JsObject.jsify(<String, dynamic>{
             'name': name,
@@ -80,7 +82,7 @@ void main() {
           return null;
         }
       });
-      js.context['firebase']['initializeApp'] =
+      (js.context['firebase'] as js.JsObject)['initializeApp'] =
           js.allowInterop((js.JsObject options, String name) {
         appConfigured = true;
         return js.JsObject.jsify(<String, dynamic>{

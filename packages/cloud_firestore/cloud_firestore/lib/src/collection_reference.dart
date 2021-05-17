@@ -61,6 +61,7 @@ abstract class CollectionReference<T extends Object?> implements Query<T> {
   /// }
   /// ```
   // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
+  @override
   CollectionReference<R> withConverter<R extends Object?>({
     required FromFirestore<R> fromFirestore,
     required ToFirestore<R> toFirestore,

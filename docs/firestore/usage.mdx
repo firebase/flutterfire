@@ -103,7 +103,7 @@ class GetUserName extends StatelessWidget {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-        
+
         if (snapshot.hasData && !snapshot.data.exists) {
           return Text("Document does not exist");
         }
@@ -140,13 +140,18 @@ Once returned, you can subscribe to updates via the `listen()` method. The below
 which helps automatically manage the streams state and disposal of the stream when it's no longer used within your app:
 
 ```dart
-class UserInformation extends StatelessWidget {
+class UserInformation extends StatefulWidget {
+  @override
+    _UsetInfomation createState() => _UserInfomationState();
+}
+
+class _UserInformationState extends State<UserInformation> {
+  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('users').snapshots();
+
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
     return StreamBuilder<QuerySnapshot>(
-      stream: users.snapshots(),
+      stream: _usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Something went wrong');
@@ -370,7 +375,7 @@ this [documentation](https://firebase.google.com/docs/firestore/manage-data/add-
 
 ## Typing CollectionReference and DocumentReference
 
-By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.  
+By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.
 One solution is to use `withConverter`, which will modify methods like `CollectionReference.add` or `Query.where` to be type-safe.
 
 A common usage of `withConverter` is when combined with a serializable class, such as:
@@ -411,7 +416,7 @@ Finally, we can use our new `moviesRef` variable to perform read and write opera
 ```dart
 Future<void> main() async {
   // Obtain science-fiction movies
-  List<Movie> movies = await moviesRef
+  List<QueryDocumentSnapshot<Movie>> movies = await moviesRef
       .where('genre', isEqualTo: 'Sci-fi')
       .get()
       .then((snapshot) => snapshot.docs);
@@ -488,7 +493,7 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`set`](!cloud_firestore.DocumentReference.set) with a id that already exists on the collection will replace all the document data.
+Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.
 
 ### Updating documents
 

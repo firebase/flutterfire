@@ -1,6 +1,27 @@
+// DO NOT MOVE THIS FILE
+//
+// Other firebase packages may import `package:firebase_core/src/internals.dart`.
+// Moving it would break the imports
+//
+// This file exports utilities shared between firebase packages, without making
+// them public.
+
 import '../firebase_core.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
+import 'interop_shimmer.dart'
+    if (dart.library.js) 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+
+extension ObjectX<T> on T? {
+  R? guard<R>(R Function(T value) cb) {
+    if (this is T) return cb(this as T);
+    return null;
+  }
+
+  R? safeCast<R>() {
+    if (this is R) return this as R;
+    return null;
+  }
+}
 
 FirebaseException _firebaseExceptionFromCoreFirebaseError(
   core_interop.FirebaseError firebaseError, {

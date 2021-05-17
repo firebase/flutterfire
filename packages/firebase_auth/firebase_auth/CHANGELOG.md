@@ -1,3 +1,15 @@
+## 1.1.4
+
+ - **FIX**: correctly cleanup Dictionary handlers (#6101).
+ - **DOCS**: Update the documentation of sendPasswordResetEmail (#6051).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.3
+
+ - **FIX**: Fix firebase_auth not being registered as a plugin (#5987).
+ - **CI**: refactor to use Firebase Auth emulator (#5939).
+
 ## 1.1.2
 
  - **FIX**: fixed an issue where Web could not connect to the Firebase Auth emulator (#5940).

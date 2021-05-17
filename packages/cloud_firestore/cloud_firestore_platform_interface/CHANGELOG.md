@@ -1,3 +1,15 @@
+## 5.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: convert FieldPath parameters from dynamic to Object (#5997).
+
 ## 4.0.3
 
  - Update a dependency to the latest release.

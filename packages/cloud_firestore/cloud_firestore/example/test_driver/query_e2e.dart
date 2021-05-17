@@ -2,12 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:math';
 import 'dart:async';
+import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
   group('$Query', () {
@@ -76,7 +75,7 @@ void runQueryTests() {
             await collection.get(const GetOptions(source: Source.cache));
         expect(qs, isA<QuerySnapshot<Map<String, dynamic>>>());
         expect(qs.metadata.isFromCache, isTrue);
-      }, skip: kIsWeb);
+      });
 
       test('uses [GetOptions] server', () async {
         CollectionReference<Map<String, dynamic>> collection =
@@ -1284,6 +1283,49 @@ void runQueryTests() {
     });
 
     group('withConverter', () {
+      test('from a query instead of collection', () async {
+        final collection = await initializeTest('foo');
+
+        final query = collection //
+            .where('value', isGreaterThan: 0)
+            .withConverter<int>(
+              fromFirestore: (snapshots, _) =>
+                  snapshots.data()!['value']! as int,
+              toFirestore: (value, _) => {'value': value},
+            );
+
+        await collection.add({'value': 42});
+        await collection.add({'value': -1});
+
+        final snapshot = query.snapshots();
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having((e) => e.docs, 'docs', [
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42)
+            ]),
+          ),
+        );
+
+        await collection.add({'value': 21});
+
+        await expectLater(
+          snapshot,
+          emits(
+            isA<QuerySnapshot<int>>().having(
+                (e) => e.docs,
+                'docs',
+                unorderedEquals([
+                  isA<DocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 42),
+                  isA<DocumentSnapshot<int>>()
+                      .having((e) => e.data(), 'data', 21)
+                ])),
+          ),
+        );
+      }, timeout: const Timeout.factor(3));
+
       test('snapshots', () async {
         final collection = await initializeTest('foo');
 

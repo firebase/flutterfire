@@ -25,6 +25,7 @@ void main() {
       );
 
       expect(options1 == options2, isTrue);
+      expect(options1.hashCode, options2.hashCode);
     });
 
     test('should not return equal if instances are the different', () {

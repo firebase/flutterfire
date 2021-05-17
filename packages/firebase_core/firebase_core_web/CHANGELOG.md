@@ -1,3 +1,13 @@
+## 1.0.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+
 ## 1.0.2
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

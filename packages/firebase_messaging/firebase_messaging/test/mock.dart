@@ -106,9 +106,8 @@ class MockFirebaseMessaging extends Mock
   }
 
   @override
-  Future<void> deleteToken({String? senderId}) {
-    return super.noSuchMethod(
-        Invocation.method(#deleteToken, [], {#senderId: senderId}),
+  Future<void> deleteToken() {
+    return super.noSuchMethod(Invocation.method(#deleteToken, []),
         returnValue: Future<void>.value(),
         returnValueForMissingStub: Future<void>.value());
   }
@@ -121,10 +120,9 @@ class MockFirebaseMessaging extends Mock
   }
 
   @override
-  Future<String> getToken({String? senderId, String? vapidKey}) {
+  Future<String> getToken({String? vapidKey}) {
     return super.noSuchMethod(
-        Invocation.method(
-            #getToken, [], {#senderId: senderId, #vapidKey: vapidKey}),
+        Invocation.method(#getToken, [], {#vapidKey: vapidKey}),
         returnValue: Future<String>.value(''),
         returnValueForMissingStub: Future<String>.value(''));
   }

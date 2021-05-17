@@ -5,6 +5,10 @@ on:
     paths:
       - "packages/firebase_messaging/**"
       - ".github/workflows/firebase_messaging.yaml"
+      # Ensure this workflow runs if the Firebase Android SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/android/gradle.properties"
+      # Ensure this workflow runs if the Firebase iOS SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb"
   push:
     branches:
       - master

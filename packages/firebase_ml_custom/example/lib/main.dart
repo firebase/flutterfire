@@ -6,12 +6,10 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:tflite/tflite.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:firebase_ml_custom/firebase_ml_custom.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(
@@ -30,6 +28,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   File _image;
   List<Map<dynamic, dynamic>> _labels;
+
   //When the model is ready, _loaded changes to trigger the screen state change.
   Future<String> _loaded = loadModel();
 
@@ -37,15 +36,17 @@ class _MyAppState extends State<MyApp> {
   Future<void> getImageLabels() async {
     try {
       final pickedFile =
-          await ImagePicker.pickImage(source: ImageSource.gallery);
+          await ImagePicker().getImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;
       }
-      var labels = List<Map>.from(await Tflite.runModelOnImage(
-        path: image.path,
-        imageStd: 127.5,
-      ));
+      // TODO TFLite plugin is broken, see https://github.com/shaqian/flutter_tflite/issues/139#issuecomment-836596852
+      // var labels = List<Map>.from(await Tflite.runModelOnImage(
+      //   path: image.path,
+      //   imageStd: 127.5,
+      // ));
+      var labels = List<Map>.from([]);
       setState(() {
         _labels = labels;
         _image = image;
@@ -98,20 +99,20 @@ class _MyAppState extends State<MyApp> {
   /// In this case interpreter provided by tflite plugin.
   static Future<String> loadTFLiteModel(File modelFile) async {
     try {
-      final appDirectory = await getApplicationDocumentsDirectory();
-      final labelsData =
-          await rootBundle.load('assets/labels_mobilenet_v1_224.txt');
-      final labelsFile =
-          await File('${appDirectory.path}/_labels_mobilenet_v1_224.txt')
-              .writeAsBytes(labelsData.buffer.asUint8List(
-                  labelsData.offsetInBytes, labelsData.lengthInBytes));
-
-      assert(await Tflite.loadModel(
-            model: modelFile.path,
-            labels: labelsFile.path,
-            isAsset: false,
-          ) ==
-          'success');
+      // TODO TFLite plugin is broken, see https://github.com/shaqian/flutter_tflite/issues/139#issuecomment-836596852
+      // final appDirectory = await getApplicationDocumentsDirectory();
+      // final labelsData =
+      //     await rootBundle.load('assets/labels_mobilenet_v1_224.txt');
+      // final labelsFile =
+      //     await File('${appDirectory.path}/_labels_mobilenet_v1_224.txt')
+      //         .writeAsBytes(labelsData.buffer.asUint8List(
+      //             labelsData.offsetInBytes, labelsData.lengthInBytes));
+      // assert(await Tflite.loadModel(
+      //       model: modelFile.path,
+      //       labels: labelsFile.path,
+      //       isAsset: false,
+      //     ) ==
+      //     'success');
       return 'Model is loaded';
     } catch (exception) {
       print(

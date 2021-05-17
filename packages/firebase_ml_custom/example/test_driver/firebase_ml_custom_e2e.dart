@@ -1,14 +1,19 @@
-// Copyright 2020 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
 // @dart=2.9
+import 'package:drive/drive.dart' as drive;
+import 'package:firebase_ml_custom/firebase_ml_custom.dart';
 
-part of 'firebase_ml_custom.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-void firebaseModelManagerTest() {
-  group('$FirebaseModelManager', () {
+void testsMain() {
+  group('FirebaseModelManager', () {
     final FirebaseModelManager modelManager = FirebaseModelManager.instance;
+    // http://download.tensorflow.org/models/mobilenet_v1_2018_08_02/mobilenet_v1_1.0_224.tgz
     const MODEL_NAME = 'mobilenet_v1_1_0_224';
     const INVALID_MODEL_NAME = 'invalidModelName';
 
@@ -35,7 +40,7 @@ void firebaseModelManagerTest() {
 
       final conditions = FirebaseModelDownloadConditions();
 
-      if (Platform.isAndroid) {
+      if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
         expect(
             modelManager.download(model, conditions),
             throwsA(isA<PlatformException>().having(
@@ -44,8 +49,9 @@ void firebaseModelManagerTest() {
                 contains('failed to schedule the download task'))));
       }
 
-      if (Platform.isIOS) {
-        expect(
+      if (defaultTargetPlatform == TargetPlatform.iOS ||
+          defaultTargetPlatform == TargetPlatform.macOS) {
+        await expectLater(
             modelManager.download(model, conditions),
             throwsA(isA<PlatformException>()
                 .having((e) => e.toString(), 'message', contains('404'))));
@@ -64,3 +70,5 @@ void firebaseModelManagerTest() {
     });
   });
 }
+
+void main() => drive.main(testsMain);

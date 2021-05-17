@@ -1,3 +1,13 @@
+## 1.1.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0
 
  - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).

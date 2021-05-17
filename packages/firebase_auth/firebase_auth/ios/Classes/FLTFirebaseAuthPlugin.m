@@ -96,11 +96,11 @@ NSString *const kErrMsgInvalidCredential =
   // Cleanup credentials.
   [_credentials removeAllObjects];
 
-  for (FlutterEventChannel *channel in self->_eventChannels) {
+  for (FlutterEventChannel *channel in self->_eventChannels.allValues) {
     [channel setStreamHandler:nil];
   }
   [self->_eventChannels removeAllObjects];
-  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers) {
+  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers.allValues) {
     [handler onCancelWithArguments:nil];
   }
   [self->_streamHandlers removeAllObjects];

@@ -1,3 +1,7 @@
+## 2.0.4
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 2.0.3
 
  - Update a dependency to the latest release.
