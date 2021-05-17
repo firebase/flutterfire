@@ -57,7 +57,8 @@ public class FlutterFirebaseFirestorePlugin
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_firestore";
 
   final StandardMethodCodec MESSAGE_CODEC =
-      new StandardMethodCodec(FlutterFirebaseFirestoreMessageCodec.INSTANCE);
+      new StandardMethodCodec(
+          io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreMessageCodec.INSTANCE);
 
   private BinaryMessenger binaryMessenger;
   private MethodChannel channel;
@@ -279,6 +280,26 @@ public class FlutterFirebaseFirestorePlugin
         });
   }
 
+  private Task<QuerySnapshot> namedQueryGet(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          Source source = getSource(arguments);
+          String name = (String) Objects.requireNonNull(arguments.get("name"));
+          FirebaseFirestore firestore =
+              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+
+          Query query = Tasks.await(firestore.getNamedQuery(name));
+
+          if (query == null) {
+            throw new NullPointerException(
+                "Named query has not been found. Please check it has been loaded properly via loadBundle().");
+          }
+
+          return Tasks.await(query.get(source));
+        });
+  }
+
   private Task<Void> documentSet(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -420,6 +441,9 @@ public class FlutterFirebaseFirestorePlugin
             registerEventChannel(
                 METHOD_CHANNEL_NAME + "/loadBundle", new LoadBundleStreamHandler()));
         return;
+      case "Firestore#namedQueryGet":
+        methodCallTask = namedQueryGet(call.arguments());
+        break;
       case "DocumentReference#get":
         methodCallTask = documentGet(call.arguments());
         break;

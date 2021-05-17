@@ -118,6 +118,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('loadBundle() is not implemented');
   }
 
+  /// Reads a Firestore Query which has been loaded using [loadBundle()]
+  Future<QuerySnapshotPlatform> namedQueryGet(String name,
+      [GetOptions options = const GetOptions()]) {
+    throw UnimplementedError('namedQueryGet() is not implemented');
+  }
+
   /// Executes the given [TransactionHandler] and then attempts to commit the
   /// changes applied within an atomic transaction.
   ///

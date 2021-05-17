@@ -7,6 +7,8 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -78,6 +80,28 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
     return MethodChannelLoadBundleTask(
         channel.invokeMethod<String>('LoadBundle#snapshots'), bundle, this);
+  }
+
+  @override
+  Future<QuerySnapshotPlatform> namedQueryGet(String name,
+      [GetOptions options = const GetOptions()]) async {
+    try {
+      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'Firestore#namedQueryGet',
+        <String, dynamic>{
+          'name': name,
+          'firestore': FirebaseFirestorePlatform.instance,
+          'source': getSourceString(options.source),
+        },
+      );
+
+      return MethodChannelQuerySnapshot(
+          FirebaseFirestorePlatform.instance, data!);
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
