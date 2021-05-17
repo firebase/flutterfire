@@ -103,7 +103,7 @@ class GetUserName extends StatelessWidget {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-        
+
         if (snapshot.hasData && !snapshot.data.exists) {
           return Text("Document does not exist");
         }
@@ -375,7 +375,7 @@ this [documentation](https://firebase.google.com/docs/firestore/manage-data/add-
 
 ## Typing CollectionReference and DocumentReference
 
-By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.  
+By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.
 One solution is to use `withConverter`, which will modify methods like `CollectionReference.add` or `Query.where` to be type-safe.
 
 A common usage of `withConverter` is when combined with a serializable class, such as:
@@ -779,4 +779,36 @@ FirebaseFirestore.instance.settings =
     Settings(host: host, sslEnabled: false);
 
 // ...
+```
+
+
+## Data Bundles
+
+If you have [setup a data bundle](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server) and are
+[currently serving it](https://firebase.google.com/docs/firestore/bundles#serving_data_bundles). You may load data bundles
+into your app.
+
+```dart
+// use a package like 'http' to retrieve bundle.
+import 'package:http/http.dart' as http;
+final response = await http.get(url);
+
+// convert the 'bundle.txt' string in the response to an Uint8List instance.
+Uint8List buffer = Uint8List.fromList(response.body.codeUnits);
+
+//Load bundle into cache
+LoadBundleTask task = firestore.loadBundle(buffer);
+
+//use .stream() API to expose a stream which listens for LoadBundleTaskSnapshot events
+task.stream().listen((taskStateProgress) {
+  if(taskStateProgress.taskState == LoadBundleTaskState.success){
+    //bundle is loaded into app cache!
+  }
+});
+
+//once bundle is loaded into cache, you may query for data by using the GetOptions() to specify data retrieval from cache
+QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+  .collection('cached-data')
+  .get(const GetOptions(source: Source.cache));
+
 ```
