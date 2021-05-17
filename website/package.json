@@ -7,7 +7,10 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\""
+    "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\"",
+    "check:linting": "eslint . --max-warnings=0",
+    "check:formatting": "prettier --check \"**/*.{js,jsx,json,md,mdx}\"",
+    "check:typescript": "tsc"
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-beta.0",
