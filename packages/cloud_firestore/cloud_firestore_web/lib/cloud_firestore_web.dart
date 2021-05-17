@@ -148,7 +148,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<QuerySnapshotPlatform> namedQueryGet(String name,
-      [GetOptions options = const GetOptions()]) async {
+      {GetOptions options = const GetOptions()}) async {
     firestore_interop.Query query = await _webFirestore.namedQuery(name);
 
     firestore_interop.QuerySnapshot snapshot =

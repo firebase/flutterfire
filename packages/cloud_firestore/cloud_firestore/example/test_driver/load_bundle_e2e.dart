@@ -78,7 +78,7 @@ void runLoadBundleTests() {
         // with 'number' property
         QuerySnapshot<Map<String, Object?>> snapshot =
             await firestore.namedQueryGet(
-                'named-bundle-test', const GetOptions(source: Source.cache));
+                'named-bundle-test', options: const GetOptions(source: Source.cache));
 
         expect(snapshot.docs.map((document) => document['number']),
             everyElement(anyOf(1, 2, 3)));
@@ -93,7 +93,7 @@ void runLoadBundleTests() {
 
         try {
           await firestore.namedQueryGet(
-              'wrong-name', const GetOptions(source: Source.cache));
+              'wrong-name', options: const GetOptions(source: Source.cache));
         } catch (error) {
           expect(error, isA<FirebaseException>());
           expect((error as FirebaseException).message,
