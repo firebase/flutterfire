@@ -812,3 +812,17 @@ QuerySnapshot<Map<String, Object?>> snapshot = await firestore
   .get(const GetOptions(source: Source.cache));
 
 ```
+
+
+## Named Query
+
+If you have loaded a bundle with a [named query](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server), you may retrieve the
+query snapshot by calling the `namedQueryGet() api`:
+
+```dart
+// assuming you've loaded a data bundle that includes a named query called 'sports-teams':
+
+//query snapshot loaded from cache
+QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', const GetOptions(source: Source.cache));
+
+```
