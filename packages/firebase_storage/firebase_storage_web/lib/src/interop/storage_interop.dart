@@ -50,7 +50,7 @@ abstract class ReferenceJsImpl {
       [String? format, UploadMetadataJsImpl? metadata]);
   @override
   external String toString();
-  external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
+  external PromiseJsImpl<Object?> updateMetadata(
       SettableMetadataJsImpl metadata);
 }
 

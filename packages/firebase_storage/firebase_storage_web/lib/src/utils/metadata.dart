@@ -15,7 +15,7 @@ FullMetadata fbFullMetadataToFullMetadata(
     'contentEncoding': metadata.contentEncoding,
     'contentLanguage': metadata.contentLanguage,
     'contentType': metadata.contentType,
-    // 'customMetadata': metadata.customMetadata,
+    'customMetadata': metadata.customMetadata,
     'fullPath': metadata.fullPath,
     'generation': metadata.generation,
     'md5Hash': metadata.md5Hash,

@@ -36,10 +36,9 @@ dynamic dartify(
   }
 
   Object? value = customDartify?.call(jsObject);
-
   if (value == null) {
     var keys = js.objectKeys(jsObject);
-    var map = <String, dynamic>{};
+    Map<String, dynamic> map = <String, dynamic>{};
     for (final key in keys) {
       map[key] = dartify(util.getProperty(jsObject, key), customDartify);
     }

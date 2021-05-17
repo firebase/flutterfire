@@ -30,9 +30,7 @@ void testsMain() {
     }
 
     // Add a write only file
-    await FirebaseStorage.instance
-        .ref('writeOnly.txt')
-        .putString('Write Only');
+    await FirebaseStorage.instance.ref('writeOnly.txt').putString('Write Only');
 
     // Setup list items - Future.wait not working...
     await FirebaseStorage.instance

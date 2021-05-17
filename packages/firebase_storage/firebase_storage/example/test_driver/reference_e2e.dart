@@ -117,7 +117,7 @@ void runReferenceTests() {
         expect(downloadUrl, contains(storage.app.options.projectId));
       });
 
-      // TODO(ehesp): Rules set read as false but this still passes?
+      // TODO(ehesp): Emulator rules issue - comment back in once fixed
       // test('errors if permission denied', () async {
       //   Reference ref = storage.ref('writeOnly.txt');
       //
@@ -182,7 +182,6 @@ void runReferenceTests() {
     });
 
     group('putData', () {
-      //todo(russellwheatley): customMetadata is cast as IdentityMap which causes web error
       test('uploads a file with buffer', () async {
         List<int> list = utf8.encode(kTestString);
 
@@ -287,24 +286,13 @@ void runReferenceTests() {
       });
     });
 
-    // TODO(ehesp): Test failing - custom metadata issue on web decoding?
     group('updateMetadata', () {
       test('updates metadata', () async {
         Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-        FullMetadata fullMetadata =
-            await ref.updateMetadata(SettableMetadata(contentLanguage: 'fr'));
-        expect(fullMetadata.contentLanguage, 'fr');
+        FullMetadata fullMetadata = await ref
+            .updateMetadata(SettableMetadata(customMetadata: {'foo': 'bar'}));
+        expect(fullMetadata.customMetadata['foo'], 'bar');
       });
-
-      //todo(russellwheatley): is this supposed to error? It doesn't. customMetadata is cast as IdentityMap which causes web error
-      // test('errors if metadata update removes existing data', () async {
-      //   Reference ref = storage.ref('flutter-tests').child('flt-ok.txt');
-      //   await ref.updateMetadata(SettableMetadata(contentLanguage: 'es'));
-      //   FullMetadata fullMetadata = await ref
-      //       .updateMetadata(SettableMetadata(contentLanguage: 'fr'));
-      //   expect(fullMetadata.contentLanguage, 'es');
-      //   // expect(fullMetadata.customMetadata, {'action': 'updateMetadata test'});
-      // });
 
       test('errors if property does not exist', () async {
         Reference ref = storage.ref('flutter-tests/iDoNotExist.jpeg');
@@ -317,7 +305,7 @@ void runReferenceTests() {
                     'No object exists at the desired reference.')));
       });
 
-      // TODO(ehesp): Emulator reporting wrong error
+      // TODO(ehesp): Emulator rules issue - comment back in once fixed
       // test('errors if permission denied', () async {
       //   final Reference ref = storage.ref('writeOnly.txt');
       //

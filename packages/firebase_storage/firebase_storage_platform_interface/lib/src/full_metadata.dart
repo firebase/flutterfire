@@ -44,7 +44,6 @@ class FullMetadata {
 
   /// Custom metadata set on this storage object.
   Map<String, String>? get customMetadata {
-    print('customMetadata ${_metadata}');
     return _metadata['customMetadata'] == null
         ? null
         : Map<String, String>.from(_metadata['customMetadata']);
