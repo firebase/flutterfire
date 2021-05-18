@@ -156,7 +156,7 @@ class LoadBundleTaskProgress
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
-  )  : super.fromJsObject(jsObject);
+  ) : super.fromJsObject(jsObject);
 
   static final _expando = Expando<LoadBundleTaskProgress>();
 
