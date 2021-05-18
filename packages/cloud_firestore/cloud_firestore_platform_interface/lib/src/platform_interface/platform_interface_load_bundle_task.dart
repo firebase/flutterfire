@@ -5,7 +5,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The interface a load bundle task must implement.
-abstract class LoadBundleTaskPlatform extends PlatformInterface {
+abstract class LoadBundleTaskPlatform<T> extends PlatformInterface {
   /// Create a [LoadBundleTaskPlatform]
   LoadBundleTaskPlatform() : super(token: _token);
 
@@ -21,5 +21,5 @@ abstract class LoadBundleTaskPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
   }
 
-  late Stream stream;
+  Stream<T> get stream;
 }
