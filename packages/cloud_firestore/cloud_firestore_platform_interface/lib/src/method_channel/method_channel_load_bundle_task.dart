@@ -12,7 +12,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
     required Future<String?> task,
     required Uint8List bundle,
     required MethodChannelFirebaseFirestore firestore,
-  })  : super() {
+  }) : super() {
     Stream<LoadBundleTaskSnapshotPlatform> mapNativeStream() async* {
       final observerId = await task;
 
