@@ -13,4 +13,4 @@ Please [see the documentation](https://firebase.flutter.dev/docs/app-check/overv
 Installation.
 
 To learn more about Firebase App Check, please visit
-the [Firebase website](https://firebase.google.com/products/app-check).
+the [Firebase website](https://firebase.google.com/docs/app-check).

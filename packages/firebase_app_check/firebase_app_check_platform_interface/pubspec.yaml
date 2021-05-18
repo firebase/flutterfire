@@ -1,9 +1,7 @@
 name: firebase_app_check_platform_interface
 description: A common platform interface for the firebase_app_check plugin.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check_platform_interface
-# NOTE: We strongly prefer non-breaking changes, even at the expense of a
-# less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 1.0.0
+version: 0.0.1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

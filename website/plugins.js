@@ -24,6 +24,18 @@ module.exports = [
     },
   },
   {
+    name: 'App Check',
+    pub: 'firebase_app_check',
+    firebase: 'https://firebase.google.com/docs/app-check',
+    documentation: 'https://firebase.flutter.dev/docs/app-check/overview',
+    status: 'Preview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Authentication',
     pub: 'firebase_auth',
     firebase: 'auth',

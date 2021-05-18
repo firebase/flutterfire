@@ -1,13 +1,13 @@
 # Firebase App Check for Flutter
 [![pub package](https://img.shields.io/pub/v/firebase_app_check.svg)](https://pub.dev/packages/firebase_app_check)
 
-A Flutter plugin to use the [Firebase App Check API](https://firebase.google.com/products/app-check/).
+A Flutter plugin to use the [Firebase App Check API](https://firebase.google.com/docs/app-check/).
 
-To learn more about Firebase App Check, please visit the [Firebase website](https://firebase.google.com/products/app-check)
+To learn more about Firebase App Check, please visit the [Firebase website](https://firebase.google.com/docs/app-check)
 
 ## Getting Started
 
-To get started with Firebase Auth for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/auth/overview).
+To get started with Firebase App Check for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/app-check/overview).
 
 ## Usage
 

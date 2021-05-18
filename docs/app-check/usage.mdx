@@ -1,0 +1,48 @@
+---
+title: App Check
+sidebar_label: Usage
+---
+
+:::caution
+FlutterFire App Check is an early access preview plugin; therefore APIs may change in a future release.
+:::
+
+Once installed, you can access the [`firebase_app_check`](!firebase_app_check) plugin by importing
+it in your Dart code:
+
+```dart
+import 'package:firebase_app_check/firebase_app_check.dart';
+```
+
+
+### Activating the default provider
+
+To activate the default App Check attestation provider you must call activate before any usages of your Firebase
+services such as Storage, but after calling `Firebase.initializeApp()`;
+
+```dart {10} title="lib/main.dart"
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
+  runApp(App());
+}
+```
+
+### Activating the debug provider (iOS/macOS)
+
+TODO
+
+### Activating the debug provider (Web)
+
+TODO
+
+### Activating the debug provider (Android)
+
+TODO

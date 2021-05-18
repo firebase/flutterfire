@@ -78,6 +78,7 @@ module.exports = [
   'unencrypted',
   'unlinked',
   'unlinking',
+  'untampered',
   'url',
   'verifications',
   'web.firebase_cdn',
