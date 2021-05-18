@@ -94,7 +94,15 @@ function PluginsTable(props: { status: PluginStatus }) {
                   </a>
                 </td>
                 <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
-                <td>{plugin.support.web ? <Check /> : <Cross />}</td>
+                <td>
+                  {plugin.name == 'Crashlytics' ? (
+                    'N/A'
+                  ) : plugin.support.web ? (
+                    <Check />
+                  ) : (
+                    <Cross />
+                  )}
+                </td>
                 <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
               </tr>
             ))}
