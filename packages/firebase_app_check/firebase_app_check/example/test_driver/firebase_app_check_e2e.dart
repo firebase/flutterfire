@@ -8,11 +8,6 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'instance_e2e.dart';
-import 'list_result_e2e.dart';
-import 'reference_e2e.dart';
-import 'task_e2e.dart';
-
 void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp();
