@@ -103,7 +103,7 @@ class GetUserName extends StatelessWidget {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
-        
+
         if (snapshot.hasData && !snapshot.data.exists) {
           return Text("Document does not exist");
         }
@@ -375,7 +375,7 @@ this [documentation](https://firebase.google.com/docs/firestore/manage-data/add-
 
 ## Typing CollectionReference and DocumentReference
 
-By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.  
+By default, Firestore references manipulate a `Map<String, dynamic>` object. The downside is that we lose type safety.
 One solution is to use `withConverter`, which will modify methods like `CollectionReference.add` or `Query.where` to be type-safe.
 
 A common usage of `withConverter` is when combined with a serializable class, such as:
@@ -416,7 +416,7 @@ Finally, we can use our new `moviesRef` variable to perform read and write opera
 ```dart
 Future<void> main() async {
   // Obtain science-fiction movies
-  List<Movie> movies = await moviesRef
+  List<QueryDocumentSnapshot<Movie>> movies = await moviesRef
       .where('genre', isEqualTo: 'Sci-fi')
       .get()
       .then((snapshot) => snapshot.docs);
@@ -493,7 +493,7 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`set`](!cloud_firestore.DocumentReference.set) with a id that already exists on the collection will replace all the document data.
+Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.
 
 ### Updating documents
 
@@ -779,4 +779,53 @@ FirebaseFirestore.instance.settings =
     Settings(host: host, sslEnabled: false);
 
 // ...
+```
+
+
+## Data Bundles
+
+If you have [setup a data bundle](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server) and are
+[currently serving it](https://firebase.google.com/docs/firestore/bundles#serving_data_bundles), you may load data bundles
+into your app.
+
+```dart
+// Use a package like 'http' to retrieve bundle.
+import 'package:http/http.dart' as http;
+final response = await http.get(url);
+
+// Convert the 'bundle.txt' string in the response to an Uint8List instance.
+Uint8List buffer = Uint8List.fromList(response.body.codeUnits);
+
+// Load bundle into cache.
+LoadBundleTask task = firestore.loadBundle(buffer);
+
+// Use .stream API to expose a stream which listens for LoadBundleTaskSnapshot events.
+task.stream.listen((taskStateProgress) {
+  if(taskStateProgress.taskState == LoadBundleTaskState.success){
+    //bundle is loaded into app cache!
+  }
+});
+
+// If you do not wish to .listen() to the stream, but simply want to know when the bundle has been loaded. Use .last API:
+await task.stream.last;
+
+// Once bundle is loaded into cache, you may query for data by using the GetOptions() to specify data retrieval from cache.
+QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+  .collection('cached-data')
+  .get(const GetOptions(source: Source.cache));
+
+```
+
+
+## Named Query
+
+If you have loaded a bundle with a [named query](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server), you may retrieve the
+query snapshot by calling the `namedQueryGet()` API:
+
+```dart
+// Assuming you've loaded a data bundle that includes a named query called 'sports-teams':
+
+// Query snapshot loaded from cache.
+QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
+
 ```
