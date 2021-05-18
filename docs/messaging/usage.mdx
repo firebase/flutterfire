@@ -108,8 +108,9 @@ FCM payloads.
 
 ### Web Tokens
 
-On the web, before a message can be sent to the browser you must have first created an initial handshake with Firebase. This can be carried out via the
-`getToken` method, passing in the public `vapidKey`. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be
+On the web, before a message can be sent to the browser you must do two things.
+
+1. Create an initial handshake with Firebase by passing in the public `vapidKey` to `messaging.getToken(vapidKey: 'KEY')` method. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be
 provided, which you can provide to the method:
 
 ```dart
@@ -119,6 +120,22 @@ FirebaseMessaging messaging = FirebaseMessaging.instance;
 String token = await messaging.getToken(
   vapidKey: "BGpdLRs......",
 );
+```
+
+2. Create a `firebase-messaging-sw.js` file inside the `web/` directory in the root of your project. In your `web/index.html` file, please ensure this file is referenced
+and registered as a `serviceWorker` as demonstrated below:
+
+```html
+...other html setup.
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+    }
+  </script>
+  ...put the script at the bottom of the enclosing body tags.
+</body>
 ```
 
 ### Message types
