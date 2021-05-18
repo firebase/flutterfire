@@ -82,8 +82,10 @@ void runLoadBundleTests() {
             await firestore.namedQueryGet('named-bundle-test',
                 options: const GetOptions(source: Source.cache));
 
-        expect(snapshot.docs.map((document) => document['number']),
-            everyElement(anyOf(1, 2, 3)));
+        expect(
+          snapshot.docs.map((document) => document['number']),
+          everyElement(anyOf(1, 2, 3)),
+        );
       });
 
       test('namedQueryGet() error', () async {
@@ -94,10 +96,15 @@ void runLoadBundleTests() {
         await task.stream().last;
 
         await expectLater(
-            firestore.namedQueryGet('wrong-name',
-                options: const GetOptions(source: Source.cache)),
-            throwsA(isA<FirebaseException>().having((e) => e.message, 'message',
-                contains('Named query has not been found'))));
+          firestore.namedQueryGet(
+            'wrong-name',
+            options: const GetOptions(source: Source.cache),
+          ),
+          throwsA(
+            isA<FirebaseException>().having((e) => e.message, 'message',
+                contains('Named query has not been found')),
+          ),
+        );
       }, skip: kIsWeb);
     });
   });
