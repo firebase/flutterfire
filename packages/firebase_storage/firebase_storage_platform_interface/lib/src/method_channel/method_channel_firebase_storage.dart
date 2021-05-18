@@ -144,6 +144,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
 
   @override
   Future<void> useEmulator(String host, int port) async {
+    emulatorHost = host;
+    emulatorPort = port;
     try {
       await MethodChannelFirebaseStorage.channel
           .invokeMethod('Storage#useEmulator', <String, dynamic>{
@@ -152,8 +154,8 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
         'maxUploadRetryTime': maxUploadRetryTime,
         'maxDownloadRetryTime': maxDownloadRetryTime,
         'bucket': bucket,
-        'host': host,
-        'port': port
+        'host': emulatorHost,
+        'port': emulatorPort
       });
     } catch (e, s) {
       throw convertPlatformException(e, s);

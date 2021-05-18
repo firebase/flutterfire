@@ -75,6 +75,16 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
     throw UnimplementedError('get.maxDownloadRetryTime is not implemented');
   }
 
+  /// The Storage emulator host this instance is configured to use. This
+  /// was required since iOS does not persist these settings on instances and
+  /// they need to be set every time when getting a `FIRStorage` instance.
+  String? emulatorHost;
+
+  /// The Storage emulator port this instance is configured to use. This
+  /// was required since iOS does not persist these settings on instances and
+  /// they need to be set every time when getting a `FIRStorage` instance.
+  int? emulatorPort;
+
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
