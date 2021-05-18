@@ -1,3 +1,7 @@
+## 5.1.0
+
+ - **FEAT**: loadBundle() & namedQueryGet() implementation (#6037).
+
 ## 5.0.1
 
  - **DOCS**: Add missing homepage/repository links (#6054).

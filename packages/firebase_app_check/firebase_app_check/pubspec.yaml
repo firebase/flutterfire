@@ -11,8 +11,8 @@ environment:
 dependencies:
   firebase_app_check_platform_interface: ^0.0.1
   firebase_app_check_web: ^0.0.1
-  firebase_core: ^1.1.0
-  firebase_core_platform_interface: ^4.0.0
+  firebase_core: ^1.2.0
+  firebase_core_platform_interface: ^4.0.1
   flutter:
     sdk: flutter
 

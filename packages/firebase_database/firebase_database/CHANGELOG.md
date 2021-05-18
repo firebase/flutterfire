@@ -1,3 +1,7 @@
+## 7.0.0-dev.3
+
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 7.0.0-dev.2
 
  - **REFACTOR**: move `packages/firebase_database` to `packages/firebase_database/firebase_database` (#5887).

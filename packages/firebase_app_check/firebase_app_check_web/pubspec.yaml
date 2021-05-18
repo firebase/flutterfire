@@ -9,8 +9,8 @@ environment:
 
 dependencies:
   firebase_app_check_platform_interface: ^0.0.1
-  firebase_core: ^1.1.0
-  firebase_core_web: ^1.0.2
+  firebase_core: ^1.2.0
+  firebase_core_web: ^1.1.0
   flutter:
     sdk: flutter
   flutter_web_plugins:
@@ -20,7 +20,7 @@ dependencies:
 dev_dependencies:
   firebase_app_check:
     path: ../firebase_app_check
-  firebase_core_platform_interface: ^4.0.0
+  firebase_core_platform_interface: ^4.0.1
   flutter_test:
     sdk: flutter
 
