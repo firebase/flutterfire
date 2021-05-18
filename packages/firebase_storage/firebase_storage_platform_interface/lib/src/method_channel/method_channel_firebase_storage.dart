@@ -151,6 +151,7 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
         'maxOperationRetryTime': maxOperationRetryTime,
         'maxUploadRetryTime': maxUploadRetryTime,
         'maxDownloadRetryTime': maxDownloadRetryTime,
+        'bucket': bucket,
         'host': host,
         'port': port
       });

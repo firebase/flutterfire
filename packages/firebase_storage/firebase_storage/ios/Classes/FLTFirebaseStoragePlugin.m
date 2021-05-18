@@ -190,8 +190,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 #pragma mark - Firebase Storage API
 
 - (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorage *storage = [self FIRStorageForArguments:arguments];
-  [storage useEmulatorWithHost:arguments[@"host"] port:[arguments[@"port"] integerValue]];
+  [self FIRStorageForArguments:arguments];
   result.success(nil);
 }
 
@@ -825,7 +824,7 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   NSString *bucket = arguments[kFLTFirebaseStorageKeyBucket];
   FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
 
-  if (![bucket isEqual:[NSNull null]]) {
+  if (![bucket isEqual:[NSNull null]] && bucket != nil) {
     NSString *url = [@"gs://" stringByAppendingString:bucket];
     storage = [FIRStorage storageForApp:firebaseApp URL:url];
   } else {
@@ -845,6 +844,17 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   NSNumber *maxUploadRetryTime = arguments[kFLTFirebaseStorageKeyMaxUploadRetryTime];
   if (![maxUploadRetryTime isEqual:[NSNull null]]) {
     storage.maxUploadRetryTime = [maxUploadRetryTime longLongValue] / 1000.0;
+  }
+
+  NSString *emulatorHost = arguments[@"host"];
+  if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil) {
+    @try {
+      [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
+    } @catch (NSException *e) {
+      NSLog(@"WARNING: Unable to set the Firebase Storage emulator settings. These must be set "
+            @"before any usages of Firebase Storage. If you see this log after a hot "
+            @"reload/restart you can safely ignore it.");
+    }
   }
 
   storage.callbackQueue = _callbackQueue;
