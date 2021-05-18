@@ -207,8 +207,8 @@ class ReferenceWeb extends ReferencePlatform {
     });
   }
 
-  // Purposefully left unimplemented because of lack of dart:io support in web:
+// Purposefully left unimplemented because of lack of dart:io support in web:
 
-  // TaskPlatform writeToFile(File file) {}
-  // TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
+// TaskPlatform writeToFile(File file) {}
+// TaskPlatform putFile(File file, [SettableMetadata metadata]) {}
 }
