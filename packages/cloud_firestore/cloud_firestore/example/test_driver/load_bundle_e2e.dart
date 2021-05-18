@@ -9,7 +9,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:http/http.dart' as http;
-// import 'package:test/test.dart';
 
 void runLoadBundleTests() {
   group('$DocumentReference', () {
@@ -35,7 +34,7 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().done;
+        await task.stream().last;
 
         QuerySnapshot<Map<String, Object?>> snapshot = await firestore
             .collection(collection)
@@ -58,15 +57,14 @@ void runLoadBundleTests() {
         expect(list.map((e) => e.documentsLoaded), everyElement(isNonNegative));
         expect(list.map((e) => e.totalBytes), everyElement(isNonNegative));
         expect(list, everyElement(isInstanceOf<LoadBundleTaskSnapshot>()));
+
+        LoadBundleTaskSnapshot lastSnapshot = list.removeLast();
+        expect(lastSnapshot.taskState, LoadBundleTaskState.success);
+
         expect(
           list.map((e) => e.taskState),
-          everyElement(
-            anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
-          ),
+          everyElement(LoadBundleTaskState.running),
         );
-
-        LoadBundleTaskSnapshot lastSnapshot = list.last;
-        expect(lastSnapshot.taskState, LoadBundleTaskState.success);
       });
     });
 
@@ -93,19 +91,13 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().done;
+        await task.stream().last;
 
-        try {
-          await firestore.namedQueryGet('wrong-name',
-              options: const GetOptions(source: Source.cache));
-        } catch (error) {
-          expect(error, isA<FirebaseException>());
-          expect((error as FirebaseException).message,
-              contains('Named query has not been found'));
-          return;
-        }
-
-        throw 'did not catch error';
+        await expectLater(
+            firestore.namedQueryGet('wrong-name',
+                options: const GetOptions(source: Source.cache)),
+            throwsA(isA<FirebaseException>().having((e) => e.message, 'message',
+                contains('Named query has not been found'))));
       }, skip: kIsWeb);
     });
   });
