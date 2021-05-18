@@ -799,15 +799,15 @@ Uint8List buffer = Uint8List.fromList(response.body.codeUnits);
 // Load bundle into cache.
 LoadBundleTask task = firestore.loadBundle(buffer);
 
-// Use .stream() API to expose a stream which listens for LoadBundleTaskSnapshot events.
-task.stream().listen((taskStateProgress) {
+// Use .stream API to expose a stream which listens for LoadBundleTaskSnapshot events.
+task.stream.listen((taskStateProgress) {
   if(taskStateProgress.taskState == LoadBundleTaskState.success){
     //bundle is loaded into app cache!
   }
 });
 
 // If you do not wish to .listen() to the stream, but simply want to know when the bundle has been loaded. Use .last API:
-await task.stream().last;
+await task.stream.last;
 
 // Once bundle is loaded into cache, you may query for data by using the GetOptions() to specify data retrieval from cache.
 QuerySnapshot<Map<String, Object?>> snapshot = await firestore

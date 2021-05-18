@@ -34,7 +34,7 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().last;
+        await task.stream.last;
 
         QuerySnapshot<Map<String, Object?>> snapshot = await firestore
             .collection(collection)
@@ -50,7 +50,7 @@ void runLoadBundleTests() {
         Uint8List buffer = await loadBundleSetup();
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        final list = await task.stream().toList();
+        final list = await task.stream.toList();
 
         expect(list.map((e) => e.totalDocuments), everyElement(isNonNegative));
         expect(list.map((e) => e.bytesLoaded), everyElement(isNonNegative));
@@ -74,7 +74,7 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().last;
+        await task.stream.last;
 
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
@@ -91,7 +91,7 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         // ensure the bundle has been completely cached
-        await task.stream().last;
+        await task.stream.last;
 
         await expectLater(
             firestore.namedQueryGet('wrong-name',
