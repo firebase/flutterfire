@@ -52,6 +52,8 @@ void main() {
       expect(result.maxOperationRetryTime, equals(120000));
       expect(result.maxDownloadRetryTime, equals(600000));
       expect(result.maxUploadRetryTime, equals(600000));
+      expect(result.emulatorHost, isNull);
+      expect(result.emulatorPort, isNull);
     });
 
     test('get.instance', () {
