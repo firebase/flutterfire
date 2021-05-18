@@ -43,6 +43,5 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
   }
 
   @override
-  // ignore: overridden_fields
   late final Stream<LoadBundleTaskSnapshotPlatform> stream;
 }
