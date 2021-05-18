@@ -41,7 +41,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   ///
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
   /// Firebase Console. For more information, see
-  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
+  /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
   Future<void> activate({String? webRecaptchaSiteKey}) {
     return _delegate.activate(webRecaptchaSiteKey: webRecaptchaSiteKey);
   }
