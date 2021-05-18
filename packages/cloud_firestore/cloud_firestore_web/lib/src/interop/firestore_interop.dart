@@ -7,6 +7,7 @@
 @JS('firebase.firestore')
 library firebase_interop.firestore;
 
+import './firestore.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'dart:typed_data' show Uint8List;
 
@@ -43,6 +44,7 @@ abstract class FirestoreJsImpl {
       [PersistenceSettings? settings]);
 
   external void Function() onSnapshotsInSync(dynamic observer);
+
 // ignore: prefer_void_to_null
   external PromiseJsImpl<Null> clearPersistence();
 
@@ -62,6 +64,10 @@ abstract class FirestoreJsImpl {
 
 // ignore: prefer_void_to_null
   external PromiseJsImpl<Null> waitForPendingWrites();
+
+  external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
+
+  external PromiseJsImpl<QueryJsImpl> namedQuery(String name);
 }
 
 @JS('WriteBatch')
@@ -226,6 +232,7 @@ abstract class DocumentReferenceJsImpl {
   external set path(String v);
 
   external CollectionReferenceJsImpl collection(String collectionPath);
+
 //ignore: prefer_void_to_null
   external PromiseJsImpl<Null> delete();
 
@@ -242,6 +249,29 @@ abstract class DocumentReferenceJsImpl {
 
 //ignore: prefer_void_to_null
   external PromiseJsImpl<Null> update(dynamic dataOrFieldsAndValues);
+}
+
+@JS('LoadBundleTask')
+abstract class LoadBundleTaskJsImpl {
+  external void Function() onProgress(
+    void Function(LoadBundleTaskProgressJsImpl) progress,
+  );
+//todo(russellwheatley): implement error handling
+//   external void Function() JS$catch(void Function(FirestoreError) errorHandler);
+}
+
+@JS()
+@anonymous
+abstract class LoadBundleTaskProgressJsImpl {
+  external String get bytesLoaded;
+
+  external int get documentsLoaded;
+
+  external String get taskState;
+
+  external String get totalBytes;
+
+  external int get totalDocuments;
 }
 
 @JS('DocumentSnapshot')
@@ -544,6 +574,7 @@ abstract class SetOptions {
   external bool get merge;
 
   external set merge(bool v);
+
 //ignore: avoid_setters_without_getters
   external set mergeFields(List<String> v);
 

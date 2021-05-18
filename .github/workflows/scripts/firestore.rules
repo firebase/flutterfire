@@ -4,11 +4,15 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-    
+
     match /flutter-tests/{document=**} {
     	allow read, write: if true;
     }
-    
+
+    match /firestore-bundle-tests/{document=**} {
+    	allow read, write: if true;
+    }
+
     match /{path=**}/group-test/{documentId} {
       allow read, write: if true;
     }

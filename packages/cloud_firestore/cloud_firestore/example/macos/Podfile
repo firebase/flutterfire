@@ -1,5 +1,4 @@
 platform :osx, '10.12'
-$FirebaseSDKVersion = '7.4.0'
 
 require 'yaml'
 
