@@ -7,9 +7,9 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
     "check:linting": "eslint . --max-warnings=0",
-    "check:formatting": "prettier --check \"**/*.{js,jsx,json,md,mdx}\"",
+    "check:formatting": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
     "check:typescript": "tsc",
     "check:spelling": "cd .. && website/node_modules/.bin/spellchecker --quiet --files=\"docs/**/*.{md,mdx}\" --dictionaries=\"./website/dictionary.js\" --reports=\"website/spelling.json\" --plugins spell indefinite-article repeated-words syntax-mentions syntax-urls frontmatter"
   },

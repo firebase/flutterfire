@@ -68,7 +68,9 @@ function PluginsTable(props: { status: PluginStatus }) {
                   <a
                     href={
                       plugin.firebase
-                        ? `https://firebase.google.com/products/${plugin.firebase}`
+                        ? plugin.firebase.startsWith('http')
+                          ? plugin.firebase
+                          : `https://firebase.google.com/products/${plugin.firebase}`
                         : 'https://firebase.google.com'
                     }
                   >
