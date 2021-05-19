@@ -1,4 +1,3 @@
-// @dart = 2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,7 +22,7 @@ void testsMain() {
       const String orderTestPath = 'ordered/';
 
       await Future.wait(testDocuments.map((map) {
-        String child = map['ref'] as String;
+        String child = map['ref']! as String;
         return database.reference().child('$orderTestPath/$child').set(map);
       }));
     });
@@ -36,7 +35,7 @@ void testsMain() {
           .onValue
           .first;
 
-      final ordered = testDocuments.map((doc) => doc['value'] as int).toList();
+      final ordered = testDocuments.map((doc) => doc['value']! as int).toList();
       ordered.sort();
 
       final documents = event.snapshot.value.values
@@ -60,7 +59,24 @@ void testsMain() {
         return mutableData;
       });
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot.value > value, true);
+      expect(transactionResult.dataSnapshot!.value > value, true);
+    });
+
+    test('DataSnapshot supports null childKeys for maps', () async {
+      // Regression test for https://github.com/FirebaseExtended/flutterfire/issues/6002
+
+      final ref = FirebaseDatabase.instance.reference().child('counter');
+
+      final transactionResult = await ref.runTransaction((mutableData) async {
+        mutableData.value = {'v': 'vala'};
+        return mutableData;
+      });
+
+      expect(transactionResult.committed, true);
+      expect(
+        transactionResult.dataSnapshot!.value,
+        {'v': 'vala'},
+      );
     });
 
     test('setPersistenceCacheSizeBytes Integer', () async {
