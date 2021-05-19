@@ -94,6 +94,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
+  LoadBundleTask loadBundle(Uint8List bundle) {
+    return LoadBundleTask._(_delegate.loadBundle(bundle));
+  }
+
+  /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
+  /// To read from the Firestore backend, use [GetOptions.source] as [Source.server].
+  Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(String name,
+      {GetOptions options = const GetOptions()}) async {
+    QuerySnapshotPlatform snapshotDelegate =
+        await _delegate.namedQueryGet(name, options: options);
+    return _JsonQuerySnapshot(FirebaseFirestore.instance, snapshotDelegate);
+  }
+
   /// Gets a [Query] for the specified collection group.
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
     assert(

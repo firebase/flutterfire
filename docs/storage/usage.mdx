@@ -419,8 +419,8 @@ Future<void> handleTaskExample3(String filePath) async {
   print('resumed, $resumed');
 
   // Cancel the upload.
-  bool cancelled = await task.cancel();
-  print('cancelled, $cancelled');
+  bool canceled = await task.cancel();
+  print('canceled, $canceled');
 
   // ...
 }
@@ -443,7 +443,7 @@ Future<void> handleTaskExample4(String filePath) async {
   task.snapshotEvents.listen((firebase_storage.TaskSnapshot snapshot) {
     // Handle your snapshot events...
   }, onError: (e) {
-    // Check if cancelled by checking error code.
+    // Check if canceled by checking error code.
     if (e.code == 'canceled') {
       print('The task has been canceled');
     }
@@ -456,14 +456,14 @@ Future<void> handleTaskExample4(String filePath) async {
   });
 
   // Cancel the upload.
-  bool cancelled = await task.cancel();
-  print('cancelled? $cancelled');
+  bool canceled = await task.cancel();
+  print('canceled? $canceled');
 
   // Or a Task Future (or both).
   try {
     await task;
   } on firebase_core.FirebaseException catch (e) {
-    // Check if cancelled by checking error code.
+    // Check if canceled by checking error code.
     if (e.code == 'canceled') {
       print('The task has been canceled');
     }
@@ -476,4 +476,15 @@ Future<void> handleTaskExample4(String filePath) async {
     // ...
   }
 }
+```
+
+## Emulator Usage
+
+If you are using the local [Storage emulator](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
+connect to these by passing a `host` & `port` to the `useEmulator` method immediately after initializing Firebase.
+
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
+
+```dart
+await FirebaseStorage.instance.useEmulator(host: 'localhost', port: 9080);
 ```

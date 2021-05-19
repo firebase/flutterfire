@@ -9,10 +9,12 @@ import 'dart:convert' show utf8, base64;
 import 'dart:io' show File;
 import 'dart:typed_data' show Uint8List;
 
+// import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'src/utils.dart';

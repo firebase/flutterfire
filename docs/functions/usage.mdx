@@ -72,6 +72,12 @@ FirebaseFunctions.instance
       .useFunctionsEmulator(origin: 'http://localhost:5001');
 ```
 
+If you have specified a region for your Cloud Function emulator, you will also have to provide the same region in your setup:
+
+```dart
+FirebaseFunctions.instanceFor(region: 'europe-west1')
+      .useFunctionsEmulator(origin: 'http://localhost:5001');
+```
 
 ### iOS
 

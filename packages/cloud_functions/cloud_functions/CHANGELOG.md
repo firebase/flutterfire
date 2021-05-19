@@ -1,3 +1,8 @@
+## 1.1.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 1.0.7
 
  - Update a dependency to the latest release.

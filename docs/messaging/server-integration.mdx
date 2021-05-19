@@ -72,7 +72,7 @@ class _Application extends State<Application> {
 ```
 
 The above code snippet has a single purpose; storing the device FCM token on a remote database. When your application first initializes, the
-users FCM token is fetched and stored in a database (Cloud Firestore in this example). If the token is refreshed at anypoint whilst your application
+users FCM token is fetched and stored in a database (Cloud Firestore in this example). If the token is refreshed at any point whilst your application
 is open, the new token is also stored on the database.
 
 It is important to remember a user can have many tokens (from multiple devices, or token refreshes), therefore we use `FieldValue.arrayUnion` to store

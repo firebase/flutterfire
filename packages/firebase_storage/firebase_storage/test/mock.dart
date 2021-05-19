@@ -87,6 +87,7 @@ class MockFirebaseStorage extends Mock
   MockFirebaseStorage() {
     TestFirebaseStoragePlatform();
   }
+
   @override
   final int maxOperationRetryTime = 0;
   @override
@@ -107,10 +108,16 @@ class MockFirebaseStorage extends Mock
         returnValue: TestReferencePlatform(),
         returnValueForMissingStub: TestReferencePlatform());
   }
+
+  @override
+  Future<void> useEmulator(String host, int port) async {
+    return super.noSuchMethod(Invocation.method(#useEmulator, [host, port]));
+  }
 }
 
 class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
   TestFirebaseStoragePlatform() : super(bucket: testBucket);
+
   @override
   FirebaseStoragePlatform delegateFor({FirebaseApp? app, String? bucket}) {
     return this;
@@ -120,7 +127,7 @@ class TestFirebaseStoragePlatform extends FirebaseStoragePlatform {
 // ReferencePlatform Mock
 class TestReferencePlatform extends ReferencePlatform {
   TestReferencePlatform() : super(TestFirebaseStoragePlatform(), testFullPath);
-  // @override
+// @override
 }
 
 // ReferencePlatform Mock

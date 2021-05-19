@@ -3,7 +3,8 @@
     "rules": "firestore.rules"
   },
   "functions": {
-    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build"
+    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build",
+    "source": "functions"
   },
   "emulators": {
     "firestore": {
@@ -12,9 +13,15 @@
     "auth": {
       "port": "9099"
     },
+    "storage": {
+      "port": "9199"
+    },
     "ui": {
       "enabled": true,
       "port": 4000
     }
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

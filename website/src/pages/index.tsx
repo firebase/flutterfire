@@ -11,13 +11,13 @@ import { Triangle } from '../components/Triangle';
 // @ts-ignore
 import plugins from '../../plugins';
 
+type PluginStatus = 'Stable' | 'Beta' | 'Preview' | 'Deprecated';
 interface Plugin {
   name: string;
   pub: string;
   documentation: string;
   firebase: string;
-  production?: boolean;
-  remoteSource?: string;
+  status: PluginStatus;
   support: {
     web: boolean;
     mobile: boolean;
@@ -25,7 +25,95 @@ interface Plugin {
   };
 }
 
-function Home() {
+function PluginsTable(props: { status: PluginStatus }) {
+  const pluginsForStatus = (plugins as Plugin[])
+    .filter(plugin => plugin.status == props.status)
+    .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0));
+  if (!pluginsForStatus.length) {
+    return null;
+  }
+
+  return (
+    <div>
+      <h2 className={styles.status}>{props.status} Plugins</h2>
+      <div className={styles.plugins}>
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>pub.dev</th>
+              <th>Firebase Product</th>
+              <th>Documentation</th>
+              <th>View Source</th>
+              <th>Mobile</th>
+              <th>Web</th>
+              <th>MacOS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {pluginsForStatus.map((plugin: Plugin) => (
+              <tr key={plugin.pub}>
+                <td>
+                  <strong>{plugin.name}</strong>
+                </td>
+                <td>
+                  <a href={`https://pub.dev/packages/${plugin.pub}`}>
+                    <img
+                      src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
+                      alt={`${plugin.name} pub.dev badge`}
+                    />
+                  </a>
+                </td>
+                <td>
+                  <a
+                    href={
+                      plugin.firebase
+                        ? plugin.firebase.startsWith('http')
+                          ? plugin.firebase
+                          : `https://firebase.google.com/products/${plugin.firebase}`
+                        : 'https://firebase.google.com'
+                    }
+                  >
+                    <img width={25} src={useBaseUrl('img/firebase-logo.png')} alt="Firebase" />
+                  </a>
+                </td>
+                <td>
+                  {plugin.documentation.length ? (
+                    <a href={plugin.documentation} target="_blank" rel="noreferrer">
+                      📖
+                    </a>
+                  ) : null}
+                </td>
+                <td>
+                  <a
+                    href={`https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <code>{plugin.pub}</code>
+                  </a>
+                </td>
+                <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
+                <td>
+                  {plugin.name == 'Crashlytics' ? (
+                    'N/A'
+                  ) : plugin.support.web ? (
+                    <Check />
+                  ) : (
+                    <Cross />
+                  )}
+                </td>
+                <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function Home(): JSX.Element {
   const context = useDocusaurusContext();
   const { siteConfig } = context;
 
@@ -79,81 +167,10 @@ function Home() {
         </div>
       </section>
       <main>
-        <div className={styles.plugins}>
-          <table className={styles.table}>
-            <thead>
-            <tr>
-              <th>Plugin</th>
-              <th>pub.dev</th>
-              <th>Firebase</th>
-              <th>Documentation</th>
-              <th>View Source</th>
-              <th>Package quality</th>
-              <th>Mobile</th>
-              <th>Web</th>
-              <th>MacOS</th>
-            </tr>
-            </thead>
-            <tbody>
-            {plugins.map((plugin: Plugin) => (
-              <tr key={plugin.pub}>
-                <td>
-                  <strong>{plugin.name}</strong>
-                </td>
-                <td style={{minWidth: 150}}>
-                  <a href={`https://pub.dev/packages/${plugin.pub}`}>
-                    <img
-                      src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
-                      alt={`${plugin.name} Badge`}
-                    />
-                  </a>
-                </td>
-                <td>
-                  <a
-                    href={
-                      plugin.firebase
-                        ? `https://firebase.google.com/products/${plugin.firebase}`
-                        : 'https://firebase.google.com'
-                    }
-                  >
-                    <img width={25} src={useBaseUrl('img/firebase-logo.png')} alt="Firebase"/>
-                  </a>
-                </td>
-                <td>
-                  {plugin.documentation.length ? (
-                    <a href={plugin.documentation} target="_blank">
-                      📖
-                    </a>
-                  ) : null}
-                </td>
-                <td>
-                  <a
-                    href={plugin.remoteSource ? plugin.remoteSource : `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin.pub}`}
-                    target="_blank"
-                  >
-                    <code>{plugin.pub}</code>
-                  </a>
-                </td>
-                <td>
-                  {plugin.production ? <b>Stable</b> : <i>Beta</i>}
-                </td>
-                <td className="icon">{plugin.support.mobile ? <Check/> : <Cross/>}</td>
-                <td>{plugin.support.web ? <Check/> : <Cross/>}</td>
-                <td>{plugin.support.macos ? <Check/> : <Cross/>}</td>
-              </tr>
-            ))}
-            </tbody>
-          </table>
-        </div>
-        {/* TODO Temporary. remove note when admob fully deprecated */}
-        <div style={{display: 'flex', justifyContent: 'center', padding: '20px'}}>
-          The FlutterFire AdMob package is deprecated and will be removed in the future. We recommend switching to the
-          official &nbsp;<a href="https://pub.dev/packages/google_mobile_ads"
-                            target="_blank">google_mobile_ads</a>&nbsp; package by Google. A migration guide is
-          available &nbsp;<a
-          href="https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_admob#deprecation-of-firebase_admob-plugin"
-          target="_blank">here</a>.
-        </div>
+        <PluginsTable status={'Stable'} />
+        <PluginsTable status={'Beta'} />
+        <PluginsTable status={'Preview'} />
+        <PluginsTable status={'Deprecated'} />
       </main>
     </Layout>
   );

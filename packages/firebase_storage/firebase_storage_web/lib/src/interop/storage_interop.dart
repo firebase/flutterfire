@@ -22,6 +22,7 @@ abstract class StorageJsImpl {
   external ReferenceJsImpl refFromURL(String url);
   external void setMaxOperationRetryTime(int time);
   external void setMaxUploadRetryTime(int time);
+  external void useEmulator(String host, int port);
 }
 
 @JS('Reference')
@@ -49,7 +50,7 @@ abstract class ReferenceJsImpl {
       [String? format, UploadMetadataJsImpl? metadata]);
   @override
   external String toString();
-  external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
+  external PromiseJsImpl<Object?> updateMetadata(
       SettableMetadataJsImpl metadata);
 }
 

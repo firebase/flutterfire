@@ -1,3 +1,8 @@
+## 1.1.0
+
+ - **FEAT**: detect the version of the Firebase JS SDK that is in use and warn if the version is incompatible with FlutterFire.
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+
 ## 1.0.3
 
  - **DOCS**: Add missing homepage/repository links (#6054).

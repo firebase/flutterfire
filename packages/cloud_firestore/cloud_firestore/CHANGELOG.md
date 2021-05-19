@@ -1,3 +1,10 @@
+## 2.2.0
+
+ - **FEAT**: support for `loadBundle()` & `namedQueryGet()` (#6037).
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+ - **FIX**: pass GetOptions to web Query.get (#6132).
+
 ## 2.1.0
 
  - **FIX**: Fix FirebaseOptions hashCode (#3263).

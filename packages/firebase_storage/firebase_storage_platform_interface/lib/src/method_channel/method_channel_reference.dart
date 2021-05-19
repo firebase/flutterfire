@@ -29,6 +29,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
       });
     } catch (e) {
@@ -47,6 +49,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
       });
 
@@ -67,6 +71,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
       });
 
@@ -86,6 +92,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
         'options': <String, dynamic>{
           'maxResults': options?.maxResults ?? 1000,
@@ -115,6 +123,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
       });
       return MethodChannelListResult(
@@ -138,6 +148,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
         'maxSize': maxSize,
       });
@@ -189,6 +201,8 @@ class MethodChannelReference extends ReferencePlatform {
         'maxUploadRetryTime': storage.maxUploadRetryTime,
         'maxDownloadRetryTime': storage.maxDownloadRetryTime,
         'bucket': storage.bucket,
+        'host': storage.emulatorHost,
+        'port': storage.emulatorPort,
         'path': fullPath,
         'metadata': metadata.asMap(),
       });

@@ -1,3 +1,7 @@
+## 0.10.0-dev.4
+
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 0.10.0-dev.3
 
  - Update a dependency to the latest release.

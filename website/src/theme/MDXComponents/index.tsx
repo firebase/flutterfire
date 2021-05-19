@@ -15,7 +15,7 @@ import { getVersion } from '../../utils';
 const reference = REFERENCE_API;
 
 export default {
-  a: (props: HTMLProps<HTMLAnchorElement>) => {
+  a: (props: HTMLProps<HTMLAnchorElement>): JSX.Element => {
     if (props.href && props.href.startsWith('!')) {
       const name = props.href.replace('!', '');
       const entity = reference[name];
@@ -25,6 +25,7 @@ export default {
           <a
             {...props}
             target="_blank"
+            rel="noreferrer"
             href={`https://pub.dev/documentation/${entity.plugin}/${entity.version}/${entity.href}`}
           />
         );
@@ -39,22 +40,24 @@ export default {
     return <Link {...props} />;
   },
 
-  pre: (props: HTMLProps<HTMLDivElement>) => <div className={styles.mdxCodeBlock} {...props} />,
+  pre: (props: HTMLProps<HTMLDivElement>): JSX.Element => (
+    <div className={styles.mdxCodeBlock} {...props} />
+  ),
 
-  inlineCode: (props: HTMLProps<HTMLElement>) => {
+  inlineCode: (props: HTMLProps<HTMLElement>): JSX.Element => {
     const { children } = props;
     if (typeof children === 'string') {
       return <code {...props}>{getVersion(children)}</code>;
     }
-    return children;
+    return children as JSX.Element;
   },
 
-  code: (props: HTMLProps<HTMLElement>) => {
+  code: (props: HTMLProps<HTMLElement>): JSX.Element => {
     const { children } = props;
     if (typeof children === 'string') {
       return <CodeBlock {...props}>{getVersion(children)}</CodeBlock>;
     }
-    return children;
+    return children as JSX.Element;
   },
 
   h1: Heading('h1'),
@@ -64,7 +67,7 @@ export default {
   h5: Heading('h5'),
   h6: Heading('h6'),
 
-  table: (props: HTMLProps<HTMLTableElement>) => (
+  table: (props: HTMLProps<HTMLTableElement>): JSX.Element => (
     <div style={{ overflowX: 'auto' }}>
       <table {...props} />
     </div>
@@ -73,12 +76,12 @@ export default {
   Tabs,
   TabItem,
 
-  blockquote: (props: HTMLProps<HTMLElement>) => (
+  blockquote: (props: HTMLProps<HTMLElement>): JSX.Element => (
     <blockquote className={styles.blockquote} {...props} />
   ),
 
   //Enables global usage of <YouTube id="xxxx" /> within MDX files
-  YouTube: ({ id }: { id: string }) => {
+  YouTube: ({ id }: { id: string }): JSX.Element => {
     return (
       <div className={styles.youtube}>
         <iframe
@@ -101,7 +104,7 @@ export default {
     alt?: string;
     zoom?: boolean;
     caption?: boolean;
-  }) => {
+  }): JSX.Element => {
     let image;
     const isExternalImage = src.startsWith('http');
 
@@ -120,8 +123,8 @@ export default {
 
     return (
       <figure className={styles.figure}>
-        {zoom && withZoom(<img src={image} />)}
-        {!zoom && <img src={image} />}
+        {zoom && withZoom(<img src={image} alt={alt || 'No alt text.'} />)}
+        {!zoom && <img src={image} alt={alt || 'No alt text.'} />}
         {!!alt && caption && <figcaption>{alt}</figcaption>}
       </figure>
     );

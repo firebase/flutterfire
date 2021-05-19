@@ -52,6 +52,8 @@ void main() {
       expect(result.maxOperationRetryTime, equals(120000));
       expect(result.maxDownloadRetryTime, equals(600000));
       expect(result.maxUploadRetryTime, equals(600000));
+      expect(result.emulatorHost, isNull);
+      expect(result.emulatorPort, isNull);
     });
 
     test('get.instance', () {
@@ -140,6 +142,16 @@ void main() {
       } on UnimplementedError catch (e) {
         expect(
             e.message, equals('setMaxDownloadRetryTime() is not implemented'));
+        return;
+      }
+      fail('Should have thrown an [UnimplementedError]');
+    });
+
+    test('throws if ref()', () {
+      try {
+        firebaseStoragePlatform!.useEmulator('foo', 1234);
+      } on UnimplementedError catch (e) {
+        expect(e.message, equals('useEmulator() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
