@@ -30,12 +30,12 @@ module.exports = {
       toReferenceAPI("firebase_analytics"),
       toGithubExample("firebase_analytics"),
     ],
-    // "App Check": [
-    //   "app-check/overview",
-    //   "app-check/usage",
-    //   toReferenceAPI("firebase_app_check"),
-    //   toGithubExample("firebase_app_check"),
-    // ],
+    "App Check": [
+      "app-check/overview",
+      "app-check/usage",
+      toReferenceAPI("firebase_app_check"),
+      toGithubExample("firebase_app_check"),
+    ],
     Authentication: [
       "auth/overview",
       "auth/usage",
