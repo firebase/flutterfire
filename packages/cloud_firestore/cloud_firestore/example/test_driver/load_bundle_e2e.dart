@@ -68,7 +68,6 @@ void runLoadBundleTests() {
       });
 
       test('loadBundle(): error handling for malformed bundle', () async {
-        //malformed bundle
         final url = Uri.https('api.rnfirebase.io', '/firestore/malformed-bundle');
         final response = await http.get(url);
         String string = response.body;
