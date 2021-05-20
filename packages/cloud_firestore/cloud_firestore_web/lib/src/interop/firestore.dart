@@ -152,7 +152,7 @@ class LoadBundleTask
         controller.add(LoadBundleTaskProgress._fromJsObject(data));
       }));
 
-      /// Catch underlying errors
+      // todo(russellwheatley): AFAIK - it isn't possible to use catch() as it is a Dart keyword
       // jsObject.JS$catch(allowInterop((firestore_interop.FirestoreError error) {
       //   controller.addError(error);
       // }));
