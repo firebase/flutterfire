@@ -16,14 +16,14 @@ As explained at https://flutter.dev/docs/testing, unit and widget tests are easi
 
 The Firebase libraries need to run on an actual device or emulator. So if you want to run unit tests, you'll have to use Fakes instead. A Fake is a library that implements the API of a given Firebase library and simulates its behavior. A few Fakes are available:
 
-- https://pub.dev/packages/cloud_firestore_mocks
+- https://pub.dev/packages/fake_cloud_firestore
 - https://pub.dev/packages/firebase_storage_mocks
 - https://pub.dev/packages/firebase_auth_mocks
 - https://pub.dev/packages/google_sign_in_mocks
 
 Note: despite the name, these libraries are Fakes, not Mocks.
 
-When initializing your app, instead of passing the actual instance of a Firebase library (eg `FirebaseFirestore.instance` if using Firestore), you pass an instance of a fake (eg `MockFirestoreInstance()`). Then the rest of your application will run as if it were talking to Firebase.
+When initializing your app, instead of passing the actual instance of a Firebase library (eg `FirebaseFirestore.instance` if using Firestore), you pass an instance of a fake (eg `FakeFirebaseFirestore()`). Then the rest of your application will run as if it were talking to Firebase.
 
 ### Testing a Firestore app
 
@@ -135,13 +135,13 @@ There are two things we can test:
 1. `MessageList` does render messages.
 1. Tapping the `ActionButton` adds a "Hello world!" message to the database, and is also rendered.
 
-In the tests, we pass a `MockFirestoreInstance` to `MyHomePage`. Since the fake instance is initially empty, we add some data so that `MessageList` has something to display.
+In the tests, we pass a `FakeFirebaseFirestore` to `MyHomePage`. Since the fake instance is initially empty, we add some data so that `MessageList` has something to display.
 
 ```dart
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_firestore_mocks/cloud_firestore_mocks.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firestore_example/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -151,7 +151,7 @@ const MessagesCollection = 'messages';
 void main() {
   testWidgets('shows messages', (WidgetTester tester) async {
     // Populate the fake database.
-    final firestore = MockFirestoreInstance();
+    final firestore = FakeFirebaseFirestore();
     await firestore.collection(MessagesCollection).add({
       'message': 'Hello world!',
       'created_at': FieldValue.serverTimestamp(),
@@ -171,7 +171,7 @@ void main() {
 
   testWidgets('adds messages', (WidgetTester tester) async {
     // Instantiate the mock database.
-    final firestore = MockFirestoreInstance();
+    final firestore = FakeFirebaseFirestore();
 
     // Render the widget.
     await tester.pumpWidget(MaterialApp(
