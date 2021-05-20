@@ -30,7 +30,7 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAppCheck.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
   runApp(App());
 }
 ```
