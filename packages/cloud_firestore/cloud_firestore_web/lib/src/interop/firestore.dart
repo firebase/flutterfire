@@ -118,7 +118,6 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       // same error as iOS & android to maintain consistency
       throw FirebaseException(
           plugin: 'cloud_firestore',
-          code: 'unknown',
           message:
               'Named query has not been found. Please check it has been loaded properly via loadBundle().');
     }
