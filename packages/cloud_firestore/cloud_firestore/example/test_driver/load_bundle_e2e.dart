@@ -76,9 +76,12 @@ void runLoadBundleTests() {
 
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        task.stream.listen((value) {}, onError: (Object error) {
-          expect(error.toString(), contains('invalid-argument'));
-        });
+        await expectLater(
+            task.stream.last,
+            throwsA(
+              isA<FirebaseException>().having(
+                  (e) => e.message, 'message', contains('invalid-argument')),
+            ));
         // Unable to catch error in Flutter web, web-js-sdk appears to error internally
         // but cannot confirm as catch() is dart keyword which stops errors from possible propagation
       }, skip: kIsWeb);
