@@ -9,7 +9,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
 // You can also test with your own ad unit IDs by registering your device as a
@@ -18,7 +17,6 @@ const String testDevice = 'YOUR_DEVICE_ID';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

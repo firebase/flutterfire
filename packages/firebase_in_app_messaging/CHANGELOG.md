@@ -1,3 +1,23 @@
+## 0.5.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.5.0+3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
+## 0.5.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.5.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.5.0
+
+ - Migrate to null safety.
+
 ## 0.4.0+1
 
  - Update a dependency to the latest release.

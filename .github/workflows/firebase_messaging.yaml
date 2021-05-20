@@ -5,6 +5,10 @@ on:
     paths:
       - "packages/firebase_messaging/**"
       - ".github/workflows/firebase_messaging.yaml"
+      # Ensure this workflow runs if the Firebase Android SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/android/gradle.properties"
+      # Ensure this workflow runs if the Firebase iOS SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb"
   push:
     branches:
       - master
@@ -25,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Build Example"
@@ -47,7 +51,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
@@ -70,7 +74,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh beta
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh

@@ -1,3 +1,19 @@
+## 1.1.0
+
+ - **FEAT**: add support for the Firebase Storage emulator via `useEmulator` (#5936).
+
+## 1.0.6
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
+## 1.0.5
+
+ - **FIX**: secondary storage buckets now work as expected on Web (#5863).
+
+## 1.0.4
+
+ - **REFACTOR**: Share guard functions accross plugins (#5783).
+
 ## 1.0.3
 
  - Update a dependency to the latest release.

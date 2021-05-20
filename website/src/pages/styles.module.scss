@@ -53,7 +53,7 @@
 .plugins {
   display: flex;
   justify-content: center;
-  margin: 3rem auto;
+  margin: 1rem auto 3rem;
   max-width: 1200px;
   overflow-x: auto;
 
@@ -62,9 +62,13 @@
   }
 }
 
-.table {
-  width: initial;
+.status {
+  display: flex;
+  margin: 1rem auto;
+  max-width: 1200px;
+}
 
+.table {
   th,
   td {
     text-align: center;

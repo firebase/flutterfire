@@ -22,6 +22,13 @@ Welcome to FlutterFire! 🔥
 
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
+## Get to know Firebase for Flutter
+
+If you're new to using Firebase in Flutter we recommend starting with the
+[Get to know Firebase for Flutter codelab](https://firebase.google.com/codelabs/firebase-get-to-know-flutter) and video:
+
+<YouTube id="wUSkeTaBonA" />
+
 ## Prerequisites
 
 Before getting started, the documentation assumes you are able to create (or have an existing) Flutter project and also
@@ -121,8 +128,20 @@ void main() {
   runApp(App());
 }
 
-class App extends StatelessWidget {
+/// We are using a StatefulWidget such that we only create the [Future] once,
+/// no matter how many times our widget rebuild.
+/// If we used a [StatelessWidget], in the event where [App] is rebuilt, that
+/// would re-initialize FlutterFire and make our application re-enter loading state,
+/// which is undesired.
+class App extends StatefulWidget {
   // Create the initialization Future outside of `build`:
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  /// The future is part of the state of our widget. We should not call `initializeApp`
+  /// directly inside [build].
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
@@ -220,14 +239,14 @@ Once initialized, you're ready to get started using FlutterFire!
 
 Currently the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in XCode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
 
-`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'`
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.0.0'`
 
 Add this line inside your target 'Runner' do block in your Podfile, e.g.:
 
 ```
 # ...
 target 'Runner' do
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '6.26.0'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.0.0'
 # ...
 end
 ```
@@ -262,7 +281,7 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '6.33.0'
+$FirebaseSDKVersion = '8.0.0'
 ```
 
 ## Next Steps

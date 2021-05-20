@@ -15,7 +15,7 @@ class OAuthProvider extends AuthProvider {
   OAuthProvider(String providerId) : super(providerId);
 
   List<String> _scopes = [];
-  Map<dynamic, dynamic>? _parameters;
+  Map<dynamic, dynamic> _parameters = {};
 
   /// Returns the currently assigned scopes to this provider instance.
   /// This is a Web only API.
@@ -25,7 +25,7 @@ class OAuthProvider extends AuthProvider {
 
   /// Returns the parameters for this provider instance.
   /// This is a Web only API.
-  Map<dynamic, dynamic>? get parameters {
+  Map<dynamic, dynamic> get parameters {
     return _parameters;
   }
 

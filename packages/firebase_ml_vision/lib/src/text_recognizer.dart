@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_ml_vision;
 
 /// Option for controlling additional variables in performing text recognition.
@@ -28,17 +26,16 @@ enum CloudTextModelType { sparse, dense }
 /// ```
 class TextRecognizer {
   TextRecognizer._({
-    CloudTextRecognizerOptions cloudOptions,
-    @required this.modelType,
-    @required int handle,
+    CloudTextRecognizerOptions? cloudOptions,
+    required this.modelType,
+    required int handle,
   })  : _cloudOptions = cloudOptions,
         _handle = handle,
-        assert(modelType != null),
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));
 
   final ModelType modelType;
-  final CloudTextRecognizerOptions _cloudOptions;
+  final CloudTextRecognizerOptions? _cloudOptions;
   final int _handle;
 
   bool _hasBeenOpened = false;
@@ -47,20 +44,18 @@ class TextRecognizer {
   /// Detects [VisionText] from a [FirebaseVisionImage].
   Future<VisionText> processImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-    assert(visionImage != null);
 
     _hasBeenOpened = true;
     Map<String, dynamic> options = {'modelType': _enumToString(modelType)};
 
     if (_cloudOptions != null) {
       options.addAll({
-        'hintedLanguages': _cloudOptions.hintedLanguages,
-        'textModelType': _enumToString(_cloudOptions.textModelType),
+        'hintedLanguages': _cloudOptions!.hintedLanguages,
+        'textModelType': _enumToString(_cloudOptions!.textModelType),
       });
     }
 
-    final Map<String, dynamic> reply =
-        await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
+    final reply = await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
       'TextRecognizer#processImage',
       <String, dynamic>{
         'handle': _handle,
@@ -68,7 +63,7 @@ class TextRecognizer {
       }..addAll(visionImage._serialize()),
     );
 
-    return VisionText._(reply);
+    return VisionText._(reply!);
   }
 
   /// Releases resources used by this recognizer.
@@ -99,7 +94,7 @@ class CloudTextRecognizerOptions {
   const CloudTextRecognizerOptions({
     this.hintedLanguages,
     this.textModelType = CloudTextModelType.sparse,
-  }) : assert(textModelType != null);
+  });
 
   /// Language hints for text recognition.
   ///
@@ -108,7 +103,7 @@ class CloudTextRecognizerOptions {
   ///
   /// Each language code parameter typically consists of a BCP-47 identifier.
   /// See //cloud.google.com/vision/docs/languages for more details.
-  final List<String> hintedLanguages;
+  final List<String>? hintedLanguages;
 
   /// Sets model type for cloud text recognition.
   /// Choosing 'sparse' or 'dense' option will lead the recognizer to use one of
@@ -126,7 +121,7 @@ class VisionText {
             .map<TextBlock>((dynamic block) => TextBlock._(block)));
 
   /// String representation of the recognized text.
-  final String text;
+  final String? text;
 
   /// All recognized text broken down into individual blocks/paragraphs.
   final List<TextBlock> blocks;
@@ -159,12 +154,12 @@ abstract class TextContainer {
   /// The point (0, 0) is defined as the upper-left corner of the image.
   ///
   /// Could be null even if text is found.
-  final Rect boundingBox;
+  final Rect? boundingBox;
 
   /// The confidence of the recognized text block.
   ///
   /// The value is null for onDevice text recognizer.
-  final double confidence;
+  final double? confidence;
 
   /// The four corner points in clockwise direction starting with top-left.
   ///
@@ -185,7 +180,7 @@ abstract class TextContainer {
   ///
   /// Returned in reading order for the language. For Latin, this is top to
   /// bottom within a Block, and left-to-right within a Line.
-  final String text;
+  final String? text;
 }
 
 /// A block of text (think of it as a paragraph) as deemed by the OCR engine.

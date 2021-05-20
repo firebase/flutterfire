@@ -1,3 +1,19 @@
+## 4.0.7
+
+ - Update a dependency to the latest release.
+
+## 4.0.6
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
+## 4.0.5
+
+ - **FIX**: bubble exceptions (#5869).
+
+## 4.0.4
+
+ - Update a dependency to the latest release.
+
 ## 4.0.3
 
  - Update a dependency to the latest release.

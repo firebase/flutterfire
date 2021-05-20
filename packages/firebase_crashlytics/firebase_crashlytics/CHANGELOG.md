@@ -1,3 +1,21 @@
+## 2.0.4
+
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 2.0.3
+
+ - Update a dependency to the latest release.
+
+## 2.0.2
+
+ - Update a dependency to the latest release.
+
+## 2.0.1
+
+ - **FIX**: Avoid duplicate prints (#5718).
+ - **FIX**: Include obfuscated stack traces (#4407).
+ - **CHORE**: update drive dependency (#5740).
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

@@ -1,3 +1,21 @@
+## 8.1.0
+
+ - **FEAT**: add support for the Firebase Storage emulator via `useEmulator` (#5936).
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 8.0.6
+
+ - Update a dependency to the latest release.
+
+## 8.0.5
+
+ - **FIX**: secondary storage buckets now work as expected on Web (#5863).
+
+## 8.0.4
+
+ - Update a dependency to the latest release.
+
 ## 8.0.3
 
  - **FIX**: improve refFromURL http regex (#5682).

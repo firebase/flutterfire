@@ -3,7 +3,7 @@ import versions from '../../docs/versions';
 
 const regex = /{{\s([a-zA-Z0-9_.]*)\s}}/gm;
 
-export function getVersion(value: string) {
+export function getVersion(value: string): string {
   let output = value;
   let m;
 

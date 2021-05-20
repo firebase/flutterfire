@@ -47,6 +47,12 @@ void runInstanceTests() {
       }, skip: kIsWeb);
     });
 
+    group('isSupported()', () {
+      test('returns "true" value', () {
+        expect(messaging.isSupported(), isTrue);
+      });
+    });
+
     group('requestPermission', () {
       test(
           'authorizationStatus returns AuthorizationStatus.authorized on Android',

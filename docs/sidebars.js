@@ -30,6 +30,12 @@ module.exports = {
       toReferenceAPI("firebase_analytics"),
       toGithubExample("firebase_analytics"),
     ],
+    "App Check": [
+      "app-check/overview",
+      "app-check/usage",
+      toReferenceAPI("firebase_app_check"),
+      toGithubExample("firebase_app_check"),
+    ],
     Authentication: [
       "auth/overview",
       "auth/usage",
@@ -42,6 +48,7 @@ module.exports = {
     "Cloud Firestore": [
       "firestore/overview",
       "firestore/usage",
+      "firestore/2.0.0_migration",
       toReferenceAPI("cloud_firestore"),
       toGithubExample("cloud_firestore"),
     ],

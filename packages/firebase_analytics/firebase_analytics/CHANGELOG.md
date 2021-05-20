@@ -1,3 +1,30 @@
+## 8.1.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **REFACTOR**: replace deprecated `setCurrentScreen` internal method usage with new `logEvent` name.
+ - **DOCS**: migrate firebase_analytics/example to null safety (#6111).
+
+## 8.0.4
+
+ - Update a dependency to the latest release.
+
+## 8.0.3
+
+ - **DOCS**: remove invalid codelabs link.
+
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
+## 8.0.1
+
+ - **FIX**: null values for events (#5563).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 8.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 8.0.0-dev.2
 
  - **FIX**: support complex data structures like list and map on Android (#4394).

@@ -14,7 +14,7 @@ const _kProviderId = 'facebook.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+/// var facebookProvider = FacebookAuthProvider();
 /// facebookProvider.addScope('user_birthday');
 /// facebookProvider.setCustomParameters({
 ///   'display': 'popup',
@@ -30,7 +30,7 @@ const _kProviderId = 'facebook.com';
 ///
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
-/// FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+/// var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
 ///
 /// FirebaseAuth.instance.signInWithCredential(facebookAuthCredential)
 ///   .then(...);
@@ -38,6 +38,13 @@ const _kProviderId = 'facebook.com';
 class FacebookAuthProvider extends AuthProvider {
   /// Creates a new instance.
   FacebookAuthProvider() : super(_kProviderId);
+
+  /// Create a new [FacebookAuthCredential] from a provided [accessToken];
+  static OAuthCredential credential(String accessToken) {
+    return FacebookAuthCredential._credential(
+      accessToken,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get FACEBOOK_SIGN_IN_METHOD {
@@ -75,13 +82,6 @@ class FacebookAuthProvider extends AuthProvider {
   ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [FacebookAuthCredential] from a provided [accessToken];
-  static OAuthCredential credential(String accessToken) {
-    return FacebookAuthCredential._credential(
-      accessToken,
-    );
   }
 }
 

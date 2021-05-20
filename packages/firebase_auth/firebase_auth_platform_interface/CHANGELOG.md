@@ -1,3 +1,34 @@
+## 4.2.3
+
+ - Update a dependency to the latest release.
+
+## 4.2.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 4.2.1
+
+ - **FIX**: authentication forceResendingToken int can be null on iOS (#5944).
+
+## 4.2.0
+
+ - **FIX**: Move communication to EventChannels (#4643).
+ - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).
+ - **DOCS**: remove implicit-cast in the doc of AuthProviders (#5862).
+
+## 4.1.1
+
+ - **REFACTOR**: fix formatting (#5835).
+ - **FIX**: uid can be null (#5834).
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **CI**: review changes.
+
+## 4.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+
 ## 4.0.2
 
  - **DOCS**: userChanges clarification (#5698).

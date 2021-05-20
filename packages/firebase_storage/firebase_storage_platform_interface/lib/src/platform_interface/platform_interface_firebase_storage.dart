@@ -75,6 +75,16 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
     throw UnimplementedError('get.maxDownloadRetryTime is not implemented');
   }
 
+  /// The Storage emulator host this instance is configured to use. This
+  /// was required since iOS does not persist these settings on instances and
+  /// they need to be set every time when getting a `FIRStorage` instance.
+  String? emulatorHost;
+
+  /// The Storage emulator port this instance is configured to use. This
+  /// was required since iOS does not persist these settings on instances and
+  /// they need to be set every time when getting a `FIRStorage` instance.
+  int? emulatorPort;
+
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
@@ -90,6 +100,19 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   ///   the bucket root.
   ReferencePlatform ref(String path) {
     throw UnimplementedError('ref() is not implemented');
+  }
+
+  /// Changes this instance to point to a Storage emulator running locally.
+  ///
+  /// Set the [host] (ex: localhost) and [port] (ex: 9199) of the local emulator.
+  ///
+  /// Note: Must be called immediately, prior to accessing storage methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
+  /// storage.useStorageEmulator until v9
+  Future<void> useEmulator(String host, int port) {
+    throw UnimplementedError('useEmulator() is not implemented');
   }
 
   /// The new maximum operation retry time in milliseconds.

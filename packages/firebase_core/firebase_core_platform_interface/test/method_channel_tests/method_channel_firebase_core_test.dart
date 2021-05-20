@@ -43,7 +43,9 @@ void main() {
             ];
           case 'Firebase#initializeApp':
             return <dynamic, dynamic>{
-              'name': methodCall.arguments['appName'] ?? defaultFirebaseAppName,
+              'name':
+                  (methodCall.arguments as Map<Object?, Object?>)['appName'] ??
+                      defaultFirebaseAppName,
               'options': <dynamic, dynamic>{
                 'apiKey': 'testing',
                 'appId': 'testing',

@@ -1,3 +1,11 @@
+## 2.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
+## 2.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 2.0.0-dev.0
 
 > Note: This release has breaking changes.

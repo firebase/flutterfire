@@ -1,3 +1,39 @@
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.1.4
+
+ - **FIX**: correctly cleanup Dictionary handlers (#6101).
+ - **DOCS**: Update the documentation of sendPasswordResetEmail (#6051).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.3
+
+ - **FIX**: Fix firebase_auth not being registered as a plugin (#5987).
+ - **CI**: refactor to use Firebase Auth emulator (#5939).
+
+## 1.1.2
+
+ - **FIX**: fixed an issue where Web could not connect to the Firebase Auth emulator (#5940).
+ - **FIX**: Import all necessary headers from the header file. (#5890).
+ - **FIX**: Move communication to EventChannels (#4643).
+ - **DOCS**: remove implicit-cast in the doc of AuthProviders (#5862).
+
+## 1.1.1
+
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **DOCS**: Add UserInfoCard widget in auth example SignInPage (#4635).
+ - **CI**: fix analyzer issues in example.
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 1.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+ - **CHORE**: update drive dependency (#5740).
+
 ## 1.0.3
 
  - **DOCS**: userChanges clarification (#5698).

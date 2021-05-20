@@ -6,6 +6,7 @@
 // ignore_for_file: prefer_void_to_null
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -103,6 +104,79 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
 
   Future<Null> waitForPendingWrites() =>
       handleThenable(jsObject.waitForPendingWrites());
+
+  LoadBundleTask loadBundle(Uint8List bundle) {
+    return LoadBundleTask.getInstance(jsObject.loadBundle(bundle));
+  }
+
+  Future<Query> namedQuery(String name) async {
+    firestore_interop.QueryJsImpl query =
+        await handleThenable(jsObject.namedQuery(name));
+    return Query.fromJsObject(query);
+  }
+}
+
+class LoadBundleTask
+    extends JsObjectWrapper<firestore_interop.LoadBundleTaskJsImpl> {
+  LoadBundleTask._fromJsObject(firestore_interop.LoadBundleTaskJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  static final _expando = Expando<LoadBundleTask>();
+
+  /// Creates a new LoadBundleTask from a [jsObject].
+  static LoadBundleTask getInstance(
+    firestore_interop.LoadBundleTaskJsImpl jsObject,
+  ) {
+    return _expando[jsObject] ??= LoadBundleTask._fromJsObject(jsObject);
+  }
+
+  ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
+  Stream<LoadBundleTaskProgress> stream() {
+    late StreamController<LoadBundleTaskProgress> controller;
+    controller =
+        StreamController<LoadBundleTaskProgress>.broadcast(onListen: () {
+      /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
+      jsObject.onProgress(
+          allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
+        controller.add(LoadBundleTaskProgress._fromJsObject(data));
+      }));
+      //todo(russellwheatley): implement error handling for loadBundle
+      // jsObject.JS$catch(allowInterop((firestore_interop.FirestoreError error) {
+      //   controller.addError(error);
+      // }));
+    }, onCancel: () {
+      controller.close();
+    });
+
+    return controller.stream;
+  }
+}
+
+class LoadBundleTaskProgress
+    extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
+  LoadBundleTaskProgress._fromJsObject(
+    firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
+
+  static final _expando = Expando<LoadBundleTaskProgress>();
+
+  /// Creates a new LoadBundleTaskProgress from a [jsObject].
+  static LoadBundleTaskProgress getInstance(
+    firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
+  ) {
+    return _expando[jsObject] ??=
+        LoadBundleTaskProgress._fromJsObject(jsObject);
+  }
+
+  int get bytesLoaded => int.parse(jsObject.bytesLoaded);
+
+  int get documentsLoaded => jsObject.documentsLoaded;
+
+  String get taskState => jsObject.taskState;
+
+  int get totalBytes => int.parse(jsObject.totalBytes);
+
+  int get totalDocuments => jsObject.totalDocuments;
 }
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
@@ -167,20 +241,25 @@ class DocumentReference
   Future<Null> delete() => handleThenable(jsObject.delete());
 
   Future<DocumentSnapshot> get([firestore_interop.GetOptions? options]) {
-    var jsObjectSet =
+    var jsObjectGet =
         (options != null) ? jsObject.get(options) : jsObject.get();
-    return handleThenable(jsObjectSet).then(DocumentSnapshot.getInstance);
+    return handleThenable(jsObjectGet).then(DocumentSnapshot.getInstance);
   }
 
   /// Attaches a listener for [DocumentSnapshot] events.
-  Stream<DocumentSnapshot> get onSnapshot => _createStream();
+  Stream<DocumentSnapshot> get onSnapshot => _createSnapshotStream().stream;
 
-  Stream<DocumentSnapshot> get onMetadataChangesSnapshot => _createStream(
-      firestore_interop.DocumentListenOptions(includeMetadataChanges: true));
+  Stream<DocumentSnapshot> get onMetadataChangesSnapshot {
+    return _createSnapshotStream(
+      firestore_interop.DocumentListenOptions(includeMetadataChanges: true),
+    ).stream;
+  }
 
-  Stream<DocumentSnapshot> _createStream(
-      [firestore_interop.DocumentListenOptions? options]) {
+  StreamController<DocumentSnapshot> _createSnapshotStream([
+    firestore_interop.DocumentListenOptions? options,
+  ]) {
     late ZoneCallback onSnapshotUnsubscribe;
+    // ignore: close_sinks, the controler is returned
     late StreamController<DocumentSnapshot> controller;
 
     final nextWrapper =
@@ -198,13 +277,13 @@ class DocumentReference
 
     void stopListen() {
       onSnapshotUnsubscribe();
-      controller.close();
     }
 
-    controller = StreamController<DocumentSnapshot>.broadcast(
-        onListen: startListen, onCancel: stopListen, sync: true);
-
-    return controller.stream;
+    return controller = StreamController<DocumentSnapshot>.broadcast(
+      onListen: startListen,
+      onCancel: stopListen,
+      sync: true,
+    );
   }
 
   Future<Null> set(Map<String, dynamic> data,
@@ -234,21 +313,29 @@ class Query<T extends firestore_interop.QueryJsImpl>
       Query.fromJsObject(
           _wrapPaginatingFunctionCall('endBefore', snapshot, fieldValues));
 
-  Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) =>
-      handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObject.get())
-          .then(QuerySnapshot.getInstance);
+  Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) {
+    var jsObjectGet =
+        (options != null) ? jsObject.get(options) : jsObject.get();
+    return handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObjectGet)
+        .then(QuerySnapshot.getInstance);
+  }
 
   Query limit(num limit) => Query.fromJsObject(jsObject.limit(limit));
 
   Query limitToLast(num limit) =>
       Query.fromJsObject(jsObject.limitToLast(limit));
 
-  Stream<QuerySnapshot> get onSnapshot => _createStream(false);
+  late final Stream<QuerySnapshot> onSnapshot =
+      _createSnapshotStream(false).stream;
 
-  Stream<QuerySnapshot> get onSnapshotMetadata => _createStream(true);
+  late final Stream<QuerySnapshot> onSnapshotMetadata =
+      _createSnapshotStream(true).stream;
 
-  Stream<QuerySnapshot> _createStream(bool includeMetadataChanges) {
+  StreamController<QuerySnapshot> _createSnapshotStream(
+    bool includeMetadataChanges,
+  ) {
     late ZoneCallback onSnapshotUnsubscribe;
+    // ignore: close_sinks, the controller is returned
     late StreamController<QuerySnapshot> controller;
 
     final nextWrapper =
@@ -266,13 +353,13 @@ class Query<T extends firestore_interop.QueryJsImpl>
 
     void stopListen() {
       onSnapshotUnsubscribe();
-      controller.close();
     }
 
-    controller = StreamController<QuerySnapshot>.broadcast(
-        onListen: startListen, onCancel: stopListen, sync: true);
-
-    return controller.stream;
+    return controller = StreamController<QuerySnapshot>.broadcast(
+      onListen: startListen,
+      onCancel: stopListen,
+      sync: true,
+    );
   }
 
   Query orderBy(/*String|FieldPath*/ dynamic fieldPath,
@@ -409,14 +496,18 @@ class QuerySnapshot
 
   // TODO: [SnapshotListenOptions options]
   List<DocumentChange> docChanges(
-          [firestore_interop.SnapshotListenOptions? options]) =>
-      jsObject
-          .docChanges(jsify(options))
-          // explicitly typing the param as dynamic to work-around
-          // https://github.com/dart-lang/sdk/issues/33537
-          // ignore: unnecessary_lambdas
-          .map((dynamic e) => DocumentChange.getInstance(e))
-          .toList();
+      [firestore_interop.SnapshotListenOptions? options]) {
+    List<firestore_interop.DocumentChangeJsImpl> changes = options != null
+        ? jsObject.docChanges(jsify(options))
+        : jsObject.docChanges();
+
+    return changes
+        // explicitly typing the param as dynamic to work-around
+        // https://github.com/dart-lang/sdk/issues/33537
+        // ignore: unnecessary_lambdas
+        .map((dynamic e) => DocumentChange.getInstance(e))
+        .toList();
+  }
 
   List<DocumentSnapshot?> get docs => jsObject.docs
       // explicitly typing the param as dynamic to work-around

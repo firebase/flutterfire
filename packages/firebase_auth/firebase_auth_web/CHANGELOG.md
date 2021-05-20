@@ -1,3 +1,30 @@
+## 1.1.3
+
+ - Update a dependency to the latest release.
+
+## 1.1.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
+## 1.1.0
+
+ - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).
+
+## 1.0.7
+
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 1.0.6
+
+ - Update a dependency to the latest release.
+
 ## 1.0.5
 
  - Update a dependency to the latest release.

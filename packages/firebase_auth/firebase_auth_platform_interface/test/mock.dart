@@ -54,6 +54,31 @@ void setupFirebaseAuthMocks([Callback? customHandlers]) {
   });
 }
 
+void handleEventChannel(
+  final String name, [
+  List<MethodCall>? log,
+]) {
+  MethodChannel(name).setMockMethodCallHandler((MethodCall methodCall) async {
+    log?.add(methodCall);
+    switch (methodCall.method) {
+      case 'listen':
+        break;
+      case 'cancel':
+      default:
+        return null;
+    }
+  });
+}
+
+Future<void> injectEventChannelResponse(
+    String channelName, Map<String, dynamic> event) async {
+  await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
+    channelName,
+    MethodChannelFirebaseAuth.channel.codec.encodeSuccessEnvelope(event),
+    (_) {},
+  );
+}
+
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
     MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
       return await methodCallCallback(call);

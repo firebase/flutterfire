@@ -14,8 +14,11 @@ analyzer:
 
 linter:
   rules:
-    ## Disabled rules because the repository doesn't respect them (yet)
+    ## currently enabled only for firebase_core
+    avoid_dynamic_calls: false
 
+    ## Disabled rules because the repository doesn't respect them (yet)
+    use_build_context_synchronously: false
     directives_ordering: false
     prefer_final_fields: false
     comment_references: false

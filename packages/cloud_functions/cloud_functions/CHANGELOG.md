@@ -1,3 +1,26 @@
+## 1.1.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.0.7
+
+ - Update a dependency to the latest release.
+
+## 1.0.6
+
+ - **FIX**: possible null pointer exception when comparing error codes (#6008).
+
+## 1.0.5
+
+ - Update a dependency to the latest release.
+
+## 1.0.4
+
+ - **FIX**: return correct type on native (#5709).
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+ - **CHORE**: update drive dependency (#5740).
+
 ## 1.0.3
 
  - Update a dependency to the latest release.

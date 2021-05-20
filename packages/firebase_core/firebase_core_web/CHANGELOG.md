@@ -1,3 +1,18 @@
+## 1.1.0
+
+ - **FEAT**: detect the version of the Firebase JS SDK that is in use and warn if the version is incompatible with FlutterFire.
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+
+## 1.0.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+
 ## 1.0.2
 
  - **FIX**: cannot store null values in firestore on the web (#5335).

@@ -7,8 +7,8 @@
 @JS('firebase.storage')
 library firebase.storage_interop;
 
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
 
 @JS('Storage')
 abstract class StorageJsImpl {
@@ -22,6 +22,7 @@ abstract class StorageJsImpl {
   external ReferenceJsImpl refFromURL(String url);
   external void setMaxOperationRetryTime(int time);
   external void setMaxUploadRetryTime(int time);
+  external void useEmulator(String host, int port);
 }
 
 @JS('Reference')
@@ -49,7 +50,7 @@ abstract class ReferenceJsImpl {
       [String? format, UploadMetadataJsImpl? metadata]);
   @override
   external String toString();
-  external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
+  external PromiseJsImpl<Object?> updateMetadata(
       SettableMetadataJsImpl metadata);
 }
 

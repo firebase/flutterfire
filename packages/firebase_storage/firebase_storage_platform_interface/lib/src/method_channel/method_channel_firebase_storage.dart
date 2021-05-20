@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_storage_platform_interface.dart';
+import './utils/exception.dart';
 import 'method_channel_reference.dart';
 import 'method_channel_task_snapshot.dart';
 
@@ -139,6 +140,26 @@ class MethodChannelFirebaseStorage extends FirebaseStoragePlatform {
   @override
   ReferencePlatform ref(String path) {
     return MethodChannelReference(this, path);
+  }
+
+  @override
+  Future<void> useEmulator(String host, int port) async {
+    emulatorHost = host;
+    emulatorPort = port;
+    try {
+      await MethodChannelFirebaseStorage.channel
+          .invokeMethod('Storage#useEmulator', <String, dynamic>{
+        'appName': app.name,
+        'maxOperationRetryTime': maxOperationRetryTime,
+        'maxUploadRetryTime': maxUploadRetryTime,
+        'maxDownloadRetryTime': maxDownloadRetryTime,
+        'bucket': bucket,
+        'host': emulatorHost,
+        'port': emulatorPort
+      });
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
