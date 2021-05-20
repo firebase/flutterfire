@@ -66,6 +66,22 @@ void runLoadBundleTests() {
           everyElement(LoadBundleTaskState.running),
         );
       });
+
+      test('loadBundle(): error handling for malformed bundle', () async {
+        //malformed bundle
+        final url = Uri.https('api.rnfirebase.io', '/firestore/malformed-bundle');
+        final response = await http.get(url);
+        String string = response.body;
+        Uint8List buffer = Uint8List.fromList(string.codeUnits);
+
+        LoadBundleTask task = firestore.loadBundle(buffer);
+
+        task.stream.listen((value) {}, onError: (Object error) {
+          expect(error.toString(), contains('invalid-argument'));
+        });
+        // Unable to catch error in Flutter, web-js-sdk appears to error internally
+        // but cannot confirm as catch() is dart keyword which stops errors from possible propagation
+      }, skip: kIsWeb);
     });
 
     group('FirebaeFirestore.namedQueryGet()', () {
@@ -79,8 +95,8 @@ void runLoadBundleTests() {
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
         QuerySnapshot<Map<String, Object?>> snapshot =
-            await firestore.namedQueryGet('named-bundle-test',
-                options: const GetOptions(source: Source.cache));
+        await firestore.namedQueryGet('named-bundle-test',
+            options: const GetOptions(source: Source.cache));
 
         expect(
           snapshot.docs.map((document) => document['number']),
@@ -105,7 +121,7 @@ void runLoadBundleTests() {
                 contains('Named query has not been found')),
           ),
         );
-      }, skip: kIsWeb);
+      });
     });
   });
 }

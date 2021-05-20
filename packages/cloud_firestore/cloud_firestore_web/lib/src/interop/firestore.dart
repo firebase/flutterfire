@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
 import 'package:js/js.dart';
@@ -109,9 +110,19 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return LoadBundleTask.getInstance(jsObject.loadBundle(bundle));
   }
 
-  Future<Query> namedQuery(String name) async {
-    firestore_interop.QueryJsImpl query =
+  Future<Query?> namedQuery(String name) async {
+    firestore_interop.QueryJsImpl? query =
         await handleThenable(jsObject.namedQuery(name));
+
+    if (query == null) {
+      // same error as iOS & android to maintain consistency
+      throw FirebaseException(
+          plugin: 'cloud_firestore',
+          code: 'unknown',
+          message:
+              'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+    }
+
     return Query.fromJsObject(query);
   }
 }
@@ -140,7 +151,8 @@ class LoadBundleTask
           allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
         controller.add(LoadBundleTaskProgress._fromJsObject(data));
       }));
-      //todo(russellwheatley): implement error handling for loadBundle
+
+      /// Catch underlying errors
       // jsObject.JS$catch(allowInterop((firestore_interop.FirestoreError error) {
       //   controller.addError(error);
       // }));

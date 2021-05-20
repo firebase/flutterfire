@@ -67,7 +67,7 @@ abstract class FirestoreJsImpl {
 
   external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
 
-  external PromiseJsImpl<QueryJsImpl> namedQuery(String name);
+  external PromiseJsImpl<QueryJsImpl?> namedQuery(String name);
 }
 
 @JS('WriteBatch')
@@ -256,7 +256,7 @@ abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
     void Function(LoadBundleTaskProgressJsImpl) progress,
   );
-//todo(russellwheatley): implement error handling
+// todo(russellwheatley): AFAIK - it isn't possible to use catch() as it is a Dart keyword
 //   external void Function() JS$catch(void Function(FirestoreError) errorHandler);
 }
 
