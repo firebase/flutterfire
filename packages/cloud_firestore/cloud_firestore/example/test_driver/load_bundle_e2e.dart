@@ -79,7 +79,7 @@ void runLoadBundleTests() {
         task.stream.listen((value) {}, onError: (Object error) {
           expect(error.toString(), contains('invalid-argument'));
         });
-        // Unable to catch error in Flutter, web-js-sdk appears to error internally
+        // Unable to catch error in Flutter web, web-js-sdk appears to error internally
         // but cannot confirm as catch() is dart keyword which stops errors from possible propagation
       }, skip: kIsWeb);
     });
