@@ -51,6 +51,9 @@ void testsMain() {
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       final DatabaseReference ref = database.reference().child('counter');
+
+      await ref.set(0);
+
       final DataSnapshot snapshot = await ref.once();
       final int value = snapshot.value ?? 0;
       final TransactionResult transactionResult =
@@ -58,6 +61,7 @@ void testsMain() {
         mutableData.value = (mutableData.value ?? 0) + 1;
         return mutableData;
       });
+
       expect(transactionResult.committed, true);
       expect(transactionResult.dataSnapshot!.value > value, true);
     });
