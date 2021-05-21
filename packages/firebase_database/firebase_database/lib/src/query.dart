@@ -91,9 +91,7 @@ class Query {
         'path': path,
       },
     );
-    if (result == null || result is! Map) {
-      throw 'firebase_database get call failed from Dart.';
-    } else if (result.containsKey('error') && result['error'] != null) {
+    if (result.containsKey('error') && result['error'] != null) {
       final errorMap = result['error'];
       throw FirebaseException(
           plugin: 'firebase_database',
