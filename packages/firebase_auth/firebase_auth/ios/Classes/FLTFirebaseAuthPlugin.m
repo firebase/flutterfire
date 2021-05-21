@@ -839,12 +839,12 @@ NSString *const kErrMsgInvalidCredential =
   NSDictionary *profileUpdates = arguments[@"profile"];
   FIRUserProfileChangeRequest *changeRequest = [currentUser profileChangeRequest];
 
-  if ([profileUpdates objectForKey:@"displayName"]) {
-     changeRequest.displayName = profileUpdates[@"displayName"];
+  if (profileUpdates[@"displayName"] != nil) {
+    changeRequest.displayName = profileUpdates[@"displayName"];
   }
 
-  if ([profileUpdates objectForKey:@"photoURL"]) {
-     changeRequest.photoURL = profileUpdates[@"photoURL"];
+  if (profileUpdates[@"photoURL"] != nil) {
+    changeRequest.photoURL = profileUpdates[@"photoURL"];
   }
 
   [changeRequest commitChangesWithCompletion:^(NSError *error) {
