@@ -91,7 +91,7 @@ class Query {
         'path': path,
       },
     );
-    if (result.containsKey('error') && result['error'] != null) {
+    if (result!.containsKey('error') && result['error'] != null) {
       final errorMap = result['error'];
       throw FirebaseException(
           plugin: 'firebase_database',
