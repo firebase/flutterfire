@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '9.0'
 
   s.dependency 'firebase_core'
   s.dependency 'Firebase/Crashlytics', firebase_sdk_version
