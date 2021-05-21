@@ -93,6 +93,13 @@ void testsMain() {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
+
+    test('get snapshot', () async {
+      final dataSnapshot = await FirebaseDatabase.instance.reference()
+          .child('counter').get();
+      expect(dataSnapshot, isNot(null));
+      expect(dataSnapshot!.key, 'counter');
+    });
   });
 }
 
