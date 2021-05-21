@@ -9,7 +9,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
@@ -534,23 +533,26 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
       case "Query#get":
         {
           DatabaseReference reference = getReference(database, arguments);
-          reference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Exception exception = task.getException();
-                    result.error("get-failed", exception.getMessage(), null);
-                } else {
-                    DataSnapshot dataSnapshot = task.getResult();
-                    Map<String, Object> snapshotMap = new HashMap<>();
-                    snapshotMap.put("key", dataSnapshot.getKey());
-                    snapshotMap.put("value", dataSnapshot.getValue());
-                    Map<String, Object> resultMap = new HashMap<>();
-                    resultMap.put("snapshot", snapshotMap);
-                    result.success(resultMap);
-                }
-            }
-          });
+          reference
+              .get()
+              .addOnCompleteListener(
+                  new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                      if (!task.isSuccessful()) {
+                        Exception exception = task.getException();
+                        result.error("get-failed", exception.getMessage(), null);
+                      } else {
+                        DataSnapshot dataSnapshot = task.getResult();
+                        Map<String, Object> snapshotMap = new HashMap<>();
+                        snapshotMap.put("key", dataSnapshot.getKey());
+                        snapshotMap.put("value", dataSnapshot.getValue());
+                        Map<String, Object> resultMap = new HashMap<>();
+                        resultMap.put("snapshot", snapshotMap);
+                        result.success(resultMap);
+                      }
+                    }
+                  });
           break;
         }
 

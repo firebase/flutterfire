@@ -48,7 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.reference().child('messages');
     database.reference().child('counter').get().then((DataSnapshot? snapshot) {
-      print('Connected to directly configured database and read ${snapshot!.value}');
+      print(
+          'Connected to directly configured database and read ${snapshot!.value}');
     });
     database.setPersistenceEnabled(true);
     database.setPersistenceCacheSizeBytes(10000000);

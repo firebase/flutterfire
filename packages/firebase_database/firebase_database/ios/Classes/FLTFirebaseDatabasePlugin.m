@@ -316,15 +316,15 @@ id roundDoubles(id value) {
     [getReference(database, call.arguments)
         cancelDisconnectOperationsWithCompletionBlock:defaultCompletionBlock];
   } else if ([@"Query#get" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) getDataWithCompletionBlock:^(NSError *error, FIRDataSnapshot *snapshot) {
-      result(@{
-          @"error": getDictionaryFromError(error) ?: [NSNull null],
-          @"snapshot": @{
-              @"key": snapshot.key ?: [NSNull null],
-              @"value": snapshot.value
+    [getReference(database, call.arguments)
+        getDataWithCompletionBlock:^(NSError *error, FIRDataSnapshot *snapshot) {
+          if (error) {
           }
-      });
-    }];
+          result(@{
+            @"error" : getDictionaryFromError(error) ?: [NSNull null],
+            @"snapshot" : @{@"key" : snapshot.key ?: [NSNull null], @"value" : snapshot.value}
+          });
+        }];
   } else if ([@"Query#observe" isEqualToString:call.method]) {
     FIRDataEventType eventType = parseEventType(call.arguments[@"eventType"]);
     __block FIRDatabaseHandle handle = [getDatabaseQuery(database, call.arguments)

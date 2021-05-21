@@ -95,8 +95,8 @@ void testsMain() {
     });
 
     test('get snapshot', () async {
-      final dataSnapshot = await FirebaseDatabase.instance.reference()
-          .child('counter').get();
+      final dataSnapshot =
+          await FirebaseDatabase.instance.reference().child('counter').get();
       expect(dataSnapshot, isNot(null));
       expect(dataSnapshot!.key, 'counter');
     });

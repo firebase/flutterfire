@@ -94,9 +94,9 @@ class Query {
     if (result!.containsKey('error') && result['error'] != null) {
       final errorMap = result['error'];
       throw FirebaseException(
-          plugin: 'firebase_database',
-          code:  'get-failed',
-          message: errorMap['details'],
+        plugin: 'firebase_database',
+        code: 'get-failed',
+        message: errorMap['details'],
       );
     } else {
       return DataSnapshot._fromJson(result['snapshot'], null);
