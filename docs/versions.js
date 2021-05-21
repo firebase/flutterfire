@@ -4,8 +4,8 @@ export default {
   plugins: {
     firebase_analytics: PUB_FIREBASE_ANALYTICS,
     firebase_analytics_ns: PUB_NS_FIREBASE_ANALYTICS,
-    // firebase_app_check: PUB_FIREBASE_APP_CHECK,
-    // firebase_app_check_ns: PUB_NS_FIREBASE_APP_CHECK,
+    firebase_app_check: PUB_FIREBASE_APP_CHECK,
+    firebase_app_check_ns: PUB_NS_FIREBASE_APP_CHECK,
     firebase_auth: PUB_FIREBASE_AUTH,
     firebase_auth_ns: PUB_NS_FIREBASE_AUTH,
     cloud_firestore: PUB_CLOUD_FIRESTORE,
