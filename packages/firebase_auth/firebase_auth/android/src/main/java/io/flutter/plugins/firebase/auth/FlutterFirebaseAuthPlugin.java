@@ -944,7 +944,6 @@ public class FlutterFirebaseAuthPlugin
               (Map<String, String>) Objects.requireNonNull(arguments.get(Constants.PROFILE));
           UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
 
-
           if (profile.containsKey(Constants.DISPLAY_NAME)) {
             String displayName = profile.get(Constants.DISPLAY_NAME);
             builder.setDisplayName(displayName);
