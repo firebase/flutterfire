@@ -76,15 +76,17 @@ void runLoadBundleTests() {
 
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        await expectLater(
-            task.stream.last,
-            throwsA(
-              isA<FirebaseException>().having(
-                  (e) => e.message, 'message', contains('invalid-argument')),
-            ));
-        // Unable to catch error in Flutter web, web-js-sdk appears to error internally
-        // but cannot confirm as catch() is dart keyword which stops errors from possible propagation
-      }, skip: kIsWeb);
+        try {
+          await task.stream.last;
+        } catch (error) {
+          expect(error, isA<FirebaseException>());
+          expect((error as FirebaseException).message?.toLowerCase(),
+              anyOf(contains('invalid'), contains('unexpected')));
+          return;
+        }
+        //if the test reaches this point, an error was not throwm
+        fail('error handling for malformed bundle test failure');
+      });
     });
 
     group('FirebaeFirestore.namedQueryGet()', () {

@@ -256,8 +256,9 @@ abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
     void Function(LoadBundleTaskProgressJsImpl) progress,
   );
-// todo(russellwheatley): AFAIK - it isn't possible to use catch() as it is a Dart keyword
-//   external void Function() JS$catch(void Function(FirestoreError) errorHandler);
+
+  external PromiseJsImpl then(
+      [Func1? onResolve, Function(FirestoreError) onReject]);
 }
 
 @JS()

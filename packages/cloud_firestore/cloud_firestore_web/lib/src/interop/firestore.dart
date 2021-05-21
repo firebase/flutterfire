@@ -8,6 +8,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
@@ -143,18 +144,28 @@ class LoadBundleTask
   ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
   Stream<LoadBundleTaskProgress> stream() {
     late StreamController<LoadBundleTaskProgress> controller;
-    controller =
-        StreamController<LoadBundleTaskProgress>.broadcast(onListen: () {
+    controller = StreamController<LoadBundleTaskProgress>(onListen: () {
       /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
       jsObject.onProgress(
           allowInterop((firestore_interop.LoadBundleTaskProgressJsImpl data) {
-        controller.add(LoadBundleTaskProgress._fromJsObject(data));
+        LoadBundleTaskProgress taskProgress =
+            LoadBundleTaskProgress._fromJsObject(data);
+
+        if (LoadBundleTaskState.error != taskProgress.taskState) {
+          //error handled in addError() call below.
+          controller.add(taskProgress);
+        }
       }));
 
-      // todo(russellwheatley): AFAIK - it isn't possible to use catch() as it is a Dart keyword
-      // jsObject.JS$catch(allowInterop((firestore_interop.FirestoreError error) {
-      //   controller.addError(error);
-      // }));
+      jsObject.then(allowInterop((value) {
+        controller.close();
+      }), allowInterop((error) {
+        controller.addError(FirebaseException(
+            plugin: 'cloud_firestore',
+            message: error.message,
+            stackTrace: StackTrace.fromString(error.stack)));
+        controller.close();
+      }));
     }, onCancel: () {
       controller.close();
     });
@@ -167,7 +178,12 @@ class LoadBundleTaskProgress
     extends JsObjectWrapper<firestore_interop.LoadBundleTaskProgressJsImpl> {
   LoadBundleTaskProgress._fromJsObject(
     firestore_interop.LoadBundleTaskProgressJsImpl jsObject,
-  ) : super.fromJsObject(jsObject);
+  )   : taskState = convertToTaskState(jsObject.taskState.toLowerCase()),
+        bytesLoaded = int.parse(jsObject.bytesLoaded),
+        documentsLoaded = jsObject.documentsLoaded,
+        totalBytes = int.parse(jsObject.totalBytes),
+        totalDocuments = jsObject.totalDocuments,
+        super.fromJsObject(jsObject);
 
   static final _expando = Expando<LoadBundleTaskProgress>();
 
@@ -179,15 +195,11 @@ class LoadBundleTaskProgress
         LoadBundleTaskProgress._fromJsObject(jsObject);
   }
 
-  int get bytesLoaded => int.parse(jsObject.bytesLoaded);
-
-  int get documentsLoaded => jsObject.documentsLoaded;
-
-  String get taskState => jsObject.taskState;
-
-  int get totalBytes => int.parse(jsObject.totalBytes);
-
-  int get totalDocuments => jsObject.totalDocuments;
+  final LoadBundleTaskState taskState;
+  final int bytesLoaded;
+  final int documentsLoaded;
+  final int totalBytes;
+  final int totalDocuments;
 }
 
 class WriteBatch extends JsObjectWrapper<firestore_interop.WriteBatchJsImpl>
