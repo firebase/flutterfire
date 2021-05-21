@@ -68,7 +68,7 @@ void runLoadBundleTests() {
 
       test('loadBundle(): error handling for malformed bundle', () async {
         final url =
-        Uri.https('api.rnfirebase.io', '/firestore/malformed-bundle');
+            Uri.https('api.rnfirebase.io', '/firestore/malformed-bundle');
         final response = await http.get(url);
         String string = response.body;
         Uint8List buffer = Uint8List.fromList(string.codeUnits);
@@ -79,7 +79,8 @@ void runLoadBundleTests() {
           await task.stream.last;
         } catch (error) {
           expect(error, isA<FirebaseException>());
-          expect((error as FirebaseException).message?.toLowerCase(),
+          expect(
+              (error as FirebaseException).message?.toLowerCase(),
               anyOf(contains('invalid'), contains('unexpected'),
                   contains('error')));
           return;
@@ -100,8 +101,8 @@ void runLoadBundleTests() {
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
         QuerySnapshot<Map<String, Object?>> snapshot =
-        await firestore.namedQueryGet('named-bundle-test',
-            options: const GetOptions(source: Source.cache));
+            await firestore.namedQueryGet('named-bundle-test',
+                options: const GetOptions(source: Source.cache));
 
         expect(
           snapshot.docs.map((document) => document['number']),
