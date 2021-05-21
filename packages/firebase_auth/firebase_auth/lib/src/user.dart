@@ -250,9 +250,12 @@ class User {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredential> reauthenticateWithCredential(
-      AuthCredential credential) async {
+    AuthCredential credential,
+  ) async {
     return UserCredential._(
-        _auth, await _delegate.reauthenticateWithCredential(credential));
+      _auth,
+      await _delegate.reauthenticateWithCredential(credential),
+    );
   }
 
   /// Refreshes the current user, if signed in.
@@ -332,9 +335,24 @@ class User {
     await _delegate.updatePhoneNumber(phoneCredential);
   }
 
+  /// Update the user name.
+  Future<void> updateDisplayName(String? displayName) {
+    return _delegate
+        .updateProfile(<String, String?>{'displayName': displayName});
+  }
+
+  /// Update the user's profile picture.
+  Future<void> updatePhotoURL(String? photoURL) {
+    return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
+  }
+
   /// Updates a user's profile data.
-  Future<void> updateProfile({String? displayName, String? photoURL}) async {
-    await _delegate.updateProfile(<String, String?>{
+  @Deprecated(
+    'Will be removed in version 2.0.0. '
+    'Use updatePhotoURL and updateDisplayName instead.',
+  )
+  Future<void> updateProfile({String? displayName, String? photoURL}) {
+    return _delegate.updateProfile(<String, String?>{
       'displayName': displayName,
       'photoURL': photoURL,
     });

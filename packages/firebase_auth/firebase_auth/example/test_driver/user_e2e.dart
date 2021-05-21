@@ -560,6 +560,135 @@ void runUserTests() {
       });
     });
 
+    group('updateDisplayName', () {
+      test('updates the user displayName without impacting the photoURL',
+          () async {
+        // First create a user with a photo
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: testPassword,
+        );
+        await FirebaseAuth.instance.currentUser.updateDisplayName('Mona Lisa');
+        await FirebaseAuth.instance.currentUser.updatePhotoURL(
+          'http://photo.url/test.jpg',
+          // await Future.wait([
+        );
+        // ]);
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          'http://photo.url/test.jpg',
+        );
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          'Mona Lisa',
+        );
+
+        await FirebaseAuth.instance.currentUser.updateDisplayName('John Smith');
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          'http://photo.url/test.jpg',
+        );
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          'John Smith',
+        );
+      });
+
+      test('can set the displayName to null', () async {
+        // First create a user with a photo
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: testPassword,
+        );
+        await FirebaseAuth.instance.currentUser.updateDisplayName('Mona Lisa');
+        await FirebaseAuth.instance.currentUser.reload();
+
+        // Just checking that the user indeed had a name before we set it to null
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          isNotNull,
+        );
+
+        await FirebaseAuth.instance.currentUser.updateDisplayName(null);
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          isNull,
+        );
+      });
+    });
+
+    group('updatePhotoURL', () {
+      test('updates the photoURL without impacting the displayName', () async {
+        // First create a user with a photo
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: testPassword,
+        );
+        await Future.wait([
+          FirebaseAuth.instance.currentUser.updateDisplayName('Mona Lisa'),
+          FirebaseAuth.instance.currentUser.updatePhotoURL(
+            'http://photo.url/test.jpg',
+          ),
+        ]);
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          'http://photo.url/test.jpg',
+        );
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          'Mona Lisa',
+        );
+
+        await FirebaseAuth.instance.currentUser.updatePhotoURL(
+          'http://photo.url/dash.jpg',
+        );
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          'http://photo.url/dash.jpg',
+        );
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          'Mona Lisa',
+        );
+      });
+
+      test('can set the photoURL to null', () async {
+        // First create a user with a photo
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: testPassword,
+        );
+        await FirebaseAuth.instance.currentUser.updatePhotoURL(
+          'http://photo.url/test.jpg',
+        );
+        await FirebaseAuth.instance.currentUser.reload();
+
+        // Just checking that the user indeed had a photo before we set it to null
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          isNotNull,
+        );
+
+        await FirebaseAuth.instance.currentUser.updatePhotoURL(null);
+        await FirebaseAuth.instance.currentUser.reload();
+
+        expect(
+          FirebaseAuth.instance.currentUser.photoURL,
+          isNull,
+        );
+      });
+    });
+
     group('updateProfile()', () {
       test('should update the profile', () async {
         String displayName = 'testName';
@@ -567,9 +696,12 @@ void runUserTests() {
 
         // Setup
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: email, password: testPassword);
+          email: email,
+          password: testPassword,
+        );
 
         // Update user profile
+        // ignore: deprecated_member_use
         await FirebaseAuth.instance.currentUser.updateProfile(
           displayName: displayName,
           photoURL: photoURL,
