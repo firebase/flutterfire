@@ -405,7 +405,7 @@ class Movie {
 We can then use `withConverter` to manipulate a collection of movies like so:
 
 ```dart
-final moviesRef = FirebaseFirestore.instance.collection('movies').withConverter(
+final moviesRef = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
       fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
       toFirestore: (movie, _) => movie.toJson(),
     );
