@@ -158,6 +158,20 @@ module.exports = [
     },
   },
   {
+    name: 'ML Custom',
+    pub: 'firebase_ml_custom',
+    //ml-custom page is a 404
+    firebase: 'ml',
+    status: 'Beta',
+    documentation:
+      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_ml_custom/README.md',
+    support: {
+      web: false,
+      mobile: true,
+      macos: false,
+    },
+  },
+  {
     name: 'ML Kit Vision',
     pub: 'firebase_ml_vision',
     firebase: 'ml-kit',
