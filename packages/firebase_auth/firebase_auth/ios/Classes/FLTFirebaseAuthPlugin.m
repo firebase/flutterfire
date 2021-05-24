@@ -840,11 +840,22 @@ NSString *const kErrMsgInvalidCredential =
   FIRUserProfileChangeRequest *changeRequest = [currentUser profileChangeRequest];
 
   if (profileUpdates[@"displayName"] != nil) {
-    changeRequest.displayName = profileUpdates[@"displayName"];
+    if ([profileUpdates[@"displayName"] isEqual:[NSNull null]]) {
+      changeRequest.displayName = nil;
+    } else {  
+      changeRequest.displayName = profileUpdates[@"displayName"];
+    }
   }
 
   if (profileUpdates[@"photoURL"] != nil) {
-    changeRequest.photoURL = profileUpdates[@"photoURL"];
+    if ([profileUpdates[@"photoURL"] isEqual:[NSNull null]]) {
+      // We apparently cannot set photoURL to nil/NULL to remove it.
+      // Instead, setting it to empty string appears to work. 
+      // When doing so, Dart will properly receive `null` anyway.
+      changeRequest.photoURL = [NSURL URLWithString:@""];
+    } else {  
+      changeRequest.photoURL = [NSURL URLWithString:profileUpdates[@"photoURL"]];
+    }
   }
 
   [changeRequest commitChangesWithCompletion:^(NSError *error) {
