@@ -106,7 +106,8 @@ await auth.verifyPhoneNumber(
 
 #### codeSent
 
-When Firebase sends an SMS code to the device, this handler is triggered with a `verificationId` and `resendToken`.
+When Firebase sends an SMS code to the device, this handler is triggered with a `verificationId` and `resendToken` (A `resendToken`
+is only supported on Android devices, iOS devices will _always_ return a `null` value).
 
 Once triggered, it would be a good time to update your application UI to prompt the user to enter the SMS code they're expecting.
 Once the SMS code has been entered, you can combine the verification ID with the SMS code to create a new `PhoneAuthCredential`:
