@@ -215,27 +215,45 @@ Some things to keep in mind before publishing the release:
   from people that immediately adopt it, and uncovering and resolving those
   support issues will take more time if you're unavailable.
 
-### Run a release... 
+### Run a release...
 
 #### ...with automatically generated change logs
 
 1) Switch to `master` branch locally.
-2) `git fetch --all` to make sure all tags and commits are fetched.
-3) Run `melos version`. This will auto commit, update the changelogs using git commit messages from the last release, and also tag the release for versioning.
-4) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
-5) Run `melos publish` to dry run and confirm all packages are publishable.
-6) Run `melos publish --no-dry-run` to now publish to Pub.dev.
-7) Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
+2) Run 'git pull origin master'.
+3) Run `git fetch --all` to make sure all tags and commits are fetched.
+4) Run `melos version`. This will auto commit, update the changelogs using git commit messages from the last release, and also tag the release for versioning.
+5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
+6) Run `melos publish` to dry run and confirm all packages are publishable.
+7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+8) Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
+
 
 #### ...with manual change log edits
 
-To run a release and manually edit the change log, do the following steps.
+To run a release and manually edit the change log, do the following steps:
+
 1) Switch to `master` branch locally.
-2) `git fetch --all` to make sure all tags and commits are fetched.
-3) Run `melos version --no-git-tag-version`. This will skip auto commiting and git tagging, leaving your git tree dirty with version bumps and changelog entry changes.
-4) Update the `CHANGELOG.md` files that you manually want to edit/reword.
-5) Add and commit all the `CHANGELOG.md` and `pubspec.yaml` files that were modified by `melos version` (using the standard release commit message, e.g. `chore(release): publish packages`).
-6) `melos publish` to dry run and confirm all packages are publishable.
-7) `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev (`--git-tag-version` will add missing git tags since we skipped tagging in step 1).
-8) Push your changes to `master`; `git push --follow-tags`.
-9) Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
+2) Run 'git pull origin master'.
+3) Run `git fetch --all` to make sure all tags and commits are fetched.
+4) Run `melos version --no-git-tag-version`. This will skip auto commiting and git tagging, leaving your git tree dirty with version bumps and changelog entry changes.
+5) Update the `CHANGELOG.md` files that you manually want to edit/reword.
+6) Add and commit all the `CHANGELOG.md` and `pubspec.yaml` files that were modified by `melos version` (using the standard release commit message, e.g. `chore(release): publish packages`).
+7) `melos publish` to dry run and confirm all packages are publishable.
+8) `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev (`--git-tag-version` will add missing git tags since we skipped tagging in step 1).
+9) Push your changes to `master`; `git push --follow-tags`.
+10)Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
+
+
+### Graduate packages
+
+Sometimes you may need to 'graduate' a package from a 'dev' or 'beta' (versions tagged like this: `0.10.0-dev.4`) to a stable version. Melos can also be used
+to graduate multiple packages using the following steps:
+
+1) Switch to `master` branch locally.
+2) Run 'git pull origin master'.
+3) Run `git fetch --all` to make sure all tags and commits are fetched.
+4) Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
+5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
+6) Run `melos publish` to dry run and confirm all packages are publishable.
+7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
