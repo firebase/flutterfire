@@ -571,9 +571,7 @@ void runUserTests() {
         await FirebaseAuth.instance.currentUser.updateDisplayName('Mona Lisa');
         await FirebaseAuth.instance.currentUser.updatePhotoURL(
           'http://photo.url/test.jpg',
-          // await Future.wait([
         );
-        // ]);
         await FirebaseAuth.instance.currentUser.reload();
 
         expect(
