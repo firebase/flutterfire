@@ -75,18 +75,13 @@ void runLoadBundleTests() {
 
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        try {
-          await task.stream.last;
-        } catch (error) {
-          expect(error, isA<FirebaseException>());
-          expect(
-              (error as FirebaseException).message?.toLowerCase(),
-              anyOf(contains('invalid'), contains('unexpected'),
-                  contains('error')));
-          return;
-        }
-        //if the test reaches this point, an error was not throwm
-        fail('error handling for malformed bundle test failure');
+        await expectLater(
+            task.stream.last,
+            throwsA(isA<FirebaseException>().having(
+                (e) => e.message,
+                'message',
+                anyOf(contains('invalid'), contains('unexpected'),
+                    contains('error')))));
       });
     });
 
