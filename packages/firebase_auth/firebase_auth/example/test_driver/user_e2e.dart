@@ -618,7 +618,8 @@ void runUserTests() {
           FirebaseAuth.instance.currentUser.displayName,
           isNull,
         );
-      });
+        // blocked by https://github.com/firebase/firebase-ios-sdk/issues/8149
+      }, skip: true);
     });
 
     group('updatePhotoURL', () {
