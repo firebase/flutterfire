@@ -675,8 +675,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (field == FieldPath.documentId) {
-        assert(!hasNotEqualTo,
-            "You cannot use '!=' filters with a FieldPath.documentId field.");
+        assert(
+          !hasNotEqualTo,
+          "You cannot use '!=' filters with a FieldPath.documentId field.",
+        );
         hasDocumentIdField = true;
       }
 
