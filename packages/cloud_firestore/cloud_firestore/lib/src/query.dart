@@ -470,16 +470,17 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (conditions.isNotEmpty) {
       for (final dynamic condition in conditions) {
-        dynamic field = condition[0];
+        dynamic conditionField = condition[0];
         String operator = condition[1];
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
-        // inequality operator is invoked
-        if (_isInequality(operator)) {
+        // inequality or 'not-in' operator is invoked
+        if (_isInequality(operator) || operator == 'not-in') {
           assert(
-            field == orders[0][0],
+            conditionField == orders[0][0] ||
+                field == FieldPath.documentId && field == conditionField,
             'The initial orderBy() field "$orders[0][0]" has to be the same as '
-            'the where() field parameter "$field" when an inequality operator is invoked.',
+            'the where() field parameter "$conditionField" when an inequality operator is invoked.',
           );
         }
 
@@ -490,12 +491,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           // '==' operand is invoked
           if (operator == '==') {
             assert(
-              field != orderField,
-              "The '$orderField' cannot be the same as your where() field parameter '$field'.",
+              conditionField != orderField,
+              "The '$orderField' cannot be the same as your where() field parameter '$conditionField'.",
             );
           }
 
-          if (field == FieldPath.documentId) {
+          if (conditionField == FieldPath.documentId) {
             assert(
               orderField == FieldPath.documentId,
               "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
