@@ -163,7 +163,7 @@ class LoadBundleTask
         controller.addError(FirebaseException(
             plugin: 'cloud_firestore',
             message: error.message,
-            stackTrace: StackTrace.fromString(error.stack)));
+            stackTrace: StackTrace.fromString(error.stack),),);
         controller.close();
       }));
     }, onCancel: () {

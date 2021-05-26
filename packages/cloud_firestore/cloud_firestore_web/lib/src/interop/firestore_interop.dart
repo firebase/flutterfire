@@ -257,8 +257,10 @@ abstract class LoadBundleTaskJsImpl {
     void Function(LoadBundleTaskProgressJsImpl) progress,
   );
 
-  external PromiseJsImpl then(
-      [Func1? onResolve, Function(FirestoreError) onReject]);
+  external PromiseJsImpl then([
+    Func1? onResolve,
+    dynamic Function(FirestoreError) onReject,
+  ]);
 }
 
 @JS()
