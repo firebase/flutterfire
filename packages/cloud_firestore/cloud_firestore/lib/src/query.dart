@@ -477,8 +477,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         // inequality or 'not-in' operator is invoked
         if (_isInequality(operator) || operator == 'not-in') {
           assert(
-            conditionField == orders[0][0] ||
-                field == FieldPath.documentId && field == conditionField,
+            conditionField == orders[0][0],
             'The initial orderBy() field "$orders[0][0]" has to be the same as '
             'the where() field parameter "$conditionField" when an inequality operator is invoked.',
           );
