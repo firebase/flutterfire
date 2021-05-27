@@ -153,7 +153,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }) async {
     firestore_interop.Query? query = await _webFirestore.namedQuery(name);
     firestore_interop.QuerySnapshot snapshot =
-        await query!.get(convertGetOptions(options));
+        await query.get(convertGetOptions(options));
 
     return convertWebQuerySnapshot(this, snapshot);
   }
