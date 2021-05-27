@@ -232,7 +232,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         operator == '!=';
   }
 
-  bool isNotIn(String operator){
+  bool isNotIn(String operator) {
     return operator == 'not-in';
   }
 
