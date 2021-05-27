@@ -654,6 +654,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     bool hasNotEqualTo = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
+    bool hasDocumentIdField = false;
 
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
@@ -671,6 +672,14 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           "The initial orderBy() field '$orders[0][0]' has to be the same as "
           "the where() field parameter '$field' when an inequality operator is invoked.",
         );
+      }
+
+      if (field == FieldPath.documentId) {
+        assert(
+          !hasNotEqualTo,
+          "You cannot use '!=' filters with a FieldPath.documentId field.",
+        );
+        hasDocumentIdField = true;
       }
 
       if (value == null) {
@@ -702,6 +711,8 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (operator == '!=') {
         assert(!hasNotEqualTo, "You cannot use '!=' filters more than once.");
         assert(!hasNotIn, "You cannot use '!=' filters with 'not-in' filters.");
+        assert(!hasDocumentIdField,
+            "You cannot use a FieldPath.documentId field with '!=' filters.");
         hasNotEqualTo = true;
       }
 

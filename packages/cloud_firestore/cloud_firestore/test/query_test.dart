@@ -148,6 +148,24 @@ void main() {
             throwsAssertionError);
       });
 
+      test(
+          'throws if FieldPath.documentId field is used in conjunction with isNotEqualTo filter',
+          () {
+        expect(
+          () => query!
+              .where(FieldPath.documentId, isEqualTo: 'fake-id')
+              .where('foo', isNotEqualTo: 'bar'),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!
+              .where('foo', isNotEqualTo: 'bar')
+              .where(FieldPath.documentId, whereIn: [2, 3]),
+          throwsAssertionError,
+        );
+      });
+
       test('allows arrayContains with whereIn filter', () {
         query!.where('foo', arrayContains: 1).where('foo', whereIn: [2, 3]);
         query!.where('foo', whereIn: [2, 3]).where('foo', arrayContains: 1);
