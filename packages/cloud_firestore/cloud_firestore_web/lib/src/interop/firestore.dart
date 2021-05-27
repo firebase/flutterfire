@@ -142,7 +142,7 @@ class LoadBundleTask
   }
 
   ///Tracks progress of loadBundle snapshots as the documents are loaded into cache
-  Stream<LoadBundleTaskProgress> stream() {
+  Stream<LoadBundleTaskProgress> get stream {
     late StreamController<LoadBundleTaskProgress> controller;
     controller = StreamController<LoadBundleTaskProgress>(onListen: () {
       /// Calls underlying onProgress method on a LoadBundleTask [jsObject].
@@ -160,10 +160,14 @@ class LoadBundleTask
       jsObject.then(allowInterop((value) {
         controller.close();
       }), allowInterop((error) {
-        controller.addError(FirebaseException(
+        controller.addError(
+          FirebaseException(
             plugin: 'cloud_firestore',
             message: error.message,
-            stackTrace: StackTrace.fromString(error.stack),),);
+            code: 'invalid-argument',
+            stackTrace: StackTrace.fromString(error.stack),
+          ),
+        );
         controller.close();
       }));
     }, onCancel: () {

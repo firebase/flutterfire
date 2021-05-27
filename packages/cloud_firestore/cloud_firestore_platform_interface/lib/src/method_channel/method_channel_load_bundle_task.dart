@@ -38,8 +38,8 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
       }
     }
 
-    stream =
-        mapNativeStream().asBroadcastStream(onCancel: (sub) => sub.cancel());
+    stream = mapNativeStream().asBroadcastStream(
+        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
   }
 
   @override

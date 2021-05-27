@@ -5,7 +5,10 @@ import 'interop/firestore.dart';
 
 class LoadBundleTaskWeb extends LoadBundleTaskPlatform {
   LoadBundleTaskWeb(LoadBundleTask task) : super() {
-    stream = task.stream().map((snapshot) {
+    stream = task.stream
+        .asBroadcastStream(
+            onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause())
+        .map((snapshot) {
       Map<String, dynamic> data = {
         'bytesLoaded': snapshot.bytesLoaded,
         'documentsLoaded': snapshot.documentsLoaded,
