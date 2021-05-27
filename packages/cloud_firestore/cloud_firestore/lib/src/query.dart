@@ -232,6 +232,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         operator == '!=';
   }
 
+  bool isNotIn(String operator){
+    return operator == 'not-in';
+  }
+
   /// Asserts that a [DocumentSnapshot] can be used within the current
   /// query.
   ///
@@ -475,7 +479,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
         // inequality or 'not-in' operator is invoked
-        if (_isInequality(operator) || operator == 'not-in') {
+        if (_isInequality(operator) || isNotIn(operator)) {
           assert(
             conditionField == orders[0][0],
             'The initial orderBy() field "$orders[0][0]" has to be the same as '
@@ -680,7 +684,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
       if (operator == 'in' ||
           operator == 'array-contains-any' ||
-          operator == 'not-in') {
+          isNotIn(operator)) {
         assert(
           value is List,
           "A non-empty [List] is required for '$operator' filters.",
@@ -705,7 +709,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         hasNotEqualTo = true;
       }
 
-      if (operator == 'not-in') {
+      if (isNotIn(operator)) {
         assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
         assert(
           !hasNotEqualTo,
