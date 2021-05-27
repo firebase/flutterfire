@@ -111,7 +111,7 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return LoadBundleTask.getInstance(jsObject.loadBundle(bundle));
   }
 
-  Future<Query?> namedQuery(String name) async {
+  Future<Query> namedQuery(String name) async {
     firestore_interop.QueryJsImpl? query =
         await handleThenable(jsObject.namedQuery(name));
 
