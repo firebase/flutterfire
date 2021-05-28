@@ -5,6 +5,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -619,7 +620,7 @@ void runUserTests() {
           isNull,
         );
         // blocked by https://github.com/firebase/firebase-ios-sdk/issues/8149
-      }, skip: true);
+      }, skip: Platform.isIOS);
     });
 
     group('updatePhotoURL', () {
