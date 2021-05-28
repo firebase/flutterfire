@@ -76,10 +76,7 @@ void runLoadBundleTests() {
 
         LoadBundleTask task = firestore.loadBundle(buffer);
 
-        await expectLater(
-            task.stream.last,
-            throwsA(isA<FirebaseException>()
-                .having((e) => e.code, 'code', 'invalid-argument')));
+        await expectLater(task.stream.last, throwsA(isA<FirebaseException>()));
       });
 
       test('loadBundle(): pause and resume stream', () async {

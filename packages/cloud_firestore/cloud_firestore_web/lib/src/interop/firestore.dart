@@ -164,7 +164,7 @@ class LoadBundleTask
           FirebaseException(
             plugin: 'cloud_firestore',
             message: error.message,
-            code: 'invalid-argument',
+            code: error.code,
             stackTrace: StackTrace.fromString(error.stack),
           ),
         );
