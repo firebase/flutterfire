@@ -620,7 +620,7 @@ void runUserTests() {
           isNull,
         );
         // blocked by https://github.com/firebase/firebase-ios-sdk/issues/8149
-      }, skip: Platform.isIOS);
+      }, skip: Platform.isIOS || Platform.isMacOS);
     });
 
     group('updatePhotoURL', () {
