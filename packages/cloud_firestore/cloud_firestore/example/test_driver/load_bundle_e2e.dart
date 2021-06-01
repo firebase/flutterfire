@@ -100,12 +100,15 @@ void runLoadBundleTests() {
 
         // Will resume & pause after second event received
         await expectLater(
-            task.stream,
-            emits(isA<LoadBundleTaskSnapshot>().having(
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
                 (ts) => ts.taskState,
                 'taskState',
-                anyOf(LoadBundleTaskState.running,
-                    LoadBundleTaskState.success)),),);
+                anyOf(
+                    LoadBundleTaskState.running, LoadBundleTaskState.success)),
+          ),
+        );
       });
     });
 
@@ -143,8 +146,8 @@ void runLoadBundleTests() {
             options: const GetOptions(source: Source.cache),
           ),
           throwsA(
-            isA<FirebaseException>().having((e) => e.message, 'message',
-                contains('Named query has not been found')),
+            isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'non-existent-named-query'),
           ),
         );
       });

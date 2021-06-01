@@ -120,7 +120,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
       throw FirebaseException(
           plugin: 'cloud_firestore',
           message:
-              'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+              'Named query has not been found. Please check it has been loaded properly via loadBundle().',
+          code: 'non-existent-named-query');
     }
 
     return Query.fromJsObject(query);
