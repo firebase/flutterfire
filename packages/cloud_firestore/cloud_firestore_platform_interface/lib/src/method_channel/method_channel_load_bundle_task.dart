@@ -7,8 +7,6 @@ import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
 
-import 'utils/exception.dart';
-
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
   MethodChannelLoadBundleTask({
     required Future<String?> task,
@@ -37,7 +35,7 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
         }
       } catch (exception) {
         if (exception is! Exception || exception is! PlatformException) {
-          throw exception;
+          rethrow;
         }
 
         Map<String, String>? details = exception.details != null
