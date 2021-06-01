@@ -153,7 +153,7 @@ class LoadBundleTask
             LoadBundleTaskProgress._fromJsObject(data);
 
         if (LoadBundleTaskState.error != taskProgress.taskState) {
-          //error handled in addError() call below.
+          // Error handled in addError() call below.
           controller.add(taskProgress);
         }
       }));
