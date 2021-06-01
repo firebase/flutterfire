@@ -164,7 +164,7 @@ class LoadBundleTask
           FirebaseException(
             plugin: 'cloud_firestore',
             message: error.message,
-            code: error.code,
+            code: 'load-bundle-error',
             stackTrace: StackTrace.fromString(error.stack),
           ),
         );
