@@ -126,7 +126,7 @@ String token = await messaging.getToken(
 and registered as a `serviceWorker` as demonstrated below:
 
 ```html
-...other html setup.
+  <!-- ...other html setup. -->
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
@@ -134,7 +134,7 @@ and registered as a `serviceWorker` as demonstrated below:
       });
     }
   </script>
-  ...put the script at the bottom of the enclosing body tags.
+  <!-- ...put the script at the bottom of the enclosing body tags. -->
 </body>
 ```
 
