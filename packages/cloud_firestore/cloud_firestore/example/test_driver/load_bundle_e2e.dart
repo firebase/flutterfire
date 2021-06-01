@@ -90,7 +90,7 @@ void runLoadBundleTests() {
         // Illustrates the pause() & resume() function.
         // A single stream will stop sending events once the listener is unsubscribed
 
-        //will listen & pause after first event received
+        // Will listen & pause after first event received
         await expectLater(
             task.stream,
             emits(isA<LoadBundleTaskSnapshot>().having((ts) => ts.taskState,
@@ -98,14 +98,14 @@ void runLoadBundleTests() {
 
         await Future.delayed(const Duration(milliseconds: 1));
 
-        //will resume & pause after second event received
+        // Will resume & pause after second event received
         await expectLater(
             task.stream,
             emits(isA<LoadBundleTaskSnapshot>().having(
                 (ts) => ts.taskState,
                 'taskState',
                 anyOf(LoadBundleTaskState.running,
-                    LoadBundleTaskState.success))));
+                    LoadBundleTaskState.success)),),);
       });
     });
 
