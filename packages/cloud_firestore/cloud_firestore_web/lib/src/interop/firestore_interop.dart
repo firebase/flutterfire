@@ -67,7 +67,7 @@ abstract class FirestoreJsImpl {
 
   external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
 
-  external PromiseJsImpl<QueryJsImpl> namedQuery(String name);
+  external PromiseJsImpl<QueryJsImpl?> namedQuery(String name);
 }
 
 @JS('WriteBatch')
@@ -256,8 +256,11 @@ abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
     void Function(LoadBundleTaskProgressJsImpl) progress,
   );
-//todo(russellwheatley): implement error handling
-//   external void Function() JS$catch(void Function(FirestoreError) errorHandler);
+
+  external PromiseJsImpl then([
+    Func1? onResolve,
+    dynamic Function(FirestoreError) onReject,
+  ]);
 }
 
 @JS()

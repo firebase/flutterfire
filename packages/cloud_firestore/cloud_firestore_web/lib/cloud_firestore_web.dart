@@ -151,8 +151,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     String name, {
     GetOptions options = const GetOptions(),
   }) async {
-    firestore_interop.Query query = await _webFirestore.namedQuery(name);
-
+    firestore_interop.Query? query = await _webFirestore.namedQuery(name);
     firestore_interop.QuerySnapshot snapshot =
         await query.get(convertGetOptions(options));
 
