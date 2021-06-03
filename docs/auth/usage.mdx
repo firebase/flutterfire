@@ -35,6 +35,10 @@ Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`
 Once called, the stream provides an immediate event of the user's current authentication state, and then provides subsequent events whenever
 the authentication state changes.
 
+There are three methods for listening to authentication state changes:
+
+1. `authStateChanges()`
+
 To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
 
 ```dart
@@ -49,15 +53,75 @@ FirebaseAuth.instance
   });
 ```
 
-The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
-about managing your users below.
+Events are fired when the following occurs:
 
-If you need authentication state change events along with any user token refresh events, you can subscribe via the
-`idTokenChanges()` method instead.
+   - Right after the listener has been registered.
+   - When a user is signed in.
+   - When the current user is signed out.
 
-Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
-`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
-unlinked and when the user's profile is updated.
+2. `idTokenChanges()`
+
+To subscribe to these changes, call the `idTokenChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+FirebaseAuth.instance
+  .idTokenChanges()
+  .listen((User user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+```
+
+Events are fired when the following occurs:
+
+   - Right after the listener has been registered.
+   - When a user is signed in.
+   - When the current user is signed out.
+   - When there is a change in the current user's token.
+
+**Warning:** if you set custom claims from your _own_ firebase admin sdk implementation, you will only see this event fire when the following occurs:
+
+   - A user signs in or re-authenticates after the custom claims are modified. The ID token issued as a result will contain the latest claims.
+   - An existing user session gets its ID token refreshed after an older token expires.
+   - An ID token is force refreshed by calling `FirebaseAuth.instance.currentUser.getIdTokenResult(true)`.
+
+For further details, please visit [Firebase admin propagating custom claims to the client](https://firebase.google.com/docs/auth/admin/custom-claims#propagate_custom_claims_to_the_client)
+
+3. `userChanges()`
+
+To subscribe to these changes, call the `userChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+FirebaseAuth.instance
+  .userChanges()
+  .listen((User user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+```
+
+Events are fired when the following occurs:
+
+   - Right after the listener has been registered.
+   - When a user is signed in.
+   - When the current user is signed out.
+   - When there is a change in the current user's token.
+   - When the following methods provided by `FirebaseAuth.instance.currentUser` are called:
+      * `reload()`
+      * `unlink()`
+      * `updateEmail()`
+      * `updatePassword()`
+      * `updatePhoneNumber()`
+      * `updateProfile()`
+
+**Warning:** `idTokenChanges()`, `userChanges()` & `authStateChanges()` will not fire if you update the `User` profile via your _own_ firebase admin sdk implementation.
+You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` to retrieve the latest `User` profile.
 
 ## Persisting authentication state
 
