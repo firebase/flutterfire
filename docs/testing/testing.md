@@ -23,7 +23,7 @@ The Firebase libraries need to run on an actual device or emulator. So if you wa
 
 Note: despite the name, these libraries are Fakes, not Mocks.
 
-When initializing your app, instead of passing the actual instance of a Firebase library (eg `FirebaseFirestore.instance` if using Firestore), you pass an instance of a fake (eg `FakeFirebaseFirestore()`). Then the rest of your application will run as if it were talking to Firebase.
+When initializing your app, instead of passing the actual instance of a Firebase library (e.g. `FirebaseFirestore.instance` if using Firestore), you pass an instance of a fake (e.g. `FakeFirebaseFirestore()`). Then the rest of your application will run as if it were talking to Firebase.
 
 ### Testing a Firestore app
 
