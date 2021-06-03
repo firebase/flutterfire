@@ -1,3 +1,7 @@
+## 3.0.1
+
+ - **FIX**: Fix FirebaseMessaging.onMessage and onMessageOpenedApp potentially throwing (#6093).
+
 ## 3.0.0
 
 > Note: This release has breaking changes.

@@ -1,3 +1,7 @@
+## 8.1.1
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
 ## 8.1.0
 
  - **FEAT**: add support for the Firebase Storage emulator via `useEmulator` (#5936).

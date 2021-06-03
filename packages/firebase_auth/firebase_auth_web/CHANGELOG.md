@@ -1,3 +1,7 @@
+## 1.2.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+
 ## 1.1.3
 
  - Update a dependency to the latest release.

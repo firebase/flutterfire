@@ -1,3 +1,7 @@
+## 2.0.5
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
 ## 2.0.4
 
  - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.

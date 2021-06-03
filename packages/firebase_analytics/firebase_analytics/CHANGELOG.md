@@ -1,3 +1,7 @@
+## 8.1.1
+
+ - Update a dependency to the latest release.
+
 ## 8.1.0
 
  - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.

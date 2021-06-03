@@ -1,3 +1,8 @@
+## 1.3.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
 ## 1.2.0
 
  - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.

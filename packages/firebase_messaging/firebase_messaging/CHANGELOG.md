@@ -1,3 +1,9 @@
+## 10.0.1
+
+ - **FIX**: Fix FirebaseMessaging.onMessage and onMessageOpenedApp potentially throwing (#6093).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+ - **CHORE**: fix broken messaging example (#6176).
+
 ## 10.0.0
 
 > Note: This release has breaking changes.

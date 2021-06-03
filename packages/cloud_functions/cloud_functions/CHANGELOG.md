@@ -1,3 +1,7 @@
+## 1.1.1
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
 ## 1.1.0
 
  - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
