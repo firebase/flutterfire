@@ -81,6 +81,28 @@ class Query {
   /// Listens for a single value event and then stops listening.
   Future<DataSnapshot> once() async => (await onValue.first).snapshot;
 
+  /// Gets the most up-to-date result for this query.
+  Future<DataSnapshot?> get() async {
+    final result = await _database._channel.invokeMethod<Map<dynamic, dynamic>>(
+      'Query#get',
+      <String, dynamic>{
+        'app': _database.app?.name,
+        'databaseURL': _database.databaseURL,
+        'path': path,
+      },
+    );
+    if (result!.containsKey('error') && result['error'] != null) {
+      final errorMap = result['error'];
+      throw FirebaseException(
+        plugin: 'firebase_database',
+        code: 'get-failed',
+        message: errorMap['details'],
+      );
+    } else {
+      return DataSnapshot._fromJson(result['snapshot'], null);
+    }
+  }
+
   /// Fires when children are added.
   Stream<Event> get onChildAdded => _observe(_EventType.childAdded);
 
