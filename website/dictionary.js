@@ -80,6 +80,7 @@ module.exports = [
   'timeframe',
   'twittersdk',
   'unencrypted',
+  'unlink',
   'unlinked',
   'unlinking',
   'untampered',
