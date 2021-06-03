@@ -55,9 +55,9 @@ FirebaseAuth.instance
 
 Events are fired when the following occurs:
 
-   - Right after the listener has been registered.
-   - When a user is signed in.
-   - When the current user is signed out.
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
 
 2. `idTokenChanges()`
 
@@ -77,16 +77,16 @@ FirebaseAuth.instance
 
 Events are fired when the following occurs:
 
-   - Right after the listener has been registered.
-   - When a user is signed in.
-   - When the current user is signed out.
-   - When there is a change in the current user's token.
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
+- When there is a change in the current user's token.
 
 **Warning:** if you set custom claims from your _own_ firebase admin sdk implementation, you will only see this event fire when the following occurs:
 
-   - A user signs in or re-authenticates after the custom claims are modified. The ID token issued as a result will contain the latest claims.
-   - An existing user session gets its ID token refreshed after an older token expires.
-   - An ID token is force refreshed by calling `FirebaseAuth.instance.currentUser.getIdTokenResult(true)`.
+- A user signs in or re-authenticates after the custom claims are modified. The ID token issued as a result will contain the latest claims.
+- An existing user session gets its ID token refreshed after an older token expires.
+- An ID token is force refreshed by calling `FirebaseAuth.instance.currentUser.getIdTokenResult(true)`.
 
 For further details, please visit [Firebase admin propagating custom claims to the client](https://firebase.google.com/docs/auth/admin/custom-claims#propagate_custom_claims_to_the_client)
 
@@ -108,17 +108,17 @@ FirebaseAuth.instance
 
 Events are fired when the following occurs:
 
-   - Right after the listener has been registered.
-   - When a user is signed in.
-   - When the current user is signed out.
-   - When there is a change in the current user's token.
-   - When the following methods provided by `FirebaseAuth.instance.currentUser` are called:
-      * `reload()`
-      * `unlink()`
-      * `updateEmail()`
-      * `updatePassword()`
-      * `updatePhoneNumber()`
-      * `updateProfile()`
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
+- When there is a change in the current user's token.
+- When the following methods provided by `FirebaseAuth.instance.currentUser` are called:
+    * `reload()`
+    * `unlink()`
+    * `updateEmail()`
+    * `updatePassword()`
+    * `updatePhoneNumber()`
+    * `updateProfile()`
 
 **Warning:** `idTokenChanges()`, `userChanges()` & `authStateChanges()` will not fire if you update the `User` profile via your _own_ firebase admin sdk implementation.
 You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` to retrieve the latest `User` profile.
