@@ -316,8 +316,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **invalid-email**:
   ///  - Thrown if the email address is not valid.
-  /// - **user-not-found**:
-  ///  - Thrown if there is no user corresponding to the email address.
   Future<void> sendSignInLinkToEmail({
     required String email,
     required ActionCodeSettings actionCodeSettings,

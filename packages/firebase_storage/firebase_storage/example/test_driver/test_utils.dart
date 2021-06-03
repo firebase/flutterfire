@@ -6,13 +6,23 @@ import 'dart:math';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
-final String kTestString = ([]..length = pow(2, 12)).join(_getRandomString(8));
+final String kTestString =
+    ([]..length = pow(2, 12)).join(_getRandomString(8)) * 100;
 const String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
 Random _random = Random();
 String _getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_random.nextInt(_chars.length))));
+
+String get testEmulatorHost {
+  if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+    return '10.0.2.2';
+  }
+  return 'localhost';
+}
+
+const int testEmulatorPort = 9199;
 
 // Creates a test file with a specified name to
 // a locally directory

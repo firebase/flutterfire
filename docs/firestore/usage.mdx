@@ -142,7 +142,7 @@ which helps automatically manage the streams state and disposal of the stream wh
 ```dart
 class UserInformation extends StatefulWidget {
   @override
-    _UsetInfomation createState() => _UserInfomationState();
+    _UserInformationState createState() => _UserInformationState();
 }
 
 class _UserInformationState extends State<UserInformation> {
@@ -405,7 +405,7 @@ class Movie {
 We can then use `withConverter` to manipulate a collection of movies like so:
 
 ```dart
-final moviesRef = Firestore.instance.collection('movies').withConverter(
+final moviesRef = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
       fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
       toFirestore: (movie, _) => movie.toJson(),
     );
@@ -779,4 +779,53 @@ FirebaseFirestore.instance.settings =
     Settings(host: host, sslEnabled: false);
 
 // ...
+```
+
+
+## Data Bundles
+
+If you have [setup a data bundle](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server) and are
+[currently serving it](https://firebase.google.com/docs/firestore/bundles#serving_data_bundles), you may load data bundles
+into your app.
+
+```dart
+// Use a package like 'http' to retrieve bundle.
+import 'package:http/http.dart' as http;
+final response = await http.get(url);
+
+// Convert the 'bundle.txt' string in the response to an Uint8List instance.
+Uint8List buffer = Uint8List.fromList(response.body.codeUnits);
+
+// Load bundle into cache.
+LoadBundleTask task = firestore.loadBundle(buffer);
+
+// Use .stream API to expose a stream which listens for LoadBundleTaskSnapshot events.
+task.stream.listen((taskStateProgress) {
+  if(taskStateProgress.taskState == LoadBundleTaskState.success){
+    //bundle is loaded into app cache!
+  }
+});
+
+// If you do not wish to .listen() to the stream, but simply want to know when the bundle has been loaded. Use .last API:
+await task.stream.last;
+
+// Once bundle is loaded into cache, you may query for data by using the GetOptions() to specify data retrieval from cache.
+QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+  .collection('cached-data')
+  .get(const GetOptions(source: Source.cache));
+
+```
+
+
+## Named Query
+
+If you have loaded a bundle with a [named query](https://firebase.google.com/docs/firestore/bundles#building_data_bundles_on_the_server), you may retrieve the
+query snapshot by calling the `namedQueryGet()` API:
+
+```dart
+// Assuming you've loaded a data bundle that includes a named query called 'sports-teams':
+
+// Query snapshot loaded from cache.
+QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
+
 ```

@@ -3,8 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_load_bundle_task.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/method_channel_query_snapshot.dart';
+import 'package:cloud_firestore_platform_interface/src/method_channel/utils/source.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -57,11 +61,62 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
   }
 
+  /// The [EventChannel] used for loadBundle
+  static EventChannel loadBundleChannel(String id) {
+    return EventChannel(
+      'plugins.flutter.io/firebase_firestore/loadBundle/$id',
+      const StandardMethodCodec(FirestoreMessageCodec()),
+    );
+  }
+
   /// Gets a [FirebaseFirestorePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
   FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseFirestore(app: app);
+  }
+
+  @override
+  LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
+    return MethodChannelLoadBundleTask(
+      task: channel.invokeMethod<String>('LoadBundle#snapshots'),
+      bundle: bundle,
+      firestore: this,
+    );
+  }
+
+  @override
+  Future<QuerySnapshotPlatform> namedQueryGet(
+    String name, {
+    GetOptions options = const GetOptions(),
+  }) async {
+    try {
+      final Map<String, dynamic>? data = await MethodChannelFirebaseFirestore
+          .channel
+          .invokeMapMethod<String, dynamic>(
+        'Firestore#namedQueryGet',
+        <String, dynamic>{
+          'name': name,
+          'firestore': FirebaseFirestorePlatform.instance,
+          'source': getSourceString(options.source),
+        },
+      );
+
+      return MethodChannelQuerySnapshot(
+        FirebaseFirestorePlatform.instance,
+        data!,
+      );
+    } catch (e) {
+      if (e.toString().contains('Named query has not been found')) {
+        throw FirebaseException(
+            plugin: 'cloud_firestore',
+            code: 'non-existent-named-query',
+            message:
+                'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+      }
+
+      throw convertPlatformException(e);
+    }
   }
 
   @override

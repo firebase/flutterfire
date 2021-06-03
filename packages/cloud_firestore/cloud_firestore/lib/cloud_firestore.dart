@@ -4,6 +4,8 @@
 
 library cloud_firestore;
 
+import 'dart:typed_data';
+
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
@@ -26,6 +28,8 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
 
+part 'src/load_bundle_task.dart';
+part 'src/load_bundle_task_snapshot.dart';
 part 'src/collection_reference.dart';
 part 'src/document_change.dart';
 part 'src/document_reference.dart';

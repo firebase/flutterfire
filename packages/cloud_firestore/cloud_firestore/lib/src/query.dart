@@ -232,6 +232,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         operator == '!=';
   }
 
+  bool isNotIn(String operator) {
+    return operator == 'not-in';
+  }
+
   /// Asserts that a [DocumentSnapshot] can be used within the current
   /// query.
   ///
@@ -470,16 +474,16 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
     if (conditions.isNotEmpty) {
       for (final dynamic condition in conditions) {
-        dynamic field = condition[0];
+        dynamic conditionField = condition[0];
         String operator = condition[1];
 
         // Initial orderBy() parameter has to match every where() fieldPath parameter when
-        // inequality operator is invoked
-        if (_isInequality(operator)) {
+        // inequality or 'not-in' operator is invoked
+        if (_isInequality(operator) || isNotIn(operator)) {
           assert(
-            field == orders[0][0],
+            conditionField == orders[0][0],
             'The initial orderBy() field "$orders[0][0]" has to be the same as '
-            'the where() field parameter "$field" when an inequality operator is invoked.',
+            'the where() field parameter "$conditionField" when an inequality operator is invoked.',
           );
         }
 
@@ -490,12 +494,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           // '==' operand is invoked
           if (operator == '==') {
             assert(
-              field != orderField,
-              "The '$orderField' cannot be the same as your where() field parameter '$field'.",
+              conditionField != orderField,
+              "The '$orderField' cannot be the same as your where() field parameter '$conditionField'.",
             );
           }
 
-          if (field == FieldPath.documentId) {
+          if (conditionField == FieldPath.documentId) {
             assert(
               orderField == FieldPath.documentId,
               "'[FieldPath.documentId]' cannot be used in conjunction with a different orderBy() parameter.",
@@ -654,6 +658,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     bool hasNotEqualTo = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
+    bool hasDocumentIdField = false;
 
     // Once all conditions have been set, we must now check them to ensure the
     // query is valid.
@@ -673,6 +678,14 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         );
       }
 
+      if (field == FieldPath.documentId) {
+        assert(
+          !hasNotEqualTo,
+          "You cannot use '!=' filters with a FieldPath.documentId field.",
+        );
+        hasDocumentIdField = true;
+      }
+
       if (value == null) {
         assert(operator == '==',
             'You can only perform equals comparisons on null.');
@@ -680,7 +693,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
 
       if (operator == 'in' ||
           operator == 'array-contains-any' ||
-          operator == 'not-in') {
+          isNotIn(operator)) {
         assert(
           value is List,
           "A non-empty [List] is required for '$operator' filters.",
@@ -702,10 +715,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (operator == '!=') {
         assert(!hasNotEqualTo, "You cannot use '!=' filters more than once.");
         assert(!hasNotIn, "You cannot use '!=' filters with 'not-in' filters.");
+        assert(!hasDocumentIdField,
+            "You cannot use a FieldPath.documentId field with '!=' filters.");
         hasNotEqualTo = true;
       }
 
-      if (operator == 'not-in') {
+      if (isNotIn(operator)) {
         assert(!hasNotIn, "You cannot use 'not-in' filters more than once.");
         assert(
           !hasNotEqualTo,

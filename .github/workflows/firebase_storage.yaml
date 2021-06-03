@@ -32,9 +32,20 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools
+          npm i
+          npm uninstall -g firebase-tools
+          npm link --local
+          cd firebase-tools && npm i && sudo npm link --local
+          firebase --open-sesame storageemulator || true
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -56,11 +67,17 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools && npm i && sudo npm link --local
+          firebase --open-sesame storageemulator || true
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
       - name: "Build MacOS Example"
@@ -78,8 +95,14 @@ jobs:
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
+        # TODO(Salakar): Switch over to published firebase-tools version once fixes are live
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
+          git clone --single-branch --branch ah/storage-emu-md-security https://github.com/firebase/firebase-tools.git
+          cd firebase-tools && npm i && sudo npm link --local
+          firebase --open-sesame storageemulator || true
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web

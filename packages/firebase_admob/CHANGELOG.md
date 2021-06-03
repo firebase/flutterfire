@@ -1,3 +1,9 @@
+## 0.11.1
+
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+ - **FEAT**: remove dependency on Firebase & `firebase_core`.
+ - **DOCS**: include deprecation plan and migration guide for firebase_admob to google_mobile_ads (#5203).
+
 ## 0.11.0+2
 
  - Update a dependency to the latest release.

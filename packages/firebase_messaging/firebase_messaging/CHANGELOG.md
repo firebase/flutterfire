@@ -1,3 +1,12 @@
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: remove support for `senderId` named argument on `getToken` & `deleteToken` methods since the native Firebase SDKs no longer support it cross-platform.
+ - **FEAT**: implement `isSupported` support for Web (#6109).
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 9.1.4
 
  - Update a dependency to the latest release.

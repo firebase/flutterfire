@@ -122,6 +122,7 @@ void runInstanceTests() {
       tearDown(() async {
         await subscription.cancel();
       });
+
       test('calls callback with the current user and when user state changes',
           () async {
         await ensureSignedIn(testEmail);
@@ -141,11 +142,14 @@ void runInstanceTests() {
         }, count: 2, reason: 'Stream should only have been called 2 times'));
 
         await FirebaseAuth.instance.currentUser
-            .updateProfile(displayName: 'updatedName');
+            .updateDisplayName('updatedName');
 
         await FirebaseAuth.instance.currentUser.reload();
-        expect(FirebaseAuth.instance.currentUser.displayName,
-            equals('updatedName'));
+
+        expect(
+          FirebaseAuth.instance.currentUser.displayName,
+          equals('updatedName'),
+        );
       });
     });
 

@@ -168,6 +168,23 @@ void main() {
       });
     });
 
+    group('useEmulator', () {
+      test('throws AssertionError when host is empty', () {
+        expect(() => storage.useEmulator(host: '', port: 123),
+            throwsAssertionError);
+      });
+
+      test('throws AssertionError when port is negative', () {
+        expect(() => storage.useEmulator(host: 'foo', port: -10),
+            throwsAssertionError);
+      });
+
+      test('verify delegate method is called with args', () {
+        storage.useEmulator(host: 'foo', port: 123);
+        verify(kMockStoragePlatform.useEmulator('foo', 123));
+      });
+    });
+
     group('setMaxDownloadRetryTime()', () {
       test('throws AssertionError if negative', () async {
         expect(

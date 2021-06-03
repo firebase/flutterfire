@@ -1,3 +1,9 @@
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase Android SDK BoM version from 28.0.0 to 28.0.1.
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 1.1.1
 
  - Update a dependency to the latest release.

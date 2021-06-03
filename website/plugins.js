@@ -24,6 +24,18 @@ module.exports = [
     },
   },
   {
+    name: 'App Check',
+    pub: 'firebase_app_check',
+    firebase: 'https://firebase.google.com/docs/app-check',
+    documentation: 'https://firebase.flutter.dev/docs/app-check/overview',
+    status: 'Preview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Authentication',
     pub: 'firebase_auth',
     firebase: 'auth',
@@ -139,6 +151,20 @@ module.exports = [
     status: 'Beta',
     documentation:
       'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_in_app_messaging/README.md',
+    support: {
+      web: false,
+      mobile: true,
+      macos: false,
+    },
+  },
+  {
+    name: 'ML Custom',
+    pub: 'firebase_ml_custom',
+    //ml-custom page is a 404
+    firebase: 'ml',
+    status: 'Beta',
+    documentation:
+      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_ml_custom/README.md',
     support: {
       web: false,
       mobile: true,

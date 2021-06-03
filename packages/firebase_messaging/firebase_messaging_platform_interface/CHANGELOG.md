@@ -1,3 +1,10 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: implement isSupported for web (#6109).
+ - **BREAKING** **REFACTOR**: remove support for `senderId` named argument on `getToken` & `deleteToken` methods since the native Firebase SDKs no longer support it cross-platform.
+
 ## 2.1.4
 
  - **DOCS**: Add missing homepage/repository links (#6054).

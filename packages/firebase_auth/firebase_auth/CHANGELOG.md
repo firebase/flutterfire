@@ -1,3 +1,8 @@
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
 ## 1.1.4
 
  - **FIX**: correctly cleanup Dictionary handlers (#6101).

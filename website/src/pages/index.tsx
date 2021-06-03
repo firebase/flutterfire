@@ -68,7 +68,9 @@ function PluginsTable(props: { status: PluginStatus }) {
                   <a
                     href={
                       plugin.firebase
-                        ? `https://firebase.google.com/products/${plugin.firebase}`
+                        ? plugin.firebase.startsWith('http')
+                          ? plugin.firebase
+                          : `https://firebase.google.com/products/${plugin.firebase}`
                         : 'https://firebase.google.com'
                     }
                   >
@@ -92,7 +94,15 @@ function PluginsTable(props: { status: PluginStatus }) {
                   </a>
                 </td>
                 <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
-                <td>{plugin.support.web ? <Check /> : <Cross />}</td>
+                <td>
+                  {plugin.name == 'Crashlytics' ? (
+                    'N/A'
+                  ) : plugin.support.web ? (
+                    <Check />
+                  ) : (
+                    <Cross />
+                  )}
+                </td>
                 <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
               </tr>
             ))}

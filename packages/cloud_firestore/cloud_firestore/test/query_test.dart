@@ -61,22 +61,58 @@ void main() {
       });
 
       test('throws if inequality is different to first orderBy', () {
-        expect(() => query!.where('foo', isGreaterThan: 123).orderBy('bar'),
-            throwsAssertionError);
-        expect(() => query!.orderBy('bar').where('foo', isGreaterThan: 123),
-            throwsAssertionError);
         expect(
-            () => query!
-                .where('foo', isGreaterThan: 123)
-                .orderBy('bar')
-                .orderBy('foo'),
-            throwsAssertionError);
+          () => query!.where('foo', isGreaterThan: 123).orderBy('bar'),
+          throwsAssertionError,
+        );
         expect(
-            () => query!
-                .orderBy('bar')
-                .orderBy('foo')
-                .where('foo', isGreaterThan: 123),
-            throwsAssertionError);
+          () => query!.orderBy('bar').where('foo', isGreaterThan: 123),
+          throwsAssertionError,
+        );
+        expect(
+          () => query!
+              .where('foo', isGreaterThan: 123)
+              .orderBy('bar')
+              .orderBy('foo'),
+          throwsAssertionError,
+        );
+        expect(
+          () => query!
+              .orderBy('bar')
+              .orderBy('foo')
+              .where('foo', isGreaterThan: 123),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!
+              .where(FieldPath.documentId, whereNotIn: ['bar']).orderBy('foo'),
+          throwsAssertionError,
+        );
+        expect(
+          () =>
+              query!.where(FieldPath.documentId, isLessThan: 3).orderBy('foo'),
+          throwsAssertionError,
+        );
+        expect(
+          () => query!
+              .where(FieldPath.documentId, isGreaterThan: 3)
+              .orderBy('foo'),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!.where('foo', whereNotIn: ['bar']).orderBy('baz'),
+          throwsAssertionError,
+        );
+        expect(
+          () => query!.where('foo', isLessThan: 3).orderBy('bar'),
+          throwsAssertionError,
+        );
+        expect(
+          () => query!.where('foo', isGreaterThan: 3).orderBy('bar'),
+          throwsAssertionError,
+        );
       });
 
       test('throws if whereIn query length is greater than 10', () {
@@ -146,6 +182,24 @@ void main() {
             () => query!.where('foo', arrayContains: 1).where('foo',
                 whereIn: [2, 3]).where('foo', arrayContainsAny: [2]),
             throwsAssertionError);
+      });
+
+      test(
+          'throws if FieldPath.documentId field is used in conjunction with isNotEqualTo filter',
+          () {
+        expect(
+          () => query!
+              .where(FieldPath.documentId, isEqualTo: 'fake-id')
+              .where('foo', isNotEqualTo: 'bar'),
+          throwsAssertionError,
+        );
+
+        expect(
+          () => query!
+              .where('foo', isNotEqualTo: 'bar')
+              .where(FieldPath.documentId, whereIn: [2, 3]),
+          throwsAssertionError,
+        );
       });
 
       test('allows arrayContains with whereIn filter', () {

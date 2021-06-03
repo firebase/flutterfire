@@ -295,6 +295,7 @@ void main() {
       };
 
       await auth!.currentUser!
+          // ignore: deprecated_member_use_from_same_package
           .updateProfile(displayName: displayName, photoURL: photoURL);
 
       verify(mockUserPlatform!.updateProfile(data));
