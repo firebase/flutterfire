@@ -95,10 +95,14 @@ void testsMain() {
     });
 
     test('get snapshot', () async {
-      final dataSnapshot =
-          await FirebaseDatabase.instance.reference().child('counter').get();
+      final dataSnapshot = await FirebaseDatabase.instance
+          .reference()
+          .child('ordered/one')
+          .get();
       expect(dataSnapshot, isNot(null));
-      expect(dataSnapshot!.key, 'counter');
+      expect(dataSnapshot!.key, 'one');
+      expect(dataSnapshot.value['ref'], 'one');
+      expect(dataSnapshot.value['value'], 23);
     });
   });
 }
