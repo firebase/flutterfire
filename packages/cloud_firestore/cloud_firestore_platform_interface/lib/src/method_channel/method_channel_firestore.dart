@@ -107,6 +107,14 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         data!,
       );
     } catch (e) {
+      if (e.toString().contains('Named query has not been found')) {
+        throw FirebaseException(
+            plugin: 'cloud_firestore',
+            code: 'non-existent-named-query',
+            message:
+                'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+      }
+
       throw convertPlatformException(e);
     }
   }

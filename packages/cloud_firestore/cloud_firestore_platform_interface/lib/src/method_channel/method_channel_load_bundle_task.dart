@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 
 import 'method_channel_firestore.dart';
-
-import 'utils/exception.dart';
 
 class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
   MethodChannelLoadBundleTask({
@@ -33,13 +33,24 @@ class MethodChannelLoadBundleTask extends LoadBundleTaskPlatform {
             return;
           }
         }
-      } catch (e) {
-        throw convertPlatformException(e);
+      } catch (exception) {
+        if (exception is! Exception || exception is! PlatformException) {
+          rethrow;
+        }
+
+        Map<String, String>? details = exception.details != null
+            ? Map<String, String>.from(exception.details)
+            : null;
+
+        throw FirebaseException(
+            plugin: 'cloud_firestore',
+            code: 'load-bundle-error',
+            message: details?['message'] ?? '');
       }
     }
 
-    stream =
-        mapNativeStream().asBroadcastStream(onCancel: (sub) => sub.cancel());
+    stream = mapNativeStream().asBroadcastStream(
+        onListen: (sub) => sub.resume(), onCancel: (sub) => sub.pause());
   }
 
   @override
