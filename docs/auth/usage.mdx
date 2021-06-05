@@ -44,7 +44,7 @@ To subscribe to these changes, call the `authStateChanges()` method on your [`Fi
 ```dart
 FirebaseAuth.instance
   .authStateChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -66,7 +66,7 @@ To subscribe to these changes, call the `idTokenChanges()` method on your [`Fire
 ```dart
 FirebaseAuth.instance
   .idTokenChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -97,7 +97,7 @@ To subscribe to these changes, call the `userChanges()` method on your [`Firebas
 ```dart
 FirebaseAuth.instance
   .userChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -245,9 +245,9 @@ this scenario.
 For example, once signed in you can check the property and send an email verification to the user:
 
 ```dart
-User user = FirebaseAuth.instance.currentUser;
+User? user = FirebaseAuth.instance.currentUser;
 
-if (!user.emailVerified) {
+if (user!= null && !user.emailVerified) {
   await user.sendEmailVerification();
 }
 ```
@@ -261,24 +261,18 @@ You can pass state via a continue URL when sending email actions for verifying a
 The following example illustrates how to send an email verification link that will open in a mobile app first as a Firebase Dynamic Link using the custom dynamic link domain example.page.link (iOS app com.example.ios or Android app com.example.android where the app will install if not already installed and the minimum version is 12). The deep link will contain the continue URL payload https://www.example.com/?email=user@example.com.
 
 ```dart
+User? user = FirebaseAuth.instance.currentUser;
 
-User user = FirebaseAuth.instance.currentUser;
+if (user != null && !user.emailVerified) {
+  var actionCodeSettings = ActionCodeSettings(
+    url: 'https://www.example.com/?email=${user.email}',
+    dynamicLinkDomain: "example.page.link",
+    android: {"packageName": "com.example.android", "installApp": true, "minimumVersion": "12"},
+    iOS: {"bundleId": "com.example.ios"},
+    handleCodeInApp: true,
+  );
 
-if (!user.emailVerified) {
-
-var actionCodeSettings = ActionCodeSettings(
-        url: 'https://www.example.com/?email=${user.email}',
-        dynamicLinkDomain: "example.page.link",
-        android: {
-          "packageName": "com.example.android",
-          "installApp": true,
-          "minimumVersion": "12"
-        },
-        iOS: {"bundleId": "com.example.ios"},
-        handleCodeInApp: true);
-
-await user.sendEmailVerification(actionCodeSettings);
-
+  await user.sendEmailVerification(actionCodeSettings);
 }
 ```
 
@@ -335,15 +329,15 @@ Construct the ActionCodeSettings object, which provides Firebase with instructio
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
-    url: "https://www.example.com/finishSignUp?cartId=1234",
+    url: 'https://www.example.com/finishSignUp?cartId=1234',
     // This must be true
     handleCodeInApp: true,
-    iOSBundleId: "com.example.ios",
-    androidPackageName: "com.example.android",
+    iOSBundleId: 'com.example.ios',
+    androidPackageName: 'com.example.android',
     // installIfNotAvailable
     androidInstallApp: true,
     // minimumVersion
-    androidMinimumVersion: "12");
+    androidMinimumVersion: '12');
 ```
 
 Ask the user for their email.
@@ -351,7 +345,7 @@ Ask the user for their email.
 Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
 
 ```dart
-var emailAuth = "someemail@domain.com";
+var emailAuth = 'someemail@domain.com';
 FirebaseAuth.instance.sendSignInLinkToEmail(
         email: emailAuth, actionCodeSettings: acs)
     .catchError((onError) => print('Error sending email verification $onError'))
@@ -370,14 +364,11 @@ After you received the link, verify that it is meant for email link authenticati
 ```dart
 var auth = FirebaseAuth.instance;
 // Retrieve the email from wherever you stored it
-var emailAuth = "someemail@domain.com";
+var emailAuth = 'someemail@domain.com';
 // Confirm the link is a sign-in with email link.
 if (auth.isSignInWithEmailLink(emailLink)) {
   // The client SDK will parse the code from the link for you.
-  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink)
-    .catchError(
-      (onError) => print('Error signing in with email link $onError'))
-    .then((value) {
+  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink).then((value) {
     // You can access the new user via value.user
     // Additional user info profile *not* available via:
     // value.additionalUserInfo.profile == null
@@ -385,9 +376,10 @@ if (auth.isSignInWithEmailLink(emailLink)) {
     // value.additionalUserInfo.isNewUser;
     var userEmail = value.user;
     print('Successfully signed in with email link!');
+  }).catchError((onError) {
+    print('Error signing in with email link $onError');
   });
 }
-
 ```
 
 ## Signing Out
@@ -432,10 +424,10 @@ user:
 <TabItem value="currentUser">
 
 ```dart
-FirebaseAuth auth = FirebaseAuth.instance;
-
-if (auth.currentUser != null) {
-  print(auth.currentUser.uid);
+var currentUser = FirebaseAuth.instance.currentUser;
+  
+if (currentUser != null) {
+  print(currentUser.uid);
 }
 ```
 
@@ -443,9 +435,9 @@ if (auth.currentUser != null) {
 <TabItem value="methods">
 
 ```dart
-UserCredential userCredential = await Firebase.auth.signInAnonymously();
-
-print(userCredential.user.uid);
+UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
+  
+print(userCredential.user!.uid);
 ```
 
 </TabItem>
@@ -455,7 +447,7 @@ print(userCredential.user.uid);
 ```dart
 FirebaseAuth.instance
   .authStateChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user != null) {
       print(user.uid);
     }
@@ -473,7 +465,7 @@ example:
 
 ```dart
 try {
-  await FirebaseAuth.instance.currentUser.delete();
+  await FirebaseAuth.instance.currentUser!.delete();
 } on FirebaseAuthException catch (e) {
   if (e.code == 'requires-recent-login') {
     print('The user must reauthenticate before this operation can be executed.');
@@ -494,10 +486,10 @@ String email = 'barry.allen@example.com';
 String password = 'SuperSecretPassword!';
 
 // Create a credential
-EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
 
 // Reauthenticate
-await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
+await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
 ```
 
 Reauthentication also works if you are using an OAuth credential instead.
