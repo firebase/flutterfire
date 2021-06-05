@@ -10,8 +10,8 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.5
         with:
           node-version: '12'
       - name: NPM Install
@@ -33,8 +33,8 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.5
         with:
           node-version: '12'
       # We check for write permission as only users with this permission
