@@ -7,7 +7,7 @@ environment:
 
 dependencies:
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
   firebase_performance:
     path: ../
   flutter:
@@ -16,11 +16,11 @@ dependencies:
 
 dependency_overrides:
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface
+    path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
-    path: ../../firebase_core/firebase_core_web
+    path: ../../../firebase_core/firebase_core_web
 
 dev_dependencies:
   e2e: ^0.6.1
