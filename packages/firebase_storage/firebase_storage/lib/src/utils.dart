@@ -40,8 +40,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   }
 
   String bucketName = uri.pathSegments[2];
-  String path =
-      "${uri.pathSegments.getRange(4, uri.pathSegments.length).join('/')}";
+  String path = uri.pathSegments.getRange(4, uri.pathSegments.length).join('/');
 
   return {
     'bucket': bucketName,
