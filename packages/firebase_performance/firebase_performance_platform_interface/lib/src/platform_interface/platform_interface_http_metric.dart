@@ -1,5 +1,5 @@
-import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'platform_interface_firebase_performance.dart';
 
 abstract class HttpMetricPlatform extends PlatformInterface {
   HttpMetricPlatform(this.performance, handle, this.url, this.httpMethod)
