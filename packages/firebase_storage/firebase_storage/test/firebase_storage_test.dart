@@ -166,6 +166,18 @@ void main() {
         expect(ref, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
       });
+
+      test('verify special characters are allowed in http path', () {
+        const String customBucket = 'test.appspot.com';
+        const String testPath = '[!@+= ^&*_+-= {};,.<> ].jpg';
+        const String url =
+            'https://firebasestorage.googleapis.com/v0/b/$customBucket/o/$testPath?alt=media';
+
+        final ref = storage.refFromURL(url);
+
+        expect(ref, isA<Reference>());
+        verify(kMockStoragePlatform.ref(testPath));
+      });
     });
 
     group('useEmulator', () {
