@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_performance.dart';
+import 'platform_interface_trace.dart';
+import 'platform_interface_http_metric.dart';
 
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
@@ -79,12 +80,14 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
 
+  /// Only works for native apps. Always returns true for web apps.
   Future<bool> isPerformanceCollectionEnabled() async {
     throw UnimplementedError(
       'isPerformanceCollectionEnabled() is not implemented',
     );
   }
 
+  /// Only works for native apps. Does nothing for web apps.
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     throw UnimplementedError(
       'setPerformanceCollectionEnabled() is not implemented',
@@ -95,10 +98,12 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     throw UnimplementedError('newTrace() is not implemented');
   }
 
+  /// Only works for native apps. Does nothing for web apps.
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     throw UnimplementedError('newHttpMetric() is not implemented');
   }
 
+  /// Creates a Trace object with given name and start the trace.
   Future<TracePlatform> startTrace(String name) {
     throw UnimplementedError('startTrace() is not implemented');
   }
