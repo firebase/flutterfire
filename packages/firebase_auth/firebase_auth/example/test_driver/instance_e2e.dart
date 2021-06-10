@@ -694,18 +694,17 @@ void runInstanceTests() {
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
 
     group('tenantId', () {
-      test('it sets and claims the tenantId', () async {
-        final userCredential = await FirebaseAuth.instance.signInAnonymously();
-        final uid = userCredential.user.uid;
-        const String tenantId = 'foobar';
+      test('User associated with the tenantId correctly', () async {
+        // tenantId created in the GCP console
+        const String tenantId = 'auth-tenant-test-xukxg';
+        // created User on GCP console associated with the above tenantId
+        final userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: 'test-tenant@email.com', password: 'fake-password');
 
-        final customToken = emulatorCreateCustomToken(uid, tenantId: tenantId);
-
-        final customTokenUserCredential =
-            await FirebaseAuth.instance.signInWithCustomToken(customToken);
-
-        expect(customTokenUserCredential.user.tenantId, tenantId);
+        expect(userCredential.user.tenantId, tenantId);
       });
-    });
+      // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
+    }, skip: true);
   });
 }
