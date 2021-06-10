@@ -27,9 +27,17 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script src="./firebase-config.js"></script>
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+  <!-- Add the standard Performance Monitoring library -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-performance.js"></script>
+  <script>
+    firebase.initializeApp(firebaseConfig);
+  </script>  
   <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
+       https://developers.google.com/web/fundamentals/primers/service-workers 
   <script>
     var serviceWorkerVersion = null;
     var scriptLoaded = false;
@@ -93,6 +101,7 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
-  </script>
+  </script>-->
+  <script src="main.dart.js" type="application/javascript"></script>
 </body>
 </html>
