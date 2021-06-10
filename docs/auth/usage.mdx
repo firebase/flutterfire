@@ -123,6 +123,9 @@ Events are fired when the following occurs:
 **Warning:** `idTokenChanges()`, `userChanges()` & `authStateChanges()` will not fire if you update the `User` profile via your _own_ firebase admin sdk implementation.
 You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` to retrieve the latest `User` profile.
 
+`idTokenChanges()`, `userChanges()` & `authStateChanges()` will also not fire if you disable or delete the `User` via your _own_ firebase admin sdk implementation or the Firebase console.
+You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` which will cause a `user-disabled` or `user-not-found` exception that you can catch and handle in your app code.
+
 ## Persisting authentication state
 
 The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
@@ -425,7 +428,7 @@ user:
 
 ```dart
 var currentUser = FirebaseAuth.instance.currentUser;
-  
+
 if (currentUser != null) {
   print(currentUser.uid);
 }
@@ -436,7 +439,7 @@ if (currentUser != null) {
 
 ```dart
 UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
-  
+
 print(userCredential.user!.uid);
 ```
 
