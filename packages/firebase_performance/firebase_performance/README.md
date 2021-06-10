@@ -8,26 +8,26 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, add `firebase_performance` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase performance monitoring for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
+To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details.
 
-You can confirm that Performance Monitoring results appear in the [Firebase console.](https://console.firebase.google.com/) Results should appear within 12 hours.
+You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
 
 ## Define a Custom Trace
 
-A custom trace is a report of performance data associated with some of the code in your app. To learn more about custom traces, see the [Performance Monitoring overview](https://firebase.google.com/docs/perf-mon/#how_does_it_work).
+A custom trace is a report of performance data associated with some of the code in your app. To learn more about custom traces, see the [Performance Monitoring overview](https://firebase.google.com/docs/perf-mon/custom-code-traces).
 
 ```dart
 final Trace myTrace = FirebasePerformance.instance.newTrace("test_trace");
-myTrace.start();
+await myTrace.start();
 
 final Item item = cache.fetch("item");
 if (item != null) {
-  myTrace.incrementMetric("item_cache_hit", 1);
+  await myTrace.incrementMetric("item_cache_hit", 1);
 } else {
-  myTrace.incrementMetric("item_cache_miss", 1);
+  await myTrace.incrementMetric("item_cache_miss", 1);
 }
 
-myTrace.stop();
+await myTrace.stop();
 ```
 
 ## Add monitoring for specific network requests
@@ -83,7 +83,7 @@ class _MyAppState extends State<MyApp> {
 
 ## Getting Started
 
-See the `example` directory for a complete sample app using Google Performance Monitoring for Firebase.
+See the [`example`](example) directory for a complete sample app using Google Performance Monitoring for Firebase.
 
 ## Issues and feedback
 
