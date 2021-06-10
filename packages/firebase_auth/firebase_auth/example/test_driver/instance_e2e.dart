@@ -692,5 +692,19 @@ void runInstanceTests() {
         expect(credential, isA<PhoneAuthCredential>());
       }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
+
+    group('tenantId', () {
+      test('User associated with the tenantId correctly', () async {
+        // tenantId created in the GCP console
+        const String tenantId = 'auth-tenant-test-xukxg';
+        // created User on GCP console associated with the above tenantId
+        final userCredential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: 'test-tenant@email.com', password: 'fake-password');
+
+        expect(userCredential.user.tenantId, tenantId);
+      });
+      // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
+    }, skip: true);
   });
 }

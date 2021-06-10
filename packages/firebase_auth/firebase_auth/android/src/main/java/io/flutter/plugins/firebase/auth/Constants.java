@@ -42,6 +42,7 @@ public class Constants {
   public static final String ADDITIONAL_USER_INFO = "additionalUserInfo";
   public static final String CREATION_TIME = "creationTime";
   public static final String LAST_SIGN_IN_TIME = "lastSignInTime";
+  public static final String TENANT_ID = "tenantId";
 
   // Auth
   public static final String PROVIDERS = "providers";

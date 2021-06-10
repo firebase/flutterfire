@@ -259,7 +259,10 @@ void main() {
           <Matcher>[
             isMethodCall(
               'User#delete',
-              arguments: <String, String>{'appName': '[DEFAULT]'},
+              arguments: <String, String?>{
+                'appName': '[DEFAULT]',
+                'tenantId': null
+              },
             ),
           ],
         );
@@ -286,6 +289,7 @@ void main() {
               'User#getIdToken',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'forceRefresh': true,
                 'tokenOnly': true
               },
@@ -316,6 +320,7 @@ void main() {
               'User#getIdToken',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'forceRefresh': true,
                 'tokenOnly': false
               },
@@ -366,6 +371,7 @@ void main() {
               'User#linkWithCredential',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'credential': credential.asMap()
               },
             ),
@@ -413,6 +419,7 @@ void main() {
               'User#reauthenticateUserWithCredential',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'credential': credential.asMap()
               },
             ),
@@ -455,6 +462,7 @@ void main() {
               'User#reload',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
               },
             )
           ],
@@ -486,6 +494,7 @@ void main() {
               'User#sendEmailVerification',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'actionCodeSettings': actionCodeSettings.asMap()
               },
             )
@@ -516,6 +525,7 @@ void main() {
               'User#unlink',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'providerId': kMockProviderId
               },
             )
@@ -552,6 +562,7 @@ void main() {
               'User#updateEmail',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'newEmail': newEmail
               },
             )
@@ -584,6 +595,7 @@ void main() {
             'User#updatePassword',
             arguments: <String, dynamic>{
               'appName': '[DEFAULT]',
+              'tenantId': null,
               'newPassword': newPassword
             },
           ),
@@ -616,6 +628,7 @@ void main() {
               'User#updatePhoneNumber',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'credential': <String, dynamic>{
                   'providerId': 'phone',
                   'signInMethod': 'phone',
@@ -660,6 +673,7 @@ void main() {
               'User#updateProfile',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'profile': <String, dynamic>{
                   'displayName': newDisplayName,
                   'photoURL': newPhotoURL,
@@ -699,6 +713,7 @@ void main() {
               'User#verifyBeforeUpdateEmail',
               arguments: <String, dynamic>{
                 'appName': '[DEFAULT]',
+                'tenantId': null,
                 'newEmail': newEmail,
                 'actionCodeSettings': actionCodeSettings.asMap(),
               },
