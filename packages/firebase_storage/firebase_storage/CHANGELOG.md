@@ -1,3 +1,7 @@
+## 8.1.3
+
+ - Update a dependency to the latest release.
+
 ## 8.1.2
 
  - **FIX**: refFromUrl parse url (#6353).

@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: Upgrade Firebase Android BoM version to 28.1.0 (#6338).
+
 ## 1.2.1
 
  - **DOCS**: Add Flutter Favorite badge (#6190).
