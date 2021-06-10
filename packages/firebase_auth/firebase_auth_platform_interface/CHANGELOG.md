@@ -1,3 +1,7 @@
+## 4.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 4.2.4
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 1.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 1.2.0
 
  - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).

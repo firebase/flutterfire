@@ -1,3 +1,7 @@
+## 8.1.2
+
+ - **FIX**: refFromUrl parse url (#6353).
+
 ## 8.1.1
 
  - **DOCS**: Add Flutter Favorite badge (#6190).
