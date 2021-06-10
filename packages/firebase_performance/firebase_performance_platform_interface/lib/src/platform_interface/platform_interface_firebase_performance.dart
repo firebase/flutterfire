@@ -21,20 +21,8 @@ enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 /// `implements` this interface will be broken by newly added
 /// [FirebasePerformancePlatform] methods.
 abstract class FirebasePerformancePlatform extends PlatformInterface {
-  /// Create an instance using [app].
-  FirebasePerformancePlatform({this.appInstance}) : super(token: _token);
-
-  /// Create instance using [app] using the existing implementation.
-  factory FirebasePerformancePlatform.instanceFor({
-    required FirebaseApp app,
-    Map<dynamic, dynamic>? pluginConstants,
-  }) {
-    return FirebasePerformancePlatform.instance
-        .delegateFor(app: app)
-        .setInitialValues(
-          performanceValues: pluginConstants ?? <dynamic, dynamic>{},
-        );
-  }
+  /// Create an instance.
+  FirebasePerformancePlatform() : super(token: _token);
 
   static final Object _token = Object();
 
@@ -52,20 +40,6 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   static set instance(FirebasePerformancePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
-  }
-
-  /// The [FirebaseApp] this instance was initialized with.
-  @protected
-  final FirebaseApp? appInstance;
-
-  /// Returns the [FirebaseApp] for the current instance.
-  late final FirebaseApp app = appInstance ?? Firebase.app();
-
-  /// Enables delegates to create new instances of themselves if a none
-  /// default [FirebaseApp] instance is required by the user.
-  @protected
-  FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
-    throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Sets any initial values on the instance.
