@@ -41,6 +41,12 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     return _instance ??= MethodChannelFirebasePerformance.instance;
   }
 
+  /// Sets the [FirebasePerformancePlatform] instance.
+  static set instance(FirebasePerformancePlatform instance) {
+    PlatformInterface.verifyToken(instance, Object());
+    _instance = instance;
+  }
+
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp? appInstance;
