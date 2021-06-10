@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_performance_platform_interface/src/platform_interface/platform_interface_attributes.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import 'platform_interface_firebase_performance.dart';
 
-abstract class TracePlatform extends PlatformInterface {
+abstract class TracePlatform extends PlatformInterface
+    with PerformanceAttributesPlatform {
   TracePlatform(this.performance, handle, this.name)
       : _handle = handle,
         super(token: _token);
@@ -18,7 +21,6 @@ abstract class TracePlatform extends PlatformInterface {
 
   final int _handle;
   final String name;
-  final Map<String, String> _attributes = <String, String>{};
 
   Future<void> start() {
     throw UnimplementedError('start() is not implemented');
@@ -39,19 +41,5 @@ abstract class TracePlatform extends PlatformInterface {
 
   Future<int> getMetric(String name) {
     throw UnimplementedError('getMetric() is not implemented');
-  }
-
-  Future<void> putAttribute(String name, String value) {
-    throw UnimplementedError('putAttribute() is not implemented');
-  }
-
-  Future<void> removeAttribute(String name) {
-    throw UnimplementedError('removeAttribute() is not implemented');
-  }
-
-  String? getAttribute(String name) => _attributes[name];
-
-  Future<Map<String, String>> getAttributes() {
-    throw UnimplementedError('getAttributes() is not implemented');
   }
 }
