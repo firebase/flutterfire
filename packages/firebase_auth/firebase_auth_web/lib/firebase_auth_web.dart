@@ -250,9 +250,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setSettings(
-      {bool? appVerificationDisabledForTesting,
-      String? userAccessGroup}) async {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
+  }) async {
     _webAuth!.settings.appVerificationDisabledForTesting =
         appVerificationDisabledForTesting;
   }

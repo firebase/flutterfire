@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
@@ -737,20 +738,47 @@ void main() {
     group('setSettings()', () {
       const bool isDisabled = true;
       test('invokes native method with correct args', () async {
-        await auth.setSettings(appVerificationDisabledForTesting: isDisabled);
+        String groupId = 'group-id';
+        String phoneNumber = '555-5555';
+        String smsCode = '123456';
+        bool forceRecaptchaFlow = true;
 
-        // check native method was called
-        expect(log, <Matcher>[
-          isMethodCall(
-            'Auth#setSettings',
-            arguments: <String, dynamic>{
-              'appName': defaultFirebaseAppName,
-              'tenantId': null,
-              'appVerificationDisabledForTesting': isDisabled,
-              'userAccessGroup': null,
-            },
-          ),
-        ]);
+        await auth.setSettings(
+          appVerificationDisabledForTesting: isDisabled,
+          userAccessGroup: groupId,
+          phoneNumber: phoneNumber,
+          smsCode: smsCode,
+          forceRecaptchaFlow: forceRecaptchaFlow,
+        );
+
+        if (Platform.isIOS || Platform.isMacOS) {
+          expect(log, <Matcher>[
+            isMethodCall(
+              'Auth#setSettings',
+              arguments: <String, dynamic>{
+                'appName': defaultFirebaseAppName,
+                'tenantId': null,
+                'appVerificationDisabledForTesting': isDisabled,
+                'userAccessGroup': groupId,
+              },
+            ),
+          ]);
+        }
+        if (Platform.isAndroid) {
+          expect(log, <Matcher>[
+            isMethodCall(
+              'Auth#setSettings',
+              arguments: <String, dynamic>{
+                'appName': defaultFirebaseAppName,
+                'tenantId': null,
+                'appVerificationDisabledForTesting': isDisabled,
+                'phoneNumber': phoneNumber,
+                'smsCode': smsCode,
+                'forceRecaptchaFlow': forceRecaptchaFlow,
+              },
+            ),
+          ]);
+        }
       });
 
       test(

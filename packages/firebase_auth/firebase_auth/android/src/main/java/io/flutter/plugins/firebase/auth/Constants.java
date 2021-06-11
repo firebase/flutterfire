@@ -80,4 +80,7 @@ public class Constants {
   public static final String HOST = "host";
   public static final String PORT = "port";
   public static final String NAME = "name";
+  public static final String APP_VERIFICATION_DISABLED_FOR_TESTING =
+      "appVerificationDisabledForTesting";
+  public static final String FORCE_RECAPTCHA_FLOW = "forceRecaptchaFlow";
 }

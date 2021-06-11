@@ -416,12 +416,35 @@ void main() {
         // Necessary as we otherwise get a "null is not a Future<void>" error
         when(mockAuthPlatform.setSettings(
           appVerificationDisabledForTesting: any,
+          phoneNumber: any,
+          smsCode: any,
+          forceRecaptchaFlow: any,
+          userAccessGroup: any,
         )).thenAnswer((i) async {});
 
-        await auth.setSettings(appVerificationDisabledForTesting: true);
+        String phoneNumber = '123456';
+        String smsCode = '1234';
+        bool forceRecaptchaFlow = true;
+        bool appVerificationDisabledForTesting = true;
+        String userAccessGroup = 'group-id';
+
+        await auth.setSettings(
+          appVerificationDisabledForTesting: appVerificationDisabledForTesting,
+          phoneNumber: phoneNumber,
+          smsCode: smsCode,
+          forceRecaptchaFlow: forceRecaptchaFlow,
+          userAccessGroup: userAccessGroup,
+        );
 
         verify(
-          mockAuthPlatform.setSettings(appVerificationDisabledForTesting: true),
+          mockAuthPlatform.setSettings(
+            appVerificationDisabledForTesting:
+                appVerificationDisabledForTesting,
+            phoneNumber: phoneNumber,
+            smsCode: smsCode,
+            forceRecaptchaFlow: forceRecaptchaFlow,
+            userAccessGroup: userAccessGroup,
+          ),
         );
       });
     });
@@ -916,11 +939,17 @@ class MockFirebaseAuth extends Mock
   Future<void> setSettings({
     bool? appVerificationDisabledForTesting,
     String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
   }) {
     return super.noSuchMethod(
       Invocation.method(#setSettings, [
         appVerificationDisabledForTesting,
         userAccessGroup,
+        phoneNumber,
+        smsCode,
+        forceRecaptchaFlow,
       ]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),

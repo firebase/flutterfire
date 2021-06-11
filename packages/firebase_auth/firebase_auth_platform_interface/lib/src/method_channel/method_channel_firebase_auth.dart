@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -364,15 +365,39 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   Future<void> setSettings({
     bool? appVerificationDisabledForTesting,
     String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
   }) async {
+    if (phoneNumber != null && smsCode == null ||
+        phoneNumber == null && smsCode != null) {
+      throw ArgumentError(
+        "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.",
+      );
+    }
+    // argument for every platform
+    var arguments = <String, dynamic>{
+      'appVerificationDisabledForTesting': appVerificationDisabledForTesting,
+    };
+
+    if (Platform.isIOS || Platform.isMacOS) {
+      arguments['userAccessGroup'] = userAccessGroup;
+    }
+
+    if (Platform.isAndroid) {
+      if (phoneNumber != null && smsCode != null) {
+        arguments['phoneNumber'] = phoneNumber;
+        arguments['smsCode'] = smsCode;
+      }
+
+      if (forceRecaptchaFlow != null) {
+        arguments['forceRecaptchaFlow'] = forceRecaptchaFlow;
+      }
+    }
+
     try {
       await channel.invokeMethod(
-          'Auth#setSettings',
-          _withChannelDefaults({
-            'appVerificationDisabledForTesting':
-                appVerificationDisabledForTesting,
-            'userAccessGroup': userAccessGroup,
-          }));
+          'Auth#setSettings', _withChannelDefaults(arguments));
     } catch (e) {
       throw convertPlatformException(e);
     }
