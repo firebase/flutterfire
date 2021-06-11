@@ -357,11 +357,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
   Future<void> setSettings({
     bool? appVerificationDisabledForTesting,
     String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
   }) {
     return _delegate.setSettings(
-      appVerificationDisabledForTesting: appVerificationDisabledForTesting,
-      userAccessGroup: userAccessGroup,
-    );
+        appVerificationDisabledForTesting: appVerificationDisabledForTesting,
+        userAccessGroup: userAccessGroup,
+        phoneNumber: phoneNumber,
+        smsCode: smsCode,
+        forceRecaptchaFlow: forceRecaptchaFlow);
   }
 
   /// Changes the current type of persistence on the current Auth instance for

@@ -692,5 +692,32 @@ void runInstanceTests() {
         expect(credential, isA<PhoneAuthCredential>());
       }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
+
+    group('setSettings()', () {
+      test('call with every available parameter', () async {
+        await FirebaseAuth.instance.setSettings(
+            phoneNumber: '+447555575555',
+            smsCode: '123456',
+            forceRecaptchaFlow: true,
+            appVerificationDisabledForTesting: true,
+            userAccessGroup: 'group-id');
+      });
+
+      test(
+          'throws argument error if phoneNumber & smsCode have not been set simultaneously',
+          () async {
+        String message =
+            "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.";
+        await expectLater(
+            FirebaseAuth.instance.setSettings(phoneNumber: '123456'),
+            throwsA(isA<ArgumentError>()
+                .having((e) => e.message, 'message', contains(message))));
+
+        await expectLater(
+            FirebaseAuth.instance.setSettings(smsCode: '123456'),
+            throwsA(isA<ArgumentError>()
+                .having((e) => e.message, 'message', contains(message))));
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+    });
   });
 }
