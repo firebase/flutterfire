@@ -22,14 +22,9 @@ enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 /// [FirebasePerformancePlatform] methods.
 abstract class FirebasePerformancePlatform extends PlatformInterface {
   /// Create an instance using [app].
-  FirebasePerformancePlatform({this.appInstance}) : super(token: Object());
-
-  /// Create instance using [app] using the existing implementation.
-  factory FirebasePerformancePlatform.instanceFor({
-    required FirebaseApp app,
-  }) {
-    return FirebasePerformancePlatform.instance.delegateFor(app: app);
-  }
+  FirebasePerformancePlatform()
+      : appInstance = Firebase.app(),
+        super(token: Object());
 
   static FirebasePerformancePlatform? _instance;
 
@@ -49,17 +44,10 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp? appInstance;
+  final FirebaseApp appInstance;
 
   /// Returns the [FirebaseApp] for the current instance.
-  late final FirebaseApp app = appInstance ?? Firebase.app();
-
-  /// Enables delegates to create new instances of themselves if a none
-  /// default [FirebaseApp] instance is required by the user.
-  @protected
-  FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
-    throw UnimplementedError('delegateFor() is not implemented');
-  }
+  FirebaseApp get app => appInstance;
 
   /// Only works for native apps. Always returns true for web apps.
   Future<bool> isPerformanceCollectionEnabled() async {
@@ -85,7 +73,9 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   }
 
   /// Creates a Trace object with given name and start the trace.
-  Future<TracePlatform> startTrace(String name) {
-    throw UnimplementedError('startTrace() is not implemented');
+  static Future<TracePlatform> startTrace(String name) async {
+    final trace = FirebasePerformancePlatform.instance.newTrace(name);
+    await trace.start();
+    return trace;
   }
 }
