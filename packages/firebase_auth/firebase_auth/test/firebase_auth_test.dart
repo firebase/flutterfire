@@ -116,7 +116,7 @@ void main() {
           .thenAnswer((_) async => mockUserCredPlatform!);
 
       when(mockAuthPlatform.signInWithCredential(any)).thenAnswer(
-              (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
+          (_) => Future<UserCredentialPlatform>.value(mockUserCredPlatform));
 
       when(mockAuthPlatform.currentUser).thenReturn(mockUserPlatform);
 
@@ -161,13 +161,13 @@ void main() {
           .thenAnswer((_) async => mockUserCredPlatform);
 
       when(mockAuthPlatform.authStateChanges()).thenAnswer((_) =>
-      Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       when(mockAuthPlatform.idTokenChanges()).thenAnswer((_) =>
-      Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       when(mockAuthPlatform.userChanges()).thenAnswer((_) =>
-      Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
+          Stream<UserPlatform>.fromIterable(<UserPlatform>[mockUserPlatform!]));
 
       MethodChannelFirebaseAuth.channel.setMockMethodCallHandler((call) async {
         return <String, dynamic>{'user': user};
@@ -320,7 +320,7 @@ void main() {
     group('authStateChanges()', () {
       test('should stream changes', () async {
         final StreamQueue<User?> changes =
-        StreamQueue<User?>(auth.authStateChanges());
+            StreamQueue<User?>(auth.authStateChanges());
         expect(await changes.next, isA<User>());
       });
     });
@@ -328,7 +328,7 @@ void main() {
     group('idTokenChanges()', () {
       test('should stream changes', () async {
         final StreamQueue<User?> changes =
-        StreamQueue<User?>(auth.idTokenChanges());
+            StreamQueue<User?>(auth.idTokenChanges());
         expect(await changes.next, isA<User>());
       });
     });
@@ -336,7 +336,7 @@ void main() {
     group('userChanges()', () {
       test('should stream changes', () async {
         final StreamQueue<User?> changes =
-        StreamQueue<User?>(auth.userChanges());
+            StreamQueue<User?>(auth.userChanges());
         expect(await changes.next, isA<User>());
       });
     });
@@ -365,31 +365,31 @@ void main() {
 
     group('sendSignInLinkToEmail()', () {
       test('should throw if actionCodeSettings.handleCodeInApp is not true',
-              () async {
-            // Necessary as we otherwise get a "null is not a Future<void>" error
-            when(mockAuthPlatform.sendSignInLinkToEmail(any, any))
-                .thenAnswer((i) async {});
+          () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.sendSignInLinkToEmail(any, any))
+            .thenAnswer((i) async {});
 
-            final ActionCodeSettings kMockActionCodeSettingsNull =
+        final ActionCodeSettings kMockActionCodeSettingsNull =
             ActionCodeSettings(url: kMockURL);
-            final ActionCodeSettings kMockActionCodeSettingsFalse =
+        final ActionCodeSettings kMockActionCodeSettingsFalse =
             ActionCodeSettings(url: kMockURL, handleCodeInApp: false);
 
-            // when handleCodeInApp is null
-            expect(
-                  () => auth.sendSignInLinkToEmail(
-                  email: kMockEmail,
-                  actionCodeSettings: kMockActionCodeSettingsNull),
-              throwsArgumentError,
-            );
-            // when handleCodeInApp is false
-            expect(
-                  () => auth.sendSignInLinkToEmail(
-                  email: kMockEmail,
-                  actionCodeSettings: kMockActionCodeSettingsFalse),
-              throwsArgumentError,
-            );
-          });
+        // when handleCodeInApp is null
+        expect(
+          () => auth.sendSignInLinkToEmail(
+              email: kMockEmail,
+              actionCodeSettings: kMockActionCodeSettingsNull),
+          throwsArgumentError,
+        );
+        // when handleCodeInApp is false
+        expect(
+          () => auth.sendSignInLinkToEmail(
+              email: kMockEmail,
+              actionCodeSettings: kMockActionCodeSettingsFalse),
+          throwsArgumentError,
+        );
+      });
 
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
@@ -397,7 +397,7 @@ void main() {
             .thenAnswer((i) async {});
 
         final ActionCodeSettings kMockActionCodeSettingsValid =
-        ActionCodeSettings(url: kMockURL, handleCodeInApp: true);
+            ActionCodeSettings(url: kMockURL, handleCodeInApp: true);
 
         await auth.sendSignInLinkToEmail(
           email: kMockEmail,
@@ -439,7 +439,7 @@ void main() {
         verify(
           mockAuthPlatform.setSettings(
             appVerificationDisabledForTesting:
-            appVerificationDisabledForTesting,
+                appVerificationDisabledForTesting,
             phoneNumber: phoneNumber,
             smsCode: smsCode,
             forceRecaptchaFlow: forceRecaptchaFlow,
@@ -473,7 +473,7 @@ void main() {
     group('signInWithCredential()', () {
       test('GithubAuthProvider signInWithCredential', () async {
         final AuthCredential credential =
-        GithubAuthProvider.credential(kMockGithubToken);
+            GithubAuthProvider.credential(kMockGithubToken);
         await auth.signInWithCredential(credential);
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
@@ -565,7 +565,7 @@ void main() {
 
       test('FacebookAuthProvider signInWithCredential', () async {
         final AuthCredential credential =
-        FacebookAuthProvider.credential(kMockAccessToken);
+            FacebookAuthProvider.credential(kMockAccessToken);
         await auth.signInWithCredential(credential);
         final captured =
             verify(mockAuthPlatform.signInWithCredential(captureAny))
@@ -647,7 +647,7 @@ void main() {
         // Necessary as we otherwise get a "null is not a Future<void>" error
         when(mockAuthPlatform.verifyPhoneNumber(
           autoRetrievedSmsCodeForTesting:
-          anyNamed('autoRetrievedSmsCodeForTesting'),
+              anyNamed('autoRetrievedSmsCodeForTesting'),
           codeAutoRetrievalTimeout: anyNamed('codeAutoRetrievalTimeout'),
           codeSent: anyNamed('codeSent'),
           forceResendingToken: anyNamed('forceResendingToken'),
@@ -736,9 +736,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
-      String? email,
-      String? password,
-      ) {
+    String? email,
+    String? password,
+  ) {
     return super.noSuchMethod(
       Invocation.method(#createUserWithEmailAndPassword, [email, password]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
@@ -748,9 +748,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<ConfirmationResultPlatform> signInWithPhoneNumber(
-      String? phoneNumber,
-      RecaptchaVerifierFactoryPlatform? applicationVerifier,
-      ) {
+    String? phoneNumber,
+    RecaptchaVerifierFactoryPlatform? applicationVerifier,
+  ) {
     return super.noSuchMethod(
       Invocation.method(
         #signInWithPhoneNumber,
@@ -758,14 +758,14 @@ class MockFirebaseAuth extends Mock
       ),
       returnValue: neverEndingFuture<ConfirmationResultPlatform>(),
       returnValueForMissingStub:
-      neverEndingFuture<ConfirmationResultPlatform>(),
+          neverEndingFuture<ConfirmationResultPlatform>(),
     );
   }
 
   @override
   Future<UserCredentialPlatform> signInWithCredential(
-      AuthCredential? credential,
-      ) {
+    AuthCredential? credential,
+  ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithCredential, [credential]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
@@ -784,9 +784,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
-      String? email,
-      String? password,
-      ) {
+    String? email,
+    String? password,
+  ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithEmailAndPassword, [email, password]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
@@ -805,9 +805,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<UserCredentialPlatform> signInWithEmailLink(
-      String? email,
-      String? emailLink,
-      ) {
+    String? email,
+    String? emailLink,
+  ) {
     return super.noSuchMethod(
       Invocation.method(#signInWithEmailLink, [email, emailLink]),
       returnValue: neverEndingFuture<UserCredentialPlatform>(),
@@ -913,9 +913,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<void> sendPasswordResetEmail(
-      String? email, [
-        ActionCodeSettings? actionCodeSettings,
-      ]) {
+    String? email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) {
     return super.noSuchMethod(
       Invocation.method(#sendPasswordResetEmail, [email, actionCodeSettings]),
       returnValue: neverEndingFuture<void>(),
@@ -925,9 +925,9 @@ class MockFirebaseAuth extends Mock
 
   @override
   Future<void> sendSignInLinkToEmail(
-      String? email,
-      ActionCodeSettings? actionCodeSettings,
-      ) {
+    String? email,
+    ActionCodeSettings? actionCodeSettings,
+  ) {
     return super.noSuchMethod(
       Invocation.method(#sendSignInLinkToEmail, [email, actionCodeSettings]),
       returnValue: neverEndingFuture<void>(),
@@ -1045,11 +1045,11 @@ class MockUserCredentialPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestUserCredentialPlatform {
   MockUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform userPlatform,
-      ) {
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform userPlatform,
+  ) {
     TestUserCredentialPlatform(
       auth,
       additionalUserInfo,
@@ -1160,16 +1160,16 @@ class TestUserPlatform extends UserPlatform {
 
 class TestUserCredentialPlatform extends UserCredentialPlatform {
   TestUserCredentialPlatform(
-      FirebaseAuthPlatform auth,
-      AdditionalUserInfo additionalUserInfo,
-      AuthCredential credential,
-      UserPlatform userPlatform,
-      ) : super(
-    auth: auth,
-    additionalUserInfo: additionalUserInfo,
-    credential: credential,
-    user: userPlatform,
-  );
+    FirebaseAuthPlatform auth,
+    AdditionalUserInfo additionalUserInfo,
+    AuthCredential credential,
+    UserPlatform userPlatform,
+  ) : super(
+          auth: auth,
+          additionalUserInfo: additionalUserInfo,
+          credential: credential,
+          user: userPlatform,
+        );
 }
 
 class EmptyUserCredentialPlatform extends UserCredentialPlatform {

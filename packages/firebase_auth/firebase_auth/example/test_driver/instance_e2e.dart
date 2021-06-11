@@ -705,19 +705,19 @@ void runInstanceTests() {
 
       test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',
-              () async {
-            String message =
-                "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.";
-            await expectLater(
-                FirebaseAuth.instance.setSettings(phoneNumber: '123456'),
-                throwsA(isA<ArgumentError>()
-                    .having((e) => e.message, 'message', contains(message))));
+          () async {
+        String message =
+            "The [smsCode] and the [phoneNumber] must both be either 'null' or a 'String''.";
+        await expectLater(
+            FirebaseAuth.instance.setSettings(phoneNumber: '123456'),
+            throwsA(isA<ArgumentError>()
+                .having((e) => e.message, 'message', contains(message))));
 
-            await expectLater(
-                FirebaseAuth.instance.setSettings(smsCode: '123456'),
-                throwsA(isA<ArgumentError>()
-                    .having((e) => e.message, 'message', contains(message))));
-          }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
+        await expectLater(
+            FirebaseAuth.instance.setSettings(smsCode: '123456'),
+            throwsA(isA<ArgumentError>()
+                .having((e) => e.message, 'message', contains(message))));
+      }, skip: kIsWeb || defaultTargetPlatform != TargetPlatform.android);
     });
 
     group('tenantId', () {
@@ -727,7 +727,7 @@ void runInstanceTests() {
         // created User on GCP console associated with the above tenantId
         final userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(
-            email: 'test-tenant@email.com', password: 'fake-password');
+                email: 'test-tenant@email.com', password: 'fake-password');
 
         expect(userCredential.user.tenantId, tenantId);
       });
