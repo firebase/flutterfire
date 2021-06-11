@@ -694,15 +694,6 @@ void runInstanceTests() {
     }, skip: defaultTargetPlatform == TargetPlatform.macOS || kIsWeb);
 
     group('setSettings()', () {
-      test('call with every available parameter', () async {
-        await FirebaseAuth.instance.setSettings(
-            phoneNumber: '+447555575555',
-            smsCode: '123456',
-            forceRecaptchaFlow: true,
-            appVerificationDisabledForTesting: true,
-            userAccessGroup: 'group-id');
-      });
-
       test(
           'throws argument error if phoneNumber & smsCode have not been set simultaneously',
           () async {
