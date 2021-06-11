@@ -1,3 +1,7 @@
+## 1.1.2
+
+ - Update a dependency to the latest release.
+
 ## 1.1.1
 
  - **DOCS**: Add Flutter Favorite badge (#6190).

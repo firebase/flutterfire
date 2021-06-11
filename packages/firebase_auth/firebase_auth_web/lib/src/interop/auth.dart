@@ -294,6 +294,15 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Currently signed-in [User].
   User? get currentUser => User.getInstance(jsObject.currentUser);
 
+  // Returns the current tenantId for the instance.
+  String? get tenantId {
+    return jsObject.tenantId;
+  }
+
+  set tenantId(String? tenantId) {
+    jsObject.tenantId = tenantId;
+  }
+
   /// The current Auth instance's language code.
   /// When set to [:null:], the default Firebase Console language setting
   /// is applied.

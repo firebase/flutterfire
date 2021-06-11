@@ -1,3 +1,7 @@
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
 ## 10.0.1
 
  - **FIX**: Fix FirebaseMessaging.onMessage and onMessageOpenedApp potentially throwing (#6093).

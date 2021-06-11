@@ -26,8 +26,8 @@ abstract class AuthJsImpl {
   );
   external PromiseJsImpl<List> fetchSignInMethodsForEmail(String email);
   external UserJsImpl get currentUser;
-  external String get tenantId;
-  external set tenantId(String s);
+  external String? get tenantId;
+  external set tenantId(String? s);
   external PromiseJsImpl<UserCredentialJsImpl> getRedirectResult();
   external bool isSignInWithEmailLink(String emailLink);
   external AuthSettings get settings;

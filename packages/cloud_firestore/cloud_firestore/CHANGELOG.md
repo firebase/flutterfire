@@ -1,3 +1,7 @@
+## 2.2.2
+
+ - Update a dependency to the latest release.
+
 ## 2.2.1
 
  - **TEST**: error handling for loadBundle() & namedQueryGet() (#6197).

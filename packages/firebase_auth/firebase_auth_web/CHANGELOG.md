@@ -1,3 +1,11 @@
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
+## 1.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 1.2.0
 
  - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).

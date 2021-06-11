@@ -240,6 +240,7 @@ void main() {
             'Auth#applyActionCode',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'code': code,
             },
           ),
@@ -284,6 +285,7 @@ void main() {
             'Auth#checkActionCode',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'code': code,
             },
           ),
@@ -317,6 +319,7 @@ void main() {
             'Auth#confirmPasswordReset',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'code': code,
               'newPassword': newPassword,
             },
@@ -350,6 +353,7 @@ void main() {
             'Auth#createUserWithEmailAndPassword',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
               'password': testPassword,
             },
@@ -384,6 +388,7 @@ void main() {
             'Auth#fetchSignInMethodsForEmail',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
             },
           ),
@@ -432,6 +437,7 @@ void main() {
             'Auth#signInAnonymously',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
             },
           ),
         ]);
@@ -470,6 +476,7 @@ void main() {
             'Auth#signInWithCredential',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'credential': credential.asMap()
             },
           ),
@@ -512,6 +519,7 @@ void main() {
             'Auth#signInWithCustomToken',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'token': token
             },
           ),
@@ -550,6 +558,7 @@ void main() {
             'Auth#signInWithEmailAndPassword',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
               'password': testPassword
             },
@@ -592,6 +601,7 @@ void main() {
             'Auth#signInWithEmailLink',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
               'emailLink': emailLink
             },
@@ -628,6 +638,7 @@ void main() {
             'Auth#sendPasswordResetEmail',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
               'actionCodeSettings': actionCodeSettings.asMap(),
             },
@@ -665,6 +676,7 @@ void main() {
             'Auth#sendSignInLinkToEmail',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'email': regularTestEmail,
               'actionCodeSettings': actionCodeSettings.asMap(),
             },
@@ -700,6 +712,7 @@ void main() {
             'Auth#setLanguageCode',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'languageCode': languageCode,
             },
           ),
@@ -732,6 +745,7 @@ void main() {
             'Auth#setSettings',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'appVerificationDisabledForTesting': isDisabled,
               'userAccessGroup': null,
             },
@@ -815,6 +829,7 @@ void main() {
             'Auth#signOut',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
             },
           ),
         ]);
@@ -846,6 +861,7 @@ void main() {
             'Auth#useEmulator',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'host': 'example.com',
               'port': 31337,
             },
@@ -868,6 +884,7 @@ void main() {
             'Auth#verifyPasswordResetCode',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'code': testCode,
             },
           ),
@@ -912,6 +929,7 @@ void main() {
             'Auth#verifyPhoneNumber',
             arguments: <String, dynamic>{
               'appName': defaultFirebaseAppName,
+              'tenantId': null,
               'phoneNumber': testPhoneNumber,
               'timeout': testTimeout.inMilliseconds,
               'forceResendingToken': null,
