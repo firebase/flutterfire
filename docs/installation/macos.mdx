@@ -47,6 +47,15 @@ Specifically if your app is named 'MyApp', and are sharing your configuration be
     <true/>
 </dict>
 ```
+## Enabling use of Firebase Emulator Suit for Auth (MacOS only)
+For mac os you need to **allow Outgoing Connections on the Xcode's Runner.xcworkspace** 
+![image](https://user-images.githubusercontent.com/12681781/121333660-d1330500-c93a-11eb-8fb6-b1d803b9c7bb.png)
+here is the full [thread ](https://stackoverflow.com/a/66008698/6133329)
+otherwise you might get
+```
+Flutter Firebase Auth: A network error (such as timeout, interrupted connection or unreachable host) has occurred
+```
+
 
 ## Initializing FlutterFire
 
