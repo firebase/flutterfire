@@ -143,6 +143,7 @@ class _MyAppState extends State<MyApp> {
     for (int i = 0; i < 10000000; i++) {
       sum += i;
     }
+
     await trace.setMetric('sum', sum);
     await trace.stop();
 
