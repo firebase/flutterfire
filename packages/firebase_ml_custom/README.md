@@ -44,7 +44,7 @@ FirebaseModelDownloadConditions conditions =
     FirebaseModelDownloadConditions(
         androidRequireWifi: true,
         androidRequireDeviceIdle: true,
-        androidRequiredCharging: true,
+        androidRequireCharging: true,
         iosAllowCellularAccess: false,
         iosAllowBackgroundDownloading: true);
 ```
