@@ -41,8 +41,30 @@ $ flutter run --no-sound-null-safety
 For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
 
 ```dart
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_app_check/firebase_app_check.dart';
 ```
+
+### Activating the default provider
+
+To activate the default App Check attestation provider you must call activate before any usages of your Firebase
+services such as Storage, but after calling `Firebase.initializeApp()`;
+
+```dart {10} title="lib/main.dart"
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// Import the firebase_app_check plugin
+import 'package:firebase_app_check/firebase_app_check.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
+  runApp(App());
+}
+```
+
 
 ### 1. Add dependency
 
