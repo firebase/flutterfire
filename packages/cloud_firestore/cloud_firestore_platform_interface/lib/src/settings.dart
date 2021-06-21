@@ -26,8 +26,6 @@ class Settings {
   final bool? persistenceEnabled;
 
   /// The hostname to connect to.
-  @Deprecated(
-      "Settings.host will be deprecated in favour of using 'FirebaseFirestore.useEmulator(host, port)' in a future version.")
   final String? host;
 
   /// Whether to use SSL when connecting.
