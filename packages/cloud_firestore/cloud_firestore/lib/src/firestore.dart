@@ -98,6 +98,36 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return LoadBundleTask._(_delegate.loadBundle(bundle));
   }
 
+  /// Changes this instance to point to a FirebaseFirestore emulator running locally.
+  ///
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "8080" (port 8080 is default)
+  ///
+  /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  Future<void> useEmulator(String host, int port,
+      {bool sslEnabled = false}) async {
+    if (kIsWeb) {
+      _delegate.useEmulator(host, port);
+    } else {
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        if (host.startsWith('localhost')) {
+          host = host.replaceFirst('localhost', '10.0.2.2');
+        } else if (host.startsWith('127.0.0.1')) {
+          host = host.replaceFirst('127.0.0.1', '10.0.2.2');
+        }
+      }
+
+      _delegate.settings = _delegate.settings.copyWith(
+        // "sslEnabled" has to be set to false for android & web to work
+        sslEnabled: sslEnabled,
+        host: '$host:$port',
+      );
+    }
+
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+  }
+
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
   /// To read from the Firestore backend, use [GetOptions.source] as [Source.server].
   Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(String name,
@@ -195,7 +225,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// You must set these before invoking any other methods on this [FirebaseFirestore] instance.
   set settings(Settings settings) {
-    _delegate.settings = settings;
+    _delegate.settings = _delegate.settings.copyWith(
+      sslEnabled: settings.sslEnabled,
+      persistenceEnabled: settings.persistenceEnabled,
+      host: settings.host,
+      cacheSizeBytes: settings.cacheSizeBytes,
+    );
   }
 
   /// The current [Settings] for this [FirebaseFirestore] instance.
