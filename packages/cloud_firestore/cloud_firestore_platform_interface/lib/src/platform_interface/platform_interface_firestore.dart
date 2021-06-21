@@ -60,7 +60,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// useEmulator is used for web only. Native platforms use Firestore settings
-  /// to initialise emulator.
+  /// to initialize emulator.
   void useEmulator(String host, int port) {
     throw UnimplementedError('useEmulator() is not implemented');
   }

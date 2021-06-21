@@ -108,6 +108,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   Future<void> useEmulator(String host, int port,
       {bool sslEnabled = false}) async {
     if (kIsWeb) {
+      // use useEmulator() API for web as settings are set immediately unlike native platforms
       _delegate.useEmulator(host, port);
     } else {
       if (defaultTargetPlatform == TargetPlatform.android) {
@@ -119,7 +120,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       }
 
       _delegate.settings = _delegate.settings.copyWith(
-        // "sslEnabled" has to be set to false for android & web to work
+        // "sslEnabled" has to be set to false for android to work
         sslEnabled: sslEnabled,
         host: '$host:$port',
       );
