@@ -105,24 +105,24 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useEmulator(String host, int port,
-      {bool sslEnabled = false}) async {
+  void useEmulator(String host, int port, {bool sslEnabled = false}) {
     if (kIsWeb) {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
       _delegate.useEmulator(host, port);
     } else {
+      String updatedHost = host;
       if (defaultTargetPlatform == TargetPlatform.android) {
         if (host.startsWith('localhost')) {
-          host = host.replaceFirst('localhost', '10.0.2.2');
+          updatedHost = host.replaceFirst('localhost', '10.0.2.2');
         } else if (host.startsWith('127.0.0.1')) {
-          host = host.replaceFirst('127.0.0.1', '10.0.2.2');
+          updatedHost = host.replaceFirst('127.0.0.1', '10.0.2.2');
         }
       }
 
       _delegate.settings = _delegate.settings.copyWith(
         // "sslEnabled" has to be set to false for android to work
         sslEnabled: sslEnabled,
-        host: '$host:$port',
+        host: '$updatedHost:$port',
       );
     }
 

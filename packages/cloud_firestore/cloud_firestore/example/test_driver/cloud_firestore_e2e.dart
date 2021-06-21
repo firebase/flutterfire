@@ -6,7 +6,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'collection_reference_e2e.dart';
