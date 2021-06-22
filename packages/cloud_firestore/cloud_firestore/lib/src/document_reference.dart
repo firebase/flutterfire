@@ -69,8 +69,8 @@ abstract class DocumentReference<T extends Object?> {
   ///     .collection('models')
   ///     .doc('123')
   ///     .withConverter<Model>(
-  ///       fromFirestore: (json) => Model.fromJson(json),
-  ///       toFirestore: (model) => model.toJson(),
+  ///       fromFirestore: (snapshot, _) => Model.fromJson(snapshot.data()!),
+  ///       toFirestore: (model, _) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
