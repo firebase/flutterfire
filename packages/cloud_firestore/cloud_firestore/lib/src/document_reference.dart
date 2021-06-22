@@ -9,7 +9,8 @@ part of cloud_firestore;
 ///
 /// The document at the referenced location may or may not exist.
 /// A [DocumentReference] can also be used to create a [CollectionReference]
-/// to a subcollection.@sealed
+/// to a subcollection.
+@sealed
 @immutable
 abstract class DocumentReference<T extends Object?> {
   /// The Firestore instance associated with this document reference.
