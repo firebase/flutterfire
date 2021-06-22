@@ -173,8 +173,8 @@ abstract class Query<T extends Object?> {
   ///     .collection('persons')
   ///     .where('age', isGreaterThan: 0)
   ///     .withConverter<Person>(
-  ///       fromFirestore: (json) => Person.fromJson(json),
-  ///       toFirestore: (model) => Person.toJson(),
+  ///       fromFirestore: (snapshot, _) => Person.fromJson(snapshot.data()!),
+  ///       toFirestore: (model, _) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
