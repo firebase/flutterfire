@@ -182,17 +182,15 @@ void main() {
 
     group('useEmulator', () {
       test('throws AssertionError when host is empty', () {
-        expect(() => storage.useEmulator(host: '', port: 123),
-            throwsAssertionError);
+        expect(() => storage.useEmulator('', 123), throwsAssertionError);
       });
 
       test('throws AssertionError when port is negative', () {
-        expect(() => storage.useEmulator(host: 'foo', port: -10),
-            throwsAssertionError);
+        expect(() => storage.useEmulator('foo', -10), throwsAssertionError);
       });
 
       test('verify delegate method is called with args', () {
-        storage.useEmulator(host: 'foo', port: 123);
+        storage.useEmulator('foo', 123);
         verify(kMockStoragePlatform.useEmulator('foo', 123));
       });
     });
