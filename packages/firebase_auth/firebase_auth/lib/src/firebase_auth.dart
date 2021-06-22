@@ -73,38 +73,23 @@ class FirebaseAuth extends FirebasePluginPlatform {
 
   /// Changes this instance to point to an Auth emulator running locally.
   ///
-  /// Set the [origin] of the local emulator, such as "http://localhost:9099"
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "9099" (port 9099 is default for auth package)
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  ///
-  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
-  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
-  Future<void> useEmulator(String origin) async {
-    assert(origin.isNotEmpty);
-    String mappedOrigin = origin;
+  Future<void> useEmulator(String host, int port) async {
+    String updatedHost = host;
 
-    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
-    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
-      if (mappedOrigin.startsWith('http://localhost')) {
-        mappedOrigin =
-            mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
-      } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
-        mappedOrigin =
-            mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      if (host.startsWith('localhost')) {
+        updatedHost = host.replaceFirst('localhost', '10.0.2.2');
+      } else if (host.startsWith('127.0.0.1')) {
+        updatedHost = host.replaceFirst('127.0.0.1', '10.0.2.2');
       }
     }
 
-    // Native calls take the host and port split out
-    final hostPortRegex = RegExp(r'^http:\/\/([\w\d.]+):(\d+)$');
-    final RegExpMatch? match = hostPortRegex.firstMatch(mappedOrigin);
-    if (match == null) {
-      throw ArgumentError('firebase.auth().useEmulator() origin format error');
-    }
-    // Two non-empty groups in RegExp match - which is null-tested - these are non-null now
-    final String host = match.group(1)!;
-    final int port = int.parse(match.group(2)!);
-    await _delegate.useEmulator(host, port);
+    await _delegate.useEmulator(updatedHost, port);
   }
 
   /// The current Auth instance's tenant ID.

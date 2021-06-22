@@ -17,7 +17,7 @@ import './signin_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.useEmulator('http://localhost:9099');
+  await FirebaseAuth.instance.useEmulator('localhost', 9099);
   runApp(AuthExampleApp());
 }
 
