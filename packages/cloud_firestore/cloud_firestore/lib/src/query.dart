@@ -174,7 +174,7 @@ abstract class Query<T extends Object?> {
   ///     .where('age', isGreaterThan: 0)
   ///     .withConverter<Person>(
   ///       fromFirestore: (snapshot, _) => Person.fromJson(snapshot.data()!),
-  ///       toFirestore: (model, _) => model.toJson(),
+  ///       toFirestore: (person, _) => person.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
