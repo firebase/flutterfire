@@ -86,4 +86,19 @@ class FirebaseFunctions extends FirebasePluginPlatform {
 
     _origin = origin;
   }
+
+  void useEmulator(String host, int port) {
+    String updatedHost = host;
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      if (host.startsWith('localhost')) {
+        updatedHost = host.replaceFirst('localhost', '10.0.2.2');
+      }
+      if (host.startsWith('127.0.0.1')) {
+        updatedHost = host.replaceFirst('127.0.0.1', '10.0.2.2');
+      }
+    }
+
+    _origin = 'http://$updatedHost:$port';
+  }
 }
