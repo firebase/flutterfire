@@ -110,23 +110,22 @@ class FirebaseFirestore extends FirebasePluginPlatform {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
       _delegate.useEmulator(host, port);
     } else {
-      String updatedHost = host;
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        if (host.startsWith('localhost')) {
-          updatedHost = host.replaceFirst('localhost', '10.0.2.2');
-        } else if (host.startsWith('127.0.0.1')) {
-          updatedHost = host.replaceFirst('127.0.0.1', '10.0.2.2');
+      String mappedHost = host;
+      // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+          // ignore: avoid_print
+          print('Mapping Firestore Emulator host "$mappedHost" to "10.0.2.2".');
+          mappedHost = '10.0.2.2';
         }
       }
 
       _delegate.settings = _delegate.settings.copyWith(
         // "sslEnabled" has to be set to false for android to work
         sslEnabled: sslEnabled,
-        host: '$updatedHost:$port',
+        host: '$mappedHost:$port',
       );
     }
-
-    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
   }
 
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
