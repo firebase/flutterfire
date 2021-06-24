@@ -99,14 +99,14 @@ void main() {
         expect(FirebaseFunctions.instance.httpsCallable('test').delegate.origin,
             isNull);
         // Set the origin for the default FirebaseFunctions instance.
-        FirebaseFunctions.instance.useEmulator('0.0.0.0', 5000);
+        FirebaseFunctions.instance.useFunctionsEmulator('0.0.0.0', 5000);
         expect(FirebaseFunctions.instance.httpsCallable('test').delegate.origin,
             equals('http://0.0.0.0:5000'));
       });
 
       test('"origin" is only set for the specific FirebaseFunctions instance',
           () {
-        FirebaseFunctions.instance.useEmulator('0.0.0.0', 5000);
+        FirebaseFunctions.instance.useFunctionsEmulator('0.0.0.0', 5000);
         // Origin on the default FirebaseFunctions instance should be set.
         expect(FirebaseFunctions.instance.httpsCallable('test').delegate.origin,
             equals('http://0.0.0.0:5000'));
@@ -133,7 +133,7 @@ void main() {
                 ? 'http://10.0.2.2:5000'
                 : 'http://$testOrigin:5000';
 
-            FirebaseFunctions.instance.useEmulator(testOrigin, 5000);
+            FirebaseFunctions.instance.useFunctionsEmulator(testOrigin, 5000);
             // Origin on the default FirebaseFunctions instance should be set.
             expect(
                 FirebaseFunctions.instance

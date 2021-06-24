@@ -22,7 +22,7 @@ void testsMain() {
   HttpsCallable callable;
   setUpAll(() async {
     await Firebase.initializeApp();
-    FirebaseFunctions.instance.useEmulator('localhost', 5001);
+    FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
     callable =
         FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);
   });
