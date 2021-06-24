@@ -188,7 +188,7 @@ void main() {
         // Necessary as we otherwise get a "null is not a Future<void>" error
         when(mockAuthPlatform.useEmulator(kMockHost, kMockPort))
             .thenAnswer((i) async {});
-        await auth.useEmulator(kMockHost, kMockPort);
+        await auth.useAuthEmulator(kMockHost, kMockPort);
         verify(mockAuthPlatform.useEmulator(kMockHost, kMockPort));
       });
     });

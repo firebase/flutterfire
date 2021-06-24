@@ -22,7 +22,7 @@ void testsMain() {
     await Firebase.initializeApp();
     if (useEmulator) {
       await FirebaseAuth.instance
-          .useEmulator(testEmulatorHost, testEmulatorPort);
+          .useAuthEmulator(testEmulatorHost, testEmulatorPort);
     }
   });
 

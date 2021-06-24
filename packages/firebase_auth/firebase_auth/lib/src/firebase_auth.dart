@@ -78,7 +78,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useEmulator(String host, int port) async {
+  Future<void> useAuthEmulator(String host, int port) async {
     String mappedHost = host;
 
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
