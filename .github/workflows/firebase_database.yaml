@@ -47,6 +47,7 @@ jobs:
           target: default
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
+          emulator-build: 7024830
 
   apple:
     runs-on: macos-latest
