@@ -148,9 +148,10 @@ class User {
   ///    user. The fields `email`, `phoneNumber`, and `credential`
   ///    ([AuthCredential]) may be provided, depending on the type of
   ///    credential. You can recover from this error by signing in with
-  ///    `credential` directly via [signInWithCredential]. Please note, you will not recover from this error
-  ///    if you're using a [PhoneAuthCredential] to link a provider to an account. Once an attempt to
-  ///    link an account has been made, a new sms code is required to sign in the user.
+  ///    `credential` directly via [signInWithCredential]. Please note, you will
+  ///    not recover from this error if you're using a [PhoneAuthCredential] to link
+  ///    a provider to an account. Once an attempt to link an account has been made,
+  ///    a new sms code is required to sign in the user.
   /// - **email-already-in-use**:
   ///  - Thrown if the email corresponding to the credential already exists
   ///    among your users. When thrown while linking a credential to an existing
