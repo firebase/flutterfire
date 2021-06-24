@@ -105,7 +105,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  void useEmulator(String host, int port, {bool sslEnabled = false}) {
+  void useFirestoreEmulator(String host, int port, {bool sslEnabled = false}) {
     if (kIsWeb) {
       // use useEmulator() API for web as settings are set immediately unlike native platforms
       _delegate.useEmulator(host, port);

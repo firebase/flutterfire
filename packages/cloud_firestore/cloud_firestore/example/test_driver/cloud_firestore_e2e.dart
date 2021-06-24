@@ -28,7 +28,7 @@ void testsMain() {
     await Firebase.initializeApp();
 
     if (kUseFirestoreEmulator) {
-      FirebaseFirestore.instance.useEmulator('localhost', 8080);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     }
   });
 
