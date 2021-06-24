@@ -43,6 +43,7 @@ jobs:
           target: google_apis
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
+          emulator-build: 6110076
 
   ios:
     runs-on: macos-latest
