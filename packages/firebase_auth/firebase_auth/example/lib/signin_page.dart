@@ -553,6 +553,7 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
 
   String _message = '';
   String _verificationId;
+  ConfirmationResult webConfirmationResult;
 
   @override
   Widget build(BuildContext context) {
@@ -571,9 +572,45 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
-              const Text(
-                'Sign In with Phone Number on Web is currently unsupported',
-              )
+              Container(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: TextFormField(
+                  controller: _phoneNumberController,
+                  decoration: const InputDecoration(
+                    labelText: 'Phone number (+x xxx-xxx-xxxx)',
+                  ),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return 'Phone number (+x xxx-xxx-xxxx)';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                  alignment: Alignment.center,
+                  child: SignInButtonBuilder(
+                    padding: const EdgeInsets.only(top: 16),
+                    icon: Icons.contact_phone,
+                    backgroundColor: Colors.deepOrangeAccent[700],
+                    text: 'Verify Number',
+                    onPressed: _verifyWebPhoneNumber,
+                  )),
+              TextField(
+                controller: _smsController,
+                decoration:
+                    const InputDecoration(labelText: 'Verification code'),
+              ),
+              Container(
+                padding: const EdgeInsets.only(top: 16),
+                alignment: Alignment.center,
+                child: SignInButtonBuilder(
+                  icon: Icons.phone,
+                  backgroundColor: Colors.deepOrangeAccent[400],
+                  onPressed: _confirmCodeWeb,
+                  text: 'Sign In',
+                ),
+              ),
             ],
           ),
         ),
@@ -644,6 +681,30 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
         ),
       ),
     );
+  }
+
+  Future<void> _verifyWebPhoneNumber() async {
+    ConfirmationResult confirmationResult =
+        await _auth.signInWithPhoneNumber(_phoneNumberController.text);
+
+    webConfirmationResult = confirmationResult;
+  }
+
+  Future<UserCredential> _confirmCodeWeb() async {
+    if (webConfirmationResult != null) {
+      try {
+        await webConfirmationResult.confirm(_smsController.text);
+      } catch (e) {
+        widget._scaffold.showSnackBar(SnackBar(
+          content: Text('Failed to sign in: ' + e.toString()),
+        ));
+      }
+    } else {
+      widget._scaffold.showSnackBar(SnackBar(
+        content:
+            Text('Please input sms code received after verifying phone number'),
+      ));
+    }
   }
 
   // Example code of how to verify phone number
