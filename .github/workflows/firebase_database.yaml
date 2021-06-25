@@ -25,7 +25,7 @@ env:
 jobs:
   android:
     if: github.event_name == 'pull_request'
-    runs-on: macos-latest
+    runs-on: macos-11
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2.3.4
