@@ -374,7 +374,7 @@ For Android, you can view Logcat logs which will give a descriptive message on w
 
 Topics are a mechanism which allow a device to subscribe and unsubscribe from named PubSub channels, all managed via FCM.
 Rather than sending a message to a specific device by FCM token, you can instead send a message to a topic and any devices
-subscribed to that topic will receive the message.It should be called everytime the app starts.
+subscribed to that topic will receive the message.
 
 Topics allow you to simplify FCM server integration as you do not need to keep a store of device tokens. There are however some things to keep in mind about topics:
 
@@ -391,6 +391,7 @@ To learn more about how to send messages to devices subscribed to topics, view t
 To subscribe a device, call the [`subscribeToTopic`](!firebase_messaging.FirebaseMessaging.subscribeToTopic) method with the topic name:
 
 ```dart
+// subscribe to topic on each app start-up
 await FirebaseMessaging.instance.subscribeToTopic('weather');
 ```
 
