@@ -11,7 +11,7 @@ To use this plugin, add `firebase_analytics` as a [dependency in your pubspec.ya
 
 ## iOS [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency)
 
-In order to avoid any user tracking you should add following line into ios/Podfile
+If you wish to use Firebase Analytics without IDFA collection capability, open your `/ios/Podfile` and add the following global variable to the top of the file:
 
 ```
 $FirebaseAnalyticsWithoutAdIdSupport = true
