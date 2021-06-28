@@ -391,6 +391,7 @@ To learn more about how to send messages to devices subscribed to topics, view t
 To subscribe a device, call the [`subscribeToTopic`](!firebase_messaging.FirebaseMessaging.subscribeToTopic) method with the topic name:
 
 ```dart
+// subscribe to topic on each app start-up
 await FirebaseMessaging.instance.subscribeToTopic('weather');
 ```
 
