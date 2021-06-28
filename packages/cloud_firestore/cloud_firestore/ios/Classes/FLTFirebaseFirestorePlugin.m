@@ -7,10 +7,10 @@
 
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
+#import "Private/FLTLoadBundleStreamHandler.h"
 #import "Private/FLTQuerySnapshotStreamHandler.h"
 #import "Private/FLTSnapshotsInSyncStreamHandler.h"
 #import "Private/FLTTransactionStreamHandler.h"
-
 #import "Public/FLTFirebaseFirestorePlugin.h"
 
 NSString *const kFLTFirebaseFirestoreChannelName = @"plugins.flutter.io/firebase_firestore";
@@ -22,6 +22,8 @@ NSString *const kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName =
     @"plugins.flutter.io/firebase_firestore/snapshotsInSync";
 NSString *const kFLTFirebaseFirestoreTransactionChannelName =
     @"plugins.flutter.io/firebase_firestore/transaction";
+NSString *const kFLTFirebaseFirestoreLoadBundleChannelName =
+    @"plugins.flutter.io/firebase_firestore/loadBundle";
 
 @interface FLTFirebaseFirestorePlugin ()
 @property(nonatomic, retain) NSMutableDictionary *transactions;
@@ -197,6 +199,8 @@ FlutterStandardMethodCodec *_codec;
     [self documentDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DocumentReference#get" isEqualToString:call.method]) {
     [self documentGet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Firestore#namedQueryGet" isEqualToString:call.method]) {
+    [self namedQueryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"WriteBatch#commit" isEqualToString:call.method]) {
@@ -218,6 +222,8 @@ FlutterStandardMethodCodec *_codec;
   } else if ([@"DocumentReference#snapshots" isEqualToString:call.method]) {
     [self setupDocumentReferenceSnapshotsListener:call.arguments
                              withMethodCallResult:methodCallResult];
+  } else if ([@"LoadBundle#snapshots" isEqualToString:call.method]) {
+    [self setupLoadBundleListener:call.arguments withMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
   }
@@ -252,6 +258,12 @@ FlutterStandardMethodCodec *_codec;
   result.success([self
       registerEventChannelWithPrefix:kFLTFirebaseFirestoreSnapshotsInSyncEventChannelName
                        streamHandler:[FLTSnapshotsInSyncStreamHandler new]]);
+}
+
+- (void)setupLoadBundleListener:(id)arguments
+           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  result.success([self registerEventChannelWithPrefix:kFLTFirebaseFirestoreLoadBundleChannelName
+                                        streamHandler:[FLTLoadBundleStreamHandler new]]);
 }
 
 - (void)setupDocumentReferenceSnapshotsListener:(id)arguments
@@ -456,6 +468,33 @@ FlutterStandardMethodCodec *_codec;
                          result.success(snapshot);
                        }
                      }];
+}
+
+- (void)namedQueryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRFirestore *firestore = arguments[@"firestore"];
+  NSString *name = arguments[@"name"];
+
+  FIRFirestoreSource source = [FLTFirebaseFirestoreUtils FIRFirestoreSourceFromArguments:arguments];
+
+  [firestore getQueryNamed:name
+                completion:^(FIRQuery *_Nullable query) {
+                  if (query == nil) {
+                    result.error(@"non-existent-named-query",
+                                 @"Named query has not been found. Please check it has been loaded "
+                                 @"properly via loadBundle().",
+                                 nil, nil);
+                    return;
+                  }
+                  [query getDocumentsWithSource:source
+                                     completion:^(FIRQuerySnapshot *_Nullable snapshot,
+                                                  NSError *_Nullable error) {
+                                       if (error != nil) {
+                                         result.error(nil, nil, nil, error);
+                                       } else {
+                                         result.success(snapshot);
+                                       }
+                                     }];
+                }];
 }
 
 - (void)batchCommit:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {

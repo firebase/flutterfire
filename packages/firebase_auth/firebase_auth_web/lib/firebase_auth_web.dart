@@ -118,6 +118,16 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
+  String? get tenantId {
+    return _webAuth!.tenantId;
+  }
+
+  @override
+  set tenantId(String? tenantId) {
+    _webAuth!.tenantId = tenantId;
+  }
+
+  @override
   void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
     assert(_userChangesListeners[appName] != null);
 
@@ -240,9 +250,13 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setSettings(
-      {bool? appVerificationDisabledForTesting,
-      String? userAccessGroup}) async {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
+  }) async {
     _webAuth!.settings.appVerificationDisabledForTesting =
         appVerificationDisabledForTesting;
   }

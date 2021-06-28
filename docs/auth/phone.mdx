@@ -49,7 +49,7 @@ await FirebaseAuth.instance.verifyPhoneNumber(
   phoneNumber: '+44 7123 123 456',
   verificationCompleted: (PhoneAuthCredential credential) {},
   verificationFailed: (FirebaseAuthException e) {},
-  codeSent: (String verificationId, int resendToken) {},
+  codeSent: (String verificationId, int? resendToken) {},
   codeAutoRetrievalTimeout: (String verificationId) {},
 );
 ```
@@ -106,7 +106,8 @@ await auth.verifyPhoneNumber(
 
 #### codeSent
 
-When Firebase sends an SMS code to the device, this handler is triggered with a `verificationId` and `resendToken`.
+When Firebase sends an SMS code to the device, this handler is triggered with a `verificationId` and `resendToken` (A `resendToken`
+is only supported on Android devices, iOS devices will _always_ return a `null` value).
 
 Once triggered, it would be a good time to update your application UI to prompt the user to enter the SMS code they're expecting.
 Once the SMS code has been entered, you can combine the verification ID with the SMS code to create a new `PhoneAuthCredential`:
@@ -116,7 +117,7 @@ FirebaseAuth auth = FirebaseAuth.instance;
 
 await auth.verifyPhoneNumber(
   phoneNumber: '+44 7123 123 456',
-  codeSent: (String verificationId, int resendToken) async {
+  codeSent: (String verificationId, int? resendToken) async {
     // Update the UI - wait for the user to enter the SMS code
     String smsCode = 'xxxx';
 
@@ -129,7 +130,7 @@ await auth.verifyPhoneNumber(
 );
 ```
 
-By default, Firebase will not re-send a new SMS message if it has been recently sent. You can however override this behaviour
+By default, Firebase will not re-send a new SMS message if it has been recently sent. You can however override this behavior
 by re-calling the `verifyPhoneNumber` method with the resend token to the `forceResendingToken` argument.
 If successful, the SMS message will be resent.
 
@@ -165,7 +166,7 @@ To get started, call the `signInWithPhoneNumber` method with the phone number.
 ```dart
 FirebaseAuth auth = FirebaseAuth.instance;
 
-// Wait for the user to complete the reCAPTCHA & for a SMS code to be sent.
+// Wait for the user to complete the reCAPTCHA & for an SMS code to be sent.
 ConfirmationResult confirmationResult = await auth.signInWithPhoneNumber('+44 7123 123 456');
 ```
 

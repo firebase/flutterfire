@@ -1,3 +1,10 @@
+## 4.0.1
+
+ - **FIX**: Fix FirebaseOptions hashCode (#3263).
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+
 ## 4.0.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

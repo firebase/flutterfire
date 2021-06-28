@@ -130,7 +130,6 @@ void main() {
           'Messaging#deleteToken',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'senderId': null,
           },
         ),
       ]);
@@ -161,7 +160,6 @@ void main() {
           'Messaging#getToken',
           arguments: <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'senderId': null,
           },
         ),
       ]);

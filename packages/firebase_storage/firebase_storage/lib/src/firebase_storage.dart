@@ -149,6 +149,33 @@ class FirebaseStorage extends FirebasePluginPlatform {
     return _delegate.setMaxDownloadRetryTime(time.inMilliseconds);
   }
 
+  /// Changes this instance to point to a Storage emulator running locally.
+  ///
+  /// Set the [host] (ex: localhost) and [port] (ex: 9199) of the local emulator.
+  ///
+  /// Note: Must be called immediately, prior to accessing storage methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
+  /// storage.useStorageEmulator until v9
+  Future<void> useEmulator({required String host, required int port}) async {
+    assert(host.isNotEmpty);
+    assert(!port.isNegative);
+
+    String mappedHost = host;
+
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+      if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+        // ignore: avoid_print
+        print('Mapping Storage Emulator host "$mappedHost" to "10.0.2.2".');
+        mappedHost = '10.0.2.2';
+      }
+    }
+
+    await _delegate.useEmulator(host, port);
+  }
+
   @override
   bool operator ==(Object other) =>
       other is FirebaseStorage &&

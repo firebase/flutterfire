@@ -52,15 +52,6 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   //
   // static final Map<String, FirebaseMessaging> _cachedInstances = {};
 
-  // ignore: close_sinks
-  static final StreamController<RemoteMessage> _onMessageController =
-      StreamController<RemoteMessage>.broadcast(onListen: () {
-    Stream<RemoteMessage> onMessageStream =
-        FirebaseMessagingPlatform.onMessage.stream;
-
-    onMessageStream.pipe(_onMessageController);
-  });
-
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
   ///
@@ -68,16 +59,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// To handle messages whilst the app is in the background or terminated,
   /// see [onBackgroundMessage].
-  static Stream<RemoteMessage> get onMessage => _onMessageController.stream;
-
-  // ignore: close_sinks
-  static final StreamController<RemoteMessage> _onMessageOpenedAppController =
-      StreamController<RemoteMessage>.broadcast(onListen: () {
-    Stream<RemoteMessage> onMessageOpenedAppStream =
-        FirebaseMessagingPlatform.onMessageOpenedApp.stream;
-
-    onMessageOpenedAppStream.pipe(_onMessageOpenedAppController);
-  });
+  static Stream<RemoteMessage> get onMessage =>
+      FirebaseMessagingPlatform.onMessage.stream;
 
   /// Returns a [Stream] that is called when a user presses a notification message displayed
   /// via FCM.
@@ -88,7 +71,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// If your app is opened via a notification whilst the app is terminated,
   /// see [getInitialMessage].
   static Stream<RemoteMessage> get onMessageOpenedApp =>
-      _onMessageOpenedAppController.stream;
+      FirebaseMessagingPlatform.onMessageOpenedApp.stream;
 
   // ignore: use_setters_to_change_properties
   /// Set a message handler function which is called when the app is in the
@@ -118,11 +101,11 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.getInitialMessage();
   }
 
-  /// Removes access to an FCM token previously authorized with optional [senderId].
+  /// Removes access to an FCM token previously authorized.
   ///
   /// Messages sent by the server to this token will fail.
-  Future<void> deleteToken({String? senderId}) {
-    return _delegate.deleteToken(senderId: senderId);
+  Future<void> deleteToken() {
+    return _delegate.deleteToken();
   }
 
   /// On iOS/MacOS, it is possible to get the users APNs token.
@@ -135,7 +118,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.getAPNSToken();
   }
 
-  /// Returns the default FCM token for this device and optionally a [senderId].
+  /// Returns the default FCM token for this device.
   Future<String?> getToken({
     String? vapidKey,
   }) {
@@ -147,6 +130,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   /// Fires when a new FCM token is generated.
   Stream<String> get onTokenRefresh {
     return _delegate.onTokenRefresh;
+  }
+
+  bool isSupported() {
+    return _delegate.isSupported();
   }
 
   /// Returns the current [NotificationSettings].

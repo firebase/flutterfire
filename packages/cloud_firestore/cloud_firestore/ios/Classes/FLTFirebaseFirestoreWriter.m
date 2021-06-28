@@ -40,6 +40,8 @@
     [self writeValue:documentPath];
   } else if ([value isKindOfClass:[FIRDocumentSnapshot class]]) {
     [super writeValue:[self FIRDocumentSnapshot:value]];
+  } else if ([value isKindOfClass:[FIRLoadBundleTaskProgress class]]) {
+    [super writeValue:[self FIRLoadBundleTaskProgress:value]];
   } else if ([value isKindOfClass:[FIRQuerySnapshot class]]) {
     [super writeValue:[self FIRQuerySnapshot:value]];
   } else if ([value isKindOfClass:[FIRDocumentChange class]]) {
@@ -136,6 +138,29 @@
     @"path" : documentSnapshot.reference.path,
     @"data" : documentSnapshot.exists ? (id)documentSnapshot.data : [NSNull null],
     @"metadata" : documentSnapshot.metadata,
+  };
+}
+
+- (NSDictionary *)FIRLoadBundleTaskProgress:(FIRLoadBundleTaskProgress *)progress {
+  NSString *state;
+
+  switch (progress.state) {
+    case FIRLoadBundleTaskStateError:
+      state = @"error";
+      break;
+    case FIRLoadBundleTaskStateSuccess:
+      state = @"success";
+      break;
+    case FIRLoadBundleTaskStateInProgress:
+      state = @"running";
+      break;
+  }
+  return @{
+    @"bytesLoaded" : @(progress.bytesLoaded),
+    @"documentsLoaded" : @(progress.documentsLoaded),
+    @"totalBytes" : @(progress.totalBytes),
+    @"totalDocuments" : @(progress.totalDocuments),
+    @"taskState" : state,
   };
 }
 

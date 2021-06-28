@@ -4,6 +4,8 @@ export default {
   plugins: {
     firebase_analytics: PUB_FIREBASE_ANALYTICS,
     firebase_analytics_ns: PUB_NS_FIREBASE_ANALYTICS,
+    firebase_app_check: PUB_FIREBASE_APP_CHECK,
+    firebase_app_check_ns: PUB_NS_FIREBASE_APP_CHECK,
     firebase_auth: PUB_FIREBASE_AUTH,
     firebase_auth_ns: PUB_NS_FIREBASE_AUTH,
     cloud_firestore: PUB_CLOUD_FIRESTORE,
@@ -32,10 +34,10 @@ export default {
     google_sign_in: "^4.4.4",
   },
   android: {
-    google_services: "4.3.3", // com.google.gms:google-services
+    google_services: "4.3.8", // com.google.gms:google-services
   },
   web: {
-    firebase_cdn: "8.4.1", // https://firebase.google.com/docs/web/setup#expandable-8-label
+    firebase_cdn: "8.6.1", // https://firebase.google.com/support/release-notes/js
   },
   external: {
     google_sign_in: "^4.5.1",

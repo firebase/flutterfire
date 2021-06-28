@@ -1,3 +1,19 @@
+## 2.1.2
+
+ - Update a dependency to the latest release.
+
+## 2.1.1
+
+ - Update a dependency to the latest release.
+
+## 2.1.0
+
+ - **FEAT**: add support for the Firebase Storage emulator via `useEmulator` (#5936).
+
+## 2.0.4
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 2.0.3
 
  - Update a dependency to the latest release.

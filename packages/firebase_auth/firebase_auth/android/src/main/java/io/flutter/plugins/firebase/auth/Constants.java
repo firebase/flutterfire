@@ -42,6 +42,7 @@ public class Constants {
   public static final String ADDITIONAL_USER_INFO = "additionalUserInfo";
   public static final String CREATION_TIME = "creationTime";
   public static final String LAST_SIGN_IN_TIME = "lastSignInTime";
+  public static final String TENANT_ID = "tenantId";
 
   // Auth
   public static final String PROVIDERS = "providers";
@@ -79,4 +80,7 @@ public class Constants {
   public static final String HOST = "host";
   public static final String PORT = "port";
   public static final String NAME = "name";
+  public static final String APP_VERIFICATION_DISABLED_FOR_TESTING =
+      "appVerificationDisabledForTesting";
+  public static final String FORCE_RECAPTCHA_FLOW = "forceRecaptchaFlow";
 }

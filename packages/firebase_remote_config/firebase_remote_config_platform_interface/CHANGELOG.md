@@ -1,3 +1,23 @@
+## 0.3.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.3.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.3.0-dev.4
+
+ - Update a dependency to the latest release.
+
+## 0.3.0-dev.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 0.3.0-dev.2
 
  - Update a dependency to the latest release.

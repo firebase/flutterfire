@@ -44,7 +44,7 @@ FirebaseModelDownloadConditions conditions =
     FirebaseModelDownloadConditions(
         androidRequireWifi: true,
         androidRequireDeviceIdle: true,
-        androidRequiredCharging: true,
+        androidRequireCharging: true,
         iosAllowCellularAccess: false,
         iosAllowBackgroundDownloading: true);
 ```
@@ -72,7 +72,7 @@ await modelManager.download(remoteModel, conditions);
 
 Return whether the given remote model is currently downloaded.
 ```dart
-if (await modelManager.isModelDownloaded(model) == true) ) {
+if (await modelManager.isModelDownloaded(model) == true) {
     // do something with this model
 } else {
     // fall back on a locally-bundled model or do something else

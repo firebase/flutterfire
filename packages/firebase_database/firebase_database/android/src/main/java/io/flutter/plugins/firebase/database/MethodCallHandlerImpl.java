@@ -9,6 +9,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -262,7 +263,7 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
   @Override
   public void onMethodCall(final MethodCall call, @NonNull final MethodChannel.Result result) {
     final Map<String, Object> arguments = call.arguments();
-    FirebaseDatabase database;
+    final FirebaseDatabase database;
     String appName = call.argument("app");
     String databaseURL = call.argument("databaseURL");
     if (appName != null && databaseURL != null) {
@@ -526,6 +527,32 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
           reference
               .onDisconnect()
               .cancel(new MethodCallHandlerImpl.DefaultCompletionListener(result));
+          break;
+        }
+
+      case "Query#get":
+        {
+          DatabaseReference reference = getReference(database, arguments);
+          reference
+              .get()
+              .addOnCompleteListener(
+                  new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                      if (!task.isSuccessful()) {
+                        Exception exception = task.getException();
+                        result.error("get-failed", exception.getMessage(), null);
+                      } else {
+                        DataSnapshot dataSnapshot = task.getResult();
+                        Map<String, Object> snapshotMap = new HashMap<>();
+                        snapshotMap.put("key", dataSnapshot.getKey());
+                        snapshotMap.put("value", dataSnapshot.getValue());
+                        Map<String, Object> resultMap = new HashMap<>();
+                        resultMap.put("snapshot", snapshotMap);
+                        result.success(resultMap);
+                      }
+                    }
+                  });
           break;
         }
 

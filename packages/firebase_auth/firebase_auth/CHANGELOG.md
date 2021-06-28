@@ -1,3 +1,28 @@
+## 1.4.1
+
+ - Update a dependency to the latest release.
+
+## 1.4.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
+## 1.3.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.1.4
+
+ - **FIX**: correctly cleanup Dictionary handlers (#6101).
+ - **DOCS**: Update the documentation of sendPasswordResetEmail (#6051).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
 ## 1.1.3
 
  - **FIX**: Fix firebase_auth not being registered as a plugin (#5987).

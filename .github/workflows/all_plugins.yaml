@@ -2,11 +2,16 @@ name: all_plugins
 
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "website/**"
+      - "**.md"
   push:
     branches:
       - master
     paths-ignore:
       - "docs/**"
+      - "website/**"
       - "**.md"
 
 jobs:
@@ -14,7 +19,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -36,7 +41,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -53,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -86,7 +91,7 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -106,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"

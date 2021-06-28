@@ -117,7 +117,7 @@ class LabelDetectorPainter extends CustomPainter {
         ..layout(ui.ParagraphConstraints(
           width: size.width,
         )),
-      const Offset(0, 0),
+      Offset.zero,
     );
   }
 

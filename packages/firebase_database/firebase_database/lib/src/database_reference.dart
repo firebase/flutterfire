@@ -146,13 +146,13 @@ class DatabaseReference extends Query {
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
   Future<TransactionResult> runTransaction(
-      TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
-    assert(timeout.inMilliseconds > 0,
-        'Transaction timeout must be more than 0 milliseconds.');
-
-    final Completer<TransactionResult> completer =
-        Completer<TransactionResult>();
+    TransactionHandler transactionHandler, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    assert(
+      timeout.inMilliseconds > 0,
+      'Transaction timeout must be more than 0 milliseconds.',
+    );
 
     final int transactionKey = FirebaseDatabase._transactions.isEmpty
         ? 0
@@ -165,7 +165,7 @@ class DatabaseReference extends Query {
           map['error'] != null ? DatabaseError._(map['error']) : null;
       final bool committed = map['committed'];
       final DataSnapshot? dataSnapshot = map['snapshot'] != null
-          ? DataSnapshot._fromJson(map['snapshot'], map['childKeys'])
+          ? DataSnapshot._fromJson(map['snapshot'], null)
           : null;
 
       FirebaseDatabase._transactions.remove(transactionKey);
@@ -173,21 +173,19 @@ class DatabaseReference extends Query {
       return TransactionResult._(databaseError, committed, dataSnapshot);
     }
 
-    // TODO(rrousselGit) refactor to async/await
-    // TODO(rrousselGit) what if invokeMethod fails?
-    // ignore: unawaited_futures
-    _database._channel.invokeMethod<void>(
-        'DatabaseReference#runTransaction', <String, dynamic>{
-      'app': _database.app?.name,
-      'databaseURL': _database.databaseURL,
-      'path': path,
-      'transactionKey': transactionKey,
-      'transactionTimeout': timeout.inMilliseconds
-    }).then((dynamic response) {
-      completer.complete(toTransactionResult(response));
-    });
+    final response =
+        await _database._channel.invokeMethod<Map<Object?, Object?>>(
+      'DatabaseReference#runTransaction',
+      <String, dynamic>{
+        'app': _database.app?.name,
+        'databaseURL': _database.databaseURL,
+        'path': path,
+        'transactionKey': transactionKey,
+        'transactionTimeout': timeout.inMilliseconds
+      },
+    );
 
-    return completer.future;
+    return toTransactionResult(response!);
   }
 
   OnDisconnect onDisconnect() {

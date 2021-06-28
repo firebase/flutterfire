@@ -94,6 +94,49 @@ class FirebaseFirestore extends FirebasePluginPlatform {
     return _delegate.enablePersistence(persistenceSettings);
   }
 
+  LoadBundleTask loadBundle(Uint8List bundle) {
+    return LoadBundleTask._(_delegate.loadBundle(bundle));
+  }
+
+  /// Changes this instance to point to a FirebaseFirestore emulator running locally.
+  ///
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "8080" (port 8080 is default)
+  ///
+  /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  void useFirestoreEmulator(String host, int port, {bool sslEnabled = false}) {
+    if (kIsWeb) {
+      // use useEmulator() API for web as settings are set immediately unlike native platforms
+      _delegate.useEmulator(host, port);
+    } else {
+      String mappedHost = host;
+      // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+        if (mappedHost == 'localhost' || mappedHost == '127.0.0.1') {
+          // ignore: avoid_print
+          print('Mapping Firestore Emulator host "$mappedHost" to "10.0.2.2".');
+          mappedHost = '10.0.2.2';
+        }
+      }
+
+      _delegate.settings = _delegate.settings.copyWith(
+        // "sslEnabled" has to be set to false for android to work
+        sslEnabled: sslEnabled,
+        host: '$mappedHost:$port',
+      );
+    }
+  }
+
+  /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
+  /// To read from the Firestore backend, use [GetOptions.source] as [Source.server].
+  Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(String name,
+      {GetOptions options = const GetOptions()}) async {
+    QuerySnapshotPlatform snapshotDelegate =
+        await _delegate.namedQueryGet(name, options: options);
+    return _JsonQuerySnapshot(FirebaseFirestore.instance, snapshotDelegate);
+  }
+
   /// Gets a [Query] for the specified collection group.
   Query<Map<String, dynamic>> collectionGroup(String collectionPath) {
     assert(
@@ -182,7 +225,12 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   ///
   /// You must set these before invoking any other methods on this [FirebaseFirestore] instance.
   set settings(Settings settings) {
-    _delegate.settings = settings;
+    _delegate.settings = _delegate.settings.copyWith(
+      sslEnabled: settings.sslEnabled,
+      persistenceEnabled: settings.persistenceEnabled,
+      host: settings.host,
+      cacheSizeBytes: settings.cacheSizeBytes,
+    );
   }
 
   /// The current [Settings] for this [FirebaseFirestore] instance.

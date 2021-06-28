@@ -6,8 +6,9 @@
 
 import 'dart:async';
 
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
+
 import 'firebase_interop.dart' as firebase_interop;
 import 'storage_interop.dart' as storage_interop;
 
@@ -67,6 +68,12 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
 
   /// Sets the maximum upload retry time to a value of [time].
   void setMaxUploadRetryTime(int time) => jsObject.setMaxUploadRetryTime(time);
+
+  /// Configures the Storage instance to work with a local emulator.
+  ///
+  /// Note: must be called before using storage methods, do not use
+  /// with production credentials as local connections are unencrypted
+  void useEmulator(String host, int port) => jsObject.useEmulator(host, port);
 }
 
 /// StorageReference is a reference to a Google Cloud Storage object.
@@ -191,9 +198,10 @@ class StorageReference
 
   /// Updates metadata from this reference at actual location with
   /// the new [metadata].
-  Future<FullMetadata> updateMetadata(SettableMetadata metadata) =>
-      handleThenable(jsObject.updateMetadata(metadata.jsObject))
-          .then(FullMetadata.getInstance);
+  Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
+    await handleThenable(jsObject.updateMetadata(metadata.jsObject));
+    return getMetadata();
+  }
 }
 
 /// The full set of object metadata, including read-only properties.
@@ -276,6 +284,7 @@ abstract class _UploadMetadataBase<
 
   /// The Base64-encoded MD5 hash for the object being uploaded.
   String get md5Hash => jsObject.md5Hash;
+
   set md5Hash(String s) {
     jsObject.md5Hash = s;
   }
@@ -446,39 +455,44 @@ abstract class _SettableMetadataBase<
 
   /// Served as the 'Cache-Control' header on object download.
   String get cacheControl => jsObject.cacheControl;
+
   set cacheControl(String s) {
     jsObject.cacheControl = s;
   }
 
   /// Served as the 'Content-Disposition' header on object download.
   String get contentDisposition => jsObject.contentDisposition;
+
   set contentDisposition(String s) {
     jsObject.contentDisposition = s;
   }
 
   /// Served as the 'Content-Encoding' header on object download.
   String get contentEncoding => jsObject.contentEncoding;
+
   set contentEncoding(String s) {
     jsObject.contentEncoding = s;
   }
 
   /// Served as the 'Content-Language' header on object download.
   String get contentLanguage => jsObject.contentLanguage;
+
   set contentLanguage(String s) {
     jsObject.contentLanguage = s;
   }
 
   /// Served as the 'Content-Type' header on object download.
   String get contentType => jsObject.contentType;
+
   set contentType(String s) {
     jsObject.contentType = s;
   }
 
   /// Additional user-defined custom metadata.
   Map<String, String> get customMetadata {
-    Map<String, String>? metadata = dartify(jsObject.customMetadata);
+    Map<String, dynamic>? metadata = dartify(jsObject.customMetadata);
     if (metadata != null) {
-      return metadata;
+      return Map<String, String>.from(metadata);
     } else {
       return {};
     }
@@ -502,12 +516,14 @@ class ListOptions extends JsObjectWrapper<storage_interop.ListOptionsJsImpl> {
   /// If set, limits the total number of prefixes and items to return.
   /// The default and maximum maxResults is 1000.
   int get maxResults => jsObject.maxResults;
+
   set maxResults(int n) => jsObject.maxResults = n;
 
   /// The [ListResult.nextPageToken] from a previous call to
   /// [StorageReference.list]. If provided, listing is resumed from the
   /// previous position.
   String get pageToken => jsObject.pageToken;
+
   set pageToken(String t) => jsObject.pageToken = t;
 }
 

@@ -1,3 +1,22 @@
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.1
+
+ - **FIX**: Fix FirebaseMessaging.onMessage and onMessageOpenedApp potentially throwing (#6093).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: implement isSupported for web (#6109).
+ - **BREAKING** **REFACTOR**: remove support for `senderId` named argument on `getToken` & `deleteToken` methods since the native Firebase SDKs no longer support it cross-platform.
+
+## 2.1.4
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 2.1.3
 
  - Update a dependency to the latest release.
