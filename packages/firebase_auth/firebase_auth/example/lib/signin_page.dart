@@ -690,17 +690,17 @@ class _PhoneSignInSectionState extends State<_PhoneSignInSection> {
     webConfirmationResult = confirmationResult;
   }
 
-  Future<UserCredential> _confirmCodeWeb() async {
+  Future<void> _confirmCodeWeb() async {
     if (webConfirmationResult != null) {
       try {
         await webConfirmationResult.confirm(_smsController.text);
       } catch (e) {
         widget._scaffold.showSnackBar(SnackBar(
-          content: Text('Failed to sign in: ' + e.toString()),
+          content: Text('Failed to sign in: ${e.toString()}'),
         ));
       }
     } else {
-      widget._scaffold.showSnackBar(SnackBar(
+      widget._scaffold.showSnackBar(const SnackBar(
         content:
             Text('Please input sms code received after verifying phone number'),
       ));
