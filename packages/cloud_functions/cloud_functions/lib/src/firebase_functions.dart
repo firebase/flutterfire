@@ -67,8 +67,8 @@ class FirebaseFunctions extends FirebasePluginPlatform {
 
   /// Changes this instance to point to a Cloud Functions emulator running locally.
   ///
-  /// Set the [origin] of the local emulator, such as "http://localhost:5001", or `null`
-  /// to remove.
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "5001" (port 5001 is default for functions package)
   void useFunctionsEmulator(String host, int port) {
     String mappedHost = host;
     // Android considers localhost as 10.0.2.2 - automatically handle this for users.
