@@ -53,6 +53,8 @@ abstract class FirestoreJsImpl {
 
   external void settings(Settings settings);
 
+  external void useEmulator(String host, int port);
+
 // ignore: prefer_void_to_null
   external PromiseJsImpl<Null> disableNetwork();
 

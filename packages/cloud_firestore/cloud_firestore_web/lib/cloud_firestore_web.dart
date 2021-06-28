@@ -61,6 +61,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
+  void useEmulator(String host, int port) {
+    return _webFirestore.useEmulator(host, port);
+  }
+
+  @override
   QueryPlatform collectionGroup(String collectionPath) {
     return QueryWeb(
         this, collectionPath, _webFirestore.collectionGroup(collectionPath),
