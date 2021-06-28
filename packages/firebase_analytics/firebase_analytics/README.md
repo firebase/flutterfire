@@ -13,7 +13,7 @@ To use this plugin, add `firebase_analytics` as a [dependency in your pubspec.ya
 
 If you wish to use Firebase Analytics without IDFA collection capability, open your `/ios/Podfile` and add the following global variable to the top of the file:
 
-```
+```ruby
 $FirebaseAnalyticsWithoutAdIdSupport = true
 ```
 
