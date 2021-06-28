@@ -163,7 +163,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #pragma mark - Firebase Messaging Delegate
 
 - (void)messaging:(nonnull FIRMessaging *)messaging
-    didReceiveRegistrationToken:(nullable NSString *)fcmToken {
+    didReceiveRegistrationToken:(nonnull NSString *)fcmToken {
   // Don't crash if the token is reset.
   if (fcmToken == nil) {
     return;
