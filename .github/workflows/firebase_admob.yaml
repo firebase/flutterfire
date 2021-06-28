@@ -1,0 +1,42 @@
+# This workflow runs builds only.
+name: firebase_admob
+
+on:
+  pull_request:
+    paths:
+      - "packages/firebase_admob/**"
+      - ".github/workflows/firebase_admob.yaml"
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_admob*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_admob_example*"
+jobs:
+  android:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh android ./lib/main.dart
+
+  apple:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-macos-desktop
+      - name: "Build iOS Example"
+        run: ./.github/workflows/scripts/build-example.sh ios ./lib/main.dart

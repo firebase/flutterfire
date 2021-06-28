@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /flutter-tests/{document=**} {
+    	allow read, write: if true;
+    }
+
+    match /firestore-bundle-tests/{document=**} {
+    	allow read, write: if true;
+    }
+
+    match /{path=**}/group-test/{documentId} {
+      allow read, write: if true;
+    }
+
+    match /flutter-tests/{testid}/group-test/{docid} {
+      allow read, write: if true;
+    }
+  }
+}
