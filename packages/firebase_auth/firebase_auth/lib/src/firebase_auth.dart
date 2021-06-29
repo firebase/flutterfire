@@ -89,7 +89,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
       }
     }
 
-    await _delegate.useEmulator(mappedHost, port);
+    await _delegate.useAuthEmulator(mappedHost, port);
   }
 
   /// The current Auth instance's tenant ID.
