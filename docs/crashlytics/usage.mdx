@@ -188,10 +188,10 @@ To catch such errors, you can use `runZonedGuarded` like do:
 
 ```dart
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runZonedGuarded<Future<void>>(() async {
     // The following lines are the same as previously explained in "Handling uncaught errors"
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
     runApp(MyApp());
