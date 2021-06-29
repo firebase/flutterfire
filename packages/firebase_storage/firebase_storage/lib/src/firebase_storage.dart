@@ -174,7 +174,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       }
     }
 
-    await _delegate.useEmulator(host, port);
+    await _delegate.useStorageEmulator(host, port);
   }
 
   @override

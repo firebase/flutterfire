@@ -180,7 +180,7 @@ void main() {
       });
     });
 
-    group('useEmulator', () {
+    group('useStorageEmulator', () {
       test('throws AssertionError when host is empty', () {
         expect(() => storage.useStorageEmulator('', 123), throwsAssertionError);
       });
@@ -192,7 +192,7 @@ void main() {
 
       test('verify delegate method is called with args', () {
         storage.useStorageEmulator('foo', 123);
-        verify(kMockStoragePlatform.useEmulator('foo', 123));
+        verify(kMockStoragePlatform.useStorageEmulator('foo', 123));
       });
     });
 
