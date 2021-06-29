@@ -153,6 +153,12 @@ Future<void> downloadURLExample() async {
 }
 ```
 
+### Cross-origin access (CORS for web only)
+
+If you wish to download a file on the `web` platform, you must configure your Cloud Storage bucket for cross-origin access (CORS).
+Please follow the [Firebase Storage documentation](https://firebase.google.com/docs/storage/web/download-files#cors_configuration) for the latest
+method for configuring your project to handle CORS.
+
 ## Uploading Files
 
 FlutterFire supports uploading via variety of ways to Firebase Storage, such a raw string values or

@@ -98,6 +98,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   void settings(firestore_interop.Settings settings) =>
       jsObject.settings(settings);
 
+  void useEmulator(String host, int port) => jsObject.useEmulator(host, port);
+
   Future enableNetwork() => handleThenable(jsObject.enableNetwork());
 
   Future disableNetwork() => handleThenable(jsObject.disableNetwork());

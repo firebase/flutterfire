@@ -52,6 +52,18 @@ class Settings {
     };
   }
 
+  Settings copyWith(
+          {bool? persistenceEnabled,
+          String? host,
+          bool? sslEnabled,
+          int? cacheSizeBytes}) =>
+      Settings(
+        persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
+        host: host ?? this.host,
+        sslEnabled: sslEnabled ?? this.sslEnabled,
+        cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
+      );
+
   @override
   bool operator ==(Object other) =>
       other is Settings && other.asMap.toString() == asMap.toString();

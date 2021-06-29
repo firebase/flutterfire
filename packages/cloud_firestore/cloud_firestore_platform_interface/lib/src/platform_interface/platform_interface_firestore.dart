@@ -20,7 +20,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
-  FirebaseFirestorePlatform({this.appInstance /*?*/}) : super(token: _token);
+  FirebaseFirestorePlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
@@ -55,6 +55,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   @protected
   FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  /// useEmulator is used for web only. Native platforms use Firestore settings
+  /// to initialize emulator.
+  void useEmulator(String host, int port) {
+    throw UnimplementedError('useEmulator() is not implemented');
   }
 
   /// Creates a write batch, used for performing multiple writes as a single
