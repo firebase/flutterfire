@@ -73,8 +73,7 @@ class Storage extends JsObjectWrapper<storage_interop.StorageJsImpl> {
   ///
   /// Note: must be called before using storage methods, do not use
   /// with production credentials as local connections are unencrypted
-  void useStorageEmulator(String host, int port) =>
-      jsObject.useEmulator(host, port);
+  void useEmulator(String host, int port) => jsObject.useEmulator(host, port);
 }
 
 /// StorageReference is a reference to a Google Cloud Storage object.

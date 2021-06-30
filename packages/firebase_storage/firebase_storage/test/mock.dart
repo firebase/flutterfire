@@ -110,9 +110,8 @@ class MockFirebaseStorage extends Mock
   }
 
   @override
-  Future<void> useStorageEmulator(String host, int port) async {
-    return super
-        .noSuchMethod(Invocation.method(#useStorageEmulator, [host, port]));
+  Future<void> useEmulator(String host, int port) async {
+    return super.noSuchMethod(Invocation.method(#useEmulator, [host, port]));
   }
 }
 

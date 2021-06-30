@@ -180,19 +180,20 @@ void main() {
       });
     });
 
-    group('useStorageEmulator', () {
+    group('useEmulator', () {
       test('throws AssertionError when host is empty', () {
-        expect(() => storage.useStorageEmulator('', 123), throwsAssertionError);
+        expect(() => storage.useEmulator(host: '', port: 123),
+            throwsAssertionError);
       });
 
       test('throws AssertionError when port is negative', () {
-        expect(
-            () => storage.useStorageEmulator('foo', -10), throwsAssertionError);
+        expect(() => storage.useEmulator(host: 'foo', port: -10),
+            throwsAssertionError);
       });
 
       test('verify delegate method is called with args', () {
-        storage.useStorageEmulator('foo', 123);
-        verify(kMockStoragePlatform.useStorageEmulator('foo', 123));
+        storage.useEmulator(host: 'foo', port: 123);
+        verify(kMockStoragePlatform.useEmulator('foo', 123));
       });
     });
 

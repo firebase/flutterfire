@@ -184,12 +184,12 @@ void main() {
     });
 
     group('emulator', () {
-      test('useAuthEmulator() should call delegate method', () async {
+      test('useEmulator() should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.useAuthEmulator(kMockHost, kMockPort))
+        when(mockAuthPlatform.useEmulator(kMockHost, kMockPort))
             .thenAnswer((i) async {});
-        await auth.useAuthEmulator(kMockHost, kMockPort);
-        verify(mockAuthPlatform.useAuthEmulator(kMockHost, kMockPort));
+        await auth.useEmulator('http://$kMockHost:$kMockPort');
+        verify(mockAuthPlatform.useEmulator(kMockHost, kMockPort));
       });
     });
 
@@ -867,7 +867,7 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  Future<void> useAuthEmulator(String host, int port) {
+  Future<void> useEmulator(String host, int port) {
     return super.noSuchMethod(
       Invocation.method(#useEmulator, [host, port]),
       returnValue: neverEndingFuture<void>(),

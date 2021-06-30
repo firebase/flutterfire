@@ -24,7 +24,7 @@ String get testEmulatorHost {
   return 'localhost';
 }
 
-const int testEmulatorPort = 9099;
+const String testEmulatorPort = '9099';
 
 class EmulatorOobCode {
   @protected
