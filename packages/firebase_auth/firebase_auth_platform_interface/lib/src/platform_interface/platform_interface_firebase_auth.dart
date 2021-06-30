@@ -123,13 +123,13 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Changes this instance to point to an Auth emulator running locally.
   ///
-  /// Set the [host] and [port] of the local emulator, such as "http://localhost"
+  /// Set the [host] and [port] of the local emulator, such as "localhost"
   /// with port 9099
   ///
   /// Note: Must be called immediately, prior to accessing auth methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  Future<void> useEmulator(String host, int port) {
-    throw UnimplementedError('useEmulator() is not implemented');
+  Future<void> useAuthEmulator(String host, int port) {
+    throw UnimplementedError('useAuthEmulator() is not implemented');
   }
 
   /// Applies a verification code sent to the user by email or other out-of-band

@@ -882,7 +882,7 @@ void main() {
 
     group('useEmulator()', () {
       test('calls useEmulator correctly', () async {
-        await auth.useEmulator('example.com', 31337);
+        await auth.useAuthEmulator('example.com', 31337);
         // check native method was called
         expect(log, <Matcher>[
           isMethodCall(

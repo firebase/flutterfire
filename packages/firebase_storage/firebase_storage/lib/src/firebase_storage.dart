@@ -151,14 +151,15 @@ class FirebaseStorage extends FirebasePluginPlatform {
 
   /// Changes this instance to point to a Storage emulator running locally.
   ///
-  /// Set the [host] (ex: localhost) and [port] (ex: 9199) of the local emulator.
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "9199" (port 9199 is default for storage package)
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
   ///
   /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
   /// storage.useStorageEmulator until v9
-  Future<void> useEmulator({required String host, required int port}) async {
+  Future<void> useStorageEmulator(String host, int port) async {
     assert(host.isNotEmpty);
     assert(!port.isNegative);
 
@@ -173,7 +174,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       }
     }
 
-    await _delegate.useEmulator(host, port);
+    await _delegate.useStorageEmulator(host, port);
   }
 
   @override
