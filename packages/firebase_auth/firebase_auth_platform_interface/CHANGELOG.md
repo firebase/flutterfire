@@ -1,3 +1,10 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
 ## 4.3.1
 
  - Update a dependency to the latest release.
