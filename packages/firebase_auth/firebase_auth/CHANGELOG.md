@@ -6,7 +6,7 @@
  - **DOCS**: phone provider account linking update (#6465).
  - **CHORE**: verifyPhoneNumber() example (#6476).
  - **CHORE**: rm deprecated jcenter repository (#6431).
- - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
 
 ## 1.4.1
 
