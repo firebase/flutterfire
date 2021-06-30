@@ -238,11 +238,14 @@ class UserWeb extends UserPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     _assertIsSignedOut(auth);
-
-    await _webUser.verifyBeforeUpdateEmail(
-      newEmail,
-      convertPlatformActionCodeSettings(actionCodeSettings),
-    );
+    try {
+      await _webUser.verifyBeforeUpdateEmail(
+        newEmail,
+        convertPlatformActionCodeSettings(actionCodeSettings),
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 }
 
