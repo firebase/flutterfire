@@ -3,7 +3,7 @@
 > Note: This release has breaking changes.
 
  - **FEAT**: setSettings now possible for android (#6367).
- - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
 
 ## 4.3.1
 
