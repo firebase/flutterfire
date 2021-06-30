@@ -2,7 +2,7 @@
 
 > Note: This release has breaking changes.
 
- - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: useStorageEmulator(host, port) API update.
 
 ## 2.1.2
 
