@@ -4,7 +4,7 @@
 
  - **FEAT**: setSettings now possible for android (#6367).
  - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
- - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
 
 ## 1.3.1
 
