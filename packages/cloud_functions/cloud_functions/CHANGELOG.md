@@ -3,7 +3,7 @@
 > Note: This release has breaking changes.
 
  - **CHORE**: rm deprecated jcenter repository (#6431).
- - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: useFunctionsEmulator(host, port) API update.
 
 ## 1.1.2
 
