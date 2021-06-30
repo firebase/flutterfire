@@ -26,7 +26,7 @@ void testsMain() {
     await Firebase.initializeApp();
     if (useEmulator) {
       await FirebaseStorage.instance
-          .useStorageEmulator(testEmulatorHost, testEmulatorPort);
+          .useEmulator(host: testEmulatorHost, port: testEmulatorPort);
     }
 
     // Add a write only file

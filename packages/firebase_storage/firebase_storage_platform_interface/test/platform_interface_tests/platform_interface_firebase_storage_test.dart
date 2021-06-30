@@ -149,9 +149,9 @@ void main() {
 
     test('throws if ref()', () {
       try {
-        firebaseStoragePlatform!.useStorageEmulator('foo', 1234);
+        firebaseStoragePlatform!.useEmulator('foo', 1234);
       } on UnimplementedError catch (e) {
-        expect(e.message, equals('useStorageEmulator() is not implemented'));
+        expect(e.message, equals('useEmulator() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
