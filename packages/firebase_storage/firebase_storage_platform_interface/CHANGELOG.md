@@ -1,3 +1,9 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: emulator API updates.
+
 ## 2.1.2
 
  - Update a dependency to the latest release.

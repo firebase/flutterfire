@@ -1,3 +1,10 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: emulator API updates.
+
 ## 1.1.2
 
  - Update a dependency to the latest release.

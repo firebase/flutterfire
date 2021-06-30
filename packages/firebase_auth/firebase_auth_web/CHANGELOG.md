@@ -1,3 +1,11 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
+ - **BREAKING** **FEAT**: emulator API updates.
+
 ## 1.3.1
 
  - Update a dependency to the latest release.
