@@ -1,3 +1,10 @@
+## 2.3.0
+
+ - **FIX**: withConverter examples in docs (#6438).
+ - **FIX**: DocumentReference @sealed annotation (#6436).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 2.2.2
 
  - Update a dependency to the latest release.

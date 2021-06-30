@@ -1,3 +1,7 @@
+## 5.2.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
 ## 5.1.2
 
  - Update a dependency to the latest release.

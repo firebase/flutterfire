@@ -1,3 +1,9 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+
 ## 1.1.2
 
  - Update a dependency to the latest release.
