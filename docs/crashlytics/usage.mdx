@@ -187,7 +187,7 @@ ElevatedButton(
 To catch such errors, you can use `runZonedGuarded` like do:
 
 ```dart
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runZonedGuarded<Future<void>>(() async {
