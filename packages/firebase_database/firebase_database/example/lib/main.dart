@@ -82,6 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _increment() async {
+    await _counterRef.set(ServerValue.increment(1));
+
+    await _messagesRef
+        .push()
+        .set(<String, String>{_kTestKey: '$_kTestValue $_counter'});
+  }
+
+  Future<void> _incrementAsTransaction() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
         await _counterRef.runTransaction((MutableData mutableData) async {
@@ -121,6 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
             ),
           ),
+          ElevatedButton(
+              onPressed: () async {
+                await _incrementAsTransaction();
+              },
+              child: const Text('increment as transaction')),
           ListTile(
             leading: Checkbox(
               onChanged: (bool? value) {
