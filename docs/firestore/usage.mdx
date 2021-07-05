@@ -757,29 +757,19 @@ await FirebaseFirestore.instance.enableNetwork()
 ## Emulator Usage
 
 If you are using the local [Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
-connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
-immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
+connect to this using the `useFirestoreEmulator` method. Ensure you pass the correct port on which the Firebase emulator is running on.
 
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
-> On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
-
 ```dart
-// Import foundation for [TargetPlatform].
-import 'package:flutter/foundation.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-// ...
-
-// Switch host based on platform.
-String host = defaultTargetPlatform == TargetPlatform.android
-    ? '10.0.2.2:8080'
-    : 'localhost:8080';
-
-// Set the host as soon as possible.
-FirebaseFirestore.instance.settings =
-    Settings(host: host, sslEnabled: false);
-
-// ...
+  // Ideal time to initialize
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  //...
+}
 ```
 
 
