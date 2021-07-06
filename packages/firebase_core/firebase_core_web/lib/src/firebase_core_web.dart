@@ -73,7 +73,22 @@ class FirebaseCoreWeb extends FirebasePlatform {
           throw coreNotInitialized();
         }
 
-        rethrow;
+        if (e.toString()
+                .contains("No Firebase App '[DEFAULT]' has been created") &&
+            options != null) {
+          app = firebase.initializeApp(
+            apiKey: options.apiKey,
+            authDomain: options.authDomain,
+            databaseURL: options.databaseURL,
+            projectId: options.projectId,
+            storageBucket: options.storageBucket,
+            messagingSenderId: options.messagingSenderId,
+            appId: options.appId,
+            measurementId: options.measurementId,
+          );
+        } else {
+          rethrow;
+        }
       }
     } else {
       assert(
