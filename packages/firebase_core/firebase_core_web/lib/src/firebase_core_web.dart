@@ -73,9 +73,11 @@ class FirebaseCoreWeb extends FirebasePlatform {
           throw coreNotInitialized();
         }
 
-        if (e.toString()
-                .contains("No Firebase App '[DEFAULT]' has been created") &&
-            options != null) {
+        bool noDefaultApp = e
+            .toString()
+            .contains("No Firebase App '[DEFAULT]' has been created");
+
+        if (noDefaultApp && options != null) {
           app = firebase.initializeApp(
             apiKey: options.apiKey,
             authDomain: options.authDomain,
