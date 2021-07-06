@@ -45,8 +45,7 @@ class MethodChannelFirebase extends FirebasePlatform {
       isAutomaticDataCollectionEnabled: map['isAutomaticDataCollectionEnabled'],
     );
 
-    MethodChannelFirebase.appInstances[methodChannelFirebaseApp.name] =
-        methodChannelFirebaseApp;
+    appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
     FirebasePluginPlatform
             ._constantsForPluginApps[methodChannelFirebaseApp.name] =
@@ -70,7 +69,6 @@ class MethodChannelFirebase extends FirebasePlatform {
     if (name == defaultFirebaseAppName) {
       throw noDefaultAppInitialization();
     }
-
     // Ensure that core has been initialized on the first usage of
     // initializeApp
     if (!isCoreInitialized) {
@@ -83,14 +81,24 @@ class MethodChannelFirebase extends FirebasePlatform {
     if (name == null) {
       MethodChannelFirebaseApp? defaultApp =
           appInstances[defaultFirebaseAppName];
+      // If options are present & no default app has been setup, the user is trying to initialize default from dart
+      if (defaultApp == null && options != null) {
+        _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
+          'Firebase#initializeApp',
+          <String, dynamic>{
+            'appName': defaultFirebaseAppName,
+            'options': options.asMap
+          },
+        ))!);
+      }
 
-      if (defaultApp == null) {
+      if (defaultApp == null && options == null) {
         throw coreNotInitialized();
       }
 
       return appInstances[defaultFirebaseAppName]!;
     }
-
+    // Only on initialisation of secondary app should we get to this point
     assert(
       options != null,
       'FirebaseOptions cannot be null when creating a secondary Firebase app.',
