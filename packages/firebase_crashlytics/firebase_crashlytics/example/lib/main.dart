@@ -21,7 +21,13 @@ const _kTestingCrashlytics = true;
 //ignore: avoid_void_async
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+  ));
 
   runZonedGuarded(() {
     runApp(MyApp());
@@ -30,6 +36,7 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
