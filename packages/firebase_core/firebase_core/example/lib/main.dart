@@ -26,11 +26,11 @@ class MyApp extends StatelessWidget {
   Future<void> initializeDefault() async {
     FirebaseApp app = await Firebase.initializeApp(
         options: const FirebaseOptions(
-          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-          appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-          messagingSenderId: '448618578101',
-          projectId: 'react-native-firebase-testing',
-        ));
+      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+    ));
     assert(app != null);
     print('Initialized default app $app');
   }
