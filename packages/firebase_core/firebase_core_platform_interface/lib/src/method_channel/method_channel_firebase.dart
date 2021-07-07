@@ -98,7 +98,7 @@ class MethodChannelFirebase extends FirebasePlatform {
 
       return appInstances[defaultFirebaseAppName]!;
     }
-    // Only on initialisation of secondary app should we get to this point
+
     assert(
       options != null,
       'FirebaseOptions cannot be null when creating a secondary Firebase app.',
