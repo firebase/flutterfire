@@ -1,3 +1,7 @@
+## 5.1.0
+
+- **FEAT**: linkWithPopup() now possible on web.
+
 ## 5.0.0
 
 > Note: This release has breaking changes.
