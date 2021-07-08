@@ -1,6 +1,7 @@
 ## 2.1.0
 
 - **FEAT**: linkWithPopup() now possible on web.
+- **FIX***: Credentials included in exceptions are now correctly converted to OAuthCredentials on web.
 
 ## 2.0.0
 

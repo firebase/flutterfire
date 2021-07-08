@@ -3,9 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import '../interop/auth.dart' as auth_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+
+import '../interop/auth.dart' as auth_interop;
 
 /// Given a web error, an [Exception] is returned.
 ///
@@ -25,11 +26,17 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
   String message =
       firebaseError.message.replaceFirst('(${firebaseError.code})', '');
 
+  auth_interop.AuthCredential firebaseAuthCredential = firebaseError.credential;
+  AuthCredential? credential =
+      firebaseAuthCredential is auth_interop.OAuthCredential
+          ? convertWebOAuthCredential(firebaseAuthCredential)
+          : convertWebAuthCredential(firebaseAuthCredential);
+
   return FirebaseAuthException(
     code: code,
     message: message,
     email: firebaseError.email,
-    credential: convertWebAuthCredential(firebaseError.credential),
+    credential: credential,
     phoneNumber: firebaseError.phoneNumber,
     tenantId: firebaseError.tenantId,
   );
