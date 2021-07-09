@@ -76,7 +76,7 @@ abstract class DocumentReference<T extends Object?> {
   ///
   /// Future<void> main() async {
   ///   // Writes now take a Model as parameter instead of a Map
-  ///   await johnRef.set(Model());
+  ///   await modelRef.set(Model());
   ///
   ///   // Reads now return a Model instead of a Map
   ///   final Model model = await modelRef.get().then((s) => s.data());
