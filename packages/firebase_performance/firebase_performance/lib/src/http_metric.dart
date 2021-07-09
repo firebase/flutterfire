@@ -20,49 +20,30 @@ part of firebase_performance;
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [HttpMetric] to avoid leaking on the platform side.
 class HttpMetric extends PerformanceAttributes {
-  HttpMetric._(this._handle, this.url, this.httpMethod);
-
-  final String url;
-  final HttpMethod httpMethod;
-
-  @override
-  bool _hasStopped = false;
-
-  int? _httpResponseCode;
-  int? _requestPayloadSize;
-  String? _responseContentType;
-  int? _responsePayloadSize;
-
-  @override
-  final int _handle;
+  HttpMetric._(HttpMetricPlatform delegate) : super._(delegate);
 
   /// HttpResponse code of the request.
-  int? get httpResponseCode => _httpResponseCode;
+  int? get httpResponseCode =>
+      (_delegate as HttpMetricPlatform).httpResponseCode;
 
   /// Size of the request payload.
-  int? get requestPayloadSize => _requestPayloadSize;
+  int? get requestPayloadSize =>
+      (_delegate as HttpMetricPlatform).requestPayloadSize;
 
   /// Content type of the response such as text/html, application/json, etc...
-  String? get responseContentType => _responseContentType;
+  String? get responseContentType =>
+      (_delegate as HttpMetricPlatform).responseContentType;
 
   /// Size of the response payload.
-  int? get responsePayloadSize => _responsePayloadSize;
+  int? get responsePayloadSize =>
+      (_delegate as HttpMetricPlatform).responsePayloadSize;
 
   /// HttpResponse code of the request.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set httpResponseCode(int? httpResponseCode) {
-    if (_hasStopped) return;
-
-    _httpResponseCode = httpResponseCode;
-    FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#httpResponseCode',
-      <String, Object?>{
-        'handle': _handle,
-        'httpResponseCode': httpResponseCode,
-      },
-    );
+    (_delegate as HttpMetricPlatform).httpResponseCode = httpResponseCode;
   }
 
   /// Size of the request payload.
@@ -70,16 +51,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set requestPayloadSize(int? requestPayloadSize) {
-    if (_hasStopped) return;
-
-    _requestPayloadSize = requestPayloadSize;
-    FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#requestPayloadSize',
-      <String, Object?>{
-        'handle': _handle,
-        'requestPayloadSize': requestPayloadSize,
-      },
-    );
+    (_delegate as HttpMetricPlatform).requestPayloadSize = requestPayloadSize;
   }
 
   /// Content type of the response such as text/html, application/json, etc...
@@ -87,16 +59,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set responseContentType(String? responseContentType) {
-    if (_hasStopped) return;
-
-    _responseContentType = responseContentType;
-    FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#responseContentType',
-      <String, Object?>{
-        'handle': _handle,
-        'responseContentType': responseContentType,
-      },
-    );
+    (_delegate as HttpMetricPlatform).responseContentType = responseContentType;
   }
 
   /// Size of the response payload.
@@ -104,16 +67,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set responsePayloadSize(int? responsePayloadSize) {
-    if (_hasStopped) return;
-
-    _responsePayloadSize = responsePayloadSize;
-    FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#responsePayloadSize',
-      <String, Object?>{
-        'handle': _handle,
-        'responsePayloadSize': responsePayloadSize,
-      },
-    );
+    (_delegate as HttpMetricPlatform).responsePayloadSize = responsePayloadSize;
   }
 
   /// Starts this [HttpMetric].
@@ -123,12 +77,7 @@ class HttpMetric extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value();
-
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#start',
-      <String, Object?>{'handle': _handle},
-    );
+    return (_delegate as HttpMetricPlatform).start();
   }
 
   /// Stops this [HttpMetric].
@@ -140,12 +89,6 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStopped = true;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#stop',
-      <String, Object?>{'handle': _handle},
-    );
+    return (_delegate as HttpMetricPlatform).stop();
   }
 }

@@ -20,6 +20,8 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
+  firebase_performance_platform_interface:
+    path: ../../firebase_performance_platform_interface
 
 dev_dependencies:
   e2e: ^0.6.1

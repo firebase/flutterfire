@@ -7,20 +7,9 @@ part of firebase_performance;
 
 /// Abstract class that allows adding/removing attributes to an object.
 abstract class PerformanceAttributes {
-  /// Maximum allowed length of a key passed to [putAttribute].
-  static const int maxAttributeKeyLength = 40;
+  PerformanceAttributes._(this._delegate);
 
-  /// Maximum allowed length of a value passed to [putAttribute].
-  static const int maxAttributeValueLength = 100;
-
-  /// Maximum allowed number of attributes that can be added.
-  static const int maxCustomAttributes = 5;
-
-  final Map<String, String> _attributes = <String, String>{};
-
-  bool get _hasStopped;
-
-  int get _handle;
+  PerformanceAttributesPlatform _delegate;
 
   /// Sets a String [value] for the specified attribute with [name].
   ///
@@ -39,22 +28,7 @@ abstract class PerformanceAttributes {
   /// If this object has been stopped, this method returns without adding the
   /// attribute.
   Future<void> putAttribute(String name, String value) {
-    if (_hasStopped ||
-        name.length > maxAttributeKeyLength ||
-        value.length > maxAttributeValueLength ||
-        _attributes.length == maxCustomAttributes) {
-      return Future<void>.value();
-    }
-
-    _attributes[name] = value;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'PerformanceAttributes#putAttribute',
-      <String, Object?>{
-        'handle': _handle,
-        'name': name,
-        'value': value,
-      },
-    );
+    return _delegate.putAttribute(name, value);
   }
 
   /// Removes an already added attribute.
@@ -62,33 +36,16 @@ abstract class PerformanceAttributes {
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
   Future<void> removeAttribute(String name) {
-    if (_hasStopped) return Future<void>.value();
-
-    _attributes.remove(name);
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'PerformanceAttributes#removeAttribute',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
+    return _delegate.removeAttribute(name);
   }
 
   /// Returns the value of an attribute.
   ///
   /// Returns `null` if an attribute with this [name] has not been added.
-  String? getAttribute(String name) => _attributes[name];
+  String? getAttribute(String name) => _delegate.getAttribute(name);
 
   /// All attributes added.
   Future<Map<String, String>> getAttributes() async {
-    if (_hasStopped) {
-      return Future<Map<String, String>>.value(
-        Map<String, String>.unmodifiable(_attributes),
-      );
-    }
-
-    final attributes =
-        await FirebasePerformance.channel.invokeMapMethod<String, String>(
-      'PerformanceAttributes#getAttributes',
-      <String, Object?>{'handle': _handle},
-    );
-    return attributes ?? {};
+    return _delegate.getAttributes();
   }
 }

@@ -7,13 +7,24 @@
 
 import 'dart:async';
 
-import 'package:http/http.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
-import 'package:firebase_performance/firebase_performance.dart';
-
-void main() => runApp(const MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, firebaseAppSnapshot) {
+        if (firebaseAppSnapshot.hasData) {
+          return MyApp();
+        } else {
+          return Container();
+        }
+      }));
+}
 
 void myLog(String msg) {
   print('My Log: $msg');

@@ -23,23 +23,7 @@ part of firebase_performance;
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [Trace] to not avoid leaking on the platform side.
 class Trace extends PerformanceAttributes {
-  Trace._(this._handle, this.name);
-
-  /// Maximum allowed length of the name of a [Trace].
-  static const int maxTraceNameLength = 100;
-
-  final Map<String, int> _metrics = <String, int>{};
-
-  bool _hasStarted = false;
-
-  @override
-  bool _hasStopped = false;
-
-  @override
-  final int _handle;
-
-  /// Name representing this [Trace] on the Firebase Console.
-  final String name;
+  Trace._(TracePlatform delegate) : super._(delegate);
 
   /// Starts this [Trace].
   ///
@@ -48,13 +32,7 @@ class Trace extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStarted = true;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#start',
-      <String, Object?>{'handle': _handle},
-    );
+    return (_delegate as TracePlatform).start();
   }
 
   /// Stops this [Trace].
@@ -66,13 +44,7 @@ class Trace extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStopped = true;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#stop',
-      <String, Object?>{'handle': _handle},
-    );
+    return (_delegate as TracePlatform).stop();
   }
 
   /// Increments the metric with the given [name].
@@ -81,15 +53,7 @@ class Trace extends PerformanceAttributes {
   /// not been started or has already been stopped, returns immediately without
   /// taking action.
   Future<void> incrementMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) {
-      return Future<void>.value();
-    }
-
-    _metrics[name] = (_metrics[name] ?? 0) + value;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#incrementMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
+    return (_delegate as TracePlatform).incrementMetric(name, value);
   }
 
   /// Sets the [value] of the metric with the given [name].
@@ -98,13 +62,7 @@ class Trace extends PerformanceAttributes {
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
   Future<void> setMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) return Future<void>.value();
-
-    _metrics[name] = value;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#setMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
+    return (_delegate as TracePlatform).setMetric(name, value);
   }
 
   /// Gets the value of the metric with the given [name].
@@ -112,12 +70,6 @@ class Trace extends PerformanceAttributes {
   /// If a metric with the given name doesn't exist, it is NOT created and a 0
   /// is returned.
   Future<int> getMetric(String name) async {
-    if (_hasStopped) return Future<int>.value(_metrics[name] ?? 0);
-
-    final metric = await FirebasePerformance.channel.invokeMethod<int>(
-      'Trace#getMetric',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
-    return metric ?? 0;
+    return (_delegate as TracePlatform).getMetric(name);
   }
 }

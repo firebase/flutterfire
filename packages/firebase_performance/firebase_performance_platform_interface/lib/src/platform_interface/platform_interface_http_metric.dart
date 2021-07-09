@@ -3,9 +3,8 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'platform_interface_firebase_performance.dart';
 
-abstract class HttpMetricPlatform extends PlatformInterface
-    with PerformanceAttributesPlatform {
-  HttpMetricPlatform(this.url, this.httpMethod) : super(token: Object());
+abstract class HttpMetricPlatform extends PerformanceAttributesPlatform {
+  HttpMetricPlatform(this.url, this.httpMethod);
 
   static void verifyExtends(HttpMetricPlatform instance) {
     PlatformInterface.verifyToken(instance, Object);

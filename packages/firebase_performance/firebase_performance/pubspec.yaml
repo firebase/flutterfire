@@ -13,6 +13,9 @@ environment:
 
 dependencies:
   firebase_core: ^1.5.0
+  firebase_core_platform_interface: ^4.0.1
+  firebase_performance_platform_interface:
+    path: '../firebase_performance_platform_interface'
   flutter:
     sdk: flutter
 

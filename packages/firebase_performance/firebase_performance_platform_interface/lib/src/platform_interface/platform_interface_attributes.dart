@@ -1,4 +1,6 @@
-abstract class PerformanceAttributesPlatform {
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+abstract class PerformanceAttributesPlatform extends PlatformInterface {
   /// Maximum allowed length of a key passed to [putAttribute].
   static const int maxAttributeKeyLength = 40;
 
@@ -7,6 +9,8 @@ abstract class PerformanceAttributesPlatform {
 
   /// Maximum allowed number of attributes that can be added.
   static const int maxCustomAttributes = 5;
+
+  PerformanceAttributesPlatform() : super(token: Object());
 
   Future<void> putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
