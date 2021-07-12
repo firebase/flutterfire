@@ -1,3 +1,24 @@
+## 2.0.7
+
+ - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.0.6
+
+ - Update a dependency to the latest release.
+
+## 2.0.5
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 2.0.4
+
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 2.0.3
+
+ - Update a dependency to the latest release.
+
 ## 2.0.2
 
  - Update a dependency to the latest release.

@@ -118,4 +118,9 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   void setMaxDownloadRetryTime(int time) {
     _maxDownloadRetryTime = time;
   }
+
+  @override
+  Future<void> useStorageEmulator(String host, int port) async {
+    guard(() => webStorage!.useStorageEmulator(host, port));
+  }
 }

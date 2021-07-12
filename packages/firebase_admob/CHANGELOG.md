@@ -1,3 +1,28 @@
+## 0.11.2
+
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+ - **FEAT**: remove dependency on Firebase & `firebase_core`.
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **DOCS**: include deprecation plan and migration guide for firebase_admob to google_mobile_ads (#5203).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: apply lints on firebase_admob (#5230).
+ - **CHORE**: bump dependencies for stable nnbd packages release (#5149).
+ - **CHORE**: Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: bump firebase_core and firebase_core_web (#4758).
+ - **CHORE**: remove quiver + remove dependency_overrides + use latest firebase (#4689).
+ - **CHORE**: Migrate firebase_core/firebase_core_platform_interface/firebase_core_web to non-nullable types (#4656).
+
+## 0.11.1
+
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+ - **FEAT**: remove dependency on Firebase & `firebase_core`.
+ - **DOCS**: include deprecation plan and migration guide for firebase_admob to google_mobile_ads (#5203).
+
 ## 0.11.0+2
 
  - Update a dependency to the latest release.

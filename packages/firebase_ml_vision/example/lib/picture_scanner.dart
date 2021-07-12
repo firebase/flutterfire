@@ -63,7 +63,7 @@ class _PictureScannerState extends State<PictureScanner> {
     final Completer<Size> completer = Completer<Size>();
 
     final Image image = Image.file(imageFile);
-    image.image.resolve(const ImageConfiguration()).addListener(
+    image.image.resolve(ImageConfiguration.empty).addListener(
       ImageStreamListener((ImageInfo info, bool _) {
         completer.complete(Size(
           info.image.width.toDouble(),

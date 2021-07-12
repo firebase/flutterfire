@@ -1,0 +1,39 @@
+name: firebase_app_check_example
+description: Firebase App Check example application.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  cupertino_icons: ^0.1.2
+  firebase_app_check:
+    path: ../
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  flutter:
+    sdk: flutter
+
+dependency_overrides:
+  firebase_app_check_platform_interface:
+    path: ../../../firebase_app_check/firebase_app_check_platform_interface
+  firebase_app_check_web:
+    path: ../../../firebase_app_check/firebase_app_check_web
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
+
+dev_dependencies:
+  drive: 0.1.0
+  flutter_driver:
+    sdk: flutter
+  test: any
+
+flutter:
+  uses-material-design: true

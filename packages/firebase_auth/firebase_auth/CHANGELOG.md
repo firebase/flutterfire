@@ -1,3 +1,43 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 1.4.1
+
+ - Update a dependency to the latest release.
+
+## 1.4.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
+## 1.3.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.1.4
+
+ - **FIX**: correctly cleanup Dictionary handlers (#6101).
+ - **DOCS**: Update the documentation of sendPasswordResetEmail (#6051).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.3
+
+ - **FIX**: Fix firebase_auth not being registered as a plugin (#5987).
+ - **CI**: refactor to use Firebase Auth emulator (#5939).
+
 ## 1.1.2
 
  - **FIX**: fixed an issue where Web could not connect to the Firebase Auth emulator (#5940).

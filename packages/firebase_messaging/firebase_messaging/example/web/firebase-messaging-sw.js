@@ -1,5 +1,5 @@
-importScripts("https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/8.6.1/firebase-messaging.js");
 
 firebase.initializeApp({
   apiKey: "AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0",
@@ -10,7 +10,7 @@ firebase.initializeApp({
   messagingSenderId: "448618578101",
   appId: "1:448618578101:web:ecaffe2bc4511738",
 });
-
+// Necessary to receive background messages:
 const messaging = firebase.messaging();
 
 // Optional:

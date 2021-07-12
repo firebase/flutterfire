@@ -7,25 +7,31 @@
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
-    "format": "prettier --write \"**/*.{js,jsx,json,md,mdx}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "check:linting": "eslint . --max-warnings=0",
+    "check:formatting": "prettier --check \"**/*.{js,jsx,ts,tsx,json,md,mdx}\"",
+    "check:typescript": "tsc",
+    "check:spelling": "cd .. && website/node_modules/.bin/spellchecker --quiet --files=\"docs/**/*.{md,mdx}\" --dictionaries=\"./website/dictionary.js\" --reports=\"website/spelling.json\" --plugins spell indefinite-article repeated-words syntax-mentions syntax-urls frontmatter"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.66",
-    "@docusaurus/module-type-aliases": "^2.0.0-alpha.66",
-    "@docusaurus/plugin-google-gtag": "^2.0.0-alpha.66",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.66",
-    "@types/classnames": "^2.2.10",
+    "@docusaurus/core": "^2.0.0-beta.0",
+    "@docusaurus/module-type-aliases": "^2.0.0-beta.0",
+    "@docusaurus/plugin-google-gtag": "^2.0.0-beta.0",
+    "@docusaurus/preset-classic": "^2.0.0-beta.0",
+    "@types/classnames": "^2.3.1",
     "@types/lodash.get": "^4.4.6",
-    "@types/react": "^16.9.55",
-    "@types/react-router-dom": "^5.1.5",
+    "@types/react": "^17.0.5",
+    "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
-    "classnames": "^2.2.6",
+    "sass": "^1.32.13",
+    "classnames": "^2.3.1",
     "compare-versions": "^3.6.0",
-    "docusaurus-plugin-sass": "^0.1.11",
-    "dotenv": "^8.2.0",
+    "docusaurus-plugin-sass": "^0.1.14",
+    "dotenv": "^9.0.2",
     "lodash.get": "^4.4.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.2.0",
     "react-medium-image-zoom": "^4.3.1"
   },
   "browserslist": {
@@ -41,13 +47,14 @@
     ]
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.34.0",
-    "@typescript-eslint/parser": "^2.34.0",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-react": "^7.20.0",
-    "prettier": "^2.0.5",
-    "typescript": "^3.9.3"
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "eslint": "^7.26.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.23.2",
+    "prettier": "^2.3.0",
+    "typescript": "^4.2.4",
+    "spellchecker-cli": "^4.4.0"
   }
 }

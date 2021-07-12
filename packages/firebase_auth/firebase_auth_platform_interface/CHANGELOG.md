@@ -1,3 +1,36 @@
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
+## 4.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
+## 4.2.4
+
+ - Update a dependency to the latest release.
+
+## 4.2.3
+
+ - Update a dependency to the latest release.
+
+## 4.2.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 4.2.1
+
+ - **FIX**: authentication forceResendingToken int can be null on iOS (#5944).
+
 ## 4.2.0
 
  - **FIX**: Move communication to EventChannels (#4643).

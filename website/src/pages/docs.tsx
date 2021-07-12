@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
-function DocsRedirect() {
+function DocsRedirect(): JSX.Element {
   const context = useDocusaurusContext();
   const { siteConfig } = context;
 

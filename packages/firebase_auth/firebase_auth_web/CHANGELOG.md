@@ -1,3 +1,37 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
+## 1.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
+## 1.2.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+
+## 1.1.3
+
+ - Update a dependency to the latest release.
+
+## 1.1.2
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.1
+
+ - Update a dependency to the latest release.
+
 ## 1.1.0
 
  - **FEAT**: OAuthProvider.parameters is now non-nullable (#5656).

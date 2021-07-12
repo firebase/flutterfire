@@ -206,10 +206,25 @@ class UserWeb extends UserPlatform {
     _assertIsSignedOut(auth);
 
     try {
-      await _webUser.updateProfile(auth_interop.UserProfile(
-        displayName: profile['displayName'],
-        photoURL: profile['photoURL'],
-      ));
+      auth_interop.UserProfile newProfile;
+
+      if (profile.containsKey('displayName') &&
+          profile.containsKey('photoURL')) {
+        newProfile = auth_interop.UserProfile(
+          displayName: profile['displayName'],
+          photoURL: profile['photoURL'],
+        );
+      } else if (profile.containsKey('displayName')) {
+        newProfile = auth_interop.UserProfile(
+          displayName: profile['displayName'],
+        );
+      } else {
+        newProfile = auth_interop.UserProfile(
+          photoURL: profile['photoURL'],
+        );
+      }
+
+      await _webUser.updateProfile(newProfile);
       await _webUser.reload();
       auth.sendAuthChangesEvent(auth.app.name, auth.currentUser);
     } catch (e) {
@@ -223,11 +238,14 @@ class UserWeb extends UserPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     _assertIsSignedOut(auth);
-
-    await _webUser.verifyBeforeUpdateEmail(
-      newEmail,
-      convertPlatformActionCodeSettings(actionCodeSettings),
-    );
+    try {
+      await _webUser.verifyBeforeUpdateEmail(
+        newEmail,
+        convertPlatformActionCodeSettings(actionCodeSettings),
+      );
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
   }
 }
 

@@ -1,3 +1,19 @@
+## 5.0.7
+
+ - Update a dependency to the latest release.
+
+## 5.0.6
+
+ - Update a dependency to the latest release.
+
+## 5.0.5
+
+ - Update a dependency to the latest release.
+
+## 5.0.4
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+
 ## 5.0.3
 
  - **FIX**: bubble exceptions (#5869).

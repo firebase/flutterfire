@@ -5,18 +5,18 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_test/flutter_test.dart';
-
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:firebase_storage_platform_interface/src/method_channel/method_channel_firebase_storage.dart';
+import 'package:flutter_test/flutter_test.dart';
+
 import '../mock.dart';
 
 void main() {
   setupFirebaseStorageMocks();
 
-  FirebaseStoragePlatform? storage;
-  FirebaseApp? app;
-  FirebaseApp? secondaryApp;
+  late FirebaseStoragePlatform storage;
+  late FirebaseApp app;
+  late FirebaseApp secondaryApp;
 
   String kBucket = 'foo';
 
@@ -33,13 +33,13 @@ void main() {
         ),
       );
 
-      storage = MethodChannelFirebaseStorage(app: app!, bucket: '');
+      storage = MethodChannelFirebaseStorage(app: app, bucket: '');
     });
 
     group('constructor', () {
       test('should create an instance with no args', () {
         MethodChannelFirebaseStorage test =
-            MethodChannelFirebaseStorage(app: app!, bucket: kBucket);
+            MethodChannelFirebaseStorage(app: app, bucket: kBucket);
         expect(test.app, equals(Firebase.app()));
       });
 
@@ -50,7 +50,7 @@ void main() {
       });
       test('create an instance with a secondary app', () {
         MethodChannelFirebaseStorage test =
-            MethodChannelFirebaseStorage(app: secondaryApp!, bucket: '');
+            MethodChannelFirebaseStorage(app: secondaryApp, bucket: '');
         expect(test.app, equals(secondaryApp));
       });
 
@@ -58,7 +58,7 @@ void main() {
         MethodChannelFirebaseStorage test1 =
             MethodChannelFirebaseStorage(app: Firebase.app(), bucket: '');
         MethodChannelFirebaseStorage test2 =
-            MethodChannelFirebaseStorage(app: secondaryApp!, bucket: '');
+            MethodChannelFirebaseStorage(app: secondaryApp, bucket: '');
         expect(test1.app, equals(Firebase.app()));
         expect(test2.app, equals(secondaryApp));
       });
@@ -95,7 +95,7 @@ void main() {
 
     group('ref', () {
       test('should return a [ReferencePlatform]', () {
-        final result = storage!.ref('foo.bar');
+        final result = storage.ref('foo.bar');
         expect(result, isInstanceOf<ReferencePlatform>());
       });
     });

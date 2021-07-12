@@ -1,3 +1,68 @@
+## 2.3.0
+
+ - **FIX**: withConverter examples in docs (#6438).
+ - **FIX**: DocumentReference @sealed annotation (#6436).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.2.2
+
+ - Update a dependency to the latest release.
+
+## 2.2.1
+
+ - **TEST**: error handling for loadBundle() & namedQueryGet() (#6197).
+ - **TEST**: improve query assertions (#6249).
+ - **TEST**: update and assert documentId field & isNotEqualTo filter test (#6225).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 2.2.0
+
+ - **FEAT**: support for `loadBundle()` & `namedQueryGet()` (#6037).
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+ - **FIX**: pass GetOptions to web Query.get (#6132).
+
+## 2.1.0
+
+ - **FIX**: Fix FirebaseOptions hashCode (#3263).
+ - **FEAT**: Add withConverter for Query (#6065).
+ - **DOCS**: add QueryDocumentSnapshot to the list of classes that received a breaking change (#6092).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Add withConverter function to CollectionReference, DocumentReference and Query (#6015).
+    This new method allows interacting with collections/documents in a type-safe way:
+
+    ```dart
+    final modelsRef = FirebaseFirestore
+        .instance
+        .collection('models')
+        .withConverter<Model>(
+          fromFirestore: (snapshot, _) => Model.fromJson(snapshot.data()!),
+          toFirestore: (model, _) => model.toJson(),
+        );
+
+    Future<void> main() async {
+      // Writes now take a Model as parameter instead of a Map
+      await modelsRef.add(Model());
+      final Model model = await modelsRef.doc('123').get().then((s) => s.data());
+    }
+    ```
+
+ - **BREAKING** **REFACTOR**: `DocumentReference`, `CollectionReference`, `Query`, `DocumentSnapshot`,
+   `CollectionSnapshot`, `QuerySnapshot`, `QueryDocumentSnapshot`, `Transaction.get`, `Transaction.set`
+   and `WriteBatch.set` now take an extra generic parameter.  (#6015).
+
+   See the [migration guide](https://firebase.flutter.dev/docs/firestore/2.0.0_migration) for more
+   information on how to update your code.
+
+ - **BREAKING** **FEAT**: convert FieldPath parameters from dynamic to Object (#5997).
+
 ## 1.0.7
 
  - **FIX**: Clear event listeners when firebase core is reinitialised (#5852).

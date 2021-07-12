@@ -29,7 +29,7 @@ class TextRecognizer {
     CloudTextRecognizerOptions? cloudOptions,
     required this.modelType,
     required int handle,
-  })   : _cloudOptions = cloudOptions,
+  })  : _cloudOptions = cloudOptions,
         _handle = handle,
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));

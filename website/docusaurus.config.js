@@ -10,9 +10,9 @@ module.exports = {
   projectName: 'flutterfire',
   themeConfig: {
     announcementBar: {
-      id: 'wip-nullsafety',
+      id: 'flutterfire-google-io-2021',
       content:
-        '📣 <a rel="noopener" href="https://firebase.flutter.dev/docs/null-safety"><b>Null-safety versions</b></a> are now available. This FlutterFire documentation hub is currently a work in progress - <a rel="noopener" target="_blank" href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>check out the roadmap to learn more.</b></a>.',
+        '📣 &nbsp;&nbsp; <a rel="noopener" href="https://invertase.io/blog/flutterfire-news-google-io-2021"><b>Read about what\'s new in the FlutterFire Google I/O 2021 updates.</b></a> &nbsp;&nbsp; 📣',
       backgroundColor: '#13B9FD',
       textColor: '#fff',
     },

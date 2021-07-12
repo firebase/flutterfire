@@ -1,3 +1,31 @@
+## 5.2.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
+## 5.1.2
+
+ - Update a dependency to the latest release.
+
+## 5.1.1
+
+ - Update a dependency to the latest release.
+
+## 5.1.0
+
+ - **FEAT**: loadBundle() & namedQueryGet() implementation (#6037).
+
+## 5.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: convert FieldPath parameters from dynamic to Object (#5997).
+
 ## 4.0.3
 
  - Update a dependency to the latest release.

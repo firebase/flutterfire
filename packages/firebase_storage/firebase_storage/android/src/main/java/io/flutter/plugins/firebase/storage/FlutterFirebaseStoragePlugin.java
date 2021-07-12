@@ -207,6 +207,18 @@ public class FlutterFirebaseStoragePlugin
     return out;
   }
 
+  private Task<Void> useEmulator(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          FirebaseStorage firebaseStorage = getStorage(arguments);
+          String host = (String) arguments.get("host");
+          int port = (int) arguments.get("port");
+          firebaseStorage.useEmulator(host, port);
+          return null;
+        });
+  }
+
   private Task<Void> referenceDelete(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -452,6 +464,9 @@ public class FlutterFirebaseStoragePlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
+      case "Storage#useEmulator":
+        methodCallTask = useEmulator(call.arguments());
+        break;
       case "Reference#delete":
         methodCallTask = referenceDelete(call.arguments());
         break;

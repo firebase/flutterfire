@@ -108,16 +108,6 @@ table {
 // Adds an icon to any external links on the menu
 li.menu__list-item > a[target='_blank'] {
   position: relative;
-
-  &:before {
-    content: url('/flutterfire/img/link-icon.svg');
-    position: absolute;
-    right: 18px;
-    top: 8px;
-    width: 15px;
-    height: 15px;
-    color: var(--ifm-menu-color);
-  }
 }
 
 .keyword {

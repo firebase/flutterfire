@@ -1,3 +1,31 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useFunctionsEmulator(host, port) API update.
+
+## 1.1.2
+
+ - Update a dependency to the latest release.
+
+## 1.1.1
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 1.1.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.0.7
+
+ - Update a dependency to the latest release.
+
+## 1.0.6
+
+ - **FIX**: possible null pointer exception when comparing error codes (#6008).
+
 ## 1.0.5
 
  - Update a dependency to the latest release.

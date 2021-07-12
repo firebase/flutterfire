@@ -18,7 +18,6 @@ FullMetadata fbFullMetadataToFullMetadata(
     'customMetadata': metadata.customMetadata,
     'fullPath': metadata.fullPath,
     'generation': metadata.generation,
-    // 'metadataGeneration': metadata.metadataGeneration,
     'md5Hash': metadata.md5Hash,
     'metageneration': metadata.metageneration,
     'name': metadata.name,

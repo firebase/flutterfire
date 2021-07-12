@@ -1,3 +1,32 @@
+## 9.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useStorageEmulator(host, port) API update.
+
+## 8.1.3
+
+ - Update a dependency to the latest release.
+
+## 8.1.2
+
+ - **FIX**: refFromUrl parse url (#6353).
+
+## 8.1.1
+
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 8.1.0
+
+ - **FEAT**: add support for the Firebase Storage emulator via `useEmulator` (#5936).
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 8.0.6
+
+ - Update a dependency to the latest release.
+
 ## 8.0.5
 
  - **FIX**: secondary storage buckets now work as expected on Web (#5863).

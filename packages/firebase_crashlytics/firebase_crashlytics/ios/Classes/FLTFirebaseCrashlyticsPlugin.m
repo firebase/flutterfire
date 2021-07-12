@@ -210,8 +210,12 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 #pragma mark - Utilities
 
 - (FIRStackFrame *)generateFrame:(NSDictionary *)errorElement {
+  NSString *methodName = [errorElement valueForKey:kCrashlyticsArgumentMethod];
+  NSString *className = [errorElement valueForKey:@"class"];
+  NSString *symbol = [NSString stringWithFormat:@"%@.%@", className, methodName];
+
   FIRStackFrame *frame = [FIRStackFrame
-      stackFrameWithSymbol:[errorElement valueForKey:kCrashlyticsArgumentMethod]
+      stackFrameWithSymbol:symbol
                       file:[errorElement valueForKey:kCrashlyticsArgumentFile]
                       line:[[errorElement valueForKey:kCrashlyticsArgumentLine] intValue]];
   return frame;

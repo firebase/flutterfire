@@ -294,6 +294,15 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// Currently signed-in [User].
   User? get currentUser => User.getInstance(jsObject.currentUser);
 
+  // Returns the current tenantId for the instance.
+  String? get tenantId {
+    return jsObject.tenantId;
+  }
+
+  set tenantId(String? tenantId) {
+    jsObject.tenantId = tenantId;
+  }
+
   /// The current Auth instance's language code.
   /// When set to [:null:], the default Firebase Console language setting
   /// is applied.
@@ -615,7 +624,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// Note: must be called before using auth methods, do not use
   /// with production credentials as local connections are unencrypted
-  void useEmulator(String origin) => jsObject.useEmulator(origin);
+  void useAuthEmulator(String origin) => jsObject.useEmulator(origin);
 
   /// Sets the current language to the default device/browser preference.
   void useDeviceLanguage() => jsObject.useDeviceLanguage();

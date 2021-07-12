@@ -1,3 +1,23 @@
+## 0.10.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.10.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.10.0-dev.4
+
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 0.10.0-dev.3
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0-dev.2
 
  - **REFACTOR**: upgrade example to v2 Android embedding.

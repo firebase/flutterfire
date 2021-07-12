@@ -43,7 +43,7 @@ class _CodecUtility {
   }
 
   static dynamic valueEncode(dynamic value) {
-    if (value is DocumentReference) {
+    if (value is _JsonDocumentReference) {
       return value._delegate;
     } else if (value is List) {
       return replaceValueWithDelegatesInArray(value);
@@ -55,7 +55,7 @@ class _CodecUtility {
 
   static dynamic valueDecode(dynamic value, FirebaseFirestore firestore) {
     if (value is DocumentReferencePlatform) {
-      return DocumentReference._(firestore, value);
+      return _JsonDocumentReference(firestore, value);
     } else if (value is List) {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {

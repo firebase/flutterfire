@@ -35,12 +35,16 @@ Firebase Auth enables you to subscribe in realtime to this state via a [`Stream`
 Once called, the stream provides an immediate event of the user's current authentication state, and then provides subsequent events whenever
 the authentication state changes.
 
+There are three methods for listening to authentication state changes:
+
+1. `authStateChanges()`
+
 To subscribe to these changes, call the `authStateChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
 
 ```dart
 FirebaseAuth.instance
   .authStateChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user == null) {
       print('User is currently signed out!');
     } else {
@@ -49,26 +53,89 @@ FirebaseAuth.instance
   });
 ```
 
-The stream returns a [`User`](!firebase_auth.User) class if the user is signed in, or `null` if they are not. You can read more
-about managing your users below.
+Events are fired when the following occurs:
 
-If you need authentication state change events along with any user token refresh events, you can subscribe via the
-`idTokenChanges()` method instead.
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
 
-Alternatively, if you need all user change events which also include authentication state changes and id token changes, you can subscribe via the
-`userChanges()` method. This stream provides realtime updates to the `User` class without having to call `reload()`, such as when credentials are linked,
-unlinked and when the user's profile is updated.
+2. `idTokenChanges()`
+
+To subscribe to these changes, call the `idTokenChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+FirebaseAuth.instance
+  .idTokenChanges()
+  .listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+```
+
+Events are fired when the following occurs:
+
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
+- When there is a change in the current user's token.
+
+**Warning:** if you set custom claims from your _own_ firebase admin sdk implementation, you will only see this event fire when the following occurs:
+
+- A user signs in or re-authenticates after the custom claims are modified. The ID token issued as a result will contain the latest claims.
+- An existing user session gets its ID token refreshed after an older token expires.
+- An ID token is force refreshed by calling `FirebaseAuth.instance.currentUser.getIdTokenResult(true)`.
+
+For further details, please visit [Firebase admin propagating custom claims to the client](https://firebase.google.com/docs/auth/admin/custom-claims#propagate_custom_claims_to_the_client)
+
+3. `userChanges()`
+
+To subscribe to these changes, call the `userChanges()` method on your [`FirebaseAuth`](!firebase_auth.FirebaseAuth) instance:
+
+```dart
+FirebaseAuth.instance
+  .userChanges()
+  .listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+```
+
+Events are fired when the following occurs:
+
+- Right after the listener has been registered.
+- When a user is signed in.
+- When the current user is signed out.
+- When there is a change in the current user's token.
+- When the following methods provided by `FirebaseAuth.instance.currentUser` are called:
+    * `reload()`
+    * `unlink()`
+    * `updateEmail()`
+    * `updatePassword()`
+    * `updatePhoneNumber()`
+    * `updateProfile()`
+
+**Warning:** `idTokenChanges()`, `userChanges()` & `authStateChanges()` will not fire if you update the `User` profile via your _own_ firebase admin sdk implementation.
+You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` to retrieve the latest `User` profile.
+
+`idTokenChanges()`, `userChanges()` & `authStateChanges()` will also not fire if you disable or delete the `User` via your _own_ firebase admin sdk implementation or the Firebase console.
+You will have to force a reload using the following `FirebaseAuth.instance.currentUser.reload()` which will cause a `user-disabled` or `user-not-found` exception that you can catch and handle in your app code.
 
 ## Persisting authentication state
 
 The Firebase SDKs for all platforms provide out of the box support for ensuring that your user's authentication state is persisted across
 app restarts or page reloads.
 
-On native platforms such as Android & iOS, this behaviour is not configurable and the user's authentication state will be persisted on-device
+On native platforms such as Android & iOS, this behavior is not configurable and the user's authentication state will be persisted on-device
 between app restarts. The user can clear the apps cached data via the device settings which will wipe any existing state being stored.
 
 On web platforms, the user's authentication state is stored in [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-If required, you can change this default behaviour to only persist authentication state for the current session, or not at all. To configure
+If required, you can change this default behavior to only persist authentication state for the current session, or not at all. To configure
 these settings, call the `setPersistence()` method (note; on native platforms an [`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html)
 will be thrown):
 
@@ -181,9 +248,9 @@ this scenario.
 For example, once signed in you can check the property and send an email verification to the user:
 
 ```dart
-User user = FirebaseAuth.instance.currentUser;
+User? user = FirebaseAuth.instance.currentUser;
 
-if (!user.emailVerified) {
+if (user!= null && !user.emailVerified) {
   await user.sendEmailVerification();
 }
 ```
@@ -197,6 +264,17 @@ You can pass state via a continue URL when sending email actions for verifying a
 The following example illustrates how to send an email verification link that will open in a mobile app first as a Firebase Dynamic Link using the custom dynamic link domain example.page.link (iOS app com.example.ios or Android app com.example.android where the app will install if not already installed and the minimum version is 12). The deep link will contain the continue URL payload https://www.example.com/?email=user@example.com.
 
 ```dart
+User? user = FirebaseAuth.instance.currentUser;
+
+if (user != null && !user.emailVerified) {
+  var actionCodeSettings = ActionCodeSettings(
+    url: 'https://www.example.com/?email=${user.email}',
+    dynamicLinkDomain: "example.page.link",
+    android: {"packageName": "com.example.android", "installApp": true, "minimumVersion": "12"},
+    iOS: {"bundleId": "com.example.ios"},
+    handleCodeInApp: true,
+  );
+
 
 User user = FirebaseAuth.instance.currentUser;
 
@@ -205,16 +283,13 @@ if (!user.emailVerified) {
 var actionCodeSettings = ActionCodeSettings(
         url: 'https://www.example.com/?email=${user.email}',
         dynamicLinkDomain: "example.page.link",
-        android: {
-          "packageName": "com.example.android",
-          "installApp": true,
-          "minimumVersion": "12"
-        },
-        iOS: {"bundleId": "com.example.ios"},
+        androidPackageName: "com.example.android",
+        androidInstallApp: true,
+        androidMinimumVersion: "12",
+        iOSBundleId: "com.example.ios",
         handleCodeInApp: true);
 
 await user.sendEmailVerification(actionCodeSettings);
-
 }
 ```
 
@@ -271,15 +346,15 @@ Construct the ActionCodeSettings object, which provides Firebase with instructio
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
-    url: "https://www.example.com/finishSignUp?cartId=1234",
+    url: 'https://www.example.com/finishSignUp?cartId=1234',
     // This must be true
     handleCodeInApp: true,
-    iOSBundleId: "com.example.ios",
-    androidPackageName: "com.example.android",
+    iOSBundleId: 'com.example.ios',
+    androidPackageName: 'com.example.android',
     // installIfNotAvailable
-    androidInstallApp: true,      
+    androidInstallApp: true,
     // minimumVersion
-    androidMinimumVersion: "12"); 
+    androidMinimumVersion: '12');
 ```
 
 Ask the user for their email.
@@ -287,7 +362,7 @@ Ask the user for their email.
 Send the authentication link to the user's email, and save the user's email in case the user completes the email sign-in on the same device.
 
 ```dart
-var emailAuth = "someemail@domain.com";
+var emailAuth = 'someemail@domain.com';
 FirebaseAuth.instance.sendSignInLinkToEmail(
         email: emailAuth, actionCodeSettings: acs)
     .catchError((onError) => print('Error sending email verification $onError'))
@@ -306,14 +381,11 @@ After you received the link, verify that it is meant for email link authenticati
 ```dart
 var auth = FirebaseAuth.instance;
 // Retrieve the email from wherever you stored it
-var emailAuth = "someemail@domain.com";
+var emailAuth = 'someemail@domain.com';
 // Confirm the link is a sign-in with email link.
 if (auth.isSignInWithEmailLink(emailLink)) {
   // The client SDK will parse the code from the link for you.
-  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink)
-    .catchError(
-      (onError) => print('Error signing in with email link $onError'))
-    .then((value) {
+  auth.signInWithEmailLink(email: emailAuth, emailLink: emailLink).then((value) {
     // You can access the new user via value.user
     // Additional user info profile *not* available via:
     // value.additionalUserInfo.profile == null
@@ -321,9 +393,10 @@ if (auth.isSignInWithEmailLink(emailLink)) {
     // value.additionalUserInfo.isNewUser;
     var userEmail = value.user;
     print('Successfully signed in with email link!');
+  }).catchError((onError) {
+    print('Error signing in with email link $onError');
   });
 }
-
 ```
 
 ## Signing Out
@@ -368,10 +441,10 @@ user:
 <TabItem value="currentUser">
 
 ```dart
-FirebaseAuth auth = FirebaseAuth.instance;
+var currentUser = FirebaseAuth.instance.currentUser;
 
-if (auth.currentUser != null) {
-  print(auth.currentUser.uid);
+if (currentUser != null) {
+  print(currentUser.uid);
 }
 ```
 
@@ -379,9 +452,9 @@ if (auth.currentUser != null) {
 <TabItem value="methods">
 
 ```dart
-UserCredential userCredential = await Firebase.auth.signInAnonymously();
+UserCredential userCredential = await FirebaseAuth.instance.signInAnonymously();
 
-print(userCredential.user.uid);
+print(userCredential.user!.uid);
 ```
 
 </TabItem>
@@ -391,7 +464,7 @@ print(userCredential.user.uid);
 ```dart
 FirebaseAuth.instance
   .authStateChanges()
-  .listen((User user) {
+  .listen((User? user) {
     if (user != null) {
       print(user.uid);
     }
@@ -403,13 +476,13 @@ FirebaseAuth.instance
 
 ### Deleting a user
 
-If your user wishes to delete their account from your project, this can be archived with the `delete()` method. Since this is a
+If your user wishes to delete their account from your project, this can be achieved with the `delete()` method. Since this is a
 security-sensitive operation, it requires that user must have recently signed-in. You can handle this scenario by catching the error, for
 example:
 
 ```dart
 try {
-  await FirebaseAuth.instance.currentUser.delete();
+  await FirebaseAuth.instance.currentUser!.delete();
 } on FirebaseAuthException catch (e) {
   if (e.code == 'requires-recent-login') {
     print('The user must reauthenticate before this operation can be executed.');
@@ -430,10 +503,10 @@ String email = 'barry.allen@example.com';
 String password = 'SuperSecretPassword!';
 
 // Create a credential
-EmailAuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
 
 // Reauthenticate
-await FirebaseAuth.instance.currentUser.reauthenticateWithCredential(credential);
+await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
 ```
 
 Reauthentication also works if you are using an OAuth credential instead.
@@ -484,10 +557,17 @@ Future<void> linkGoogleAndTwitter() async {
 
 ### Emulator Usage
 
-If you are using the local Authentication emulator, then it is possible to connect to this using the `useEmulator` method.
+If you are using the local Authentication emulator, then it is possible to connect to this using the `useAuthEmulator` method.
 Ensure you pass the correct port on which the Firebase emulator is running on.
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
 ```dart
-FirebaseAuth.instance.useEmulator('http://localhost:9099');
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Ideal time to initialize
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  //...
+}
 ```
