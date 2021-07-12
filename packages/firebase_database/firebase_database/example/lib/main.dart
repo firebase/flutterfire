@@ -133,7 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () async {
                 await _incrementAsTransaction();
               },
-              child: const Text('increment as transaction')),
+              child: const Text('Increment as transaction')),
           ListTile(
             leading: Checkbox(
               onChanged: (bool? value) {
