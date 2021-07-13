@@ -204,7 +204,7 @@ AuthCredential? convertWebOAuthCredential(
 
   return OAuthProvider(oAuthCredential.providerId).credential(
     accessToken: oAuthCredential.accessToken,
-    idToken: oAuthCredential.idToken,
+    idToken: oAuthCredential.idToken as String,
   );
 }
 
@@ -242,6 +242,18 @@ auth_interop.OAuthCredential? convertPlatformCredential(
   }
 
   if (credential is OAuthCredential) {
+    if (credential.rawNonce != null) {
+      auth_interop.OAuthCredentialOptions options =
+          auth_interop.OAuthCredentialOptions();
+      options.accessToken = credential.accessToken;
+      options.idToken = credential.idToken;
+      options.rawNonce = credential.rawNonce;
+
+      return auth_interop.OAuthProvider(credential.providerId)
+          .credentialWithOptions(
+        options,
+      );
+    }
     return auth_interop.OAuthProvider(credential.providerId).credential(
       credential.idToken,
       credential.accessToken,

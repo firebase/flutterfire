@@ -213,11 +213,29 @@ abstract class OAuthCredential extends AuthCredential {
 
   /// The OAuth ID token associated with the credential if it belongs to an
   /// OIDC provider, such as google.com.
-  external String get idToken;
+  external Object get idToken;
 
   /// The OAuth access token secret associated with the credential if it
   /// belongs to an OAuth 1.0 provider, such as twitter.com.
   external String get secret;
+}
+
+/// Defines the options for initializing an firebase.auth.OAuthCredential.
+/// For ID tokens with nonce claim, the raw nonce has to also be provided.
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredentialOptions>.
+@JS()
+@anonymous
+class OAuthCredentialOptions extends AuthCredential {
+  /// The OAuth access token used to initialize the OAuthCredential.
+  external String? accessToken;
+
+  /// The OAuth ID token used to initialize the OAuthCredential.
+  external String? idToken;
+
+  /// The raw nonce associated with the ID token.
+  /// It is required when an ID token with a nonce field is provided.
+  /// The SHA-256 hash of the raw nonce must match the nonce field in the ID token.
+  external String? rawNonce;
 }
 
 @JS('AuthProvider')
@@ -278,7 +296,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external OAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external OAuthCredential credential([String? idToken, String? accessToken]);
+  external OAuthCredential credential([Object? idToken, String? accessToken]);
 }
 
 @JS('TwitterAuthProvider')
