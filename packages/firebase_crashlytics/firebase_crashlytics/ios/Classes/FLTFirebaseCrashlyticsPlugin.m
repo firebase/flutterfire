@@ -5,8 +5,14 @@
 #import "FLTFirebaseCrashlyticsPlugin.h"
 
 #import <Firebase/Firebase.h>
+
+#if TARGET_OS_OSX
+// macOS platform does not support analytics
+#else
 #import <FirebaseCrashlytics/FIRAnalyticsInterop.h>
 #import <FirebaseCrashlytics/FIRCLSAnalyticsManager.h>
+#endif
+
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
@@ -29,6 +35,9 @@ NSString *const kCrashlyticsArgumentEnabled = @"enabled";
 NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
 NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
 
+#if TARGET_OS_OSX
+// macOS platform does not support analytics
+#else
 @interface FIRCLSAnalyticsManager ()
 @property(nonatomic, strong) id<FIRAnalyticsInterop> analytics;
 @end
@@ -36,6 +45,7 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 @interface FIRCrashlytics ()
 @property(nonatomic, strong) FIRCLSAnalyticsManager *analyticsManager;
 @end
+#endif
 
 @interface FLTFirebaseCrashlyticsPlugin ()
 @end
@@ -139,11 +149,14 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
   if (fatal) {
     NSTimeInterval timeInterval = [NSDate date].timeIntervalSince1970;
-    id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager analytics];
     [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
                                           forKey:@"com.firebase.crashlytics.flutter.fatal"];
-
+#if TARGET_OS_OSX
+    // macOS platform does not support analytics
+#else
+    id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager analytics];
     [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval toAnalytics:analytics];
+#endif
   }
 
   // Log additional custom value to match Android.
