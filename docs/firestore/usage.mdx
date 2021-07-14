@@ -494,7 +494,23 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.
+Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data, unless you specify that the data should be merged into the existing document, as follows:
+
+```dart highlight={6-8}
+CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+Future<void> addUser() {
+  return users
+    .doc('ABC123')
+    .set({
+      'full_name': "Mary Jane",
+      'age': 18
+    },
+    SetOptions(merge: true))
+    .then((value) => print("User Added"))
+    .catchError((error) => print("Failed to add user: $error"));
+}
+```
 
 ### Updating documents
 
