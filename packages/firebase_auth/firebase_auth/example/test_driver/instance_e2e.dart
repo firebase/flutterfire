@@ -135,7 +135,7 @@ void runInstanceTests() {
         //requires a fresh app
         FirebaseApp second = await Firebase.initializeApp(
             name: 'test-init',
-            options: FirebaseOptions(
+            options: const FirebaseOptions(
               apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
               appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
               messagingSenderId: '448618578101',
