@@ -23,6 +23,8 @@ Future<void> main() async {
     messagingSenderId: '448618578101',
     projectId: 'react-native-firebase-testing',
     authDomain: 'react-native-firebase-testing.firebaseapp.com',
+    iosClientId:
+        '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
   ));
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   runApp(AuthExampleApp());
