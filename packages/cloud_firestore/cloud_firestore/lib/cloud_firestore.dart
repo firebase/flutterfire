@@ -25,6 +25,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         GetOptions,
         SetOptions,
         DocumentChangeType,
+        PersistenceSettings,
         Settings;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
