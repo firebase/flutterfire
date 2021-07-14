@@ -123,6 +123,34 @@ void runInstanceTests() {
         await subscription.cancel();
       });
 
+      test('fires once on first initialization of FirebaseAuth', () async {
+        /* fixes a very specific bug: https://github.com/FirebaseExtended/flutterfire/issues/3628
+        If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
+        the user will receive two events. Why? The native SDK listener will always fire an event upon initial
+        listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
+        not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behaviour by sending an
+        event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
+         */
+
+        //requires a fresh app
+        FirebaseApp second = await Firebase.initializeApp(
+            name: 'test-init',
+            options: FirebaseOptions(
+              apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+              appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
+              messagingSenderId: '448618578101',
+              projectId: 'react-native-firebase-testing',
+              authDomain: 'react-native-firebase-testing.firebaseapp.com',
+              iosClientId:
+                  '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+            ));
+        Stream<User> stream =
+            FirebaseAuth.instanceFor(app: second).userChanges();
+
+        subscription = stream.listen(expectAsync1((event) {},
+            count: 1, reason: 'Stream should only call once'));
+      });
+
       test('calls callback with the current user and when user state changes',
           () async {
         await ensureSignedIn(testEmail);
