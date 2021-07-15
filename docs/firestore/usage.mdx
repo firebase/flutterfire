@@ -501,6 +501,7 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> addUser() {
   return users
+// existing document in 'users' collection: "ABC123"
     .doc('ABC123')
     .set({
       'full_name': "Mary Jane",
