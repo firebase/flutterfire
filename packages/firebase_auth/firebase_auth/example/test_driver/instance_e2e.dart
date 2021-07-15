@@ -124,13 +124,12 @@ void runInstanceTests() {
       });
 
       test('fires once on first initialization of FirebaseAuth', () async {
-        /* fixes a very specific bug: https://github.com/FirebaseExtended/flutterfire/issues/3628
-        If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
-        the user will receive two events. Why? The native SDK listener will always fire an event upon initial
-        listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
-        not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behaviour by sending an
-        event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
-         */
+        // Fixes a very specific bug: https://github.com/FirebaseExtended/flutterfire/issues/3628
+        // If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
+        // the user will receive two events. Why? The native SDK listener will always fire an event upon initial
+        // listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
+        // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behaviour by sending an
+        // event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
 
         //requires a fresh app
         FirebaseApp second = await Firebase.initializeApp(
