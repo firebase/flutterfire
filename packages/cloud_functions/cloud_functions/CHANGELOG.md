@@ -1,3 +1,11 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

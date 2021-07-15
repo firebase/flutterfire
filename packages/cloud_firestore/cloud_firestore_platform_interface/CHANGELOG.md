@@ -1,3 +1,7 @@
+## 5.3.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
 ## 5.2.0
 
  - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).

@@ -1,3 +1,9 @@
+## 0.7.0+7
+
+ - **REFACTOR**: add all perf API usage to the firebase_performance example app.
+ - **REFACTOR**: move plugin to a subdirectory.
+ - **CHORE**: update v2 embedding support (#6506).
+
 ## 0.7.0+6
 
  - **REFACTOR**: add all perf API usage to the firebase_performance example app.
