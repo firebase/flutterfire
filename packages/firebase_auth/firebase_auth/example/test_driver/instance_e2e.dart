@@ -148,8 +148,11 @@ void runInstanceTests() {
             FirebaseAuth.instanceFor(app: second).userChanges();
 
         subscription = stream.listen(
-          expectAsync1((User user) {},
-              count: 1, reason: 'Stream should only call once'),
+          expectAsync1(
+            (User user) {},
+            count: 1,
+            reason: 'Stream should only call once',
+          ),
         );
 
         await Future.delayed(const Duration(seconds: 2));
