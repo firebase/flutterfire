@@ -1,3 +1,18 @@
+## 2.1.0
+
+ - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).
+ - **FEAT**: submit analytics crash event on fatal - enables support for crash free users reporting (#5900).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.0.7
+
+ - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.0.6
+
+ - Update a dependency to the latest release.
+
 ## 2.0.5
 
  - **DOCS**: Add Flutter Favorite badge (#6190).

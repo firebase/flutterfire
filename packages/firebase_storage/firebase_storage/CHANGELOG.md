@@ -1,3 +1,28 @@
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Use `mappedHost` instead of `host` (#6539).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
+## 9.0.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useStorageEmulator(host, port) API update.
+
+## 8.1.3
+
+ - Update a dependency to the latest release.
+
+## 8.1.2
+
+ - **FIX**: refFromUrl parse url (#6353).
+
 ## 8.1.1
 
  - **DOCS**: Add Flutter Favorite badge (#6190).

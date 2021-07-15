@@ -138,6 +138,9 @@ and registered as a `serviceWorker` as demonstrated below:
 </body>
 ```
 
+> For a complete `firebase_messaging` web demonstration, please run our example app found [here](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging/example).
+> Take care to ensure you have setup the `web/firebase-messaging-sw.js` file found [here](https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_messaging/firebase_messaging/example/web/firebase-messaging-sw.js).
+
 ### Message types
 
 A message payload can be viewed as one of three types:
@@ -388,6 +391,7 @@ To learn more about how to send messages to devices subscribed to topics, view t
 To subscribe a device, call the [`subscribeToTopic`](!firebase_messaging.FirebaseMessaging.subscribeToTopic) method with the topic name:
 
 ```dart
+// subscribe to topic on each app start-up
 await FirebaseMessaging.instance.subscribeToTopic('weather');
 ```
 

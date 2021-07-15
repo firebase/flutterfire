@@ -1038,8 +1038,15 @@ NSString *const kErrMsgInvalidCredential =
 
 - (FIRAuth *_Nullable)getFIRAuthFromArguments:(NSDictionary *)arguments {
   NSString *appNameDart = arguments[@"appName"];
+  NSString *tenantId = arguments[@"tenantId"];
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
-  return [FIRAuth authWithApp:app];
+  FIRAuth *auth = [FIRAuth authWithApp:app];
+
+  if (tenantId != nil && ![tenantId isEqual:[NSNull null]]) {
+    auth.tenantID = tenantId;
+  }
+
+  return auth;
 }
 
 - (FIRActionCodeSettings *_Nullable)getFIRActionCodeSettingsFromArguments:
@@ -1260,6 +1267,12 @@ NSString *const kErrMsgInvalidCredential =
 
   userData[@"isAnonymous"] = @(user.isAnonymous);
   userData[@"emailVerified"] = @(user.isEmailVerified);
+
+  if (user.tenantID != nil) {
+    userData[@"tenantId"] = user.tenantID;
+  } else {
+    userData[@"tenantId"] = [NSNull null];
+  }
 
   // native does not provide refresh tokens
   userData[@"refreshToken"] = @"";

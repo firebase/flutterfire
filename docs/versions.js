@@ -34,7 +34,7 @@ export default {
     google_sign_in: "^4.4.4",
   },
   android: {
-    google_services: "4.3.3", // com.google.gms:google-services
+    google_services: "4.3.8", // com.google.gms:google-services
   },
   web: {
     firebase_cdn: "8.6.1", // https://firebase.google.com/support/release-notes/js

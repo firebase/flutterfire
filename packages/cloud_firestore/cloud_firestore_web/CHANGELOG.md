@@ -1,3 +1,17 @@
+## 2.3.0
+
+ - **FIX**: export PersistenceSettings (#6603).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: publish packages (#6513).
+
+## 2.2.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
+## 2.1.2
+
+ - Update a dependency to the latest release.
+
 ## 2.1.1
 
  - Update a dependency to the latest release.

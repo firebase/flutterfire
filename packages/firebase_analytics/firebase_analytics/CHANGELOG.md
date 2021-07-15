@@ -1,3 +1,13 @@
+## 8.2.0
+
+ - **FEAT**: firebase_analytics plugin with AnalyticsWithoutAdIdSupport pod (#6046).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 8.1.2
+
+ - Update a dependency to the latest release.
+
 ## 8.1.1
 
  - Update a dependency to the latest release.

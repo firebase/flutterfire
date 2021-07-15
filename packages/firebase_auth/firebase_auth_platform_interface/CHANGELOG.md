@@ -1,3 +1,26 @@
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: publish packages (#6513).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 4.3.1
+
+ - Update a dependency to the latest release.
+
+## 4.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 4.2.4
 
  - Update a dependency to the latest release.

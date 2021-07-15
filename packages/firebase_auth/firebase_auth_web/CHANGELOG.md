@@ -1,3 +1,27 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 1.3.1
+
+ - Update a dependency to the latest release.
+
+## 1.3.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 1.2.0
 
  - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).

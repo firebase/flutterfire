@@ -104,12 +104,12 @@ class GetUserName extends StatelessWidget {
           return Text("Something went wrong");
         }
 
-        if (snapshot.hasData && !snapshot.data.exists) {
+        if (snapshot.hasData && !snapshot.data!.exists) {
           return Text("Document does not exist");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
+          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
         }
 
@@ -163,9 +163,10 @@ class _UserInformationState extends State<UserInformation> {
 
         return new ListView(
           children: snapshot.data.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return new ListTile(
-              title: new Text(document.data()['full_name']),
-              subtitle: new Text(document.data()['company']),
+              title: new Text(data['full_name']),
+              subtitle: new Text(data['company']),
             );
           }).toList(),
         );
@@ -632,7 +633,7 @@ DocumentReference documentReference = FirebaseFirestore.instance
   .collection('users')
   .doc(documentId);
 
-return Firestore.instance.runTransaction((transaction) async {
+return FirebaseFirestore.instance.runTransaction((transaction) async {
   // Get the document
   DocumentSnapshot snapshot = await transaction.get(documentReference);
 
@@ -682,7 +683,7 @@ Future<void> batchDelete() {
   WriteBatch batch = FirebaseFirestore.instance.batch();
 
   return users.get().then((querySnapshot) {
-    querySnapshot.documents.forEach((document) {
+    querySnapshot.docs.forEach((document) {
       batch.delete(document.reference);
     });
 
@@ -756,29 +757,19 @@ await FirebaseFirestore.instance.enableNetwork()
 ## Emulator Usage
 
 If you are using the local [Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
-connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
-immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
+connect to this using the `useFirestoreEmulator` method. Ensure you pass the correct port on which the Firebase emulator is running on.
 
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
-> On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
-
 ```dart
-// Import foundation for [TargetPlatform].
-import 'package:flutter/foundation.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-// ...
-
-// Switch host based on platform.
-String host = defaultTargetPlatform == TargetPlatform.android
-    ? '10.0.2.2:8080'
-    : 'localhost:8080';
-
-// Set the host as soon as possible.
-FirebaseFirestore.instance.settings =
-    Settings(host: host, sslEnabled: false);
-
-// ...
+  // Ideal time to initialize
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  //...
+}
 ```
 
 
@@ -797,7 +788,7 @@ final response = await http.get(url);
 Uint8List buffer = Uint8List.fromList(response.body.codeUnits);
 
 // Load bundle into cache.
-LoadBundleTask task = firestore.loadBundle(buffer);
+LoadBundleTask task = FirebaseFirestore.instance.loadBundle(buffer);
 
 // Use .stream API to expose a stream which listens for LoadBundleTaskSnapshot events.
 task.stream.listen((taskStateProgress) {
@@ -810,7 +801,7 @@ task.stream.listen((taskStateProgress) {
 await task.stream.last;
 
 // Once bundle is loaded into cache, you may query for data by using the GetOptions() to specify data retrieval from cache.
-QuerySnapshot<Map<String, Object?>> snapshot = await firestore
+QuerySnapshot<Map<String, Object?>> snapshot = await FirebaseFirestore.instance
   .collection('cached-data')
   .get(const GetOptions(source: Source.cache));
 
@@ -826,6 +817,6 @@ query snapshot by calling the `namedQueryGet()` API:
 // Assuming you've loaded a data bundle that includes a named query called 'sports-teams':
 
 // Query snapshot loaded from cache.
-QuerySnapshot<Map<String, Object?>>  snapshot = await firestore.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
+QuerySnapshot<Map<String, Object?>>  snapshot = await FirebaseFirestore.instance.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
 
 ```

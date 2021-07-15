@@ -105,10 +105,8 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  @override
-  void initState() async {
-    super.initState();
-
+  // It is assumed that all messages contain a data field with the key 'type'
+  Future<void> setupInteractedMessage() async {
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage initialMessage =
@@ -116,7 +114,7 @@ class _Application extends State<Application> {
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
-    if (initialMessage?.data['type'] == 'chat') {
+    if (initialMessage != null && initialMessage.data['type'] == 'chat') {
       Navigator.pushNamed(context, '/chat',
           arguments: ChatArguments(initialMessage));
     }
@@ -129,6 +127,15 @@ class _Application extends State<Application> {
           arguments: ChatArguments(message));
       }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Run code required to handle interacted messages in an async function
+    // as initState() must not be async
+    setupInteractedMessage();
   }
 
   @override

@@ -153,6 +153,12 @@ Future<void> downloadURLExample() async {
 }
 ```
 
+### Cross-origin access (CORS for web only)
+
+If you wish to download a file on the `web` platform, you must configure your Cloud Storage bucket for cross-origin access (CORS).
+Please follow the [Firebase Storage documentation](https://firebase.google.com/docs/storage/web/download-files#cors_configuration) for the latest
+method for configuring your project to handle CORS.
+
 ## Uploading Files
 
 FlutterFire supports uploading via variety of ways to Firebase Storage, such a raw string values or
@@ -481,10 +487,18 @@ Future<void> handleTaskExample4(String filePath) async {
 ## Emulator Usage
 
 If you are using the local [Storage emulator](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
-connect to these by passing a `host` & `port` to the `useEmulator` method immediately after initializing Firebase.
+connect to this by passing a `host` & `port` to the `useStorageEmulator` method immediately after initializing Firebase.
 
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
 ```dart
-await FirebaseStorage.instance.useEmulator(host: 'localhost', port: 9080);
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Ideal time to initialize
+  await FirebaseStorage.instance.useStorageEmulator('localhost', 9199);
+  //...
+}
 ```
+

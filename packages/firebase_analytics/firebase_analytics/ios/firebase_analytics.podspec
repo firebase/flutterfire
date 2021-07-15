@@ -2,6 +2,11 @@ require 'yaml'
 
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
+firebase_analytics = 'Firebase/Analytics'
+
+if defined?($FirebaseAnalyticsWithoutAdIdSupport)
+firebase_analytics = 'Firebase/AnalyticsWithoutAdIdSupport'
+end
 
 if defined?($FirebaseSDKVersion)
   Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
@@ -33,7 +38,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
 
   s.dependency 'firebase_core'
-  s.dependency 'Firebase/Analytics', firebase_sdk_version
+  s.dependency firebase_analytics, firebase_sdk_version
   
   s.static_framework = true
   s.pod_target_xcconfig = { 

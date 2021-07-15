@@ -166,22 +166,33 @@ void main() {
         expect(ref, isA<Reference>());
         verify(kMockStoragePlatform.ref(testPath));
       });
+
+      test('verify special characters are allowed in http path', () {
+        const String customBucket = 'test.appspot.com';
+        const String testPath = '[!@+= ^&*_+-= {};,.<> ].jpg';
+        const String url =
+            'https://firebasestorage.googleapis.com/v0/b/$customBucket/o/$testPath?alt=media';
+
+        final ref = storage.refFromURL(url);
+
+        expect(ref, isA<Reference>());
+        verify(kMockStoragePlatform.ref(testPath));
+      });
     });
 
-    group('useEmulator', () {
+    group('useStorageEmulator', () {
       test('throws AssertionError when host is empty', () {
-        expect(() => storage.useEmulator(host: '', port: 123),
-            throwsAssertionError);
+        expect(() => storage.useStorageEmulator('', 123), throwsAssertionError);
       });
 
       test('throws AssertionError when port is negative', () {
-        expect(() => storage.useEmulator(host: 'foo', port: -10),
-            throwsAssertionError);
+        expect(
+            () => storage.useStorageEmulator('foo', -10), throwsAssertionError);
       });
 
       test('verify delegate method is called with args', () {
-        storage.useEmulator(host: 'foo', port: 123);
-        verify(kMockStoragePlatform.useEmulator('foo', 123));
+        storage.useStorageEmulator('foo', 123);
+        verify(kMockStoragePlatform.useStorageEmulator('foo', 123));
       });
     });
 

@@ -9,7 +9,8 @@ part of cloud_firestore;
 ///
 /// The document at the referenced location may or may not exist.
 /// A [DocumentReference] can also be used to create a [CollectionReference]
-/// to a subcollection.@sealed
+/// to a subcollection.
+@sealed
 @immutable
 abstract class DocumentReference<T extends Object?> {
   /// The Firestore instance associated with this document reference.
@@ -69,13 +70,13 @@ abstract class DocumentReference<T extends Object?> {
   ///     .collection('models')
   ///     .doc('123')
   ///     .withConverter<Model>(
-  ///       fromFirestore: (json) => Model.fromJson(json),
-  ///       toFirestore: (model) => model.toJson(),
+  ///       fromFirestore: (snapshot, _) => Model.fromJson(snapshot.data()!),
+  ///       toFirestore: (model, _) => model.toJson(),
   ///     );
   ///
   /// Future<void> main() async {
   ///   // Writes now take a Model as parameter instead of a Map
-  ///   await johnRef.set(Model());
+  ///   await modelRef.set(Model());
   ///
   ///   // Reads now return a Model instead of a Map
   ///   final Model model = await modelRef.get().then((s) => s.data());

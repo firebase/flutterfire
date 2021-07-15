@@ -1,3 +1,24 @@
+## 2.4.0
+
+ - **FIX**: export PersistenceSettings (#6603).
+ - **FIX**: Fixed variable name (#6564).
+ - **FIX**: withConverter examples in docs (#6438).
+ - **FIX**: DocumentReference @sealed annotation (#6436).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.3.0
+
+ - **FIX**: withConverter examples in docs (#6438).
+ - **FIX**: DocumentReference @sealed annotation (#6436).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 2.2.2
+
+ - Update a dependency to the latest release.
+
 ## 2.2.1
 
  - **TEST**: error handling for loadBundle() & namedQueryGet() (#6197).

@@ -1,3 +1,13 @@
+## 7.1.2
+
+ - **DOCS**: update database example with increment() (#6518).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
+## 7.1.1
+
+ - Update a dependency to the latest release.
+
 ## 7.1.0
 
  - **FEAT**: Add support for RTDB get method. (#6208).

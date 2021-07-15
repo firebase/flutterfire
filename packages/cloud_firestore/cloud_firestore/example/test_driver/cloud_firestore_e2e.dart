@@ -6,7 +6,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'collection_reference_e2e.dart';
@@ -29,11 +28,7 @@ void testsMain() {
     await Firebase.initializeApp();
 
     if (kUseFirestoreEmulator) {
-      String host = !kIsWeb && defaultTargetPlatform == TargetPlatform.android
-          ? '10.0.2.2:8080'
-          : 'localhost:8080';
-      FirebaseFirestore.instance.settings =
-          Settings(host: host, sslEnabled: false, persistenceEnabled: true);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
     }
   });
 

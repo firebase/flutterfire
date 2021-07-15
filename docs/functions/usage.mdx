@@ -68,15 +68,21 @@ Ensure you pass the correct port on which the Firebase emulator is running on.
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system. You only have to call `useFunctionsEmulator` once, so do it as early as possible.
 
 ```dart
-FirebaseFunctions.instance
-      .useFunctionsEmulator(origin: 'http://localhost:5001');
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Ideal time to initialize
+  FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
+  //...
+}
 ```
 
 If you have specified a region for your Cloud Function emulator, you will also have to provide the same region in your setup:
 
 ```dart
 FirebaseFunctions.instanceFor(region: 'europe-west1')
-      .useFunctionsEmulator(origin: 'http://localhost:5001');
+      .useFunctionsEmulator('localhost', 5001);
 ```
 
 ### iOS

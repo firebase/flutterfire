@@ -1,3 +1,32 @@
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 1.4.1
+
+ - Update a dependency to the latest release.
+
+## 1.4.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
 ## 1.3.0
 
  - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).

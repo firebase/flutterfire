@@ -4,8 +4,7 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
-        mavenLocal()
+        mavenCentral()
     }
 
     dependencies {
@@ -16,8 +15,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
-        mavenLocal()
+        mavenCentral()
     }
 }
 

@@ -111,8 +111,8 @@ abstract class FirebaseStoragePlatform extends PlatformInterface {
   ///
   /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
   /// storage.useStorageEmulator until v9
-  Future<void> useEmulator(String host, int port) {
-    throw UnimplementedError('useEmulator() is not implemented');
+  Future<void> useStorageEmulator(String host, int port) {
+    throw UnimplementedError('useStorageEmulator() is not implemented');
   }
 
   /// The new maximum operation retry time in milliseconds.

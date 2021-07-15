@@ -61,6 +61,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
+  void useEmulator(String host, int port) {
+    return _webFirestore.useEmulator(host, port);
+  }
+
+  @override
   QueryPlatform collectionGroup(String collectionPath) {
     return QueryWeb(
         this, collectionPath, _webFirestore.collectionGroup(collectionPath),
@@ -128,6 +133,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Enable persistence of Firestore data.
   @override
   Future<void> enablePersistence([PersistenceSettings? settings]) {
+    if (settings != null) {
+      firestore_interop.PersistenceSettings interopSettings =
+          firestore_interop.PersistenceSettings(
+              synchronizeTabs: settings.synchronizeTabs);
+
+      return guard(() => _webFirestore.enablePersistence(interopSettings));
+    }
+
     return guard(_webFirestore.enablePersistence);
   }
 

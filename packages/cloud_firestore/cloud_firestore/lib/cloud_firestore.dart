@@ -10,6 +10,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
@@ -24,6 +25,7 @@ export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
         GetOptions,
         SetOptions,
         DocumentChangeType,
+        PersistenceSettings,
         Settings;
 export 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebaseException;
