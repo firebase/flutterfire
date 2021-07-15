@@ -143,11 +143,16 @@ void runInstanceTests() {
               iosClientId:
                   '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
             ));
+
         Stream<User> stream =
             FirebaseAuth.instanceFor(app: second).userChanges();
 
-        subscription = stream.listen(expectAsync1((event) {},
-            count: 1, reason: 'Stream should only call once'));
+        subscription = stream.listen(
+          expectAsync1((User user) {},
+              count: 1, reason: 'Stream should only call once'),
+        );
+
+        await Future.delayed(Duration(seconds: 2));
       });
 
       test('calls callback with the current user and when user state changes',
