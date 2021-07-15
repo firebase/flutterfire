@@ -131,7 +131,7 @@ void runInstanceTests() {
         // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behaviour by sending an
         // event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
 
-        //requires a fresh app
+        // Requires a fresh app.
         FirebaseApp second = await Firebase.initializeApp(
             name: 'test-init',
             options: const FirebaseOptions(
