@@ -152,7 +152,7 @@ void runInstanceTests() {
               count: 1, reason: 'Stream should only call once'),
         );
 
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
       });
 
       test('calls callback with the current user and when user state changes',
