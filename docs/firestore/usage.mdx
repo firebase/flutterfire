@@ -508,7 +508,7 @@ Future<void> addUser() {
       'age': 18
     },
     SetOptions(merge: true))
-    .then((value) => print("User Added"))
+    .then((value) => print("'full_name' & 'age' merged with existing data!"))
     .catchError((error) => print("Failed to add user: $error"));
 }
 ```
