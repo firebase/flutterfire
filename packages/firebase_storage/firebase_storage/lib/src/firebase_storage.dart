@@ -159,7 +159,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
   /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
   /// storage.useStorageEmulator until v9
   @Deprecated(
-    'Will be removed in version 10.0.0. '
+    'Will be removed in future release. '
     'Use useStorageEmulator().',
   )
   Future<void> useEmulator({required String host, required int port}) async {
