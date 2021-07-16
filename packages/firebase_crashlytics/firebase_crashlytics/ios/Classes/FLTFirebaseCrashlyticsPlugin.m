@@ -9,8 +9,13 @@
 #if TARGET_OS_OSX
 // macOS platform does not support analytics
 #else
+#if __has_include(<FirebaseCrashlytics/FIRAnalyticsInterop.h>)
 #import <FirebaseCrashlytics/FIRAnalyticsInterop.h>
 #import <FirebaseCrashlytics/FIRCLSAnalyticsManager.h>
+#else
+#import "FIRAnalyticsInterop.h"
+#import "FIRCLSAnalyticsManager.h"
+#endif
 #endif
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
