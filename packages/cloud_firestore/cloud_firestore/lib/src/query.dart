@@ -682,14 +682,16 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (field != FieldPath.documentId && hasDocumentIdField) {
         assert(
           operator != '!=',
-          'You cannot use '!=' filters whilst using a FieldPath.documentId field in another filter.',
+          'You cannot use ' !=
+              ' filters whilst using a FieldPath.documentId field in another filter.',
         );
       }
 
       if (field == FieldPath.documentId) {
         assert(
           !hasNotEqualToNotOperatorAndNotDocumentIdField,
-          'You cannot use FieldPath.documentId field whilst using a '!=' filter on a different field.',
+          'You cannot use FieldPath.documentId field whilst using a ' !=
+              ' filter on a different field.',
         );
         hasDocumentIdField = true;
       }
