@@ -1,3 +1,7 @@
+## 2.1.1
+
+ - **FIX**: issue where build would fail with missing header (#6628).
+
 ## 2.1.0
 
  - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).
