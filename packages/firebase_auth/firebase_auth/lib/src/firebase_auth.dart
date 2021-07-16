@@ -81,7 +81,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
   /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
   @Deprecated(
-    'Will be removed in version 3.0.0. '
+    'Will be removed in future release. '
     'Use useAuthEmulator().',
   )
   Future<void> useEmulator(String origin) async {
