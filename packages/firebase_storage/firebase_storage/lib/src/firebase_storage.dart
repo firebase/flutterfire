@@ -155,9 +155,6 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  ///
-  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
-  /// storage.useStorageEmulator until v9
   @Deprecated(
     'Will be removed in future release. '
     'Use useStorageEmulator().',
@@ -186,9 +183,6 @@ class FirebaseStorage extends FirebasePluginPlatform {
   ///
   /// Note: Must be called immediately, prior to accessing storage methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
-  ///
-  /// Note: storage emulator is not supported for web yet. firebase-js-sdk does not support
-  /// storage.useStorageEmulator until v9
   Future<void> useStorageEmulator(String host, int port) async {
     assert(host.isNotEmpty);
     assert(!port.isNegative);
