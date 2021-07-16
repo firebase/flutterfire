@@ -162,11 +162,11 @@ class _UserInformationState extends State<UserInformation> {
         }
 
         return new ListView(
-          children: snapshot.data.docs.map((DocumentSnapshot document) {
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
             return new ListTile(
-              title: new Text(data['full_name']),
-              subtitle: new Text(data['company']),
+              title: new Text("${data['full_name']}"),
+              subtitle: new Text("${data['company']}"),
             );
           }).toList(),
         );
