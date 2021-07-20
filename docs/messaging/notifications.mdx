@@ -114,19 +114,19 @@ class _Application extends State<Application> {
 
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
-    if (initialMessage != null && initialMessage.data['type'] == 'chat') {
-      Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(initialMessage));
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (message.data['type'] == 'chat') {
-        Navigator.pushNamed(context, '/chat',
-          arguments: ChatArguments(message));
-      }
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+  
+  Future<void> _handleMessage(RemoteMessage message) {
+    if (message.data['type'] == 'chat') {
+      Navigator.pushNamed(context, '/chat', arguments: ChatArguments(message));
+    }
   }
 
   @override
