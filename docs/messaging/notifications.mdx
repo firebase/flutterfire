@@ -115,7 +115,7 @@ class _Application extends State<Application> {
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
     if (initialMessage != null) {
-      _handleMessage(initialMessage);
+      await _handleMessage(initialMessage);
     }
 
     // Also handle any interaction when the app is in the background via a
