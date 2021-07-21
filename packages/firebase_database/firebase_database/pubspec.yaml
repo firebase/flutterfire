@@ -11,6 +11,8 @@ environment:
 
 dependencies:
   firebase_core: ^1.4.0
+  firebase_database_platform_interface:
+    path: ../firebase_database_platform_interface
   flutter:
     sdk: flutter
 
