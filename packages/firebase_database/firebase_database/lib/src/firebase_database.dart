@@ -28,6 +28,9 @@ class FirebaseDatabase {
   /// Gets the instance of FirebaseDatabase for the default Firebase app.
   static FirebaseDatabase get instance => _instance;
 
+  @visibleForTesting
+  static MethodChannel get channel => MethodChannelDatabase.channel;
+
   /// Gets a DatabaseReference for the root of your Firebase Database.
   DatabaseReference reference() => DatabaseReference._(_delegate.reference());
 
