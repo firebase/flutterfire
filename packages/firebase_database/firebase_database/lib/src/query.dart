@@ -27,32 +27,27 @@ class Query {
   }
 
   /// Fires when children are added.
-  Stream<Event> get onChildAdded => _queryPlatform
-      .observe(EventType.childAdded)
+  Stream<Event> get onChildAdded => _queryPlatform.onChildAdded
       .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<Event> get onChildRemoved => _queryPlatform
-      .observe(EventType.childRemoved)
+  Stream<Event> get onChildRemoved => _queryPlatform.onChildRemoved
       .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are changed.
-  Stream<Event> get onChildChanged => _queryPlatform
-      .observe(EventType.childChanged)
+  Stream<Event> get onChildChanged => _queryPlatform.onChildChanged
       .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when children are moved.
-  Stream<Event> get onChildMoved => _queryPlatform
-      .observe(EventType.childMoved)
+  Stream<Event> get onChildMoved => _queryPlatform.onChildMoved
       .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue => _queryPlatform
-      .observe(EventType.value)
+  Stream<Event> get onValue => _queryPlatform.onValue
       .handleError((error) => DatabaseError._(error))
       .map((item) => Event._(item));
 
