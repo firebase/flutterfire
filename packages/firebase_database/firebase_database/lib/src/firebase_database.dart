@@ -11,10 +11,17 @@ class FirebaseDatabase {
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
-  FirebaseDatabase({FirebaseApp? app, String? databaseURL}) {
-    DatabasePlatform.instance =
-        MethodChannelDatabase(app: app, databaseURL: databaseURL);
+
+  DatabasePlatform? _delegatePackingProperty;
+
+  DatabasePlatform get _delegate {
+    _delegatePackingProperty ??= DatabasePlatform.instance;
+    return _delegatePackingProperty!;
   }
+
+  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
+      : _delegatePackingProperty =
+            MethodChannelDatabase(app: app, databaseURL: databaseURL);
 
   static FirebaseDatabase _instance = FirebaseDatabase();
 
@@ -22,8 +29,7 @@ class FirebaseDatabase {
   static FirebaseDatabase get instance => _instance;
 
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReference reference() =>
-      DatabaseReference._(DatabasePlatform.instance.reference());
+  DatabaseReference reference() => DatabaseReference._(_delegate.reference());
 
   /// Attempts to sets the database persistence to [enabled].
   ///
@@ -44,7 +50,7 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    return DatabasePlatform.instance.setPersistenceEnabled(enabled);
+    return _delegate.setPersistenceEnabled(enabled);
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -65,19 +71,19 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    return DatabasePlatform.instance.setPersistenceCacheSizeBytes(cacheSize);
+    return _delegate.setPersistenceCacheSizeBytes(cacheSize);
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return DatabasePlatform.instance.goOnline();
+    return _delegate.goOnline();
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return DatabasePlatform.instance.goOffline();
+    return _delegate.goOffline();
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -91,6 +97,6 @@ class FirebaseDatabase {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return DatabasePlatform.instance.purgeOutstandingWrites();
+    return _delegate.purgeOutstandingWrites();
   }
 }
