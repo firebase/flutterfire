@@ -31,7 +31,8 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   DatabaseReferencePlatform child(String path) {
     return MethodChannelDatabaseReference(
         database: database,
-        pathComponents: pathComponents..addAll(path.split('/')));
+        pathComponents: List<String>.from(pathComponents)
+          ..addAll(path.split('/')));
   }
 
   /// Gets a DatabaseReference for the parent location. If this instance
