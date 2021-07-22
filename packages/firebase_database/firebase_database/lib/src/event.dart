@@ -30,21 +30,6 @@ class DataSnapshot {
   dynamic get value => _delegate?.value;
 }
 
-class MutableData {
-  @visibleForTesting
-  MutableData.private(this._data);
-
-  final Map<dynamic, dynamic> _data;
-
-  /// The key of the location that generated this MutableData.
-  String get key => _data['key'];
-
-  /// Returns the mutable contents of this MutableData as native types.
-  dynamic get value => _data['value'];
-
-  set value(dynamic newValue) => _data['value'] = newValue;
-}
-
 /// A DatabaseError contains code, message and details of a Firebase Database
 /// Error that results from a transaction operation at a Firebase Database
 /// location.

@@ -68,9 +68,9 @@ class DataSnapshotPlatform {
 }
 
 /// A SataSnapshot class which can be mutated. Specially used with transactions.
-class MutableDataPlatform {
+class MutableData {
   @visibleForTesting
-  MutableDataPlatform.private(this._data);
+  MutableData.private(this._data);
 
   final Map<dynamic, dynamic> _data;
 

@@ -22,9 +22,9 @@ class MethodChannelDatabase extends DatabasePlatform {
           _observers[call.arguments['handle']]?.addError(error);
           return null;
         case 'DoTransaction':
-          final MutableDataPlatform mutableData =
-              MutableDataPlatform.private(call.arguments['snapshot']);
-          final MutableDataPlatform updated =
+          final MutableData mutableData =
+              MutableData.private(call.arguments['snapshot']);
+          final MutableData updated =
               await _transactions[call.arguments['transactionKey']]!(
                   mutableData);
           return <String, dynamic>{'value': updated.value};
@@ -46,8 +46,8 @@ class MethodChannelDatabase extends DatabasePlatform {
   static final Map<int, StreamController<EventPlatform>> _observers =
       <int, StreamController<EventPlatform>>{};
 
-  static final Map<int, TransactionHandlerPlatform> _transactions =
-      <int, TransactionHandlerPlatform>{};
+  static final Map<int, TransactionHandler> _transactions =
+      <int, TransactionHandler>{};
 
   static bool _initialized = false;
 

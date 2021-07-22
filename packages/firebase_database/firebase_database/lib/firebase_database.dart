@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 export 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart'
-    show ServerValue;
+    show ServerValue, MutableData, TransactionHandler;
 
 part 'src/database_reference.dart';
 part 'src/event.dart';

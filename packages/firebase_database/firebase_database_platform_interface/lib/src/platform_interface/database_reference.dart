@@ -115,7 +115,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
   Future<TransactionResultPlatform> runTransaction(
-      TransactionHandlerPlatform transactionHandler,
+      TransactionHandler transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
     throw UnimplementedError('runTransaction() not implemented');
   }
@@ -140,9 +140,9 @@ class ServerValue {
   }
 }
 
-/// Interface for [TransactionHandlerPlatform]
-typedef TransactionHandlerPlatform = Future<MutableDataPlatform> Function(
-    MutableDataPlatform mutableData);
+/// Interface for [TransactionHandler]
+typedef TransactionHandler = Future<MutableData> Function(
+    MutableData mutableData);
 
 /// Interface for [TransactionResultPlatform]
 class TransactionResultPlatform extends PlatformInterface {
