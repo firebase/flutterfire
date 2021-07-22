@@ -22,7 +22,7 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  Stream<EventPlatform> observe(_EventType eventType) {
+  Stream<EventPlatform> observe(EventType eventType) {
     late Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
     // subscribers have cancelled; this analyzer warning is safe to ignore.

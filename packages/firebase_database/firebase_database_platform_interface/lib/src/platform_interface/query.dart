@@ -28,7 +28,7 @@ abstract class QueryPlatform extends PlatformInterface {
   String get path => throw UnimplementedError('path not implemented');
 
   /// Assigns the proper event type to a stream for [EventPlatform]
-  Stream<EventPlatform> observe(_EventType eventType) {
+  Stream<EventPlatform> observe(EventType eventType) {
     throw UnimplementedError('observe() not implemented');
   }
 
@@ -48,19 +48,19 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Fires when children are added.
-  Stream<EventPlatform> get onChildAdded => observe(_EventType.childAdded);
+  Stream<EventPlatform> get onChildAdded => observe(EventType.childAdded);
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<EventPlatform> get onChildRemoved => observe(_EventType.childRemoved);
+  Stream<EventPlatform> get onChildRemoved => observe(EventType.childRemoved);
 
   /// Fires when children are changed.
-  Stream<EventPlatform> get onChildChanged => observe(_EventType.childChanged);
+  Stream<EventPlatform> get onChildChanged => observe(EventType.childChanged);
 
   /// Fires when children are moved.
-  Stream<EventPlatform> get onChildMoved => observe(_EventType.childMoved);
+  Stream<EventPlatform> get onChildMoved => observe(EventType.childMoved);
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<EventPlatform> get onValue => observe(_EventType.value);
+  Stream<EventPlatform> get onValue => observe(EventType.value);
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or

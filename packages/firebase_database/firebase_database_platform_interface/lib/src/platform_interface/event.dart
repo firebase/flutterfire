@@ -5,7 +5,7 @@
 part of firebase_database_platform_interface;
 
 /// Enum to define various types of database events
-enum _EventType {
+enum EventType {
   /// Event for [onChildAdded] listener
   childAdded,
 
