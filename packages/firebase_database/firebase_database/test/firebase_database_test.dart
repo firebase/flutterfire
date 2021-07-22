@@ -569,7 +569,7 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
-                'eventType': '_EventType.value',
+                'eventType': 'EventType.value',
               },
             ),
             isMethodCall(
