@@ -15,7 +15,7 @@ class FirebasePerformance extends FirebasePluginPlatform {
   late final _delegate = FirebasePerformancePlatform.instance;
 
   /// Singleton of [FirebasePerformance].
-  static final FirebasePerformance instance = FirebasePerformance._();
+  static FirebasePerformance get instance => FirebasePerformance._();
 
   /// Determines whether performance monitoring is enabled or disabled.
   ///

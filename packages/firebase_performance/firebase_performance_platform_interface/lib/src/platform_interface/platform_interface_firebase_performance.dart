@@ -22,9 +22,7 @@ enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 /// [FirebasePerformancePlatform] methods.
 abstract class FirebasePerformancePlatform extends PlatformInterface {
   /// Create an instance using [app].
-  FirebasePerformancePlatform()
-      : appInstance = Firebase.app(),
-        super(token: Object());
+  FirebasePerformancePlatform({this.appInstance}) : super(token: Object());
 
   static FirebasePerformancePlatform? _instance;
 
@@ -44,10 +42,10 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// Returns the [FirebaseApp] for the current instance.
-  FirebaseApp get app => appInstance;
+  FirebaseApp get app => appInstance ?? Firebase.app();
 
   /// Only works for native apps. Always returns true for web apps.
   Future<bool> isPerformanceCollectionEnabled() async {
