@@ -122,7 +122,7 @@ class DatabaseReference extends Query {
   }) async {
     TransactionResultPlatform transactionResult =
         await _databaseReferencePlatform.runTransaction(
-      (platformTransaction) async => platformTransaction,
+      transactionHandler,
       timeout: timeout,
     );
     return TransactionResult._(
