@@ -115,7 +115,7 @@ class _Application extends State<Application> {
     // If the message also contains a data property with a "type" of "chat",
     // navigate to a chat screen
     if (initialMessage != null) {
-      await _handleMessage(initialMessage);
+      _handleMessage(initialMessage);
     }
 
     // Also handle any interaction when the app is in the background via a
@@ -123,7 +123,7 @@ class _Application extends State<Application> {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
   
-  Future<void> _handleMessage(RemoteMessage message) {
+  void _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'chat') {
       Navigator.pushNamed(context, '/chat', 
         arguments: ChatArguments(message),
