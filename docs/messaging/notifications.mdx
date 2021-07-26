@@ -125,7 +125,9 @@ class _Application extends State<Application> {
   
   Future<void> _handleMessage(RemoteMessage message) {
     if (message.data['type'] == 'chat') {
-      Navigator.pushNamed(context, '/chat', arguments: ChatArguments(message));
+      Navigator.pushNamed(context, '/chat', 
+        arguments: ChatArguments(message),
+      );
     }
   }
 
