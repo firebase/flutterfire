@@ -500,12 +500,13 @@ Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already 
 CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> addUser() {
-  users
-  // existing document in 'users' collection: "ABC123"
-        .doc('ABC123')
-        .set({'full_name': "Mary Jane", 'age': 18}, SetOptions(merge: true))
-        .then((value) => print("'full_name' & 'age' merged with existing data!"))
-        .catchError((error) => print("Failed to merge data: $error"));
+  return users
+          // existing document in 'users' collection: "ABC123"
+          .doc('ABC123')
+          .set({'full_name': "Mary Jane", 'age': 18}, SetOptions(merge: true))
+          .then(
+              (value) => print("'full_name' & 'age' merged with existing data!"))
+          .catchError((error) => print("Failed to merge data: $error"));
 }
 ```
 
@@ -549,7 +550,7 @@ array management.
 To store [`GeoPoint`](!cloud_firestore_platform_interface.GeoPoint) values, provide the latitude
 and longitude to the GeoPoint class:
 
-```dart highlight={7-11}
+```dart highlight={6}
 CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> updateUser() {
