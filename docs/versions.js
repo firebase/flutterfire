@@ -41,6 +41,6 @@ export default {
   },
   external: {
     google_sign_in: "^4.5.1",
-    flutter_facebook_auth: "^3.5.0
+    flutter_facebook_auth: "^3.5.0",
   }
 };
