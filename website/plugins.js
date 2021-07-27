@@ -199,7 +199,7 @@ module.exports = [
     name: 'Remote Config',
     pub: 'firebase_remote_config',
     firebase: 'remote-config',
-    status: 'Stable',
+    status: 'Beta',
     documentation: 'https://firebase.flutter.dev/docs/remote-config/overview',
     support: {
       web: false,
