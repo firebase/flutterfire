@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
-#import "Firebase/Firebase.h"
 
 #import "Private/FLTAuthStateChannelStreamHandler.h"
 #import "Private/FLTIdTokenChannelStreamHandler.h"

@@ -161,12 +161,12 @@ class _UserInformationState extends State<UserInformation> {
           return Text("Loading");
         }
 
-        return new ListView(
-          children: snapshot.data.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return new ListTile(
-              title: new Text(data['full_name']),
-              subtitle: new Text(data['company']),
+        return ListView(
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+            return ListTile(
+              title: Text(data['full_name']),
+              subtitle: Text(data['company']),
             );
           }).toList(),
         );
@@ -496,19 +496,22 @@ Future<void> addUser() {
 
 Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.  You can also specify `SetOptions(merge: true))` on the query, and this will merge the existing document with the data passed into the `set()`:
 
-```dart highlight={6-8}
+```dart highlight={7-11}
 CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> addUser() {
   return users
-// existing document in 'users' collection: "ABC123"
+    // existing document in 'users' collection: "ABC123"
     .doc('ABC123')
     .set({
       'full_name': "Mary Jane",
       'age': 18
-    },
-    SetOptions(merge: true))
-    .then((value) => print("'full_name' & 'age' merged with existing data!"))
+      },
+      SetOptions(merge: true),
+    )
+    .then(
+      (value) => print("'full_name' & 'age' merged with existing data!")
+    )
     .catchError((error) => print("Failed to merge data: $error"));
 }
 ```
@@ -624,7 +627,7 @@ Transactions are a way to ensure that a write operation only occurs using the la
 Transactions never partially apply writes, and writes execute at the end of a successful transaction.
 
 Transactions are useful when you want to update a field based on its current value, or the value of another field. If
-you want to write multiple documents without using the documents current state, a [batch write](usage#batch-write)
+you want to write multiple documents without using the documents current state, a [batch write](#batch-write)
 should be used.
 
 When using transactions, note that:
