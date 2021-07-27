@@ -501,12 +501,18 @@ CollectionReference users = FirebaseFirestore.instance.collection('users');
 
 Future<void> addUser() {
   return users
-          // existing document in 'users' collection: "ABC123"
-          .doc('ABC123')
-          .set({'full_name': "Mary Jane", 'age': 18}, SetOptions(merge: true))
-          .then(
-              (value) => print("'full_name' & 'age' merged with existing data!"))
-          .catchError((error) => print("Failed to merge data: $error"));
+    // existing document in 'users' collection: "ABC123"
+    .doc('ABC123')
+    .set({
+      'full_name': "Mary Jane",
+      'age': 18
+      },
+      SetOptions(merge: true),
+    )
+    .then(
+      (value) => print("'full_name' & 'age' merged with existing data!")
+    )
+    .catchError((error) => print("Failed to merge data: $error"));
 }
 ```
 
