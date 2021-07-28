@@ -57,7 +57,9 @@ class RemoteNotification {
               : AppleNotificationSound(
                   critical: map['apple']['sound']['critical'] ?? false,
                   name: map['apple']['sound']['name'],
-                  volume: map['apple']['sound']['volume']));
+                  volume: map['apple']['sound']['volume'] ?? 0,
+                ),
+        );
     }
 
     return RemoteNotification(
