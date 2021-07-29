@@ -143,7 +143,7 @@ class CodecUtility {
 
   /// Decodes an incoming value to its proper type.
   static dynamic valueDecode(dynamic value) {
-    if (value is firestore_interop.GeoPoint) {
+    if (value.latitude != null && value.longitude != null) {
       return GeoPoint(value.latitude as double, value.longitude as double);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
