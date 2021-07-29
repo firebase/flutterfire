@@ -7,7 +7,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
 import 'utils/web_utils.dart';
-import 'utils/codec_utility.dart';
+import 'utils/encode_utility.dart';
 
 /// A web specific implementation of [WriteBatch].
 class WriteBatchWeb extends WriteBatchPlatform {

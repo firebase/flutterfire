@@ -24,7 +24,7 @@ dynamic dartify(Object? jsObject) {
           (object! as TimestampJsImpl).toMillis());
     }
     if (util.instanceof(object, BlobConstructor)) {
-      return object! as Blob;
+      return object! as BlobJsImpl;
     }
     return null;
   });
@@ -49,12 +49,12 @@ dynamic jsify(Object? dartObject) {
       return jsifyFieldValue(object);
     }
 
-    if (object is Blob) {
+    if (object is BlobJsImpl) {
       return object;
     }
 
     // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
-    if (object is GeoPoint) {
+    if (object is GeoPointJsImpl) {
       return dartObject;
     }
 
