@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,7 +32,8 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
         context,
         FlutterFirebaseMessagingBackgroundService.class,
         FlutterFirebaseMessagingUtils.JOB_ID,
-        messageIntent);
+        messageIntent,
+        true);
   }
 
   /**
@@ -124,7 +124,7 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * Executes a Dart callback, as specified within the incoming {@code intent}.
    *
    * <p>Invoked by our {@link JobIntentService} superclass after a call to {@link
-   * JobIntentService#enqueueWork(Context, Class, int, Intent);}.
+   * JobIntentService#enqueueWork(Context, Class, int, Intent, boolean);}.
    *
    * <p>If there are no pre-existing callback execution requests, other than the incoming {@code
    * intent}, then the desired Dart callback is invoked immediately.
