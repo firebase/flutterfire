@@ -9,7 +9,7 @@ import '../document_reference_web.dart';
 import '../field_value_web.dart';
 
 /// Class containing static utility methods to encode/decode firestore data.
-class CodecUtility {
+class EncodeUtility {
   /// Encodes a Map of values from their proper types to a serialized version.
   static Map<String, dynamic>? encodeMapData(Map<String, dynamic>? data) {
     if (data == null) {

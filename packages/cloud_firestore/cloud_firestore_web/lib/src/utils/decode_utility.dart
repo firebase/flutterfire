@@ -10,7 +10,7 @@ import 'package:js/js_util.dart' as util;
 
 import '../interop/firestore.dart' as firestore_interop;
 
-/// Class containing static utility methods to encode/decode firestore data.
+/// Class containing static utility methods to decode firestore data.
 class DecodeUtility {
   /// Decodes the values on an incoming Map to their proper types.
   static Map<String, dynamic>? decodeMapData(Map<String, dynamic>? data) {

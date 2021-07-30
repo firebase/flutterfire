@@ -15,12 +15,12 @@ class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
   FieldValueWeb arrayRemove(List elements) =>
       FieldValueWeb(firestore_interop.FieldValue.arrayRemove(
-          CodecUtility.valueEncode(elements)));
+          EncodeUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb arrayUnion(List elements) =>
       FieldValueWeb(firestore_interop.FieldValue.arrayUnion(
-          CodecUtility.valueEncode(elements)));
+          EncodeUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb delete() =>

@@ -33,7 +33,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
   void set(String documentPath, Map<String, dynamic> data,
       [SetOptions? options]) {
     _webWriteBatchDelegate.set(_webFirestoreDelegate.doc(documentPath),
-        CodecUtility.encodeMapData(data)!, convertSetOptions(options));
+        EncodeUtility.encodeMapData(data)!, convertSetOptions(options));
   }
 
   @override
@@ -42,6 +42,6 @@ class WriteBatchWeb extends WriteBatchPlatform {
     Map<String, dynamic> data,
   ) {
     _webWriteBatchDelegate.update(_webFirestoreDelegate.doc(documentPath),
-        CodecUtility.encodeMapData(data)!);
+        EncodeUtility.encodeMapData(data)!);
   }
 }

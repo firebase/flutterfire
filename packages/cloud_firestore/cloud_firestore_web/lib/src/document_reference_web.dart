@@ -30,7 +30,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return guard(
       () => _delegate.set(
-        CodecUtility.encodeMapData(data)!,
+        EncodeUtility.encodeMapData(data)!,
         convertSetOptions(options),
       ),
     );
@@ -38,7 +38,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> update(Map<String, dynamic> data) {
-    return guard(() => _delegate.update(CodecUtility.encodeMapData(data)!));
+    return guard(() => _delegate.update(EncodeUtility.encodeMapData(data)!));
   }
 
   @override

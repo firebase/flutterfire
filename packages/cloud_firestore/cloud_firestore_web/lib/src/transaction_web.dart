@@ -46,7 +46,7 @@ class TransactionWeb extends TransactionPlatform {
   ]) {
     _webTransactionDelegate.set(
       _webFirestoreDelegate.doc(documentPath),
-      CodecUtility.encodeMapData(data)!,
+      EncodeUtility.encodeMapData(data)!,
       convertSetOptions(options),
     );
     return this;
@@ -59,7 +59,7 @@ class TransactionWeb extends TransactionPlatform {
   ) {
     _webTransactionDelegate.update(
       _webFirestoreDelegate.doc(documentPath),
-      CodecUtility.encodeMapData(data)!,
+      EncodeUtility.encodeMapData(data)!,
     );
     return this;
   }

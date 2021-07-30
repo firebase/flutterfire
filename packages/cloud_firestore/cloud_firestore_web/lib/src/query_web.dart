@@ -43,27 +43,27 @@ class QueryWeb extends QueryPlatform {
 
     for (final List<dynamic> order in parameters['orderBy']) {
       query = query.orderBy(
-          CodecUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
+          EncodeUtility.valueEncode(order[0]), order[1] ? 'desc' : 'asc');
     }
 
     if (parameters['startAt'] != null) {
       query = query.startAt(
-          fieldValues: CodecUtility.valueEncode(parameters['startAt']));
+          fieldValues: EncodeUtility.valueEncode(parameters['startAt']));
     }
 
     if (parameters['startAfter'] != null) {
       query = query.startAfter(
-          fieldValues: CodecUtility.valueEncode(parameters['startAfter']));
+          fieldValues: EncodeUtility.valueEncode(parameters['startAfter']));
     }
 
     if (parameters['endAt'] != null) {
       query = query.endAt(
-          fieldValues: CodecUtility.valueEncode(parameters['endAt']));
+          fieldValues: EncodeUtility.valueEncode(parameters['endAt']));
     }
 
     if (parameters['endBefore'] != null) {
       query = query.endBefore(
-          fieldValues: CodecUtility.valueEncode(parameters['endBefore']));
+          fieldValues: EncodeUtility.valueEncode(parameters['endBefore']));
     }
 
     if (parameters['limit'] != null) {
@@ -75,9 +75,9 @@ class QueryWeb extends QueryPlatform {
     }
 
     for (final List<dynamic> condition in parameters['where']) {
-      dynamic fieldPath = CodecUtility.valueEncode(condition[0]);
+      dynamic fieldPath = EncodeUtility.valueEncode(condition[0]);
       String opStr = condition[1];
-      dynamic value = CodecUtility.valueEncode(condition[2]);
+      dynamic value = EncodeUtility.valueEncode(condition[2]);
 
       query = query.where(fieldPath, opStr, value);
     }
