@@ -155,7 +155,7 @@ external GeoPointJsImpl get GeoPointConstructor;
 /// The geo point is represented as latitude/longitude pair.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.GeoPoint>.
-@JS()
+@JS('GeoPoint')
 class GeoPointJsImpl {
   /// Creates a new immutable [GeoPoint] object with the provided [latitude] and
   /// [longitude] values.
