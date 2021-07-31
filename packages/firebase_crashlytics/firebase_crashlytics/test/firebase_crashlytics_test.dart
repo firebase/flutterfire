@@ -75,6 +75,7 @@ void main() {
             'exception': exception,
             'reason': exceptionReason,
             'information': '',
+            'fatal': false,
             'stackTraceElements': getStackTraceElements(stack)
           })
         ]);
@@ -127,6 +128,7 @@ void main() {
         isMethodCall('Crashlytics#recordError', arguments: {
           'exception': exception,
           'reason': exceptionReason,
+          'fatal': false,
           'information': '$exceptionFirstMessage\n$exceptionSecondMessage',
           'stackTraceElements': getStackTraceElements(stack)
         })

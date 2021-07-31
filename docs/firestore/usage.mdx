@@ -161,12 +161,12 @@ class _UserInformationState extends State<UserInformation> {
           return Text("Loading");
         }
 
-        return new ListView(
-          children: snapshot.data.docs.map((DocumentSnapshot document) {
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return new ListTile(
-              title: new Text(data['full_name']),
-              subtitle: new Text(data['company']),
+        return ListView(
+          children: snapshot.data!.docs.map((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+            return ListTile(
+              title: Text(data['full_name']),
+              subtitle: Text(data['company']),
             );
           }).toList(),
         );
@@ -494,7 +494,27 @@ Future<void> addUser() {
 }
 ```
 
-Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.
+Calling [`set`](!cloud_firestore.DocumentReference.set) with an id that already exists on the collection will replace all the document data.  You can also specify `SetOptions(merge: true))` on the query, and this will merge the existing document with the data passed into the `set()`:
+
+```dart highlight={7-11}
+CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+Future<void> addUser() {
+  return users
+    // existing document in 'users' collection: "ABC123"
+    .doc('ABC123')
+    .set({
+      'full_name': "Mary Jane",
+      'age': 18
+      },
+      SetOptions(merge: true),
+    )
+    .then(
+      (value) => print("'full_name' & 'age' merged with existing data!")
+    )
+    .catchError((error) => print("Failed to merge data: $error"));
+}
+```
 
 ### Updating documents
 
@@ -607,7 +627,7 @@ Transactions are a way to ensure that a write operation only occurs using the la
 Transactions never partially apply writes, and writes execute at the end of a successful transaction.
 
 Transactions are useful when you want to update a field based on its current value, or the value of another field. If
-you want to write multiple documents without using the documents current state, a [batch write](usage#batch-write)
+you want to write multiple documents without using the documents current state, a [batch write](#batch-write)
 should be used.
 
 When using transactions, note that:
@@ -757,29 +777,19 @@ await FirebaseFirestore.instance.enableNetwork()
 ## Emulator Usage
 
 If you are using the local [Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup), then it is possible to
-connect to these by passing a [`host`](!cloud_firestore.Settings.host) parameter to the [`settings`](!cloud_firestore.FirebaseFirestore.settings) method,
-immediately after initializing Firebase. Ensure you pass the correct port on which the Firebase emulator is running on.
+connect to this using the `useFirestoreEmulator` method. Ensure you pass the correct port on which the Firebase emulator is running on.
 
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
-> On Android emulators, to reference `localhost`, use the `10.0.2.2` IP address instead.
-
 ```dart
-// Import foundation for [TargetPlatform].
-import 'package:flutter/foundation.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-// ...
-
-// Switch host based on platform.
-String host = defaultTargetPlatform == TargetPlatform.android
-    ? '10.0.2.2:8080'
-    : 'localhost:8080';
-
-// Set the host as soon as possible.
-FirebaseFirestore.instance.settings =
-    Settings(host: host, sslEnabled: false);
-
-// ...
+  // Ideal time to initialize
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  //...
+}
 ```
 
 

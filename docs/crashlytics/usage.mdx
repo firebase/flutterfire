@@ -187,17 +187,18 @@ ElevatedButton(
 To catch such errors, you can use `runZonedGuarded` like do:
 
 ```dart
-void main() {
+void main() async {
   runZonedGuarded<Future<void>>(() async {
-    // The following lines are the same as previously explained in "Handling uncaught errors"
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
     runApp(MyApp());
-  }, FirebaseCrashlytics.instance.recordError);
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 ```
+Note that you must call `WidgetsFlutterBinding.ensureInitialized()` inside `runZonedGuarded`. Error handling wouldn’t work if `WidgetsFlutterBinding.ensureInitialized()` was called from the outside.
 
 ### Errors outside of Flutter
 

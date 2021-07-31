@@ -1,3 +1,9 @@
+## 0.2.0+2
+
+ - **DOCS**: fix typo in README.md (#6411).
+ - **DOCS**: removing extra `)` in sample (#6412).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 0.2.0+1
 
  - **REFACTOR**: replace usage of deprecated & removed Image Picker API.

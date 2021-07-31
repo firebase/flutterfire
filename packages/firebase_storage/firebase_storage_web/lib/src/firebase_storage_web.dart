@@ -120,7 +120,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   }
 
   @override
-  Future<void> useEmulator(String host, int port) async {
-    guard(() => webStorage!.useEmulator(host, port));
+  Future<void> useStorageEmulator(String host, int port) async {
+    guard(() => webStorage!.useStorageEmulator(host, port));
   }
 }
