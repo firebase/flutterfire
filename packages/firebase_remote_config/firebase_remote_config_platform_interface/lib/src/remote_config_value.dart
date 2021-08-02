@@ -19,7 +19,8 @@ enum ValueSource {
 class RemoteConfigValue {
   /// Wraps a value with metadata and type-safe getters.
   @protected
-  RemoteConfigValue(this._value, this.source);
+  RemoteConfigValue(List<int>? value, this.source)
+      : _value = utf8.decode(value ?? const []);
 
   /// Default value for String
   static const String defaultValueForString = '';
@@ -33,53 +34,31 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  List<int>? _value;
+  static const Map<String, dynamic> defaultValueForJson = {};
+
+  String _value;
 
   /// Indicates at which source this value came from.
   final ValueSource source;
 
   /// Decode value to string.
   String asString() {
-    final value = _value;
-    return value != null
-        ? const Utf8Codec().decode(value)
-        : defaultValueForString;
+    return _value;
   }
 
   /// Decode value to int.
   int asInt() {
-    final value = _value;
-    if (value != null) {
-      final String strValue = const Utf8Codec().decode(value);
-      final int intValue = int.tryParse(strValue) ?? defaultValueForInt;
-      return intValue;
-    } else {
-      return defaultValueForInt;
-    }
+    return int.tryParse(_value) ?? defaultValueForInt;
   }
 
   /// Decode value to double.
   double asDouble() {
-    final value = _value;
-    if (value != null) {
-      final String strValue = const Utf8Codec().decode(value);
-      final double doubleValue =
-          double.tryParse(strValue) ?? defaultValueForDouble;
-      return doubleValue;
-    } else {
-      return defaultValueForDouble;
-    }
+    return double.tryParse(_value) ?? defaultValueForDouble;
   }
 
   /// Decode value to bool.
   bool asBool() {
-    final value = _value;
-    if (value != null) {
-      final String strValue = const Utf8Codec().decode(value);
-      final lowerCase = strValue.toLowerCase();
-      return lowerCase == 'true' || lowerCase == '1';
-    } else {
-      return defaultValueForBool;
-    }
+    final lowerCase = _value.toLowerCase();
+    return lowerCase == '1' || lowerCase == 'true';
   }
 }
