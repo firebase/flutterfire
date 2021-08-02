@@ -113,6 +113,10 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     return _delegate.getString(key);
   }
 
+  Map<String, dynamic> getJson(String key) {
+    return _delegate.getJson(key);
+  }
+
   /// Gets the [RemoteConfigValue] for a given key.
   RemoteConfigValue getValue(String key) {
     return _delegate.getValue(key);

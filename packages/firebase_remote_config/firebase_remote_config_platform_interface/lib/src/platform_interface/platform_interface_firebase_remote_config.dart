@@ -146,6 +146,10 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
     throw UnimplementedError('getString() is not implemented');
   }
 
+  Map<String, dynamic> getJson(String key) {
+    throw UnimplementedError('getJson() is not implemented');
+  }
+
   /// Gets the [RemoteConfigValue] for a given key.
   RemoteConfigValue getValue(String key) {
     throw UnimplementedError('getValue() is not implemented');

@@ -44,6 +44,7 @@ class WelcomeWidget extends AnimatedWidget {
             const SizedBox(
               height: 20,
             ),
+            Text('Nested object: ${remoteConfig.getJson('locale')}'),
             Text('(${remoteConfig.getValue('welcome').source})'),
             Text('(${remoteConfig.lastFetchTime})'),
             Text('(${remoteConfig.lastFetchStatus})'),
@@ -85,6 +86,10 @@ Future<RemoteConfig> setupRemoteConfig() async {
   await remoteConfig.setDefaults(<String, dynamic>{
     'welcome': 'default welcome',
     'hello': 'default hello',
+    'locale': {
+      'languageCode': 'en',
+      'countryCode': 'US',
+    }
   });
   RemoteConfigValue(null, ValueSource.valueStatic);
   return remoteConfig;

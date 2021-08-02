@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -193,6 +194,14 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return _activeParameters[key]!.asString();
   }
 
+  Map<String, dynamic> getJson(String key) {
+    if (!_activeParameters.containsKey(key)) {
+      return RemoteConfigValue.defaultValueForJson;
+    }
+
+    return _activeParameters[key]!.asJson();
+  }
+
   @override
   RemoteConfigValue getValue(String key) {
     if (!_activeParameters.containsKey(key)) {
@@ -224,7 +233,14 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     try {
       await channel.invokeMethod('RemoteConfig#setDefaults', <String, dynamic>{
         'appName': app.name,
-        'defaults': defaultParameters
+        'defaults': Map<String, dynamic>.from(
+          defaultParameters.map(
+            (key, value) => MapEntry(
+              key,
+              value is Map ? json.encode(value) : value,
+            ),
+          ),
+        )
       });
       await _updateConfigParameters();
     } catch (exception, stackTrace) {
