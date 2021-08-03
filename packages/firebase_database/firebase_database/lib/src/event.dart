@@ -29,9 +29,7 @@ class Event {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshot {
-  DataSnapshot._(this.key, this.value) {
-    exists = value != null;
-  }
+  DataSnapshot._(this.key, this.value);
 
   factory DataSnapshot._fromJson(
     Map<Object?, Object?> _data,
@@ -57,9 +55,6 @@ class DataSnapshot {
 
   /// Returns the contents of this data snapshot as native types.
   final dynamic value;
-
-  /// Ascertains whether the value exists at the Firebase Database location.
-  late bool exists;
 }
 
 class MutableData {

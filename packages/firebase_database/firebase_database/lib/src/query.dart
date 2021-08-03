@@ -82,7 +82,7 @@ class Query {
   Future<DataSnapshot> once() async => (await onValue.first).snapshot;
 
   /// Gets the most up-to-date result for this query.
-  Future<DataSnapshot> get() async {
+  Future<DataSnapshot?> get() async {
     final result = await _database._channel.invokeMethod<Map<dynamic, dynamic>>(
       'Query#get',
       <String, dynamic>{
