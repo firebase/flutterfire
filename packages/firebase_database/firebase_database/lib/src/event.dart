@@ -29,7 +29,7 @@ class Event {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshot {
-  DataSnapshot._(this.key, this.value) {
+  DataSnapshot._(this.key, this.value){
     exists = value != null;
   }
 
