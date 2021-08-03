@@ -100,9 +100,27 @@ void testsMain() {
           .child('ordered/one')
           .get();
       expect(dataSnapshot, isNot(null));
-      expect(dataSnapshot!.key, 'one');
+      expect(dataSnapshot.key, 'one');
       expect(dataSnapshot.value['ref'], 'one');
       expect(dataSnapshot.value['value'], 23);
+    });
+
+    test('DataSnapshot.exists is false for no data', () async {
+      final dataSnapshot = await FirebaseDatabase.instance
+          .reference()
+          .child('a-non-existing-reference')
+          .get();
+
+      expect(dataSnapshot.exists, false);
+    });
+
+    test('DataSnapshot.exists is true for existing data', () async {
+      final dataSnapshot = await FirebaseDatabase.instance
+          .reference()
+          .child('ordered/one')
+          .get();
+
+      expect(dataSnapshot.exists, true);
     });
   });
 }
