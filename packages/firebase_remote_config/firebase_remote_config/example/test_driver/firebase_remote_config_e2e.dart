@@ -34,6 +34,11 @@ void testsMain() {
       expect(remoteConfig.getString('hello'), 'default hello');
       expect(remoteConfig.getValue('hello').source, ValueSource.valueDefault);
 
+      final locale = remoteConfig.getJson('locale');
+      expect(locale['languageCode'], 'de');
+      expect(locale['countryCode'], 'DE');
+      expect(remoteConfig.getValue('locale').source, ValueSource.valueRemote);
+
       expect(remoteConfig.getInt('nonexisting'), 0);
 
       expect(
