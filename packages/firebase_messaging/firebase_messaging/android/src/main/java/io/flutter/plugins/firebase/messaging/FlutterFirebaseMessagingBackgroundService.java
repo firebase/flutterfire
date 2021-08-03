@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -28,12 +29,14 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
    * Schedule the message to be handled by the {@link FlutterFirebaseMessagingBackgroundService}.
    */
   public static void enqueueMessageProcessing(Context context, Intent messageIntent) {
+    RemoteMessage message = (RemoteMessage) messageIntent.getExtras().get("notification");
+
     enqueueWork(
         context,
         FlutterFirebaseMessagingBackgroundService.class,
         FlutterFirebaseMessagingUtils.JOB_ID,
         messageIntent,
-        true);
+        message.getOriginalPriority() == RemoteMessage.PRIORITY_HIGH);
   }
 
   /**
