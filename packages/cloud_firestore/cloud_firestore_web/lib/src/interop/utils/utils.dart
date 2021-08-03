@@ -13,7 +13,7 @@ import '../firestore_interop.dart' hide FieldValue;
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object? jsObject) {
   return core_interop.dartify(jsObject, (Object? object) {
-    if(object == null){
+    if (object == null) {
       return null;
     }
     if (util.instanceof(object, DocumentReferenceJsConstructor)) {
