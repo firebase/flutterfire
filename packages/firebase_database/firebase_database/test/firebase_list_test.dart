@@ -330,13 +330,16 @@ class MockEvent implements Event {
 }
 
 class MockDataSnapshot implements DataSnapshot {
-  MockDataSnapshot(this.key, this.value);
+  MockDataSnapshot(this.key, this.value) : exists = value != null;
 
   @override
   final String key;
 
   @override
   final dynamic value;
+
+  @override
+  final bool exists;
 
   @override
   // ignore: no_runtimetype_tostring
