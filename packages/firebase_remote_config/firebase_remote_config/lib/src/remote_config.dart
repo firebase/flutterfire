@@ -113,6 +113,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
     return _delegate.getString(key);
   }
 
+  /// Gets the value for a given key as json (calls json.decode on underlying string value)
   Map<String, dynamic> getJson(String key) {
     return _delegate.getJson(key);
   }

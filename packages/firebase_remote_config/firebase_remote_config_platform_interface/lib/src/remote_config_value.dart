@@ -62,6 +62,7 @@ class RemoteConfigValue {
     return lowerCase == '1' || lowerCase == 'true';
   }
 
+  /// Decode value as json
   Map<String, dynamic> asJson() {
     try {
       return json.decode(_value);
