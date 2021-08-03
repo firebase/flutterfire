@@ -194,6 +194,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     return _activeParameters[key]!.asString();
   }
 
+  @override
   Map<String, dynamic> getJson(String key) {
     if (!_activeParameters.containsKey(key)) {
       return RemoteConfigValue.defaultValueForJson;
