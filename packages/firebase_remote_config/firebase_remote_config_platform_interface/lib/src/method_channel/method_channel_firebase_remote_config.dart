@@ -238,7 +238,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
           defaultParameters.map(
             (key, value) => MapEntry(
               key,
-              value is Map ? json.encode(value) : value,
+              _isSupportedType(value) ? value : json.encode(value),
             ),
           ),
         )
@@ -300,5 +300,9 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       default:
         return ValueSource.valueStatic;
     }
+  }
+
+  bool _isSupportedType(dynamic value) {
+    return value is bool || value is num || value is String;
   }
 }
