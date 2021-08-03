@@ -17,9 +17,7 @@ class DecodeUtility {
     if (data == null) {
       return null;
     }
-    Map<String, dynamic> output = Map.from(data);
-    output.updateAll((key, value) => valueDecode(value));
-    return output;
+    return data..updateAll((key, value) => valueDecode(value));
   }
 
   /// Decodes the values on an incoming Array to their proper types.
@@ -27,7 +25,7 @@ class DecodeUtility {
     if (data == null) {
       return null;
     }
-    return List.from(data).map(valueDecode).toList();
+    return data.map(valueDecode).toList();
   }
 
   /// Decodes an incoming value to its proper type.
