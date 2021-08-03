@@ -656,7 +656,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     bool hasIn = false;
     bool hasNotIn = false;
     bool hasNotEqualTo = false;
-    bool hasNotEqualToNotOperatorAndNotDocumentIdField = false;
+    bool hasNotEqualToOperatorAndNotDocumentIdField = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
     bool hasDocumentIdField = false;
@@ -682,16 +682,14 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (field != FieldPath.documentId && hasDocumentIdField) {
         assert(
           operator != '!=',
-          'You cannot use ' !=
-              ' filters whilst using a FieldPath.documentId field in another filter.',
+          "You cannot use '!=' filters whilst using a FieldPath.documentId field in another filter.",
         );
       }
 
       if (field == FieldPath.documentId) {
         assert(
-          !hasNotEqualToNotOperatorAndNotDocumentIdField,
-          'You cannot use FieldPath.documentId field whilst using a ' !=
-              ' filter on a different field.',
+          !hasNotEqualToOperatorAndNotDocumentIdField,
+          "You cannot use FieldPath.documentId field whilst using a '!=' filter on a different field.",
         );
         hasDocumentIdField = true;
       }
@@ -729,7 +727,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         hasNotEqualTo = true;
 
         if (field != FieldPath.documentId) {
-          hasNotEqualToNotOperatorAndNotDocumentIdField = true;
+          hasNotEqualToOperatorAndNotDocumentIdField = true;
         }
       }
 
