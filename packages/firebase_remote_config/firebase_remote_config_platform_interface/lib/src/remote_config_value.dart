@@ -34,8 +34,6 @@ class RemoteConfigValue {
   /// Default value for Bool
   static const bool defaultValueForBool = false;
 
-  static const Map<String, dynamic> defaultValueForJson = {};
-
   String _value;
 
   /// Indicates at which source this value came from.
@@ -64,10 +62,6 @@ class RemoteConfigValue {
 
   /// Decode value as json
   Map<String, dynamic> asJson() {
-    try {
-      return json.decode(_value);
-    } catch (_) {
-      return defaultValueForJson;
-    }
+    return json.decode(_value);
   }
 }

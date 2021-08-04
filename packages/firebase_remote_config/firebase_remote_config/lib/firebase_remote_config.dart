@@ -5,6 +5,7 @@
 library firebase_remote_config;
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';

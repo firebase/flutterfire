@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -195,12 +194,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   }
 
   @override
-  Map<String, dynamic> getJson(String key) {
-    if (!_activeParameters.containsKey(key)) {
-      return RemoteConfigValue.defaultValueForJson;
-    }
-
-    return _activeParameters[key]!.asJson();
+  Map<String, dynamic>? getJson(String key) {
+    return _activeParameters[key]?.asJson();
   }
 
   @override
@@ -234,14 +229,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     try {
       await channel.invokeMethod('RemoteConfig#setDefaults', <String, dynamic>{
         'appName': app.name,
-        'defaults': Map<String, dynamic>.from(
-          defaultParameters.map(
-            (key, value) => MapEntry(
-              key,
-              _isSupportedType(value) ? value : json.encode(value),
-            ),
-          ),
-        )
+        'defaults': defaultParameters,
       });
       await _updateConfigParameters();
     } catch (exception, stackTrace) {
@@ -300,9 +288,5 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       default:
         return ValueSource.valueStatic;
     }
-  }
-
-  bool _isSupportedType(dynamic value) {
-    return value is bool || value is num || value is String;
   }
 }

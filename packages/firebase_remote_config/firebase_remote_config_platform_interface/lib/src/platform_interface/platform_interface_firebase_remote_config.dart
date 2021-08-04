@@ -147,7 +147,7 @@ abstract class FirebaseRemoteConfigPlatform extends PlatformInterface {
   }
 
   /// Gets the value for a given key as json (calls json.decode on underlying string value)
-  Map<String, dynamic> getJson(String key) {
+  Map<String, dynamic>? getJson(String key) {
     throw UnimplementedError('getJson() is not implemented');
   }
 

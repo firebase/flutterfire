@@ -114,7 +114,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Gets the value for a given key as json (calls json.decode on underlying string value)
-  Map<String, dynamic> getJson(String key) {
+  Map<String, dynamic>? getJson(String key) {
     return _delegate.getJson(key);
   }
 
@@ -137,6 +137,19 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   /// Sets the default parameter values for the current instance.
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
-    return _delegate.setDefaults(defaultParameters);
+    final encodedParams = defaultParameters
+        .map(
+          (key, value) => MapEntry(
+            key,
+            _isSupportedType(value) ? value : json.encode(value),
+          ),
+        )
+        .cast<String, dynamic>();
+
+    return _delegate.setDefaults(encodedParams);
+  }
+
+  bool _isSupportedType(dynamic value) {
+    return value is bool || value is num || value is String;
   }
 }
