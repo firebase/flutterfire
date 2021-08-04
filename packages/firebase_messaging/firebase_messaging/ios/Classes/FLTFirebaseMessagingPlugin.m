@@ -613,14 +613,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messagingDeleteToken:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRMessaging *messaging = [FIRMessaging messaging];
-  [messaging deleteTokenWithCompletion:^(NSError *_Nullable error) {
+  [[FIRInstallations installations] deleteWithCompletion:^(NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
       result.success(nil);
     }
   }];
+}];
+
 }
 
 #pragma mark - FLTFirebasePlugin
