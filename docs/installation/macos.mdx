@@ -32,6 +32,14 @@ Select the `GoogleService-Info.plist` file you downloaded, and ensure the "Copy 
   caption={false}
 />
 
+## Enabling Outgoing Connections
+
+**Important** It is important you enable `Outgoing Connections (Client)` on Xcode's `Runner.xcworkspace` as illustrated below:
+
+![image](https://user-images.githubusercontent.com/12681781/121333660-d1330500-c93a-11eb-8fb6-b1d803b9c7bb.png)
+
+Failure to enable will result in a network error. You will not b able to connect to services such as any Firebase Emulator.
+
 ## Enabling use of Firebase Emulator Suite
 
 The [Firebase Emulator Suite](https://firebase.google.com/docs/emulator-suite) uses un-encrypted networking connections in order to enable fast, uncomplicated setup. However macOS by default requires encrypted networking connections. If you would like to use any part of the Firebase Emulator Suite to emulate firebase services on your local machine during development, you must allow your macOS app to connect to local network services over insecure connections.
@@ -47,12 +55,6 @@ Specifically if your app is named 'MyApp', and are sharing your configuration be
     <true/>
 </dict>
 ```
-
-**Important** The next step is to enable `Outgoing Connections (Client)` on Xcode's `Runner.xcworkspace` as illustrated below:
-
-![image](https://user-images.githubusercontent.com/12681781/121333660-d1330500-c93a-11eb-8fb6-b1d803b9c7bb.png)
-
-Failure to enable will result in a network error.
 
 ## Initializing FlutterFire
 
