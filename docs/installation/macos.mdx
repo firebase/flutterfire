@@ -32,6 +32,12 @@ Select the `GoogleService-Info.plist` file you downloaded, and ensure the "Copy 
   caption={false}
 />
 
+## Setting up entitlements
+
+It is **important** you setup [entitlements](https://flutter.dev/desktop#setting-up-entitlements).
+
+Failure to setup will result in network errors. You will not be able to connect to services such as any Firebase Emulator.
+
 ## Enabling use of Firebase Emulator Suite
 
 The [Firebase Emulator Suite](https://firebase.google.com/docs/emulator-suite) uses un-encrypted networking connections in order to enable fast, uncomplicated setup. However macOS by default requires encrypted networking connections. If you would like to use any part of the Firebase Emulator Suite to emulate firebase services on your local machine during development, you must allow your macOS app to connect to local network services over insecure connections.
