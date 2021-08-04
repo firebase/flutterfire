@@ -209,7 +209,7 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// reads are performed before any writes. Transactions must be performed
   /// while online. Otherwise, reads will fail, and the final commit will fail.
   ///
-  /// By default transactions are limited to 5 seconds of execution time. This
+  /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
   Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
