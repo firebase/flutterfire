@@ -620,8 +620,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       result.success(nil);
     }
   }];
-}];
-
 }
 
 #pragma mark - FLTFirebasePlugin
