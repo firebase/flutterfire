@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -97,12 +98,14 @@ void testsMain() {
     test('setLoggingEnabled to true', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(true);
-    });
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
 
     test('setLoggingEnabled to false', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(false);
-    });
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
 
     test('get snapshot', () async {
       final dataSnapshot = await FirebaseDatabase.instance
