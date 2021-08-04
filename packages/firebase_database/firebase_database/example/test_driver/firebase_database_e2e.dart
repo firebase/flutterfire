@@ -50,7 +50,7 @@ void testsMain() {
 
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
-      final DatabaseReference ref = database.reference().child('counter');
+      final DatabaseReference ref = database.reference().child('flutterfire');
 
       await ref.set(0);
 
@@ -69,7 +69,7 @@ void testsMain() {
     test('DataSnapshot supports null childKeys for maps', () async {
       // Regression test for https://github.com/FirebaseExtended/flutterfire/issues/6002
 
-      final ref = FirebaseDatabase.instance.reference().child('counter');
+      final ref = FirebaseDatabase.instance.reference().child('flutterfire');
 
       final transactionResult = await ref.runTransaction((mutableData) async {
         mutableData.value = {'v': 'vala'};
