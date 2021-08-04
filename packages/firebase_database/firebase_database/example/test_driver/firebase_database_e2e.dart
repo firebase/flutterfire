@@ -94,6 +94,16 @@ void testsMain() {
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
 
+    test('setLoggingEnabled to true', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(true);
+    });
+
+    test('setLoggingEnabled to false', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(false);
+    });
+
     test('get snapshot', () async {
       final dataSnapshot = await FirebaseDatabase.instance
           .reference()
