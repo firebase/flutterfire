@@ -6,7 +6,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:js/js_util.dart';
 
 import 'field_value_web.dart';
-import 'utils/codec_utility.dart';
+import 'utils/encode_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
 
 /// An implementation of [FieldValueFactoryPlatform] which builds [FieldValuePlatform]
@@ -15,12 +15,12 @@ class FieldValueFactoryWeb extends FieldValueFactoryPlatform {
   @override
   FieldValueWeb arrayRemove(List elements) =>
       FieldValueWeb(firestore_interop.FieldValue.arrayRemove(
-          CodecUtility.valueEncode(elements)));
+          EncodeUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb arrayUnion(List elements) =>
       FieldValueWeb(firestore_interop.FieldValue.arrayUnion(
-          CodecUtility.valueEncode(elements)));
+          EncodeUtility.valueEncode(elements)));
 
   @override
   FieldValueWeb delete() =>

@@ -28,6 +28,9 @@ class DataSnapshot {
 
   /// Returns the contents of this data snapshot as native types.
   dynamic get value => _delegate?.value;
+
+  /// Ascertains whether the value exists at the Firebase Database location.
+  bool get exists => _delegate?.exists ?? false;
 }
 
 /// A DatabaseError contains code, message and details of a Firebase Database

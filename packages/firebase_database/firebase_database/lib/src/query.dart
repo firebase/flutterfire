@@ -22,7 +22,7 @@ class Query {
       DataSnapshot._(await _queryPlatform.once());
 
   /// Gets the most up-to-date result for this query.
-  Future<DataSnapshot?> get() async {
+  Future<DataSnapshot> get() async {
     return DataSnapshot._(await _queryPlatform.get());
   }
 

@@ -6,7 +6,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
-import 'utils/codec_utility.dart';
+import 'utils/encode_utility.dart';
 import 'utils/web_utils.dart';
 
 /// A web specific implementation of [Transaction].
@@ -46,7 +46,7 @@ class TransactionWeb extends TransactionPlatform {
   ]) {
     _webTransactionDelegate.set(
       _webFirestoreDelegate.doc(documentPath),
-      CodecUtility.encodeMapData(data)!,
+      EncodeUtility.encodeMapData(data)!,
       convertSetOptions(options),
     );
     return this;
@@ -59,7 +59,7 @@ class TransactionWeb extends TransactionPlatform {
   ) {
     _webTransactionDelegate.update(
       _webFirestoreDelegate.doc(documentPath),
-      CodecUtility.encodeMapData(data)!,
+      EncodeUtility.encodeMapData(data)!,
     );
     return this;
   }
