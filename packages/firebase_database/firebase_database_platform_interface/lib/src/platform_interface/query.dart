@@ -43,7 +43,7 @@ abstract class QueryPlatform extends PlatformInterface {
   Future<DataSnapshotPlatform> once() async => (await onValue.first).snapshot;
 
   /// Gets the most up-to-date result for this query.
-  Future<DataSnapshotPlatform?> get() {
+  Future<DataSnapshotPlatform> get() {
     throw UnimplementedError('get() not implemented');
   }
 

@@ -39,7 +39,7 @@ class EventPlatform {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshotPlatform {
-  DataSnapshotPlatform(this.key, this.value);
+  DataSnapshotPlatform(this.key, this.value) : exists = value != null;
 
   factory DataSnapshotPlatform.fromJson(
     Map<Object?, Object?> _data,
@@ -65,6 +65,9 @@ class DataSnapshotPlatform {
 
   /// Returns the contents of this data snapshot as native types.
   final dynamic value;
+
+  /// Ascertains whether the value exists at the Firebase Database location.
+  final bool exists;
 }
 
 /// A SataSnapshot class which can be mutated. Specially used with transactions.

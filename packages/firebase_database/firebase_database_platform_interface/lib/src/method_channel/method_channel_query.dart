@@ -68,7 +68,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Gets the most up-to-date result for this query.
   @override
-  Future<DataSnapshotPlatform?> get() async {
+  Future<DataSnapshotPlatform> get() async {
     final result =
         await MethodChannelDatabase.channel.invokeMethod<Map<dynamic, dynamic>>(
       'Query#get',
