@@ -9,6 +9,7 @@ import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class IdTokenChannelStreamHandler implements StreamHandler {
 
@@ -24,8 +25,15 @@ public class IdTokenChannelStreamHandler implements StreamHandler {
     Map<String, Object> event = new HashMap<>();
     event.put(Constants.APP_NAME, firebaseAuth.getApp().getName());
 
+    final AtomicBoolean initialAuthState = new AtomicBoolean(true);
+
     idTokenListener =
         auth -> {
+          if (initialAuthState.get()) {
+            initialAuthState.set(false);
+            return;
+          }
+
           FirebaseUser user = auth.getCurrentUser();
 
           if (user == null) {

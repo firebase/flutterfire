@@ -1,3 +1,9 @@
+## 10.0.4
+
+ - **DOCS**: update web example in line with flutter 2.2.0 generated `index.html` (#6398).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 10.0.3
 
  - **DOCS**: update web example in line with flutter 2.2.0 generated `index.html` (#6398).

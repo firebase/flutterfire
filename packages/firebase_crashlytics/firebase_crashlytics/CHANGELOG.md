@@ -1,3 +1,13 @@
+## 2.1.1
+
+ - **FIX**: issue where build would fail with missing header (#6628).
+
+## 2.1.0
+
+ - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).
+ - **FEAT**: submit analytics crash event on fatal - enables support for crash free users reporting (#5900).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 2.0.7
 
  - **FIX**: improve stack trace symbol. "class.method" signature. (#6442).

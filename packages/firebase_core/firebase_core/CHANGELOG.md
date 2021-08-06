@@ -1,3 +1,9 @@
+## 1.4.0
+
+ - **FEAT**: bump Firebase iOS SDK version to 8.3.0 (#6568).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 1.3.0
 
  - **FEAT**: Upgrade Firebase Android BoM version to 28.1.0 (#6338).

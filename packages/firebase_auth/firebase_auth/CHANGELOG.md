@@ -1,7 +1,17 @@
-## 2.1.0
+## 3.0.1
 
-- **FEAT**: linkWithPopup() now possible on web.
-- **FIX***: Credentials included in exceptions are now correctly converted to OAuthCredentials on web.
+ - **FIX**: reinstate deprecated emulator apis (#6626).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
 
 ## 2.0.0
 

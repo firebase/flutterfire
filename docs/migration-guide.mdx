@@ -367,6 +367,7 @@ Firestore specific errors now return a `FirebaseException` (see Core changes), a
 
 - **`FirebaseFirestore`**:
 
+    - **NEW**: Add `useFirestoreEmulator(String host, int port)` support.
     - **BREAKING**: Calling `settings()` now accepts a `Settings` instance.
     - **DEPRECATED**: Calling `document()` is deprecated in favor of `doc()`.
     - **DEPRECATED**: Calling `Firestore(app: app)` is now deprecated. Use `FirebaseFirestore.instance`
@@ -456,6 +457,8 @@ Firestore specific errors now return a `FirebaseException` (see Core changes), a
 
 - **`FirebaseFunctions`**:
 
+    - **DEPRECATED**: `useFunctionsEmulator({required String origin})` parameters have been changed in line with every
+      other package emulator API; `useFunctionsEmulator(String host, int port)`.
     - **DEPRECATED**: Class `CloudFunctions` is now deprecated. Use `FirebaseFunctions` instead.
     - **DEPRECATED**: Calling `CloudFunctions.instance` or `CloudFunctions(app: app, region: region)` is now deprecated.
       Use `FirebaseFunctions.instance` or `FirebaseFunctions.instanceFor(app: app, region: region)` instead.

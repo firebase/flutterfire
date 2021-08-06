@@ -47,17 +47,19 @@ class RemoteNotification {
 
     if (map['apple'] != null) {
       _apple = AppleNotification(
-          badge: map['apple']['badge'],
-          subtitle: map['apple']['subtitle'],
-          subtitleLocArgs: _toList(map['apple']['subtitleLocArgs']),
-          subtitleLocKey: map['apple']['subtitleLocKey'],
-          imageUrl: map['apple']['imageUrl'],
-          sound: map['apple']['sound'] == null
-              ? null
-              : AppleNotificationSound(
-                  critical: map['apple']['sound']['critical'],
-                  name: map['apple']['sound']['name'],
-                  volume: map['apple']['sound']['volume']));
+        badge: map['apple']['badge'],
+        subtitle: map['apple']['subtitle'],
+        subtitleLocArgs: _toList(map['apple']['subtitleLocArgs']),
+        subtitleLocKey: map['apple']['subtitleLocKey'],
+        imageUrl: map['apple']['imageUrl'],
+        sound: map['apple']['sound'] == null
+            ? null
+            : AppleNotificationSound(
+                critical: map['apple']['sound']['critical'] ?? false,
+                name: map['apple']['sound']['name'],
+                volume: map['apple']['sound']['volume'] ?? 0,
+              ),
+      );
     }
 
     return RemoteNotification(

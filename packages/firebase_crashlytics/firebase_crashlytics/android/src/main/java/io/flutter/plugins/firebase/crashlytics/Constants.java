@@ -19,4 +19,8 @@ public class Constants {
   public static final String DID_CRASH_ON_PREVIOUS_EXECUTION = "didCrashOnPreviousExecution";
   public static final String UNSENT_REPORTS = "unsentReports";
   public static final String IS_CRASHLYTICS_COLLECTION_ENABLED = "isCrashlyticsCollectionEnabled";
+  public static final String FATAL = "fatal";
+  public static final String TIMESTAMP = "timestamp";
+  public static final String FIREBASE_APPLICATION_EXCEPTION = "_ae";
+  public static final String CRASH_EVENT_KEY = "com.firebase.crashlytics.flutter.fatal";
 }

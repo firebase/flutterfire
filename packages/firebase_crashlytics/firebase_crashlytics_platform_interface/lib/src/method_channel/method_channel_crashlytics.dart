@@ -22,9 +22,6 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
   static MethodChannel channel = const MethodChannel(
     'plugins.flutter.io/firebase_crashlytics',
   );
-  // TODO: reinstate once analytics plugin is part of recording fatal error crashes.
-  // static MethodChannel _analyticsChannel =
-  //     const MethodChannel('plugins.flutter.io/firebase_analytics');
 
   bool? _isCrashlyticsCollectionEnabled;
 
@@ -99,36 +96,12 @@ class MethodChannelFirebaseCrashlytics extends FirebaseCrashlyticsPlatform {
     List<Map<String, String>>? stackTraceElements,
   }) async {
     try {
-      /// "fatal" is an optional parameter that we're using to signal to the Crashlytic's service that this particular
-      /// error was a fatal one.  The below if statement is Firebase's prescribed method of signalling a fatal error.
-      if (fatal) {
-        try {
-          num currentUnixTimeSeconds =
-              (DateTime.now().millisecondsSinceEpoch / 1000).ceil();
-
-          await setCustomKey('com.firebase.crashlytics.flutter.fatal',
-              '$currentUnixTimeSeconds');
-
-          // TODO: once confirmation on the event name is received, reinstate analytics.logEvent below.
-          // await _analyticsChannel.invokeMethod('logEvent', <String, dynamic>{
-          //   'name': '_ae',
-          //   'parameters': {
-          //     'fatal': 1,
-          //     'timestamp': '$currentUnixTimeSeconds',
-          //   },
-          // });
-        } on MissingPluginException {
-          // noop - User ought to install firebase_analytics plugin
-        } on PlatformException catch (e, s) {
-          throw platformExceptionToFirebaseException(e, s);
-        }
-      }
-
       await channel
           .invokeMethod<void>('Crashlytics#recordError', <String, dynamic>{
         'exception': exception,
         'information': information,
         'reason': reason,
+        'fatal': fatal,
         'stackTraceElements': stackTraceElements ?? [],
       });
     } on PlatformException catch (e, s) {
