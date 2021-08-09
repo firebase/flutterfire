@@ -1,9 +1,14 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui/auth.dart';
 
 import 'auth_controller.dart';
 import 'auth_flow.dart';
+
+class AwatingPhoneNumber extends AuthState {}
+
+class SMSCodeRequested extends AuthState {}
 
 class PhoneVerified extends AuthState {
   final AuthCredential credential;
@@ -32,13 +37,20 @@ class PhoneVerificationAuthFlow extends AuthFlow
     implements PhoneVerificationController {
   final _smsCodeCompleter = Completer<String>();
 
+  PhoneVerificationAuthFlow({
+    required FirebaseAuth auth,
+    required AuthMethod method,
+  }) : super(auth: auth, initialState: AwatingPhoneNumber(), method: method);
+
   @override
   void acceptPhoneNumber(String phoneNumber) {
+    value = SMSCodeRequested();
+
     auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (credential) {
         value = PhoneVerified(credential);
-        setCredentials(credential);
+        setCredential(credential);
       },
       verificationFailed: (exception) {
         value = PhoneVerificationFailed(exception);
@@ -51,11 +63,11 @@ class PhoneVerificationAuthFlow extends AuthFlow
           smsCode: code,
         );
         value = PhoneVerified(credential);
-        setCredentials(credential);
+        setCredential(credential);
       },
       codeAutoRetrievalTimeout: (verificationId) {
         // TODO: handle this properly
-        throw new Exception('code autoresolution failed');
+        throw Exception('code autoresolution failed');
       },
     );
   }

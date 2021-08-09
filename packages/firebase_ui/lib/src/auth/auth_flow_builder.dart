@@ -1,3 +1,4 @@
+import 'package:firebase_ui/auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -8,20 +9,26 @@ typedef AuthFlowBuilderCallback<T extends AuthController> = Widget Function(
   BuildContext context,
   AuthState state,
   T ctrl,
+  Widget? child,
 );
+
+typedef StateTransitionListener = void Function(
+    AuthState oldState, AuthState newState);
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   final AuthFlow flow;
-  final FirebaseAuth auth;
-  final AuthFlowBuilderCallback<T> builder;
-  final Function(AuthCredential credential) onComplete;
+  final AuthFlowBuilderCallback<T>? builder;
+  final Function(AuthCredential credential)? onComplete;
+  final Widget? child;
+  final StateTransitionListener? listener;
 
   const AuthFlowBuilder({
     Key? key,
     required this.flow,
-    required this.auth,
-    required this.builder,
-    required this.onComplete,
+    this.builder,
+    this.onComplete,
+    this.child,
+    this.listener,
   }) : super(key: key);
 
   @override
@@ -31,22 +38,42 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
 class _AuthFlowBuilderState<T extends AuthController>
     extends State<AuthFlowBuilder> {
   AuthFlow get flow => widget.flow;
+  @override
+  AuthFlowBuilder<T> get widget => super.widget as AuthFlowBuilder<T>;
+  Widget? get child => widget.child;
+
+  AuthState? prevState;
 
   @override
   void initState() {
-    flow.auth = widget.auth;
-    flow.credentials.then(widget.onComplete);
+    prevState = flow.value;
+    flow.addListener(onFlowStateChanged);
 
     super.initState();
   }
 
+  void onFlowStateChanged() {
+    widget.listener?.call(prevState!, flow.value);
+    prevState = flow.value;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<AuthState>(
-      valueListenable: flow,
-      builder: (context, value, _) {
-        return widget.builder(context, value, flow as T);
-      },
+    return AuthControllerProvider(
+      ctrl: flow,
+      child: ValueListenableBuilder<AuthState>(
+        valueListenable: flow,
+        builder: (context, value, _) {
+          return widget.builder?.call(context, value, flow as T, child) ??
+              child!;
+        },
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    flow.removeListener(onFlowStateChanged);
+    super.dispose();
   }
 }
