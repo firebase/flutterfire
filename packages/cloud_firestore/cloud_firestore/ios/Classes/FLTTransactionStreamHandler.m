@@ -12,7 +12,7 @@
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
 @property(nonatomic, copy, nonnull) void (^ended)(void);
 @property(strong) dispatch_semaphore_t semaphore;
-@property NSDictionary * response;
+@property NSDictionary *response;
 @end
 
 @implementation FLTTransactionStreamHandler {
@@ -37,7 +37,7 @@
                                        eventSink:(nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
-  __weak FLTTransactionStreamHandler * weakSelf = self;
+  __weak FLTTransactionStreamHandler *weakSelf = self;
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
     weakSelf.started(transaction);
