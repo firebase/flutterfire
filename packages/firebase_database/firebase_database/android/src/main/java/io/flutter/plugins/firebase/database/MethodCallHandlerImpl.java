@@ -339,6 +339,8 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
 
           if (enabled) {
             database.setLogLevel(Logger.Level.DEBUG);
+          } else {
+            database.setLogLevel(Logger.Level.INFO);
           }
           result.success(null);
           break;
