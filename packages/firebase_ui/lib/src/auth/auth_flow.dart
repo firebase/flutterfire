@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui/src/auth/auth_controller.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 abstract class AuthState {}
 
@@ -11,7 +12,11 @@ class CredentialReceived extends AuthState {
   CredentialReceived(this.credential);
 }
 
-class CredentialLinked extends AuthState {}
+class CredentialLinked extends AuthState {
+  final AuthCredential credential;
+
+  CredentialLinked(this.credential);
+}
 
 class AuthFailed extends AuthState {
   final Exception exception;
@@ -27,6 +32,8 @@ class SignedIn extends AuthState {
 
 abstract class AuthFlow extends ValueNotifier<AuthState>
     implements AuthController {
+  BuildContext? context;
+
   @override
   final FirebaseAuth auth;
 
@@ -77,6 +84,7 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
           break;
         case AuthMethod.link:
           await link(credential);
+          value = CredentialLinked(credential);
           break;
         default:
           throw Exception('$method is not supported by $runtimeType');
