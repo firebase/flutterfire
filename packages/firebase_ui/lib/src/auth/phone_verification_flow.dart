@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
 
 import 'auth_controller.dart';
 import 'auth_flow.dart';
