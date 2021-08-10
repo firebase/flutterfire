@@ -1,4 +1,4 @@
-import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -47,6 +47,7 @@ class _AuthFlowBuilderState<T extends AuthController>
   @override
   void initState() {
     prevState = flow.value;
+    flow.context = context;
     flow.addListener(onFlowStateChanged);
 
     super.initState();
@@ -55,6 +56,15 @@ class _AuthFlowBuilderState<T extends AuthController>
   void onFlowStateChanged() {
     widget.listener?.call(prevState!, flow.value);
     prevState = flow.value;
+  }
+
+  @override
+  void didUpdateWidget(covariant AuthFlowBuilder<AuthController> oldWidget) {
+    oldWidget.flow.removeListener(onFlowStateChanged);
+
+    widget.flow.context = context;
+    widget.flow.addListener(onFlowStateChanged);
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

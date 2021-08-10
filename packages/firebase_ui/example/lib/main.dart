@@ -1,8 +1,8 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,24 +12,33 @@ void main() {
 class FirebaseAuthUIExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Container();
-        }
-
-        return MaterialApp(
-          title: 'Firebase UI demo',
-          theme: ThemeData(
-            brightness: Brightness.dark,
-            inputDecorationTheme: const InputDecorationTheme(
-              border: OutlineInputBorder(),
+    return FirebaseUIApp(
+      initializers: [
+        FirebaseUIAppInitializer(),
+        FirebaseUIAuthInitializer(
+          FirebaseUIAuthOptions(
+            emailLinkSettings: ActionCodeSettings(
+              url: 'https://react-native-firebase-testing.firebaseapp.com',
+              dynamicLinkDomain: 'reactnativefirebase.page.link',
+              androidPackageName:
+                  'io.flutter.plugins.firebase_ui.firebase_ui_example',
+              androidInstallApp: true,
+              androidMinimumVersion: '21',
+              handleCodeInApp: true,
             ),
           ),
-          home: const Home(),
-        );
-      },
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Firebase UI demo',
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(),
+          ),
+        ),
+        home: const Home(),
+      ),
     );
   }
 }
@@ -231,7 +240,7 @@ class PhoneAuthFlow extends StatelessWidget {
               method: authMethod,
             ),
             listener: (_, newState) {
-              if (newState is SignedIn) {
+              if (newState is SignedIn || newState is CredentialLinked) {
                 Navigator.of(context).pop();
               }
             },
@@ -290,11 +299,72 @@ class UserFieldTile extends StatelessWidget {
   }
 }
 
-class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+class VerifiedBadge extends StatelessWidget {
+  const VerifiedBadge({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(right: 12),
+      child: Icon(Icons.verified),
+    );
+  }
+}
+
+class EmailVerificationButton extends StatefulWidget {
+  const EmailVerificationButton({Key? key}) : super(key: key);
+
+  @override
+  _EmailVerificationButtonState createState() =>
+      _EmailVerificationButtonState();
+}
+
+class _EmailVerificationButtonState extends State<EmailVerificationButton> {
+  @override
+  Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser?.emailVerified ?? false) {
+      return const VerifiedBadge();
+    }
+
+    return AuthFlowBuilder<EmailFlowController>(
+      flow: EmailFlow(auth: FirebaseAuth.instance, method: AuthMethod.link),
+      builder: (context, state, ctrl, _) {
+        if (state is AwaitingEmailVerification) {
+          return const CircularProgressIndicator();
+        }
+
+        if (state is EmailVerified) {
+          return const VerifiedBadge();
+        }
+
+        return IconButton(
+          icon: const Icon(Icons.warning),
+          onPressed: () async {
+            try {
+              // TODO(@lesnitsky): figure out why apply fails, but emailVerified is true
+              await ctrl.verifyEmail();
+            } finally {
+              await FirebaseAuth.instance.currentUser?.reload();
+              setState(() {});
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  @override
+  Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
     final u = FirebaseAuth.instance.currentUser!;
 
     return Scaffold(
@@ -312,25 +382,57 @@ class Profile extends StatelessWidget {
                 UserFieldTile(
                   field: 'Email',
                   value: u.email,
-                  trailing: u.emailVerified
-                      ? const Icon(Icons.verified)
-                      : IconButton(
-                          icon: Icon(Icons.warning),
-                          onPressed: () {
-                            // TODO(@lesnitsky): implement
-                          },
-                        ),
+                  trailing: const EmailVerificationButton(),
                 ),
-                UserFieldTile(field: 'Phone number', value: u.phoneNumber),
+                UserFieldTile(
+                  field: 'Phone number',
+                  value: u.phoneNumber,
+                  trailing: u.phoneNumber == null
+                      ? IconButton(
+                          icon: const Icon(Icons.warning),
+                          onPressed: () async {
+                            await Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const PhoneAuthFlow(
+                                  authMethod: AuthMethod.link,
+                                ),
+                              ),
+                            );
+
+                            setState(() {});
+                          })
+                      : const VerifiedBadge(),
+                ),
               ],
             ),
           ),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.logout_outlined),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            label: const Text('Sign out'),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.currentUser!.delete();
+                  },
+                  style: ButtonStyle(
+                    foregroundColor:
+                        MaterialStateColor.resolveWith((states) => Colors.red),
+                    overlayColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.red.withAlpha(20)),
+                  ),
+                  icon: const Icon(Icons.delete),
+                  label: const Text('Delete account'),
+                ),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.logout_outlined),
+                  onPressed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                  label: const Text('Sign out'),
+                ),
+              ],
+            ),
           )
         ],
       ),

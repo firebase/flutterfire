@@ -25,8 +25,10 @@ abstract class AuthController {
 class AuthControllerProvider extends InheritedWidget {
   final AuthController ctrl;
 
-  AuthControllerProvider({required Widget child, required this.ctrl})
-      : super(child: child);
+  AuthControllerProvider({
+    required Widget child,
+    required this.ctrl,
+  }) : super(child: child);
 
   @override
   bool updateShouldNotify(AuthControllerProvider oldWidget) {
