@@ -4,7 +4,7 @@
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
-import '../utils/codec_utility.dart';
+import '../utils/decode_utility.dart';
 import '../interop/firestore.dart' as firestore_interop;
 
 const _kChangeTypeAdded = 'added';
@@ -37,7 +37,7 @@ DocumentSnapshotPlatform convertWebDocumentSnapshot(
     firestore,
     webSnapshot.ref!.path,
     <String, dynamic>{
-      'data': CodecUtility.decodeMapData(webSnapshot.data()),
+      'data': DecodeUtility.decodeMapData(webSnapshot.data()),
       'metadata': <String, bool>{
         'hasPendingWrites': webSnapshot.metadata.hasPendingWrites,
         'isFromCache': webSnapshot.metadata.fromCache,

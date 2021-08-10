@@ -1,3 +1,7 @@
+## 3.0.1
+
+ - **FIX**: reinstate deprecated emulator apis (#6626).
+
 ## 3.0.0
 
 > Note: This release has breaking changes.
