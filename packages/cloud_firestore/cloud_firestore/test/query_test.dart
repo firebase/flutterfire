@@ -202,6 +202,15 @@ void main() {
         );
       });
 
+      test(
+          'allow isNotEqualTo filter on FieldPath.documentId field & a different field on a separate filter',
+          () {
+        query!
+            .where(FieldPath.documentId, isNotEqualTo: 'fake-id')
+            .where(FieldPath.documentId, isEqualTo: 'another-fake-id')
+            .where('foo', isNull: true);
+      });
+
       test('allows arrayContains with whereIn filter', () {
         query!.where('foo', arrayContains: 1).where('foo', whereIn: [2, 3]);
         query!.where('foo', whereIn: [2, 3]).where('foo', arrayContains: 1);
