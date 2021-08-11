@@ -51,7 +51,10 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   void initState() {
     super.initState();
 
-    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: <SystemUiOverlay>[],
+    );
     SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[DeviceOrientation.portraitUp],
     );
@@ -272,10 +275,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _barcodeDetector.close();
 
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[]);
-    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[
-      SystemUiOverlay.top,
-      SystemUiOverlay.bottom,
-    ]);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: <SystemUiOverlay>[
+        SystemUiOverlay.top,
+        SystemUiOverlay.bottom,
+      ],
+    );
 
     super.dispose();
   }

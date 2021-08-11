@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:path/path.dart' as path;
@@ -20,10 +19,6 @@ part 'text_recognizer.dart';
 part 'document_text_recognizer.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
-
   group('$FirebaseVision', () {
     barcodeDetectorTests();
     faceDetectorTests();
