@@ -7,8 +7,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-import '../../firebase_storage_platform_interface.dart';
 import './utils/exception.dart';
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 import 'method_channel_task_snapshot.dart';
 
