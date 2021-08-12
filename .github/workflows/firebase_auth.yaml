@@ -34,7 +34,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@9.10.0
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: Start Firebase Emulator
@@ -60,7 +60,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@9.10.0
           flutter config --enable-macos-desktop
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
@@ -86,7 +86,7 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
-          sudo npm i -g firebase-tools
+          sudo npm i -g firebase-tools@9.10.0
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
