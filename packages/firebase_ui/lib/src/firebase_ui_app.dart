@@ -90,7 +90,7 @@ class _InitializersBindingState extends State<InitializersBinding> {
             Future.wait(widget.initializers.map((i) => i.initialize(i.params))),
       );
 
-  Widget buildSlashScreen() {
+  Widget buildSplashScreen() {
     return widget.splashScreenBuilder?.call(context) ??
         const SizedBox(width: 0, height: 0);
   }
@@ -111,10 +111,10 @@ class _InitializersBindingState extends State<InitializersBinding> {
           } else if (snapshot.hasError) {
             return buildError(snapshot);
           } else {
-            return buildSlashScreen();
+            return buildSplashScreen();
           }
         } else {
-          return buildSlashScreen();
+          return buildSplashScreen();
         }
       },
     );
