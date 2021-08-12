@@ -71,6 +71,8 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
       value = EmailVerified();
     } on Exception catch (e) {
       value = EmailVerificationFailed(e);
+      await auth.currentUser!.reload();
+      print(auth.currentUser!.emailVerified);
     }
   }
 

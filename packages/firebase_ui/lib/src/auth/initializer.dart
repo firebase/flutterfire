@@ -35,13 +35,6 @@ class FirebaseUIAuthInitializer
       onSuccess: (dynamicLink) async {
         final deepLink = dynamicLink!.link;
         _links.add(deepLink);
-
-        final code = deepLink.queryParameters['oobCode']!;
-
-        await auth.checkActionCode(code);
-        await auth.applyActionCode(code);
-
-        await auth.currentUser!.reload();
       },
     );
   }

@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui_example/widgets/email_verification_button.dart';
 import 'package:firebase_ui_example/widgets/user_field_tile.dart';
 import 'package:flutter/material.dart';
+
+import 'phone_auth_flow.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
