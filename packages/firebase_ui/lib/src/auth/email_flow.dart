@@ -53,14 +53,16 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
 
   @override
   Future<void> verifyEmail() async {
-    final initializer =
-        FirebaseUIApp.initializerOf<FirebaseUIAuthInitializer>(context!);
-    final settings = initializer.params!.emailLinkSettings;
+    final authInitializer = resolveInitializer<FirebaseUIAuthInitializer>();
+    final linksInitializer =
+        resolveInitializer<FirebaseUIDynamicLinksInitializer>();
+
+    final settings = authInitializer.params!.emailLinkSettings;
 
     value = AwaitingEmailVerification();
-    await initializer.auth.currentUser!.sendEmailVerification(settings);
+    await authInitializer.auth.currentUser!.sendEmailVerification(settings);
 
-    final link = await initializer.awaitLink();
+    final link = await linksInitializer.awaitLink();
 
     try {
       final code = link.queryParameters['oobCode']!;
@@ -71,8 +73,6 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
       value = EmailVerified();
     } on Exception catch (e) {
       value = EmailVerificationFailed(e);
-      await auth.currentUser!.reload();
-      print(auth.currentUser!.emailVerified);
     }
   }
 

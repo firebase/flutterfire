@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/auth/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -31,6 +32,7 @@ class SignedIn extends AuthState {
 }
 
 abstract class AuthFlow extends ValueNotifier<AuthState>
+    with InitializerProvider
     implements AuthController {
   BuildContext? context;
 
@@ -92,5 +94,9 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
     } on Exception catch (err) {
       value = AuthFailed(err);
     }
+  }
+
+  T resolveInitializer<T>() {
+    return getInitializerOfType<T>(context!);
   }
 }
