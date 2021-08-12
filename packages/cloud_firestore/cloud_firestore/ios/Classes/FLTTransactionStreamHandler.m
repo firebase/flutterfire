@@ -41,7 +41,7 @@
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
     FLTTransactionStreamHandler *strongSelf = weakSelf;
-    
+
     strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
