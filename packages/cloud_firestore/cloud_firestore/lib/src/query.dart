@@ -645,11 +645,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     if (whereIn != null) addCondition(field, 'in', whereIn);
     if (whereNotIn != null) addCondition(field, 'not-in', whereNotIn);
     if (isNull != null) {
-      assert(
-          isNull,
-          'isNull can only be set to true. '
-          'Use isEqualTo to filter on non-null values.');
-      addCondition(field, '==', null);
+      if (isNull == true) {
+        addCondition(field, '==', null);
+      } else {
+        addCondition(field, '!=', null);
+      }
     }
 
     dynamic hasInequality;
@@ -692,11 +692,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           "You cannot use FieldPath.documentId field whilst using a '!=' filter on a different field.",
         );
         hasDocumentIdField = true;
-      }
-
-      if (value == null) {
-        assert(operator == '==',
-            'You can only perform equals comparisons on null.');
       }
 
       if (operator == 'in' ||
