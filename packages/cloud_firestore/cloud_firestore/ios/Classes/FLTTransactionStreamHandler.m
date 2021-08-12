@@ -40,14 +40,16 @@
   __weak FLTTransactionStreamHandler *weakSelf = self;
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
-    weakSelf.started(transaction);
+    FLTTransactionStreamHandler *strongSelf = weakSelf;
+    
+    strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
       events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
     });
 
     long timedOut = dispatch_semaphore_wait(
-        weakSelf.semaphore,
+        strongSelf.semaphore,
         dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
@@ -67,7 +69,7 @@
       });
     }
 
-    NSDictionary *response = weakSelf.response;
+    NSDictionary *response = strongSelf.response;
 
     if (response.count == 0) {
       return nil;
@@ -107,6 +109,7 @@
   };
 
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
+    FLTTransactionStreamHandler *strongSelf = weakSelf;
     if (error) {
       NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
@@ -128,7 +131,7 @@
       events(FlutterEndOfEventStream);
     });
 
-    weakSelf.ended();
+    strongSelf.ended();
   };
 
   [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
