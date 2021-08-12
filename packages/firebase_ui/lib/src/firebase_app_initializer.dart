@@ -12,8 +12,13 @@ class FirebaseUIAppInitializer
     extends FirebaseUIInitializer<FirebaseUIAppOptions> {
   FirebaseUIAppInitializer([FirebaseUIAppOptions? params]) : super(params);
 
+  late FirebaseApp app;
+
   @override
   Future<void> initialize([params]) async {
-    await Firebase.initializeApp(name: params?.name, options: params?.options);
+    app = await Firebase.initializeApp(
+      name: params?.name,
+      options: params?.options,
+    );
   }
 }

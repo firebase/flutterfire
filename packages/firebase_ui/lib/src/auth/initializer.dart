@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class FirebaseUIAuthOptions {
   final FirebaseApp? app;
@@ -22,24 +22,12 @@ class FirebaseUIAuthInitializer
   late FirebaseAuth? _auth;
   FirebaseAuth get auth => _auth!;
 
-  StreamController<Uri> _links = StreamController.broadcast();
-  Stream<Uri> get links => _links.stream;
+  @override
+  final dependencies = {FirebaseUIAppInitializer};
 
   @override
   Future<void> initialize([FirebaseUIAuthOptions? params]) async {
-    _auth = params?.app != null
-        ? FirebaseAuth.instanceFor(app: params!.app!)
-        : FirebaseAuth.instance;
-
-    FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (dynamicLink) async {
-        final deepLink = dynamicLink!.link;
-        _links.add(deepLink);
-      },
-    );
-  }
-
-  Future<Uri> awaitLink() {
-    return links.take(1).toList().then((links) => links.first);
+    final dep = resolveDependency<FirebaseUIAppInitializer>();
+    _auth = FirebaseAuth.instanceFor(app: dep.app);
   }
 }
