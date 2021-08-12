@@ -16,6 +16,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
     return FirebaseUIApp(
       initializers: [
         FirebaseUIAppInitializer(),
+        FirebaseUIDynamicLinksInitializer(),
         FirebaseUIAuthInitializer(
           FirebaseUIAuthOptions(
             emailLinkSettings: ActionCodeSettings(
