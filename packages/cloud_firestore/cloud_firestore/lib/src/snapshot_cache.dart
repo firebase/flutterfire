@@ -21,6 +21,7 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
 ) {
   // A stream that emits the latest value emitted by the cached native connection
   // followed by new events from the native connection.
+  // ignore: close_sinks, should be safe to not close the controller since all listeners are removed
   final controllerWithLastEvent = StreamController<Snapshot>.broadcast();
 
   StreamSubscription? connectionSub;
@@ -40,6 +41,7 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
       final nativeBridgeStream = create();
 
       late StreamSubscription sub;
+      // ignore: close_sinks, should be safe to not close the controller since all listeners are removed
       final nativeController = StreamController<Snapshot>.broadcast();
 
       nativeController.onListen = () {
@@ -60,7 +62,7 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
         // When all listeners on the native bridge are removed, remove the
         // entry from cache to avoid memory leaks
         snapshotCache.remove(key);
-        nativeController.close();
+        // nativeController.close();
       };
 
       return connection = _ReferenceConnection<Snapshot>(
@@ -101,9 +103,9 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
     // when the expected behaviour is to reuse the connection.
     return Future(() {
       connectionSub?.cancel();
-      if (!controllerWithLastEvent.isClosed) {
-        controllerWithLastEvent.close();
-      }
+      // if (!controllerWithLastEvent.isClosed) {
+      //   controllerWithLastEvent.close();
+      // }
     });
   };
 
