@@ -9,6 +9,7 @@ part of cloud_firestore;
 /// Can construct refined [Query] objects by adding filters and ordering.
 // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
 @sealed
+@immutable
 abstract class Query<T extends Object?> {
   /// The [FirebaseFirestore] instance of this query.
   FirebaseFirestore get firestore;
@@ -794,6 +795,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _JsonQuery &&
+        other.firestore == firestore &&
+        other._delegate == _delegate;
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ firestore.hashCode ^ _delegate.hashCode;
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -941,4 +954,20 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _WithConverterQuery &&
+        other._fromFirestore == _fromFirestore &&
+        other._toFirestore == _toFirestore &&
+        other._originalQuery == _originalQuery;
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      _fromFirestore.hashCode ^
+      _toFirestore.hashCode ^
+      _originalQuery.hashCode;
 }
