@@ -951,6 +951,53 @@ void runQueryTests() {
      */
 
     group('Query.where()', () {
+      test('returns documents when querying for properties that are not null',
+          () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('not-null');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isNull: false).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc1'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+      });
+
+      test('returns documents when querying properties that are equal to null',
+          () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('not-null');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isNull: true).get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].id, equals('doc3'));
+      });
+
       test('returns with equal checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-equal');
