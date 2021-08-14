@@ -7,6 +7,9 @@ homepage: https://firebase.flutter.dev/docs/performance/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
 version: 0.7.0+8
 
+# Remove this before sending out the PR
+publish_to: none
+
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
@@ -26,10 +29,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   http: ^0.13.0
-  pedantic: ^1.8.0
-  test: any
   mockito: ^5.0.0
+  pedantic: ^1.8.0
   plugin_platform_interface: ^2.0.0
+  test: any
 
 flutter:
   plugin:
