@@ -19,7 +19,7 @@ void main() {
       future: Firebase.initializeApp(),
       builder: (context, firebaseAppSnapshot) {
         if (firebaseAppSnapshot.hasData) {
-          return MyApp();
+          return const MyApp();
         } else {
           return Container();
         }

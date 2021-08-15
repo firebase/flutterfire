@@ -1,5 +1,8 @@
 name: firebase_performance_example
 description: Demonstrates how to use the firebase_performance plugin.
+author: Flutter Team <flutter-dev@googlegroups.com>
+version: 0.0.1
+publish_to: none
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
