@@ -1,4 +1,3 @@
-
 part of cloud_firestore;
 
 class LoadBundleTask {
