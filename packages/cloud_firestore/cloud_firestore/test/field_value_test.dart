@@ -10,7 +10,9 @@ void main() {
     test('equality', () {
       expect(FieldValue.delete() == FieldValue.delete(), isTrue);
       expect(
-          FieldValue.serverTimestamp() == FieldValue.serverTimestamp(), isTrue);
+        FieldValue.serverTimestamp() == FieldValue.serverTimestamp(),
+        isTrue,
+      );
       expect(FieldValue.delete() == FieldValue.serverTimestamp(), isFalse);
     });
   });
