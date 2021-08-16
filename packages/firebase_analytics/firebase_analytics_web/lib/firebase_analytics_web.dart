@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';

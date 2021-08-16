@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 @TestOn('chrome') // Uses web-only Flutter SDK
 
 import 'package:firebase/firebase.dart';

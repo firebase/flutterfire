@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 part of cloud_firestore;
 
 class LoadBundleTask {
