@@ -62,7 +62,6 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
         // When all listeners on the native bridge are removed, remove the
         // entry from cache to avoid memory leaks
         snapshotCache.remove(key);
-        // nativeController.close();
       };
 
       return connection = _ReferenceConnection<Snapshot>(
@@ -103,9 +102,6 @@ Stream<Snapshot> getCachedConnection<Snapshot>(
     // when the expected behaviour is to reuse the connection.
     return Future(() {
       connectionSub?.cancel();
-      // if (!controllerWithLastEvent.isClosed) {
-      //   controllerWithLastEvent.close();
-      // }
     });
   };
 
