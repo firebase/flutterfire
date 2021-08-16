@@ -8,3 +8,4 @@ analyzer:
   errors:
     avoid_print: ignore
     depend_on_referenced_packages: false
+    library_private_types_in_public_api: false
