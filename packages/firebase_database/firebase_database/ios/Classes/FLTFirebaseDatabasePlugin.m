@@ -230,6 +230,10 @@ id roundDoubles(id value) {
         @throw;
       }
     }
+  } else if ([@"FirebaseDatabase#setLoggingEnabled" isEqualToString:call.method]) {
+    BOOL enabled = call.arguments[@"enabled"];
+    [FIRDatabase setLoggingEnabled:enabled];
+    result(nil);
   } else if ([@"DatabaseReference#set" isEqualToString:call.method]) {
     [getReference(database, call.arguments) setValue:call.arguments[@"value"]
                                          andPriority:call.arguments[@"priority"]

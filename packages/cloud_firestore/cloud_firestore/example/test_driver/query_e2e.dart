@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runQueryTests() {
@@ -29,6 +30,64 @@ void runQueryTests() {
       });
       return collection;
     }
+
+    group('equality', () {
+      // testing == override using e2e tests as it is dependent on the platform
+      test('handles deeply compares query parameters', () {
+        final movies = firestore.collection('/movies');
+        final starWarsComments =
+            firestore.collection('/movies/star-wars/comments');
+
+        expect(
+          movies.where('genre', arrayContains: ['Flutter']),
+          movies.where('genre', arrayContains: ['Flutter']),
+        );
+        expect(
+          movies.where('genre', arrayContains: ['Flutter']),
+          isNot(movies.where('genre', arrayContains: ['React'])),
+        );
+        expect(
+          movies.where('genre', arrayContains: ['Flutter']),
+          isNot(starWarsComments.where('genre', arrayContains: ['Flutter'])),
+        );
+      });
+
+      test('differentiate queries from a different app instance', () async {
+        final fooApp = await Firebase.initializeApp(
+          name: 'foo',
+          options: Firebase.app().options,
+        );
+
+        expect(
+          FirebaseFirestore.instanceFor(app: fooApp)
+              .collection('movies')
+              .limit(42),
+          FirebaseFirestore.instanceFor(app: fooApp)
+              .collection('movies')
+              .limit(42),
+        );
+
+        expect(
+          FirebaseFirestore.instance.collection('movies').limit(42),
+          isNot(
+            FirebaseFirestore.instanceFor(app: fooApp)
+                .collection('movies')
+                .limit(42),
+          ),
+        );
+      });
+
+      test('differentiate collection group', () {
+        expect(
+          firestore.collectionGroup('comments').limit(42),
+          firestore.collectionGroup('comments').limit(42),
+        );
+        expect(
+          firestore.collectionGroup('comments').limit(42),
+          isNot(firestore.collection('comments').limit(42)),
+        );
+      });
+    });
 
     /**
      * collectionGroup
@@ -892,6 +951,53 @@ void runQueryTests() {
      */
 
     group('Query.where()', () {
+      test('returns documents when querying for properties that are not null',
+          () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('not-null');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isNull: false).get();
+
+        expect(snapshot.docs.length, equals(2));
+        expect(snapshot.docs[0].id, equals('doc1'));
+        expect(snapshot.docs[1].id, equals('doc2'));
+      });
+
+      test('returns documents when querying properties that are equal to null',
+          () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('not-null');
+        await Future.wait([
+          collection.doc('doc1').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc2').set({
+            'foo': 'bar',
+          }),
+          collection.doc('doc3').set({
+            'foo': null,
+          }),
+        ]);
+
+        QuerySnapshot<Map<String, dynamic>> snapshot =
+            await collection.where('foo', isNull: true).get();
+
+        expect(snapshot.docs.length, equals(1));
+        expect(snapshot.docs[0].id, equals('doc3'));
+      });
+
       test('returns with equal checks', () async {
         CollectionReference<Map<String, dynamic>> collection =
             await initializeTest('where-equal');

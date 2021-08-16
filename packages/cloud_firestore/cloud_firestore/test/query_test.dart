@@ -202,6 +202,15 @@ void main() {
         );
       });
 
+      test(
+          'allow isNotEqualTo filter on FieldPath.documentId field & a different field on a separate filter',
+          () {
+        query!
+            .where(FieldPath.documentId, isNotEqualTo: 'fake-id')
+            .where(FieldPath.documentId, isEqualTo: 'another-fake-id')
+            .where('foo', isNull: true);
+      });
+
       test('allows arrayContains with whereIn filter', () {
         query!.where('foo', arrayContains: 1).where('foo', whereIn: [2, 3]);
         query!.where('foo', whereIn: [2, 3]).where('foo', arrayContains: 1);
@@ -262,6 +271,87 @@ void main() {
         q = q.endAt(['456']);
         expect(q.parameters['endBefore'], isNull);
         expect(q.parameters['endAt'], equals(['456']));
+      });
+    });
+
+    group('withConverter', () {
+      test('overrides ==', () {
+        final query = firestore.collection('/movies').limit(42);
+        final query2 = firestore.collection('/movies').limit(21);
+
+        int fromFirestore(Object? snapshot, Object? options) => 42;
+        Map<String, Object?> toFirestore(Object? value, Object? options) => {};
+
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+        );
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          isNot(
+            query.withConverter<Object?>(
+              fromFirestore: fromFirestore,
+              toFirestore: toFirestore,
+            ),
+          ),
+        );
+        expect(
+          query.withConverter<Object?>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          isNot(
+            query.withConverter<int>(
+              fromFirestore: fromFirestore,
+              toFirestore: toFirestore,
+            ),
+          ),
+        );
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          isNot(
+            query2.withConverter<int>(
+              fromFirestore: fromFirestore,
+              toFirestore: toFirestore,
+            ),
+          ),
+        );
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          isNot(
+            query.withConverter<int>(
+              fromFirestore: (_, __) => 21,
+              toFirestore: toFirestore,
+            ),
+          ),
+        );
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          isNot(
+            query.withConverter<int>(
+              fromFirestore: fromFirestore,
+              toFirestore: (_, __) => {},
+            ),
+          ),
+        );
       });
     });
   });

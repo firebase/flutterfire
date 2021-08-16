@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Logger;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
@@ -329,6 +330,19 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             // Database is already in use, e.g. after hot reload/restart.
             result.success(false);
           }
+          break;
+        }
+
+      case "FirebaseDatabase#setLoggingEnabled":
+        {
+          boolean enabled = call.argument("enabled");
+
+          if (enabled) {
+            database.setLogLevel(Logger.Level.DEBUG);
+          } else {
+            database.setLogLevel(Logger.Level.INFO);
+          }
+          result.success(null);
           break;
         }
 

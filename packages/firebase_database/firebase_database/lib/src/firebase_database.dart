@@ -77,6 +77,20 @@ class FirebaseDatabase {
     return _delegate.setPersistenceCacheSizeBytes(cacheSize);
   }
 
+  /// Enables verbose diagnostic logging for debugging your application.
+  /// This must be called before any other usage of FirebaseDatabase instance.
+  /// By default, diagnostic logging is disabled.
+  Future<void> setLoggingEnabled(bool enabled) {
+    return _channel.invokeMethod<void>(
+      'FirebaseDatabase#setLoggingEnabled',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'enabled': enabled
+      },
+    );
+  }
+
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {

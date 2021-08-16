@@ -1,6 +1,5 @@
 name: firebase_ml_vision_example
 description: Demonstrates how to use the firebase_ml_vision plugin.
-author: Flutter Team <flutter-dev@googlegroups.com>
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
