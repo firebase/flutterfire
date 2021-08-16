@@ -81,14 +81,7 @@ class FirebaseDatabase {
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
   Future<void> setLoggingEnabled(bool enabled) {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#setLoggingEnabled',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled
-      },
-    );
+    return _delegate.setLoggingEnabled(enabled);
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous

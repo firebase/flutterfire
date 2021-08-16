@@ -120,6 +120,13 @@ abstract class DatabasePlatform extends PlatformInterface {
     throw UnimplementedError('setPersistenceCacheSizeBytes() not implemented');
   }
 
+  /// Enables verbose diagnostic logging for debugging your application.
+  /// This must be called before any other usage of FirebaseDatabase instance.
+  /// By default, diagnostic logging is disabled.
+  Future<void> setLoggingEnabled(bool enabled) {
+    throw UnimplementedError('setLoggingEnabled() not implemented');
+  }
+
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {

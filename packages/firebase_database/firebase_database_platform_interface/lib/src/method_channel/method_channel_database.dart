@@ -123,6 +123,21 @@ class MethodChannelDatabase extends DatabasePlatform {
     return result!;
   }
 
+  /// Enables verbose diagnostic logging for debugging your application.
+  /// This must be called before any other usage of FirebaseDatabase instance.
+  /// By default, diagnostic logging is disabled.
+  @override
+  Future<void> setLoggingEnabled(bool enabled) {
+    return channel.invokeMethod<void>(
+      'FirebaseDatabase#setLoggingEnabled',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'enabled': enabled
+      },
+    );
+  }
+
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   @override
