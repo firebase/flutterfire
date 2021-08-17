@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +16,7 @@ class PhoneAuthFlow extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Center(
           child: AuthFlowBuilder<PhoneVerificationController>(
-            flow: PhoneVerificationAuthFlow(
-              auth: FirebaseAuth.instance,
-              method: authMethod,
-            ),
+            method: authMethod,
             listener: (_, newState) {
               if (newState is SignedIn || newState is CredentialLinked) {
                 Navigator.of(context).pop();

@@ -105,7 +105,6 @@ class _InitializersBindingState extends State<InitializersBinding> {
   }
 
   Future invokeInitializer(FirebaseUIInitializer initializer) {
-    final params = initializer.params;
     final deps = resolveDependencies(initializer.dependencies);
     final depsMap = deps.fold<Map<Type, FirebaseUIInitializer>>(
       {},
@@ -117,11 +116,11 @@ class _InitializersBindingState extends State<InitializersBinding> {
 
     DependencyManager.inject(initializer, depsMap);
 
-    return initializer.initialize(params);
+    return initializer.initialize();
   }
 
   Future<List> init() async {
-    await rootInitializer.initialize(rootInitializer.params);
+    await rootInitializer.initialize();
     final orderedInitializers = <FirebaseUIInitializer>[];
     final rest = {...widget.initializers}..remove(FirebaseUIAppInitializer);
 

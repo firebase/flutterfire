@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fba;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import '../oauth_providers.dart';
+import '../oauth_providers.dart' show Apple;
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
@@ -26,7 +26,7 @@ String sha256ofString(String input) {
 
 class AppleProviderImpl extends Apple {
   @override
-  Future<fba.OAuthCredential> signIn() async {
+  Future<OAuthCredential> signIn() async {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
@@ -40,7 +40,7 @@ class AppleProviderImpl extends Apple {
     );
 
     // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = fba.OAuthProvider('apple.com').credential(
+    final oauthCredential = OAuthProvider('apple.com').credential(
       idToken: appleCredential.identityToken,
       rawNonce: rawNonce,
     );

@@ -4,13 +4,11 @@ import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class FirebaseUIDynamicLinksInitializer extends FirebaseUIInitializer {
-  FirebaseUIDynamicLinksInitializer() : super(null);
-
   StreamController<Uri> _links = StreamController.broadcast();
   Stream<Uri> get links => _links.stream;
 
   @override
-  Future<void> initialize([params]) async {
+  Future<void> initialize() async {
     FirebaseDynamicLinks.instance.onLink(
       onSuccess: (dynamicLink) async {
         final deepLink = dynamicLink!.link;

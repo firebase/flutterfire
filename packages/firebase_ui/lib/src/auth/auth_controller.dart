@@ -16,6 +16,7 @@ abstract class AuthController {
   }
 
   AuthMethod get method;
+
   FirebaseAuth get auth;
 
   Future<User?> signIn(AuthCredential credential);

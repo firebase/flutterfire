@@ -77,10 +77,7 @@ class _ProfileState extends State<Profile> {
                         style: Theme.of(context).textTheme.overline,
                       ),
                       AuthFlowBuilder<OAuthController>(
-                        flow: OAuthFlow(
-                          auth: FirebaseAuth.instance,
-                          method: AuthMethod.link,
-                        ),
+                        method: AuthMethod.link,
                         listener: (_, newState) {
                           if (newState is CredentialLinked) {
                             u.reload();

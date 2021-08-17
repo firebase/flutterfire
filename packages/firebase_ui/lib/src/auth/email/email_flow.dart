@@ -9,7 +9,8 @@ import 'package:firebase_ui/firebase_ui.dart';
 
 import 'package:firebase_ui/src/auth/auth_controller.dart';
 
-import 'auth_flow.dart';
+import '../auth_flow.dart';
+import 'email_provider_configuration.dart';
 
 class AwaitingEmailAndPassword extends AuthState {}
 
@@ -54,15 +55,16 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
   @override
   Future<void> verifyEmail() async {
     final authInitializer = resolveInitializer<FirebaseUIAuthInitializer>();
-    final linksInitializer =
-        resolveInitializer<FirebaseUIDynamicLinksInitializer>();
+    final deepLinks = resolveInitializer<FirebaseUIDynamicLinksInitializer>();
 
-    final settings = authInitializer.params!.emailLinkSettings;
+    final settings = authInitializer
+        .configOf<EmailProviderConfiguration>()
+        .actionCodeSettings;
 
     value = AwaitingEmailVerification();
     await authInitializer.auth.currentUser!.sendEmailVerification(settings);
 
-    final link = await linksInitializer.awaitLink();
+    final link = await deepLinks.awaitLink();
 
     try {
       final code = link.queryParameters['oobCode']!;
