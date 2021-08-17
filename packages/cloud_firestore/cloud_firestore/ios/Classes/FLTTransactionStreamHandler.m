@@ -11,12 +11,12 @@
 @interface FLTTransactionStreamHandler ()
 @property(nonatomic, copy, nonnull) void (^started)(FIRTransaction *);
 @property(nonatomic, copy, nonnull) void (^ended)(void);
+@property(strong) dispatch_semaphore_t semaphore;
+@property NSDictionary *response;
 @end
 
 @implementation FLTTransactionStreamHandler {
   NSString *_transactionId;
-  dispatch_semaphore_t _semaphore;
-  NSDictionary *_response;
 }
 
 - (instancetype)initWithId:(NSString *)transactionId
@@ -27,8 +27,8 @@
     _transactionId = transactionId;
     self.started = startedListener;
     self.ended = endedListener;
-    _semaphore = dispatch_semaphore_create(0);
-    _response = [NSMutableDictionary dictionary];
+    self.semaphore = dispatch_semaphore_create(0);
+    self.response = [NSMutableDictionary dictionary];
   }
   return self;
 }
@@ -37,16 +37,19 @@
                                        eventSink:(nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
+  __weak FLTTransactionStreamHandler *weakSelf = self;
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
-    self.started(transaction);
+    FLTTransactionStreamHandler *strongSelf = weakSelf;
+
+    strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
       events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
     });
 
     long timedOut = dispatch_semaphore_wait(
-        self->_semaphore,
+        strongSelf.semaphore,
         dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
@@ -66,7 +69,7 @@
       });
     }
 
-    NSDictionary *response = self->_response;
+    NSDictionary *response = strongSelf.response;
 
     if (response.count == 0) {
       return nil;
@@ -106,6 +109,7 @@
   };
 
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
+    FLTTransactionStreamHandler *strongSelf = weakSelf;
     if (error) {
       NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
@@ -127,7 +131,7 @@
       events(FlutterEndOfEventStream);
     });
 
-    self.ended();
+    strongSelf.ended();
   };
 
   [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
@@ -136,15 +140,15 @@
 }
 
 - (FlutterError *_Nullable)onCancelWithArguments:(id _Nullable)arguments {
-  dispatch_semaphore_signal(_semaphore);
+  dispatch_semaphore_signal(self.semaphore);
 
   return nil;
 }
 
 - (void)receiveTransactionResponse:(NSDictionary *)response {
-  _response = response;
+  self.response = response;
 
-  dispatch_semaphore_signal(_semaphore);
+  dispatch_semaphore_signal(self.semaphore);
 }
 
 @end

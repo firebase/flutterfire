@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -50,7 +51,7 @@ void testsMain() {
 
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
-      final DatabaseReference ref = database.reference().child('counter');
+      final DatabaseReference ref = database.reference().child('flutterfire');
 
       await ref.set(0);
 
@@ -69,7 +70,7 @@ void testsMain() {
     test('DataSnapshot supports null childKeys for maps', () async {
       // Regression test for https://github.com/FirebaseExtended/flutterfire/issues/6002
 
-      final ref = FirebaseDatabase.instance.reference().child('counter');
+      final ref = FirebaseDatabase.instance.reference().child('flutterfire');
 
       final transactionResult = await ref.runTransaction((mutableData) async {
         mutableData.value = {'v': 'vala'};
@@ -93,6 +94,18 @@ void testsMain() {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
     });
+
+    test('setLoggingEnabled to true', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(true);
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
+
+    test('setLoggingEnabled to false', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(false);
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
 
     test('get snapshot', () async {
       final dataSnapshot = await FirebaseDatabase.instance

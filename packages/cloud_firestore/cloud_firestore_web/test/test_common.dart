@@ -36,6 +36,7 @@ class MockWebDocumentReference extends Mock implements web.DocumentReference {}
 class MockWebCollectionReference extends Mock
     implements web.CollectionReference {}
 
+// ignore: must_be_immutable, avoid_implementing_value_types
 class MockQueryWeb extends Mock implements QueryWeb {}
 
 class MockDocumentSnapshot extends Mock implements DocumentSnapshotPlatform {}

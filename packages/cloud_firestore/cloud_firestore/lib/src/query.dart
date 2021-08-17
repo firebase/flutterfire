@@ -9,6 +9,7 @@ part of cloud_firestore;
 /// Can construct refined [Query] objects by adding filters and ordering.
 // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
 @sealed
+@immutable
 abstract class Query<T extends Object?> {
   /// The [FirebaseFirestore] instance of this query.
   FirebaseFirestore get firestore;
@@ -645,11 +646,11 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     if (whereIn != null) addCondition(field, 'in', whereIn);
     if (whereNotIn != null) addCondition(field, 'not-in', whereNotIn);
     if (isNull != null) {
-      assert(
-          isNull,
-          'isNull can only be set to true. '
-          'Use isEqualTo to filter on non-null values.');
-      addCondition(field, '==', null);
+      if (isNull == true) {
+        addCondition(field, '==', null);
+      } else {
+        addCondition(field, '!=', null);
+      }
     }
 
     dynamic hasInequality;
@@ -692,11 +693,6 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
           "You cannot use FieldPath.documentId field whilst using a '!=' filter on a different field.",
         );
         hasDocumentIdField = true;
-      }
-
-      if (value == null) {
-        assert(operator == '==',
-            'You can only perform equals comparisons on null.');
       }
 
       if (operator == 'in' ||
@@ -799,6 +795,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _JsonQuery &&
+        other.firestore == firestore &&
+        other._delegate == _delegate;
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ firestore.hashCode ^ _delegate.hashCode;
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -946,4 +954,20 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _WithConverterQuery &&
+        other._fromFirestore == _fromFirestore &&
+        other._toFirestore == _toFirestore &&
+        other._originalQuery == _originalQuery;
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      _fromFirestore.hashCode ^
+      _toFirestore.hashCode ^
+      _originalQuery.hashCode;
 }

@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import 'package:collection/collection.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
 
 import 'internals.dart';
@@ -11,30 +12,51 @@ import 'utils/web_utils.dart';
 
 /// Web implementation of Firestore [QueryPlatform].
 class QueryWeb extends QueryPlatform {
+  /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
+  /// to delegate queries to underlying firestore web plugin
+  QueryWeb(
+    FirebaseFirestorePlatform firestore,
+    this._path,
+    this._webQuery, {
+    Map<String, dynamic>? parameters,
+    this.isCollectionGroupQuery = false,
+  }) : super(firestore, parameters);
+
   final firestore_interop.Query _webQuery;
-  final FirebaseFirestorePlatform _firestore;
   final String _path;
 
   /// Flags whether the current query is for a collection group.
   @override
   final bool isCollectionGroupQuery;
 
-  /// Builds an instance of [QueryWeb] delegating to a package:firebase [Query]
-  /// to delegate queries to underlying firestore web plugin
-  QueryWeb(
-    this._firestore,
-    this._path,
-    this._webQuery, {
-    Map<String, dynamic>? parameters,
-    this.isCollectionGroupQuery = false,
-  }) : super(_firestore, parameters);
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is QueryWeb &&
+        other.firestore == firestore &&
+        other._path == _path &&
+        other.isCollectionGroupQuery == isCollectionGroupQuery &&
+        const DeepCollectionEquality().equals(other.parameters, parameters);
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      firestore.hashCode ^
+      _path.hashCode ^
+      isCollectionGroupQuery.hashCode ^
+      const DeepCollectionEquality().hash(parameters);
 
   QueryWeb _copyWithParameters(Map<String, dynamic> parameters) {
-    return QueryWeb(_firestore, _path, _webQuery,
-        isCollectionGroupQuery: isCollectionGroupQuery,
-        parameters: Map<String, dynamic>.unmodifiable(
-          Map<String, dynamic>.from(this.parameters)..addAll(parameters),
-        ));
+    return QueryWeb(
+      firestore,
+      _path,
+      _webQuery,
+      isCollectionGroupQuery: isCollectionGroupQuery,
+      parameters: Map<String, dynamic>.unmodifiable(
+        Map<String, dynamic>.from(this.parameters)..addAll(parameters),
+      ),
+    );
   }
 
   /// Builds a [web.Query] from given [parameters].

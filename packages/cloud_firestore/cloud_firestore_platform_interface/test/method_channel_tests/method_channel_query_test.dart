@@ -45,7 +45,7 @@ void main() {
       query = MethodChannelQuery(
         FirebaseFirestorePlatform.instance,
         '$kCollectionId/$kDocumentId',
-        parameters: {
+        parameters: const {
           'where': [],
           'orderBy': ['foo'],
           'startAt': null,
@@ -164,7 +164,7 @@ void main() {
         MethodChannelQuery testQuery = MethodChannelQuery(
           FirebaseFirestorePlatform.instance,
           'foo/unknown',
-          parameters: {
+          parameters: const {
             'where': [],
             'orderBy': [],
           },

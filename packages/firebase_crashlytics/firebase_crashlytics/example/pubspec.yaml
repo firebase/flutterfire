@@ -1,6 +1,5 @@
 name: firebase_crashlytics_example
 description: Demonstrates how to use the firebase_crashlytics plugin.
-author: Flutter Team <flutter-dev@googlegroups.com>
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

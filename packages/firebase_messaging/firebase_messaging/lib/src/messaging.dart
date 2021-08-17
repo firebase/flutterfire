@@ -79,6 +79,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
+  // ignore: use_setters_to_change_properties
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
