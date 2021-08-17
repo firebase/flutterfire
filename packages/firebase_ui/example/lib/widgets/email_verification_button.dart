@@ -30,7 +30,7 @@ class _EmailVerificationButtonState extends State<EmailVerificationButton> {
     }
 
     return AuthFlowBuilder<EmailFlowController>(
-      flow: EmailFlow(auth: FirebaseAuth.instance, method: AuthMethod.link),
+      method: AuthMethod.link,
       builder: (context, state, ctrl, _) {
         if (state is AwaitingEmailVerification) {
           return const CircularProgressIndicator();

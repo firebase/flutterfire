@@ -10,13 +10,6 @@ abstract class OAuthProvider {
   }
 }
 
-enum OAuthProviders {
-  google,
-  apple,
-  twitter,
-  facebook,
-}
-
 abstract class Google extends OAuthProvider {}
 
 abstract class Apple extends OAuthProvider {}

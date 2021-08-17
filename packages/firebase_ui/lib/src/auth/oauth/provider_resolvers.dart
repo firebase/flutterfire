@@ -63,18 +63,3 @@ IconData providerIcon<T extends OAuthProvider>() {
       throw Exception('Unknown provider: $T');
   }
 }
-
-OAuthProviders enumValueOf<T>() {
-  switch (T) {
-    case Google:
-      return OAuthProviders.google;
-    case Apple:
-      return OAuthProviders.apple;
-    case Twitter:
-      return OAuthProviders.twitter;
-    case Facebook:
-      return OAuthProviders.facebook;
-    default:
-      throw Exception('Unknown provider: $T');
-  }
-}

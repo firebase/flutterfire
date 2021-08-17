@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui_example/widgets/sign_in_form.dart';
-import 'package:flutter/material.dart';
 
 import 'phone_auth_flow.dart';
 
@@ -23,7 +22,6 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
     final tabs = TabBar(
       controller: ctrl,
       tabs: const [
@@ -50,11 +48,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                   Expanded(
                     child: Column(
                       children: [
-                        AuthFlowBuilder(
-                          flow: EmailFlow(
-                            auth: auth,
-                            method: method,
-                          ),
+                        AuthFlowBuilder<EmailFlowController>(
+                          method: method,
                           listener: (oldState, newState) {
                             if (newState is AuthFailed) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -89,10 +84,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                 icon: const Icon(Icons.phone),
                               ),
                               AuthFlowBuilder<OAuthController>(
-                                flow: OAuthFlow(
-                                  auth: auth,
-                                  method: AuthMethod.signIn,
-                                ),
+                                method: AuthMethod.signIn,
                                 child: Row(
                                   children: [
                                     ProviderButton.google(),

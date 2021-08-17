@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
 
 import 'pages/home.dart';
@@ -18,17 +17,19 @@ class FirebaseAuthUIExample extends StatelessWidget {
         FirebaseUIAppInitializer(),
         FirebaseUIDynamicLinksInitializer(),
         FirebaseUIAuthInitializer(
-          FirebaseUIAuthOptions(
-            emailLinkSettings: ActionCodeSettings(
-              url: 'https://react-native-firebase-testing.firebaseapp.com',
-              dynamicLinkDomain: 'reactnativefirebase.page.link',
-              androidPackageName:
-                  'io.flutter.plugins.firebase_ui.firebase_ui_example',
-              androidInstallApp: true,
-              androidMinimumVersion: '21',
-              handleCodeInApp: true,
+          providerConfigs: [
+            EmailProviderConfiguration(
+              actionCodeSettings: ActionCodeSettings(
+                url: 'https://react-native-firebase-testing.firebaseapp.com',
+                dynamicLinkDomain: 'reactnativefirebase.page.link',
+                androidPackageName:
+                    'io.flutter.plugins.firebase_ui.firebase_ui_example',
+                androidInstallApp: true,
+                androidMinimumVersion: '21',
+                handleCodeInApp: true,
+              ),
             ),
-          ),
+          ],
         ),
       ],
       child: MaterialApp(

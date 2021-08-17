@@ -1,24 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 
-class FirebaseUIAppOptions {
+class FirebaseUIAppInitializer extends FirebaseUIInitializer {
   final String? name;
   final FirebaseOptions? options;
 
-  FirebaseUIAppOptions({this.name, this.options});
-}
-
-class FirebaseUIAppInitializer
-    extends FirebaseUIInitializer<FirebaseUIAppOptions> {
-  FirebaseUIAppInitializer([FirebaseUIAppOptions? params]) : super(params);
+  FirebaseUIAppInitializer({
+    this.name,
+    this.options,
+  }) : super();
 
   late FirebaseApp app;
 
   @override
-  Future<void> initialize([params]) async {
+  Future<void> initialize() async {
     app = await Firebase.initializeApp(
-      name: params?.name,
-      options: params?.options,
+      name: name,
+      options: options,
     );
   }
 }
