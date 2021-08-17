@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2018, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -42,7 +43,7 @@ class Timestamp implements Comparable<Timestamp> {
 
   /// Create a [Timestamp] fromMicrosecondsSinceEpoch
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
-    final int seconds = (microseconds ~/ _kMillion).floor();
+    final int seconds = microseconds ~/ _kMillion;
     final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
     return Timestamp(seconds, nanoseconds);
   }

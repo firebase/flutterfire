@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 /// Defines the options for the corresponding Remote Config instance.
 class RemoteConfigSettings {
   /// Constructs an instance of [RemoteConfigSettings] with given [fetchTimeout]

@@ -33,8 +33,10 @@ class _JsonQuerySnapshot implements QuerySnapshot<Map<String, dynamic>> {
 
   @override
   List<QueryDocumentSnapshot<Map<String, dynamic>>> get docs => _delegate.docs
-      .map((documentDelegate) =>
-          _JsonQueryDocumentSnapshot(_firestore, documentDelegate))
+      .map(
+        (documentDelegate) =>
+            _JsonQueryDocumentSnapshot(_firestore, documentDelegate),
+      )
       .toList();
 
   @override

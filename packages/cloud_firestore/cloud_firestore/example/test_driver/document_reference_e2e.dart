@@ -17,7 +17,8 @@ void runDocumentReferenceTests() {
     });
 
     Future<DocumentReference<Map<String, dynamic>>> initializeTest(
-        String path) async {
+      String path,
+    ) async {
       String prefixedPath = 'flutter-tests/$path';
       await firestore.doc(prefixedPath).delete();
       return firestore.doc(prefixedPath);
@@ -71,14 +72,19 @@ void runDocumentReferenceTests() {
         int call = 0;
 
         stream.listen(
-            expectAsync1((DocumentSnapshot<Map<String, dynamic>> snapshot) {
-          call++;
-          if (call == 1) {
-            expect(snapshot.exists, isFalse);
-          } else {
-            fail('Should not have been called');
-          }
-        }, count: 1, reason: 'Stream should only have been called once.'));
+          expectAsync1(
+            (DocumentSnapshot<Map<String, dynamic>> snapshot) {
+              call++;
+              if (call == 1) {
+                expect(snapshot.exists, isFalse);
+              } else {
+                fail('Should not have been called');
+              }
+            },
+            count: 1,
+            reason: 'Stream should only have been called once.',
+          ),
+        );
       });
 
       test('listens to multiple documents', () async {
@@ -104,31 +110,35 @@ void runDocumentReferenceTests() {
             document.snapshots();
         int call = 0;
 
-        StreamSubscription subscription = stream.listen(expectAsync1(
+        StreamSubscription subscription = stream.listen(
+          expectAsync1(
             (DocumentSnapshot<Map<String, dynamic>> snapshot) {
-          call++;
-          if (call == 1) {
-            expect(snapshot.exists, isFalse);
-          } else if (call == 2) {
-            expect(snapshot.exists, isTrue);
-            expect(snapshot.data()!['bar'], equals('baz'));
-          } else if (call == 3) {
-            expect(snapshot.exists, isFalse);
-          } else if (call == 4) {
-            expect(snapshot.exists, isTrue);
-            expect(snapshot.data()!['foo'], equals('bar'));
-          } else if (call == 5) {
-            expect(snapshot.exists, isTrue);
-            expect(snapshot.data()!['foo'], equals('baz'));
-          } else {
-            fail('Should not have been called');
-          }
-        },
+              call++;
+              if (call == 1) {
+                expect(snapshot.exists, isFalse);
+              } else if (call == 2) {
+                expect(snapshot.exists, isTrue);
+                expect(snapshot.data()!['bar'], equals('baz'));
+              } else if (call == 3) {
+                expect(snapshot.exists, isFalse);
+              } else if (call == 4) {
+                expect(snapshot.exists, isTrue);
+                expect(snapshot.data()!['foo'], equals('bar'));
+              } else if (call == 5) {
+                expect(snapshot.exists, isTrue);
+                expect(snapshot.data()!['foo'], equals('baz'));
+              } else {
+                fail('Should not have been called');
+              }
+            },
             count: 5,
-            reason: 'Stream should only have been called five times.'));
+            reason: 'Stream should only have been called five times.',
+          ),
+        );
 
         await Future.delayed(
-            const Duration(seconds: 1)); // allow stream to return a noop-doc
+          const Duration(seconds: 1),
+        ); // allow stream to return a noop-doc
         await document.set({'bar': 'baz'});
         await document.delete();
         await document.set({'foo': 'bar'});
@@ -148,7 +158,9 @@ void runDocumentReferenceTests() {
         } catch (error) {
           expect(error, isA<FirebaseException>());
           expect(
-              (error as FirebaseException).code, equals('permission-denied'));
+            (error as FirebaseException).code,
+            equals('permission-denied'),
+          );
           return;
         }
 
@@ -179,7 +191,9 @@ void runDocumentReferenceTests() {
         } catch (error) {
           expect(error, isA<FirebaseException>());
           expect(
-              (error as FirebaseException).code, equals('permission-denied'));
+            (error as FirebaseException).code,
+            equals('permission-denied'),
+          );
           return;
         }
         fail('Should have thrown a [FirebaseException]');
@@ -197,15 +211,19 @@ void runDocumentReferenceTests() {
         expect(snapshot.metadata.isFromCache, isFalse);
       });
 
-      test('gets a document from cache', () async {
-        DocumentReference<Map<String, dynamic>> document =
-            await initializeTest('document-get-cache');
-        await document.set({'foo': 'bar'});
-        DocumentSnapshot<Map<String, dynamic>> snapshot =
-            await document.get(const GetOptions(source: Source.cache));
-        expect(snapshot.data(), equals({'foo': 'bar'}));
-        expect(snapshot.metadata.isFromCache, isTrue);
-      }, skip: kIsWeb);
+      test(
+        'gets a document from cache',
+        () async {
+          DocumentReference<Map<String, dynamic>> document =
+              await initializeTest('document-get-cache');
+          await document.set({'foo': 'bar'});
+          DocumentSnapshot<Map<String, dynamic>> snapshot =
+              await document.get(const GetOptions(source: Source.cache));
+          expect(snapshot.data(), equals({'foo': 'bar'}));
+          expect(snapshot.metadata.isFromCache, isTrue);
+        },
+        skip: kIsWeb,
+      );
 
       test('throws a [FirebaseException] on error', () async {
         DocumentReference<Map<String, dynamic>> document =
@@ -216,7 +234,9 @@ void runDocumentReferenceTests() {
         } catch (error) {
           expect(error, isA<FirebaseException>());
           expect(
-              (error as FirebaseException).code, equals('permission-denied'));
+            (error as FirebaseException).code,
+            equals('permission-denied'),
+          );
           return;
         }
         fail('Should have thrown a [FirebaseException]');
@@ -247,32 +267,43 @@ void runDocumentReferenceTests() {
         expect(snapshot2.data(), equals({'foo': 'ben', 'bar': 'baz'}));
       });
 
-      test('set() merges fields', () async {
-        DocumentReference<Map<String, dynamic>> document =
-            await initializeTest('document-set-merge-fields');
-        Map<String, dynamic> initialData = {
-          'foo': 'bar',
-          'bar': 123,
-          'baz': '456',
-        };
-        Map<String, dynamic> dataToSet = {
-          'foo': 'should-not-merge',
-          'bar': 456,
-          'baz': 'foo',
-        };
-        await document.set(initialData);
-        DocumentSnapshot<Map<String, dynamic>> snapshot = await document.get();
-        expect(snapshot.data(), equals(initialData));
-        await document.set(
+      test(
+        'set() merges fields',
+        () async {
+          DocumentReference<Map<String, dynamic>> document =
+              await initializeTest('document-set-merge-fields');
+          Map<String, dynamic> initialData = {
+            'foo': 'bar',
+            'bar': 123,
+            'baz': '456',
+          };
+          Map<String, dynamic> dataToSet = {
+            'foo': 'should-not-merge',
+            'bar': 456,
+            'baz': 'foo',
+          };
+          await document.set(initialData);
+          DocumentSnapshot<Map<String, dynamic>> snapshot =
+              await document.get();
+          expect(snapshot.data(), equals(initialData));
+          await document.set(
             dataToSet,
-            SetOptions(mergeFields: [
-              'bar',
-              FieldPath(const ['baz'])
-            ]));
-        DocumentSnapshot<Map<String, dynamic>> snapshot2 = await document.get();
-        expect(
-            snapshot2.data(), equals({'foo': 'bar', 'bar': 456, 'baz': 'foo'}));
-      }, skip: kIsWeb);
+            SetOptions(
+              mergeFields: [
+                'bar',
+                FieldPath(const ['baz']),
+              ],
+            ),
+          );
+          DocumentSnapshot<Map<String, dynamic>> snapshot2 =
+              await document.get();
+          expect(
+            snapshot2.data(),
+            equals({'foo': 'bar', 'bar': 456, 'baz': 'foo'}),
+          );
+        },
+        skip: kIsWeb,
+      );
 
       test('throws a [FirebaseException] on error', () async {
         DocumentReference<Map<String, dynamic>> document =
@@ -283,7 +314,9 @@ void runDocumentReferenceTests() {
         } catch (error) {
           expect(error, isA<FirebaseException>());
           expect(
-              (error as FirebaseException).code, equals('permission-denied'));
+            (error as FirebaseException).code,
+            equals('permission-denied'),
+          );
           return;
         }
         fail('Should have thrown a [FirebaseException]');
@@ -329,20 +362,22 @@ void runDocumentReferenceTests() {
         expect(data['bool_true'], isTrue);
         expect(data['bool_false'], isFalse);
         expect(
-            data['map'],
-            equals(<String, dynamic>{
-              'foo': 'bar',
-              'bar': {'baz': 'ben'}
-            }));
+          data['map'],
+          equals(<String, dynamic>{
+            'foo': 'bar',
+            'bar': {'baz': 'ben'}
+          }),
+        );
         expect(
-            data['list'],
-            equals([
-              1,
-              '2',
-              true,
-              false,
-              {'foo': 'bar'}
-            ]));
+          data['list'],
+          equals([
+            1,
+            '2',
+            true,
+            false,
+            {'foo': 'bar'}
+          ]),
+        );
         expect(data['null'], equals(null));
         expect(data['timestamp'], isA<Timestamp>());
         expect(data['geopoint'], isA<GeoPoint>());
@@ -384,67 +419,74 @@ void runDocumentReferenceTests() {
     });
 
     group('withConverter', () {
-      test('set/snapshot/get', () async {
-        final foo = await initializeTest('foo');
-        final fooConverter = foo.withConverter<int>(
-          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
-          toFirestore: (value, _) => {'value': value},
-        );
+      test(
+        'set/snapshot/get',
+        () async {
+          final foo = await initializeTest('foo');
+          final fooConverter = foo.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
 
-        final fooSnapshot = foo.snapshots();
-        final fooConverterSnapshot = fooConverter.snapshots();
+          final fooSnapshot = foo.snapshots();
+          final fooConverterSnapshot = fooConverter.snapshots();
 
-        await expectLater(
-          fooSnapshot,
-          emits(isA<DocumentSnapshot<Map<String, dynamic>>>()
-              .having((e) => e.data(), 'data', null)),
-        );
-        await expectLater(
-          fooConverterSnapshot,
-          emits(
-            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', null),
-          ),
-        );
+          await expectLater(
+            fooSnapshot,
+            emits(
+              isA<DocumentSnapshot<Map<String, dynamic>>>()
+                  .having((e) => e.data(), 'data', null),
+            ),
+          );
+          await expectLater(
+            fooConverterSnapshot,
+            emits(
+              isA<DocumentSnapshot<int>>()
+                  .having((e) => e.data(), 'data', null),
+            ),
+          );
 
-        await fooConverter.set(42);
+          await fooConverter.set(42);
 
-        await expectLater(
-          fooSnapshot,
-          emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>()
-                .having((e) => e.data(), 'data', {'value': 42}),
-          ),
-        );
-        await expectLater(
-          fooConverterSnapshot,
-          emits(
-            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
-          ),
-        );
-        await expectLater(
-          fooConverter.get(),
-          completion(
-            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
-          ),
-        );
+          await expectLater(
+            fooSnapshot,
+            emits(
+              isA<DocumentSnapshot<Map<String, dynamic>>>()
+                  .having((e) => e.data(), 'data', {'value': 42}),
+            ),
+          );
+          await expectLater(
+            fooConverterSnapshot,
+            emits(
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+            ),
+          );
+          await expectLater(
+            fooConverter.get(),
+            completion(
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 42),
+            ),
+          );
 
-        await foo.set({'value': 21});
+          await foo.set({'value': 21});
 
-        await expectLater(
-          fooSnapshot,
-          emits(
-            isA<DocumentSnapshot<Map<String, dynamic>>>()
-                .having((e) => e.data(), 'data', {'value': 21}),
-          ),
-        );
+          await expectLater(
+            fooSnapshot,
+            emits(
+              isA<DocumentSnapshot<Map<String, dynamic>>>()
+                  .having((e) => e.data(), 'data', {'value': 21}),
+            ),
+          );
 
-        await expectLater(
-          fooConverter.get(),
-          completion(
-            isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 21),
-          ),
-        );
-      }, timeout: const Timeout.factor(3));
+          await expectLater(
+            fooConverter.get(),
+            completion(
+              isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 21),
+            ),
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
     });
   });
 }

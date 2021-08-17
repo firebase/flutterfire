@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 import 'dart:io';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
