@@ -432,8 +432,7 @@ NSString *const kErrMsgInvalidCredential =
 
                       if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
                         // error from firebase-ios-sdk is buried in underlying error.
-                        NSString *code = [NSString stringWithFormat:@"%li", underlyingError.code];
-                        result.error(code, firebaseDictionary[@"message"], nil, nil);
+                        result.error(nil, firebaseDictionary[@"message"], nil, nil);
                       } else {
                         result.error(nil, nil, nil, error);
                       }
