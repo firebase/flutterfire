@@ -1,28 +1,30 @@
 import 'dart:async';
 
 import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
-import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
-import 'package:firebase_ui/src/auth/oauth/providers/apple_provider.dart';
+import 'package:firebase_ui/src/auth/provider_configuration.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 
-import 'oauth/providers/google_provider.dart';
-
 class FirebaseUIAuthOptions {
-  final ActionCodeSettings? emailLinkSettings;
+  final List<ProviderConfiguration> providerConfigs;
 
-  FirebaseUIAuthOptions({
-    this.emailLinkSettings,
-  });
+  FirebaseUIAuthOptions(this.providerConfigs);
 }
 
-class FirebaseUIAuthInitializer
-    extends FirebaseUIInitializer<FirebaseUIAuthOptions> {
-  FirebaseUIAuthInitializer([FirebaseUIAuthOptions? params]) : super(params);
+typedef FlowFactory = AuthFlow Function(FirebaseAuth auth, AuthMethod method);
+
+class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
+  FirebaseUIAuthInitializer({
+    this.providerConfigs = const [],
+  });
+
+  late final _configurations = _buildConfigMap();
+  late final _flowFactories = _buildFlowFactories();
 
   late FirebaseAuth? _auth;
   FirebaseAuth get auth => _auth!;
+
+  List<ProviderConfiguration> providerConfigs;
 
   @override
   final dependencies = {FirebaseUIAppInitializer};
@@ -33,15 +35,37 @@ class FirebaseUIAuthInitializer
     _auth = FirebaseAuth.instanceFor(app: dep.app);
   }
 
-  OAuthProvider resolveOAuthProvider<T extends OAuthProvider>() {
-    // TODO(@lesnitsky): figure out tree-shaking
-    switch (enumValueOf<T>()) {
-      case OAuthProviders.google:
-        return GoogleProviderImpl();
-      case OAuthProviders.apple:
-        return AppleProviderImpl();
+  Map<Type, ProviderConfiguration> _buildConfigMap() {
+    return providerConfigs.fold<Map<Type, ProviderConfiguration>>(
+      {},
+      (acc, el) {
+        acc[el.runtimeType] = el;
+        return acc;
+      },
+    );
+  }
+
+  Map<Type, FlowFactory> _buildFlowFactories() {
+    return providerConfigs.fold<Map<Type, FlowFactory>>({}, (acc, el) {
+      acc[el.controllerType] = el.createFlow;
+      return acc;
+    });
+  }
+
+  T configOf<T extends ProviderConfiguration>() {
+    return _configurations[T]! as T;
+  }
+
+  AuthFlow createFlow<T extends AuthController>(AuthMethod method) {
+    final factory = _flowFactories[T];
+
+    if (factory == null) {
+      throw Exception(
+        'Unknown controller $T. '
+        'Make sure to pass provider configuration which registers $T as controllerType',
+      );
     }
 
-    throw Exception('Unknown OAuth provider type: $T');
+    return factory(auth, method);
   }
 }
