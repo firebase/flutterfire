@@ -1,3 +1,9 @@
+## 1.5.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: lower iOS & macOS deployment targets for relevant plugins (#6757).
+ - **FEAT**: iOS sdk version bump 8.5.0. (#6786).
+
 ## 1.4.0
 
  - **FEAT**: bump Firebase iOS SDK version to 8.3.0 (#6568).

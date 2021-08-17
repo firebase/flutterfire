@@ -1,3 +1,8 @@
+## 0.0.2
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: lower iOS & macOS deployment targets for relevant plugins (#6757).
+
 ## 0.0.1+3
 
  - Update a dependency to the latest release.

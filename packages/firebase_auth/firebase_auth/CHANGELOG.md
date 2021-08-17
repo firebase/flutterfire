@@ -1,3 +1,10 @@
+## 3.0.2
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: precise error message is propagated (#6793).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **FIX**: stop idTokenChanges & userChanges firing twice on initial listen (#6560).
+
 ## 3.0.1
 
  - **FIX**: reinstate deprecated emulator apis (#6626).

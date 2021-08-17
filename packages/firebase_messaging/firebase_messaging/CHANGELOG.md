@@ -1,3 +1,7 @@
+## 10.0.5
+
+ - Update a dependency to the latest release.
+
 ## 10.0.4
 
  - **DOCS**: update web example in line with flutter 2.2.0 generated `index.html` (#6398).
