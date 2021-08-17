@@ -5,7 +5,9 @@ import 'package:firebase_ui/src/auth/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class AuthState {}
+abstract class AuthState {
+  const AuthState();
+}
 
 class CredentialReceived extends AuthState {
   final AuthCredential credential;

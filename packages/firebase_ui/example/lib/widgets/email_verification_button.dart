@@ -43,13 +43,7 @@ class _EmailVerificationButtonState extends State<EmailVerificationButton> {
         return IconButton(
           icon: const Icon(Icons.warning),
           onPressed: () async {
-            try {
-              // TODO(@lesnitsky): figure out why apply fails, but emailVerified is true
-              await ctrl.verifyEmail();
-            } finally {
-              await FirebaseAuth.instance.currentUser?.reload();
-              setState(() {});
-            }
+            await ctrl.verifyEmail();
           },
         );
       },
