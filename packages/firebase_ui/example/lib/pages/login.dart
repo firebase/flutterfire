@@ -23,6 +23,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
     final tabs = TabBar(
       controller: ctrl,
       tabs: const [
@@ -51,7 +52,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                       children: [
                         AuthFlowBuilder(
                           flow: EmailFlow(
-                            auth: FirebaseAuth.instance,
+                            auth: auth,
                             method: method,
                           ),
                           listener: (oldState, newState) {
@@ -74,6 +75,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                         Padding(
                           padding: const EdgeInsets.all(16).copyWith(top: 0),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               IconButton(
                                 onPressed: () {
@@ -85,6 +87,20 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   );
                                 },
                                 icon: const Icon(Icons.phone),
+                              ),
+                              AuthFlowBuilder<OAuthController>(
+                                flow: OAuthFlow(
+                                  auth: auth,
+                                  method: AuthMethod.signIn,
+                                ),
+                                child: Row(
+                                  children: [
+                                    ProviderButton.google(),
+                                    ProviderButton.apple(),
+                                    ProviderButton.twitter(),
+                                    ProviderButton.facebook(),
+                                  ],
+                                ),
                               ),
                             ],
                           ),

@@ -4,18 +4,20 @@ class UserFieldTile extends StatelessWidget {
   final String field;
   final String? value;
   final Widget? trailing;
+  final Widget? child;
 
   const UserFieldTile({
     Key? key,
     required this.field,
-    required this.value,
+    this.value,
     this.trailing,
+    this.child,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(field),
-      subtitle: Text(value ?? 'unknown'),
+      subtitle: child ?? Text(value ?? 'unknown'),
       trailing: trailing,
     );
   }

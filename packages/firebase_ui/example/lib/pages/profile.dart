@@ -17,6 +17,11 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final u = FirebaseAuth.instance.currentUser!;
+    final providers = u.providerData
+        .map((e) => e.providerId)
+        .where(isOAuthProvider)
+        .map((e) => Icon(providerIconFromString(e)))
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -54,6 +59,48 @@ class _ProfileState extends State<Profile> {
                           })
                       : const VerifiedBadge(),
                 ),
+                UserFieldTile(
+                  field: 'Providers',
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: providers.isNotEmpty
+                        ? Row(children: providers)
+                        : const Text('No providers linked'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Link providers',
+                        style: Theme.of(context).textTheme.overline,
+                      ),
+                      AuthFlowBuilder<OAuthController>(
+                        flow: OAuthFlow(
+                          auth: FirebaseAuth.instance,
+                          method: AuthMethod.link,
+                        ),
+                        listener: (_, newState) {
+                          if (newState is CredentialLinked) {
+                            u.reload();
+                            setState(() {});
+                          }
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (!u.isProviderLinked<Google>())
+                              ProviderButton.google(),
+                            ProviderButton.apple(),
+                            ProviderButton.twitter(),
+                            ProviderButton.facebook(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
