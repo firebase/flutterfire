@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // DO NOT MOVE THIS FILE
 //
 // Other firebase packages may import `package:firebase_core/src/internals.dart`.

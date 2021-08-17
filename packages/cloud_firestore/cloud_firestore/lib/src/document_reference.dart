@@ -154,15 +154,19 @@ class _JsonDocumentReference
       SnapshotParameter(this, includeMetadataChanges),
       () => _delegate
           .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map((delegateSnapshot) =>
-              _JsonDocumentSnapshot(firestore, delegateSnapshot)),
+          .map(
+            (delegateSnapshot) =>
+                _JsonDocumentSnapshot(firestore, delegateSnapshot),
+          ),
     );
   }
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return _delegate.set(
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
+      _CodecUtility.replaceValueWithDelegatesInMap(data)!,
+      options,
+    );
   }
 
   @override
@@ -300,7 +304,11 @@ class _WithConverterDocumentReference<T extends Object?>
 
   @override
   int get hashCode => hashValues(
-      runtimeType, _originalDocumentReference, _fromFirestore, _toFirestore);
+        runtimeType,
+        _originalDocumentReference,
+        _fromFirestore,
+        _toFirestore,
+      );
 
   @override
   String toString() => 'DocumentReference<$T>($path)';

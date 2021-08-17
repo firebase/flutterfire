@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // @dart = 2.9
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file

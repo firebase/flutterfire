@@ -98,10 +98,11 @@ void main() {
     test('data returns correct result', () async {
       DocumentSnapshot ds = await firestore!.doc('doc/exists').get();
       expect(
-          ds.data(),
-          equals(<String, dynamic>{
-            'foo': 'bar',
-          }));
+        ds.data(),
+        equals(<String, dynamic>{
+          'foo': 'bar',
+        }),
+      );
 
       DocumentSnapshot ds2 = await firestore!.doc('doc/not-exists').get();
       expect(ds2.data(), isNull);

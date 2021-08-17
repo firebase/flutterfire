@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // @dart = 2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:flutter_test/flutter_test.dart';

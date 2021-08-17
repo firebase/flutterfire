@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // @dart=2.9
 
 import 'dart:async';

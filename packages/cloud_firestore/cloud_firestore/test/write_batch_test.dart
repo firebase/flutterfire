@@ -44,13 +44,14 @@ void main() {
   setUpAll(() async {
     await Firebase.initializeApp();
     FirebaseApp secondaryApp = await Firebase.initializeApp(
-        name: 'foo',
-        options: const FirebaseOptions(
-          apiKey: '123',
-          appId: '123',
-          messagingSenderId: '123',
-          projectId: '123',
-        ));
+      name: 'foo',
+      options: const FirebaseOptions(
+        apiKey: '123',
+        appId: '123',
+        messagingSenderId: '123',
+        projectId: '123',
+      ),
+    );
 
     firestore = FirebaseFirestore.instance;
     firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp);

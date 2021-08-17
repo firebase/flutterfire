@@ -18,13 +18,14 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: const FirebaseOptions(
-            apiKey: '123',
-            appId: '123',
-            messagingSenderId: '123',
-            projectId: '123',
-          ));
+        name: 'foo',
+        options: const FirebaseOptions(
+          apiKey: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          projectId: '123',
+        ),
+      );
 
       firestore = FirebaseFirestore.instance;
       firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp!);
@@ -33,8 +34,10 @@ void main() {
     test('equality', () {
       expect(firestore, equals(FirebaseFirestore.instance));
       expect(firestore.hashCode, firestore.hashCode);
-      expect(firestoreSecondary,
-          equals(FirebaseFirestore.instanceFor(app: secondaryApp!)));
+      expect(
+        firestoreSecondary,
+        equals(FirebaseFirestore.instanceFor(app: secondaryApp!)),
+      );
     });
 
     test('returns the correct $FirebaseApp', () {
@@ -67,8 +70,10 @@ void main() {
       });
 
       test('does accept a path containing "/"', () {
-        expect(() => firestore!.collectionGroup('foo/bar/baz'),
-            throwsAssertionError);
+        expect(
+          () => firestore!.collectionGroup('foo/bar/baz'),
+          throwsAssertionError,
+        );
       });
     });
 

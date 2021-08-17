@@ -17,7 +17,8 @@ void runWriteBatchTests() {
     });
 
     Future<CollectionReference<Map<String, dynamic>>> initializeTest(
-        String id) async {
+      String id,
+    ) async {
       CollectionReference<Map<String, dynamic>> collection =
           firestore.collection('flutter-tests/$id/query-tests');
       QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
@@ -103,8 +104,11 @@ void runWriteBatchTests() {
 
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
-        batch.set(doc5, <String, dynamic>{'bar': 'ben'},
-            SetOptions(mergeFields: ['bar']));
+        batch.set(
+          doc5,
+          <String, dynamic>{'bar': 'ben'},
+          SetOptions(mergeFields: ['bar']),
+        );
       }
 
       await batch.commit();
@@ -114,31 +118,24 @@ void runWriteBatchTests() {
       expect(snapshot.docs.length, equals(4));
       expect(snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty, isTrue);
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc2').data(),
-          equals(<String, dynamic>{
-            'bar': 'baz',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc2').data(),
+        equals(<String, dynamic>{'bar': 'baz'}),
+      );
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc3').data(),
-          equals(<String, dynamic>{
-            'foo': 'bar',
-            'bar': 'ben',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc3').data(),
+        equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+      );
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc4').data(),
-          equals(<String, dynamic>{
-            'foo': 'bar',
-            'bar': 'ben',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc4').data(),
+        equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+      );
       // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         expect(
-            snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
-            equals(<String, dynamic>{
-              'foo': 'bar',
-              'bar': 'ben',
-            }));
+          snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
+          equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+        );
       }
     });
   });

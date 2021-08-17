@@ -103,7 +103,8 @@ class _JsonCollectionReference extends _JsonQuery
 
   @override
   Future<DocumentReference<Map<String, dynamic>>> add(
-      Map<String, dynamic> data) async {
+    Map<String, dynamic> data,
+  ) async {
     final newDocument = doc();
     await newDocument.set(data);
     return newDocument;
