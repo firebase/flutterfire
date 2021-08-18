@@ -1,6 +1,5 @@
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_firebase_performance.dart';
-import 'method_channel_performance_attributes.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(this._handle, String url, HttpMethod httpMethod)
@@ -14,6 +13,8 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   int? _responsePayloadSize;
 
   bool _hasStopped = false;
+
+  final Map<String, String> _attributes = <String, String>{};
 
   @override
   int? get httpResponseCode => _httpResponseCode;
@@ -106,22 +107,51 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> putAttribute(String name, String value) {
-    return MethodChannelPerformanceAttributes(_handle)
-        .putAttribute(name, value);
+    if (_hasStopped ||
+        name.length > HttpMetricPlatform.maxAttributeKeyLength ||
+        value.length > HttpMetricPlatform.maxAttributeValueLength ||
+        _attributes.length == HttpMetricPlatform.maxCustomAttributes) {
+      return Future<void>.value();
+    }
+
+    _attributes[name] = value;
+    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+      'HttpMetric#putAttribute',
+      <String, Object?>{
+        'handle': _handle,
+        'name': name,
+        'value': value,
+      },
+    );
   }
 
   @override
   Future<void> removeAttribute(String name) {
-    return MethodChannelPerformanceAttributes(_handle).removeAttribute(name);
+    if (_hasStopped) return Future<void>.value();
+
+    _attributes.remove(name);
+    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+      'HttpMetric#removeAttribute',
+      <String, Object?>{'handle': _handle, 'name': name},
+    );
   }
 
   @override
-  String? getAttribute(String name) {
-    return MethodChannelPerformanceAttributes(_handle).getAttribute(name);
-  }
+  String? getAttribute(String name) => _attributes[name];
 
   @override
-  Future<Map<String, String>> getAttributes() {
-    return MethodChannelPerformanceAttributes(_handle).getAttributes();
+  Future<Map<String, String>> getAttributes() async {
+    if (_hasStopped) {
+      return Future<Map<String, String>>.value(
+        Map<String, String>.unmodifiable(_attributes),
+      );
+    }
+
+    final attributes = await MethodChannelFirebasePerformance.channel
+        .invokeMapMethod<String, String>(
+      'HttpMetric#getAttributes',
+      <String, Object?>{'handle': _handle},
+    );
+    return attributes ?? {};
   }
 }

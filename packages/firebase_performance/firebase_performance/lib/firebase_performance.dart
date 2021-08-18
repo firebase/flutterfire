@@ -16,5 +16,4 @@ export 'package:firebase_performance_platform_interface/firebase_performance_pla
 
 part 'src/firebase_performance.dart';
 part 'src/http_metric.dart';
-part 'src/performance_attributes.dart';
 part 'src/trace.dart';

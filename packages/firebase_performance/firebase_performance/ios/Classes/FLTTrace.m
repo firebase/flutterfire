@@ -29,11 +29,11 @@
     [self incrementMetric:call result:result];
   } else if ([@"Trace#getMetric" isEqualToString:call.method]) {
     [self getMetric:call result:result];
-  } else if ([@"PerformanceAttributes#putAttribute" isEqualToString:call.method]) {
+  } else if ([@"Trace#putAttribute" isEqualToString:call.method]) {
     [self putAttribute:call result:result];
-  } else if ([@"PerformanceAttributes#removeAttribute" isEqualToString:call.method]) {
+  } else if ([@"Trace#removeAttribute" isEqualToString:call.method]) {
     [self removeAttribute:call result:result];
-  } else if ([@"PerformanceAttributes#getAttributes" isEqualToString:call.method]) {
+  } else if ([@"Trace#getAttributes" isEqualToString:call.method]) {
     [self getAttributes:result];
   } else {
     result(FlutterMethodNotImplemented);

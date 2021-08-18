@@ -19,31 +19,29 @@ part of firebase_performance;
 ///
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [HttpMetric] to avoid leaking on the platform side.
-class HttpMetric extends PerformanceAttributes {
-  HttpMetric._(HttpMetricPlatform delegate) : super._(delegate);
+class HttpMetric {
+  HttpMetricPlatform _delegate;
+
+  HttpMetric._(this._delegate);
 
   /// HttpResponse code of the request.
-  int? get httpResponseCode =>
-      (_delegate as HttpMetricPlatform).httpResponseCode;
+  int? get httpResponseCode => _delegate.httpResponseCode;
 
   /// Size of the request payload.
-  int? get requestPayloadSize =>
-      (_delegate as HttpMetricPlatform).requestPayloadSize;
+  int? get requestPayloadSize => _delegate.requestPayloadSize;
 
   /// Content type of the response such as text/html, application/json, etc...
-  String? get responseContentType =>
-      (_delegate as HttpMetricPlatform).responseContentType;
+  String? get responseContentType => _delegate.responseContentType;
 
   /// Size of the response payload.
-  int? get responsePayloadSize =>
-      (_delegate as HttpMetricPlatform).responsePayloadSize;
+  int? get responsePayloadSize => _delegate.responsePayloadSize;
 
   /// HttpResponse code of the request.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set httpResponseCode(int? httpResponseCode) {
-    (_delegate as HttpMetricPlatform).httpResponseCode = httpResponseCode;
+    _delegate.httpResponseCode = httpResponseCode;
   }
 
   /// Size of the request payload.
@@ -51,7 +49,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set requestPayloadSize(int? requestPayloadSize) {
-    (_delegate as HttpMetricPlatform).requestPayloadSize = requestPayloadSize;
+    _delegate.requestPayloadSize = requestPayloadSize;
   }
 
   /// Content type of the response such as text/html, application/json, etc...
@@ -59,7 +57,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set responseContentType(String? responseContentType) {
-    (_delegate as HttpMetricPlatform).responseContentType = responseContentType;
+    _delegate.responseContentType = responseContentType;
   }
 
   /// Size of the response payload.
@@ -67,7 +65,7 @@ class HttpMetric extends PerformanceAttributes {
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
   set responsePayloadSize(int? responsePayloadSize) {
-    (_delegate as HttpMetricPlatform).responsePayloadSize = responsePayloadSize;
+    _delegate.responsePayloadSize = responsePayloadSize;
   }
 
   /// Starts this [HttpMetric].
@@ -77,7 +75,7 @@ class HttpMetric extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    return (_delegate as HttpMetricPlatform).start();
+    return _delegate.start();
   }
 
   /// Stops this [HttpMetric].
@@ -89,6 +87,44 @@ class HttpMetric extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    return (_delegate as HttpMetricPlatform).stop();
+    return _delegate.stop();
+  }
+
+  /// Sets a String [value] for the specified attribute with [name].
+  ///
+  /// Updates the value of the attribute if the attribute already exists.
+  /// The maximum number of attributes that can be added are
+  /// [maxCustomAttributes]. An attempt to add more than [maxCustomAttributes]
+  /// to this object will return without adding the attribute.
+  ///
+  /// Name of the attribute has max length of [maxAttributeKeyLength]
+  /// characters. Value of the attribute has max length of
+  /// [maxAttributeValueLength] characters. If the name has a length greater
+  /// than [maxAttributeKeyLength] or the value has a length greater than
+  /// [maxAttributeValueLength], this method will return without adding
+  /// anything.
+  ///
+  /// If this object has been stopped, this method returns without adding the
+  /// attribute.
+  Future<void> putAttribute(String name, String value) {
+    return _delegate.putAttribute(name, value);
+  }
+
+  /// Removes an already added attribute.
+  ///
+  /// If this object has been stopped, this method returns without removing the
+  /// attribute.
+  Future<void> removeAttribute(String name) {
+    return _delegate.removeAttribute(name);
+  }
+
+  /// Returns the value of an attribute.
+  ///
+  /// Returns `null` if an attribute with this [name] has not been added.
+  String? getAttribute(String name) => _delegate.getAttribute(name);
+
+  /// All attributes added.
+  Future<Map<String, String>> getAttributes() async {
+    return _delegate.getAttributes();
   }
 }
