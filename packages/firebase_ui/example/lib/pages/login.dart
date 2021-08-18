@@ -62,7 +62,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                             }
                           },
                           child: const Padding(
-                            padding: EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
                             child: SignInForm(),
                           ),
                         ),
@@ -77,7 +77,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) => const PhoneAuthFlow(
-                                          authMethod: AuthMethod.signIn),
+                                        authMethod: AuthMethod.signIn,
+                                      ),
                                     ),
                                   );
                                 },

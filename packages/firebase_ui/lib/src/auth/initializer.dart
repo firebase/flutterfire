@@ -35,11 +35,11 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
     _auth = FirebaseAuth.instanceFor(app: dep.app);
   }
 
-  Map<Type, ProviderConfiguration> _buildConfigMap() {
-    return providerConfigs.fold<Map<Type, ProviderConfiguration>>(
+  Map<String, ProviderConfiguration> _buildConfigMap() {
+    return providerConfigs.fold<Map<String, ProviderConfiguration>>(
       {},
       (acc, el) {
-        acc[el.runtimeType] = el;
+        acc[el.providerId] = el;
         return acc;
       },
     );
@@ -52,8 +52,8 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
     });
   }
 
-  T configOf<T extends ProviderConfiguration>() {
-    return _configurations[T]! as T;
+  T configOf<T extends ProviderConfiguration>(String providerId) {
+    return _configurations[providerId]! as T;
   }
 
   AuthFlow createFlow<T extends AuthController>(AuthMethod method) {
