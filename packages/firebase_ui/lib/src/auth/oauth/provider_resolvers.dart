@@ -3,16 +3,16 @@ import 'package:flutter/widgets.dart';
 
 import 'oauth_providers.dart';
 
-const GOOGLE = 'google.com';
-const APPLE = 'apple.com';
-const TWITTER = 'twitter.com';
-const FACEBOOK = 'facebook.com';
+const GOOGLE_PROVIDER_ID = 'google.com';
+const APPLE_PROVIDER_ID = 'apple.com';
+const TWITTER_PROVIDER_ID = 'twitter.com';
+const FACEBOOK_PROVIDER_ID = 'facebook.com';
 
 const _providers = {
-  GOOGLE,
-  APPLE,
-  TWITTER,
-  FACEBOOK,
+  GOOGLE_PROVIDER_ID,
+  APPLE_PROVIDER_ID,
+  TWITTER_PROVIDER_ID,
+  FACEBOOK_PROVIDER_ID,
 };
 
 bool isOAuthProvider(String providerId) {
@@ -21,13 +21,13 @@ bool isOAuthProvider(String providerId) {
 
 IconData providerIconFromString(String providerId) {
   switch (providerId) {
-    case GOOGLE:
+    case GOOGLE_PROVIDER_ID:
       return SocialIcons.google;
-    case APPLE:
+    case APPLE_PROVIDER_ID:
       return SocialIcons.apple;
-    case TWITTER:
+    case TWITTER_PROVIDER_ID:
       return SocialIcons.twitter;
-    case FACEBOOK:
+    case FACEBOOK_PROVIDER_ID:
       return SocialIcons.facebook;
     default:
       throw Exception('Unknown provider: $providerId');

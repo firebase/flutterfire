@@ -58,7 +58,7 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
     final deepLinks = resolveInitializer<FirebaseUIDynamicLinksInitializer>();
 
     final settings = authInitializer
-        .configOf<EmailProviderConfiguration>()
+        .configOf<EmailProviderConfiguration>(EMAIL_PROVIDER_ID)
         .actionCodeSettings;
 
     value = AwaitingEmailVerification();
