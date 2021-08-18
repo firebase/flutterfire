@@ -3,11 +3,13 @@ import 'package:firebase_ui/firebase_ui.dart';
 
 import '../provider_configuration.dart';
 
+const EMAIL_PROVIDER_ID = 'password';
+
 class EmailProviderConfiguration extends ProviderConfiguration {
   final ActionCodeSettings actionCodeSettings;
 
   @override
-  final providerId = 'password';
+  final providerId = EMAIL_PROVIDER_ID;
 
   @override
   final controllerType = EmailFlowController;

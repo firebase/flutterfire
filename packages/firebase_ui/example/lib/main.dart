@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui/auth/google.dart';
 
 import 'pages/home.dart';
 
@@ -29,6 +30,8 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 handleCodeInApp: true,
               ),
             ),
+            PhoneProviderConfiguration(),
+            GoogleProviderConfiguration(),
           ],
         ),
       ],

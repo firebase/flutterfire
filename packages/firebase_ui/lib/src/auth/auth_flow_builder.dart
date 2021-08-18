@@ -44,17 +44,21 @@ class _AuthFlowBuilderState<T extends AuthController>
   Widget? get child => widget.child;
 
   AuthState? prevState;
-  late final AuthFlow flow;
+  late AuthFlow flow;
 
-  @override
-  void initState() {
+  bool initialized = false;
+
+  void initializeFlow() {
+    if (initialized) return;
+
     flow = getInitializerOfType<FirebaseUIAuthInitializer>(context)
-        .createFlow(widget.method);
+        .createFlow<T>(widget.method);
 
     flow.context = context;
     flow.addListener(onFlowStateChanged);
+    prevState = flow.value;
 
-    super.initState();
+    initialized = true;
   }
 
   void onFlowStateChanged() {
@@ -70,7 +74,10 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   @override
   Widget build(BuildContext context) {
+    initializeFlow();
+
     return AuthControllerProvider(
+      method: flow.method,
       ctrl: flow,
       child: ValueListenableBuilder<AuthState>(
         valueListenable: flow,

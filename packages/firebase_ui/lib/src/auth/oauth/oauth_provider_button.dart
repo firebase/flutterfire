@@ -11,15 +11,6 @@ class ProviderButton<T extends OAuthProvider> extends StatefulWidget {
 
   const ProviderButton({Key? key, this.icon}) : super(key: key);
 
-  Future<void> signIn(BuildContext context) async {
-    final initializer =
-        FirebaseUIApp.getInitializerOfType<FirebaseUIAuthInitializer>(context);
-    final provider = initializer.resolveOAuthProvider<T>();
-    final oauthCredential = await provider.signIn();
-    final ctrl = AuthController.of(context) as OAuthController;
-    ctrl.setOAuthCredential(oauthCredential);
-  }
-
   static ProviderButton<Google> google({Key? key}) =>
       ProviderButton<Google>(key: key);
   static ProviderButton<Apple> apple({Key? key}) =>
@@ -35,7 +26,10 @@ class ProviderButton<T extends OAuthProvider> extends StatefulWidget {
 
 class _ProviderButtonState<T extends OAuthProvider>
     extends State<ProviderButton> {
-  bool loading = false;
+  void signIn() {
+    final ctrl = AuthController.of(context) as OAuthController;
+    ctrl.signInWithProvider<T>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +37,7 @@ class _ProviderButtonState<T extends OAuthProvider>
       margin: const EdgeInsets.all(8),
       child: IconButton(
         icon: Icon(widget.icon ?? providerIcon<T>()),
-        onPressed: () => widget.signIn(context),
+        onPressed: signIn,
       ),
     );
   }
