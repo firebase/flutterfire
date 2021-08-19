@@ -7,9 +7,6 @@ homepage: https://firebase.flutter.dev/docs/performance/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
 version: 0.7.0+8
 
-# Remove this before sending out the PR
-publish_to: none
-
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
@@ -17,8 +14,7 @@ environment:
 dependencies:
   firebase_core: ^1.5.0
   firebase_core_platform_interface: ^4.0.1
-  firebase_performance_platform_interface:
-    path: '../firebase_performance_platform_interface'
+  firebase_performance_platform_interface: ^0.0.1
   flutter:
     sdk: flutter
 
