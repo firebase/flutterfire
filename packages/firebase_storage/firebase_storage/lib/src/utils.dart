@@ -35,7 +35,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   String firebaseStorageHost = 'firebasestorage.googleapis.com';
   String cloudStorageHost =
       '(?:storage.googleapis.com|storage.cloud.google.com)';
-  String bucketDomain = '([A-Za-z0-9.\\-_]+)';
+  String bucketDomain = r'([A-Za-z0-9.\-_]+)';
 
   if (decodedUrl.contains('firebasestorage.googleapis.com')) {
     String version = 'v[A-Za-z0-9_]+';
