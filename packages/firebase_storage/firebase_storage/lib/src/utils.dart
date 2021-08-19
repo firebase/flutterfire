@@ -37,7 +37,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
       '(?:storage.googleapis.com|storage.cloud.google.com)';
   String bucketDomain = r'([A-Za-z0-9.\-_]+)';
 
-  if (decodedUrl.contains('firebasestorage.googleapis.com')) {
+  if (decodedUrl.contains(firebaseStorageHost)) {
     String version = 'v[A-Za-z0-9_]+';
     String firebaseStoragePath = r'(/([^?#]*).*)?$';
     RegExp firebaseStorageRegExp = RegExp(
