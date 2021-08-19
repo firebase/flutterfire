@@ -32,21 +32,47 @@ Map<String, String?>? partsFromHttpUrl(String url) {
     return null;
   }
 
-  Uri uri = Uri.parse(decodedUrl);
+  String firebaseStorageHost = 'firebasestorage.googleapis.com';
+  String cloudStorageHost =
+      '(?:storage.googleapis.com|storage.cloud.google.com)';
+  String bucketDomain = '([A-Za-z0-9.\\-_]+)';
 
-  if (uri.pathSegments.length <= 3 ||
-      uri.pathSegments[0] != 'v0' ||
-      uri.pathSegments[1] != 'b') {
-    return null;
+  if (decodedUrl.contains('firebasestorage.googleapis.com')) {
+    String version = 'v[A-Za-z0-9_]+';
+    String firebaseStoragePath = r'(/([^?#]*).*)?$';
+    RegExp firebaseStorageRegExp = RegExp(
+      '^https?://$firebaseStorageHost/$version/b/$bucketDomain/o$firebaseStoragePath',
+      caseSensitive: false,
+    );
+
+    RegExpMatch? match = firebaseStorageRegExp.firstMatch(decodedUrl);
+
+    if (match == null) {
+      return null;
+    }
+
+    return {
+      'bucket': match.group(1),
+      'path': match.group(3),
+    };
+  } else {
+    String cloudStoragePath = r'([^?#]*)*$';
+    RegExp cloudStorageRegExp = RegExp(
+      '^https?://$cloudStorageHost/$bucketDomain/$cloudStoragePath',
+      caseSensitive: false,
+    );
+
+    RegExpMatch? match = cloudStorageRegExp.firstMatch(decodedUrl);
+
+    if (match == null) {
+      return null;
+    }
+
+    return {
+      'bucket': match.group(1),
+      'path': match.group(2),
+    };
   }
-
-  String bucketName = uri.pathSegments[2];
-  String path = uri.pathSegments.getRange(4, uri.pathSegments.length).join('/');
-
-  return {
-    'bucket': bucketName,
-    'path': path,
-  };
 }
 
 String? _decodeHttpUrl(String url) {
