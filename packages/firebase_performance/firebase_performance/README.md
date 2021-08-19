@@ -8,7 +8,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details.
+To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details on the API usage.
 
 You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
 
