@@ -31,7 +31,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   if (decodedUrl == null) {
     return null;
   }
-
+  // Either a firebase storage or google cloud http url
   String firebaseStorageHost = 'firebasestorage.googleapis.com';
   String cloudStorageHost =
       '(?:storage.googleapis.com|storage.cloud.google.com)';
