@@ -30,8 +30,10 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
+  flutter_facebook_auth: '^3.5.0'
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.0.0
+  twitter_login: ^4.0.1
 
 dev_dependencies:
   flutter_test:

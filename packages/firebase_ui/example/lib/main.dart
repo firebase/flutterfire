@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
+
 import 'package:firebase_ui/auth/google.dart';
+import 'package:firebase_ui/auth/apple.dart';
+import 'package:firebase_ui/auth/facebook.dart';
+import 'package:firebase_ui/auth/twitter.dart';
 
 import 'pages/home.dart';
 
@@ -32,6 +36,15 @@ class FirebaseAuthUIExample extends StatelessWidget {
             ),
             PhoneProviderConfiguration(),
             GoogleProviderConfiguration(),
+            AppleProviderConfiguration(),
+            FacebookProviderConfiguration(),
+            TwitterProviderConfiguration(
+              apiKey: 'uIwDYzdziDHOjNwA2IitM9wYI',
+              apiSecretKey:
+                  'jmvrMCEorotAZ5Y4gevmrAEJgxz5UV3c7qLZosaQhxDafee58F',
+              redirectURI:
+                  'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
+            ),
           ],
         ),
       ],

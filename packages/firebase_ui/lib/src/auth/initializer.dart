@@ -53,7 +53,15 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
   }
 
   T configOf<T extends ProviderConfiguration>(String providerId) {
-    return _configurations[providerId]! as T;
+    final config = _configurations[providerId];
+    if (config == null) {
+      throw Exception(
+        'No config for $providerId found. '
+        'Make sure to pass a provider configuration to FirebaseUIAuthInitializer for $providerId',
+      );
+    } else {
+      return config as T;
+    }
   }
 
   AuthFlow createFlow<T extends AuthController>(AuthMethod method) {
