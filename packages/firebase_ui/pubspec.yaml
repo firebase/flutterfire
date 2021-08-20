@@ -15,10 +15,12 @@ dev_dependencies:
   crypto: ^3.0.1
   firebase_auth: ^3.0.1
   firebase_dynamic_links: ^2.0.7
+  flutter_facebook_auth: '^3.5.0'
   flutter_test:
     sdk: flutter
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.0.0
+  twitter_login: ^4.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
