@@ -89,9 +89,12 @@ class _ProfileState extends State<Profile> {
                           children: [
                             if (!u.isProviderLinked<Google>())
                               ProviderButton.google(),
-                            ProviderButton.apple(),
-                            ProviderButton.twitter(),
-                            ProviderButton.facebook(),
+                            if (!u.isProviderLinked<Apple>())
+                              ProviderButton.apple(),
+                            if (!u.isProviderLinked<Twitter>())
+                              ProviderButton.twitter(),
+                            if (!u.isProviderLinked<Facebook>())
+                              ProviderButton.facebook(),
                           ],
                         ),
                       ),
