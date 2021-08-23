@@ -424,7 +424,18 @@ NSString *const kErrMsgInvalidCredential =
   [auth signInWithCredential:credential
                   completion:^(FIRAuthDataResult *authResult, NSError *error) {
                     if (error != nil) {
-                      result.error(nil, nil, nil, error);
+                      NSDictionary *userInfo = [error userInfo];
+                      NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
+
+                      NSDictionary *firebaseDictionary =
+                          underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
+
+                      if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
+                        // error from firebase-ios-sdk is buried in underlying error.
+                        result.error(nil, firebaseDictionary[@"message"], nil, nil);
+                      } else {
+                        result.error(nil, nil, nil, error);
+                      }
                     } else {
                       result.success(authResult);
                     }

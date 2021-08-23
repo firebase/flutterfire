@@ -1,3 +1,7 @@
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
 ## 3.1.0
 
  - **FEAT**: submit analytics crash event on fatal - enables support for crash free users reporting (#5900).

@@ -419,9 +419,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    return _delegate
-        .snapshots(includeMetadataChanges: includeMetadataChanges)
-        .map((item) => _JsonQuerySnapshot(firestore, item));
+    return getCachedConnection<QuerySnapshot<Map<String, dynamic>>>(
+      SnapshotParameter(this, includeMetadataChanges),
+      () => _delegate
+          .snapshots(includeMetadataChanges: includeMetadataChanges)
+          .map((item) => _JsonQuerySnapshot(firestore, item)),
+    );
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
@@ -757,8 +760,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'array-contains-any' || operator == 'in') {
-        assert(!(hasIn && hasArrayContainsAny),
-            "You cannot use 'in' filters with 'array-contains-any' filters.");
+        assert(
+          !(hasIn && hasArrayContainsAny),
+          "You cannot use 'in' filters with 'array-contains-any' filters.",
+        );
       }
 
       if (operator == 'array-contains' || operator == 'array-contains-any') {
@@ -848,11 +853,13 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false}) {
     return _originalQuery
         .snapshots(includeMetadataChanges: includeMetadataChanges)
-        .map((snapshot) => _WithConverterQuerySnapshot<T>(
-              snapshot,
-              _fromFirestore,
-              _toFirestore,
-            ));
+        .map(
+          (snapshot) => _WithConverterQuerySnapshot<T>(
+            snapshot,
+            _fromFirestore,
+            _toFirestore,
+          ),
+        );
   }
 
   @override

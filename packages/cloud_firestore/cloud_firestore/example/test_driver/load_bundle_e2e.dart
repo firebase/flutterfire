@@ -77,11 +77,12 @@ void runLoadBundleTests() {
         LoadBundleTask task = firestore.loadBundle(buffer);
 
         await expectLater(
-            task.stream.last,
-            throwsA(
-              isA<FirebaseException>()
-                  .having((e) => e.code, 'code', 'load-bundle-error'),
-            ));
+          task.stream.last,
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'load-bundle-error'),
+          ),
+        );
       });
 
       test('loadBundle(): pause and resume stream', () async {
@@ -92,9 +93,15 @@ void runLoadBundleTests() {
 
         // Will listen & pause after first event received
         await expectLater(
-            task.stream,
-            emits(isA<LoadBundleTaskSnapshot>().having((ts) => ts.taskState,
-                'taskState', LoadBundleTaskState.running)));
+          task.stream,
+          emits(
+            isA<LoadBundleTaskSnapshot>().having(
+              (ts) => ts.taskState,
+              'taskState',
+              LoadBundleTaskState.running,
+            ),
+          ),
+        );
 
         await Future.delayed(const Duration(milliseconds: 1));
 
@@ -103,10 +110,10 @@ void runLoadBundleTests() {
           task.stream,
           emits(
             isA<LoadBundleTaskSnapshot>().having(
-                (ts) => ts.taskState,
-                'taskState',
-                anyOf(
-                    LoadBundleTaskState.running, LoadBundleTaskState.success)),
+              (ts) => ts.taskState,
+              'taskState',
+              anyOf(LoadBundleTaskState.running, LoadBundleTaskState.success),
+            ),
           ),
         );
       });
@@ -124,8 +131,10 @@ void runLoadBundleTests() {
         // namedQuery 'named-bundle-test' which returns a QuerySnaphot of the same 3 documents
         // with 'number' property
         QuerySnapshot<Map<String, Object?>> snapshot =
-            await firestore.namedQueryGet('named-bundle-test-$number',
-                options: const GetOptions(source: Source.cache));
+            await firestore.namedQueryGet(
+          'named-bundle-test-$number',
+          options: const GetOptions(source: Source.cache),
+        );
 
         expect(
           snapshot.docs.map((document) => document['number']),

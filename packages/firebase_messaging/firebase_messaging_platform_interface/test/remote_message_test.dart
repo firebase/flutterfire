@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 

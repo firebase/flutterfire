@@ -18,7 +18,8 @@ void runFieldValueTests() {
     });
 
     Future<DocumentReference<Map<String, dynamic>>> initializeTest(
-        String path) async {
+      String path,
+    ) async {
       String prefixedPath = 'flutter-tests/$path';
       await firestore.doc(prefixedPath).delete();
       return firestore.doc(prefixedPath);
@@ -76,9 +77,10 @@ void runFieldValueTests() {
         Timestamp serverTime2 = snapshot2.data()['foo'];
         expect(serverTime2, isA<Timestamp>());
         expect(
-            serverTime2.microsecondsSinceEpoch >
-                serverTime1.microsecondsSinceEpoch,
-            isTrue);
+          serverTime2.microsecondsSinceEpoch >
+              serverTime1.microsecondsSinceEpoch,
+          isTrue,
+        );
       });
     });
 
@@ -170,22 +172,26 @@ void runFieldValueTests() {
 
       // ignore: todo
       // TODO(salakar): test is currently failing on CI but unable to reproduce locally
-      test('updates with nested types', () async {
-        DocumentReference<Map<String, dynamic>> doc =
-            await initializeTest('field-value-nested-types');
+      test(
+        'updates with nested types',
+        () async {
+          DocumentReference<Map<String, dynamic>> doc =
+              await initializeTest('field-value-nested-types');
 
-        DocumentReference<Map<String, dynamic>> ref =
-            FirebaseFirestore.instance.doc('foo/bar');
+          DocumentReference<Map<String, dynamic>> ref =
+              FirebaseFirestore.instance.doc('foo/bar');
 
-        await doc.set({
-          'foo': [1]
-        });
-        await doc.update({
-          'foo': FieldValue.arrayUnion([2, ref])
-        });
-        DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-        expect(snapshot.data()['foo'], equals([1, 2, ref]));
-      }, skip: true);
+          await doc.set({
+            'foo': [1]
+          });
+          await doc.update({
+            'foo': FieldValue.arrayUnion([2, ref])
+          });
+          DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
+          expect(snapshot.data()['foo'], equals([1, 2, ref]));
+        },
+        skip: true,
+      );
     });
   });
 }

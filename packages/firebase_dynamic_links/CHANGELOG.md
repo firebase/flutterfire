@@ -1,3 +1,9 @@
+## 2.0.8
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **DOCS**: fix readme example (#6790).
+
 ## 2.0.7
 
  - Update a dependency to the latest release.

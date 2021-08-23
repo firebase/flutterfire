@@ -1,3 +1,8 @@
+## 5.4.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+
 ## 5.3.0
 
  - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).

@@ -1,3 +1,8 @@
+## 0.10.0+4
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: propagate error message (#6834).
+
 ## 0.10.0+3
 
  - Update a dependency to the latest release.

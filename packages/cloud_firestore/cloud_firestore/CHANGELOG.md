@@ -1,3 +1,13 @@
+## 2.5.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: transactionHandler was losing ref to self in blocks (#6791).
+ - **FIX**: allow querying on 'is not null' properties (#6788).
+ - **FIX**: improve query filter assertions (#6627).
+ - **FEAT**: cache snapshot connections with underlying native listener (#6819).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+ - **DOCS**: Transaction timeout correction (#6761).
+
 ## 2.4.0
 
  - **FIX**: export PersistenceSettings (#6603).

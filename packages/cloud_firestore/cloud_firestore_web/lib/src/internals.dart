@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 export 'package:firebase_core/src/internals.dart' hide guard;
 
 import 'package:firebase_core/firebase_core.dart';

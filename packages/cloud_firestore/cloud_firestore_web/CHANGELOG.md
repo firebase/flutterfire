@@ -1,3 +1,9 @@
+## 2.4.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: blob was being parsed as geopoint. (#6728).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+
 ## 2.3.0
 
  - **FIX**: export PersistenceSettings (#6603).

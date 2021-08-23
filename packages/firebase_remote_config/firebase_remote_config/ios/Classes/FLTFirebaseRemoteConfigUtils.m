@@ -12,7 +12,7 @@
   switch (error.code) {
     case FIRRemoteConfigErrorInternalError:
       [codeAndMessage setValue:@"internal" forKey:@"code"];
-      [codeAndMessage setValue:@"internal remote config fetch error" forKey:@"message"];
+      [codeAndMessage setValue:error.userInfo[NSLocalizedDescriptionKey] forKey:@"message"];
       break;
     case FIRRemoteConfigErrorThrottled:
       [codeAndMessage setValue:@"throttled" forKey:@"code"];

@@ -1,3 +1,8 @@
+## 2.2.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: lower iOS & macOS deployment targets for relevant plugins (#6757).
+
 ## 2.1.1
 
  - **FIX**: issue where build would fail with missing header (#6628).

@@ -18,13 +18,14 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       FirebaseApp secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: const FirebaseOptions(
-            apiKey: '123',
-            appId: '123',
-            messagingSenderId: '123',
-            projectId: '123',
-          ));
+        name: 'foo',
+        options: const FirebaseOptions(
+          apiKey: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          projectId: '123',
+        ),
+      );
 
       firestore = FirebaseFirestore.instance;
       firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp);
@@ -109,13 +110,19 @@ void main() {
     test('merge options', () {
       DocumentReference ref = firestore.collection('foo').doc();
       // can't specify both merge and mergeFields
-      expect(() => ref.set({}, SetOptions(merge: true, mergeFields: [])),
-          throwsAssertionError);
-      expect(() => ref.set({}, SetOptions(merge: false, mergeFields: [])),
-          throwsAssertionError);
+      expect(
+        () => ref.set({}, SetOptions(merge: true, mergeFields: [])),
+        throwsAssertionError,
+      );
+      expect(
+        () => ref.set({}, SetOptions(merge: false, mergeFields: [])),
+        throwsAssertionError,
+      );
       // all mergeFields to be a string or a FieldPath
-      expect(() => ref.set({}, SetOptions(mergeFields: ['foo', false])),
-          throwsAssertionError);
+      expect(
+        () => ref.set({}, SetOptions(mergeFields: ['foo', false])),
+        throwsAssertionError,
+      );
     });
 
     group('withConverter', () {

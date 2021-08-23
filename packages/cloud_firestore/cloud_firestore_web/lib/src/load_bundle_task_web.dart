@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';

@@ -1,3 +1,9 @@
+## 8.3.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **FEAT**: lower iOS & macOS deployment targets for relevant plugins (#6757).
+
 ## 8.2.0
 
  - **FEAT**: firebase_analytics plugin with AnalyticsWithoutAdIdSupport pod (#6046).

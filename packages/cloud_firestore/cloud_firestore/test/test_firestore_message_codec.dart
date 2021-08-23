@@ -36,24 +36,29 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
       case _kArrayUnion:
         final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
-            FieldValueFactoryPlatform.instance.arrayUnion(value));
+          FieldValueFactoryPlatform.instance.arrayUnion(value),
+        );
       case _kArrayRemove:
         final List<dynamic> value = readValue(buffer)! as List<dynamic>;
         return FieldValuePlatform(
-            FieldValueFactoryPlatform.instance.arrayRemove(value));
+          FieldValueFactoryPlatform.instance.arrayRemove(value),
+        );
       case _kDelete:
         return FieldValuePlatform(FieldValueFactoryPlatform.instance.delete());
       case _kServerTimestamp:
         return FieldValuePlatform(
-            FieldValueFactoryPlatform.instance.serverTimestamp());
+          FieldValueFactoryPlatform.instance.serverTimestamp(),
+        );
       case _kIncrementDouble:
         final double value = readValue(buffer)! as double;
         return FieldValuePlatform(
-            FieldValueFactoryPlatform.instance.increment(value));
+          FieldValueFactoryPlatform.instance.increment(value),
+        );
       case _kIncrementInteger:
         final int value = readValue(buffer)! as int;
         return FieldValuePlatform(
-            FieldValueFactoryPlatform.instance.increment(value));
+          FieldValueFactoryPlatform.instance.increment(value),
+        );
       case _kFirestoreInstance:
         String appName = readValue(buffer)! as String;
         readValue(buffer);
@@ -65,7 +70,9 @@ class TestFirestoreMessageCodec extends FirestoreMessageCodec {
             readValue(buffer)! as Map<dynamic, dynamic>;
         final FirebaseApp app = Firebase.app(appName);
         return MethodChannelQuery(
-            MethodChannelFirebaseFirestore(app: app), values['path']);
+          MethodChannelFirebaseFirestore(app: app),
+          values['path'],
+        );
       case _kFirestoreSettings:
         readValue(buffer);
         return const Settings();

@@ -8,3 +8,5 @@ linter:
   rules:
     public_member_api_docs: false
     avoid_print: false
+    depend_on_referenced_packages: false
+    library_private_types_in_public_api: false

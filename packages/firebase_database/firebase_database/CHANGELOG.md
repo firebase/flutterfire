@@ -1,3 +1,10 @@
+## 7.2.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: DataSnapshot is always present (#6754).
+ - **FEAT**: allow diagnostic logging for android/ios (#6763).
+ - **FEAT**: DataSnapshot.exists property.
+
 ## 7.1.2
 
  - **DOCS**: update database example with increment() (#6518).
