@@ -1,8 +1,7 @@
 // ignore_for_file: require_trailing_commas
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:test/expect.dart';
-import 'package:test/scaffolding.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
 
