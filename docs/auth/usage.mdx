@@ -268,28 +268,16 @@ User? user = FirebaseAuth.instance.currentUser;
 
 if (user != null && !user.emailVerified) {
   var actionCodeSettings = ActionCodeSettings(
-    url: 'https://www.example.com/?email=${user.email}',
-    dynamicLinkDomain: "example.page.link",
-    android: {"packageName": "com.example.android", "installApp": true, "minimumVersion": "12"},
-    iOS: {"bundleId": "com.example.ios"},
-    handleCodeInApp: true,
+      url: 'https://www.example.com/?email=${user.email}',
+      dynamicLinkDomain: 'example.page.link',
+      androidPackageName: 'com.example.android',
+      androidInstallApp: true,
+      androidMinimumVersion: '12",
+      iOSBundleId: 'com.example.ios',
+      handleCodeInApp: true,
   );
 
-
-User user = FirebaseAuth.instance.currentUser;
-
-if (!user.emailVerified) {
-
-var actionCodeSettings = ActionCodeSettings(
-        url: 'https://www.example.com/?email=${user.email}',
-        dynamicLinkDomain: "example.page.link",
-        androidPackageName: "com.example.android",
-        androidInstallApp: true,
-        androidMinimumVersion: "12",
-        iOSBundleId: "com.example.ios",
-        handleCodeInApp: true);
-
-await user.sendEmailVerification(actionCodeSettings);
+  await user.sendEmailVerification(actionCodeSettings);
 }
 ```
 
