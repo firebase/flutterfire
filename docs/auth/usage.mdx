@@ -274,7 +274,8 @@ if (user != null && !user.emailVerified) {
       androidInstallApp: true,
       androidMinimumVersion: '12",
       iOSBundleId: 'com.example.ios',
-      handleCodeInApp: true);
+      handleCodeInApp: true,
+  );
 
   await user.sendEmailVerification(actionCodeSettings);
 }
