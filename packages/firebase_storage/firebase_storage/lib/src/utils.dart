@@ -32,15 +32,15 @@ Map<String, String?>? partsFromHttpUrl(String url) {
     return null;
   }
   // Either a firebase storage or google cloud http url
-  String firebaseStorageHost = 'firebasestorage.googleapis.com';
-  String cloudStorageHost =
+  const String firebaseStorageHost = 'firebasestorage.googleapis.com';
+  const String cloudStorageHost =
       '(?:storage.googleapis.com|storage.cloud.google.com)';
-  String bucketDomain = r'([A-Za-z0-9.\-_]+)';
+  const String bucketDomain = r'([A-Za-z0-9.\-_]+)';
 
   if (decodedUrl.contains(firebaseStorageHost)) {
-    String version = 'v[A-Za-z0-9_]+';
-    String firebaseStoragePath = r'(/([^?#]*).*)?$';
-    RegExp firebaseStorageRegExp = RegExp(
+    const String version = 'v[A-Za-z0-9_]+';
+    const String firebaseStoragePath = r'(/([^?#]*).*)?$';
+     RegExp firebaseStorageRegExp = RegExp(
       '^https?://$firebaseStorageHost/$version/b/$bucketDomain/o$firebaseStoragePath',
       caseSensitive: false,
     );
@@ -56,7 +56,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
       'path': match.group(3),
     };
   } else {
-    String cloudStoragePath = r'([^?#]*)*$';
+    const String cloudStoragePath = r'([^?#]*)*$';
     RegExp cloudStorageRegExp = RegExp(
       '^https?://$cloudStorageHost/$bucketDomain/$cloudStoragePath',
       caseSensitive: false,
