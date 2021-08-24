@@ -40,7 +40,7 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   if (decodedUrl.contains(firebaseStorageHost)) {
     const String version = 'v[A-Za-z0-9_]+';
     const String firebaseStoragePath = r'(/([^?#]*).*)?$';
-     RegExp firebaseStorageRegExp = RegExp(
+    RegExp firebaseStorageRegExp = RegExp(
       '^https?://$firebaseStorageHost/$version/b/$bucketDomain/o$firebaseStoragePath',
       caseSensitive: false,
     );
