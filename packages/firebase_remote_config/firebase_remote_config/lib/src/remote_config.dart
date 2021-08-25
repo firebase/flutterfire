@@ -133,6 +133,16 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
 
   /// Sets the default parameter values for the current instance.
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
+    defaultParameters.values.forEach(_checkIsSupportedType);
     return _delegate.setDefaults(defaultParameters);
+  }
+
+  void _checkIsSupportedType(dynamic value) {
+    if (value is! bool && value is! num && value is! String) {
+      throw Exception(
+        'Non-primitive types are not supported as config values. '
+        "If you're trying to pass a json object – convert it to string beforehand",
+      );
+    }
   }
 }
