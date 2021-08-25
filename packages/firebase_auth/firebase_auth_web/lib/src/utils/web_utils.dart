@@ -212,6 +212,7 @@ AuthCredential? convertWebOAuthCredential(
 
   return OAuthProvider(oAuthCredential.providerId).credential(
     accessToken: oAuthCredential.accessToken,
+    secret: oAuthCredential.secret,
     idToken: oAuthCredential.idToken,
   );
 }
