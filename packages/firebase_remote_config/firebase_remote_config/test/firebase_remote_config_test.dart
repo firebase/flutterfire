@@ -213,6 +213,15 @@ void main() {
         remoteConfig.setDefaults(mockParameters);
         verify(mockRemoteConfigPlatform.setDefaults(mockDefaultParameters));
       });
+
+      test('should throw when non-primitive value is passed', () {
+        expect(
+          () => remoteConfig.setDefaults({
+            'key': {'nested': 'object'}
+          }),
+          throwsException,
+        );
+      });
     });
   });
 }
