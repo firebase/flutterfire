@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -24,7 +24,7 @@ void myLog(String msg) {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
