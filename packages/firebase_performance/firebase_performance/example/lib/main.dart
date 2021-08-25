@@ -13,17 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (context, firebaseAppSnapshot) {
-        if (firebaseAppSnapshot.hasData) {
-          return const MyApp();
-        } else {
-          return Container();
-        }
-      }));
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 void myLog(String msg) {
