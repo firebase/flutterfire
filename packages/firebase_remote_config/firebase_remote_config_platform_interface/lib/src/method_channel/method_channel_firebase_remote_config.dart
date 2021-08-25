@@ -291,7 +291,8 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
   void _checkIsSupportedType(dynamic value) {
     if (value is! bool && value is! num && value is! String) {
       throw Exception(
-        "Non-primitive types are not supported as config values. If you're trying to pass a json object – convert it to string beforehand",
+        'Non-primitive types are not supported as config values. '
+        "If you're trying to pass a json object – convert it to string beforehand",
       );
     }
   }
