@@ -7,20 +7,24 @@
 
 import 'dart:async';
 
-import 'package:http/http.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
-import 'package:firebase_performance/firebase_performance.dart';
-
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 void myLog(String msg) {
   print('My Log: $msg');
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();

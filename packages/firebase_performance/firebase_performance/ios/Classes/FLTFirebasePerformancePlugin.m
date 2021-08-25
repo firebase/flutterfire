@@ -29,22 +29,15 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if ([@"FirebasePerformance#instance" isEqualToString:call.method]) {
-    [methodHandlers removeAllObjects];
-
-    NSNumber *handle = call.arguments[@"handle"];
-    FLTFirebasePerformance *performance = [FLTFirebasePerformance sharedInstance];
-
-    [FLTFirebasePerformancePlugin addMethodHandler:handle methodHandler:performance];
-    result(nil);
-  } else {
-    NSNumber *handle = call.arguments[@"handle"];
-
-    if (![handle isEqual:[NSNull null]]) {
-      [methodHandlers[handle] handleMethodCall:call result:result];
-    } else {
-      result(FlutterMethodNotImplemented);
+  NSNumber *handle = call.arguments[@"handle"];
+  if (![handle isEqual:[NSNull null]]) {
+    if (![methodHandlers objectForKey:handle]) {
+      FLTFirebasePerformance *performance = [FLTFirebasePerformance sharedInstance];
+      [FLTFirebasePerformancePlugin addMethodHandler:handle methodHandler:performance];
     }
+    [methodHandlers[handle] handleMethodCall:call result:result];
+  } else {
+    result(FlutterMethodNotImplemented);
   }
 }
 

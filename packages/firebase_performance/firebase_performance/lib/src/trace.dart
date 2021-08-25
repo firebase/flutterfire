@@ -22,24 +22,10 @@ part of firebase_performance;
 ///
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [Trace] to not avoid leaking on the platform side.
-class Trace extends PerformanceAttributes {
-  Trace._(this._handle, this.name);
+class Trace {
+  final TracePlatform _delegate;
 
-  /// Maximum allowed length of the name of a [Trace].
-  static const int maxTraceNameLength = 100;
-
-  final Map<String, int> _metrics = <String, int>{};
-
-  bool _hasStarted = false;
-
-  @override
-  bool _hasStopped = false;
-
-  @override
-  final int _handle;
-
-  /// Name representing this [Trace] on the Firebase Console.
-  final String name;
+  Trace._(this._delegate);
 
   /// Starts this [Trace].
   ///
@@ -48,13 +34,7 @@ class Trace extends PerformanceAttributes {
   /// Using `await` with this method is only necessary when accurate timing
   /// is relevant.
   Future<void> start() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStarted = true;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#start',
-      <String, Object?>{'handle': _handle},
-    );
+    return _delegate.start();
   }
 
   /// Stops this [Trace].
@@ -66,13 +46,7 @@ class Trace extends PerformanceAttributes {
   ///
   /// Not necessary to use `await` with this method.
   Future<void> stop() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStopped = true;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#stop',
-      <String, Object?>{'handle': _handle},
-    );
+    return _delegate.stop();
   }
 
   /// Increments the metric with the given [name].
@@ -81,15 +55,7 @@ class Trace extends PerformanceAttributes {
   /// not been started or has already been stopped, returns immediately without
   /// taking action.
   Future<void> incrementMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) {
-      return Future<void>.value();
-    }
-
-    _metrics[name] = (_metrics[name] ?? 0) + value;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#incrementMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
+    return _delegate.incrementMetric(name, value);
   }
 
   /// Sets the [value] of the metric with the given [name].
@@ -98,13 +64,7 @@ class Trace extends PerformanceAttributes {
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
   Future<void> setMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) return Future<void>.value();
-
-    _metrics[name] = value;
-    return FirebasePerformance.channel.invokeMethod<void>(
-      'Trace#setMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
+    return _delegate.setMetric(name, value);
   }
 
   /// Gets the value of the metric with the given [name].
@@ -112,12 +72,44 @@ class Trace extends PerformanceAttributes {
   /// If a metric with the given name doesn't exist, it is NOT created and a 0
   /// is returned.
   Future<int> getMetric(String name) async {
-    if (_hasStopped) return Future<int>.value(_metrics[name] ?? 0);
+    return _delegate.getMetric(name);
+  }
 
-    final metric = await FirebasePerformance.channel.invokeMethod<int>(
-      'Trace#getMetric',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
-    return metric ?? 0;
+  /// Sets a String [value] for the specified attribute with [name].
+  ///
+  /// Updates the value of the attribute if the attribute already exists.
+  /// The maximum number of attributes that can be added are
+  /// [maxCustomAttributes]. An attempt to add more than [maxCustomAttributes]
+  /// to this object will return without adding the attribute.
+  ///
+  /// Name of the attribute has max length of [maxAttributeKeyLength]
+  /// characters. Value of the attribute has max length of
+  /// [maxAttributeValueLength] characters. If the name has a length greater
+  /// than [maxAttributeKeyLength] or the value has a length greater than
+  /// [maxAttributeValueLength], this method will return without adding
+  /// anything.
+  ///
+  /// If this object has been stopped, this method returns without adding the
+  /// attribute.
+  Future<void> putAttribute(String name, String value) {
+    return _delegate.putAttribute(name, value);
+  }
+
+  /// Removes an already added attribute.
+  ///
+  /// If this object has been stopped, this method returns without removing the
+  /// attribute.
+  Future<void> removeAttribute(String name) {
+    return _delegate.removeAttribute(name);
+  }
+
+  /// Returns the value of an attribute.
+  ///
+  /// Returns `null` if an attribute with this [name] has not been added.
+  String? getAttribute(String name) => _delegate.getAttribute(name);
+
+  /// All attributes added.
+  Future<Map<String, String>> getAttributes() async {
+    return _delegate.getAttributes();
   }
 }

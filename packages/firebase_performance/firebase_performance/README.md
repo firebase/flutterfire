@@ -8,11 +8,11 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details.
+To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details on the API usage.
 
 You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
 
-## Define a Custom Trace
+### Define a Custom Trace
 
 A custom trace is a report of performance data associated with some of the code in your app. To learn more about custom traces, see the [Performance Monitoring overview](https://firebase.google.com/docs/perf-mon/custom-code-traces).
 
@@ -30,7 +30,7 @@ if (item != null) {
 await myTrace.stop();
 ```
 
-## Add monitoring for specific network requests
+### Add monitoring for specific network requests
 
 Performance Monitoring collects network requests automatically. Although this includes most network requests for your app, some might not be reported. To include specific network requests in Performance Monitoring, add the following code to your app:
 
@@ -81,16 +81,20 @@ class _MyAppState extends State<MyApp> {
 }
 ```
 
-## Getting Started
-
-See the [`example`](example) directory for a complete sample app using Google Performance Monitoring for Firebase.
-
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
 Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
+## Contribution
+
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+
+The integration test is in `example/test_driver/firebase_performance_e2e.dart` which you can run on an emulator:
+```
+cd example
+flutter drive --target=./test_driver/firebase_performance_e2e.dart
+```

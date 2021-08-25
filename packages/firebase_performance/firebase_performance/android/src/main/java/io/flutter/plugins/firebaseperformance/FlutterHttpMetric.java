@@ -38,13 +38,13 @@ class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
       case "HttpMetric#responsePayloadSize":
         setResponsePayloadSize(call, result);
         break;
-      case "PerformanceAttributes#putAttribute":
+      case "HttpMetric#putAttribute":
         putAttribute(call, result);
         break;
-      case "PerformanceAttributes#removeAttribute":
+      case "HttpMetric#removeAttribute":
         removeAttribute(call, result);
         break;
-      case "PerformanceAttributes#getAttributes":
+      case "HttpMetric#getAttributes":
         getAttributes(result);
         break;
       default:
