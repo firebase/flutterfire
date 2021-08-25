@@ -66,12 +66,12 @@ void main() {
 
     test('parses a https url with host "storage.cloud.google.com"', () {
       String url =
-          'https://storage.cloud.google.com/v0/b/valid-url.appspot.com/o/path';
+          'https://storage.cloud.google.com/valid-url.appspot.com/path/to/file';
 
       final result = partsFromHttpUrl(url)!;
 
       expect(result['bucket'], 'valid-url.appspot.com');
-      expect(result['path'], 'path');
+      expect(result['path'], 'path/to/file');
     });
 
     test('parses a encoded https url', () {

@@ -5,12 +5,12 @@
 
 import 'dart:async';
 
-import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 import 'package:intl/intl.dart';
 
 import 'firebase_auth_web_confirmation_result.dart';
+import 'interop/auth.dart' as auth_interop;
 import 'utils/web_utils.dart';
 
 /// The format of an incoming metadata string timestamp from the firebase-dart library
@@ -89,6 +89,17 @@ class UserWeb extends UserPlatform {
           auth,
           await _webUser
               .linkWithCredential(convertPlatformCredential(credential)));
+    } catch (e) {
+      throw getFirebaseAuthException(e);
+    }
+  }
+
+  @override
+  Future<UserCredentialPlatform> linkWithPopup(AuthProvider provider) async {
+    _assertIsSignedOut(auth);
+    try {
+      return UserCredentialWeb(auth,
+          await _webUser.linkWithPopup(convertPlatformAuthProvider(provider)));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
