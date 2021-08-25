@@ -35,13 +35,13 @@ class FlutterTrace implements MethodChannel.MethodCallHandler {
       case "Trace#getMetric":
         getMetric(call, result);
         break;
-      case "PerformanceAttributes#putAttribute":
+      case "Trace#putAttribute":
         putAttribute(call, result);
         break;
-      case "PerformanceAttributes#removeAttribute":
+      case "Trace#removeAttribute":
         removeAttribute(call, result);
         break;
-      case "PerformanceAttributes#getAttributes":
+      case "Trace#getAttributes":
         getAttributes(result);
         break;
       default:
