@@ -132,6 +132,7 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   }
 
   /// Sets the default parameter values for the current instance.
+  /// Only booleans, strings and numbers are supported as values of the map
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
     defaultParameters.values.forEach(_checkIsSupportedType);
     return _delegate.setDefaults(defaultParameters);
