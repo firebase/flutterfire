@@ -1,9 +1,12 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:io';
+
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'query_e2e.dart';
 
 final List<Map<String, Object>> testDocuments = [
   {'ref': 'one', 'value': 23},
@@ -12,43 +15,49 @@ final List<Map<String, Object>> testDocuments = [
   {'ref': 'four', 'value': 40}
 ];
 
+Future<void> setTestData() {
+  final FirebaseDatabase database = FirebaseDatabase.instance;
+  const String orderTestPath = 'ordered/';
+  return Future.wait(testDocuments.map((map) {
+    String child = map['ref']! as String;
+    return database.reference().child('$orderTestPath/$child').set(map);
+  }));
+}
+
 void testsMain() {
   group('FirebaseDatabase', () {
+    // initialize the firebase
     setUp(() async {
       await Firebase.initializeApp();
     });
 
+    // set up dummy data
     setUpAll(() async {
+      await setTestData();
+    });
+
+    test('setPersistenceCacheSizeBytes Integer', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
-      const String orderTestPath = 'ordered/';
-
-      await Future.wait(testDocuments.map((map) {
-        String child = map['ref']! as String;
-        return database.reference().child('$orderTestPath/$child').set(map);
-      }));
+      await database.setPersistenceCacheSizeBytes(2147483647);
     });
 
-    test('correct order returned from query', () async {
-      Event event = await FirebaseDatabase.instance
-          .reference()
-          .child('ordered')
-          .orderByChild('value')
-          .onValue
-          .first;
-
-      final ordered = testDocuments.map((doc) => doc['value']! as int).toList();
-      ordered.sort();
-
-      final documents = event.snapshot.value.values
-          .map((doc) => doc['value'] as int)
-          .toList();
-
-      expect(documents[0], ordered[0]);
-      expect(documents[1], ordered[1]);
-      expect(documents[2], ordered[2]);
-      expect(documents[3], ordered[3]);
+    test('setPersistenceCacheSizeBytes Long', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setPersistenceCacheSizeBytes(2147483648);
     });
+
+    test('setLoggingEnabled to true', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(true);
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
+
+    test('setLoggingEnabled to false', () async {
+      final FirebaseDatabase database = FirebaseDatabase.instance;
+      await database.setLoggingEnabled(false);
+      // Skipped because it needs to be initialized first on android
+    }, skip: Platform.isAndroid);
 
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
@@ -85,57 +94,7 @@ void testsMain() {
       );
     });
 
-    test('setPersistenceCacheSizeBytes Integer', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-
-      await database.setPersistenceCacheSizeBytes(2147483647);
-    });
-
-    test('setPersistenceCacheSizeBytes Long', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-      await database.setPersistenceCacheSizeBytes(2147483648);
-    });
-
-    test('setLoggingEnabled to true', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-      await database.setLoggingEnabled(true);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
-
-    test('setLoggingEnabled to false', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-      await database.setLoggingEnabled(false);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
-
-    test('get snapshot', () async {
-      final dataSnapshot = await FirebaseDatabase.instance
-          .reference()
-          .child('ordered/one')
-          .get();
-      expect(dataSnapshot, isNot(null));
-      expect(dataSnapshot.key, 'one');
-      expect(dataSnapshot.value['ref'], 'one');
-      expect(dataSnapshot.value['value'], 23);
-    });
-
-    test('DataSnapshot.exists is false for no data', () async {
-      final dataSnapshot = await FirebaseDatabase.instance
-          .reference()
-          .child('a-non-existing-reference')
-          .get();
-
-      expect(dataSnapshot.exists, false);
-    });
-
-    test('DataSnapshot.exists is true for existing data', () async {
-      final dataSnapshot = await FirebaseDatabase.instance
-          .reference()
-          .child('ordered/one')
-          .get();
-
-      expect(dataSnapshot.exists, true);
-    });
+    runQueryTests();
   });
 }
 
