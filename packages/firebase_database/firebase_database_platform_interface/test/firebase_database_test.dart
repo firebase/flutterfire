@@ -512,7 +512,8 @@ void main() {
         final DatabaseErrorPlatform error1 = await errors.remove();
         final DatabaseErrorPlatform error2 = await errors.remove();
         await subscription.cancel();
-        expect(error1.toString(), 'DatabaseErrorPlatform(12, Bad foo, Some details)');
+        expect(error1.toString(),
+            'DatabaseErrorPlatform(12, Bad foo, Some details)');
         expect(error1.code, errorCode);
         expect(error1.message, 'Bad foo');
         expect(error1.details, errorDetails);
