@@ -1,3 +1,8 @@
+## 6.1.0
+
+ - **FEAT**: Add support for `secret` on `OAuthCredential` on web (#6830).
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
 ## 6.0.1
 
  - Update a dependency to the latest release.

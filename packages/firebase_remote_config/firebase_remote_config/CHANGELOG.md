@@ -1,3 +1,7 @@
+## 0.10.0+5
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0+4
 
  - **STYLE**: enable additional lint rules (#6832).
