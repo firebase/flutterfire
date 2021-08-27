@@ -1,3 +1,9 @@
+## 10.0.6
+
+ - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
+ - **FIX**: allow messages when device is in idle mode (#6730).
+ - **FIX**: onMessage event handler for notifcations with `contentAvailable:true` (#6838).
+
 ## 10.0.5
 
  - Update a dependency to the latest release.

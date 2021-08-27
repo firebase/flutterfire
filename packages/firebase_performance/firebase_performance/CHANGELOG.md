@@ -1,3 +1,7 @@
+## 0.7.0+9
+
+ - **REFACTOR**: create interface plugin that federates the main plugin (#6851).
+
 ## 0.7.0+8
 
  - Update a dependency to the latest release.

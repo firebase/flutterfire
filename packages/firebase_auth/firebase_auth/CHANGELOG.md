@@ -1,3 +1,7 @@
+## 3.1.0
+
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
 ## 3.0.2
 
  - **STYLE**: enable additional lint rules (#6832).

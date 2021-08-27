@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - **FEAT**: update Firebase Android SDK to `28.3.1` & Firebase iOS SDK to `8.6.0` (#6847).
+
 ## 1.5.0
 
  - **STYLE**: enable additional lint rules (#6832).

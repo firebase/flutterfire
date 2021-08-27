@@ -1,3 +1,7 @@
+## 0.0.2+1
+
+ - **DOCS**: using for version `0.0.1` the same markdown headline level as the other versions have in the changelog (#6845).
+
 ## 0.0.2
 
  - **STYLE**: enable additional lint rules (#6832).

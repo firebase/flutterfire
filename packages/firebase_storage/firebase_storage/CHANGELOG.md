@@ -1,3 +1,7 @@
+## 10.0.3
+
+ - **FIX**: accept google storage bucket urls (#6848).
+
 ## 10.0.2
 
  - Update a dependency to the latest release.
