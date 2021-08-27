@@ -62,40 +62,44 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                             }
                           },
                           child: const Padding(
-                            padding: const EdgeInsets.all(16),
+                            padding: EdgeInsets.all(16),
                             child: SignInForm(),
                           ),
                         ),
                         const Text('Other sign in options'),
                         Padding(
                           padding: const EdgeInsets.all(16).copyWith(top: 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => const PhoneAuthFlow(
-                                        authMethod: AuthMethod.signIn,
+                          child: AuthFlowBuilder<OAuthController>(
+                            method: AuthMethod.signIn,
+                            builder: (_, state, __, child) {
+                              if (state is SigningIn) {
+                                return const CircularProgressIndicator();
+                              }
+
+                              return child!;
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PhoneAuthFlow(
+                                          authMethod: AuthMethod.signIn,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.phone),
-                              ),
-                              AuthFlowBuilder<OAuthController>(
-                                method: AuthMethod.signIn,
-                                child: Row(
-                                  children: [
-                                    ProviderButton.google(),
-                                    ProviderButton.apple(),
-                                    ProviderButton.twitter(),
-                                    ProviderButton.facebook(),
-                                  ],
+                                    );
+                                  },
+                                  icon: const Icon(Icons.phone),
                                 ),
-                              ),
-                            ],
+                                ProviderButton.google(),
+                                ProviderButton.apple(),
+                                ProviderButton.twitter(),
+                                ProviderButton.facebook(),
+                              ],
+                            ),
                           ),
                         ),
                       ],
