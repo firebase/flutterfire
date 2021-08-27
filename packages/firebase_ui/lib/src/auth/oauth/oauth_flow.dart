@@ -24,6 +24,8 @@ class OAuthFlow extends AuthFlow implements OAuthController {
     final config =
         initializer.configOf<OAuthProviderConfiguration>(providerIdOf<T>());
     final provider = config.createProvider();
+
+    value = const SigningIn();
     final oauthCredential = await provider.signIn();
 
     setCredential(oauthCredential);

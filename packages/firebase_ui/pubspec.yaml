@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   crypto: ^3.0.1
@@ -21,6 +22,11 @@ dev_dependencies:
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.0.0
   twitter_login: ^4.0.1
+  deep_links:
+    git:
+      url: git://github.com/lesnitsky/flutter_desktop_plugins.git
+      path: deep_links
+      ref: d4f2b98
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

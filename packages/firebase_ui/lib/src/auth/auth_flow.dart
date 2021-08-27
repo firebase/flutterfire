@@ -9,6 +9,10 @@ abstract class AuthState {
   const AuthState();
 }
 
+class SigningIn extends AuthState {
+  const SigningIn();
+}
+
 class CredentialReceived extends AuthState {
   final AuthCredential credential;
 
