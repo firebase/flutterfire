@@ -3,9 +3,7 @@ import 'package:firebase_performance_platform_interface/firebase_performance_pla
 /// Web implementation for HttpMetricPlatform. Custom request metrics are not
 /// supported for Web apps, so this class is a dummy.
 class HttpMetricWeb extends HttpMetricPlatform {
-  HttpMetricWeb(FirebasePerformancePlatform performance, handle, String url,
-      HttpMethod httpMethod)
-      : super(performance, handle, url, httpMethod);
+  HttpMetricWeb(String url, HttpMethod httpMethod) : super(url, httpMethod);
 
   @override
   set httpResponseCode(int? httpResponseCode) {

@@ -45,7 +45,6 @@ void main() {
       trace = trace as TraceWeb;
       expect(trace.traceDelegate, mockTrace);
       expect(trace.name, testTraceName);
-      expect(trace.performance, firebasePerformancePlatform);
       verify(mockPerformance.trace(testTraceName)).called(1);
       verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
@@ -67,13 +66,12 @@ void main() {
       when(mockPerformance.trace(testTraceName)).thenReturn(mockTrace);
 
       TracePlatform trace =
-          await firebasePerformancePlatform.startTrace(testTraceName);
+          await FirebasePerformancePlatform.startTrace(testTraceName);
 
       expect(trace.runtimeType, TraceWeb);
       trace = trace as TraceWeb;
       expect(trace.traceDelegate, mockTrace);
       expect(trace.name, testTraceName);
-      expect(trace.performance, firebasePerformancePlatform);
       verify(mockPerformance.trace(testTraceName)).called(1);
       verify(mockTrace.start()).called(1);
       verifyNoMoreInteractions(mockPerformance);
@@ -93,8 +91,7 @@ void main() {
       firebasePerformancePlatform =
           FirebasePerformanceWeb(performance: mockPerformance);
       mockTrace = MockTrace();
-      tracePlatform =
-          TraceWeb(firebasePerformancePlatform, mockTrace, 0, testTraceName);
+      tracePlatform = TraceWeb(mockTrace, testTraceName);
     });
 
     test('start', () async {
@@ -170,8 +167,7 @@ void main() {
       mockPerformance = MockPerformance();
       firebasePerformancePlatform =
           FirebasePerformanceWeb(performance: mockPerformance);
-      httpMetricPlatform =
-          HttpMetricWeb(firebasePerformancePlatform, 0, '', HttpMethod.Get);
+      httpMetricPlatform = HttpMetricWeb('', HttpMethod.Get);
     });
 
     test('httpResponseCode setter does nothing', () async {

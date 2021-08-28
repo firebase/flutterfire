@@ -5,9 +5,7 @@ import 'package:firebase_performance_platform_interface/firebase_performance_pla
 class TraceWeb extends TracePlatform {
   final firebase.Trace traceDelegate;
 
-  TraceWeb(FirebasePerformancePlatform performance, this.traceDelegate, handle,
-      String name)
-      : super(performance, handle, name);
+  TraceWeb(this.traceDelegate, String name) : super(name);
 
   @override
   Future<void> start() async {

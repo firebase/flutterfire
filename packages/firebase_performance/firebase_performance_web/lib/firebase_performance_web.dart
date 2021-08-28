@@ -31,12 +31,12 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   TracePlatform newTrace(String name) {
-    return TraceWeb(this, _performance.trace(name), 0, name);
+    return TraceWeb(_performance.trace(name), name);
   }
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
-    return HttpMetricWeb(this, 0, '', HttpMethod.Get);
+    return HttpMetricWeb('', HttpMethod.Get);
   }
 
   @override
