@@ -15,6 +15,8 @@ dependencies:
   firebase_core: ^1.6.0
   firebase_core_platform_interface: ^4.0.1
   firebase_performance_platform_interface: ^0.0.1+2
+  firebase_performance_web:
+    path: ../firebase_performance_web
   flutter:
     sdk: flutter
 
@@ -38,3 +40,5 @@ flutter:
         pluginClass: FirebasePerformancePlugin
       ios:
         pluginClass: FLTFirebasePerformancePlugin
+      web:
+        default_package: firebase_performance_web
