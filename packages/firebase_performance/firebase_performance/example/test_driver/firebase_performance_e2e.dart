@@ -60,8 +60,6 @@ Future<void> main() async {
     });
   });
 
-  // TODO(kroikie): Update flaky tests comment back in
-  //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
   group('$Trace', () {
     FirebasePerformance performance;
     Trace testTrace;
@@ -210,8 +208,6 @@ Future<void> main() async {
     });
   });
 
-  // TODO(kroikie): Update flaky tests and comment back in
-  //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
   group('$HttpMetric', () {
     FirebasePerformance performance;
     HttpMetric testHttpMetric;
