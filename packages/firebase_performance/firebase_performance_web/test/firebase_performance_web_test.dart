@@ -64,6 +64,7 @@ void main() {
       const testTraceName = 'test_trace';
       final MockTrace mockTrace = MockTrace();
       when(mockPerformance.trace(testTraceName)).thenReturn(mockTrace);
+      FirebasePerformanceWeb.registerWithForTest(firebasePerformancePlatform);
 
       TracePlatform trace =
           await FirebasePerformancePlatform.startTrace(testTraceName);
@@ -80,16 +81,11 @@ void main() {
   });
 
   group('TraceWeb', () {
-    late FirebasePerformancePlatform firebasePerformancePlatform;
-    late MockPerformance mockPerformance;
     late TracePlatform tracePlatform;
     late MockTrace mockTrace;
     late String testTraceName = 'test_trace';
 
     setUp(() {
-      mockPerformance = MockPerformance();
-      firebasePerformancePlatform =
-          FirebasePerformanceWeb(performance: mockPerformance);
       mockTrace = MockTrace();
       tracePlatform = TraceWeb(mockTrace, testTraceName);
     });
@@ -97,55 +93,47 @@ void main() {
     test('start', () async {
       await tracePlatform.start();
       verify(mockTrace.start()).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('stop', () async {
       await tracePlatform.stop();
       verify(mockTrace.stop()).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('incrementMetric', () async {
       await tracePlatform.incrementMetric('counter_name', 33);
       verify(mockTrace.incrementMetric('counter_name', 33)).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('setMetric does nothing', () async {
       await tracePlatform.setMetric('counter_name', 33);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('getMetric', () async {
       await tracePlatform.getMetric('counter_name');
       verify(mockTrace.getMetric('counter_name')).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('putAttribute', () async {
       await tracePlatform.putAttribute('attribute', 'value');
       verify(mockTrace.putAttribute('attribute', 'value')).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('removeAttribute', () async {
       await tracePlatform.removeAttribute('attribute');
       verify(mockTrace.removeAttribute('attribute')).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('getAttribute', () async {
       tracePlatform.getAttribute('attribute');
       verify(mockTrace.getAttribute('attribute')).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
 
@@ -153,54 +141,36 @@ void main() {
       when(mockTrace.getAttributes()).thenReturn(<String, String>{});
       await tracePlatform.getAttributes();
       verify(mockTrace.getAttributes()).called(1);
-      verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
     });
   });
 
   group('HttpMetricWeb', () {
-    late FirebasePerformancePlatform firebasePerformancePlatform;
-    late MockPerformance mockPerformance;
     late HttpMetricPlatform httpMetricPlatform;
 
     setUp(() {
-      mockPerformance = MockPerformance();
-      firebasePerformancePlatform =
-          FirebasePerformanceWeb(performance: mockPerformance);
       httpMetricPlatform = HttpMetricWeb('', HttpMethod.Get);
     });
 
     test('httpResponseCode setter does nothing', () async {
       httpMetricPlatform.httpResponseCode = 404;
       expect(httpMetricPlatform.httpResponseCode, null);
-      verifyNoMoreInteractions(mockPerformance);
     });
 
     test('requestPayloadSize setter does nothing', () async {
       httpMetricPlatform.requestPayloadSize = 100;
       expect(httpMetricPlatform.requestPayloadSize, null);
-      verifyNoMoreInteractions(mockPerformance);
     });
 
     test('responsePayloadSize setter does nothing', () async {
       httpMetricPlatform.responsePayloadSize = 100;
       expect(httpMetricPlatform.responsePayloadSize, null);
-      verifyNoMoreInteractions(mockPerformance);
-    });
-
-    test('start does nothing', () async {
-      await httpMetricPlatform.start();
-      verifyNoMoreInteractions(mockPerformance);
-    });
-
-    test('stop does nothing', () async {
-      await httpMetricPlatform.stop();
-      verifyNoMoreInteractions(mockPerformance);
     });
 
     test('putAttribute does nothing', () async {
-      //await httpMetricPlatform.putAttribute();
-      verifyNoMoreInteractions(mockPerformance);
+      await httpMetricPlatform.putAttribute('attribute', 'value');
+      expect(httpMetricPlatform.getAttribute('attribute'), null);
+      expect(await httpMetricPlatform.getAttributes(), {});
     });
   });
 }

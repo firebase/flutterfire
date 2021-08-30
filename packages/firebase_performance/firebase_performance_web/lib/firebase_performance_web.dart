@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/trace.dart';
@@ -12,11 +13,18 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// A constructor that allows tests to override the firebase.Performance object.
   FirebasePerformanceWeb({firebase.Performance? performance})
-      : _performance = performance ?? firebase.performance();
+      : _performance = performance ?? firebase.performance(),
+        super();
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb();
+  }
+
+  @visibleForTesting
+  static void registerWithForTest(
+      FirebasePerformancePlatform firebasePerformancePlatform) {
+    FirebasePerformancePlatform.instance = firebasePerformancePlatform;
   }
 
   @override
@@ -37,12 +45,5 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     return HttpMetricWeb('', HttpMethod.Get);
-  }
-
-  @override
-  Future<TracePlatform> startTrace(String name) async {
-    TracePlatform trace = newTrace(name);
-    await trace.start();
-    return trace;
   }
 }
