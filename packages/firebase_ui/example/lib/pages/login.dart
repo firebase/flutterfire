@@ -32,80 +32,81 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
     );
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IntrinsicHeight(
-            child: Card(
-              margin: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  tabs,
-                  Expanded(
-                    child: Column(
-                      children: [
-                        AuthFlowBuilder<EmailFlowController>(
-                          method: method,
-                          listener: (oldState, newState) {
-                            if (newState is AuthFailed) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    newState.exception.toString(),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IntrinsicHeight(
+              child: Card(
+                margin: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    tabs,
+                    Expanded(
+                      child: Column(
+                        children: [
+                          AuthFlowBuilder<EmailFlowController>(
+                            method: method,
+                            listener: (oldState, newState) {
+                              if (newState is AuthFailed) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      newState.exception.toString(),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(16),
+                              child: SignInForm(),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const PhoneAuthFlow(
+                                    authMethod: AuthMethod.signIn,
                                   ),
                                 ),
                               );
-                            }
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.all(16),
-                            child: SignInForm(),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16).copyWith(top: 0),
-                          child: AuthFlowBuilder<OAuthController>(
-                            method: AuthMethod.signIn,
-                            builder: (_, state, __, child) {
-                              if (state is SigningIn) {
-                                return const CircularProgressIndicator();
-                              }
-
-                              return child!;
                             },
-                            child: Column(
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PhoneAuthFlow(
-                                          authMethod: AuthMethod.signIn,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text('Sign in with phone'),
-                                ),
-                                const ProviderButton<Google>(),
-                                const ProviderButton<Apple>(),
-                                const ProviderButton<Twitter>(),
-                                const ProviderButton<Facebook>(),
-                              ],
+                            child: const Text('Sign in with phone'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(16).copyWith(top: 0),
+                            child: AuthFlowBuilder<OAuthController>(
+                              method: AuthMethod.signIn,
+                              builder: (_, state, __, child) {
+                                if (state is SigningIn) {
+                                  return const CircularProgressIndicator();
+                                }
+
+                                return child!;
+                              },
+                              child: Column(
+                                children: const [
+                                  ProviderButton<Google>(),
+                                  ProviderButton<Apple>(),
+                                  ProviderButton<Twitter>(),
+                                  ProviderButton<Facebook>(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
