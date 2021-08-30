@@ -1,5 +1,4 @@
 import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/src/dependency_manager.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:flutter/material.dart';
 

@@ -41,6 +41,10 @@
               <data
                 android:scheme="https"
                 android:host="reactnativefirebase.page.link" />
+
+              <data
+                android:scheme="ffire"
+                android:host="reactnativefirebase.page.link" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

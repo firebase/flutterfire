@@ -38,6 +38,7 @@ class _SignInFormState extends State<SignInForm> {
           decoration: const InputDecoration(labelText: 'Email'),
           autofocus: true,
           keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
         ),
         const SizedBox(height: 16),
         TextField(
