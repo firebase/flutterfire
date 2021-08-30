@@ -5,6 +5,8 @@
 
 // @dart=2.9
 
+import 'dart:io';
+
 import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -36,10 +38,18 @@ Future<void> main() async {
       );
 
       await performance.setPerformanceCollectionEnabled(false);
-      expect(
-        performance.isPerformanceCollectionEnabled(),
-        completion(isFalse),
-      );
+
+      if (Platform.isIOS || Platform.isAndroid) {
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isFalse),
+        );
+      } else {
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isTrue),
+        );
+      }
     });
 
     testWidgets('test all Http method values', (WidgetTester tester) async {
@@ -122,10 +132,19 @@ Future<void> main() async {
       await testTrace.start();
 
       await testTrace.setMetric(metricName, 37);
-      expect(testTrace.getMetric(metricName), completion(37));
+
+      if (Platform.isIOS || Platform.isAndroid) {
+        expect(testTrace.getMetric(metricName), completion(37));
+      } else {
+        expect(testTrace.getMetric(metricName), completion(0));
+      }
 
       await testTrace.setMetric(metricName, 3);
-      expect(testTrace.getMetric(metricName), completion(3));
+      if (Platform.isIOS || Platform.isAndroid) {
+        expect(testTrace.getMetric(metricName), completion(3));
+      } else {
+        expect(testTrace.getMetric(metricName), completion(0));
+      }
     });
 
     testWidgets('setMetric does nothing after the trace is stopped',
@@ -328,5 +347,5 @@ Future<void> main() async {
       testHttpMetric.responseContentType = '1984';
       expect(testHttpMetric.responseContentType, equals('1984'));
     });
-  });
+  }, skip: !(Platform.isIOS || Platform.isAndroid));
 }
