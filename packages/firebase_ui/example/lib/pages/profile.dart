@@ -88,13 +88,13 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             if (!u.isProviderLinked<Google>())
-                              ProviderButton.google(),
+                              ProviderButton.icon<Google>(),
                             if (!u.isProviderLinked<Apple>())
-                              ProviderButton.apple(),
+                              ProviderButton.icon<Apple>(),
                             if (!u.isProviderLinked<Twitter>())
-                              ProviderButton.twitter(),
+                              ProviderButton.icon<Twitter>(),
                             if (!u.isProviderLinked<Facebook>())
-                              ProviderButton.facebook(),
+                              ProviderButton.icon<Facebook>(),
                           ],
                         ),
                       ),

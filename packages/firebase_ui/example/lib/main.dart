@@ -39,11 +39,10 @@ class FirebaseAuthUIExample extends StatelessWidget {
             AppleProviderConfiguration(),
             FacebookProviderConfiguration(),
             TwitterProviderConfiguration(
-              apiKey: 'uIwDYzdziDHOjNwA2IitM9wYI',
+              apiKey: 'FQodF7ffKY3Xp7TxiiSeOcJtL',
               apiSecretKey:
-                  'jmvrMCEorotAZ5Y4gevmrAEJgxz5UV3c7qLZosaQhxDafee58F',
-              redirectURI:
-                  'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
+                  'MyEtRndTKlDuSFXGwGg3JfxWkJVsPksvaCpM4vCm1kckRwxcag',
+              redirectURI: 'ffire://',
             ),
           ],
         ),
@@ -51,7 +50,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       child: MaterialApp(
         title: 'Firebase UI demo',
         theme: ThemeData(
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
           inputDecorationTheme: const InputDecorationTheme(
             border: OutlineInputBorder(),
           ),
