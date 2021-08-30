@@ -1,4 +1,9 @@
 import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui/src/auth/oauth/buttons/apple_provider_button_style.dart';
+import 'package:firebase_ui/src/auth/oauth/buttons/facebook_provider_button_style.dart';
+import 'package:firebase_ui/src/auth/oauth/buttons/google_provider_button_style.dart';
+import 'package:firebase_ui/src/auth/oauth/buttons/oauth_provider_button_style.dart';
+import 'package:firebase_ui/src/auth/oauth/buttons/twitter_provider_button.dart';
 import 'package:flutter/widgets.dart';
 
 import 'oauth_providers.dart';
@@ -59,6 +64,21 @@ IconData providerIcon<T extends OAuthProvider>() {
       return SocialIcons.twitter;
     case Facebook:
       return SocialIcons.facebook;
+    default:
+      throw Exception('Unknown provider: $T');
+  }
+}
+
+ThemedOAuthProviderButtonStyle buttonStyle<T extends OAuthProvider>() {
+  switch (T) {
+    case Google:
+      return GoogleProviderButtonStyle();
+    case Apple:
+      return AppleProviderButtonStyle();
+    case Twitter:
+      return TwitterProviderButtonStyle();
+    case Facebook:
+      return FacebookProviderButtonStyle();
     default:
       throw Exception('Unknown provider: $T');
   }

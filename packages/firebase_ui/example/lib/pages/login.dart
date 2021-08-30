@@ -23,17 +23,15 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final tabs = TabBar(
+      labelColor: Theme.of(context).accentColor,
       controller: ctrl,
       tabs: const [
-        Tab(child: Text('Sign in')),
-        Tab(child: Text('Sign up')),
+        Tab(text: 'Sign in'),
+        Tab(text: 'Sign up'),
       ],
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Firebase UI auth demo'),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -66,7 +64,6 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                             child: SignInForm(),
                           ),
                         ),
-                        const Text('Other sign in options'),
                         Padding(
                           padding: const EdgeInsets.all(16).copyWith(top: 0),
                           child: AuthFlowBuilder<OAuthController>(
@@ -78,10 +75,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
 
                               return child!;
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            child: Column(
                               children: [
-                                IconButton(
+                                TextButton(
                                   onPressed: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
@@ -92,12 +88,12 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                                       ),
                                     );
                                   },
-                                  icon: const Icon(Icons.phone),
+                                  child: const Text('Sign in with phone'),
                                 ),
-                                ProviderButton.google(),
-                                ProviderButton.apple(),
-                                ProviderButton.twitter(),
-                                ProviderButton.facebook(),
+                                const ProviderButton<Google>(),
+                                const ProviderButton<Apple>(),
+                                const ProviderButton<Twitter>(),
+                                const ProviderButton<Facebook>(),
                               ],
                             ),
                           ),
