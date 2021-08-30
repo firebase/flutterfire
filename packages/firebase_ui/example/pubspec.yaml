@@ -23,6 +23,11 @@ environment:
 dependencies:
   crypto: ^3.0.1
   cupertino_icons: ^1.0.2
+  deep_links:
+    git:
+      url: git://github.com/lesnitsky/flutter_desktop_plugins.git
+      path: deep_links
+      ref: d4f2b98
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   firebase_dynamic_links: ^2.0.7
@@ -34,11 +39,6 @@ dependencies:
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.0.0
   twitter_login: ^4.0.1
-  deep_links:
-    git:
-      url: git://github.com/lesnitsky/flutter_desktop_plugins.git
-      path: deep_links
-      ref: d4f2b98
 
 dev_dependencies:
   flutter_test:

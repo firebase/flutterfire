@@ -8,6 +8,8 @@ class PhoneAuthFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final phoneInputKey = GlobalKey<PhoneInputState>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Verify phone number'),
@@ -22,13 +24,25 @@ class PhoneAuthFlow extends StatelessWidget {
                 Navigator.of(context).pop();
               }
             },
-            builder: (context, state, ctrl, _) {
+            builder: (_, state, ctrl, __) {
               if (state is AwatingPhoneNumber) {
-                return TextField(
-                  decoration: const InputDecoration(labelText: 'Phone number'),
-                  onSubmitted: ctrl.acceptPhoneNumber,
-                  autofocus: true,
-                  keyboardType: TextInputType.phone,
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    PhoneInput(
+                      onSubmitted: ctrl.acceptPhoneNumber,
+                      key: phoneInputKey,
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: () {
+                        final number = phoneInputKey.currentState!.phoneNumber;
+                        ctrl.acceptPhoneNumber(number);
+                      },
+                      child: const Text('Verify'),
+                    ),
+                  ],
                 );
               }
 
