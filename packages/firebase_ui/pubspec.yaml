@@ -39,6 +39,7 @@ flutter:
         - asset: assets/fonts/SocialIcons.ttf
   assets:
     - assets/icons/
+    - assets/countries.json
 
 # To add assets to your package, add an assets section, like this:
 # assets:
