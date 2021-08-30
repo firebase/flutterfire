@@ -93,6 +93,10 @@ To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
+### Testing
+
+The unit test is in `test` directory which you can run using `flutter test`.
+
 The integration test is in `example/test_driver/firebase_performance_e2e.dart` which you can run on an emulator:
 ```
 cd example
