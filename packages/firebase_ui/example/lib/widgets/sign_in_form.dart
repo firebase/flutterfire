@@ -36,7 +36,6 @@ class _SignInFormState extends State<SignInForm> {
         TextField(
           controller: emailCtrl,
           decoration: const InputDecoration(labelText: 'Email'),
-          autofocus: true,
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
         ),
@@ -44,7 +43,6 @@ class _SignInFormState extends State<SignInForm> {
         TextField(
           controller: passwordCtrl,
           decoration: const InputDecoration(labelText: 'Password'),
-          autofocus: true,
           obscureText: true,
           enableSuggestions: false,
           autocorrect: false,

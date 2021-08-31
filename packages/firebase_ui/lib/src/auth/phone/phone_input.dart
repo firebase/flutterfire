@@ -73,6 +73,11 @@ class _CountryPickerState extends State<CountryPicker> {
 class PhoneInput extends StatefulWidget {
   final SubmitCallback? onSubmitted;
 
+  static String getPhoneNumber(GlobalKey<PhoneInputState> key) {
+    final state = key.currentState!;
+    return state.phoneNumber;
+  }
+
   const PhoneInput({
     Key? key,
     this.onSubmitted,
