@@ -37,7 +37,7 @@ class PhoneAuthFlow extends StatelessWidget {
                     const SizedBox(height: 8),
                     OutlinedButton(
                       onPressed: () {
-                        final number = phoneInputKey.currentState!.phoneNumber;
+                        final number = PhoneInput.getPhoneNumber(phoneInputKey);
                         ctrl.acceptPhoneNumber(number);
                       },
                       child: const Text('Verify'),
@@ -53,11 +53,17 @@ class PhoneAuthFlow extends StatelessWidget {
               }
 
               if (state is SMSCodeSent) {
-                return TextField(
-                  decoration: const InputDecoration(labelText: 'SMS Code'),
-                  onSubmitted: ctrl.verifySMSCode,
-                  autofocus: true,
-                  keyboardType: TextInputType.number,
+                final key = GlobalKey<SMSCodeInputState>();
+                return Column(
+                  children: [
+                    Expanded(child: SMSCodeInput(key: key)),
+                    OutlinedButton(
+                      onPressed: () {
+                        ctrl.verifySMSCode(key.currentState!.code);
+                      },
+                      child: const Text('Verify the code'),
+                    ),
+                  ],
                 );
               }
 
