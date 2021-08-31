@@ -1,3 +1,6 @@
+## 0.7.1
+- **FEAT**: add web support.
+
 ## 0.7.0+9
 
  - **REFACTOR**: create interface plugin that federates the main plugin (#6851).

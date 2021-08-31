@@ -8,7 +8,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details on the API usage.
+To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios) / [Web](https://firebase.flutter.dev/docs/installation/web). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details on the API usage.
 
 You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
 
@@ -101,4 +101,10 @@ The integration test is in `example/test_driver/firebase_performance_e2e.dart` w
 ```
 cd example
 flutter drive --target=./test_driver/firebase_performance_e2e.dart
+```
+
+To test the web implementation, [download and run ChromeDriver](https://flutter.dev/docs/testing/integration-tests#running-in-a-browser), and then run `flutter_drive`: 
+
+```
+flutter drive --target=./test_driver/firebase_performance_e2e.dart  -d web-server --release --browser-name=chrome --web-port=8080
 ```
