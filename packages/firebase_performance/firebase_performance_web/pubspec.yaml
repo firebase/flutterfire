@@ -9,8 +9,7 @@ environment:
 
 dependencies:
   firebase: ^9.0.1
-  firebase_performance_platform_interface:
-    path: ../firebase_performance_platform_interface
+  firebase_performance_platform_interface: 0.0.1+2
   flutter:
     sdk: flutter
   flutter_web_plugins:

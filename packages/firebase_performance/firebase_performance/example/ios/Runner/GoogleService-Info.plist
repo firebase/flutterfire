@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>654932399586-fj7eqato111rqnmsn8k96rnd1vn1ae1k.apps.googleusercontent.com</string>
+	<string>448618578101-hqml84baqlms4dfthm77qrhdot7reesa.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.654932399586-fj7eqato111rqnmsn8k96rnd1vn1ae1k</string>
+	<string>com.googleusercontent.apps.448618578101-hqml84baqlms4dfthm77qrhdot7reesa</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>448618578101-2baveavh8bvs2famsa5r8t77fe1nrcn6.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBewN2dYuKUiNmijy0rL1-gdiN6XyQ1mec</string>
+	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>654932399586</string>
+	<string>448618578101</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>io.flutter.plugins.firebasePerformanceExample</string>
 	<key>PROJECT_ID</key>
-	<string>flutterfire-fireperf-example</string>
+	<string>react-native-firebase-testing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>flutterfire-fireperf-example.appspot.com</string>
+	<string>react-native-firebase-testing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:654932399586:ios:888a3e3c74c69d453bd5bb</string>
+	<string>1:448618578101:ios:bfee21690b400a65ac3efc</string>
+	<key>DATABASE_URL</key>
+	<string>https://react-native-firebase-testing.firebaseio.com</string>
 </dict>
 </plist>
