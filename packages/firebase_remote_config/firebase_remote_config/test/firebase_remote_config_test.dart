@@ -219,7 +219,7 @@ void main() {
           () => remoteConfig.setDefaults({
             'key': {'nested': 'object'}
           }),
-          throwsException,
+          throwsArgumentError,
         );
       });
     });

@@ -134,14 +134,15 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   /// Sets the default parameter values for the current instance.
   /// Only booleans, strings and numbers are supported as values of the map
   Future<void> setDefaults(Map<String, dynamic> defaultParameters) {
-    defaultParameters.values.forEach(_checkIsSupportedType);
+    defaultParameters.forEach(_checkIsSupportedType);
     return _delegate.setDefaults(defaultParameters);
   }
 
-  void _checkIsSupportedType(dynamic value) {
+  void _checkIsSupportedType(String key, dynamic value) {
     if (value is! bool && value is! num && value is! String) {
-      throw Exception(
-        'Non-primitive types are not supported as config values. '
+      throw ArgumentError(
+        'Invalid value type "${value.runtimeType}" for key "$key". '
+        'Only booleans, numbers and strings are supported as config values. '
         "If you're trying to pass a json object – convert it to string beforehand",
       );
     }
