@@ -9,6 +9,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
@@ -219,10 +220,11 @@ class MethodChannelQuery extends QueryPlatform {
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      firestore.hashCode ^
-      _pointer.hashCode ^
-      isCollectionGroupQuery.hashCode ^
-      const DeepCollectionEquality().hash(parameters);
+  int get hashCode => hashValues(
+        runtimeType,
+        firestore,
+        _pointer,
+        isCollectionGroupQuery,
+        const DeepCollectionEquality().hash(parameters),
+      );
 }

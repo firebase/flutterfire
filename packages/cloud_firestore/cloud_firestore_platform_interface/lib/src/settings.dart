@@ -11,11 +11,12 @@ import 'package:flutter/material.dart';
 @immutable
 class Settings {
   /// Creates an instance for these [Settings].
-  const Settings(
-      {this.persistenceEnabled,
-      this.host,
-      this.sslEnabled,
-      this.cacheSizeBytes});
+  const Settings({
+    this.persistenceEnabled,
+    this.host,
+    this.sslEnabled,
+    this.cacheSizeBytes,
+  });
 
   /// Constant used to indicate the LRU garbage collection should be disabled.
   ///
@@ -53,11 +54,12 @@ class Settings {
     };
   }
 
-  Settings copyWith(
-          {bool? persistenceEnabled,
-          String? host,
-          bool? sslEnabled,
-          int? cacheSizeBytes}) =>
+  Settings copyWith({
+    bool? persistenceEnabled,
+    String? host,
+    bool? sslEnabled,
+    int? cacheSizeBytes,
+  }) =>
       Settings(
         persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
         host: host ?? this.host,
@@ -67,10 +69,21 @@ class Settings {
 
   @override
   bool operator ==(Object other) =>
-      other is Settings && other.asMap.toString() == asMap.toString();
+      other is Settings &&
+      other.runtimeType == runtimeType &&
+      other.persistenceEnabled == persistenceEnabled &&
+      other.host == host &&
+      other.sslEnabled == sslEnabled &&
+      other.cacheSizeBytes == cacheSizeBytes;
 
   @override
-  int get hashCode => asMap.hashCode;
+  int get hashCode => hashValues(
+        runtimeType,
+        persistenceEnabled,
+        host,
+        sslEnabled,
+        cacheSizeBytes,
+      );
 
   @override
   String toString() => 'Settings(${asMap.toString()})';

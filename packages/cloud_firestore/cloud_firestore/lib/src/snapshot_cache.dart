@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 
 @visibleForTesting
@@ -134,7 +135,7 @@ class SnapshotParameter {
       other.includeMetadataChanges == includeMetadataChanges;
 
   @override
-  int get hashCode => reference.hashCode ^ includeMetadataChanges.hashCode;
+  int get hashCode => hashValues(reference, includeMetadataChanges);
 
   @override
   String toString() {
