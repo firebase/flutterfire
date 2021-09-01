@@ -76,9 +76,7 @@ void main() {
   };
 
   Future<void> mockSignIn() async {
-    if (auth is FirebaseAuthPlatform) {
-      await auth.signInAnonymously();
-    }
+    await auth.signInAnonymously();
   }
 
   void verifyUser(UserPlatform user) {
