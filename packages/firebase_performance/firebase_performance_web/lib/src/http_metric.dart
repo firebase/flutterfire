@@ -8,12 +8,14 @@ class HttpMetricWeb extends HttpMetricPlatform {
   /// HttpResponse code of the request.
   @override
   int? get httpResponseCode {
+    // ignore: avoid_returning_null
     return null;
   }
 
   /// Size of the request payload.
   @override
   int? get requestPayloadSize {
+    // ignore: avoid_returning_null
     return null;
   }
 
@@ -26,6 +28,7 @@ class HttpMetricWeb extends HttpMetricPlatform {
   /// Size of the response payload.
   @override
   int? get responsePayloadSize {
+    // ignore: avoid_returning_null
     return null;
   }
 

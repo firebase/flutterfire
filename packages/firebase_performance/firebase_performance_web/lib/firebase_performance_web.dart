@@ -21,6 +21,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb();
   }
 
+  // ignore: use_setters_to_change_properties
   @visibleForTesting
   static void registerWithForTest(
       FirebasePerformancePlatform firebasePerformancePlatform) {

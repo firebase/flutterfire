@@ -12,7 +12,7 @@ You can build and run the app directly on emulators. To view the performance dat
 
 1. Download `google-services.json` and replace the existing one in `android/app/` with yours. 
 
-1. Gradle files already have the correct Firebase configuration so no need to change them. Remove the existing build files (`build/`) so that your own `google-services.json` will not be overriden,  and then run the app on an Android emulator.
+1. Gradle files already have the correct Firebase configuration so no need to change them. Remove the existing build files (`build/`) so that your own `google-services.json` will not be overridden,  and then run the app on an Android emulator.
 
 1. In a few minutes you should see data show up in your [Firebase Performance console](https://firebase.corp.google.com/project/_/performance). Click different buttons in the app to generate more data.
 
