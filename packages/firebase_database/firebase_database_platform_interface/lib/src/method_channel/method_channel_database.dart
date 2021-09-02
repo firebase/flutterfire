@@ -64,7 +64,9 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   DatabaseReferencePlatform reference() {
     return MethodChannelDatabaseReference(
-        database: this, pathComponents: <String>[]);
+      database: this,
+      pathComponents: <String>[],
+    );
   }
 
   /// Attempts to sets the database persistence to [enabled].

@@ -19,14 +19,6 @@ class MethodChannelQuery extends QueryPlatform {
         );
 
   @override
-  Map<String, dynamic> buildArguments() {
-    return Map<String, dynamic>.from(parameters)
-      ..addAll(<String, dynamic>{
-        'path': path,
-      });
-  }
-
-  @override
   Stream<EventPlatform> observe(EventType eventType) {
     late Future<int> _handle;
     // It's fine to let the StreamController be garbage collected once all the
@@ -43,9 +35,9 @@ class MethodChannelQuery extends QueryPlatform {
             'parameters': parameters,
             'eventType': eventType.toString(),
           },
-        ).then<int>((dynamic result) => result);
-        _handle.then((int handle) {
-          MethodChannelDatabase._observers[handle] = controller;
+        ).then((value) {
+          MethodChannelDatabase._observers[value!] = controller;
+          return value;
         });
       },
       onCancel: () {

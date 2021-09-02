@@ -177,8 +177,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds.');
 
-    final Completer<TransactionResultPlatform> completer =
-        Completer<TransactionResultPlatform>();
+    final completer = Completer<TransactionResultPlatform>();
 
     final int transactionKey = MethodChannelDatabase._transactions.isEmpty
         ? 0
@@ -200,13 +199,15 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     }
 
     await MethodChannelDatabase.channel.invokeMethod<void>(
-        'DatabaseReference#runTransaction', <String, dynamic>{
-      'app': database.app?.name,
-      'databaseURL': database.databaseURL,
-      'path': path,
-      'transactionKey': transactionKey,
-      'transactionTimeout': timeout.inMilliseconds
-    }).then((dynamic response) {
+      'DatabaseReference#runTransaction',
+      <String, dynamic>{
+        'app': database.app?.name,
+        'databaseURL': database.databaseURL,
+        'path': path,
+        'transactionKey': transactionKey,
+        'transactionTimeout': timeout.inMilliseconds
+      },
+    ).then((dynamic response) {
       completer.complete(toTransactionResult(response));
     });
 

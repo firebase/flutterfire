@@ -34,10 +34,10 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   Map<String, dynamic> buildArguments() {
-    return Map<String, dynamic>.from(parameters)
-      ..addAll(<String, dynamic>{
-        'path': path,
-      });
+    return <String, dynamic>{
+      ...parameters,
+      'path': path,
+    };
   }
 
   /// Listens for a single value event and then stops listening.
