@@ -1,6 +1,5 @@
 name: firebase_performance_web
 description: A new Flutter package project.
-version: 0.0.1
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance/firebase_performance_web
 
 environment:
