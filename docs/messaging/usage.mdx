@@ -161,7 +161,7 @@ Data only messages are considered low priority by devices when your application 
 ignored. You can however explicitly increase the priority by sending additional properties on the FCM payload:
 
 - On Android, set the `priority` field to `high`.
-- On Apple (iOS & macOS), set the `content-available` field to `true`.
+- On Apple (iOS & macOS), set the `content_available` field to `true`.
 
 Since the sending of FCM payloads is custom to your own setup, it is best to read the official [FCM API reference](https://firebase.google.com/docs/cloud-messaging/concept-options) for your chosen
 Firebase Admin SDK.
