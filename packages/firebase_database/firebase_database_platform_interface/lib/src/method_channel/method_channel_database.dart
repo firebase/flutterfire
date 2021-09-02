@@ -3,37 +3,71 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database;
+part of firebase_database_platform_interface;
 
-/// The entry point for accessing a Firebase Database. You can get an instance
-/// by calling `FirebaseDatabase.instance`. To access a location in the database
-/// and read or write data, use `reference()`.
-class FirebaseDatabase {
+/// The entry point for accessing a FirebaseDatabase.
+///
+/// You can get an instance by calling [FirebaseDatabase.instance].
+class MethodChannelDatabase extends DatabasePlatform {
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
-
-  DatabasePlatform? _delegatePackingProperty;
-
-  DatabasePlatform get _delegate {
-    _delegatePackingProperty ??= DatabasePlatform.instance;
-    return _delegatePackingProperty!;
+  MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
+      : super(app: app, databaseURL: databaseURL) {
+    if (_initialized) return;
+    channel.setMethodCallHandler((MethodCall call) async {
+      switch (call.method) {
+        case 'Event':
+          EventPlatform event = EventPlatform(call.arguments);
+          _observers[call.arguments['handle']]?.add(event);
+          return null;
+        case 'Error':
+          final DatabaseErrorPlatform error =
+              DatabaseErrorPlatform(call.arguments['error']);
+          _observers[call.arguments['handle']]?.addError(error);
+          return null;
+        case 'DoTransaction':
+          final MutableData mutableData =
+              MutableData.private(call.arguments['snapshot']);
+          final MutableData updated =
+              await _transactions[call.arguments['transactionKey']]!(
+                  mutableData);
+          return <String, dynamic>{'value': updated.value};
+        default:
+          throw MissingPluginException(
+            '${call.method} method not implemented on the Dart side.',
+          );
+      }
+    });
+    _initialized = true;
   }
 
-  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
-      : _delegatePackingProperty =
-            MethodChannelDatabase(app: app, databaseURL: databaseURL);
+  @override
+  DatabasePlatform withApp(FirebaseApp? app) => MethodChannelDatabase(app: app);
 
-  static FirebaseDatabase _instance = FirebaseDatabase();
+  @override
+  String? appName() => app?.name;
 
-  /// Gets the instance of FirebaseDatabase for the default Firebase app.
-  static FirebaseDatabase get instance => _instance;
+  static final Map<int, StreamController<EventPlatform>> _observers =
+      <int, StreamController<EventPlatform>>{};
 
-  @visibleForTesting
-  static MethodChannel get channel => MethodChannelDatabase.channel;
+  static final Map<int, TransactionHandler> _transactions =
+      <int, TransactionHandler>{};
+
+  static bool _initialized = false;
+
+  /// The [MethodChannel] used to communicate with the native plugin
+  static const MethodChannel channel =
+      MethodChannel('plugins.flutter.io/firebase_database');
 
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReference reference() => DatabaseReference._(_delegate.reference());
+  @override
+  DatabaseReferencePlatform reference() {
+    return MethodChannelDatabaseReference(
+      database: this,
+      pathComponents: <String>[],
+    );
+  }
 
   /// Attempts to sets the database persistence to [enabled].
   ///
@@ -53,8 +87,17 @@ class FirebaseDatabase {
   /// to `true`, the data will be persisted to on-device (disk) storage and will
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
+  @override
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    return _delegate.setPersistenceEnabled(enabled);
+    final bool? result = await channel.invokeMethod<bool>(
+      'FirebaseDatabase#setPersistenceEnabled',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'enabled': enabled,
+      },
+    );
+    return result!;
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -74,27 +117,58 @@ class FirebaseDatabase {
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
+  @override
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    return _delegate.setPersistenceCacheSizeBytes(cacheSize);
+    final bool? result = await channel.invokeMethod<bool>(
+      'FirebaseDatabase#setPersistenceCacheSizeBytes',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'cacheSize': cacheSize,
+      },
+    );
+    return result!;
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
+  @override
   Future<void> setLoggingEnabled(bool enabled) {
-    return _delegate.setLoggingEnabled(enabled);
+    return channel.invokeMethod<void>(
+      'FirebaseDatabase#setLoggingEnabled',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+        'enabled': enabled
+      },
+    );
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
+  @override
   Future<void> goOnline() {
-    return _delegate.goOnline();
+    return channel.invokeMethod<void>(
+      'FirebaseDatabase#goOnline',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+      },
+    );
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
+  @override
   Future<void> goOffline() {
-    return _delegate.goOffline();
+    return channel.invokeMethod<void>(
+      'FirebaseDatabase#goOffline',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+      },
+    );
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -107,7 +181,14 @@ class FirebaseDatabase {
   /// The writes will be rolled back locally, perhaps triggering events for
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
+  @override
   Future<void> purgeOutstandingWrites() {
-    return _delegate.purgeOutstandingWrites();
+    return channel.invokeMethod<void>(
+      'FirebaseDatabase#purgeOutstandingWrites',
+      <String, dynamic>{
+        'app': app?.name,
+        'databaseURL': databaseURL,
+      },
+    );
   }
 }

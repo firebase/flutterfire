@@ -6,7 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -28,7 +28,7 @@ void main() {
     );
   });
 
-  group('$FirebaseDatabase', () {
+  group('$MethodChannelDatabase', () {
     const MethodChannel channel = MethodChannel(
       'plugins.flutter.io/firebase_database',
     );
@@ -36,10 +36,10 @@ void main() {
     final List<MethodCall> log = <MethodCall>[];
 
     const String databaseURL = 'https://fake-database-url2.firebaseio.com';
-    late FirebaseDatabase database;
+    late MethodChannelDatabase database;
 
     setUp(() async {
-      database = FirebaseDatabase(app: app, databaseURL: databaseURL);
+      database = MethodChannelDatabase(app: app, databaseURL: databaseURL);
 
       channel.setMockMethodCallHandler((MethodCall methodCall) async {
         log.add(methodCall);
@@ -191,7 +191,7 @@ void main() {
       );
     });
 
-    group('$DatabaseReference', () {
+    group('$MethodChannelDatabaseReference', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         final dynamic serverValue = <String, dynamic>{
@@ -280,7 +280,7 @@ void main() {
       });
 
       test('runTransaction', () async {
-        final TransactionResult transactionResult = await database
+        final TransactionResultPlatform transactionResult = await database
             .reference()
             .child('foo')
             .runTransaction((MutableData mutableData) {
@@ -311,11 +311,11 @@ void main() {
       });
     });
 
-    group('$OnDisconnect', () {
+    group('$MethodChannelOnDisconnect', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         const int priority = 42;
-        final DatabaseReference ref = database.reference();
+        final DatabaseReferencePlatform ref = database.reference();
         await ref.child('foo').onDisconnect().set(value);
         await ref.child('bar').onDisconnect().set(value, priority: priority);
         await ref.child('psi').onDisconnect().set(value, priority: 'priority');
@@ -420,10 +420,10 @@ void main() {
       });
     });
 
-    group('$Query', () {
+    group('$MethodChannelQuery', () {
       test('keepSynced, simple query', () async {
         const String path = 'foo';
-        final Query query = database.reference().child(path);
+        final QueryPlatform query = database.reference().child(path);
         await query.keepSynced(true);
         expect(
           log,
@@ -447,7 +447,7 @@ void main() {
         const String childKey = 'bar';
         const bool endAt = true;
         const String endAtKey = 'baz';
-        final Query query = database
+        final QueryPlatform query = database
             .reference()
             .child(path)
             .orderByChild(childKey)
@@ -481,7 +481,7 @@ void main() {
         mockHandleId = 99;
         const int errorCode = 12;
         const String errorDetails = 'Some details';
-        final Query query = database.reference().child('some path');
+        final QueryPlatform query = database.reference().child('some path');
         Future<void> simulateError(String errorMessage) async {
           await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
@@ -499,19 +499,21 @@ void main() {
                   (_) {});
         }
 
-        final AsyncQueue<DatabaseError> errors = AsyncQueue<DatabaseError>();
+        final AsyncQueue<DatabaseErrorPlatform> errors =
+            AsyncQueue<DatabaseErrorPlatform>();
 
         // Subscribe and allow subscription to complete.
-        final StreamSubscription<Event> subscription =
+        final StreamSubscription<EventPlatform> subscription =
             query.onValue.listen((_) {}, onError: errors.add);
         await Future<void>.delayed(Duration.zero);
 
         await simulateError('Bad foo');
         await simulateError('Bad bar');
-        final DatabaseError error1 = await errors.remove();
-        final DatabaseError error2 = await errors.remove();
+        final DatabaseErrorPlatform error1 = await errors.remove();
+        final DatabaseErrorPlatform error2 = await errors.remove();
         await subscription.cancel();
-        expect(error1.toString(), 'DatabaseError(12, Bad foo, Some details)');
+        expect(error1.toString(),
+            'DatabaseErrorPlatform(12, Bad foo, Some details)');
         expect(error1.code, errorCode);
         expect(error1.message, 'Bad foo');
         expect(error1.details, errorDetails);
@@ -523,7 +525,7 @@ void main() {
       test('observing value events', () async {
         mockHandleId = 87;
         const String path = 'foo';
-        final Query query = database.reference().child(path);
+        final QueryPlatform query = database.reference().child(path);
         Future<void> simulateEvent(String value) async {
           await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
@@ -540,17 +542,17 @@ void main() {
                   (_) {});
         }
 
-        final AsyncQueue<Event> events = AsyncQueue<Event>();
+        final AsyncQueue<EventPlatform> events = AsyncQueue<EventPlatform>();
 
         // Subscribe and allow subscription to complete.
-        final StreamSubscription<Event> subscription =
+        final StreamSubscription<EventPlatform> subscription =
             query.onValue.listen(events.add);
         await Future<void>.delayed(Duration.zero);
 
         await simulateEvent('1');
         await simulateEvent('2');
-        final Event event1 = await events.remove();
-        final Event event2 = await events.remove();
+        final EventPlatform event1 = await events.remove();
+        final EventPlatform event2 = await events.remove();
         expect(event1.snapshot.key, path);
         expect(event1.snapshot.value, '1');
         expect(event2.snapshot.key, path);
@@ -570,7 +572,7 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
-                'eventType': '_EventType.value',
+                'eventType': 'EventType.value',
               },
             ),
             isMethodCall(

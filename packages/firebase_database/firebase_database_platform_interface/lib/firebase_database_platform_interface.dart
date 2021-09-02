@@ -3,37 +3,80 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database;
+library firebase_database_platform_interface;
 
-/// The entry point for accessing a Firebase Database. You can get an instance
-/// by calling `FirebaseDatabase.instance`. To access a location in the database
-/// and read or write data, use `reference()`.
-class FirebaseDatabase {
+import 'dart:async';
+import 'dart:math';
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
+part 'src/method_channel/method_channel_database.dart';
+part 'src/method_channel/method_channel_database_reference.dart';
+part 'src/method_channel/method_channel_on_disconnect.dart';
+part 'src/method_channel/method_channel_query.dart';
+part 'src/method_channel/utils/push_id_generator.dart';
+part 'src/platform_interface/database_reference.dart';
+part 'src/platform_interface/event.dart';
+part 'src/platform_interface/on_disconnect.dart';
+part 'src/platform_interface/query.dart';
+
+/// Defines an interface to work with [FirebaseDatabase] on web and mobile
+abstract class DatabasePlatform extends PlatformInterface {
+  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
+  ///
+  /// If null, the default [FirebaseApp] is used.
+  final FirebaseApp? app;
+
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
 
-  DatabasePlatform? _delegatePackingProperty;
+  DatabasePlatform({this.app, this.databaseURL}) : super(token: _token);
 
-  DatabasePlatform get _delegate {
-    _delegatePackingProperty ??= DatabasePlatform.instance;
-    return _delegatePackingProperty!;
+  static final Object _token = Object();
+
+  /// Create an instance using [app] using the existing implementation
+  factory DatabasePlatform.instanceFor({FirebaseApp? app}) {
+    return DatabasePlatform.instance.withApp(app);
   }
 
-  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
-      : _delegatePackingProperty =
-            MethodChannelDatabase(app: app, databaseURL: databaseURL);
+  /// The current default [DatabasePlatform] instance.
+  ///
+  /// It will always default to [MethodChannelDatabase]
+  /// if no web implementation was provided.
+  static DatabasePlatform _instance = MethodChannelDatabase();
 
-  static FirebaseDatabase _instance = FirebaseDatabase();
+  static DatabasePlatform get instance {
+    return _instance;
+  }
 
-  /// Gets the instance of FirebaseDatabase for the default Firebase app.
-  static FirebaseDatabase get instance => _instance;
+  static set instance(DatabasePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
 
-  @visibleForTesting
-  static MethodChannel get channel => MethodChannelDatabase.channel;
+  /// Create a new [DatabasePlatform] with a [FirebaseApp] instance
+  DatabasePlatform withApp(FirebaseApp? app) {
+    throw UnimplementedError('withApp() not implemented');
+  }
+
+  ///
+  String? appName() {
+    throw UnimplementedError('appName() not implemented');
+  }
+
+  /// The URL to which this [FirebaseDatabase] belongs
+  ///
+  /// If null, the URL of the specified [FirebaseApp] is used
+  final String? databaseURL;
 
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReference reference() => DatabaseReference._(_delegate.reference());
+  DatabaseReferencePlatform reference() {
+    throw UnimplementedError('reference() not implemented');
+  }
 
   /// Attempts to sets the database persistence to [enabled].
   ///
@@ -54,7 +97,7 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    return _delegate.setPersistenceEnabled(enabled);
+    throw UnimplementedError('setPersistenceEnabled() not implemented');
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -75,26 +118,26 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    return _delegate.setPersistenceCacheSizeBytes(cacheSize);
+    throw UnimplementedError('setPersistenceCacheSizeBytes() not implemented');
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
   Future<void> setLoggingEnabled(bool enabled) {
-    return _delegate.setLoggingEnabled(enabled);
+    throw UnimplementedError('setLoggingEnabled() not implemented');
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return _delegate.goOnline();
+    throw UnimplementedError('goOnline() not implemented');
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return _delegate.goOffline();
+    throw UnimplementedError('goOffline() not implemented');
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -108,6 +151,6 @@ class FirebaseDatabase {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return _delegate.purgeOutstandingWrites();
+    throw UnimplementedError('purgeOutstandingWrites() not implemented');
   }
 }
