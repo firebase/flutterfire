@@ -43,7 +43,11 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app) => MethodChannelDatabase(app: app);
+  DatabasePlatform withApp(FirebaseApp? app, String? databaseUrl) =>
+      MethodChannelDatabase(
+        app: app,
+        databaseURL: databaseUrl,
+      );
 
   @override
   String? appName() => app?.name;

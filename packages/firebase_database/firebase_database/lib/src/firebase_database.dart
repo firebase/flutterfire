@@ -20,9 +20,10 @@ class FirebaseDatabase {
     return _delegatePackingProperty!;
   }
 
-  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
-      : _delegatePackingProperty =
-            MethodChannelDatabase(app: app, databaseURL: databaseURL);
+  FirebaseDatabase({FirebaseApp? app, String? databaseUrl})
+      : _delegatePackingProperty = app != null
+            ? DatabasePlatform.instanceFor(app: app, databaseUrl: databaseUrl)
+            : DatabasePlatform.instance;
 
   static FirebaseDatabase _instance = FirebaseDatabase();
 

@@ -34,7 +34,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
         super(app: app, databaseURL: databaseUrl);
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app) => FirebaseDatabaseWeb(app: app);
+  DatabasePlatform withApp(FirebaseApp? app, String? databaseUrl) =>
+      FirebaseDatabaseWeb(app: app, databaseUrl: databaseUrl);
 
   @override
   String? appName() => app?.name;
