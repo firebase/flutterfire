@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart';
@@ -40,24 +41,26 @@ void testsMain() {
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
       await database.setPersistenceCacheSizeBytes(2147483647);
-    });
+      // Skipped because it is not supported on web
+    }, skip: kIsWeb);
 
     test('setPersistenceCacheSizeBytes Long', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
-    });
+      // Skipped because it is not supported on web
+    }, skip: kIsWeb);
 
     test('setLoggingEnabled to true', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(true);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android and not supported on web.
+    }, skip: Platform.isAndroid || kIsWeb);
 
     test('setLoggingEnabled to false', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(false);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android and not supported on web.
+    }, skip: Platform.isAndroid || kIsWeb);
 
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;

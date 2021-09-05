@@ -1,6 +1,7 @@
 // ignore_for_file: require_trailing_commas
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
@@ -30,17 +31,24 @@ void runQueryTests() {
       expect(dataSnapshot.key, 'two');
       expect(dataSnapshot.value['ref'], 'two');
       expect(dataSnapshot.value['value'], 56);
-    });
+      // Skipped because it is not supported on web.
+      // see https://github.com/FirebaseExtended/firebase-dart/issues/400
+    }, skip: kIsWeb);
 
     test('DataSnapshot.exists is false for no data', () async {
+      final databaseRef =
+          database.reference().child('a-non-existing-reference');
+      // get is not supported on web
       final dataSnapshot =
-          await database.reference().child('a-non-existing-reference').get();
+          await (kIsWeb ? databaseRef.once() : databaseRef.get());
       expect(dataSnapshot.exists, false);
     });
 
     test('DataSnapshot.exists is true for existing data', () async {
+      final databaseRef = database.reference().child('ordered/one');
+      // get is not supported on web
       final dataSnapshot =
-          await database.reference().child('ordered/one').get();
+          await (kIsWeb ? databaseRef.once() : databaseRef.get());
       expect(dataSnapshot.exists, true);
     });
 
