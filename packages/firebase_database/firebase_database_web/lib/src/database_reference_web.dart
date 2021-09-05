@@ -75,6 +75,8 @@ class DatabaseReferenceWeb extends QueryWeb
   }
 
   /// on the web, [timeout] parameter is ignored.
+  /// transaction((_) => null) doesn't work when compiled to JS
+  /// probably because of https://github.com/dart-lang/sdk/issues/24088
   @override
   Future<TransactionResultPlatform> runTransaction(transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
