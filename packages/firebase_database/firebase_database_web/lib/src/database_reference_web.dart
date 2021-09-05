@@ -83,7 +83,6 @@ class DatabaseReferenceWeb extends QueryWeb
     try {
       firebase.Transaction firebaseTransaction =
           await _firebaseQuery.ref.transaction((p0) async {
-        // TODO: am I doing it correct?
         var mutableData = MutableData(_firebaseQuery.ref.key, p0);
         return (await (transactionHandler(mutableData))).value;
       });
