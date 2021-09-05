@@ -8,9 +8,12 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios) / [Web](https://firebase.flutter.dev/docs/installation/web). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See the [`example`](example) folder for details on the API usage.
+To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios) / [Web](https://firebase.flutter.dev/docs/installation/web). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See [`example/lib/main.dart`](example/lib/main.dart) for details on the API usage.
 
 You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
+
+> :warning: **Note:** *First Paint* and *First Contentful Paint* metrics of web page load trace will not be collected; automatic network request traces and screen traces will not always be collected for mobile apps.
+
 
 ### Define a Custom Trace
 
@@ -30,7 +33,7 @@ if (item != null) {
 await myTrace.stop();
 ```
 
-### Add monitoring for specific network requests
+### Add monitoring for specific network requests (mobile only)
 
 Performance Monitoring collects network requests automatically. Although this includes most network requests for your app, some might not be reported. To include specific network requests in Performance Monitoring, add the following code to your app:
 
