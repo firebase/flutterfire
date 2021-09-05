@@ -1,0 +1,85 @@
+// Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+library firebase_database_web;
+
+import 'dart:async';
+
+import "package:firebase/firebase.dart" as firebase;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
+part './src/database_reference_web.dart';
+part './src/ondisconnect_web.dart';
+part './src/query_web.dart';
+part './src/utils/snapshot_utils.dart';
+
+/// Web implementation for [DatabasePlatform]
+/// delegates calls to firebase web plugin
+class FirebaseDatabaseWeb extends DatabasePlatform {
+  /// Instance of Database from web plugin
+  final firebase.Database _firebaseDatabase;
+
+  /// Called by PluginRegistry to register this plugin for Flutter Web
+  static void registerWith(Registrar registrar) {
+    DatabasePlatform.instance = FirebaseDatabaseWeb();
+  }
+
+  /// Builds an instance of [DatabaseWeb] with an optional [FirebaseApp] instance
+  /// If [app] is null then the created instance will use the default [FirebaseApp]
+  FirebaseDatabaseWeb({FirebaseApp? app, String? databaseUrl})
+      : _firebaseDatabase = firebase.database(firebase.app(app?.name)),
+        super(app: app, databaseURL: databaseUrl);
+
+  @override
+  DatabasePlatform withApp(FirebaseApp? app) => FirebaseDatabaseWeb(app: app);
+
+  @override
+  String? appName() => app?.name;
+
+  @override
+  DatabaseReferencePlatform reference() {
+    return DatabaseReferenceWeb(_firebaseDatabase, this, <String>[]);
+  }
+
+  /// This is not supported on web. However,
+  /// If a client loses its network connection, your app will continue functioning correctly.
+  ///
+  /// The Firebase Realtime Database web APIs do not persist data offline outside of the session.
+  /// In order for writes to be persisted to the server,
+  /// the web page must not be closed before the data is written to the server.
+  ///
+  /// On the web, real-time database offline mode work in Tunnel mode not with airplane mode.
+  /// check the https://stackoverflow.com/a/32530269/3452078
+  @override
+  Future<bool> setPersistenceEnabled(bool enabled) async {
+    throw Exception("setPersistenceEnabled() is not supported for web");
+  }
+
+  @override
+  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+    throw Exception("setPersistenceCacheSizeBytes() is not supported for web");
+  }
+
+  @override
+  Future<void> setLoggingEnabled(bool enabled) {
+    throw Exception("setLoggingEnabled() is not supported for web");
+  }
+
+  @override
+  Future<void> goOnline() async {
+    _firebaseDatabase.goOnline();
+  }
+
+  @override
+  Future<void> goOffline() async {
+    _firebaseDatabase.goOffline();
+  }
+
+  @override
+  Future<void> purgeOutstandingWrites() async {
+    throw Exception("purgeOutstandingWrites() is not supported for web");
+  }
+}
