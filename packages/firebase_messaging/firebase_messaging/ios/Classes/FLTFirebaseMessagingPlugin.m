@@ -213,6 +213,27 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 #else
   [_registrar addApplicationDelegate:self];
+
+  // By the time FlutterPluginRegistrar adds `self` as a delegate, the `didFinishLaunching` events have already been
+  // sent out by iOS, so implementing didFinishLaunching to intercept initial tap-on-notification information might not
+  // work when app is launched from a terminated state.  didReceive: is not called as it would be were the app
+  // in the background or foreground.
+  // (see FlutterPluginAppLifeCycleDelegate.mm - `addDelegate` for some context as to how delegation works in Flutter)
+  //
+  // So, as a kludge, we can manually call the MethodChannel function that `didReceive`, also calls.
+  NSDictionary *remoteNotification = notification.userInfo;
+  if (remoteNotification != nil) {
+      NSDictionary *data = remoteNotification[UIApplicationLaunchOptionsRemoteNotificationKey];
+      // We only want to handle FCM notifications.
+      if (data[@"gcm.message_id"]) {
+        NSDictionary *notificationDict =
+            [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:data];
+        [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
+        @synchronized(self) {
+          _initialNotification = notificationDict;
+        }
+      }
+  }
 #endif
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
