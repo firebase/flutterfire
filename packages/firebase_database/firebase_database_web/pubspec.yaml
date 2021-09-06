@@ -23,11 +23,6 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^1.0.0
 
-dependency_overrides:
-  firebase_database_platform_interface:
-    path: ../firebase_database_platform_interface
-
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
