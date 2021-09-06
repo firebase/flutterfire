@@ -20,9 +20,9 @@ class FirebaseDatabase {
     return _delegatePackingProperty!;
   }
 
-  FirebaseDatabase({FirebaseApp? app, String? databaseUrl})
+  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
       : _delegatePackingProperty = app != null
-            ? DatabasePlatform.instanceFor(app: app, databaseUrl: databaseUrl)
+            ? DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL)
             : DatabasePlatform.instance;
 
   static FirebaseDatabase _instance = FirebaseDatabase();

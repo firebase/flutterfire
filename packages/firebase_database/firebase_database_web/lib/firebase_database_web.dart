@@ -29,13 +29,13 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Builds an instance of [DatabaseWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseDatabaseWeb({FirebaseApp? app, String? databaseUrl})
+  FirebaseDatabaseWeb({FirebaseApp? app, String? databaseURL})
       : _firebaseDatabase = firebase.database(firebase.app(app?.name)),
-        super(app: app, databaseURL: databaseUrl);
+        super(app: app, databaseURL: databaseURL);
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app, String? databaseUrl) =>
-      FirebaseDatabaseWeb(app: app, databaseUrl: databaseUrl);
+  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) =>
+      FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
 
   @override
   String? appName() => app?.name;

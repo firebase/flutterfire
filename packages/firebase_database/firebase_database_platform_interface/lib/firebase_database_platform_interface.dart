@@ -40,8 +40,8 @@ abstract class DatabasePlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory DatabasePlatform.instanceFor(
-      {FirebaseApp? app, String? databaseUrl}) {
-    return DatabasePlatform.instance.withApp(app, databaseUrl);
+      {FirebaseApp? app, String? databaseURL}) {
+    return DatabasePlatform.instance.withApp(app, databaseURL);
   }
 
   /// The current default [DatabasePlatform] instance.
@@ -60,7 +60,7 @@ abstract class DatabasePlatform extends PlatformInterface {
   }
 
   /// Create a new [DatabasePlatform] with a [FirebaseApp] instance
-  DatabasePlatform withApp(FirebaseApp? app, String? databaseUrl) {
+  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) {
     throw UnimplementedError('withApp() not implemented');
   }
 
