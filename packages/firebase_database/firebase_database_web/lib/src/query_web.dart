@@ -130,7 +130,7 @@ class QueryWeb extends QueryPlatform {
       case EventType.value:
         return _webStreamToPlatformStream(_firebaseQuery.onValue);
       default:
-        throw Exception("Invalid event type");
+        throw Exception("Invalid event type: $eventType");
     }
   }
 
