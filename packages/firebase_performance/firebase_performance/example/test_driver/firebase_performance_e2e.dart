@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:pedantic/pedantic.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<void> main() async {
   E2EWidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +37,18 @@ Future<void> main() async {
       );
 
       await performance.setPerformanceCollectionEnabled(false);
-      expect(
-        performance.isPerformanceCollectionEnabled(),
-        completion(isFalse),
-      );
+
+      if (kIsWeb) {
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isTrue),
+        );
+      } else {
+        expect(
+          performance.isPerformanceCollectionEnabled(),
+          completion(isFalse),
+        );
+      }
     });
 
     testWidgets('test all Http method values', (WidgetTester tester) async {
@@ -60,8 +69,6 @@ Future<void> main() async {
     });
   });
 
-  // TODO(kroikie): Update flaky tests comment back in
-  //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
   group('$Trace', () {
     FirebasePerformance performance;
     Trace testTrace;
@@ -87,7 +94,7 @@ Future<void> main() async {
       await testTrace.start();
 
       expect(testTrace.getMetric(metricName), completion(0));
-    });
+    }, skip: kIsWeb);
 
     testWidgets(
         "incrementMetric works correctly after the trace is started and before it's stopped",
@@ -108,7 +115,7 @@ Future<void> main() async {
       await testTrace.incrementMetric(metricName, 100);
 
       expect(testTrace.getMetric(metricName), completion(0));
-    });
+    }, skip: kIsWeb);
 
     testWidgets('setMetric does nothing before the trace is started',
         (WidgetTester tester) async {
@@ -124,10 +131,19 @@ Future<void> main() async {
       await testTrace.start();
 
       await testTrace.setMetric(metricName, 37);
-      expect(testTrace.getMetric(metricName), completion(37));
+
+      if (kIsWeb) {
+        expect(testTrace.getMetric(metricName), completion(0));
+      } else {
+        expect(testTrace.getMetric(metricName), completion(37));
+      }
 
       await testTrace.setMetric(metricName, 3);
-      expect(testTrace.getMetric(metricName), completion(3));
+      if (kIsWeb) {
+        expect(testTrace.getMetric(metricName), completion(0));
+      } else {
+        expect(testTrace.getMetric(metricName), completion(3));
+      }
     });
 
     testWidgets('setMetric does nothing after the trace is stopped',
@@ -166,7 +182,7 @@ Future<void> main() async {
         testTrace.getAttributes(),
         completion(<String, String>{}),
       );
-    });
+    }, skip: kIsWeb);
 
     testWidgets('removeAttribute works correctly before the trace is stopped',
         (WidgetTester tester) async {
@@ -197,7 +213,7 @@ Future<void> main() async {
         testTrace.getAttributes(),
         completion(<String, String>{'sponge': 'bob'}),
       );
-    });
+    }, skip: kIsWeb);
 
     testWidgets('getAttribute', (WidgetTester tester) async {
       await testTrace.putAttribute('yugi', 'oh');
@@ -210,8 +226,6 @@ Future<void> main() async {
     });
   });
 
-  // TODO(kroikie): Update flaky tests and comment back in
-  //                https://github.com/FirebaseExtended/flutterfire/issues/1454.
   group('$HttpMetric', () {
     FirebasePerformance performance;
     HttpMetric testHttpMetric;
@@ -332,5 +346,5 @@ Future<void> main() async {
       testHttpMetric.responseContentType = '1984';
       expect(testHttpMetric.responseContentType, equals('1984'));
     });
-  });
+  }, skip: kIsWeb);
 }
