@@ -56,17 +56,19 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   /// check the https://stackoverflow.com/a/32530269/3452078
   @override
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    throw Exception("setPersistenceEnabled() is not supported for web");
+    throw UnimplementedError(
+        "setPersistenceEnabled() is not supported for web");
   }
 
   @override
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    throw Exception("setPersistenceCacheSizeBytes() is not supported for web");
+    throw UnimplementedError(
+        "setPersistenceCacheSizeBytes() is not supported for web");
   }
 
   @override
   Future<void> setLoggingEnabled(bool enabled) {
-    throw Exception("setLoggingEnabled() is not supported for web");
+    throw UnimplementedError("setLoggingEnabled() is not supported for web");
   }
 
   @override
@@ -81,6 +83,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   Future<void> purgeOutstandingWrites() async {
-    throw Exception("purgeOutstandingWrites() is not supported for web");
+    throw UnimplementedError(
+        "purgeOutstandingWrites() is not supported for web");
   }
 }
