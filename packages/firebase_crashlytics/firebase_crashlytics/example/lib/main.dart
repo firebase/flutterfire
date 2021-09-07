@@ -20,11 +20,10 @@ const _kShouldTestAsyncErrorOnInit = false;
 // Toggle this for testing Crashlytics in your app locally.
 const _kTestingCrashlytics = true;
 //ignore: avoid_void_async
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  runZonedGuarded(() {
+void main() {
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
     runApp(MyApp());
   }, FirebaseCrashlytics.instance.recordError);
 }
