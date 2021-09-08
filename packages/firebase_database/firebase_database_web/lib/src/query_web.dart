@@ -6,8 +6,8 @@ part of firebase_database_web;
 
 /// Web implementation for firebase [QueryPlatform]
 class QueryWeb extends QueryPlatform {
-  final firebase.Database _firebaseDatabase;
-  final firebase.Query _firebaseQuery;
+  final database_interop.Database _firebaseDatabase;
+  final database_interop.Query _firebaseQuery;
 
   /// Builds an instance of [QueryWeb] delegating to a package:firebase [QueryPlatform]
   /// to delegate queries to underlying firebase web plugin
@@ -135,9 +135,9 @@ class QueryWeb extends QueryPlatform {
   }
 
   Stream<EventPlatform> _webStreamToPlatformStream(
-      Stream<firebase.QueryEvent> stream) {
+      Stream<database_interop.QueryEvent> stream) {
     return stream
-        .map((firebase.QueryEvent event) => fromWebEventToPlatformEvent(event));
+        .map((database_interop.QueryEvent event) => fromWebEventToPlatformEvent(event));
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.

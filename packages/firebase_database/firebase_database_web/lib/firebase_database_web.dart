@@ -6,10 +6,11 @@ library firebase_database_web;
 
 import 'dart:async';
 
-import "package:firebase/firebase.dart" as firebase;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
+import 'src/interop/database.dart' as database_interop;
 
 part './src/database_reference_web.dart';
 part './src/ondisconnect_web.dart';
@@ -20,7 +21,7 @@ part './src/utils/snapshot_utils.dart';
 /// delegates calls to firebase web plugin
 class FirebaseDatabaseWeb extends DatabasePlatform {
   /// Instance of Database from web plugin
-  final firebase.Database _firebaseDatabase;
+  final database_interop.Database _firebaseDatabase;
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -30,7 +31,10 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   /// Builds an instance of [DatabaseWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseDatabaseWeb({FirebaseApp? app, String? databaseURL})
-      : _firebaseDatabase = firebase.database(firebase.app(app?.name)),
+      : _firebaseDatabase = database_interop.getDatabaseInstance(
+          database_interop.getApp(app?.name),
+          databaseURL,
+        ),
         super(app: app, databaseURL: databaseURL);
 
   @override
@@ -68,7 +72,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
-    firebase.enableLogging(enabled);
+    database_interop.enableLogging(enabled);
   }
 
   @override

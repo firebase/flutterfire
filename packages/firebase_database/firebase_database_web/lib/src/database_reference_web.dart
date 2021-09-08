@@ -10,7 +10,7 @@ class DatabaseReferenceWeb extends QueryWeb
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
-    firebase.Database firebaseDatabase,
+    database_interop.Database firebaseDatabase,
     DatabasePlatform databasePlatform,
     List<String> pathComponents,
   ) : super(
@@ -81,7 +81,7 @@ class DatabaseReferenceWeb extends QueryWeb
   Future<TransactionResultPlatform> runTransaction(transactionHandler,
       {Duration timeout = const Duration(seconds: 5)}) async {
     try {
-      firebase.Transaction firebaseTransaction =
+      database_interop.Transaction firebaseTransaction =
           await _firebaseQuery.ref.transaction((p0) async {
         var mutableData = MutableData(_firebaseQuery.ref.key, p0);
         return (await (transactionHandler(mutableData))).value;

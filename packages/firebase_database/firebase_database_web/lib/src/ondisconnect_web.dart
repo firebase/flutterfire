@@ -6,7 +6,7 @@ part of firebase_database_web;
 
 /// Web implementation for firebase [OnDisconnectPlatform]
 class OnDisconnectWeb extends OnDisconnectPlatform {
-  final firebase.OnDisconnect _onDisconnect;
+  final database_interop.OnDisconnect _onDisconnect;
 
   OnDisconnectWeb._(this._onDisconnect, DatabasePlatform database,
       DatabaseReferencePlatform reference)
