@@ -136,8 +136,8 @@ class QueryWeb extends QueryPlatform {
 
   Stream<EventPlatform> _webStreamToPlatformStream(
       Stream<database_interop.QueryEvent> stream) {
-    return stream
-        .map((database_interop.QueryEvent event) => fromWebEventToPlatformEvent(event));
+    return stream.map((database_interop.QueryEvent event) =>
+        fromWebEventToPlatformEvent(event));
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
