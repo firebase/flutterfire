@@ -16,13 +16,14 @@ import 'database_interop.dart' as database_interop;
 import 'firebase_interop.dart' as firebase_interop;
 import 'utils/utils.dart';
 
-/// Given an AppJSImp, return the Firestore instance.
+/// Given an AppJSImp, return the Database instance.
 Database getDatabaseInstance([App? app, String? databaseURL]) {
   App databaseApp =
       app ?? Database.getInstance(firebase_interop.database()).app;
   return databaseApp.database(databaseURL);
 }
 
+/// get the App instance
 App getApp(String? name) {
   final jsObject =
       (name != null) ? firebase_interop.app(name) : firebase_interop.app();
