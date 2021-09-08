@@ -53,14 +53,14 @@ void testsMain() {
     test('setLoggingEnabled to true', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(true);
-      // Skipped because it needs to be initialized first on android and not supported on web.
-    }, skip: kIsWeb || Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android.
+    }, skip: !kIsWeb && Platform.isAndroid);
 
     test('setLoggingEnabled to false', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(false);
-      // Skipped because it needs to be initialized first on android and not supported on web.
-    }, skip: kIsWeb || Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android.
+    }, skip: !kIsWeb && Platform.isAndroid);
 
     test('runTransaction', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
