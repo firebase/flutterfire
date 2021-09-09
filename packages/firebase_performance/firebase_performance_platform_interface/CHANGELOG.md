@@ -1,3 +1,7 @@
+## 0.0.1+3
+
+ - **FIX**: fix the token verification. (#6912).
+
 ## 0.0.1+2
 
   **FIX**: fix the token verification (#6912).
