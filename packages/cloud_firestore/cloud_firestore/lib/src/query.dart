@@ -810,8 +810,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ firestore.hashCode ^ _delegate.hashCode;
+  int get hashCode => hashValues(runtimeType, firestore, _delegate);
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -973,8 +972,5 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^
-      _fromFirestore.hashCode ^
-      _toFirestore.hashCode ^
-      _originalQuery.hashCode;
+      hashValues(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
 }

@@ -10,18 +10,49 @@ void main() {
   group('$Settings', () {
     test('equality', () {
       expect(
+        const Settings(
+          persistenceEnabled: true,
+          host: 'foo bar',
+          sslEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        ),
+        equals(
           const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           ),
-          equals(const Settings(
+        ),
+      );
+
+      expect(
+        const Settings(
+          persistenceEnabled: true,
+          host: 'foo bar',
+          sslEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        ),
+        isNot(
+          const ExtendedSettings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          )));
+          ),
+        ),
+      );
+    });
+
+    test('hashCode', () {
+      const settings = Settings(
+        persistenceEnabled: true,
+        host: 'foo bar',
+        sslEnabled: true,
+        cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+      );
+
+      expect(settings.hashCode, equals(settings.hashCode));
     });
 
     test('returns a map of settings', () {
@@ -52,3 +83,7 @@ void main() {
     });
   });
 }
+
+mixin _Noop {}
+
+class ExtendedSettings = Settings with _Noop;
