@@ -419,12 +419,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    return getCachedConnection<QuerySnapshot<Map<String, dynamic>>>(
-      SnapshotParameter(this, includeMetadataChanges),
-      () => _delegate
-          .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map((item) => _JsonQuerySnapshot(firestore, item)),
-    );
+    return _delegate
+        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .map((item) => _JsonQuerySnapshot(firestore, item));
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
