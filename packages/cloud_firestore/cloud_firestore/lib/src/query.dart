@@ -419,12 +419,9 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   Stream<QuerySnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    return getCachedConnection<QuerySnapshot<Map<String, dynamic>>>(
-      SnapshotParameter(this, includeMetadataChanges),
-      () => _delegate
-          .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map((item) => _JsonQuerySnapshot(firestore, item)),
-    );
+    return _delegate
+        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .map((item) => _JsonQuerySnapshot(firestore, item));
   }
 
   /// Creates and returns a new [Query] that's additionally sorted by the specified
@@ -810,8 +807,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^ firestore.hashCode ^ _delegate.hashCode;
+  int get hashCode => hashValues(runtimeType, firestore, _delegate);
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -973,8 +969,5 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^
-      _fromFirestore.hashCode ^
-      _toFirestore.hashCode ^
-      _originalQuery.hashCode;
+      hashValues(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
 }

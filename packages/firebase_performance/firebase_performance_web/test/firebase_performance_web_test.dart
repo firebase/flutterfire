@@ -24,8 +24,10 @@ void main() {
     });
 
     test('isPerformanceCollectionEnabled always returns true', () async {
-      expect(await firebasePerformancePlatform.isPerformanceCollectionEnabled(),
-          true);
+      expect(
+        await firebasePerformancePlatform.isPerformanceCollectionEnabled(),
+        true,
+      );
       verifyNoMoreInteractions(mockPerformance);
     });
 
@@ -52,7 +54,9 @@ void main() {
 
     test('newHttpMetric returns a dummy object', () async {
       HttpMetricPlatform httpMeric = firebasePerformancePlatform.newHttpMetric(
-          'http://test_url', HttpMethod.Get);
+        'http://test_url',
+        HttpMethod.Get,
+      );
 
       expect(httpMeric.runtimeType, HttpMetricWeb);
       expect(httpMeric.url, '');

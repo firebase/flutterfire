@@ -150,15 +150,12 @@ class _JsonDocumentReference
   Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    return getCachedConnection(
-      SnapshotParameter(this, includeMetadataChanges),
-      () => _delegate
-          .snapshots(includeMetadataChanges: includeMetadataChanges)
-          .map(
-            (delegateSnapshot) =>
-                _JsonDocumentSnapshot(firestore, delegateSnapshot),
-          ),
-    );
+    return _delegate
+        .snapshots(includeMetadataChanges: includeMetadataChanges)
+        .map(
+          (delegateSnapshot) =>
+              _JsonDocumentSnapshot(firestore, delegateSnapshot),
+        );
   }
 
   @override
