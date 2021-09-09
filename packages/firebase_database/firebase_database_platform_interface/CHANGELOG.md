@@ -1,3 +1,4 @@
-## [1.0.0]
+## 0.0.1
 
-- Created Platform Interface
+ - Initial release of firebase_database_platform_interface.
+
