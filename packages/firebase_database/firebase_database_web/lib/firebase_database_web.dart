@@ -71,8 +71,8 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   }
 
   @override
-  Future<void> setLoggingEnabled(bool enabled) async {
-    database_interop.enableLogging(enabled);
+  Future<void> setLoggingEnabled(bool enabled) {
+    throw UnimplementedError("setLoggingEnabled() is not supported for web");
   }
 
   @override
