@@ -4,7 +4,6 @@
 
 library cloud_firestore;
 
-import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -15,8 +14,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:collection/collection.dart';
-
-import 'src/snapshot_cache.dart';
 
 export 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart'
     show
