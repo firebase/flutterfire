@@ -1,3 +1,9 @@
+## 7.2.2
+
+ - **REFACTOR**: firebase_database_platform_interface (#6668).
+ - **CHORE**: release firebase_database_platform_interface.
+ - **CHORE**: fix analyze issues (#6977).
+
 ## 7.2.1
 
  - Update a dependency to the latest release.

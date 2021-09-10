@@ -4,7 +4,7 @@ description:
   re-releasing.
 homepage: https://firebase.flutter.dev/docs/remote-config/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config
-version: 0.10.0+5
+version: 0.11.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

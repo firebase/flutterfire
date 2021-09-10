@@ -1,3 +1,9 @@
+## 0.11.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**: check value types before passing them to native (#6817).
+
 ## 0.10.0+5
 
  - Update a dependency to the latest release.

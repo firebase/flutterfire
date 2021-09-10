@@ -1,3 +1,7 @@
+## 10.0.7
+
+ - **FIX**: was creating a new instance each time (#6961).
+
 ## 10.0.6
 
  - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
