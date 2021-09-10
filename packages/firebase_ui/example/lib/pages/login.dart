@@ -13,7 +13,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
   AuthMethod method = AuthMethod.signIn;
-  late final ctrl = TabController(length: 2, vsync: this)
+  late final TabController ctrl = TabController(length: 2, vsync: this)
     ..addListener(() {
       setState(() {
         method = AuthMethod.values.elementAt(ctrl.index);
