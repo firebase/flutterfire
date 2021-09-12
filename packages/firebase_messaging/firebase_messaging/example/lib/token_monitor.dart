@@ -1,5 +1,4 @@
 // ignore_for_file: require_trailing_commas
-// @dart=2.9
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,17 +10,17 @@ class TokenMonitor extends StatefulWidget {
   // ignore: public_member_api_docs
   TokenMonitor(this._builder);
 
-  final Widget Function(String token) _builder;
+  final Widget Function(String? token) _builder;
 
   @override
   State<StatefulWidget> createState() => _TokenMonitor();
 }
 
 class _TokenMonitor extends State<TokenMonitor> {
-  String _token;
-  Stream<String> _tokenStream;
+  String? _token;
+  late Stream<String> _tokenStream;
 
-  void setToken(String token) {
+  void setToken(String? token) {
     print('FCM Token: $token');
     setState(() {
       _token = token;
