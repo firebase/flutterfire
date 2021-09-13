@@ -63,8 +63,8 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Future<DataSnapshotPlatform> get() async {
-    // https://github.com/FirebaseExtended/firebase-dart/issues/400
-    throw UnimplementedError("get() is not supported on web");
+    final snapshot = await _firebaseQuery.get();
+    return fromWebSnapshotToPlatformSnapShot(snapshot);
   }
 
   /// Generate a view of the data sorted by values of a particular child key.

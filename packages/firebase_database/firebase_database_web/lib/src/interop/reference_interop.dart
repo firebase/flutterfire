@@ -23,30 +23,28 @@ abstract class ReferenceJsImpl extends QueryJsImpl {
     void Function(dynamic) onComplete,
   ]);
 
-  external core_interop.PromiseJsImpl<void> remove(
-      [void Function(dynamic) onComplete]);
+  external PromiseJsImpl<void> remove([void Function(dynamic) onComplete]);
 
-  external core_interop.PromiseJsImpl<void> set(value,
-      [void Function(dynamic) onComplete]);
+  external PromiseJsImpl<void> set(value, [void Function(dynamic) onComplete]);
 
-  external core_interop.PromiseJsImpl<void> setPriority(
+  external PromiseJsImpl<void> setPriority(
     priority, [
     void Function(dynamic) onComplete,
   ]);
 
-  external core_interop.PromiseJsImpl<void> setWithPriority(
+  external PromiseJsImpl<void> setWithPriority(
     newVal,
     newPriority, [
     void Function(dynamic) onComplete,
   ]);
 
-  external core_interop.PromiseJsImpl<TransactionJsImpl> transaction(
+  external PromiseJsImpl<TransactionJsImpl> transaction(
     void Function(dynamic) transactionUpdate, [
     dynamic Function(Object, bool, DataSnapshotJsImpl) onComplete,
     bool applyLocally,
   ]);
 
-  external core_interop.PromiseJsImpl<void> update(
+  external PromiseJsImpl<void> update(
     values, [
     void Function(dynamic) onComplete,
   ]);

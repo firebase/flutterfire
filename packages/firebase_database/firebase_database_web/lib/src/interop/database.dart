@@ -9,7 +9,9 @@ import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_database_web/firebase_database_web.dart';
 import 'package:js/js.dart';
+import 'package:js/js_util.dart';
 
 import 'app.dart';
 import 'database_interop.dart' as database_interop;
@@ -270,6 +272,16 @@ class Query<T extends database_interop.QueryJsImpl>
 
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
+
+  /// Gets the most up-to-date result for this query.
+  Future<DataSnapshot> get() async {
+    final jsSnapshotPromise = jsObject.get();
+    final snapshot = await promiseToFuture<database_interop.DataSnapshotJsImpl>(
+      jsSnapshotPromise,
+    );
+
+    return DataSnapshot.getInstance(snapshot);
+  }
 
   /// Returns a Query with the ending point [value]. The ending point
   /// is inclusive.

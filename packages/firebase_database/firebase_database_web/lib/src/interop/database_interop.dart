@@ -9,7 +9,7 @@
 library firebase.database_interop;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+    show PromiseJsImpl, Func1;
 import 'package:firebase_database_web/src/interop/app_interop.dart';
 import 'package:js/js.dart';
 
@@ -47,22 +47,19 @@ abstract class DatabaseJsImpl {
 
 @JS('OnDisconnect')
 abstract class OnDisconnectJsImpl {
-  external core_interop.PromiseJsImpl<void> cancel(
-      [void Function(dynamic) onComplete]);
+  external PromiseJsImpl<void> cancel([void Function(dynamic) onComplete]);
 
-  external core_interop.PromiseJsImpl<void> remove(
-      [void Function(dynamic) onComplete]);
+  external PromiseJsImpl<void> remove([void Function(dynamic) onComplete]);
 
-  external core_interop.PromiseJsImpl<void> set(value,
-      [void Function(dynamic) onComplete]);
+  external PromiseJsImpl<void> set(value, [void Function(dynamic) onComplete]);
 
-  external core_interop.PromiseJsImpl<void> setWithPriority(
+  external PromiseJsImpl<void> setWithPriority(
     value,
     priority, [
     void Function(dynamic) onComplete,
   ]);
 
-  external core_interop.PromiseJsImpl<void> update(
+  external PromiseJsImpl<void> update(
     values, [
     void Function(dynamic) onComplete,
   ]);
@@ -70,10 +67,9 @@ abstract class OnDisconnectJsImpl {
 
 @JS('ThenableReference')
 abstract class ThenableReferenceJsImpl extends ReferenceJsImpl
-    implements core_interop.PromiseJsImpl<ReferenceJsImpl> {
+    implements PromiseJsImpl<ReferenceJsImpl> {
   @override
-  external core_interop.PromiseJsImpl<void> then(
-      [core_interop.Func1? onResolve, core_interop.Func1? onReject]);
+  external PromiseJsImpl<void> then([Func1? onResolve, Func1? onReject]);
 }
 
 @JS()

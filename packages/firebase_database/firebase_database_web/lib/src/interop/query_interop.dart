@@ -6,6 +6,8 @@ abstract class QueryJsImpl {
 
   external set ref(ReferenceJsImpl r);
 
+  external PromiseJsImpl<DataSnapshotJsImpl> get();
+
   external QueryJsImpl endAt(value, [String key]);
 
   external QueryJsImpl equalTo(value, [String key]);
@@ -29,7 +31,7 @@ abstract class QueryJsImpl {
     context,
   ]);
 
-  external core_interop.PromiseJsImpl<dynamic> once(
+  external PromiseJsImpl<dynamic> once(
     String eventType, [
     dynamic Function(DataSnapshotJsImpl, [String]) callback,
     successCallback,
