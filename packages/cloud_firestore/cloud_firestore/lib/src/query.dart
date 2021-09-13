@@ -961,7 +961,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   @override
   bool operator ==(Object other) {
     return runtimeType == other.runtimeType &&
-        other is _WithConverterQuery &&
+        other is _WithConverterQuery<T> &&
         other._fromFirestore == _fromFirestore &&
         other._toFirestore == _toFirestore &&
         other._originalQuery == _originalQuery;
