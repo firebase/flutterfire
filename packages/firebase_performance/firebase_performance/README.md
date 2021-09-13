@@ -10,7 +10,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios) / [Web](https://firebase.flutter.dev/docs/installation/web). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See [`example/lib/main.dart`](example/lib/main.dart) for details on the API usage.
 
-You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://firebase.corp.google.com/project/_/performance). Results should appear within a few minutes.
+You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://console.firebase.google.com/project/_/performance). Results should appear within a few minutes.
 
 > :warning: **Note:** *First Paint* and *First Contentful Paint* metrics of web page load trace will not be collected; automatic network request traces and screen traces will not always be collected for mobile apps.
 
