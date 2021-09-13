@@ -10,6 +10,7 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:flutter/widgets.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
@@ -37,8 +38,12 @@ App getApp(String? name) {
 /// If [persistent], it remembers the logging state between page refreshes.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.database#.enableLogging>.
-void enableLogging([logger, bool persistent = false]) =>
-    database_interop.enableLogging(jsify(logger), persistent);
+void enableLogging(bool enable, [bool persistent = false]) {
+  database_interop.enableLogging(
+    enable ? (message) => debugPrint('@firebase/database: $message') : enable,
+    persistent,
+  );
+}
 
 /// Firebase realtime database service class.
 ///

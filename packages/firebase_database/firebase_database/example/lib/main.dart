@@ -54,11 +54,13 @@ class _MyHomePageState extends State<MyHomePage> {
           'Connected to directly configured database and read ${snapshot!.value}');
     });
 
+    database.setLoggingEnabled(true);
+
     if (!kIsWeb) {
       database.setPersistenceEnabled(true);
       database.setPersistenceCacheSizeBytes(10000000);
+      _counterRef.keepSynced(true);
     }
-    _counterRef.keepSynced(true);
     _counterSubscription = _counterRef.onValue.listen((Event event) {
       setState(() {
         _error = null;
