@@ -108,8 +108,8 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Future<void> keepSynced(bool value) {
-    throw UnsupportedError("keepSynced() not supported on web");
+  Future<void> keepSynced(bool value) async {
+    // nooping
   }
 
   /// Slash-delimited path representing the database location of this query.
