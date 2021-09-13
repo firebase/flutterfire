@@ -86,15 +86,12 @@ class DatabaseReferenceWeb extends QueryWeb
       final ref = _firebaseQuery.ref;
       final transaction = await ref.transaction(transactionHandler);
 
-      print(transaction);
-
       return TransactionResultPlatform(
         null,
         transaction.committed,
         fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
       );
     } on DatabaseErrorPlatform catch (e) {
-      print('error ${e}');
       return TransactionResultPlatform(
         e,
         false,

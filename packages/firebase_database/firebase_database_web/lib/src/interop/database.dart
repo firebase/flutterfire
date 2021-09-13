@@ -10,7 +10,6 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
-import 'package:firebase_database_web/firebase_database_web.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
@@ -343,7 +342,7 @@ class Query<T extends database_interop.QueryJsImpl>
     });
 
     void startListen() {
-      // TODO(kevmoo) – should probably implement cancel callback
+      // TODO(lesnitsky) – should probably implement cancel callback
       // See https://firebase.google.com/docs/reference/js/firebase.database.Query#on
       jsObject.on(eventType, callbackWrap);
     }

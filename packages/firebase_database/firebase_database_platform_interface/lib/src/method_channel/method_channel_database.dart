@@ -30,8 +30,7 @@ class MethodChannelDatabase extends DatabasePlatform {
           final MutableData mutableData =
               MutableData.private(call.arguments['snapshot']);
           final MutableData updated =
-              await _transactions[call.arguments['transactionKey']]!(
-                  mutableData);
+              _transactions[call.arguments['transactionKey']]!(mutableData);
           return <String, dynamic>{'value': updated.value};
         default:
           throw MissingPluginException(
