@@ -78,24 +78,25 @@ class DatabaseReferenceWeb extends QueryWeb
   /// transaction((_) => null) doesn't work when compiled to JS
   /// probably because of https://github.com/dart-lang/sdk/issues/24088
   @override
-  Future<TransactionResultPlatform> runTransaction(transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
+  Future<TransactionResultPlatform> runTransaction(
+    transactionHandler, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
     try {
-      database_interop.Transaction firebaseTransaction =
-          await _firebaseQuery.ref.transaction((p0) async {
-        var mutableData = MutableData(_firebaseQuery.ref.key, p0);
-        return (await (transactionHandler(mutableData))).value;
-      });
+      final ref = _firebaseQuery.ref;
+      final transaction = await ref.transaction(transactionHandler);
+
+      print(transaction);
+
       return TransactionResultPlatform(
         null,
-        firebaseTransaction.committed,
-        fromWebSnapshotToPlatformSnapShot(firebaseTransaction.snapshot),
+        transaction.committed,
+        fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
       );
-    } catch (e) {
-      // there is error in transaction
+    } on DatabaseErrorPlatform catch (e) {
+      print('error ${e}');
       return TransactionResultPlatform(
-        // TODO: am I doing it correct?
-        (e is Map) ? DatabaseErrorPlatform(e) : null,
+        e,
         false,
         null,
       );

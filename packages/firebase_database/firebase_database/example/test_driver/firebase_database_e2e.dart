@@ -71,7 +71,7 @@ void testsMain() {
       final DataSnapshot snapshot = await ref.once();
       final int value = snapshot.value ?? 0;
       final TransactionResult transactionResult =
-          await ref.runTransaction((MutableData mutableData) async {
+          await ref.runTransaction((MutableData mutableData) {
         mutableData.value = (mutableData.value ?? 0) + 1;
         return mutableData;
       });
@@ -85,7 +85,7 @@ void testsMain() {
 
       final ref = FirebaseDatabase.instance.reference().child('flutterfire');
 
-      final transactionResult = await ref.runTransaction((mutableData) async {
+      final transactionResult = await ref.runTransaction((mutableData) {
         mutableData.value = {'v': 'vala'};
         return mutableData;
       });

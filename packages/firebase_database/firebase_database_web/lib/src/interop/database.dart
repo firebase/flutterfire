@@ -9,6 +9,7 @@ import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_web/firebase_database_web.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -173,26 +174,35 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   /// type or the error is thrown.
   ///
   /// Set [applyLocally] to `false` to not see intermediate states.
-  Future<Transaction> transaction(dynamic Function(dynamic) transactionUpdate,
-      [bool applyLocally = true]) {
+  Future<Transaction> transaction(
+    TransactionHandler transactionUpdate, [
+    bool applyLocally = true,
+  ]) async {
     final c = Completer<Transaction>();
 
-    final transactionUpdateWrap =
-        allowInterop((update) => jsify(transactionUpdate(dartify(update))));
+    final transactionUpdateWrap = allowInterop((update) {
+      final dartUpdate = MutableData('key', dartify(update));
+      final result = jsify(transactionUpdate(dartUpdate).value);
+      return result;
+    });
 
-    final onCompleteWrap = allowInterop(
-      (error, bool committed, database_interop.DataSnapshotJsImpl snapshot) {
-        if (error != null) {
-          c.completeError(error);
-        } else {
-          c.complete(Transaction(
-              committed: committed,
-              snapshot: DataSnapshot.getInstance(snapshot)));
-        }
-      },
+    final onCompleteWrap = allowInterop((error, commited, snapshot) {
+      if (error != null) {
+        c.completeError(DatabaseErrorPlatform(dartify(error)));
+      } else {
+        c.complete(Transaction(
+          committed: commited,
+          snapshot: DataSnapshot._fromJsObject(snapshot),
+        ));
+      }
+    });
+
+    jsObject.transaction(
+      transactionUpdateWrap,
+      onCompleteWrap,
+      applyLocally,
     );
 
-    jsObject.transaction(transactionUpdateWrap, onCompleteWrap, applyLocally);
     return c.future;
   }
 

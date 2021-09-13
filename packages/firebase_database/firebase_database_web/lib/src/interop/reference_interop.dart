@@ -1,5 +1,10 @@
 part of firebase.database_interop;
 
+@JS('TransactionResult')
+abstract class TransactionResultJsImpl {
+  external dynamic toJson();
+}
+
 @JS('Reference')
 abstract class ReferenceJsImpl extends QueryJsImpl {
   external String get key;
@@ -38,9 +43,9 @@ abstract class ReferenceJsImpl extends QueryJsImpl {
     void Function(dynamic) onComplete,
   ]);
 
-  external PromiseJsImpl<TransactionJsImpl> transaction(
+  external PromiseJsImpl<TransactionResultJsImpl> transaction(
     void Function(dynamic) transactionUpdate, [
-    dynamic Function(Object, bool, DataSnapshotJsImpl) onComplete,
+    void Function(dynamic, bool, DataSnapshotJsImpl) onComplete,
     bool applyLocally,
   ]);
 
