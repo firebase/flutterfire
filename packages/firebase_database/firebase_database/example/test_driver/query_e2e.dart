@@ -59,7 +59,7 @@ void runQueryTests() {
           .onChildAdded
           .forEach((element) {
         items.add(element.snapshot.value);
-        if (items.length == 4) c.complete(items);
+        if (items.length == testDocuments.length) c.complete(items);
       });
 
       final snapshots = await c.future;
