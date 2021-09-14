@@ -39,10 +39,21 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   if (decodedUrl == null) {
     return null;
   }
+
   // firebase storage url
-  if (decodedUrl.contains(_firebaseStorageHost)) {
+  if (decodedUrl.contains(_firebaseStorageHost) ||
+      decodedUrl.contains('localhost')) {
+
+    String origin;
+    if(decodedUrl.contains('localhost')){
+      Uri uri = Uri.parse(url);
+      origin = '^http?://${uri.host}:${uri.port}';
+    } else {
+      origin = '^https?://$_firebaseStorageHost';
+    }
+
     RegExp firebaseStorageRegExp = RegExp(
-      '^https?://$_firebaseStorageHost/$_version/b/$_bucketDomain/o$_firebaseStoragePath',
+      '$origin/$_version/b/$_bucketDomain/o$_firebaseStoragePath',
       caseSensitive: false,
     );
 
