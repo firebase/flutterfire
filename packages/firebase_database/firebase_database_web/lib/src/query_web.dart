@@ -4,62 +4,24 @@
 
 part of firebase_database_web;
 
-/// Web implementation for firebase [QueryPlatform]
+/// An implementation of [QueryPlatform] which proxies calls to js objects
 class QueryWeb extends QueryPlatform {
   final database_interop.Database _firebaseDatabase;
   final database_interop.Query _firebaseQuery;
 
-  /// Builds an instance of [QueryWeb] delegating to a package:firebase [QueryPlatform]
-  /// to delegate queries to underlying firebase web plugin
   QueryWeb(
     this._firebaseDatabase,
     DatabasePlatform databasePlatform,
     List<String> pathComponents,
     this._firebaseQuery,
-  ) : super(
-          database: databasePlatform,
-          pathComponents: pathComponents,
-        );
-
-  /// Create a query constrained to only return child nodes with a value greater
-  /// than or equal to the given value, using the given orderBy directive or
-  /// priority as default, and optionally only child nodes with a key greater
-  /// than or equal to the given key.
-  @override
-  QueryPlatform startAt(dynamic value, {String? key}) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.startAt(value, key));
-  }
+  ) : super(database: databasePlatform, pathComponents: pathComponents);
 
   @override
-  QueryPlatform endAt(value, {String? key}) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.endAt(value, key));
-  }
+  DatabaseReferencePlatform reference() =>
+      DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
 
   @override
-  QueryPlatform equalTo(value, {String? key}) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.equalTo(value, key));
-  }
-
-  @override
-  QueryPlatform limitToFirst(int limit) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.limitToFirst(limit));
-  }
-
-  @override
-  QueryPlatform limitToLast(int limit) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.limitToLast(limit));
-  }
-
-  @override
-  Future<DataSnapshotPlatform> once() async {
-    return fromWebSnapshotToPlatformSnapShot(
-        (await _firebaseQuery.once("value")).snapshot);
-  }
+  String get path => pathComponents.join('/');
 
   @override
   Future<DataSnapshotPlatform> get() async {
@@ -67,54 +29,62 @@ class QueryWeb extends QueryPlatform {
     return fromWebSnapshotToPlatformSnapShot(snapshot);
   }
 
-  /// Generate a view of the data sorted by values of a particular child key.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
+  @override
+  Future<DataSnapshotPlatform> once() async {
+    return fromWebSnapshotToPlatformSnapShot(
+      (await _firebaseQuery.once("value")).snapshot,
+    );
+  }
+
+  @override
+  QueryPlatform startAt(dynamic value, {String? key}) {
+    return _withQuery(_firebaseQuery.startAt(value, key));
+  }
+
+  @override
+  QueryPlatform endAt(value, {String? key}) {
+    return _withQuery(_firebaseQuery.endAt(value, key));
+  }
+
+  @override
+  QueryPlatform equalTo(value, {String? key}) {
+    return _withQuery(_firebaseQuery.equalTo(value, key));
+  }
+
+  @override
+  QueryPlatform limitToFirst(int limit) {
+    return _withQuery(_firebaseQuery.limitToFirst(limit));
+  }
+
+  @override
+  QueryPlatform limitToLast(int limit) {
+    return _withQuery(_firebaseQuery.limitToLast(limit));
+  }
+
   @override
   QueryPlatform orderByChild(String key) {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.orderByChild(key));
+    return _withQuery(_firebaseQuery.orderByChild(key));
   }
 
-  /// Generate a view of the data sorted by key.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
   @override
   QueryPlatform orderByKey() {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.orderByKey());
+    return _withQuery(_firebaseQuery.orderByKey());
   }
 
-  /// Generate a view of the data sorted by priority.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
   @override
   QueryPlatform orderByPriority() {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.orderByValue());
+    return _withQuery(_firebaseQuery.orderByPriority());
   }
 
-  /// Generate a view of the data sorted by value.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
   @override
   QueryPlatform orderByValue() {
-    return QueryWeb(_firebaseDatabase, database, pathComponents,
-        _firebaseQuery.orderByValue());
+    return _withQuery(_firebaseQuery.orderByValue());
   }
 
   @override
   Future<void> keepSynced(bool value) async {
     throw UnsupportedError('keepSynced() is not supported on web');
   }
-
-  /// Slash-delimited path representing the database location of this query.
-  @override
-  String get path => pathComponents.join('/');
 
   @override
   Stream<EventPlatform> observe(EventType eventType) {
@@ -140,8 +110,12 @@ class QueryWeb extends QueryPlatform {
         fromWebEventToPlatformEvent(event));
   }
 
-  /// Obtains a DatabaseReference corresponding to this query's location.
-  @override
-  DatabaseReferencePlatform reference() =>
-      DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
+  QueryPlatform _withQuery(newQuery) {
+    return QueryWeb(
+      _firebaseDatabase,
+      database,
+      pathComponents,
+      newQuery,
+    );
+  }
 }
