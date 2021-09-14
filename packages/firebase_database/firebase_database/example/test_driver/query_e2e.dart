@@ -1,6 +1,9 @@
 // ignore_for_file: require_trailing_commas
 
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
@@ -46,19 +49,24 @@ void runQueryTests() {
     });
 
     test('correct order returned from query', () async {
-      Event event = await database
+      final c = Completer<List<Map<String, dynamic>>>();
+      final items = <Map<String, dynamic>>[];
+
+      // ignore: unawaited_futures
+      database
           .reference()
           .child('ordered')
           .orderByChild('value')
-          .onValue
-          .first;
+          .onChildAdded
+          .forEach((element) {
+        items.add(element.snapshot.value);
+        if (items.length == 4) c.complete(items);
+      });
 
-      final ordered = testDocuments.map((doc) => doc['value']! as int).toList();
-      ordered.sort();
+      final snapshots = await c.future;
 
-      final documents = event.snapshot.value.values
-          .map((doc) => doc['value'] as int)
-          .toList();
+      final documents = snapshots.map((v) => v['value'] as int).toList();
+      final ordered = testDocuments.map((doc) => doc['value']).toList()..sort();
 
       expect(documents[0], ordered[0]);
       expect(documents[1], ordered[1]);
