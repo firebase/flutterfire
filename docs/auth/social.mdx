@@ -332,44 +332,39 @@ with an API Key and API Secret set.
 
 On native platforms, a 3rd party library is required to both install the Twitter SDK and trigger the authentication flow.
 
-Install the [`flutter_twitter_login`](https://pub.dev/packages/flutter_twitter_login) plugin:
+Install the [`twitter_login`](https://pub.dev/packages/twitter_login) plugin:
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  flutter_twitter_login: ^1.1.0
+  twitter_login: ^4.0.1
 ```
 
-You will need to ensure that your application in the [Twitter Developer Portal](https://developer.twitter.com/) has
-a callback URL of `twittersdk://` for Android, and `twitterkit-CONSUMERKEY://` for iOS. Once complete, trigger the sign-in flow, create a Twitter credential and sign the user in:
+Make sure to carefully go through the configuration steps of [`twitter_login`](https://pub.dev/packages/twitter_login) and register a callback URL at the [Twitter Developer Portal](https://developer.twitter.com/) with a matching URL scheme
 
 ```dart
-import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 Future<UserCredential> signInWithTwitter() async {
   // Create a TwitterLogin instance
-  final TwitterLogin twitterLogin = new TwitterLogin(
-    consumerKey: '<your consumer key>',
-    consumerSecret:' <your consumer secret>',
+  final twitterLogin = new TwitterLogin(
+    apiKey: '<your consumer key>',
+    apiSecretKey:' <your consumer secret>',
+    redirectURI: '<your_scheme>://'
   );
 
   // Trigger the sign-in flow
-  final TwitterLoginResult loginResult = await twitterLogin.authorize();
-
-  // Get the Logged In session
-  final TwitterSession twitterSession = loginResult.session;
+  final authResult = twitterLogin.login();
 
   // Create a credential from the access token
   final twitterAuthCredential = TwitterAuthProvider.credential(
-    accessToken: twitterSession.token,
-    secret: twitterSession.secret,
+    accessToken: authResult.authToken!,
+    secret: authResult.authTokenSecret!,
   );
 
   // Once signed in, return the UserCredential
   return await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
 }
 ```
-
-Please note there is an [outstanding issue](https://github.com/roughike/flutter_twitter_login/issues/32) with this package, regarding iOS and the use of `UIWebView` which is deprecated.
 
 </TabItem>
 <TabItem value="web">
