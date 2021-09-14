@@ -119,6 +119,15 @@ void runInstanceTests() {
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
+      test('accepts a Storage emulator url', () {
+        const url =
+            'http://localhost:9199/v0/b/react-native-firebase-testing.appspot.com/o/1mbTestFile.gif?alt=media';
+        Reference ref = storage.refFromURL(url);
+        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.name, '1mbTestFile.gif');
+        expect(ref.fullPath, '1mbTestFile.gif');
+      });
+
       test('throws an error if https url could not be parsed', () async {
         try {
           storage.refFromURL('https://invertase.io');
