@@ -43,9 +43,8 @@ Map<String, String?>? partsFromHttpUrl(String url) {
   // firebase storage url
   if (decodedUrl.contains(_firebaseStorageHost) ||
       decodedUrl.contains('localhost')) {
-
     String origin;
-    if(decodedUrl.contains('localhost')){
+    if (decodedUrl.contains('localhost')) {
       Uri uri = Uri.parse(url);
       origin = '^http?://${uri.host}:${uri.port}';
     } else {
