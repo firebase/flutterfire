@@ -59,22 +59,39 @@ void testsMain() {
       // Skipped because it needs to be initialized first on android
     }, skip: Platform.isAndroid);
 
-    test('runTransaction', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-      final DatabaseReference ref = database.reference().child('flutterfire');
+    group('runTransation', () {
+      test('update and check values', () async {
+        final FirebaseDatabase database = FirebaseDatabase.instance;
+        final DatabaseReference ref = database.reference().child('flutterfire');
 
-      await ref.set(0);
+        await ref.set(0);
 
-      final DataSnapshot snapshot = await ref.once();
-      final int value = snapshot.value ?? 0;
-      final TransactionResult transactionResult =
-          await ref.runTransaction((MutableData mutableData) async {
-        mutableData.value = (mutableData.value ?? 0) + 1;
-        return mutableData;
+        final DataSnapshot snapshot = await ref.once();
+        final int value = snapshot.value ?? 0;
+        final TransactionResult transactionResult =
+            await ref.runTransaction((MutableData mutableData) async {
+          mutableData.value = (mutableData.value ?? 0) + 1;
+          return mutableData;
+        });
+
+        expect(transactionResult.committed, true);
+        expect(transactionResult.dataSnapshot!.value > value, true);
       });
 
-      expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot!.value > value, true);
+      test('get primitive list values', () async {
+
+        List<String> data = ['first', 'second'];
+        final FirebaseDatabase database = FirebaseDatabase.instance;
+        final DatabaseReference ref = database.reference().child('list-values');
+
+        await ref.set({'list': data});
+
+        final transactionResult = await ref.runTransaction((mutableData) async {
+          return mutableData;
+        });
+
+        expect(transactionResult.dataSnapshot!.value['list'], data);
+      });
     });
 
     test('DataSnapshot supports null childKeys for maps', () async {
