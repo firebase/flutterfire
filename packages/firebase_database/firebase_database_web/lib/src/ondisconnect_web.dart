@@ -8,12 +8,11 @@ part of firebase_database_web;
 class OnDisconnectWeb extends OnDisconnectPlatform {
   final database_interop.OnDisconnect _onDisconnect;
 
-  OnDisconnectWeb._(this._onDisconnect, DatabasePlatform database,
-      DatabaseReferencePlatform reference)
-      : super(
-          database: database,
-          reference: reference,
-        );
+  OnDisconnectWeb._(
+    this._onDisconnect,
+    DatabasePlatform database,
+    DatabaseReferencePlatform reference,
+  ) : super(database: database, reference: reference);
 
   @override
   Future<void> set(value, {priority}) {
