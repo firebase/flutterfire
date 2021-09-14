@@ -12,6 +12,7 @@ environment:
 dependencies:
   firebase_core: ^1.6.0
   firebase_database_platform_interface: ^0.0.1+1
+  firebase_database_web: ^0.0.1
   flutter:
     sdk: flutter
 
@@ -32,3 +33,5 @@ flutter:
         pluginClass: FLTFirebaseDatabasePlugin
       macos:
         pluginClass: FLTFirebaseDatabasePlugin
+      web:
+        default_package: firebase_database_web

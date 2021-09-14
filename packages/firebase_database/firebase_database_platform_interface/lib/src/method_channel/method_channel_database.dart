@@ -30,8 +30,7 @@ class MethodChannelDatabase extends DatabasePlatform {
           final MutableData mutableData =
               MutableData.private(call.arguments['snapshot']);
           final MutableData updated =
-              await _transactions[call.arguments['transactionKey']]!(
-                  mutableData);
+              _transactions[call.arguments['transactionKey']]!(mutableData);
           return <String, dynamic>{'value': updated.value};
         default:
           throw MissingPluginException(
@@ -43,7 +42,11 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app) => MethodChannelDatabase(app: app);
+  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) =>
+      MethodChannelDatabase(
+        app: app,
+        databaseURL: databaseURL,
+      );
 
   @override
   String? appName() => app?.name;

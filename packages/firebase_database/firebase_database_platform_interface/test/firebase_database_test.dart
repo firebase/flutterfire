@@ -283,10 +283,10 @@ void main() {
         final TransactionResultPlatform transactionResult = await database
             .reference()
             .child('foo')
-            .runTransaction((MutableData mutableData) {
-          mutableData.value['fakeKey'] =
+            .runTransaction((MutableData? mutableData) {
+          mutableData!.value['fakeKey'] =
               'updated ${mutableData.value['fakeKey']}';
-          return Future.value(mutableData);
+          return mutableData;
         });
         expect(
           log,
