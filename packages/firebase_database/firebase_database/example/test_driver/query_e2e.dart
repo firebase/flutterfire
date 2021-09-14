@@ -58,7 +58,7 @@ void runQueryTests() {
           .orderByChild('value')
           .onChildAdded
           .forEach((element) {
-        items.add(element.snapshot.value);
+        items.add(element.snapshot.value.cast<String, dynamic>());
         if (items.length == testDocuments.length) c.complete(items);
       });
 
