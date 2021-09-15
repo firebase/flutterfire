@@ -45,11 +45,11 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   String? appName() => app?.name;
 
   @override
-  DatabaseReferencePlatform ref([String? path = '']) {
+  DatabaseReferencePlatform ref([String? path]) {
     return DatabaseReferenceWeb(
       _firebaseDatabase,
       this,
-      path!.split('/').toList(),
+      path?.split('/').toList() ?? const <String>[],
     );
   }
 

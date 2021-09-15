@@ -9,13 +9,6 @@ import 'firebase_database_e2e.dart';
 
 void runQueryTests() {
   group('$Query', () {
-    late FirebaseDatabase database;
-
-    setUpAll(() async {
-      database = FirebaseDatabase.instance;
-      await setTestData();
-    });
-
     test('once', () async {
       final dataSnapshot = await database.ref('ordered/one').once();
       expect(dataSnapshot, isNot(null));

@@ -67,10 +67,10 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// corresponding to the provided path.
   /// If no path is provided, the Reference will point to the root of the Database.
   @override
-  DatabaseReferencePlatform ref([String? path = '']) {
+  DatabaseReferencePlatform ref([String? path]) {
     return MethodChannelDatabaseReference(
       database: this,
-      pathComponents: path!.split('/').toList(),
+      pathComponents: path?.split('/').toList() ?? const <String>[],
     );
   }
 

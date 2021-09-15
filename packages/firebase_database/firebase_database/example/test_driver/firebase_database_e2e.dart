@@ -16,59 +16,50 @@ final List<Map<String, Object>> testDocuments = [
   {'ref': 'four', 'value': 40}
 ];
 
-Future<void> setTestData() {
-  final FirebaseDatabase database = FirebaseDatabase.instance;
-  const String orderTestPath = 'ordered/';
-  return Future.wait(testDocuments.map((map) {
-    String child = map['ref']! as String;
-    return database.ref('$orderTestPath/$child').set(map);
-  }));
-}
+late FirebaseDatabase database;
 
 void testsMain() {
+  setUpAll(() async {
+    await Firebase.initializeApp();
+  });
+
+  setUp(() async {
+    database = FirebaseDatabase.instance;
+    await database.ref('flutterfire').set(0);
+
+    final orderedRef = database.ref('ordered');
+
+    await Future.wait(testDocuments.map((map) {
+      String key = map['ref']! as String;
+      return orderedRef.child(key).set(map);
+    }));
+  });
+
   group('FirebaseDatabase', () {
-    // initialize the firebase
-    setUp(() async {
-      await Firebase.initializeApp();
-    });
-
-    // set up dummy data
-    setUpAll(() async {
-      await setTestData();
-    });
-
     test('setPersistenceCacheSizeBytes Integer', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
-
       await database.setPersistenceCacheSizeBytes(2147483647);
       // Skipped because it is not supported on web
     }, skip: kIsWeb);
 
     test('setPersistenceCacheSizeBytes Long', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
       // Skipped because it is not supported on web
     }, skip: kIsWeb);
 
     test('setLoggingEnabled to true', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(true);
       // Skipped because it needs to be initialized first on android.
     }, skip: !kIsWeb && Platform.isAndroid);
 
     test('setLoggingEnabled to false', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(false);
       // Skipped because it needs to be initialized first on android.
     }, skip: !kIsWeb && Platform.isAndroid);
 
     test('runTransaction', () async {
-      final FirebaseDatabase database = FirebaseDatabase.instance;
       final DatabaseReference ref = database.ref('flutterfire');
+      final DataSnapshot snapshot = await ref.get();
 
-      await ref.set(0);
-
-      final DataSnapshot snapshot = await ref.once();
       final int value = snapshot.value ?? 0;
       final TransactionResult transactionResult =
           await ref.runTransaction((MutableData mutableData) {
@@ -78,6 +69,23 @@ void testsMain() {
 
       expect(transactionResult.committed, true);
       expect(transactionResult.dataSnapshot!.value > value, true);
+    });
+
+    group('#ref()', () {
+      test('returns a correct reference', () async {
+        final ref = FirebaseDatabase.instance.ref('flutterfire');
+        final snapshot = await ref.get();
+        expect(snapshot.value, 0);
+      });
+
+      test(
+        'returns a reference to the root of the database if no path specified',
+        () async {
+          final ref = FirebaseDatabase.instance.ref().child('flutterfire');
+          final snapshot = await ref.get();
+          expect(snapshot.value, 0);
+        },
+      );
     });
 
     test('DataSnapshot supports null childKeys for maps', () async {
