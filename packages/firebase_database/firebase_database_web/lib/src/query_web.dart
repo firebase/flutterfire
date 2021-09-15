@@ -17,7 +17,7 @@ class QueryWeb extends QueryPlatform {
   ) : super(database: databasePlatform, pathComponents: pathComponents);
 
   @override
-  DatabaseReferencePlatform reference() =>
+  DatabaseReferencePlatform get ref =>
       DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
 
   @override

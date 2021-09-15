@@ -63,12 +63,14 @@ class MethodChannelDatabase extends DatabasePlatform {
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_database');
 
-  /// Gets a DatabaseReference for the root of your Firebase Database.
+  /// Returns a [DatabaseReference] representing the location in the Database
+  /// corresponding to the provided path.
+  /// If no path is provided, the Reference will point to the root of the Database.
   @override
-  DatabaseReferencePlatform reference() {
+  DatabaseReferencePlatform ref([String? path = '']) {
     return MethodChannelDatabaseReference(
       database: this,
-      pathComponents: <String>[],
+      pathComponents: path!.split('/').toList(),
     );
   }
 

@@ -11,8 +11,8 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
   OnDisconnectWeb._(
     this._onDisconnect,
     DatabasePlatform database,
-    DatabaseReferencePlatform reference,
-  ) : super(database: database, reference: reference);
+    DatabaseReferencePlatform ref,
+  ) : super(database: database, ref: ref);
 
   @override
   Future<void> set(value, {priority}) {

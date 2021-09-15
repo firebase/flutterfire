@@ -9,7 +9,7 @@ part of firebase_database_platform_interface;
 /// These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
 abstract class OnDisconnectPlatform extends PlatformInterface {
   /// Create a [OnDisconnectPlatform] instance
-  OnDisconnectPlatform({required this.database, required this.reference})
+  OnDisconnectPlatform({required this.database, required this.ref})
       : super(token: _token);
 
   static final Object _token = Object();
@@ -18,7 +18,7 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
   final DatabasePlatform database;
 
   /// The DatabaseReference instance associated with this [OnDisconnectPlatform] class
-  final DatabaseReferencePlatform reference;
+  final DatabaseReferencePlatform ref;
 
   /// Ensures the data at this location is set to the specified value when the client is disconnected
   Future<void> set(dynamic value, {dynamic priority}) {

@@ -45,8 +45,12 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   String? appName() => app?.name;
 
   @override
-  DatabaseReferencePlatform reference() {
-    return DatabaseReferenceWeb(_firebaseDatabase, this, <String>[]);
+  DatabaseReferencePlatform ref([String? path = '']) {
+    return DatabaseReferenceWeb(
+      _firebaseDatabase,
+      this,
+      path!.split('/').toList(),
+    );
   }
 
   /// This is not supported on web. However,

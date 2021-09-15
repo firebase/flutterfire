@@ -17,8 +17,7 @@ void runQueryTests() {
     });
 
     test('once', () async {
-      final dataSnapshot =
-          await database.reference().child('ordered/one').once();
+      final dataSnapshot = await database.ref('ordered/one').once();
       expect(dataSnapshot, isNot(null));
       expect(dataSnapshot.key, 'one');
       expect(dataSnapshot.value['ref'], 'one');
@@ -26,8 +25,7 @@ void runQueryTests() {
     });
 
     test('get', () async {
-      final dataSnapshot =
-          await database.reference().child('ordered/two').get();
+      final dataSnapshot = await database.ref('ordered/two').get();
       expect(dataSnapshot, isNot(null));
       expect(dataSnapshot.key, 'two');
       expect(dataSnapshot.value['ref'], 'two');
@@ -35,14 +33,13 @@ void runQueryTests() {
     });
 
     test('DataSnapshot.exists is false for no data', () async {
-      final databaseRef =
-          database.reference().child('a-non-existing-reference');
+      final databaseRef = database.ref('a-non-existing-reference');
       final dataSnapshot = await databaseRef.get();
       expect(dataSnapshot.exists, false);
     });
 
     test('DataSnapshot.exists is true for existing data', () async {
-      final databaseRef = database.reference().child('ordered/one');
+      final databaseRef = database.ref('ordered/one');
       final dataSnapshot = await databaseRef.get();
       expect(dataSnapshot.exists, true);
     });
@@ -53,8 +50,7 @@ void runQueryTests() {
 
       // ignore: unawaited_futures
       database
-          .reference()
-          .child('ordered')
+          .ref('ordered')
           .orderByChild('value')
           .onChildAdded
           .forEach((element) {
@@ -74,14 +70,12 @@ void runQueryTests() {
     });
 
     test('limitToFirst', () async {
-      final snapshot =
-          await database.reference().child('ordered').limitToFirst(2).once();
+      final snapshot = await database.ref('ordered').limitToFirst(2).once();
       Map<dynamic, dynamic> data = snapshot.value;
       expect(data.length, 2);
 
       final snapshot1 = await database
-          .reference()
-          .child('ordered')
+          .ref('ordered')
           .limitToFirst(testDocuments.length + 2)
           .once();
       Map<dynamic, dynamic> data1 = snapshot1.value;
@@ -89,14 +83,12 @@ void runQueryTests() {
     });
 
     test('limitToLast', () async {
-      final snapshot =
-          await database.reference().child('ordered').limitToLast(3).once();
+      final snapshot = await database.ref('ordered').limitToLast(3).once();
       Map<dynamic, dynamic> data = snapshot.value;
       expect(data.length, 3);
 
       final snapshot1 = await database
-          .reference()
-          .child('ordered')
+          .ref('ordered')
           .limitToLast(testDocuments.length + 2)
           .once();
       Map<dynamic, dynamic> data1 = snapshot1.value;
@@ -106,8 +98,7 @@ void runQueryTests() {
     test('startAt & endAt', () async {
       // query to get the data that has key starts with t only
       final snapshot = await database
-          .reference()
-          .child('ordered')
+          .ref('ordered')
           .orderByKey()
           .startAt('t')
           .endAt('t\uf8ff')
@@ -124,8 +115,7 @@ void runQueryTests() {
       expect(data.length, 2);
 
       final snapshot1 = await database
-          .reference()
-          .child('ordered')
+          .ref('ordered')
           .orderByKey()
           .startAt('t')
           .endAt('three')
@@ -136,12 +126,8 @@ void runQueryTests() {
     });
 
     test('equalTo', () async {
-      final snapshot = await database
-          .reference()
-          .child('ordered')
-          .orderByKey()
-          .equalTo('one')
-          .once();
+      final snapshot =
+          await database.ref('ordered').orderByKey().equalTo('one').once();
 
       Map<dynamic, dynamic> data = snapshot.value;
 

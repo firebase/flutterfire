@@ -198,9 +198,9 @@ void main() {
           'qux': ServerValue.increment(8)
         };
         const int priority = 42;
-        await database.reference().child('foo').set(value);
-        await database.reference().child('bar').set(value, priority: priority);
-        await database.reference().child('baz').set(serverValue);
+        await database.ref().child('foo').set(value);
+        await database.ref().child('bar').set(value, priority: priority);
+        await database.ref().child('baz').set(serverValue);
         expect(
           log,
           <Matcher>[
@@ -243,7 +243,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child('foo').update(value);
+        await database.ref().child('foo').update(value);
         expect(
           log,
           <Matcher>[
@@ -262,7 +262,7 @@ void main() {
 
       test('setPriority', () async {
         const int priority = 42;
-        await database.reference().child('foo').setPriority(priority);
+        await database.ref().child('foo').setPriority(priority);
         expect(
           log,
           <Matcher>[
@@ -281,7 +281,7 @@ void main() {
 
       test('runTransaction', () async {
         final TransactionResultPlatform transactionResult = await database
-            .reference()
+            .ref()
             .child('foo')
             .runTransaction((MutableData? mutableData) {
           mutableData!.value['fakeKey'] =
@@ -315,7 +315,7 @@ void main() {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         const int priority = 42;
-        final DatabaseReferencePlatform ref = database.reference();
+        final DatabaseReferencePlatform ref = database.ref();
         await ref.child('foo').onDisconnect().set(value);
         await ref.child('bar').onDisconnect().set(value, priority: priority);
         await ref.child('psi').onDisconnect().set(value, priority: 'priority');
@@ -368,7 +368,7 @@ void main() {
       });
       test('update', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
-        await database.reference().child('foo').onDisconnect().update(value);
+        await database.ref().child('foo').onDisconnect().update(value);
         expect(
           log,
           <Matcher>[
@@ -385,7 +385,7 @@ void main() {
         );
       });
       test('cancel', () async {
-        await database.reference().child('foo').onDisconnect().cancel();
+        await database.ref().child('foo').onDisconnect().cancel();
         expect(
           log,
           <Matcher>[
@@ -401,7 +401,7 @@ void main() {
         );
       });
       test('remove', () async {
-        await database.reference().child('foo').onDisconnect().remove();
+        await database.ref().child('foo').onDisconnect().remove();
         expect(
           log,
           <Matcher>[
@@ -423,7 +423,7 @@ void main() {
     group('$MethodChannelQuery', () {
       test('keepSynced, simple query', () async {
         const String path = 'foo';
-        final QueryPlatform query = database.reference().child(path);
+        final QueryPlatform query = database.ref().child(path);
         await query.keepSynced(true);
         expect(
           log,
@@ -448,7 +448,7 @@ void main() {
         const bool endAt = true;
         const String endAtKey = 'baz';
         final QueryPlatform query = database
-            .reference()
+            .ref()
             .child(path)
             .orderByChild(childKey)
             .startAt(startAt)
@@ -481,7 +481,7 @@ void main() {
         mockHandleId = 99;
         const int errorCode = 12;
         const String errorDetails = 'Some details';
-        final QueryPlatform query = database.reference().child('some path');
+        final QueryPlatform query = database.ref().child('some path');
         Future<void> simulateError(String errorMessage) async {
           await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(
@@ -525,7 +525,7 @@ void main() {
       test('observing value events', () async {
         mockHandleId = 87;
         const String path = 'foo';
-        final QueryPlatform query = database.reference().child(path);
+        final QueryPlatform query = database.ref().child(path);
         Future<void> simulateEvent(String value) async {
           await ServicesBinding.instance!.defaultBinaryMessenger
               .handlePlatformMessage(

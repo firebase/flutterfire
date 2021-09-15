@@ -7,7 +7,7 @@ part of firebase_database;
 
 /// The entry point for accessing a Firebase Database. You can get an instance
 /// by calling `FirebaseDatabase.instance`. To access a location in the database
-/// and read or write data, use `reference()`.
+/// and read or write data, use `ref()`.
 class FirebaseDatabase {
   /// Gets an instance of [FirebaseDatabase].
   ///
@@ -33,8 +33,12 @@ class FirebaseDatabase {
   @visibleForTesting
   static MethodChannel get channel => MethodChannelDatabase.channel;
 
-  /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReference reference() => DatabaseReference._(_delegate.reference());
+  /// Returns a [DatabaseReference] representing the location in the Database
+  /// corresponding to the provided path.
+  /// If no path is provided, the Reference will point to the root of the Database.
+  DatabaseReference ref([String? path]) {
+    return DatabaseReference._(_delegate.ref(path));
+  }
 
   /// Attempts to sets the database persistence to [enabled].
   ///

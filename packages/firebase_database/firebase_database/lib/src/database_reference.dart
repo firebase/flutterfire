@@ -10,7 +10,7 @@ part of firebase_database;
 ///
 /// This class is the starting point for all Firebase Database operations.
 /// After you’ve obtained your first DatabaseReference via
-/// `FirebaseDatabase.reference()`, you can use it to read data
+/// `FirebaseDatabase.ref()`, you can use it to read data
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
