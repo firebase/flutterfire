@@ -58,7 +58,7 @@ class _ContentState extends State<_Content> {
                 height: double.infinity,
                 width: mq.widthFor(cols: colsCount),
               ),
-              const ResponsiveGridOverlay(),
+              const ResponsiveGridOverlay(enabled: true),
             ],
           ),
         ),

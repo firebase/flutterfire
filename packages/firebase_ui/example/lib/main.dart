@@ -60,6 +60,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
             border: OutlineInputBorder(),
           ),
         ),
+        builder: FirebaseUIApp.builder,
         home: const Home(),
       ),
     );

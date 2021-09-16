@@ -2,106 +2,52 @@ import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/responsive.dart';
 
-import '../widgets/sign_in_form.dart';
 import 'phone_auth_flow.dart';
 
-class Login extends StatefulWidget {
+class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
-  _LoginState createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
-  AuthMethod method = AuthMethod.signIn;
-  late final TabController ctrl = TabController(length: 2, vsync: this)
-    ..addListener(() {
-      setState(() {
-        method = AuthMethod.values.elementAt(ctrl.index);
-      });
-    });
-
-  @override
   Widget build(BuildContext context) {
-    final tabs = TabBar(
-      labelColor: Theme.of(context).accentColor,
-      controller: ctrl,
-      tabs: const [
-        Tab(text: 'Sign in'),
-        Tab(text: 'Sign up'),
-      ],
-    );
-    final mq = MediaQuery.of(context);
-
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login'),
+      ),
       body: Body(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: SignInForm(
+          surfaceBuilder: (context, child) {
+            return Card(child: child);
+          },
           children: [
-            Expanded(
-              child: Card(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(mq.deviceType.toString()),
-                    tabs,
-                    Expanded(
-                      child: Column(
-                        children: [
-                          AuthFlowBuilder<EmailFlowController>(
-                            method: method,
-                            listener: (oldState, newState) {
-                              if (newState is AuthFailed) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      newState.exception.toString(),
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                            child: const Padding(
-                              padding: EdgeInsets.all(16),
-                              child: SignInForm(),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const PhoneAuthFlow(
-                                    authMethod: AuthMethod.signIn,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: const Text('Sign in with phone'),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16).copyWith(top: 0),
-                            child: AuthFlowBuilder<OAuthController>(
-                              method: AuthMethod.signIn,
-                              builder: (_, state, __, child) {
-                                if (state is SigningIn) {
-                                  return const CircularProgressIndicator();
-                                }
-
-                                return child!;
-                              },
-                              child: Column(
-                                children: const [
-                                  ProviderButton<Google>(),
-                                  ProviderButton<Apple>(),
-                                  ProviderButton<Twitter>(),
-                                  ProviderButton<Facebook>(),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PhoneAuthFlow(
+                      authMethod: AuthMethod.signIn,
                     ),
+                  ),
+                );
+              },
+              child: const Text('Sign in with phone'),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16).copyWith(top: 0),
+              child: AuthFlowBuilder<OAuthController>(
+                method: AuthMethod.signIn,
+                builder: (_, state, __, child) {
+                  if (state is SigningIn) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  return child!;
+                },
+                child: Column(
+                  children: const [
+                    ProviderButton<Google>(),
+                    ProviderButton<Apple>(),
+                    ProviderButton<Twitter>(),
+                    ProviderButton<Facebook>(),
                   ],
                 ),
               ),

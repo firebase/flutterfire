@@ -1,9 +1,16 @@
 import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui/responsive.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:flutter/material.dart';
 
 class FirebaseUIApp extends InheritedWidget {
   static FirebaseUIApp? _instance;
+
+  static Widget builder(BuildContext context, Widget? widget) {
+    return ResponsiveGridOverlay(
+      child: widget,
+    );
+  }
 
   final List<FirebaseUIInitializer> initializers;
   late final Map<Type, FirebaseUIInitializer> _initializersMap;
