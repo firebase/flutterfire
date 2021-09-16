@@ -43,7 +43,7 @@ class PhoneVerificationAuthFlow extends AuthFlow
   }) : super(auth: auth, initialState: AwatingPhoneNumber(), method: method);
 
   @override
-  void acceptPhoneNumber(String phoneNumber) {
+  Future<void> acceptPhoneNumber(String phoneNumber) async {
     value = SMSCodeRequested();
 
     auth.verifyPhoneNumber(

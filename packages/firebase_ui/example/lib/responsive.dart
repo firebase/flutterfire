@@ -72,25 +72,3 @@ class App extends StatelessWidget {
     );
   }
 }
-
-class ResponsiveGridOverlay extends StatelessWidget {
-  const ResponsiveGridOverlay({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ...List.generate(
-          mq.maxColsCount,
-          (_) => Container(
-            width: mq.colSize,
-            color: Colors.pink.withAlpha(50),
-          ),
-        ),
-      ],
-    );
-  }
-}
