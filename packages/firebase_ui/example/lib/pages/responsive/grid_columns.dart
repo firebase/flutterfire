@@ -9,7 +9,7 @@ class GridColumnsExamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: ExampleTabBar(title: 'Grid columns example'),
+      appBar: ExampleAppBar(title: 'Grid columns example'),
       body: Body(
         child: SizedBox.expand(
           child: _Content(),

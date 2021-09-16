@@ -1,9 +1,9 @@
 import 'package:firebase_ui_example/widgets/device_indicator.dart';
 import 'package:flutter/material.dart';
 
-class ExampleTabBar extends StatelessWidget implements PreferredSizeWidget {
+class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  const ExampleTabBar({Key? key, required this.title}) : super(key: key);
+  const ExampleAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
