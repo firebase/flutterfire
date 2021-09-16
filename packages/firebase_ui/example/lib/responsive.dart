@@ -1,9 +1,11 @@
+import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/responsive.dart';
-import 'package:firebase_ui_example/pages/responsive/grid_columns.dart';
-import 'package:firebase_ui_example/pages/responsive/gutters.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/responsive/body.dart';
+import 'pages/responsive/gutters.dart';
+import 'pages/responsive/grid_columns.dart';
+import 'pages/responsive/responsive_container.dart';
 
 void main() {
   runApp(const App());
@@ -24,6 +26,7 @@ class App extends StatelessWidget {
           margin: EdgeInsets.zero,
         ),
       ),
+      builder: FirebaseUIApp.builder,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Firebase UI Responsive'),
@@ -61,6 +64,15 @@ class App extends StatelessWidget {
                     ),
                     onTap: () {
                       openPage(context, const GuttersExamplePage());
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('ResponsiveContainer example'),
+                    subtitle: const Text(
+                      'Shows the capabilities of ResponsiveContainer',
+                    ),
+                    onTap: () {
+                      openPage(context, const ResponsiveContainerExamplePage());
                     },
                   ),
                 ],
