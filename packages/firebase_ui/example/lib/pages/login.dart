@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui_example/widgets/sign_in_form.dart';
+import 'package:firebase_ui/responsive.dart';
 
+import '../widgets/sign_in_form.dart';
 import 'phone_auth_flow.dart';
 
 class Login extends StatefulWidget {
@@ -30,19 +31,19 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
         Tab(text: 'Sign up'),
       ],
     );
+    final mq = MediaQuery.of(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Body(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IntrinsicHeight(
+            Expanded(
               child: Card(
-                margin: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    Text(mq.deviceType.toString()),
                     tabs,
                     Expanded(
                       child: Column(
