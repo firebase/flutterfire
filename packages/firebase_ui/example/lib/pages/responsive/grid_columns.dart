@@ -10,11 +10,7 @@ class GridColumnsExamplePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: ExampleAppBar(title: 'Grid columns example'),
-      body: Body(
-        child: SizedBox.expand(
-          child: _Content(),
-        ),
-      ),
+      body: _Content(),
     );
   }
 }
@@ -40,23 +36,27 @@ class _ContentState extends State<_Content> {
 
     return Column(
       children: [
-        Slider(
-          value: colsCount.toDouble(),
-          min: 1,
-          max: mq.maxColsCount.toDouble(),
-          onChanged: (v) {
-            setState(() {
-              colsCount = v.toInt();
-            });
-          },
+        Body(
+          child: Slider(
+            value: colsCount.toDouble(),
+            min: 1,
+            max: mq.maxColsCount.toDouble(),
+            onChanged: (v) {
+              setState(() {
+                colsCount = v.toInt();
+              });
+            },
+          ),
         ),
         Expanded(
           child: Stack(
             children: [
-              Container(
-                color: Theme.of(context).primaryColor,
-                height: double.infinity,
-                width: mq.widthFor(cols: colsCount),
+              Body(
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  height: double.infinity,
+                  width: mq.widthFor(cols: colsCount),
+                ),
               ),
               const ResponsiveGridOverlay(enabled: true),
             ],
