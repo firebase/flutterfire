@@ -14,7 +14,7 @@ class _GuttersExamplePageState extends State<GuttersExamplePage> {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
     return Scaffold(
-      appBar: const ExampleTabBar(title: 'Gutters example'),
+      appBar: const ExampleAppBar(title: 'Gutters example'),
       body: Body(
         child: ListView.separated(
           itemBuilder: (context, index) {

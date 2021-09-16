@@ -8,7 +8,7 @@ class BodyExamplePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ExampleTabBar(title: 'Body() example'),
+      appBar: const ExampleAppBar(title: 'Body() example'),
       body: Body(
         child: SizedBox.expand(
           child: Container(color: Colors.blue),

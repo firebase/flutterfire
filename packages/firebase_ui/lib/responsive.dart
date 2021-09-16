@@ -260,6 +260,16 @@ class ColWidth extends ResponsiveValue<int> {
           laptop: laptop,
           desktop: desktop,
         );
+
+  static expand() {
+    return ColWidth(
+      phone: _colsCount[DeviceType.phone]!,
+      phablet: _colsCount[DeviceType.phablet]!,
+      tablet: _colsCount[DeviceType.tablet]!,
+      laptop: _colsCount[DeviceType.laptop]!,
+      desktop: _colsCount[DeviceType.desktop]!,
+    );
+  }
 }
 
 class ResponsiveContainer extends StatelessWidget {
