@@ -5,6 +5,7 @@ export 'src/auth/initializer.dart';
 
 export 'src/auth/email/email_flow.dart';
 export 'src/auth/email/email_provider_configuration.dart';
+export 'src/auth/email/sign_in_form.dart';
 
 export 'src/auth/phone/phone_verification_flow.dart';
 export 'src/auth/phone/phone_provider_configuration.dart';
