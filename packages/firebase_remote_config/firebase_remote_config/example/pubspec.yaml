@@ -25,6 +25,8 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_web
   firebase_remote_config_platform_interface:
     path: ../../firebase_remote_config_platform_interface
+  firebase_remote_config_web:
+    path: ../../firebase_remote_config_web
 
 dev_dependencies:
   drive: 0.1.0

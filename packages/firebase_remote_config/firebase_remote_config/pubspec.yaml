@@ -14,6 +14,7 @@ dependencies:
   firebase_core: ^1.6.0
   firebase_core_platform_interface: ^4.0.1
   firebase_remote_config_platform_interface: ^0.3.0+5
+  firebase_remote_config_web: ^0.1.0
   flutter:
     sdk: flutter
 
@@ -35,3 +36,5 @@ flutter:
         pluginClass: FLTFirebaseRemoteConfigPlugin
       macos:
         pluginClass: FLTFirebaseRemoteConfigPlugin
+      web:
+        default_package: firebase_remote_config_web
