@@ -190,7 +190,7 @@ module.exports = [
     status: 'Beta',
     documentation: 'https://firebase.flutter.dev/docs/performance/overview',
     support: {
-      web: false,
+      web: true,
       mobile: true,
       macos: false,
     },
