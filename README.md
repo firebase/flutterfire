@@ -289,7 +289,7 @@ tracing. [[Learn More][performance_product]]
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
+|    ✔️    |  ✔️  |       |  ✔️  |
 
 ----
 
