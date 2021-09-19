@@ -1,3 +1,7 @@
+## 8.3.2
+
+ - **FIX**: Fix incorrect type name in error message (#6917).
+
 ## 8.3.1
 
  - Update a dependency to the latest release.

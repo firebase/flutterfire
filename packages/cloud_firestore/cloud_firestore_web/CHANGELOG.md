@@ -1,3 +1,8 @@
+## 2.4.2
+
+ - **FIX**: implement missing getter for settings on Firestore web (#6930).
+ - **CHORE**: Reduce hash conflicts on objects (#6928).
+
 ## 2.4.1
 
  - Update a dependency to the latest release.

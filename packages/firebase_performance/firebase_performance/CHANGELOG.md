@@ -1,3 +1,9 @@
+## 0.7.1
+
+ - **FIX**: fix the token verification. (#6912).
+ - **FEAT**: add web support to the plugin (#6920).
+ - **CHORE**: fix analyze issues (#6977).
+
 ## 0.7.0+9
 
  - **REFACTOR**: create interface plugin that federates the main plugin (#6851).

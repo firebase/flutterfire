@@ -21,8 +21,9 @@ class FirebaseDatabase {
   }
 
   FirebaseDatabase({FirebaseApp? app, String? databaseURL})
-      : _delegatePackingProperty =
-            MethodChannelDatabase(app: app, databaseURL: databaseURL);
+      : _delegatePackingProperty = app != null || databaseURL != null
+            ? DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL)
+            : DatabasePlatform.instance;
 
   static FirebaseDatabase _instance = FirebaseDatabase();
 

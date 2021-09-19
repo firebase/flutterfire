@@ -14,6 +14,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseMessagingPlatform? _delegatePackingProperty;
 
+  static Map<String, FirebaseMessaging> _firebaseMessagingInstances = {};
+
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
         app: app, pluginConstants: pluginConstants);
@@ -27,31 +29,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseMessaging get instance {
-    return FirebaseMessaging._(app: Firebase.app());
+    FirebaseApp defaultAppInstance = Firebase.app();
+    return FirebaseMessaging._instanceFor(app: defaultAppInstance);
   }
 
   //  Messaging does not yet support multiple Firebase Apps. Default app only.
-  /// Returns an instance using a specified [FirebaseApp]
-  ///
-  /// If [app] is not provided, the default Firebase app will be used.
-  // static FirebaseMessaging instanceFor({
-  //   FirebaseApp app,
-  // }) {
-  //   app ??= Firebase.app();
-  //   assert(app != null);
-  //
-  //   String key = '${app.name}';
-  //   if (_cachedInstances.containsKey(key)) {
-  //     return _cachedInstances[key];
-  //   }
-  //
-  //   FirebaseMessaging newInstance = FirebaseMessaging._(app: app);
-  //   _cachedInstances[key] = newInstance;
-  //
-  //   return newInstance;
-  // }
-  //
-  // static final Map<String, FirebaseMessaging> _cachedInstances = {};
+  /// Returns an instance using a specified [FirebaseApp].
+  factory FirebaseMessaging._instanceFor({required FirebaseApp app}) {
+    return _firebaseMessagingInstances.putIfAbsent(app.name, () {
+      return FirebaseMessaging._(app: app);
+    });
+  }
 
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.

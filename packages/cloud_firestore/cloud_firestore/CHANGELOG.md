@@ -1,3 +1,8 @@
+## 2.5.2
+
+ - **REVERT**: Firestore cache snapshot connections with underlying native listener (#6819) (#6974).
+ - **CHORE**: Reduce hash conflicts on objects (#6928).
+
 ## 2.5.1
 
  - Update a dependency to the latest release.

@@ -13,6 +13,7 @@ import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.functions.FirebaseFunctionsException;
 import com.google.firebase.functions.HttpsCallableReference;
 import com.google.firebase.functions.HttpsCallableResult;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -26,13 +27,39 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class FlutterFirebaseFunctionsPlugin implements FlutterFirebasePlugin, MethodCallHandler {
+public class FlutterFirebaseFunctionsPlugin
+    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler {
+
+  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
+  private MethodChannel channel;
+
+  private FlutterFirebaseFunctionsPlugin(MethodChannel channel) {
+    this.channel = channel;
+  }
+
+  /**
+   * Default Constructor.
+   *
+   * <p>Use this when adding the plugin to your FlutterEngine
+   */
+  public FlutterFirebaseFunctionsPlugin() {}
 
   public static void registerWith(Registrar registrar) {
-    final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "plugins.flutter.io/firebase_functions");
-    channel.setMethodCallHandler(
-        new io.flutter.plugins.firebase.functions.FlutterFirebaseFunctionsPlugin());
+    final MethodChannel channel = new MethodChannel(registrar.messenger(), METHOD_CHANNEL_NAME);
+    final FlutterFirebaseFunctionsPlugin plugin = new FlutterFirebaseFunctionsPlugin(channel);
+    channel.setMethodCallHandler(plugin);
+  }
+
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getBinaryMessenger(), METHOD_CHANNEL_NAME);
+    channel.setMethodCallHandler(this);
+  }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    channel.setMethodCallHandler(null);
+    channel = null;
   }
 
   private FirebaseFunctions getFunctions(Map<String, Object> arguments) {

@@ -319,6 +319,18 @@ void main() {
 
         int fromFirestore(Object? snapshot, Object? options) => 42;
         Map<String, Object?> toFirestore(Object? value, Object? options) => {};
+        Map<String, Object?> intToFirestore(int value, Object? options) => {};
+
+        expect(
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: intToFirestore,
+          ),
+          query.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: intToFirestore,
+          ),
+        );
 
         expect(
           query.withConverter<int>(
