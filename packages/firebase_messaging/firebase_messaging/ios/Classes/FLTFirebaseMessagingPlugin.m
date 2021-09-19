@@ -216,11 +216,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   // By the time FlutterPluginRegistrar adds `self` as a delegate, the `didFinishLaunching` events have already been
   // sent out by iOS, so implementing didFinishLaunching to intercept initial tap-on-notification information might not
-  // work when app is launched from a terminated state.  didReceive: is not called as it would be were the app
-  // in the background or foreground.
+  // work when app is launched from a terminated state.  `didReceive:UNNotificationResponse` is not called as it would
+  // be were the app in the background or foreground.
   // (see FlutterPluginAppLifeCycleDelegate.mm - `addDelegate` for some context as to how delegation works in Flutter)
   //
-  // So, as a kludge, we can manually call the MethodChannel function that `didReceive`, also calls.
+  // So, as a kludge, we can manually call the `onMessageOpenedApp` MethodChannel function:
   NSDictionary *remoteNotification = notification.userInfo;
   if (remoteNotification != nil) {
       NSDictionary *data = remoteNotification[UIApplicationLaunchOptionsRemoteNotificationKey];
