@@ -221,19 +221,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // (see FlutterPluginAppLifeCycleDelegate.mm - `addDelegate` for some context as to how delegation works in Flutter)
   //
   // So, as a kludge, we can manually call the `onMessageOpenedApp` MethodChannel function:
-  NSDictionary *remoteNotification = notification.userInfo;
-  if (remoteNotification != nil) {
-      NSDictionary *data = remoteNotification[UIApplicationLaunchOptionsRemoteNotificationKey];
-      // We only want to handle FCM notifications.
-      if (data[@"gcm.message_id"]) {
-        NSDictionary *notificationDict =
-            [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:data];
-        [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-        @synchronized(self) {
-          _initialNotification = notificationDict;
-        }
-      }
-  }
+  [self callFlutterOnMessageOpenedAppWith:notification.userInfo];
 #endif
 
   // Set UNUserNotificationCenter but preserve original delegate if necessary.
@@ -339,12 +327,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 }
 
-// Called when a use interacts with a notification.
-- (void)userNotificationCenter:(UNUserNotificationCenter *)center
-    didReceiveNotificationResponse:(UNNotificationResponse *)response
-             withCompletionHandler:(void (^)(void))completionHandler
-    API_AVAILABLE(macos(10.14), ios(10.0)) {
-  NSDictionary *remoteNotification = response.notification.request.content.userInfo;
+// Tells Dart/Flutter that a user tapped a notification to open the app.
+- (void)callFlutterOnMessageOpenedAppWith:(NSDictionary *)remoteNotification {
   // We only want to handle FCM notifications.
   if (remoteNotification[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
@@ -354,6 +338,15 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       _initialNotification = notificationDict;
     }
   }
+}
+
+// TODO(tek08): Is this worth having implemented, given that I believe it is never called?
+// Called when a user interacts with a notification.
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center
+    didReceiveNotificationResponse:(UNNotificationResponse *)response
+             withCompletionHandler:(void (^)(void))completionHandler
+    API_AVAILABLE(macos(10.14), ios(10.0)) {
+  [self callFlutterOnMessageOpenedAppWith:response.notification.request.content.userInfo];
 
   // Forward on to any other delegates.
   if (_originalNotificationCenterDelegate != nil &&
