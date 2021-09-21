@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  final FirebaseAnalytics analytics = FirebaseAnalytics();
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
   MethodCall? methodCall;

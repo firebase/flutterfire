@@ -7,8 +7,37 @@
 part of firebase_analytics;
 
 /// Firebase Analytics API.
-class FirebaseAnalytics {
-  final _platformInstance = FirebaseAnalyticsPlatform.instance;
+class FirebaseAnalytics extends FirebasePluginPlatform {
+  FirebaseAnalytics._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+
+  static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
+  // Cached and lazily loaded instance of [FirebaseAnalyticsPlatform] to avoid
+  // creating a [MethodChannelFirebaseAnalytics] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  FirebaseAnalyticsPlatform? _delegatePackingProperty;
+
+  FirebaseAnalyticsPlatform get _delegate {
+    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(
+        app: app);
+  }
+
+  //  Analytics does not yet support multiple Firebase Apps. Default app only.
+  /// Returns an instance using a specified [FirebaseApp].
+  factory FirebaseAnalytics._instanceFor({required FirebaseApp app}) {
+    return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
+      return FirebaseAnalytics._(app: app);
+    });
+  }
+
+  /// The [FirebaseApp] for this current [FirebaseAnalytics] instance.
+  FirebaseApp app;
+
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseAnalytics get instance {
+    FirebaseApp defaultAppInstance = Firebase.app();
+    return FirebaseAnalytics._instanceFor(app: defaultAppInstance);
+  }
 
   /// Namespace for analytics API available on Android only.
   ///
@@ -18,7 +47,7 @@ class FirebaseAnalytics {
   ///
   /// Example:
   ///
-  ///     FirebaseAnalytics analytics = FirebaseAnalytics();
+  ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   ///     analytics.android?.setSessionTimeoutDuration(true);
   final FirebaseAnalyticsAndroid? android =
       defaultTargetPlatform == TargetPlatform.android && !kIsWeb
@@ -40,14 +69,14 @@ class FirebaseAnalytics {
           'Prefix "$kReservedPrefix" is reserved and cannot be used.');
     }
 
-    await _platformInstance.logEvent(name: name, parameters: parameters);
+    await _delegate.logEvent(name: name, parameters: parameters);
   }
 
   /// Sets whether analytics collection is enabled for this app on this device.
   ///
   /// This setting is persisted across app sessions. By default it is enabled.
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    await _platformInstance.setAnalyticsCollectionEnabled(enabled);
+    await _delegate.setAnalyticsCollectionEnabled(enabled);
   }
 
   /// Sets the user ID property.
@@ -58,7 +87,7 @@ class FirebaseAnalytics {
   ///
   /// [1]: https://www.google.com/policies/privacy/
   Future<void> setUserId(String? id) async {
-    await _platformInstance.setUserId(id);
+    await _delegate.setUserId(id);
   }
 
   /// Sets the current [screenName], which specifies the current visual context
@@ -83,7 +112,7 @@ class FirebaseAnalytics {
   Future<void> setCurrentScreen(
       {required String? screenName,
       String screenClassOverride = 'Flutter'}) async {
-    await _platformInstance.setCurrentScreen(
+    await _delegate.setCurrentScreen(
       screenName: screenName,
       screenClassOverride: screenClassOverride,
     );
@@ -117,12 +146,12 @@ class FirebaseAnalytics {
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
     }
 
-    await _platformInstance.setUserProperty(name: name, value: value);
+    await _delegate.setUserProperty(name: name, value: value);
   }
 
   /// Clears all analytics data for this app from the device and resets the app instance id.
   Future<void> resetAnalyticsData() async {
-    await _platformInstance.resetAnalyticsData();
+    await _delegate.resetAnalyticsData();
   }
 
   /// Logs the standard `add_payment_info` event.
@@ -854,13 +883,13 @@ class FirebaseAnalytics {
 
 /// Android-specific analytics API.
 class FirebaseAnalyticsAndroid {
-  final _platformInstance = FirebaseAnalyticsPlatform.instance;
+  final _delegate = FirebaseAnalyticsPlatform.instance;
 
   /// Sets the duration of inactivity that terminates the current session.
   ///
   /// The default value is 1800000 (30 minutes).
   Future<void> setSessionTimeoutDuration(int milliseconds) async {
-    await _platformInstance.setSessionTimeoutDuration(milliseconds);
+    await _delegate.setSessionTimeoutDuration(milliseconds);
   }
 }
 

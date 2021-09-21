@@ -23,19 +23,19 @@ void main() {
 
   testWidgets('Android-only functionality', (WidgetTester tester) async {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      await FirebaseAnalytics().android.setSessionTimeoutDuration(1000);
+      await FirebaseAnalytics.instance.android.setSessionTimeoutDuration(1000);
     } else {
-      expect(FirebaseAnalytics().android, isNull);
+      expect(FirebaseAnalytics.instance.android, isNull);
     }
   }, skip: kIsWeb);
 
   testWidgets('logging', (WidgetTester tester) async {
-    expect(FirebaseAnalytics().setAnalyticsCollectionEnabled(true), completes);
+    expect(FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true), completes);
     expect(
-        FirebaseAnalytics().setCurrentScreen(screenName: 'testing'), completes);
-    expect(FirebaseAnalytics().logEvent(name: 'testing'), completes);
+        FirebaseAnalytics.instance.setCurrentScreen(screenName: 'testing'), completes);
+    expect(FirebaseAnalytics.instance.logEvent(name: 'testing'), completes);
     expect(
-        FirebaseAnalytics().logEvent(
+        FirebaseAnalytics.instance.logEvent(
           name: 'view_item_list',
           parameters: {
             'item_list_id': 'Test',
@@ -59,7 +59,7 @@ void main() {
 
     if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
       expect(
-        FirebaseAnalytics().logEvent(
+        FirebaseAnalytics.instance.logEvent(
           name: 'test_event',
           parameters: {
             'ids': [1, 2, 3, 4, 5],

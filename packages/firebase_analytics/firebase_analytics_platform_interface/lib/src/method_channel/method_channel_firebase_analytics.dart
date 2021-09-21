@@ -4,13 +4,30 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/services.dart';
 
-import 'firebase_analytics_platform_interface.dart';
+import '../platform_interface/platform_interface_firebase_analytics.dart';
 
 /// The method channel implementation of [FirebaseAnalyticsPlatform].
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
+  /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
+  /// [region].
+  MethodChannelFirebaseAnalytics({FirebaseApp? app})
+      : super(app);
+
+  /// Internal stub class initializer.
+  ///
+  /// When the user code calls an analytics method, the real instance is
+  /// then initialized via the [delegateFor] method.
+  MethodChannelFirebaseAnalytics._() : super(null);
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFirebaseAnalytics get instance {
+    return MethodChannelFirebaseAnalytics._();
+  }
+
   static const MethodChannel _channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
 

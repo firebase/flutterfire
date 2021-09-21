@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_analytics_platform_interface/method_channel_firebase_analytics.dart';
+import 'package:firebase_analytics_platform_interface/src/method_channel/method_channel_firebase_analytics.dart';
 import 'package:flutter/services.dart';
 
 void main() {

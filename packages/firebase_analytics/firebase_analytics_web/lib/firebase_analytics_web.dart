@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   /// A constructor that allows tests to override the firebase.Analytics object.
   FirebaseAnalyticsWeb({@visibleForTesting firebase.Analytics? analytics})
-      : _analytics = analytics ?? firebase.analytics();
+      : _analytics = analytics ?? firebase.analytics(), super(null);
 
   /// Instance of Analytics from the web plugin.
   final firebase.Analytics _analytics;
