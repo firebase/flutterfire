@@ -4,12 +4,9 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 
 class TabsPage extends StatefulWidget {
-  const TabsPage(this.observer, {Key? key}) : super(key: key);
-
-  final FirebaseAnalyticsObserver observer;
+  const TabsPage({Key? key}) : super(key: key);
 
   static const String routeName = '/tab';
 
@@ -37,12 +34,10 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    widget.observer.subscribe(this, ModalRoute.of(context)! as PageRoute);
   }
 
   @override
   void dispose() {
-    widget.observer.unsubscribe(this);
     super.dispose();
   }
 
@@ -88,8 +83,6 @@ class _TabsPageState extends State<TabsPage>
   }
 
   void _sendCurrentTabToAnalytics() {
-    widget.observer.analytics.setCurrentScreen(
-      screenName: '${TabsPage.routeName}/tab$selectedIndex',
-    );
+
   }
 }
