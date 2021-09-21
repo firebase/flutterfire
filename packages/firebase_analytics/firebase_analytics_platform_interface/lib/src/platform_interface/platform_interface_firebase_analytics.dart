@@ -21,6 +21,7 @@ import '../method_channel/method_channel_firebase_analytics.dart';
 abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// Create an instance using [app] and [region].
   FirebaseAnalyticsPlatform(this.app) : super(token: _token);
+
   /// Only mock implementations should set this to `true`.
   ///
   /// Mockito mocks implement this class with `implements` which is forbidden
@@ -35,11 +36,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// The [FirebaseApp] this instance was initialized with
   final FirebaseApp? app;
+
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAnalyticsPlatform.instanceFor(
-      {FirebaseApp? app }) {
-    return FirebaseAnalyticsPlatform.instance
-        .delegateFor(app: app);
+  factory FirebaseAnalyticsPlatform.instanceFor({FirebaseApp? app}) {
+    return FirebaseAnalyticsPlatform.instance.delegateFor(app: app);
   }
 
   /// The current default [FirebaseAnalyticsPlatform] instance.
@@ -59,8 +59,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance or region is required by the user.
   @protected
-  FirebaseAnalyticsPlatform delegateFor(
-      {FirebaseApp? app}) {
+  FirebaseAnalyticsPlatform delegateFor({FirebaseApp? app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

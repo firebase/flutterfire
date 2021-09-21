@@ -82,7 +82,5 @@ class _TabsPageState extends State<TabsPage>
     _sendCurrentTabToAnalytics();
   }
 
-  void _sendCurrentTabToAnalytics() {
-
-  }
+  void _sendCurrentTabToAnalytics() {}
 }

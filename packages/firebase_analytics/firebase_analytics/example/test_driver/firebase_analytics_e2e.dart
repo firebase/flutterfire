@@ -30,9 +30,10 @@ void main() {
   }, skip: kIsWeb);
 
   testWidgets('logging', (WidgetTester tester) async {
-    expect(FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true), completes);
-    expect(
-        FirebaseAnalytics.instance.setCurrentScreen(screenName: 'testing'), completes);
+    expect(FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true),
+        completes);
+    expect(FirebaseAnalytics.instance.setCurrentScreen(screenName: 'testing'),
+        completes);
     expect(FirebaseAnalytics.instance.logEvent(name: 'testing'), completes);
     expect(
         FirebaseAnalytics.instance.logEvent(

@@ -14,14 +14,14 @@ import '../platform_interface/platform_interface_firebase_analytics.dart';
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseAnalytics({FirebaseApp? app})
-      : super(app);
+  MethodChannelFirebaseAnalytics({FirebaseApp? app}) : super(app);
 
   /// Internal stub class initializer.
   ///
   /// When the user code calls an analytics method, the real instance is
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebaseAnalytics._() : super(null);
+
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseAnalytics get instance {

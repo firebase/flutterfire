@@ -25,7 +25,8 @@ void main() {
 
     test('Can be extended', () async {
       app = await Firebase.initializeApp();
-      FirebaseAnalyticsPlatform.instance = ExtendsFirebaseAnalyticsPlatform(app);
+      FirebaseAnalyticsPlatform.instance =
+          ExtendsFirebaseAnalyticsPlatform(app);
     });
 
     test('Can be mocked with `implements`', () {
