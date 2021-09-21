@@ -18,8 +18,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalyticsPlatform? _delegatePackingProperty;
 
   FirebaseAnalyticsPlatform get _delegate {
-    return _delegatePackingProperty ??= FirebaseAnalyticsPlatform.instanceFor(
-        app: app);
+    return _delegatePackingProperty ??=
+        FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
   //  Analytics does not yet support multiple Firebase Apps. Default app only.
@@ -160,8 +160,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// to your app.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_PAYMENT_INFO
-  Future<void> logAddPaymentInfo() {
-    return logEvent(name: 'add_payment_info');
+  Future<void> logAddPaymentInfo(
+      {String? coupon,
+      String? currency,
+      String? paymentType,
+      double? value,
+      List<Item>? items}) {
+    return logEvent(name: 'add_payment_info', parameters: {
+      'coupon': coupon,
+      'currency': currency,
+      'paymentType': paymentType,
+      'value': value
+    });
   }
 
   /// Logs the standard `add_to_cart` event.
