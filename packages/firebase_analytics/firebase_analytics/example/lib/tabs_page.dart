@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage(this.observer, {Key? key}) : super(key: key);
