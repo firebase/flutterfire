@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'int': 42,
         'long': 12345678910,
         'double': 42.0,
-        'bool': true.toString(),
+        'bool': true.toString(), // Only strings and integers are supported for GA custom event parameters https://developers.google.com/analytics/devguides/collection/analyticsjs/custom-dims-mets#overview
       },
     );
     setMessage('logEvent succeeded');
