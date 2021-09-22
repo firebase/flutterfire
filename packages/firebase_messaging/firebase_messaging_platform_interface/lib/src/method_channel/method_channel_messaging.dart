@@ -69,34 +69,41 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
   MethodChannelFirebaseMessaging({required FirebaseApp app})
       : super(appInstance: app) {
     if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'Messaging#onTokenRefresh':
-          _tokenStreamController.add(call.arguments as String);
-          break;
-        case 'Messaging#onMessage':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessage
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onMessageOpenedApp':
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          FirebaseMessagingPlatform.onMessageOpenedApp
-              .add(RemoteMessage.fromMap(messageMap));
-          break;
-        case 'Messaging#onBackgroundMessage':
-          // Apple only. Android calls via separate background channel.
-          Map<String, dynamic> messageMap =
-              Map<String, dynamic>.from(call.arguments);
-          return FirebaseMessagingPlatform.onBackgroundMessage
-              ?.call(RemoteMessage.fromMap(messageMap));
-        default:
-          throw UnimplementedError('${call.method} has not been implemented');
-      }
-    });
+    channel.setMethodCallHandler(_methodCallHandler);
     _initialized = true;
+  }
+
+  Future<dynamic> _methodCallHandler(MethodCall call) async {
+    switch (call.method) {
+      case 'Messaging#onTokenRefresh':
+        _tokenStreamController.add(call.arguments as String);
+        break;
+      case 'Messaging#onMessage':
+        Map<String, dynamic> messageMap =
+            Map<String, dynamic>.from(call.arguments);
+        FirebaseMessagingPlatform.onMessage
+            .add(RemoteMessage.fromMap(messageMap));
+        break;
+      case 'Messaging#onMessageOpenedApp':
+        Map<String, dynamic> messageMap =
+            Map<String, dynamic>.from(call.arguments);
+        FirebaseMessagingPlatform.onMessageOpenedApp
+            .add(RemoteMessage.fromMap(messageMap));
+        break;
+      case 'Messaging#onBackgroundMessage':
+        // Apple only. Android calls via separate background channel.
+        Map<String, dynamic> messageMap =
+            Map<String, dynamic>.from(call.arguments);
+        return FirebaseMessagingPlatform.onBackgroundMessage
+            ?.call(RemoteMessage.fromMap(messageMap));
+      case 'Messaging#shouldShowNotification':
+        Map<String, dynamic> messageMap =
+            Map<String, dynamic>.from(call.arguments);
+        return FirebaseMessagingPlatform.shouldShowNotificationMessageHandler
+            ?.call(RemoteMessage.fromMap(messageMap));
+      default:
+        throw UnimplementedError('${call.method} has not been implemented');
+    }
   }
 
   late bool _autoInitEnabled;

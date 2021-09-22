@@ -83,6 +83,11 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   static BackgroundMessageHandler? _onBackgroundMessageHandler;
 
+  /// Custom function that developer can define to conditionally override
+  /// setForegroundNotificationPresentationOptions(...).
+  static ShouldShowNotificationMessageHandler?
+      shouldShowNotificationMessageHandler;
+
   /// Set a message handler function which is called when the app is in the
   /// background or terminated.
   ///

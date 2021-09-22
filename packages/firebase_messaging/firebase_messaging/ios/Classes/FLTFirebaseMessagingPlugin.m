@@ -293,14 +293,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
-  // Forward on to any other delegates amd allow them to control presentation behavior.
+  // Forward on to any other delegates and allow them to control presentation behavior.
   if (_originalNotificationCenterDelegate != nil &&
       _originalNotificationCenterDelegateRespondsTo.willPresentNotification) {
     [_originalNotificationCenterDelegate userNotificationCenter:center
                                         willPresentNotification:notification
                                           withCompletionHandler:completionHandler];
   } else {
-    UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
+    NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
+
+    __block UNNotificationPresentationOptions presentationOptions = UNNotificationPresentationOptionNone;
     NSDictionary *persistedOptions = [[NSUserDefaults standardUserDefaults]
         dictionaryForKey:kMessagingPresentationOptionsUserDefaults];
     if (persistedOptions != nil) {
@@ -314,7 +317,17 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
         presentationOptions |= UNNotificationPresentationOptionSound;
       }
     }
-    completionHandler(presentationOptions);
+
+    [_channel invokeMethod:@"Messaging#shouldShowNotification" arguments:notificationDict result:^(id _Nullable result){
+        if (result != nil && result != FlutterMethodNotImplemented) {
+            /// Dart has explicitly said to *not* show the notification, so we won't!
+            if (![(NSNumber *)result boolValue]) {
+                presentationOptions = UNNotificationPresentationOptionNone;
+            }
+        }
+
+        completionHandler(presentationOptions);
+    }];
   }
 }
 

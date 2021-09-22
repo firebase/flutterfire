@@ -73,6 +73,10 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
 
+  static void shouldShowNotificationMessageHandler(ShouldShowNotificationMessageHandler handler) {
+    FirebaseMessagingPlatform.shouldShowNotificationMessageHandler = handler;
+  }
+
   /// Returns whether messaging auto initialization is enabled or disabled for the device.
   bool get isAutoInitEnabled {
     return _delegate.isAutoInitEnabled;

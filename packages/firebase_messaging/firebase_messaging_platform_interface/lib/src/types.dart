@@ -8,6 +8,10 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 /// Defines a handler for incoming remote message payloads.
 typedef BackgroundMessageHandler = Future<void> Function(RemoteMessage message);
 
+/// Defines a handler for determining whether a Notification Message should be shown when app is in foreground.
+typedef ShouldShowNotificationMessageHandler = Future<bool> Function(
+    RemoteMessage message);
+
 /// An enum representing a notification setting for this app on the device.
 enum AppleNotificationSetting {
   /// This setting is currently disabled by the user.
