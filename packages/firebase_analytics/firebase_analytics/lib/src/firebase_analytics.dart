@@ -12,6 +12,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
+
   // Cached and lazily loaded instance of [FirebaseAnalyticsPlatform] to avoid
   // creating a [MethodChannelFirebaseAnalytics] when not needed or creating an
   // instance with the default app before a user specifies an app.
@@ -160,17 +161,41 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// to your app.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_PAYMENT_INFO
-  Future<void> logAddPaymentInfo(
-      {String? coupon,
-      String? currency,
-      String? paymentType,
-      double? value,
-      List<Item>? items}) {
+  Future<void> logAddPaymentInfo({
+    String? coupon,
+    String? currency,
+    String? paymentType,
+    double? value,
+    List<Item>? items,
+  }) {
     return logEvent(name: 'add_payment_info', parameters: {
-      'coupon': coupon,
-      'currency': currency,
-      'paymentType': paymentType,
-      'value': value
+      _COUPON: coupon,
+      _CURRENCY: currency,
+      _PAYMENT_TYPE: paymentType,
+      _VALUE: value,
+      _ITEMS: items,
+    });
+  }
+
+  /// Logs the standard `add_shipping_info` event.
+  ///
+  /// This event signifies that a user has submitted their shipping information
+  /// to your app.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_PAYMENT_INFO
+  Future<void> logAddShippingInfo({
+    String? coupon,
+    String? currency,
+    double? value,
+    String? shippingTier,
+    List<Item>? items,
+  }) {
+    return logEvent(name: 'add_shipping_info', parameters: {
+      _COUPON: coupon,
+      _CURRENCY: currency,
+      _SHIPPING_TIER: shippingTier,
+      _VALUE: value,
+      _ITEMS: items,
     });
   }
 
@@ -184,36 +209,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_CART
   Future<void> logAddToCart({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    required int quantity,
-    double? price,
+    List<Item>? items,
     double? value,
     String? currency,
-    String? origin,
-    String? itemLocationId,
-    String? destination,
-    String? startDate,
-    String? endDate,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'add_to_cart',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEM_ID: itemId,
-        _ITEM_NAME: itemName,
-        _ITEM_CATEGORY: itemCategory,
-        _QUANTITY: quantity,
-        _PRICE: price,
+        _ITEMS: items,
         _VALUE: value,
         _CURRENCY: currency,
-        _ORIGIN: origin,
-        _ITEM_LOCATION_ID: itemLocationId,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
       }),
     );
   }
@@ -227,28 +234,49 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_WISHLIST
   Future<void> logAddToWishlist({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    required int quantity,
-    double? price,
+    List<Item>? items,
     double? value,
     String? currency,
-    String? itemLocationId,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'add_to_wishlist',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEM_ID: itemId,
-        _ITEM_NAME: itemName,
-        _ITEM_CATEGORY: itemCategory,
-        _QUANTITY: quantity,
-        _PRICE: price,
+        _ITEMS: items,
         _VALUE: value,
         _CURRENCY: currency,
-        _ITEM_LOCATION_ID: itemLocationId,
+      }),
+    );
+  }
+
+  /// Logs the standard `add_to_wishlist` event.
+  ///
+  /// This event signifies that an item was added to a wishlist. Use this event
+  /// to identify popular gift items in your app. Note: If you supply the
+  /// [value] parameter, you must also supply the [currency] parameter so that
+  /// revenue metrics can be computed accurately.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_WISHLIST
+  Future<void> logAdImpression({
+    String? adPlatform,
+    String? adSource,
+    String? adFormat,
+    String? adUnitName,
+    double? value,
+    String? currency,
+  }) {
+    _requireValueAndCurrencyTogether(value, currency);
+
+    return logEvent(
+      name: 'ad_impression',
+      parameters: filterOutNulls(<String, Object?>{
+        _AD_PLATFORM: adPlatform,
+        _AD_SOURCE: adSource,
+        _AD_FORMAT: adFormat,
+        _AD_UNIT_NAME: adUnitName,
+        _VALUE: value,
+        _CURRENCY: currency,
       }),
     );
   }
@@ -272,15 +300,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logBeginCheckout({
     double? value,
     String? currency,
-    String? transactionId,
-    int? numberOfNights,
-    int? numberOfRooms,
-    int? numberOfPassengers,
-    String? origin,
-    String? destination,
-    String? startDate,
-    String? endDate,
-    String? travelClass,
+    List<Item>? items,
+    String? coupon,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -289,15 +310,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _VALUE: value,
         _CURRENCY: currency,
-        _TRANSACTION_ID: transactionId,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _TRAVEL_CLASS: travelClass,
+        _ITEMS: items,
+        _COUPON: coupon,
       }),
     );
   }
@@ -346,56 +360,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
-      }),
-    );
-  }
-
-  /// Logs the standard `ecommerce_purchase` event.
-  ///
-  /// This event signifies that an item was purchased by a user. Note: This is
-  /// different from the in-app purchase event, which is reported automatically
-  /// for Google Play-based apps. Note: If you supply the [value] parameter,
-  /// you must also supply the [currency] parameter so that revenue metrics can
-  /// be computed accurately.
-  ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ECOMMERCE_PURCHASE
-  Future<void> logEcommercePurchase({
-    String? currency,
-    double? value,
-    String? transactionId,
-    double? tax,
-    double? shipping,
-    String? coupon,
-    String? location,
-    int? numberOfNights,
-    int? numberOfRooms,
-    int? numberOfPassengers,
-    String? origin,
-    String? destination,
-    String? startDate,
-    String? endDate,
-    String? travelClass,
-  }) {
-    _requireValueAndCurrencyTogether(value, currency);
-
-    return logEvent(
-      name: 'ecommerce_purchase',
-      parameters: filterOutNulls(<String, Object?>{
-        _CURRENCY: currency,
-        _VALUE: value,
-        _TRANSACTION_ID: transactionId,
-        _TAX: tax,
-        _SHIPPING: shipping,
-        _COUPON: coupon,
-        _LOCATION: location,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _TRAVEL_CLASS: travelClass,
       }),
     );
   }
@@ -529,99 +493,142 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Logs the standard `present_offer` event.
+  /// Logs the standard `purchase` event.
   ///
-  /// This event signifies that the app has presented a purchase offer to a
-  /// user. Add this event to a funnel with the [logAddToCart] and
-  /// [logEcommercePurchase] to gauge your conversion process. Note: If you
-  /// supply the [value] parameter, you must also supply the [currency]
-  /// parameter so that revenue metrics can be computed accurately.
+  /// This event signifies that an item(s) was purchased by a user.
+  /// Note: This is different from the in-app purchase event,
+  /// which is reported automatically for Google Play-based apps.
   ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PRESENT_OFFER
-  Future<void> logPresentOffer({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    required int quantity,
-    double? price,
-    double? value,
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PURCHASE
+  Future<void> logPurchase({
     String? currency,
-    String? itemLocationId,
-  }) {
-    _requireValueAndCurrencyTogether(value, currency);
-
-    return logEvent(
-      name: 'present_offer',
-      parameters: filterOutNulls(<String, Object?>{
-        _ITEM_ID: itemId,
-        _ITEM_NAME: itemName,
-        _ITEM_CATEGORY: itemCategory,
-        _QUANTITY: quantity,
-        _PRICE: price,
-        _VALUE: value,
-        _CURRENCY: currency,
-        _ITEM_LOCATION_ID: itemLocationId,
-      }),
-    );
-  }
-
-  /// Logs the standard `purchase_refund` event.
-  ///
-  /// This event signifies that an item purchase was refunded. Note: If you
-  /// supply the [value] parameter, you must also supply the [currency]
-  /// parameter so that revenue metrics can be computed accurately.
-  ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PURCHASE_REFUND
-  Future<void> logPurchaseRefund({
-    String? currency,
+    String? coupon,
     double? value,
+    List<Item>? items,
+    double? tax,
+    double? shipping,
     String? transactionId,
+    String? affiliation,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
-      name: 'purchase_refund',
+      name: 'purchase',
       parameters: filterOutNulls(<String, Object?>{
         _CURRENCY: currency,
+        _COUPON: coupon,
         _VALUE: value,
+        _ITEMS: items,
+        _TAX: tax,
+        _SHIPPING: shipping,
         _TRANSACTION_ID: transactionId,
+        _AFFILIATION: affiliation,
       }),
     );
   }
 
   /// Logs the standard `remove_from_cart` event.
+  ///
+  /// This event signifies that an item(s) was removed from a cart.
+  ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#REMOVE_FROM_CART
   Future<void> logRemoveFromCart({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    required int quantity,
-    double? price,
-    double? value,
     String? currency,
-    String? origin,
-    String? itemLocationId,
-    String? destination,
-    String? startDate,
-    String? endDate,
+    double? value,
+    List<Item>? items,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'remove_from_cart',
       parameters: filterOutNulls(<String, Object?>{
-        _QUANTITY: quantity,
-        _ITEM_CATEGORY: itemCategory,
-        _ITEM_NAME: itemName,
-        _ITEM_ID: itemId,
-        _VALUE: value,
-        _PRICE: price,
         _CURRENCY: currency,
-        _ITEM_LOCATION_ID: itemLocationId,
-        _ORIGIN: origin,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _DESTINATION: destination,
+        _VALUE: value,
+        _ITEMS: items,
+      }),
+    );
+  }
+
+  /// Logs the standard `screen_view` event.
+  ///
+  /// This event signifies a screen view. Use this when a screen transition occurs.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SCREEN_VIEW
+  Future<void> logScreenView({
+    String? screenClass,
+    String? screenName,
+  }) {
+    return logEvent(
+      name: 'screen_view',
+      parameters: filterOutNulls(<String, Object?>{
+        _SCREEN_CLASS: screenClass,
+        _SCREEN_NAME: screenName,
+      }),
+    );
+  }
+
+  /// Logs the standard `select_item` event.
+  ///
+  /// This event signifies that an item was selected by a user from a list.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SELECT_ITEM
+  Future<void> logSelectItem({
+    String? itemListId,
+    String? itemListName,
+    List<Item>? items,
+  }) {
+    return logEvent(
+      name: 'select_item',
+      parameters: filterOutNulls(<String, Object?>{
+        _ITEM_LIST_ID: itemListId,
+        _ITEM_LIST_NAME: itemListName,
+        _ITEMS: items,
+      }),
+    );
+  }
+
+  /// Logs the standard `select_promotion` event.
+  ///
+  /// This event signifies that a user has selected a promotion offer.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SELECT_PROMOTION
+  Future<void> logSelectPromotion({
+    String? creativeName,
+    String? creativeSlot,
+    List<Item>? items,
+    String? locationId,
+    String? promotionId,
+    String? promotionName,
+  }) {
+    return logEvent(
+      name: 'select_promotion',
+      parameters: filterOutNulls(<String, Object?>{
+        _CREATIVE_NAME: creativeName,
+        _CREATIVE_SLOT: creativeSlot,
+        _ITEMS: items,
+        _LOCATION_ID: locationId,
+        _PROMOTION_ID: promotionId,
+        _PROMOTION_NAME: promotionName,
+      }),
+    );
+  }
+
+  /// Logs the standard `view_cart` event.
+  ///
+  /// This event signifies that a user has viewed their cart. Use this to analyze your purchase funnel.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_CART
+  Future<void> logViewCart({
+    String? currency,
+    double? value,
+    List<Item>? items,
+  }) {
+    return logEvent(
+      name: 'view_cart',
+      parameters: filterOutNulls(<String, Object?>{
+        _CURRENCY: currency,
+        _VALUE: value,
+        _ITEMS: items,
       }),
     );
   }
@@ -677,21 +684,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       parameters: filterOutNulls(<String, Object?>{
         _CONTENT_TYPE: contentType,
         _ITEM_ID: itemId,
-      }),
-    );
-  }
-
-  /// Logs the standard `set_checkout_option` event.
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#SET_CHECKOUT_OPTION
-  Future<void> logSetCheckoutOption({
-    required int checkoutStep,
-    required String checkoutOption,
-  }) {
-    return logEvent(
-      name: 'set_checkout_option',
-      parameters: filterOutNulls(<String, Object?>{
-        _CHECKOUT_STEP: checkoutStep,
-        _CHECKOUT_OPTION: checkoutOption,
       }),
     );
   }
@@ -810,48 +802,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_ITEM
   Future<void> logViewItem({
-    required String itemId,
-    required String itemName,
-    required String itemCategory,
-    String? itemLocationId,
-    double? price,
-    int? quantity,
     String? currency,
     double? value,
-    String? flightNumber,
-    int? numberOfPassengers,
-    int? numberOfNights,
-    int? numberOfRooms,
-    String? origin,
-    String? destination,
-    String? startDate,
-    String? endDate,
-    String? searchTerm,
-    String? travelClass,
+    List<Item>? items,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
     return logEvent(
       name: 'view_item',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEM_ID: itemId,
-        _ITEM_NAME: itemName,
-        _ITEM_CATEGORY: itemCategory,
-        _ITEM_LOCATION_ID: itemLocationId,
-        _PRICE: price,
-        _QUANTITY: quantity,
         _CURRENCY: currency,
         _VALUE: value,
-        _FLIGHT_NUMBER: flightNumber,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _SEARCH_TERM: searchTerm,
-        _TRAVEL_CLASS: travelClass,
+        _ITEMS: items,
       }),
     );
   }
@@ -863,12 +825,42 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_ITEM_LIST
   Future<void> logViewItemList({
-    required String itemCategory,
+    List<Item>? items,
+    String? itemListId,
+    String? itemListName,
   }) {
     return logEvent(
       name: 'view_item_list',
       parameters: filterOutNulls(<String, Object?>{
-        _ITEM_CATEGORY: itemCategory,
+        _ITEMS: items,
+        _ITEM_LIST_ID: itemListId,
+        _ITEM_LIST_NAME: itemListName,
+      }),
+    );
+  }
+
+  /// Logs the standard `view_promotion` event.
+  ///
+  /// This event signifies that a promotion was shown to a user.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#VIEW_PROMOTION
+  Future<void> logViewPromotion({
+    String? creativeName,
+    String? creativeSlot,
+    List<Item>? items,
+    String? locationId,
+    String? promotionId,
+    String? promotionName,
+  }) {
+    return logEvent(
+      name: 'view_promotion',
+      parameters: filterOutNulls(<String, Object?>{
+        _CREATIVE_NAME: creativeName,
+        _CREATIVE_SLOT: creativeSlot,
+        _ITEMS: items,
+        _LOCATION_ID: locationId,
+        _PROMOTION_ID: promotionId,
+        _PROMOTION_NAME: promotionName,
       }),
     );
   }
@@ -886,6 +878,36 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       name: 'view_search_results',
       parameters: filterOutNulls(<String, Object?>{
         _SEARCH_TERM: searchTerm,
+      }),
+    );
+  }
+
+  /// Logs the standard `refund` event.
+  ///
+  /// This event signifies that a refund was issued.
+  ///
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#REFUND
+  Future<void> logRefund({
+    String? currency,
+    String? coupon,
+    double? value,
+    double? tax,
+    double? shipping,
+    String? transactionId,
+    String? affiliation,
+    List<Item>? items,
+  }) {
+    return logEvent(
+      name: 'refund',
+      parameters: filterOutNulls(<String, Object?>{
+        _CURRENCY: currency,
+        _COUPON: coupon,
+        _VALUE: value,
+        _TAX: tax,
+        _SHIPPING: shipping,
+        _TRANSACTION_ID: transactionId,
+        _AFFILIATION: affiliation,
+        _ITEMS: items,
       }),
     );
   }
@@ -933,7 +955,6 @@ const List<String> _reservedEventNames = <String>[
   'ad_activeview',
   'ad_click',
   'ad_exposure',
-  'ad_impression',
   'ad_query',
   'ad_reward',
   'adunit_exposure',
@@ -1018,11 +1039,22 @@ const String _GROUP_ID = 'group_id';
 /// Item category.
 const String _ITEM_CATEGORY = 'item_category';
 
+const String _ITEMS = 'items';
+
 /// Item ID.
 const String _ITEM_ID = 'item_id';
 
 /// The Google Place ID that corresponds to the associated item.
 const String _ITEM_LOCATION_ID = 'item_location_id';
+
+/// The location associated with the event.
+const String _LOCATION_ID = 'location_id';
+
+/// The ID of the list in which the item was presented to the user
+const String _ITEM_LIST_ID = 'item_list_id';
+
+/// The ID of the list in which the item was presented to the user
+const String _ITEM_LIST_NAME = 'item_list_name';
 
 /// Item Brand.
 // const String _ITEM_BRAND = 'item_brand';
@@ -1040,13 +1072,13 @@ const String _CHECKOUT_STEP = 'checkout_step';
 const String _CHECKOUT_OPTION = 'checkout_option';
 
 /// The name of a creative used in a promotional spot.
-// const String _CREATIVE_NAME = 'creative_name';
+const String _CREATIVE_NAME = 'creative_name';
 
 /// The name of a creative slot.
-// const String _CREATIVE_SLOT = 'creative_slot';
+const String _CREATIVE_SLOT = 'creative_slot';
 
 /// The store or affiliation from which this transaction occurred.
-// const String _AFFILIATION = 'affiliation';
+const String _AFFILIATION = 'affiliation';
 
 /// The index of an item in a list.
 // const String _INDEX = 'index';
@@ -1076,6 +1108,8 @@ const String _NUMBER_OF_NIGHTS = 'number_of_nights';
 /// Number of passengers traveling (long).
 const String _NUMBER_OF_PASSENGERS = 'number_of_passengers';
 
+const String _PAYMENT_TYPE = 'payment_type';
+
 /// Number of rooms for travel events (long).
 const String _NUMBER_OF_ROOMS = 'number_of_rooms';
 
@@ -1096,6 +1130,9 @@ const String _SEARCH_TERM = 'search_term';
 
 /// Shipping cost (double).
 const String _SHIPPING = 'shipping';
+
+/// Shipping tier (string).
+const String _SHIPPING_TIER = 'shipping_tier';
 
 /// A particular approach used in an operation; for example, "facebook" or
 /// "email" in the context of a sign_up or login event.
@@ -1127,3 +1164,27 @@ const String _VALUE = 'value';
 
 /// Name of virtual currency type.
 const String _VIRTUAL_CURRENCY_NAME = 'virtual_currency_name';
+
+/// Name of ad platform.
+const String _AD_PLATFORM = 'ad_platform';
+
+/// Name of ad source.
+const String _AD_SOURCE = 'ad_source';
+
+/// Name of ad format.
+const String _AD_FORMAT = 'ad_format';
+
+/// Name of ad unit name.
+const String _AD_UNIT_NAME = 'ad_unit_name';
+
+/// Name of screen class
+const String _SCREEN_CLASS = 'screen_class';
+
+/// Name of screen name
+const String _SCREEN_NAME = 'screen_name';
+
+/// The ID of a product promotion
+const String _PROMOTION_ID = 'promotion_id';
+
+/// The name of a product promotion
+const String _PROMOTION_NAME = 'promotion_name';
