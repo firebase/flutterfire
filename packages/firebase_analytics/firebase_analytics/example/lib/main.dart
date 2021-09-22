@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
         'int': 42,
         'long': 12345678910,
         'double': 42.0,
-        'bool': true,
+        'bool': true.toString(),
       },
     );
     setMessage('logEvent succeeded');
