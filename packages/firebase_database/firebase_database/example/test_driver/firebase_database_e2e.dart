@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'query_e2e.dart';
@@ -40,26 +41,28 @@ void testsMain() {
       final FirebaseDatabase database = FirebaseDatabase.instance;
 
       await database.setPersistenceCacheSizeBytes(2147483647);
-    });
+      // Skipped because it is not supported on web
+    }, skip: kIsWeb);
 
     test('setPersistenceCacheSizeBytes Long', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setPersistenceCacheSizeBytes(2147483648);
-    });
+      // Skipped because it is not supported on web
+    }, skip: kIsWeb);
 
     test('setLoggingEnabled to true', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(true);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android.
+    }, skip: !kIsWeb && Platform.isAndroid);
 
     test('setLoggingEnabled to false', () async {
       final FirebaseDatabase database = FirebaseDatabase.instance;
       await database.setLoggingEnabled(false);
-      // Skipped because it needs to be initialized first on android
-    }, skip: Platform.isAndroid);
+      // Skipped because it needs to be initialized first on android.
+    }, skip: !kIsWeb && Platform.isAndroid);
 
-    group('runTransation', () {
+    group('runTransaction', () {
       test('update and check values', () async {
         final FirebaseDatabase database = FirebaseDatabase.instance;
         final DatabaseReference ref = database.reference().child('flutterfire');
@@ -69,7 +72,7 @@ void testsMain() {
         final DataSnapshot snapshot = await ref.once();
         final int value = snapshot.value ?? 0;
         final TransactionResult transactionResult =
-            await ref.runTransaction((MutableData mutableData) async {
+            await ref.runTransaction((MutableData mutableData) {
           mutableData.value = (mutableData.value ?? 0) + 1;
           return mutableData;
         });
@@ -85,7 +88,7 @@ void testsMain() {
 
         await ref.set({'list': data});
 
-        final transactionResult = await ref.runTransaction((mutableData) async {
+        final transactionResult = await ref.runTransaction((mutableData) {
           return mutableData;
         });
 
@@ -98,7 +101,7 @@ void testsMain() {
 
       final ref = FirebaseDatabase.instance.reference().child('flutterfire');
 
-      final transactionResult = await ref.runTransaction((mutableData) async {
+      final transactionResult = await ref.runTransaction((mutableData) {
         mutableData.value = {'v': 'vala'};
         return mutableData;
       });

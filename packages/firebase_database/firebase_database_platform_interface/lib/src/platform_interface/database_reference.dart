@@ -142,8 +142,7 @@ class ServerValue {
 }
 
 /// Interface for [TransactionHandler]
-typedef TransactionHandler = Future<MutableData> Function(
-    MutableData mutableData);
+typedef TransactionHandler = MutableData Function(MutableData mutableData);
 
 /// Interface for [TransactionResultPlatform]
 class TransactionResultPlatform extends PlatformInterface {
