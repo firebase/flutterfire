@@ -954,7 +954,7 @@ class _OtherProvidersSignInSectionState
         _signInWithTwitter();
         break;
       default:
-        // _signInWithGoogle();
+      // _signInWithGoogle();
     }
   }
 
