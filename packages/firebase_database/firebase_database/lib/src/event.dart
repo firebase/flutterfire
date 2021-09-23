@@ -32,6 +32,10 @@ class DataSnapshot {
 
   /// Ascertains whether the value exists at the Firebase Database location.
   bool get exists => _delegate?.exists ?? false;
+
+  /// The [DatabaseReference] for  the location
+  /// that generated this [DataSnapshot]
+  DatabaseReference get ref => DatabaseReference._(_delegate!.ref);
 }
 
 /// A DatabaseError contains code, message and details of a Firebase Database

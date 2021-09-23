@@ -193,7 +193,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
           map['error'] != null ? DatabaseErrorPlatform(map['error']) : null;
       final bool committed = map['committed'];
       final DataSnapshotPlatform? dataSnapshot = map['snapshot'] != null
-          ? DataSnapshotPlatform.fromJson(map['snapshot'], null)
+          ? DataSnapshotPlatform.fromJson(map['snapshot'], null, this)
           : null;
 
       MethodChannelDatabase._transactions.remove(transactionKey);

@@ -18,7 +18,15 @@ class MethodChannelDatabase extends DatabasePlatform {
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'Event':
-          EventPlatform event = EventPlatform(call.arguments);
+          EventPlatform event = EventPlatform(
+            call.arguments,
+            MethodChannelDatabaseReference(
+              database: this,
+              // TODO: implement on native side
+              pathComponents: call.arguments['ref'].split('/').toList(),
+            ),
+          );
+
           _observers[call.arguments['handle']]?.add(event);
           return null;
         case 'Error':

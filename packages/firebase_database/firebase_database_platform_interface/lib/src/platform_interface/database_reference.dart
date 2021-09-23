@@ -14,9 +14,9 @@ part of firebase_database_platform_interface;
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 /// Note: [QueryPlatform] extends PlatformInterface already.
-abstract class DatabaseReferencePlatform extends QueryPlatform {
+class DatabaseReferencePlatform extends QueryPlatform {
   /// Create a [DatabaseReferencePlatform] using [pathComponents]
-  DatabaseReferencePlatform._(
+  DatabaseReferencePlatform(
       DatabasePlatform database, List<String> pathComponents)
       : super(database: database, pathComponents: pathComponents);
 

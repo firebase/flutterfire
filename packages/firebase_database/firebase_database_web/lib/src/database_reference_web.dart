@@ -89,7 +89,11 @@ class DatabaseReferenceWeb extends QueryWeb
       return TransactionResultPlatform(
         null,
         transaction.committed,
-        fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
+        fromWebSnapshotToPlatformSnapShot(
+          database,
+          transaction.snapshot,
+          pathComponents,
+        ),
       );
     } on DatabaseErrorPlatform catch (e) {
       return TransactionResultPlatform(

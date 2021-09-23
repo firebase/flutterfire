@@ -26,11 +26,13 @@ enum EventType {
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
 class EventPlatform {
-  EventPlatform(Map<Object?, Object?> _data)
+  EventPlatform(Map<Object?, Object?> _data, DatabaseReferencePlatform ref)
       : previousSiblingKey = _data['previousSiblingKey'] as String?,
         snapshot = DataSnapshotPlatform.fromJson(
-            _data['snapshot']! as Map<Object?, Object?>,
-            _data['childKeys'] as List<Object?>?);
+          _data['snapshot']! as Map<Object?, Object?>,
+          _data['childKeys'] as List<Object?>?,
+          ref,
+        );
 
   /// create [EventPlatform] from [DataSnapshotPlatform]
   EventPlatform.fromDataSnapshotPlatform(
@@ -46,11 +48,12 @@ class EventPlatform {
 /// A DataSnapshot contains data from a Firebase Database location.
 /// Any time you read Firebase data, you receive the data as a DataSnapshot.
 class DataSnapshotPlatform {
-  DataSnapshotPlatform(this.key, this.value) : exists = value != null;
+  DataSnapshotPlatform(this.key, this.value, this.ref) : exists = value != null;
 
   factory DataSnapshotPlatform.fromJson(
     Map<Object?, Object?> _data,
     List<Object?>? childKeys,
+    DatabaseReferencePlatform ref,
   ) {
     Object? dataValue = _data['value'];
     Object? value;
@@ -64,7 +67,7 @@ class DataSnapshotPlatform {
     } else {
       value = dataValue;
     }
-    return DataSnapshotPlatform(_data['key'] as String?, value);
+    return DataSnapshotPlatform(_data['key'] as String?, value, ref);
   }
 
   /// The key of the location that generated this DataSnapshot.
@@ -75,6 +78,8 @@ class DataSnapshotPlatform {
 
   /// Ascertains whether the value exists at the Firebase Database location.
   final bool exists;
+
+  final DatabaseReferencePlatform ref;
 }
 
 /// A dataSnapshot class which can be mutated. Specially used with transactions.

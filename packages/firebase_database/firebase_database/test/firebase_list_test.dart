@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
 import 'package:firebase_database/ui/firebase_sorted_list.dart';
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -341,6 +342,9 @@ class MockDataSnapshot implements DataSnapshot {
 
   @override
   final bool exists;
+
+  @override
+  DatabaseReference get ref => throw UnimplementedError();
 
   @override
   // ignore: no_runtimetype_tostring

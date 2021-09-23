@@ -83,7 +83,14 @@ class MethodChannelQuery extends QueryPlatform {
         message: errorMap['details'],
       );
     } else {
-      return DataSnapshotPlatform.fromJson(result['snapshot'], null);
+      return DataSnapshotPlatform.fromJson(
+        result['snapshot'],
+        null,
+        DatabaseReferencePlatform(
+          database,
+          pathComponents,
+        ),
+      );
     }
   }
 

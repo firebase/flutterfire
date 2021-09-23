@@ -5,13 +5,30 @@
 part of firebase_database_web;
 
 /// Builds [EventPlatform] instance form web event instance
-EventPlatform fromWebEventToPlatformEvent(database_interop.QueryEvent event) {
+EventPlatform fromWebEventToPlatformEvent(
+  DatabasePlatform database,
+  database_interop.QueryEvent event,
+  List<String> pathComponents,
+) {
   return EventPlatform.fromDataSnapshotPlatform(
-      fromWebSnapshotToPlatformSnapShot(event.snapshot), event.prevChildKey);
+    fromWebSnapshotToPlatformSnapShot(
+      database,
+      event.snapshot,
+      pathComponents,
+    ),
+    event.prevChildKey,
+  );
 }
 
 /// Builds [DataSnapshotPlatform] instance form web snapshot instance
 DataSnapshotPlatform fromWebSnapshotToPlatformSnapShot(
-    database_interop.DataSnapshot snapshot) {
-  return DataSnapshotPlatform(snapshot.key, snapshot.val());
+  DatabasePlatform database,
+  database_interop.DataSnapshot snapshot,
+  List<String> pathComponents,
+) {
+  return DataSnapshotPlatform(
+    snapshot.key,
+    snapshot.val(),
+    DatabaseReferencePlatform(database, pathComponents),
+  );
 }
