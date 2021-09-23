@@ -314,7 +314,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// localization with the language code specified.
   String get languageCode => jsObject.languageCode;
 
-  set languageCode(String s) {
+  set languageCode(String? s) {
     jsObject.languageCode = s;
   }
 
