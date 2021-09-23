@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 
 part of firebase_auth;
-
+//testing auth package
 /// The entry point of the Firebase Authentication SDK.
 class FirebaseAuth extends FirebasePluginPlatform {
   // Cached instances of [FirebaseAuth].
