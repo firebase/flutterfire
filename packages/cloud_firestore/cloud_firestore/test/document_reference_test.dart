@@ -309,11 +309,11 @@ void main() {
           toFirestore: (v, _) => {'key': 42},
         );
 
-        expect(
-          firestore.collection('bar').doc().set({
-            'key': fooCollection.doc()
-          }),
-          completion(equals(null)),
+        await firestore.collection('bar').doc().set({'key': fooCollection.doc()});
+
+        await expectLater(
+          firestore.collection('bar').doc().get().then((s) => s.data,
+          completion(equals(42)),
         );
       });
     });
