@@ -118,6 +118,9 @@ class Query {
     return Query._(_queryPlatform.orderByPriority());
   }
 
+  @Deprecated('Use .ref instead')
+  DatabaseReference reference() => ref;
+
   /// Obtains a [DatabaseReference] corresponding to this query's location.
   DatabaseReference get ref => DatabaseReference._(_queryPlatform.ref);
 

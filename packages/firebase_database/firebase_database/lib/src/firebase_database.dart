@@ -33,6 +33,12 @@ class FirebaseDatabase {
   @visibleForTesting
   static MethodChannel get channel => MethodChannelDatabase.channel;
 
+  @Deprecated(
+    'reference() is deprecated. '
+    "instead of db.reference().child('key') use db.ref('key')",
+  )
+  DatabaseReference reference() => ref();
+
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided path.
   /// If no path is provided, the Reference will point to the root of the Database.
