@@ -16,8 +16,11 @@ class QueryWeb extends QueryPlatform {
     this._firebaseQuery,
   ) : super(database: databasePlatform, pathComponents: pathComponents);
 
+  @Deprecated('Use .ref instead')
+  DatabaseReferencePlatform reference() => ref;
+
   @override
-  DatabaseReferencePlatform reference() =>
+  DatabaseReferencePlatform get ref =>
       DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
 
   @override

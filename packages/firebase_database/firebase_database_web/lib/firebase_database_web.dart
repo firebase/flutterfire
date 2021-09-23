@@ -44,9 +44,19 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   @override
   String? appName() => app?.name;
 
+  @Deprecated(
+    'reference() is deprecated. '
+    "instead of db.reference().child('key') use db.ref('key')",
+  )
+  DatabaseReferencePlatform reference() => ref();
+
   @override
-  DatabaseReferencePlatform reference() {
-    return DatabaseReferenceWeb(_firebaseDatabase, this, <String>[]);
+  DatabaseReferencePlatform ref([String? path]) {
+    return DatabaseReferenceWeb(
+      _firebaseDatabase,
+      this,
+      path?.split('/').toList() ?? const <String>[],
+    );
   }
 
   /// This is not supported on web. However,

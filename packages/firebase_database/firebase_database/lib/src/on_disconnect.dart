@@ -9,7 +9,7 @@ class OnDisconnect {
   OnDisconnectPlatform _onDisconnectPlatform;
 
   OnDisconnect._(this._onDisconnectPlatform)
-      : path = _onDisconnectPlatform.reference.path;
+      : path = _onDisconnectPlatform.ref.path;
 
   final String path;
 

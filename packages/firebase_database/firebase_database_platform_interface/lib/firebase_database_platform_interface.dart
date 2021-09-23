@@ -75,8 +75,8 @@ abstract class DatabasePlatform extends PlatformInterface {
   final String? databaseURL;
 
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReferencePlatform reference() {
-    throw UnimplementedError('reference() not implemented');
+  DatabaseReferencePlatform ref([String? path]) {
+    throw UnimplementedError('ref() not implemented');
   }
 
   /// Attempts to sets the database persistence to [enabled].

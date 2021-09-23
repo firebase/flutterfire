@@ -118,9 +118,11 @@ class Query {
     return Query._(_queryPlatform.orderByPriority());
   }
 
-  /// Obtains a DatabaseReference corresponding to this query's location.
-  DatabaseReference reference() =>
-      DatabaseReference._(_queryPlatform.reference());
+  @Deprecated('Use .ref instead')
+  DatabaseReference reference() => ref;
+
+  /// Obtains a [DatabaseReference] corresponding to this query's location.
+  DatabaseReference get ref => DatabaseReference._(_queryPlatform.ref);
 
   /// By calling keepSynced(true) on a location, the data for that location will
   /// automatically be downloaded and kept in sync, even when no listeners are

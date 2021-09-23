@@ -10,7 +10,7 @@ part of firebase_database_platform_interface;
 ///
 /// This class is the starting point for all Firebase Database operations.
 /// After you’ve obtained your first DatabaseReference via
-/// `FirebaseDatabase.reference()`, you can use it to read data
+/// `FirebaseDatabase.ref()`, you can use it to read data
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class MethodChannelDatabaseReference extends MethodChannelQuery
@@ -221,7 +221,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   OnDisconnectPlatform onDisconnect() {
     return MethodChannelOnDisconnect(
       database: database,
-      reference: this,
+      ref: this,
     );
   }
 }

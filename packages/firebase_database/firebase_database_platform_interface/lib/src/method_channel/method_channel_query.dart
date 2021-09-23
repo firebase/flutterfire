@@ -196,8 +196,12 @@ class MethodChannelQuery extends QueryPlatform {
 
   /// Obtains a DatabaseReference corresponding to this query's location.
   @override
-  DatabaseReferencePlatform reference() => MethodChannelDatabaseReference(
-      database: database, pathComponents: pathComponents);
+  DatabaseReferencePlatform get ref {
+    return MethodChannelDatabaseReference(
+      database: database,
+      pathComponents: pathComponents,
+    );
+  }
 
   /// By calling keepSynced(true) on a location, the data for that location will
   /// automatically be downloaded and kept in sync, even when no listeners are

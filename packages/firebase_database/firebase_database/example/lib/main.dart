@@ -44,12 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    // Demonstrates configuring to the database using a file
-    _counterRef = FirebaseDatabase.instance.reference().child('counter');
+    // Demonstrates configuring to the database using a default instance
+    _counterRef = FirebaseDatabase.instance.ref('counter');
     // Demonstrates configuring the database directly
-    final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
-    _messagesRef = database.reference().child('messages');
-    database.reference().child('counter').get().then((DataSnapshot? snapshot) {
+    final database = FirebaseDatabase(app: widget.app);
+    _messagesRef = database.ref('messages');
+    _counterRef.get().then((DataSnapshot? snapshot) {
       print(
           'Connected to directly configured database and read ${snapshot!.value}');
     });

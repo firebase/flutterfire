@@ -71,7 +71,7 @@ class Database
   void goOnline() => jsObject.goOnline();
 
   /// Returns a [DatabaseReference] to the root or provided [path].
-  DatabaseReference ref([String? path]) =>
+  DatabaseReference ref([String? path = "/"]) =>
       DatabaseReference.getInstance(jsObject.ref(path));
 
   /// Returns a [DatabaseReference] from provided [url].

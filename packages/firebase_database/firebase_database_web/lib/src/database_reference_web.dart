@@ -18,7 +18,7 @@ class DatabaseReferenceWeb extends QueryWeb
           databasePlatform,
           pathComponents,
           pathComponents.isEmpty
-              ? firebaseDatabase.ref("/")
+              ? firebaseDatabase.ref()
               : firebaseDatabase.ref(pathComponents.join("/")),
         );
 

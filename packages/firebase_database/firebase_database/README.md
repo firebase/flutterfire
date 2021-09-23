@@ -16,8 +16,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 final FirebaseApp app = FirebaseApp(name: '[DEFAULT]');
-final DatabaseReference db = FirebaseDatabase(app: firebaseApp).reference();
-db.child('your_db_child').once().then((result) => print('result = $result'));
+final DatabaseReference ref = FirebaseDatabase(app: firebaseApp).ref('your_db_child');
+ref.get().then((result) => print('result = $result'));
 ```
 
 ## Getting Started

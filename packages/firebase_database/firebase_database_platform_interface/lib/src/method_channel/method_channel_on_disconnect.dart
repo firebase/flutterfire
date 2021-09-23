@@ -10,9 +10,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
   MethodChannelOnDisconnect(
       {required DatabasePlatform database,
-      required DatabaseReferencePlatform reference})
-      : path = reference.path,
-        super(database: database, reference: reference);
+      required DatabaseReferencePlatform ref})
+      : path = ref.path,
+        super(database: database, ref: ref);
 
   final String path;
 

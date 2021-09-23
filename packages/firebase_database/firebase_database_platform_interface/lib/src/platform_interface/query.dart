@@ -138,7 +138,7 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
-  DatabaseReferencePlatform reference() {
-    throw UnimplementedError('reference() not implemented');
+  DatabaseReferencePlatform get ref {
+    throw UnimplementedError('get ref() not implemented');
   }
 }
