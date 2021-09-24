@@ -10,7 +10,8 @@ part of firebase_performance;
 /// You can get an instance by calling [FirebasePerformance.instance].
 class FirebasePerformance extends FirebasePluginPlatform {
   FirebasePerformance._()
-      : super(Firebase.app().name, 'plugins.flutter.io/firebase_performance');
+      : super(
+            defaultFirebaseAppName, 'plugins.flutter.io/firebase_performance');
 
   late final _delegate = FirebasePerformancePlatform.instance;
 
