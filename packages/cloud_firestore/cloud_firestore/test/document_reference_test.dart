@@ -14,6 +14,12 @@ import './test_firestore_message_codec.dart';
 
 void main() {
   setupCloudFirestoreMocks();
+  MethodChannelFirebaseFirestore.channel = const MethodChannel(
+    'plugins.flutter.io/firebase_firestore',
+    StandardMethodCodec(TestFirestoreMessageCodec()),
+  )..setMockMethodCallHandler((call) async {
+    return null;
+  });
   late FirebaseFirestore firestore;
   late FirebaseFirestore firestoreSecondary;
 
@@ -296,25 +302,15 @@ void main() {
         );
       });
 
-      test('can encode _WithConverterDocumentReference', () {
-        MethodChannelFirebaseFirestore.channel = const MethodChannel(
-          'plugins.flutter.io/firebase_firestore',
-          StandardMethodCodec(TestFirestoreMessageCodec()),
-        )..setMockMethodCallHandler((call) async {
-          return null;
-        });
-
+      test('can encode _WithConverterDocumentReference', () async {
         final fooCollection = firestore.collection('foo').withConverter<int>(
           fromFirestore: (ds, _) => 42,
           toFirestore: (v, _) => {'key': 42},
         );
 
-        expect(
-          firestore.collection('bar').doc().set({
-            'key': fooCollection.doc()
-          }),
-          completion(equals(null)),
-        );
+        await firestore.collection('bar').doc().set({
+          'key': fooCollection.doc()
+        });
       });
     });
   });
