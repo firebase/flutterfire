@@ -1,6 +1,6 @@
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' show AuthCredential;
 
 import 'auth_controller.dart';
 import 'auth_flow.dart';
@@ -19,14 +19,14 @@ typedef StateTransitionListener = void Function(
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   final AuthFlowBuilderCallback<T>? builder;
-  final AuthMethod method;
+  final AuthMethod? method;
   final Function(AuthCredential credential)? onComplete;
   final Widget? child;
   final StateTransitionListener? listener;
 
   const AuthFlowBuilder({
     Key? key,
-    required this.method,
+    this.method,
     this.builder,
     this.onComplete,
     this.child,
@@ -41,23 +41,39 @@ class _AuthFlowBuilderState<T extends AuthController>
     extends State<AuthFlowBuilder> with InitializerProvider {
   @override
   AuthFlowBuilder<T> get widget => super.widget as AuthFlowBuilder<T>;
-  Widget? get child => widget.child;
+  AuthFlowBuilderCallback<T> get builder => widget.builder ?? _defaultBuilder;
 
   AuthState? prevState;
+
   late AuthFlow flow;
+  late AuthMethod method;
 
   bool initialized = false;
+
+  Widget _defaultBuilder(_, __, ___, ____) {
+    return widget.child!;
+  }
 
   void initializeFlow() {
     if (initialized) return;
 
-    flow = getInitializerOfType<FirebaseUIAuthInitializer>(context)
-        .createFlow<T>(widget.method);
+    final initializer =
+        getInitializerOfType<FirebaseUIAuthInitializer>(context);
+
+    if (widget.method == null) {
+      method = widget.method!;
+    } else if (initializer.auth.currentUser == null) {
+      method = AuthMethod.signIn;
+    } else {
+      method = AuthMethod.link;
+    }
+
+    flow = initializer.createFlow<T>(method);
 
     flow.context = context;
     flow.addListener(onFlowStateChanged);
-    prevState = flow.value;
 
+    prevState = flow.value;
     initialized = true;
   }
 
@@ -68,7 +84,7 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   @override
   void didUpdateWidget(covariant AuthFlowBuilder<AuthController> oldWidget) {
-    flow.method = widget.method;
+    flow.method = method;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -82,8 +98,12 @@ class _AuthFlowBuilderState<T extends AuthController>
       child: ValueListenableBuilder<AuthState>(
         valueListenable: flow,
         builder: (context, value, _) {
-          return widget.builder?.call(context, value, flow as T, child) ??
-              child!;
+          return builder(
+            context,
+            value,
+            flow as T,
+            widget.child,
+          );
         },
       ),
     );
