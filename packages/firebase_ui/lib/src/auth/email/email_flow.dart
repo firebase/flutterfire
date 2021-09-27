@@ -9,8 +9,9 @@ import 'package:firebase_ui/firebase_ui.dart';
 
 import 'package:firebase_ui/src/auth/auth_controller.dart';
 
-import '../auth_flow.dart';
 import 'email_provider_configuration.dart';
+import '../auth_flow.dart';
+import '../auth_state.dart';
 
 class AwaitingEmailAndPassword extends AuthState {}
 

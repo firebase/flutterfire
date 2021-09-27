@@ -1,41 +1,12 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/src/auth/auth_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class AuthState {
-  const AuthState();
-}
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SigningIn extends AuthState {
-  const SigningIn();
-}
-
-class CredentialReceived extends AuthState {
-  final AuthCredential credential;
-
-  CredentialReceived(this.credential);
-}
-
-class CredentialLinked extends AuthState {
-  final AuthCredential credential;
-
-  CredentialLinked(this.credential);
-}
-
-class AuthFailed extends AuthState {
-  final Exception exception;
-
-  AuthFailed(this.exception);
-}
-
-class SignedIn extends AuthState {
-  final User user;
-
-  SignedIn(this.user);
-}
+import '../firebase_ui_app.dart';
+import 'auth_state.dart';
+import 'auth_controller.dart';
 
 abstract class AuthFlow extends ValueNotifier<AuthState>
     with InitializerProvider

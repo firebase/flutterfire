@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
-import 'package:firebase_ui/src/firebase_ui_initializer.dart';
+
+import '../auth_state.dart';
 
 class Uninitialized extends AuthState {
   const Uninitialized();
