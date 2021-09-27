@@ -1,5 +1,6 @@
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/responsive.dart';
+import 'package:firebase_ui/src/i10n/i10n.dart';
 import 'package:flutter/material.dart';
 
 import '../auth_state.dart';
@@ -31,7 +32,7 @@ class _SignInFormState extends State<SignInForm>
     });
 
   late final tabs = TabBar(
-    labelColor: Theme.of(context).accentColor,
+    labelColor: Theme.of(context).colorScheme.secondary,
     controller: ctrl,
     tabs: const [
       Tab(text: 'Sign in'),
@@ -100,7 +101,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   final passwordCtrl = TextEditingController();
 
   String chooseButtonLabel() {
-    final ctrl = AuthController.of(context);
+    final ctrl = AuthController.ofType<EmailFlowController>(context);
 
     switch (ctrl.method) {
       case AuthMethod.signIn:
@@ -114,7 +115,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   @override
   Widget build(BuildContext context) {
-    final ctrl = AuthController.of(context);
+    final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final l = FirebaseUILocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -137,7 +139,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         const SizedBox(height: 16),
         OutlinedButton(
           onPressed: () {
-            (ctrl as EmailFlowController).setEmailAndPassword(
+            ctrl.setEmailAndPassword(
               emailCtrl.text,
               passwordCtrl.text,
             );
