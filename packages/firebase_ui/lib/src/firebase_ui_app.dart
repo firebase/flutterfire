@@ -37,9 +37,17 @@ class FirebaseUIApp extends InheritedWidget {
   }
 
   static T getInitializerOfType<T>(BuildContext context) {
-    return context
+    final _initializersMap = context
         .dependOnInheritedWidgetOfExactType<FirebaseUIApp>()!
-        ._initializersMap[T]! as T;
+        ._initializersMap;
+
+    final initializer = _initializersMap[T];
+
+    if (initializer == null) {
+      throw Exception('No $T found');
+    }
+
+    return initializer as T;
   }
 
   @override
