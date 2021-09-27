@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' show AuthCredential;
 
 import 'auth_controller.dart';
 import 'auth_flow.dart';
+import 'auth_state.dart';
 
 typedef AuthFlowBuilderCallback<T extends AuthController> = Widget Function(
   BuildContext context,
@@ -102,12 +103,14 @@ class _AuthFlowBuilderState<T extends AuthController>
       child: ValueListenableBuilder<AuthState>(
         valueListenable: flow,
         builder: (context, value, _) {
-          return builder(
+          final child = builder(
             context,
             value,
             flow as T,
             widget.child,
           );
+
+          return AuthStateProvider(state: value, child: child);
         },
       ),
     );
