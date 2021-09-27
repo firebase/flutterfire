@@ -7,7 +7,7 @@ import 'package:firebase_ui/auth/apple.dart';
 import 'package:firebase_ui/auth/facebook.dart';
 import 'package:firebase_ui/auth/twitter.dart';
 
-import 'pages/home.dart';
+import 'pages/auth_resolver.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,7 +61,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
           ),
         ),
         builder: FirebaseUIApp.builder,
-        home: const Home(),
+        home: const AuthResolver(),
       ),
     );
   }
