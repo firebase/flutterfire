@@ -9,10 +9,19 @@ enum AuthMethod {
 }
 
 abstract class AuthController {
-  static AuthController of(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<AuthControllerProvider>()!
-        .ctrl;
+  static T ofType<T extends AuthController>(BuildContext context) {
+    final ctrl = context
+        .dependOnInheritedWidgetOfExactType<AuthControllerProvider>()
+        ?.ctrl;
+
+    if (ctrl == null || ctrl is! T) {
+      throw Exception(
+        'No controller of type $T found. '
+        'Make sure to wrap your code with AuthFlowBuilder<$T>',
+      );
+    }
+
+    return ctrl;
   }
 
   AuthMethod get method;
