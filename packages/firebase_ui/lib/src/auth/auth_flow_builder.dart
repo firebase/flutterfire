@@ -31,7 +31,11 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     this.onComplete,
     this.child,
     this.listener,
-  }) : super(key: key);
+  })  : assert(
+          builder != null || child != null,
+          'Either child or builder should be provided',
+        ),
+        super(key: key);
 
   @override
   _AuthFlowBuilderState createState() => _AuthFlowBuilderState<T>();
