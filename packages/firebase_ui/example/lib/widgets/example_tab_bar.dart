@@ -1,5 +1,6 @@
-import 'package:firebase_ui_example/widgets/device_indicator.dart';
 import 'package:flutter/material.dart';
+
+import 'device_indicator.dart';
 
 class ExampleAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

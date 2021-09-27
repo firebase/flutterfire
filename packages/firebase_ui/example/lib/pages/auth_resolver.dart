@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'login.dart';
 import 'profile.dart';
 
-class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+class AuthResolver extends StatelessWidget {
+  const AuthResolver({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
