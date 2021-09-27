@@ -54,6 +54,7 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
 
   T configOf<T extends ProviderConfiguration>(String providerId) {
     final config = _configurations[providerId];
+
     if (config == null) {
       throw Exception(
         'No config for $providerId found. '
