@@ -23,7 +23,7 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
       ProviderIconButton<T>(size: size);
 
   void signIn(BuildContext context) {
-    final ctrl = AuthController.of(context) as OAuthController;
+    final ctrl = AuthController.ofType<OAuthController>(context);
     ctrl.signInWithProvider<T>();
   }
 
