@@ -1650,6 +1650,54 @@ void runQueryTests() {
         timeout: const Timeout.factor(3),
       );
 
+      test('endBefore', () async {
+        final collection = await initializeTest('foo');
+
+        final converted = collection.withConverter<int>(
+          fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+          toFirestore: (value, _) => {'value': value},
+        );
+
+        await converted.add(1);
+        await converted.add(2);
+        await converted.add(3);
+
+        expect(
+          await converted
+              .orderBy('value')
+              .endBefore([2])
+              .get()
+              .then((d) => d.docs),
+          [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
+        );
+      });
+
+      test(
+        'endBeforeDocument',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          final doc2 = await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .endBeforeDocument(await doc2.get())
+                .get()
+                .then((d) => d.docs),
+            [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 1)],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
       test(
         'startAt',
         () async {
@@ -1703,6 +1751,58 @@ void runQueryTests() {
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 2),
               isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3),
             ],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
+        'startAfter',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAfter([2])
+                .get()
+                .then((d) => d.docs),
+            [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],
+          );
+        },
+        timeout: const Timeout.factor(3),
+      );
+
+      test(
+        'startAfterDocument',
+        () async {
+          final collection = await initializeTest('foo');
+
+          final converted = collection.withConverter<int>(
+            fromFirestore: (snapshots, _) => snapshots.data()!['value']! as int,
+            toFirestore: (value, _) => {'value': value},
+          );
+
+          await converted.add(1);
+          final doc2 = await converted.add(2);
+          await converted.add(3);
+
+          expect(
+            await converted
+                .orderBy('value')
+                .startAfterDocument(await doc2.get())
+                .get()
+                .then((d) => d.docs),
+            [isA<DocumentSnapshot<int>>().having((e) => e.data(), 'data', 3)],
           );
         },
         timeout: const Timeout.factor(3),
