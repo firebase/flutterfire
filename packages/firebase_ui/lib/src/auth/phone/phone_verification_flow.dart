@@ -5,6 +5,7 @@ import 'package:firebase_ui/firebase_ui.dart';
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
+import '../auth_state.dart';
 
 class AwatingPhoneNumber extends AuthState {}
 
@@ -46,7 +47,7 @@ class PhoneVerificationAuthFlow extends AuthFlow
   Future<void> acceptPhoneNumber(String phoneNumber) async {
     value = SMSCodeRequested();
 
-    auth.verifyPhoneNumber(
+    await auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (credential) {
         value = PhoneVerified(credential);

@@ -2,6 +2,8 @@ import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/responsive.dart';
 import 'package:flutter/material.dart';
 
+import '../auth_state.dart';
+
 typedef SurfaceBuilder = Widget Function(BuildContext context, Widget child);
 
 class SignInForm extends StatefulWidget {
