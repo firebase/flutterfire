@@ -12,7 +12,7 @@ class AwatingPhoneNumber extends AuthState {}
 class SMSCodeRequested extends AuthState {}
 
 class PhoneVerified extends AuthState {
-  final AuthCredential credential;
+  final PhoneAuthCredential credential;
 
   PhoneVerified(this.credential);
 }
@@ -63,7 +63,7 @@ class PhoneVerificationAuthFlow extends AuthFlow
           verificationId: verificationId,
           smsCode: code,
         );
-        value = PhoneVerified(credential);
+
         setCredential(credential);
       },
       codeAutoRetrievalTimeout: (verificationId) {
