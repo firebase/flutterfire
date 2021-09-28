@@ -23,11 +23,11 @@ class SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<SignInForm>
     with SingleTickerProviderStateMixin {
-  AuthMethod method = AuthMethod.signIn;
+  AuthAction action = AuthAction.signIn;
   late final TabController ctrl = TabController(length: 2, vsync: this)
     ..addListener(() {
       setState(() {
-        method = AuthMethod.values.elementAt(ctrl.index);
+        action = AuthAction.values.elementAt(ctrl.index);
       });
     });
 
@@ -50,7 +50,7 @@ class _SignInFormState extends State<SignInForm>
           child: Column(
             children: [
               AuthFlowBuilder<EmailFlowController>(
-                method: method,
+                action: action,
                 listener: (oldState, newState) {
                   if (newState is AuthFailed) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -103,12 +103,12 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   String chooseButtonLabel() {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
 
-    switch (ctrl.method) {
-      case AuthMethod.signIn:
+    switch (ctrl.action) {
+      case AuthAction.signIn:
         return 'Sing in';
-      case AuthMethod.signUp:
+      case AuthAction.signUp:
         return 'Sign up';
-      case AuthMethod.link:
+      case AuthAction.link:
         return 'Next';
     }
   }

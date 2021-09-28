@@ -11,7 +11,7 @@ class FirebaseUIAuthOptions {
   FirebaseUIAuthOptions(this.providerConfigs);
 }
 
-typedef FlowFactory = AuthFlow Function(FirebaseAuth auth, AuthMethod method);
+typedef FlowFactory = AuthFlow Function(FirebaseAuth auth, AuthAction action);
 
 class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
   FirebaseUIAuthInitializer({
@@ -65,7 +65,7 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
     }
   }
 
-  AuthFlow createFlow<T extends AuthController>(AuthMethod method) {
+  AuthFlow createFlow<T extends AuthController>(AuthAction action) {
     final factory = _flowFactories[T];
 
     if (factory == null) {
@@ -75,6 +75,6 @@ class FirebaseUIAuthInitializer extends FirebaseUIInitializer {
       );
     }
 
-    return factory(auth, method);
+    return factory(auth, action);
   }
 }

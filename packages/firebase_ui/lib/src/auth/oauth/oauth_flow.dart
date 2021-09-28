@@ -15,9 +15,9 @@ abstract class OAuthController extends AuthController {
 
 class OAuthFlow extends AuthFlow implements OAuthController {
   OAuthFlow({
-    required AuthMethod method,
+    required AuthAction action,
     required FirebaseAuth auth,
-  }) : super(method: method, auth: auth, initialState: const Uninitialized());
+  }) : super(action: action, auth: auth, initialState: const Uninitialized());
 
   @override
   Future<void> signInWithProvider<T extends OAuthProvider>() async {

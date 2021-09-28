@@ -52,7 +52,7 @@ class _ProfileState extends State<Profile> {
                               await Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const PhoneAuthFlow(
-                                    authMethod: AuthMethod.link,
+                                    authMethod: AuthAction.link,
                                   ),
                                 ),
                               );
@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
                           style: Theme.of(context).textTheme.overline,
                         ),
                         AuthFlowBuilder<OAuthController>(
-                          method: AuthMethod.link,
+                          action: AuthAction.link,
                           listener: (_, newState) {
                             if (newState is CredentialLinked) {
                               u.reload();

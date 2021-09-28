@@ -17,7 +17,7 @@ class EmailProviderConfiguration extends ProviderConfiguration {
   EmailProviderConfiguration({required this.actionCodeSettings});
 
   @override
-  AuthFlow createFlow(FirebaseAuth auth, AuthMethod method) {
-    return EmailFlow(auth: auth, method: method);
+  AuthFlow createFlow(FirebaseAuth auth, AuthAction action) {
+    return EmailFlow(auth: auth, action: action);
   }
 }

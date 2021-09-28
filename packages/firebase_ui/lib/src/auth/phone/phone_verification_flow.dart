@@ -40,8 +40,8 @@ class PhoneVerificationAuthFlow extends AuthFlow
 
   PhoneVerificationAuthFlow({
     required FirebaseAuth auth,
-    required AuthMethod method,
-  }) : super(auth: auth, initialState: AwatingPhoneNumber(), method: method);
+    required AuthAction action,
+  }) : super(auth: auth, initialState: AwatingPhoneNumber(), action: action);
 
   @override
   Future<void> acceptPhoneNumber(String phoneNumber) async {
