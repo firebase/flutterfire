@@ -88,8 +88,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
     if (binding.getApplicationContext() != null) {
-        LocalBroadcastManager.getInstance(binding.getApplicationContext())
-            .unregisterReceiver(this);
+      LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
     }
   }
 
