@@ -1,3 +1,5 @@
+import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/firebase_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -138,8 +140,20 @@ class SMSCodeInputState extends State<SMSCodeInput> {
   }
 
   @override
+  void didChangeDependencies() {
+    final authState = AuthState.of(context);
+
+    if (authState is PhoneVerified) {
+      controller.text = authState.credential.smsCode!;
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Stack(
       children: [
         Offstage(

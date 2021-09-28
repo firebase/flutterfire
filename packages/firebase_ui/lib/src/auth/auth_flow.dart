@@ -50,7 +50,8 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
       }
     } else {
       throw Exception(
-          "Can't link the credential: no user is currently signed in");
+        "Can't link the credential: no user is currently signed in",
+      );
     }
   }
 
@@ -58,10 +59,12 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
     try {
       switch (action) {
         case AuthAction.signIn:
+          value = const SigningIn();
           final user = await signIn(credential);
           value = SignedIn(user!);
           break;
         case AuthAction.link:
+          value = CredentialReceived(credential);
           await link(credential);
           value = CredentialLinked(credential);
           break;
