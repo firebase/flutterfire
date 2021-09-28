@@ -237,7 +237,8 @@ class _WithConverterDocumentReference<T extends Object?>
   }
 
   @override
-  DocumentReferencePlatform get _delegate => _originalDocumentReference._delegate;
+  DocumentReferencePlatform get _delegate =>
+      _originalDocumentReference._delegate;
 
   @override
   FirebaseFirestore get firestore => _originalDocumentReference.firestore;

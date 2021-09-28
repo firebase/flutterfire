@@ -18,8 +18,8 @@ void main() {
     'plugins.flutter.io/firebase_firestore',
     StandardMethodCodec(TestFirestoreMessageCodec()),
   )..setMockMethodCallHandler((call) async {
-    return null;
-  });
+      return null;
+    });
   late FirebaseFirestore firestore;
   late FirebaseFirestore firestoreSecondary;
 
@@ -304,13 +304,14 @@ void main() {
 
       test('can encode _WithConverterDocumentReference', () async {
         final fooCollection = firestore.collection('foo').withConverter<int>(
-          fromFirestore: (ds, _) => 42,
-          toFirestore: (v, _) => {'key': 42},
-        );
+              fromFirestore: (ds, _) => 42,
+              toFirestore: (v, _) => {'key': 42},
+            );
 
-        await firestore.collection('bar').doc().set({
-          'key': fooCollection.doc()
-        });
+        await firestore
+            .collection('bar')
+            .doc()
+            .set({'key': fooCollection.doc()});
       });
     });
   });
