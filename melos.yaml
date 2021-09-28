@@ -41,8 +41,8 @@ scripts:
 
   build:all:
     run: |
-      melos run build:example_ios_pub --no-select && melos run build:example_android_pub --no-select && melos bootstrap
-    description: Build all example apps (currently ios and android, macos requires flutter channel master)
+      melos run build:example_ios_pub --no-select && melos run build:example_android_pub --no-select && melos run build:example_macos --no-select && melos bootstrap
+    description: Build all example apps
 
   build:example_android:
     run: |
@@ -96,7 +96,7 @@ scripts:
         "flutter build macos --no-pub"
     description: |
       Build a specific example app for macOS.
-       - Requires `flutter channel master`.
+       - Requires `flutter channel stable`.
        - Requires `flutter config --enable-macos-desktop` set.
     select-package:
       dir-exists:
