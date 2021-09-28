@@ -20,14 +20,14 @@ typedef StateTransitionListener = void Function(
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   final AuthFlowBuilderCallback<T>? builder;
-  final AuthMethod? method;
+  final AuthAction? action;
   final Function(AuthCredential credential)? onComplete;
   final Widget? child;
   final StateTransitionListener? listener;
 
   const AuthFlowBuilder({
     Key? key,
-    this.method,
+    this.action,
     this.builder,
     this.onComplete,
     this.child,
@@ -51,7 +51,7 @@ class _AuthFlowBuilderState<T extends AuthController>
   AuthState? prevState;
 
   late AuthFlow flow;
-  late AuthMethod method;
+  late AuthAction action;
 
   bool initialized = false;
 
@@ -65,15 +65,15 @@ class _AuthFlowBuilderState<T extends AuthController>
     final initializer =
         getInitializerOfType<FirebaseUIAuthInitializer>(context);
 
-    if (widget.method == null) {
-      method = widget.method!;
+    if (widget.action == null) {
+      action = widget.action!;
     } else if (initializer.auth.currentUser == null) {
-      method = AuthMethod.signIn;
+      action = AuthAction.signIn;
     } else {
-      method = AuthMethod.link;
+      action = AuthAction.link;
     }
 
-    flow = initializer.createFlow<T>(method);
+    flow = initializer.createFlow<T>(action);
 
     flow.context = context;
     flow.addListener(onFlowStateChanged);
@@ -89,7 +89,7 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   @override
   void didUpdateWidget(covariant AuthFlowBuilder<AuthController> oldWidget) {
-    flow.method = method;
+    flow.action = action;
     super.didUpdateWidget(oldWidget);
   }
 
@@ -98,7 +98,7 @@ class _AuthFlowBuilderState<T extends AuthController>
     initializeFlow();
 
     return AuthControllerProvider(
-      method: flow.method,
+      action: flow.action,
       ctrl: flow,
       child: ValueListenableBuilder<AuthState>(
         valueListenable: flow,

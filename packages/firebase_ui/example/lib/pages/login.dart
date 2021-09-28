@@ -24,7 +24,7 @@ class Login extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const PhoneAuthFlow(
-                      authMethod: AuthMethod.signIn,
+                      authMethod: AuthAction.signIn,
                     ),
                   ),
                 );
@@ -34,7 +34,7 @@ class Login extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16).copyWith(top: 0),
               child: AuthFlowBuilder<OAuthController>(
-                method: AuthMethod.signIn,
+                action: AuthAction.signIn,
                 builder: (_, state, __, child) {
                   if (state is SigningIn) {
                     return const CircularProgressIndicator();

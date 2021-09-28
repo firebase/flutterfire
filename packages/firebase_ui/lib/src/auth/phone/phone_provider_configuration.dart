@@ -9,8 +9,8 @@ class PhoneProviderConfiguration extends ProviderConfiguration {
   Type get controllerType => PhoneVerificationController;
 
   @override
-  AuthFlow createFlow(FirebaseAuth auth, AuthMethod method) {
-    return PhoneVerificationAuthFlow(auth: auth, method: method);
+  AuthFlow createFlow(FirebaseAuth auth, AuthAction action) {
+    return PhoneVerificationAuthFlow(auth: auth, action: action);
   }
 
   @override

@@ -17,12 +17,12 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   final FirebaseAuth auth;
 
   @override
-  AuthMethod method;
+  AuthAction action;
 
   AuthFlow({
     required this.auth,
     required AuthState initialState,
-    required this.method,
+    required this.action,
   }) : super(initialState);
 
   void setCredential(AuthCredential credential) {
@@ -56,17 +56,17 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
 
   Future<void> onCredentialReceived(AuthCredential credential) async {
     try {
-      switch (method) {
-        case AuthMethod.signIn:
+      switch (action) {
+        case AuthAction.signIn:
           final user = await signIn(credential);
           value = SignedIn(user!);
           break;
-        case AuthMethod.link:
+        case AuthAction.link:
           await link(credential);
           value = CredentialLinked(credential);
           break;
         default:
-          throw Exception('$method is not supported by $runtimeType');
+          throw Exception('$action is not supported by $runtimeType');
       }
     } on Exception catch (err) {
       value = AuthFailed(err);

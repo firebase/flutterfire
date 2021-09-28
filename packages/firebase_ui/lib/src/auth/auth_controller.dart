@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, FirebaseAuth, User;
 import 'package:flutter/widgets.dart';
 
-enum AuthMethod {
+enum AuthAction {
   signIn,
   signUp,
   link,
@@ -24,7 +24,7 @@ abstract class AuthController {
     return ctrl;
   }
 
-  AuthMethod get method;
+  AuthAction get action;
 
   FirebaseAuth get auth;
 
@@ -33,17 +33,17 @@ abstract class AuthController {
 }
 
 class AuthControllerProvider extends InheritedWidget {
-  final AuthMethod method;
+  final AuthAction action;
   final AuthController ctrl;
 
   AuthControllerProvider({
     required Widget child,
-    required this.method,
+    required this.action,
     required this.ctrl,
   }) : super(child: child);
 
   @override
   bool updateShouldNotify(AuthControllerProvider oldWidget) {
-    return ctrl != oldWidget.ctrl || method != oldWidget.method;
+    return ctrl != oldWidget.ctrl || action != oldWidget.action;
   }
 }

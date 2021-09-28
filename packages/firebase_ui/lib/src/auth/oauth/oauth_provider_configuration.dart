@@ -11,8 +11,8 @@ abstract class OAuthProviderConfiguration extends ProviderConfiguration {
   Type get controllerType => OAuthController;
 
   @override
-  AuthFlow createFlow(FirebaseAuth auth, AuthMethod method) {
-    return OAuthFlow(auth: auth, method: method);
+  AuthFlow createFlow(FirebaseAuth auth, AuthAction action) {
+    return OAuthFlow(auth: auth, action: action);
   }
 
   OAuthProvider createProvider();
