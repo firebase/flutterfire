@@ -39,9 +39,9 @@ abstract class EmailFlowController extends AuthController {
 class EmailFlow extends AuthFlow implements EmailFlowController {
   EmailFlow({
     required FirebaseAuth auth,
-    required AuthMethod method,
+    required AuthAction action,
   }) : super(
-          method: method,
+          action: action,
           initialState: AwaitingEmailAndPassword(),
           auth: auth,
         );
@@ -82,7 +82,7 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
   @override
   Future<void> onCredentialReceived(AuthCredential credential) async {
     try {
-      if (method == AuthMethod.signUp) {
+      if (action == AuthAction.signUp) {
         final userCredential = await auth.createUserWithEmailAndPassword(
           email: (credential as EmailAuthCredential).email,
           password: credential.password!,

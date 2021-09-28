@@ -30,7 +30,7 @@ class _EmailVerificationButtonState extends State<EmailVerificationButton> {
     }
 
     return AuthFlowBuilder<EmailFlowController>(
-      method: AuthMethod.link,
+      action: AuthAction.link,
       builder: (context, state, ctrl, _) {
         if (state is AwaitingEmailVerification) {
           return const CircularProgressIndicator();
