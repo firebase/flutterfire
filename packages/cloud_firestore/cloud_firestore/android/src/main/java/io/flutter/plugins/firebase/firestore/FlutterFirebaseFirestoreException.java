@@ -79,7 +79,8 @@ public class FlutterFirebaseFirestoreException extends Exception {
             break;
           case "FAILED_PRECONDITION":
             code = "failed-precondition";
-            if (foundMessage.contains("query requires an index") || foundMessage.contains("")) {
+            if (foundMessage.contains("query requires an index")
+                || foundMessage.contains("ensure it has been indexed")) {
               message = foundMessage;
             } else {
               message = ERROR_FAILED_PRECONDITION;
