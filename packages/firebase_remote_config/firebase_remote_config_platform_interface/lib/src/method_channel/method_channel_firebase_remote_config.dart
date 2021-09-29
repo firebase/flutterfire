@@ -1,5 +1,6 @@
 // ignore_for_file: require_trailing_commas
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -153,6 +154,15 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
+
+      if (exception is FormatException &&
+          exception.message.contains('Invalid envelope')) {
+        //This exception occurs when no internet connection is present. This exception makes it clearer to the user.
+        HttpException httpException = const HttpException(
+            'No internet connection available to fetch and activate config values');
+        throw convertPlatformException(httpException, stackTrace);
+      }
+
       throw convertPlatformException(exception, stackTrace);
     }
   }
