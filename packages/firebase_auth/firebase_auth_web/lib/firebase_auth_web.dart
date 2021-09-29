@@ -246,7 +246,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setLanguageCode(String languageCode) async {
+  Future<void> setLanguageCode(String? languageCode) async {
     _webAuth!.languageCode = languageCode;
   }
 
