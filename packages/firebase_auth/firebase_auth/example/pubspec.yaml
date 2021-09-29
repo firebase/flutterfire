@@ -14,7 +14,8 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_signin_button: ^1.0.0
-  google_sign_in: ^5.0.0-nullsafety
+# Removed google_sign_in plugin temporarily until CI is fixed
+#  google_sign_in: ^5.0.0-nullsafety
 
 dependency_overrides:
   firebase_auth:
