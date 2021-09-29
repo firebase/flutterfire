@@ -1,6 +1,6 @@
 name: firebase_database_web
 description: The web implementation of firebase_database
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_database/firebase_database_web
 
 environment:
@@ -8,9 +8,9 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  firebase_core: ^1.6.0
+  firebase_core: ^1.7.0
   firebase_core_web: ^1.1.0
-  firebase_database_platform_interface: ^0.0.1+1
+  firebase_database_platform_interface: ^0.1.0
   flutter:
     sdk: flutter
   flutter_web_plugins:

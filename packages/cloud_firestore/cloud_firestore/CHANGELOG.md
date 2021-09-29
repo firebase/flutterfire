@@ -1,3 +1,11 @@
+## 2.5.3
+
+ - **FIX**: value encoding fails when using `DocumentReference` & `withConverter` (#7020).
+ - **FIX**: propagate query index link  to firebase console for user (#7087).
+ - **FIX**: fixed a bug where `withConverter.endBeforeDocument` incorrectly behaved as `endAtDocument`.
+ - **FIX**: an issue where `Query.==` throws when using `withConverter` (#6997).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 2.5.2
 
  - **REVERT**: Firestore cache snapshot connections with underlying native listener (#6819) (#6974).

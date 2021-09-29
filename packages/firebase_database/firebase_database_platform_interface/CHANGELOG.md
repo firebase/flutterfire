@@ -1,3 +1,10 @@
+## 0.1.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: List of values erroring on transaction result (#7001).
+ - **BREAKING** **FEAT**: add initial support for Web.
+
 ## 0.0.1+1
 
  - **REFACTOR**: firebase_database_platform_interface (#6668).

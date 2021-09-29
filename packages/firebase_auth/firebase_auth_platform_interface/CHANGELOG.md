@@ -1,3 +1,8 @@
+## 6.1.1
+
+ - **TEST**: Fix pre-existing HintCode.UNNECESSARY_TYPE_CHECK_TRUE (#6931).
+ - **FIX**: allow setLanguage to accept null (#7050).
+
 ## 6.1.0
 
  - **FEAT**: Add support for `secret` on `OAuthCredential` on web (#6830).

@@ -1,3 +1,9 @@
+## 10.0.8
+
+ - **FIX**: Fix crash on Android in onDetachedFromEngine (#7088).
+ - **CHORE**: update gradle version across packages (#7054).
+ - **CHORE**: migrate example app to null-safety (#6990).
+
 ## 10.0.7
 
  - **FIX**: was creating a new instance each time (#6961).
