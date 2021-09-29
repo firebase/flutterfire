@@ -1,0 +1,64 @@
+name: website
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "website/**"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '12'
+      - name: NPM Install
+        working-directory: ./website
+        run: yarn
+      - name: Check Linting
+        working-directory: ./website
+        run: yarn run check:linting
+      - name: Check Formatting
+        working-directory: ./website
+        run: yarn run check:formatting
+      - name: Check TS Compiles
+        working-directory: ./website
+        run: yarn run check:typescript
+      - name: Check Spelling & Grammar
+        working-directory: ./website
+        run: yarn run check:spelling
+
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '12'
+      # We check for write permission as only users with this permission
+      # will be able to retrieve the FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS credential
+      - name: Check user permission
+        id: check
+        uses: scherermichael-oss/action-has-permission@master
+        with:
+          required-permission: write
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Build
+        if: steps.check.outputs.has-permission
+        working-directory: ./website
+        run: |
+          yarn
+          yarn run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        if: steps.check.outputs.has-permission
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}'
+          projectId: flutter-firebase-docs
+          entryPoint: "website"
+          expires: 7d
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels

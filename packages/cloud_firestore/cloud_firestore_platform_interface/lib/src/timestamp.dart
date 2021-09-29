@@ -1,7 +1,11 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2018, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+
 import 'dart:ui';
+
+import 'package:flutter/material.dart';
 
 const int _kThousand = 1000;
 const int _kMillion = 1000000;
@@ -9,7 +13,7 @@ const int _kBillion = 1000000000;
 
 void _check(bool expr, String name, int value) {
   if (!expr) {
-    throw ArgumentError("Timestamp $name out of range: $value");
+    throw ArgumentError('Timestamp $name out of range: $value');
   }
 }
 
@@ -23,6 +27,7 @@ void _check(bool expr, String name, int value) {
 /// can convert to and from RFC 3339 date strings.
 ///
 /// For more information, see [the reference timestamp definition](https://github.com/google/protobuf/blob/master/src/google/protobuf/timestamp.proto)
+@immutable
 class Timestamp implements Comparable<Timestamp> {
   /// Creates a [Timestamp]
   Timestamp(this._seconds, this._nanoseconds) {
@@ -31,14 +36,14 @@ class Timestamp implements Comparable<Timestamp> {
 
   /// Create a [Timestamp] fromMillisecondsSinceEpoch
   factory Timestamp.fromMillisecondsSinceEpoch(int milliseconds) {
-    final int seconds = (milliseconds ~/ _kThousand).floor();
+    int seconds = (milliseconds / _kThousand).floor();
     final int nanoseconds = (milliseconds - seconds * _kThousand) * _kMillion;
     return Timestamp(seconds, nanoseconds);
   }
 
   /// Create a [Timestamp] fromMicrosecondsSinceEpoch
   factory Timestamp.fromMicrosecondsSinceEpoch(int microseconds) {
-    final int seconds = (microseconds ~/ _kMillion).floor();
+    final int seconds = microseconds ~/ _kMillion;
     final int nanoseconds = (microseconds - seconds * _kMillion) * _kThousand;
     return Timestamp(seconds, nanoseconds);
   }
@@ -68,11 +73,11 @@ class Timestamp implements Comparable<Timestamp> {
 
   // ignore: public_member_api_docs
   int get millisecondsSinceEpoch =>
-      (seconds * _kThousand + nanoseconds ~/ _kMillion);
+      seconds * _kThousand + nanoseconds ~/ _kMillion;
 
   // ignore: public_member_api_docs
   int get microsecondsSinceEpoch =>
-      (seconds * _kMillion + nanoseconds ~/ _kThousand);
+      seconds * _kMillion + nanoseconds ~/ _kThousand;
 
   /// Converts [Timestamp] to [DateTime]
   DateTime toDate() {
@@ -83,8 +88,10 @@ class Timestamp implements Comparable<Timestamp> {
   int get hashCode => hashValues(seconds, nanoseconds);
 
   @override
-  bool operator ==(dynamic o) =>
-      o is Timestamp && o.seconds == seconds && o.nanoseconds == nanoseconds;
+  bool operator ==(Object other) =>
+      other is Timestamp &&
+      other.seconds == seconds &&
+      other.nanoseconds == nanoseconds;
 
   @override
   int compareTo(Timestamp other) {
@@ -97,7 +104,7 @@ class Timestamp implements Comparable<Timestamp> {
 
   @override
   String toString() {
-    return "Timestamp(seconds=$seconds, nanoseconds=$nanoseconds)";
+    return 'Timestamp(seconds=$seconds, nanoseconds=$nanoseconds)';
   }
 
   static void _validateRange(int seconds, int nanoseconds) {

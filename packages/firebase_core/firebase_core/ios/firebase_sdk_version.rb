@@ -1,3 +1,4 @@
+# https://firebase.google.com/support/release-notes/ios
 def firebase_sdk_version!()
-  '6.26.0'
+  '8.7.0'
 end

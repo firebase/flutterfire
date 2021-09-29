@@ -1,6 +1,9 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -27,7 +30,7 @@ void main() {
       final BannerAd bannerAd = BannerAd(
         adUnitId: BannerAd.testAdUnitId,
         size: AdSize.banner,
-        targetingInfo: MobileAdTargetingInfo(
+        targetingInfo: const MobileAdTargetingInfo(
           keywords: <String>['foo', 'bar'],
           contentUrl: 'http://foo.com/bar.html',
           childDirected: true,
@@ -47,7 +50,7 @@ void main() {
 
       final InterstitialAd interstitialAd = InterstitialAd(
         adUnitId: InterstitialAd.testAdUnitId,
-        targetingInfo: MobileAdTargetingInfo(
+        targetingInfo: const MobileAdTargetingInfo(
           keywords: <String>['foo', 'bar'],
           contentUrl: 'http://foo.com/bar.html',
           childDirected: true,
@@ -72,7 +75,7 @@ void main() {
       // Request with a targeting info
       hasStartedLoading = await RewardedVideoAd.instance.load(
         adUnitId: RewardedVideoAd.testAdUnitId,
-        targetingInfo: MobileAdTargetingInfo(
+        targetingInfo: const MobileAdTargetingInfo(
           keywords: <String>['foo', 'bar'],
           contentUrl: 'http://foo.com/bar.html',
           childDirected: true,
@@ -88,7 +91,7 @@ void main() {
       final NativeAd nativeAd = NativeAd(
         adUnitId: NativeAd.testAdUnitId,
         factoryId: 'adFactoryExample',
-        targetingInfo: MobileAdTargetingInfo(
+        targetingInfo: const MobileAdTargetingInfo(
           keywords: <String>['foo', 'bar'],
           contentUrl: 'http://foo.com/bar.html',
           childDirected: true,

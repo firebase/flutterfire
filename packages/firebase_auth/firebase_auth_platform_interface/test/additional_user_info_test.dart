@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -6,13 +7,13 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  final bool kMockIsNewUser = true;
-  final String kMockDisplayName = 'test-name';
+  const bool kMockIsNewUser = true;
+  const String kMockDisplayName = 'test-name';
   final Map<String, dynamic> kMockProfile = <String, dynamic>{
     'displayName': kMockDisplayName
   };
-  final String kMockProviderId = 'password';
-  final String kMockUsername = 'username';
+  const String kMockProviderId = 'password';
+  const String kMockUsername = 'username';
 
   group('$AdditionalUserInfo', () {
     AdditionalUserInfo additionalUserInfo = AdditionalUserInfo(
@@ -39,19 +40,6 @@ void main() {
             result,
             equals(
                 '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: ${kMockProfile.toString()}, providerId: $kMockProviderId, username: $kMockUsername)'));
-      });
-
-      test('returns expected string when profile is null', () {
-        AdditionalUserInfo additionalUserInfo = AdditionalUserInfo(
-            isNewUser: kMockIsNewUser,
-            profile: null,
-            providerId: kMockProviderId,
-            username: kMockUsername);
-
-        expect(
-            additionalUserInfo.toString(),
-            equals(
-                '$AdditionalUserInfo(isNewUser: $kMockIsNewUser, profile: null, providerId: $kMockProviderId, username: $kMockUsername)'));
       });
     });
   });

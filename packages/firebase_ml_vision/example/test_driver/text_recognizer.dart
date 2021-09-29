@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -5,7 +6,7 @@
 part of 'firebase_ml_vision.dart';
 
 void textRecognizerTests() {
-  FirebaseVisionImage visionImage;
+  late FirebaseVisionImage visionImage;
 
   setUp(() async {
     final tmpFilename = await _loadImage('assets/test_text.png');
@@ -41,7 +42,7 @@ void textRecognizerTests() {
 
     test('processImage with specified options', () async {
       final languageHints = ['en', 'ru'];
-      final textModelType = CloudTextModelType.dense;
+      const textModelType = CloudTextModelType.dense;
 
       final options = CloudTextRecognizerOptions(
           hintedLanguages: languageHints, textModelType: textModelType);
@@ -52,7 +53,7 @@ void textRecognizerTests() {
 
       expect(text.text, 'TEXT\n');
 
-      recognizer.close();
+      await recognizer.close();
     });
   });
 }

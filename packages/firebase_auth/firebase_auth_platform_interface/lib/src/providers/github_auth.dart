@@ -1,10 +1,10 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
-import 'package:flutter/material.dart';
 
 const _kProviderId = 'github.com';
 
@@ -15,7 +15,7 @@ const _kProviderId = 'github.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// GithubAuthProvider githubProvider = GithubAuthProvider();
+/// var githubProvider = GithubAuthProvider();
 /// githubProvider.addScope('repo');
 /// githubProvider.setCustomParameters({
 ///   'allow_signup': 'false',
@@ -31,7 +31,7 @@ const _kProviderId = 'github.com';
 ///
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
-/// GithubAuthCredential githubAuthCredential = GithubAuthProvider.credential(accessToken);
+/// var githubAuthCredential = GithubAuthProvider.credential(accessToken);
 ///
 /// FirebaseAuth.instance.signInWithCredential(githubAuthCredential)
 ///   .then(...);
@@ -39,6 +39,13 @@ const _kProviderId = 'github.com';
 class GithubAuthProvider extends AuthProvider {
   /// Creates a new instance.
   GithubAuthProvider() : super(_kProviderId);
+
+  /// Create a new [GithubAuthCredential] from a provided [accessToken];
+  static OAuthCredential credential(String accessToken) {
+    return GithubAuthCredential._credential(
+      accessToken,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get GITHUB_SIGN_IN_METHOD {
@@ -65,7 +72,6 @@ class GithubAuthProvider extends AuthProvider {
 
   /// Adds GitHub OAuth scope.
   GithubAuthProvider addScope(String scope) {
-    assert(scope != null);
     _scopes.add(scope);
     return this;
   }
@@ -73,24 +79,10 @@ class GithubAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a GitHub OAuth
   /// request for popup and redirect sign-in operations.
   GithubAuthProvider setCustomParameters(
-      Map<dynamic, dynamic> customOAuthParameters) {
-    assert(customOAuthParameters != null);
+    Map<dynamic, dynamic> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [GithubAuthCredential] from a provided [accessToken];
-  static OAuthCredential credential(String accessToken) {
-    assert(accessToken != null);
-    return GithubAuthCredential._credential(
-      accessToken,
-    );
-  }
-
-  @Deprecated('Deprecated in favor of `GithubAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return GithubAuthProvider.credential(token);
   }
 }
 
@@ -98,7 +90,7 @@ class GithubAuthProvider extends AuthProvider {
 /// [GithubAuthProvider.credential].
 class GithubAuthCredential extends OAuthCredential {
   GithubAuthCredential._({
-    @required String accessToken,
+    required String accessToken,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,

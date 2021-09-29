@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -69,8 +70,10 @@ class FirebaseMock {
 
 @JS()
 class Promise<T> {
-  external Promise(void executor(void resolve(T result), Function reject));
-  external Promise then(void onFulfilled(T result), [Function onRejected]);
+  external Promise(
+      void Function(void Function(T result) resolve, Function reject) executor);
+  external Promise then(void Function(T result) onFulfilled,
+      [Function onRejected]);
 }
 
 // Wire to the global 'window.firebase' object.

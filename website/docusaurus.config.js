@@ -10,9 +10,9 @@ module.exports = {
   projectName: 'flutterfire',
   themeConfig: {
     announcementBar: {
-      id: 'wip',
+      id: 'flutterfire-google-io-2021',
       content:
-        'The FlutterFire documentation hub is currently a work in progress. <a rel="noopener" target="_blank" href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>Check out the roadmap to learn more.</b></a>.',
+        '📣 &nbsp;&nbsp; <a rel="noopener" href="https://invertase.io/blog/flutterfire-news-google-io-2021"><b>Read about what\'s new in the FlutterFire Google I/O 2021 updates.</b></a> &nbsp;&nbsp; 📣',
       backgroundColor: '#13B9FD',
       textColor: '#fff',
     },
@@ -40,7 +40,7 @@ module.exports = {
         alt: 'FlutterFire Logo',
         src: '/img/flutterfire_300x.png',
       },
-      links: [
+      items: [
         {
           to: 'docs/overview',
           activeBasePath: 'docs',
@@ -116,10 +116,13 @@ module.exports = {
       ],
       copyright: `<div style="margin-top: 3rem"><small>Except as otherwise noted, this work is licensed under a Creative Commons Attribution 4.0 International License, and code samples are licensed under the BSD License.</small></div>`,
     },
+    gtag: {
+      trackingID: 'G-8PJJN5LRR7',
+      anonymizeIP: true,
+    },
   },
   plugins: [
     require.resolve('docusaurus-plugin-sass'),
-    require.resolve('@docusaurus/plugin-ideal-image'),
     path.resolve(__dirname, './docusaurus-plugins/favicon-tags'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
     path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),

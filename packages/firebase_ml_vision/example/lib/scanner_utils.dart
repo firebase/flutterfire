@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -14,7 +15,7 @@ class ScannerUtils {
   ScannerUtils._();
 
   static Future<CameraDescription> getCamera(CameraLensDirection dir) async {
-    return await availableCameras().then(
+    return availableCameras().then(
       (List<CameraDescription> cameras) => cameras.firstWhere(
         (CameraDescription camera) => camera.lensDirection == dir,
       ),
@@ -22,9 +23,9 @@ class ScannerUtils {
   }
 
   static Future<dynamic> detect({
-    @required CameraImage image,
-    @required Future<dynamic> Function(FirebaseVisionImage image) detectInImage,
-    @required int imageRotation,
+    required CameraImage image,
+    required Future<dynamic> Function(FirebaseVisionImage image) detectInImage,
+    required int imageRotation,
   }) async {
     return detectInImage(
       FirebaseVisionImage.fromBytes(
@@ -36,7 +37,7 @@ class ScannerUtils {
 
   static Uint8List _concatenatePlanes(List<Plane> planes) {
     final WriteBuffer allBytes = WriteBuffer();
-    for (Plane plane in planes) {
+    for (final Plane plane in planes) {
       allBytes.putUint8List(plane.bytes);
     }
     return allBytes.done().buffer.asUint8List();

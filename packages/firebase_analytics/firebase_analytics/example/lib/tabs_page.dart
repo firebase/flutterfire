@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -6,22 +7,26 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/observer.dart';
 
 class TabsPage extends StatefulWidget {
-  TabsPage(this.observer);
+  const TabsPage(this.observer, {Key? key}) : super(key: key);
 
   final FirebaseAnalyticsObserver observer;
 
   static const String routeName = '/tab';
 
   @override
-  State<StatefulWidget> createState() => _TabsPageState(observer);
+  State<StatefulWidget> createState() => _TabsPageState();
 }
 
 class _TabsPageState extends State<TabsPage>
-    with SingleTickerProviderStateMixin, RouteAware {
-  _TabsPageState(this.observer);
-
-  final FirebaseAnalyticsObserver observer;
-  TabController _controller;
+    with
+        SingleTickerProviderStateMixin,
+        // ignore: prefer_mixin
+        RouteAware {
+  late final TabController _controller = TabController(
+    vsync: this,
+    length: tabs.length,
+    initialIndex: selectedIndex,
+  );
   int selectedIndex = 0;
 
   final List<Tab> tabs = <Tab>[
@@ -32,23 +37,18 @@ class _TabsPageState extends State<TabsPage>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    observer.subscribe(this, ModalRoute.of(context));
+    widget.observer.subscribe(this, ModalRoute.of(context)! as PageRoute);
   }
 
   @override
   void dispose() {
-    observer.unsubscribe(this);
+    widget.observer.unsubscribe(this);
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _controller = TabController(
-      vsync: this,
-      length: tabs.length,
-      initialIndex: selectedIndex,
-    );
     _controller.addListener(() {
       setState(() {
         if (selectedIndex != _controller.index) {
@@ -71,7 +71,7 @@ class _TabsPageState extends State<TabsPage>
       body: TabBarView(
         controller: _controller,
         children: tabs.map((Tab tab) {
-          return Center(child: Text(tab.text));
+          return Center(child: Text(tab.text!));
         }).toList(),
       ),
     );
@@ -88,7 +88,7 @@ class _TabsPageState extends State<TabsPage>
   }
 
   void _sendCurrentTabToAnalytics() {
-    observer.analytics.setCurrentScreen(
+    widget.observer.analytics.setCurrentScreen(
       screenName: '${TabsPage.routeName}/tab$selectedIndex',
     );
   }

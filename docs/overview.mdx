@@ -18,12 +18,16 @@ hide_title: true
 
 <h1 style={{ textAlign: 'center', marginBottom: '4rem' }}>FlutterFire Overview</h1>
 
-Welcome to FlutterFire! 🔥 
+Welcome to FlutterFire! 🔥
 
 FlutterFire is a set of Flutter plugins which connect your Flutter application to [Firebase](https://firebase.com).
 
-> FlutterFire is currently a work in progress as we work towards a stable release. Plugins & documentation may be incomplete
-> or missing functionality. See the [roadmap issue](https://github.com/FirebaseExtended/flutterfire/issues/2582) to learn more.
+## Get to know Firebase for Flutter
+
+If you're new to using Firebase in Flutter we recommend starting with the
+[Get to know Firebase for Flutter codelab](https://firebase.google.com/codelabs/firebase-get-to-know-flutter) and video:
+
+<YouTube id="wUSkeTaBonA" />
 
 ## Prerequisites
 
@@ -35,8 +39,22 @@ have an active Firebase project. If you do not meet these prerequisites, follow 
 
 ## Installation
 
+:::caution
+Are you migrating your existing project to these new plugins? Please start with the <a href="https://firebase.flutter.dev/docs/migration"><b>migration guide</b></a>.
+:::
+
 Before any Firebase services can be used, you must first install the [`firebase_core`](https://pub.dev/packages/firebase_core)
 plugin, which is responsible for connecting your application to Firebase. Add the plugin to your `pubspec.yaml` file:
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
 
 ```yaml {4} title="pubspec.yaml"
 dependencies:
@@ -44,6 +62,19 @@ dependencies:
     sdk: flutter
   firebase_core: "{{ plugins.firebase_core }}"
 ```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {4} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+```
+
+</TabItem>
+</Tabs>
 
 Install the plugin by running the following command from the project root:
 
@@ -93,15 +124,31 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
-class App extends StatelessWidget {
+/// We are using a StatefulWidget such that we only create the [Future] once,
+/// no matter how many times our widget rebuild.
+/// If we used a [StatelessWidget], in the event where [App] is rebuilt, that
+/// would re-initialize FlutterFire and make our application re-enter loading state,
+/// which is undesired.
+class App extends StatefulWidget {
+  // Create the initialization Future outside of `build`:
+  @override
+  _AppState createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  /// The future is part of the state of our widget. We should not call `initializeApp`
+  /// directly inside [build].
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      // Initialize FlutterFire
-      future: Firebase.initializeApp(),
+      // Initialize FlutterFire:
+      future: _initialization,
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
@@ -131,6 +178,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(App());
 }
 
@@ -187,6 +235,27 @@ class _AppState extends State<App> {
 
 Once initialized, you're ready to get started using FlutterFire!
 
+## Improve iOS Build Times
+
+Currently the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in XCode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
+
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.6.0'`
+
+Add this line inside your target 'Runner' do block in your Podfile, e.g.:
+
+```
+# ...
+target 'Runner' do
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.6.0'
+# ...
+end
+```
+
+Additionally, ensure that you have upgraded your cocoapods to 1.9.1 or higher:
+`gem install cocoapods`
+
+For more information see this issue: https://github.com/FirebaseExtended/flutterfire/issues/2751
+
 ## Overriding Native SDK Versions
 
 FlutterFire internally sets the versions of the native SDKs that each module uses. Each release is tested against a fixed
@@ -199,9 +268,9 @@ If you wish to change these versions, you can manually override the native SDK v
 In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
 
 ```groovy
-project.ext {
+rootProject.ext {
   set('FlutterFire', [
-    FirebaseSDKVersion: '21.1.0'
+    FirebaseSDKVersion: '28.4.1'
   ])
 }
 ```
@@ -212,7 +281,7 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '21.1.0'
+$FirebaseSDKVersion = '8.7.0'
 ```
 
 ## Next Steps
@@ -225,6 +294,10 @@ get started:
 
 |      Firebase       | Description                                                                                                                                                                                                                                                                                                                             |                          FlutterFire Plugin                          |
 | :-----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------: |
-| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dev/packages/firebase_auth)   |
-| **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dev/packages/cloud_firestore) |
-|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dev/packages/firebase_core)   |
+| **Authentication**  | Using Firebase Authentication you can authenticate users to your app using several methods such as passwords, phone numbers, and popular federated providers like Google, Facebook, and more. <br /><br /> [View documentation &raquo;](auth/overview.mdx)                                                                              |   [firebase_auth](https://pub.dev/packages/firebase_auth)            |
+| **Cloud Firestore** | Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud Platform. Cloud Firestore also offers seamless integration with other Firebase and Google Cloud Platform products, including Cloud Functions. <br /><br /> [View documentation &raquo;](firestore/overview.mdx) | [cloud_firestore](https://pub.dev/packages/cloud_firestore)          |
+|      **Core**       | The `firebase_core` plugin is used to initialize FlutterFire and connect your application with multiple Firebase projects. <br /><br /> [View documentation &raquo;](core/usage.mdx)                                                                                                                                                    |   [firebase_core](https://pub.dev/packages/firebase_core)            |
+| **Cloud Storage**   | Cloud Storage is designed to help you quickly and easily store and serve user-generated content, such as photos and videos. <br /><br /> [View documentation &raquo;](storage/overview.mdx)                                                                                                                                             |   [firebase_storage](https://pub.dev/packages/firebase_storage)      |
+| **Crashlytics**     | Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. <br /><br /> [View documentation &raquo;](crashlytics/overview.mdx)                                                                                                                                                             |   [firebase_crashlytics](https://pub.dev/packages/firebase_crashlytics)                |
+| **Cloud Messaging** | Firebase Cloud Messaging (FCM) is a cross-platform messaging solution that lets you reliably send messages at no cost. <br /><br /> [View documentation &raquo;](messaging/overview.mdx)                                                                                                                                                |   [firebase_messaging](https://pub.dev/packages/firebase_messaging)  |
+| **Cloud Functions**  | Cloud Functions for Firebase let you automatically run backend code in response to events triggered by Firebase features and HTTPS requests.  <br /><br /> [View documentation &raquo;](functions/overview.mdx)                                                                                                                         |   [cloud_functions](https://pub.dev/packages/cloud_functions)        |

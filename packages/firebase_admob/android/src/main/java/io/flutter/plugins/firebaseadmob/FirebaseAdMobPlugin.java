@@ -12,7 +12,6 @@ import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
-import com.google.firebase.FirebaseApp;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -202,7 +201,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
       Context applicationContext, Activity activity, BinaryMessenger messenger) {
     this.activity = activity;
     this.applicationContext = applicationContext;
-    FirebaseApp.initializeApp(applicationContext);
 
     this.channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_admob");
     channel.setMethodCallHandler(this);

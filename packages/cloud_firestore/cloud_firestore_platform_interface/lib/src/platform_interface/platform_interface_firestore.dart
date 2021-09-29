@@ -1,38 +1,37 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
 
   /// Create an instance using [app]
   FirebaseFirestorePlatform({this.appInstance}) : super(token: _token);
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app {
-    if (appInstance == null) {
-      return Firebase.app();
-    }
-
-    return appInstance;
+    return appInstance ?? Firebase.app();
   }
 
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseFirestorePlatform.instanceFor({FirebaseApp app}) {
+  factory FirebaseFirestorePlatform.instanceFor({required FirebaseApp app}) {
     return FirebaseFirestorePlatform.instance.delegateFor(app: app);
   }
 
@@ -41,13 +40,10 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseFirestore]
   /// if no other implementation was provided.
   static FirebaseFirestorePlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseFirestore(app: Firebase.app());
-    }
-    return _instance;
+    return _instance ??= MethodChannelFirebaseFirestore(app: Firebase.app());
   }
 
-  static FirebaseFirestorePlatform _instance;
+  static FirebaseFirestorePlatform? _instance;
 
   /// Sets the [FirebaseFirestorePlatform.instance]
   static set instance(FirebaseFirestorePlatform instance) {
@@ -58,8 +54,14 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseFirestorePlatform delegateFor({FirebaseApp app}) {
+  FirebaseFirestorePlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  /// useEmulator is used for web only. Native platforms use Firestore settings
+  /// to initialize emulator.
+  void useEmulator(String host, int port) {
+    throw UnimplementedError('useEmulator() is not implemented');
   }
 
   /// Creates a write batch, used for performing multiple writes as a single
@@ -77,7 +79,8 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   /// Enable persistence of Firestore data. Web only.
-  Future<void> enablePersistence() async {
+  Future<void> enablePersistence(
+      [PersistenceSettings? persistenceSettings]) async {
     throw UnimplementedError('enablePersistence() is not implemented');
   }
 
@@ -116,6 +119,20 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
     throw UnimplementedError('snapshotsInSync() is not implemented');
   }
 
+  /// Loads a Firestore bundle into the local cache. Returns a [LoadBundleTask]
+  /// which notifies callers with progress updates, and completion or error events.
+  LoadBundleTaskPlatform loadBundle(Uint8List bundle) {
+    throw UnimplementedError('loadBundle() is not implemented');
+  }
+
+  /// Reads a Firestore Query which has been loaded using [loadBundle()]
+  Future<QuerySnapshotPlatform> namedQueryGet(
+    String name, {
+    GetOptions options = const GetOptions(),
+  }) {
+    throw UnimplementedError('namedQueryGet() is not implemented');
+  }
+
   /// Executes the given [TransactionHandler] and then attempts to commit the
   /// changes applied within an atomic transaction.
   ///
@@ -124,7 +141,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   /// After the [TransactionHandler] is run, Firestore will attempt to apply the
   /// changes to the server. If any of the data read has been modified outside
   /// of this transaction since being read, then the transaction will be
-  /// retried by executing the updateBlock again. If the transaction still
+  /// retried by executing the provided [TransactionHandler] again. If the transaction still
   /// fails after 5 retries, then the transaction will fail.
   ///
   /// The [TransactionHandler] may be executed multiple times, it should be able
@@ -137,7 +154,7 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the [timeout] parameter.
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
+  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) {
     throw UnimplementedError('runTransaction() is not implemented');
   }
@@ -187,10 +204,12 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   }
 
   @override
-  bool operator ==(dynamic o) =>
-      o is FirebaseFirestorePlatform && o.app.name == app.name;
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) =>
+      other is FirebaseFirestorePlatform && other.app.name == app.name;
 
   @override
+  //ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => toString().hashCode;
 
   @override

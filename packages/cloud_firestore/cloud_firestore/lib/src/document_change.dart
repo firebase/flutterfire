@@ -8,36 +8,78 @@ part of cloud_firestore;
 ///
 /// It contains the document affected and the type of change that occurred
 /// (added, modified, or removed).
-class DocumentChange {
-  final DocumentChangePlatform _delegate;
-  final FirebaseFirestore _firestore;
-
-  DocumentChange._(this._firestore, this._delegate) {
-    DocumentChangePlatform.verifyExtends(_delegate);
-  }
-
+abstract class DocumentChange<T extends Object?> {
   /// The type of change that occurred (added, modified, or removed).
-  DocumentChangeType get type => _delegate.type;
+  DocumentChangeType get type;
 
   /// The index of the changed document in the result set immediately prior to
   /// this [DocumentChange] (i.e. supposing that all prior [DocumentChange] objects
   /// have been applied).
   ///
   /// -1 is returned for [DocumentChangeType.added] events.
-  int get oldIndex => _delegate.oldIndex;
+  int get oldIndex;
 
   /// The index of the changed document in the result set immediately after this
   /// [DocumentChange] (i.e. supposing that all prior [DocumentChange] objects
   /// and the current [DocumentChange] object have been applied).
   ///
   /// -1 is returned for [DocumentChangeType.removed] events.
-  int get newIndex => _delegate.newIndex;
+  int get newIndex;
 
   /// Returns the [DocumentSnapshot] for this instance.
-  DocumentSnapshot get doc =>
-      DocumentSnapshot._(_firestore, _delegate.document);
+  DocumentSnapshot<T> get doc;
+}
 
-  @Deprecated("Deprecated in favor of .doc")
-  // ignore: public_member_api_docs
-  DocumentSnapshot get document => doc;
+class _JsonDocumentChange implements DocumentChange<Map<String, dynamic>> {
+  _JsonDocumentChange(this._firestore, this._delegate) {
+    DocumentChangePlatform.verifyExtends(_delegate);
+  }
+
+  final DocumentChangePlatform _delegate;
+  final FirebaseFirestore _firestore;
+
+  @override
+  DocumentChangeType get type => _delegate.type;
+
+  @override
+  int get oldIndex => _delegate.oldIndex;
+
+  @override
+  int get newIndex => _delegate.newIndex;
+
+  @override
+  DocumentSnapshot<Map<String, dynamic>> get doc {
+    return _JsonDocumentSnapshot(_firestore, _delegate.document);
+  }
+}
+
+class _WithConverterDocumentChange<T extends Object?>
+    implements DocumentChange<T> {
+  _WithConverterDocumentChange(
+    this._originalDocumentChange,
+    this._fromFirestore,
+    this._toFirestore,
+  );
+
+  final DocumentChange<Map<String, dynamic>> _originalDocumentChange;
+  final FromFirestore<T> _fromFirestore;
+  final ToFirestore<T> _toFirestore;
+
+  @override
+  DocumentChangeType get type => _originalDocumentChange.type;
+
+  @override
+  int get oldIndex => _originalDocumentChange.oldIndex;
+
+  @override
+  int get newIndex => _originalDocumentChange.newIndex;
+
+  @override
+  DocumentSnapshot<T> get doc {
+    return _WithConverterDocumentSnapshot<T>(
+      _originalDocumentChange.doc,
+      _fromFirestore,
+      _toFirestore,
+    );
+  }
 }

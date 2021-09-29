@@ -5,11 +5,16 @@ on:
     paths:
       - "packages/firebase_auth/**"
       - ".github/workflows/firebase_auth.yaml"
+      # Ensure this workflow runs if the Firebase Android SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/android/gradle.properties"
+      # Ensure this workflow runs if the Firebase iOS SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb"
   push:
     branches:
       - master
     paths-ignore:
-    - "docs/**"
+      - "docs/**"
+      - "**.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_auth*"
@@ -21,15 +26,19 @@ jobs:
     if: github.event_name == 'pull_request'
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
-        run: ./.github/workflows/scripts/install-tools.sh
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -43,17 +52,20 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh dev
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
           flutter config --enable-macos-desktop
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive iOS Example"
         run: ./.github/workflows/scripts/drive-example.sh ios
       - name: "Build MacOS Example"
@@ -65,14 +77,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh beta
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
+          sudo npm i -g firebase-tools
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         run: ./.github/workflows/scripts/drive-example.sh web

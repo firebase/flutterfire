@@ -12,7 +12,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, add `firebase_dynamic_links` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase dynamic links for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
+To use this plugin, add `firebase_dynamic_links` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure firebase dynamic links for each platform project: Android and iOS (see the example folder for details).
 
 ## Create Dynamic Links
 
@@ -106,8 +106,21 @@ Remember not to include `https://` or any slashes or paths in your prefix
   <string>https://example.com/links/share</string>
 </array>
 ```
+5. If you want to open android app directly without redirecting to Chrome or Any other Browser you can put an `intent-filter` in your `AndroidManifest.xml` file. It will open the system dialogue to open link with your app or other browsers. Users can then directly choose to open the link in your app.
 
-5. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
+Note: This step is optional and in case we do not implement this then link will open in chrome at first and then will eventually open your application.
+```xml
+<intent-filter>
+  <action android:name="android.intent.action.VIEW" />
+  <category android:name="android.intent.category.DEFAULT" />
+  <category android:name="android.intent.category.BROWSABLE" />
+  <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
+  <data
+    android:scheme="https"
+    android:host="YOUR_SUBDOMAIN.page.link" />
+</intent-filter>
+```
+6. To receive a dynamic link, call the `getInitialLink()` method from `FirebaseDynamicLinks` which gets the link that opened the app (or null if it was not opened via a dynamic link)
 and configure listeners for link callbacks when the application is active or in background calling `onLink`.
 
 ```dart
@@ -133,8 +146,8 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
 
   void initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final Uri deepLink = dynamicLink?.link;
+      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+        final Uri? deepLink = dynamicLink?.link;
 
         if (deepLink != null) {
           Navigator.pushNamed(context, deepLink.path);
@@ -146,8 +159,8 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
       }
     );
     
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
       Navigator.pushNamed(context, deepLink.path);

@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,7 +8,7 @@ part of 'firebase_ml_vision.dart';
 void documentTextRecognizerTests() {
   group('$DocumentTextRecognizer', () {
     final recognizer = FirebaseVision.instance.cloudDocumentTextRecognizer();
-    FirebaseVisionImage visionImage;
+    late FirebaseVisionImage visionImage;
 
     setUp(() async {
       final tmpFilename = await _loadImage('assets/test_text.png');

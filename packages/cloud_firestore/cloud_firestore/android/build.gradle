@@ -4,20 +4,18 @@ version '1.0-SNAPSHOT'
 buildscript {
     repositories {
         google()
-        jcenter()
-        mavenLocal()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.4'
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
-        mavenLocal()
+        mavenCentral()
     }
 }
 
@@ -37,7 +35,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

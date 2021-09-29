@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.LoadBundleTaskProgress;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SnapshotMetadata;
@@ -76,6 +77,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
       writeQuerySnapshot(stream, (QuerySnapshot) value);
     } else if (value instanceof DocumentChange) {
       writeDocumentChange(stream, (DocumentChange) value);
+    } else if (value instanceof LoadBundleTaskProgress) {
+      writeLoadBundleTaskProgress(stream, (LoadBundleTaskProgress) value);
     } else if (value instanceof SnapshotMetadata) {
       writeSnapshotMetadata(stream, (SnapshotMetadata) value);
     } else if (value instanceof Blob) {
@@ -149,6 +152,35 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
     querySnapshotMap.put("metadata", value.getMetadata());
 
     writeValue(stream, querySnapshotMap);
+  }
+
+  private void writeLoadBundleTaskProgress(
+      ByteArrayOutputStream stream, LoadBundleTaskProgress snapshot) {
+    Map<String, Object> snapshotMap = new HashMap<>();
+
+    snapshotMap.put("bytesLoaded", snapshot.getBytesLoaded());
+    snapshotMap.put("documentsLoaded", snapshot.getDocumentsLoaded());
+    snapshotMap.put("totalBytes", snapshot.getTotalBytes());
+    snapshotMap.put("totalDocuments", snapshot.getTotalDocuments());
+
+    LoadBundleTaskProgress.TaskState taskState = snapshot.getTaskState();
+    String convertedState = "running";
+
+    switch (taskState) {
+      case RUNNING:
+        convertedState = "running";
+        break;
+      case SUCCESS:
+        convertedState = "success";
+        break;
+      case ERROR:
+        convertedState = "error";
+        break;
+    }
+
+    snapshotMap.put("taskState", convertedState);
+
+    writeValue(stream, snapshotMap);
   }
 
   @SuppressWarnings("ConstantConditions")
@@ -317,6 +349,8 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
 
         if ("==".equals(operator)) {
           query = query.whereEqualTo(fieldPath, value);
+        } else if ("!=".equals(operator)) {
+          query = query.whereNotEqualTo(fieldPath, value);
         } else if ("<".equals(operator)) {
           query = query.whereLessThan(fieldPath, value);
         } else if ("<=".equals(operator)) {
@@ -335,6 +369,10 @@ class FlutterFirebaseFirestoreMessageCodec extends StandardMessageCodec {
           @SuppressWarnings("unchecked")
           List<Object> listValues = (List<Object>) value;
           query = query.whereIn(fieldPath, listValues);
+        } else if ("not-in".equals(operator)) {
+          @SuppressWarnings("unchecked")
+          List<Object> listValues = (List<Object>) value;
+          query = query.whereNotIn(fieldPath, listValues);
         } else {
           Log.w(
               "FLTFirestoreMsgCodec",

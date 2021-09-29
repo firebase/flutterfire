@@ -1,3 +1,5 @@
+[<img src="https://raw.githubusercontent.com/FirebaseExtended/flutterfire/master/resources/flutter_favorite.png" width="200" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
+
 # Firebase Core for Flutter
 
 [![pub package](https://img.shields.io/pub/v/firebase_core.svg)](https://pub.dev/packages/firebase_core)
@@ -8,8 +10,7 @@ To learn more about Firebase, please visit the [Firebase website](https://fireba
 
 ## Getting Started
 
-To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/overview)
-available at [https://firebase.flutter.dev](https://firebase.flutter.dev/docs/overview)
+To get started with FlutterFire, please [see the documentation](https://firebase.flutter.dev/docs/overview).
 
 ## Usage
 

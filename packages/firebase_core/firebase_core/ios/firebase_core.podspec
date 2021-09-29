@@ -3,7 +3,6 @@ require 'yaml'
 pubspec = YAML.load_file(File.join('..', 'pubspec.yaml'))
 library_version = pubspec['version'].gsub('+', '-')
 
-firebase_sdk_version = '6.26.0'
 if defined?($FirebaseSDKVersion)
   Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
   firebase_sdk_version = $FirebaseSDKVersion
@@ -27,15 +26,15 @@ Pod::Spec.new do |s|
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
-  
-  s.ios.deployment_target = '8.0'
-  
+
+  s.ios.deployment_target = '9.0'
+
   # Flutter dependencies
   s.dependency 'Flutter'
-  
+
   # Firebase dependencies
-  s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
-   
+  s.dependency 'Firebase/CoreOnly', firebase_sdk_version
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-core\\\"",

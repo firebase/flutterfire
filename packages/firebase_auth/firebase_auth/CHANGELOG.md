@@ -1,3 +1,219 @@
+## 3.1.1
+
+ - **FIX**: use Locale.ROOT while processing error code (#6946).
+
+## 3.1.0
+
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
+## 3.0.2
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: precise error message is propagated (#6793).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **FIX**: stop idTokenChanges & userChanges firing twice on initial listen (#6560).
+
+## 3.0.1
+
+ - **FIX**: reinstate deprecated emulator apis (#6626).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: useAuthEmulator(host, port) API update.
+
+## 1.4.1
+
+ - Update a dependency to the latest release.
+
+## 1.4.0
+
+ - **FEAT**: add tenantId support  (#5736).
+
+## 1.3.0
+
+ - **FEAT**: add User.updateDisplayName and User.updatePhotoURL (#6213).
+ - **DOCS**: Add Flutter Favorite badge (#6190).
+
+## 1.2.0
+
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+ - **FIX**: podspec osx version checking script should use a version range instead of a single fixed version.
+
+## 1.1.4
+
+ - **FIX**: correctly cleanup Dictionary handlers (#6101).
+ - **DOCS**: Update the documentation of sendPasswordResetEmail (#6051).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 1.1.3
+
+ - **FIX**: Fix firebase_auth not being registered as a plugin (#5987).
+ - **CI**: refactor to use Firebase Auth emulator (#5939).
+
+## 1.1.2
+
+ - **FIX**: fixed an issue where Web could not connect to the Firebase Auth emulator (#5940).
+ - **FIX**: Import all necessary headers from the header file. (#5890).
+ - **FIX**: Move communication to EventChannels (#4643).
+ - **DOCS**: remove implicit-cast in the doc of AuthProviders (#5862).
+
+## 1.1.1
+
+ - **FIX**: ensure web is initialized before sending stream events (#5766).
+ - **DOCS**: Add UserInfoCard widget in auth example SignInPage (#4635).
+ - **CI**: fix analyzer issues in example.
+ - **CHORE**: update Web plugins to use Firebase JS SDK version 8.4.1 (#4464).
+
+## 1.1.0
+
+ - **FEAT**: PhoneAuthProvider.credential and PhoneAuthProvider.credentialFromToken now return a PhoneAuthCredential (#5675).
+ - **CHORE**: update drive dependency (#5740).
+
+## 1.0.3
+
+ - **DOCS**: userChanges clarification (#5698).
+
+## 1.0.2
+
+ - Update a dependency to the latest release.
+
+## 1.0.1
+
+ - **DOCS**: note that auth emulator is not supported for web (#5169).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_auth" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.21.0-1.1.nullsafety.3
+
+ - Update a dependency to the latest release.
+
+## 0.21.0-1.1.nullsafety.2
+
+ - **TESTS**: update mockito API usage in tests
+
+## 0.21.0-1.1.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+
+## 0.21.0-1.1.nullsafety.0
+
+ - **FEAT**: implement support for `useEmulator` (#4263).
+
+## 0.21.0-1.0.nullsafety.0
+
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+
+## 0.21.0-nullsafety.0
+
+ - **FEAT**: Migrated to null safety (#4633)
+
+## 0.20.0+1
+
+ - **FIX**: package compatibility.
+
+## 0.20.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: null pointer exception if user metadata null (#4622).
+ - **FEAT**: add check on podspec to assist upgrading users deployment target.
+ - **BUILD**: commit Podfiles with 10.12 deployment target.
+ - **BUILD**: remove default sdk version, version should always come from firebase_core, or be user defined.
+ - **BUILD**: set macOS deployment target to 10.12 (from 10.11).
+ - **BREAKING** **BUILD**: set osx min supported platform version to 10.12.
+
+## 0.19.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.19.0
+
+> Note: This release has breaking changes.
+
+ - **CHORE**: harmonize dependencies and version handling.
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.18.4+1
+
+ - Update a dependency to the latest release.
+
+## 0.18.4
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **DOCS**: Fixed two typos in method documentation (#4219).
+
+## 0.18.3+1
+
+ - **TEST**: Explicitly opt-out from null safety.
+ - **FIX**: stop authStateChange firing twice for initial event (#4099).
+ - **FIX**: updated email link signin to use latest format for ActionCodeSettings (#3425).
+ - **CHORE**: add missing dependency to example app.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.18.3
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **FEAT** [WEB] adds support for `EmailAuthProvider.credentialWithLink`
+ - **FEAT** [WEB] adds support for `FirebaseAuth.setSettings`
+ - **FEAT** [WEB] adds support for `User.tenantId`
+ - **FEAT** [WEB] `FirebaseAuthException` now supports `email` & `credential` properties
+ - **FEAT** [WEB] `ActionCodeInfo` now supports `previousEmail` field
+
+## 0.18.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.18.1+2
+
+ - **FIX**: on iOS use sendEmailVerificationWithActionCodeSettings instead of sendEmailVerificationWithCompletion (#3686).
+ - **DOCS**: README updates (#3768).
+
+## 0.18.1+1
+
+ - **FIX**: Optional params for "signInWithCredential" method are converted to "nil" if "null" for iOS (#3731).
+
+## 0.18.1
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FIX**: fix IdTokenResult timestamps (web, ios) (#3357).
+ - **FIX**: pub.dev score fixes (#3318).
+ - **FIX**: use unknown APNS token type (#3345).
+ - **FIX**: update FLTFirebaseAuthPlugin.m (#3360).
+ - **FIX**: use correct FIRAuth instance on listeners (#3316).
+ - **FEAT**: add support for linkWithPhoneNumber (#3436).
+ - **FEAT**: use named arguments for ActionCodeSettings (#3269).
+ - **FEAT**: implement signInWithPhoneNumber on web (#3205).
+ - **FEAT**: expose smsCode (android only) (#3308).
+ - **DOCS**: fixed signOut method documentation (#3342).
+
 ## 0.18.0+1
 
 * Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)

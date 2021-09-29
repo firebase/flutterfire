@@ -1,0 +1,72 @@
+name: firebase_dynamic_links
+
+on:
+  pull_request:
+    paths:
+      - "packages/firebase_dynamic_links/**"
+      - ".github/workflows/firebase_dynamic_links.yaml"
+      # Ensure this workflow runs if the Firebase Android SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/android/gradle.properties"
+      # Ensure this workflow runs if the Firebase iOS SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_dynamic_links*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*firebase_dynamic_links_example*"
+  # TODO(Salakar): `flutter_driver` does not yet support NNBD
+  FLUTTER_COMMAND_FLAGS: "--no-sound-null-safety"
+
+jobs:
+  android:
+    if: github.event_name == 'pull_request'
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Build Example"
+        run: ./.github/workflows/scripts/build-example.sh android
+      - name: "Drive Example"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 28
+          arch: x86_64
+          # Firebase Database works without Google Play Services, so we don't use the `googleapis`
+          # emulator target as it's considerably slower on CI.
+          target: default
+          profile: Nexus 5X
+          script: ./.github/workflows/scripts/drive-example.sh android
+
+  apple:
+    runs-on: macos-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-macos-desktop
+      - name: "Build iOS Example"
+        run: ./.github/workflows/scripts/build-example.sh ios
+      - name: "Drive iOS Example"
+        run: ./.github/workflows/scripts/drive-example.sh ios
+# TODO: Currently does not have macOS support.
+#      - name: "Build MacOS Example"
+#        run: ./.github/workflows/scripts/build-example.sh macos
+#      - name: "Drive MacOS Example"
+#        run: ./.github/workflows/scripts/drive-example.sh macos

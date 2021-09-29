@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -8,8 +9,6 @@ part of firebase_core;
 ///
 /// You can get an instance by calling [Firebase.app()].
 class FirebaseApp {
-  FirebaseAppPlatform _delegate;
-
   /// A [FirebaseApp] instance can only be accessed from a call to `app()` on
   /// [FirebaseCore].
   ///
@@ -19,45 +18,14 @@ class FirebaseApp {
     FirebaseAppPlatform.verifyExtends(_delegate);
   }
 
+  final FirebaseAppPlatform _delegate;
+
   /// Deletes this app and frees up system resources.
   ///
   /// Once deleted, any plugin functionality using this app instance will throw
   /// an error.
   Future<void> delete() async {
     await _delegate.delete();
-  }
-
-  @Deprecated("Deprecated in favor of Firebase.app()")
-  // ignore: public_member_api_docs
-  static FirebaseApp appNamed(String name) {
-    return Firebase.app(name);
-  }
-
-  @Deprecated("Deprecated in favor of Firebase.apps")
-  // ignore: public_member_api_docs
-  static Future<List<FirebaseApp>> allApps() async {
-    return Firebase.apps;
-  }
-
-  @Deprecated("Deprecated in favor of Firebase.initializeApp()")
-  // ignore: public_member_api_docs
-  static Future<FirebaseApp> configure({
-    @required String name,
-    @required FirebaseOptions options,
-  }) {
-    return Firebase.initializeApp(name: name, options: options);
-  }
-
-  @Deprecated("Deprecated in favor of Firebase.app()")
-  // ignore: public_member_api_docs
-  static FirebaseApp get instance {
-    return Firebase.app();
-  }
-
-  @Deprecated("Deprecated in favor of defaultFirebaseAppName")
-  // ignore: public_member_api_docs
-  static String get defaultAppName {
-    return defaultFirebaseAppName;
   }
 
   /// The name of this [FirebaseApp].
@@ -88,14 +56,16 @@ class FirebaseApp {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other is! FirebaseApp) return false;
     return other.name == name && other.options == options;
   }
 
   @override
-  int get hashCode => hash2(name, options);
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => hashValues(name, options);
 
   @override
   String toString() => '$FirebaseApp($name)';

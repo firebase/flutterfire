@@ -1,0 +1,38 @@
+name: firebase_remote_config_example
+description: Demonstrates how to use the firebase_remote_config plugin.
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.12.13+hotfix.5"
+
+dependencies:
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.0
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_remote_config:
+    path: ../
+  flutter:
+    sdk: flutter
+
+dependency_overrides:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
+  firebase_remote_config_platform_interface:
+    path: ../../firebase_remote_config_platform_interface
+
+dev_dependencies:
+  drive: 0.1.0
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  test: any
+
+flutter:
+  uses-material-design: true

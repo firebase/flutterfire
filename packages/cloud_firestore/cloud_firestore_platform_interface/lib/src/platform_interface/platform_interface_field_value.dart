@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -17,8 +18,4 @@ class FieldValuePlatform {
   /// through to the underlying implementation.
   static dynamic getDelegate(FieldValuePlatform fieldValue) =>
       fieldValue._delegate;
-
-  /// No-op method kept in place to avoid a breaking change.
-  @Deprecated('It is no longer necessary to call this method.')
-  static void verifyExtends(FieldValuePlatform instance) {}
 }

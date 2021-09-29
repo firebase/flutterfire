@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -7,10 +8,6 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('$Pointer', () {
-    test('fails assertion if path is null', () {
-      expect(() => Pointer(null), throwsAssertionError);
-    });
-
     test('returns a path and components', () {
       expect(Pointer('foo/bar').path, 'foo/bar');
       expect(Pointer('foo/bar').components, ['foo', 'bar']);

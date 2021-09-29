@@ -5,9 +5,9 @@ ACTION=$1
 if [ "$ACTION" == "android" ]
 then
   # Sleep to allow emulator to settle.
-  sleep 15 
+  sleep 15
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive $FLUTTER_COMMAND_FLAGS --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
   exit
 fi
 
@@ -22,23 +22,24 @@ then
   # Uncomment following line to have simulator logs printed out for debugging purposes.
   # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive $FLUTTER_COMMAND_FLAGS -d \"$SIMULATOR\" --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
+  MELOS_EXIT_CODE=$?
   xcrun simctl shutdown "$SIMULATOR"
-  exit
+  exit $MELOS_EXIT_CODE
 fi
 
 if [ "$ACTION" == "macos" ]
 then
   melos exec -c 1 --fail-fast --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=test_driver -- \
-    flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive $FLUTTER_COMMAND_FLAGS -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
   exit
 fi
 
 if [ "$ACTION" == "web" ]
 then
-  melos bootstrap
+  melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
   chromedriver --port=4444 &
   melos exec -c 1 --scope="$FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE" --dir-exists=web -- \
-    flutter drive --release --no-pub --verbose-system-logs --browser-name=chrome --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart
+    flutter drive $FLUTTER_COMMAND_FLAGS --no-pub --verbose-system-logs --device-id=web-server --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart --dart-define=CI=true
   exit
 fi

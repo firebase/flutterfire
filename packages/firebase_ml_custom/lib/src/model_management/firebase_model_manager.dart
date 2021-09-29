@@ -1,6 +1,9 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 import 'dart:io';
@@ -46,8 +49,10 @@ class FirebaseModelManager {
       FirebaseModelDownloadConditions conditions) async {
     assert(model != null);
     assert(conditions != null);
-    await channel.invokeMethod("FirebaseModelManager#download",
-        {'modelName': model.modelName, 'conditions': conditions.toMap()});
+    await channel.invokeMethod('FirebaseModelManager#download', {
+      'modelName': model.modelName,
+      'conditions': conditions.toMap(),
+    });
   }
 
   /// Returns a [File] containing the latest model for the remote model name.
@@ -56,15 +61,18 @@ class FirebaseModelManager {
   Future<File> getLatestModelFile(FirebaseRemoteModel model) async {
     assert(model != null);
     var modelPath = await channel.invokeMethod(
-        "FirebaseModelManager#getLatestModelFile",
-        {'modelName': model.modelName});
+      'FirebaseModelManager#getLatestModelFile',
+      {'modelName': model.modelName},
+    );
     return File(modelPath);
   }
 
   /// Returns whether the given [FirebaseRemoteModel] is currently downloaded.
   Future<bool> isModelDownloaded(FirebaseRemoteModel model) async {
     assert(model != null);
-    return channel.invokeMethod("FirebaseModelManager#isModelDownloaded",
-        {'modelName': model.modelName});
+    return channel.invokeMethod(
+      'FirebaseModelManager#isModelDownloaded',
+      {'modelName': model.modelName},
+    );
   }
 }

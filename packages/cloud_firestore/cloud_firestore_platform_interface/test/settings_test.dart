@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -9,22 +10,53 @@ void main() {
   group('$Settings', () {
     test('equality', () {
       expect(
-          Settings(
+        const Settings(
+          persistenceEnabled: true,
+          host: 'foo bar',
+          sslEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        ),
+        equals(
+          const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
           ),
-          equals(Settings(
+        ),
+      );
+
+      expect(
+        const Settings(
+          persistenceEnabled: true,
+          host: 'foo bar',
+          sslEnabled: true,
+          cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+        ),
+        isNot(
+          const ExtendedSettings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
             cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-          )));
+          ),
+        ),
+      );
+    });
+
+    test('hashCode', () {
+      const settings = Settings(
+        persistenceEnabled: true,
+        host: 'foo bar',
+        sslEnabled: true,
+        cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+      );
+
+      expect(settings.hashCode, equals(settings.hashCode));
     });
 
     test('returns a map of settings', () {
-      expect(Settings().asMap, <String, dynamic>{
+      expect(const Settings().asMap, <String, dynamic>{
         'persistenceEnabled': null,
         'host': null,
         'sslEnabled': null,
@@ -32,7 +64,7 @@ void main() {
       });
 
       expect(
-          Settings(
+          const Settings(
             persistenceEnabled: true,
             host: 'foo bar',
             sslEnabled: true,
@@ -51,3 +83,7 @@ void main() {
     });
   });
 }
+
+mixin _Noop {}
+
+class ExtendedSettings = Settings with _Noop;

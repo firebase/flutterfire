@@ -7,22 +7,22 @@ package io.flutter.plugins.firebaseanalytics;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.embedding.engine.plugins.activity.ActivityAware;
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import java.util.ArrayList;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin, ActivityAware {
+public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
   // Only set registrar for v1 embedder.
@@ -36,9 +36,51 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     instance.onAttachedToEngine(registrar.context(), registrar.messenger());
   }
 
-  // Only access activity with this method.
-  private Activity getActivity() {
-    return registrar != null ? registrar.activity() : activity;
+  private static Bundle createBundleFromMap(Map<String, Object> map) {
+    if (map == null) {
+      return null;
+    }
+
+    Bundle bundle = new Bundle();
+    for (Map.Entry<String, Object> jsonParam : map.entrySet()) {
+      final Object value = jsonParam.getValue();
+      final String key = jsonParam.getKey();
+      if (value instanceof String) {
+        bundle.putString(key, (String) value);
+      } else if (value instanceof Integer) {
+        bundle.putInt(key, (Integer) value);
+      } else if (value instanceof Long) {
+        bundle.putLong(key, (Long) value);
+      } else if (value instanceof Double) {
+        bundle.putDouble(key, (Double) value);
+      } else if (value instanceof Boolean) {
+        bundle.putBoolean(key, (Boolean) value);
+      } else if (value == null) {
+        bundle.putString(key, null);
+      } else if (value instanceof Iterable<?>) {
+        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+
+        for (Object item : (Iterable<?>) value) {
+          if (item instanceof Map) {
+            list.add(createBundleFromMap((Map<String, Object>) item));
+          } else {
+            throw new IllegalArgumentException(
+                "Unsupported value type: "
+                    + item.getClass().getCanonicalName()
+                    + " in list at key "
+                    + key);
+          }
+        }
+
+        bundle.putParcelableArrayList(key, list);
+      } else if (value instanceof Map<?, ?>) {
+        bundle.putParcelable(key, createBundleFromMap((Map<String, Object>) value));
+      } else {
+        throw new IllegalArgumentException(
+            "Unsupported value type: " + value.getClass().getCanonicalName());
+      }
+    }
+    return bundle;
   }
 
   @Override
@@ -60,25 +102,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-    setActivity(binding.getActivity());
-  }
-
-  @Override
-  public void onDetachedFromActivityForConfigChanges() {
-    setActivity(null);
-  }
-
-  @Override
-  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
-    setActivity(binding.getActivity());
-  }
-
-  @Override
-  public void onDetachedFromActivity() {}
-
-  @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(MethodCall call, @NonNull Result result) {
     switch (call.method) {
       case "logEvent":
         handleLogEvent(call, result);
@@ -107,12 +131,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
     }
   }
 
-  private void setActivity(Activity activity) {
-    this.activity = activity;
-  }
-
   private void handleLogEvent(MethodCall call, Result result) {
-
     final String eventName = call.argument("name");
     final Map<String, Object> map = call.argument("parameters");
     final Bundle parameterBundle = createBundleFromMap(map);
@@ -127,15 +146,12 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   private void handleSetCurrentScreen(MethodCall call, Result result) {
-    if (getActivity() == null) {
-      result.error("no_activity", "handleSetCurrentScreen requires a foreground activity", null);
-      return;
-    }
-
     final String screenName = call.argument("screenName");
     final String screenClassOverride = call.argument("screenClassOverride");
-
-    firebaseAnalytics.setCurrentScreen(getActivity(), screenName, screenClassOverride);
+    Bundle parameterBundle = new Bundle();
+    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
+    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
     result.success(null);
   }
 
@@ -162,32 +178,5 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   private void handleResetAnalyticsData(Result result) {
     firebaseAnalytics.resetAnalyticsData();
     result.success(null);
-  }
-
-  private static Bundle createBundleFromMap(Map<String, Object> map) {
-    if (map == null) {
-      return null;
-    }
-
-    Bundle bundle = new Bundle();
-    for (Map.Entry<String, Object> jsonParam : map.entrySet()) {
-      final Object value = jsonParam.getValue();
-      final String key = jsonParam.getKey();
-      if (value instanceof String) {
-        bundle.putString(key, (String) value);
-      } else if (value instanceof Integer) {
-        bundle.putInt(key, (Integer) value);
-      } else if (value instanceof Long) {
-        bundle.putLong(key, (Long) value);
-      } else if (value instanceof Double) {
-        bundle.putDouble(key, (Double) value);
-      } else if (value instanceof Boolean) {
-        bundle.putBoolean(key, (Boolean) value);
-      } else {
-        throw new IllegalArgumentException(
-            "Unsupported value type: " + value.getClass().getCanonicalName());
-      }
-    }
-    return bundle;
   }
 }

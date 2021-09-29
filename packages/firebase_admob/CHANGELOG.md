@@ -1,3 +1,87 @@
+## 0.11.2
+
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+ - **FIX**: bump firebase_core_* package versions to updated NNBD versioning format (#4832).
+ - **FEAT**: remove dependency on Firebase & `firebase_core`.
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **DOCS**: remove incorrect ARCHS in ios examples (#5450).
+ - **DOCS**: include deprecation plan and migration guide for firebase_admob to google_mobile_ads (#5203).
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: merge all analysis_options.yaml into one (#5329).
+ - **CHORE**: apply lints on firebase_admob (#5230).
+ - **CHORE**: bump dependencies for stable nnbd packages release (#5149).
+ - **CHORE**: Bump "firebase_core" to `1.0.0-1.0.nullsafety.0`.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: bump firebase_core and firebase_core_web (#4758).
+ - **CHORE**: remove quiver + remove dependency_overrides + use latest firebase (#4689).
+ - **CHORE**: Migrate firebase_core/firebase_core_platform_interface/firebase_core_web to non-nullable types (#4656).
+
+## 0.11.1
+
+ - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.
+ - **FEAT**: remove dependency on Firebase & `firebase_core`.
+ - **DOCS**: include deprecation plan and migration guide for firebase_admob to google_mobile_ads (#5203).
+
+## 0.11.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.11.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.11.0
+
+ - Update a dependency to the latest release.
+ - **BREAKING** **FEAT**: forward port to firebase-ios-sdk v7.3.0.
+   - Due to this SDK upgrade, iOS 10 is now the minimum supported version by FlutterFire. Please update your build target version.
+
+## 0.10.3
+
+ - **FEAT**: bump android `com.android.tools.build` & `'com.google.gms:google-services` versions (#4269).
+ - **CHORE**: publish packages.
+ - **CHORE**: bump gradle wrapper to 5.6.4 (#4158).
+
+## 0.10.2
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: bump `compileSdkVersion` to 29 in preparation for upcoming Play Store requirement.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 0.10.1
+
+ - **FEAT**: bump compileSdkVersion to 29 (#3975).
+ - **FEAT**: update Firebase iOS SDK version to 6.33.0 (from 6.26.0).
+
+## 0.10.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+1
+
+ - **FIX**: remove `platform` package usage (#3729).
+
+## 0.10.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.10.0-dev.2
+
+ - **FIX**: local dependencies in example apps (#3319).
+ - **FEAT**: integrate Admob with new core (#3347).
+ - **CHORE**: intellij cleanup (#3326).
+
+## 0.10.0-dev.1
+
+* Depend on `firebase_core` 0.5.0.
+* Firebase iOS SDK versions are now locked to use the same version defined in
+  `firebase_core`.
+* Firebase Android SDK versions are now using the Firebase Bill of Materials (BoM)
+  to specify individual SDK versions. BoM version is also sourced from
+  `firebase_core`.
+
 ## 0.9.3+4
 
 * Bump Dart version requirement.

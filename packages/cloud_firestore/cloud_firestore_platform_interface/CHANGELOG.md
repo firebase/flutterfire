@@ -1,3 +1,116 @@
+## 5.4.1
+
+ - Update a dependency to the latest release.
+
+## 5.4.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+
+## 5.3.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
+## 5.2.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
+## 5.1.2
+
+ - Update a dependency to the latest release.
+
+## 5.1.1
+
+ - Update a dependency to the latest release.
+
+## 5.1.0
+
+ - **FEAT**: loadBundle() & namedQueryGet() implementation (#6037).
+
+## 5.0.1
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages (#6022).
+ - **CHORE**: publish packages.
+
+## 5.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: convert FieldPath parameters from dynamic to Object (#5997).
+
+## 4.0.3
+
+ - Update a dependency to the latest release.
+
+## 4.0.2
+
+ - Update a dependency to the latest release.
+
+## 4.0.1
+
+ - Update a dependency to the latest release.
+
+## 4.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 4.0.0-1.0.nullsafety.2
+
+ - **FIX**: Fix type issue. (#5081).
+ - **FIX**: Fixed crashes due to null `Settings` (#5031).
+
+## 4.0.0-1.0.nullsafety.1
+
+ - **TESTS**: update mockito API usage in tests
+
+## 4.0.0-1.0.nullsafety.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: migrate to NNBD (#4780).
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: Move Snapshot handling into a EventChannel (#4209).
+ - **BREAKING** **REFACTOR**: remove all currently deprecated APIs (#4594).
+
+## 2.2.1
+
+ - Update a dependency to the latest release.
+
+## 2.2.0
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+
+## 2.1.3
+
+ - Update a dependency to the latest release.
+
+## 2.1.2
+
+ - **FIX**: bubble exceptions (#3701).
+ - **FIX**: fix returning of transaction result (#3747).
+
+## 2.1.1
+
+ - **FIX**: typo in code comments (#3655).
+ - **DOCS**: remove `updateBlock` reference in Firestore docs (#3728).
+
+## 2.1.0
+
+ - **FIX**: check for Stream existence before sending event (#3435).
+ - **FEAT**: add a [] operator to DocumentSnapshot, acting as get() (#3387).
+ - **DOCS**: Fixed docs typo (#3471).
+
 ## 2.0.1
 
  - Fixed 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)

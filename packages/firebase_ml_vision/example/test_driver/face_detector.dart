@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -20,7 +21,7 @@ void faceDetectorTests() {
 
       expect(faces.length, 1);
       expect(
-        faces[0].getContour(FaceContourType.allPoints).positionsList,
+        faces[0].getContour(FaceContourType.allPoints)!.positionsList,
         isNotEmpty,
       );
     });

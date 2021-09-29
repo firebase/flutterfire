@@ -1,6 +1,9 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// @dart=2.9
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,8 +11,8 @@ import 'package:firebase_ml_custom/firebase_ml_custom.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final MODEL_NAME = "myModelName";
-  final MODEL_FILE_PATH = "someDestination";
+  const MODEL_NAME = 'myModelName';
+  const MODEL_FILE_PATH = 'someDestination';
 
   group('$FirebaseRemoteModel()', () {
     test('constructor creates a valid model with correct name', () {
@@ -173,7 +176,7 @@ void main() {
             case 'FirebaseModelManager#isModelDownloaded':
               return true;
             default:
-              throw Exception("Not implemented");
+              throw Exception('Not implemented');
           }
         });
         log.clear();
@@ -242,7 +245,7 @@ void main() {
       final FirebaseModelManager modelManager = FirebaseModelManager.instance;
       final FirebaseCustomRemoteModel model =
           FirebaseCustomRemoteModel(MODEL_NAME);
-      final ERROR_MESSAGE = "There is some problem with a call";
+      const ERROR_MESSAGE = 'There is some problem with a call';
 
       setUp(() {
         FirebaseModelManager.channel

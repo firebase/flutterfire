@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -17,14 +18,14 @@ class User {
   /// The users display name.
   ///
   /// Will be `null` if signing in anonymously or via password authentication.
-  String get displayName {
+  String? get displayName {
     return _delegate.displayName;
   }
 
   /// The users email address.
   ///
   /// Will be `null` if signing in anonymously.
-  String get email {
+  String? get email {
     return _delegate.email;
   }
 
@@ -52,7 +53,7 @@ class User {
   ///
   /// This property will be `null` if the user has not signed in or been has
   /// their phone number linked.
-  String get phoneNumber {
+  String? get phoneNumber {
     return _delegate.phoneNumber;
   }
 
@@ -60,16 +61,7 @@ class User {
   ///
   /// This property will be populated if the user has signed in or been linked
   /// with a 3rd party OAuth provider (such as Google).
-  String get photoURL {
-    return _delegate.photoURL;
-  }
-
-  /// Returns a photo URL for the user.
-  ///
-  /// This property will be populated if the user has signed in or been linked
-  /// with a 3rd party OAuth provider (such as Google).
-  @Deprecated("Deprecated in favor of 'photoURL'.")
-  String get photoUrl {
+  String? get photoURL {
     return _delegate.photoURL;
   }
 
@@ -82,7 +74,7 @@ class User {
   ///
   /// This property maybe `null` or empty if the underlying platform does not
   /// support providing refresh tokens.
-  String get refreshToken {
+  String? get refreshToken {
     return _delegate.refreshToken;
   }
 
@@ -91,7 +83,7 @@ class User {
   /// This is a read-only property, which indicates the tenant ID used to sign
   /// in the current user. This is `null` if the user is signed in from the
   /// parent project.
-  String get tenantId {
+  String? get tenantId {
     return _delegate.tenantId;
   }
 
@@ -111,7 +103,7 @@ class User {
   ///  - Thrown if the user's last sign-in time does not meet the security
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
-  Future<void> delete() {
+  Future<void> delete() async {
     return _delegate.delete();
   }
 
@@ -121,7 +113,7 @@ class User {
   /// Returns the current token if it has not expired. Otherwise, this will
   /// refresh the token and return a new one.
   ///
-  /// If [forceRefresh] is `true`, the token returned will be refresh regardless
+  /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
   Future<String> getIdToken([bool forceRefresh = false]) {
     return _delegate.getIdToken(forceRefresh);
@@ -130,7 +122,7 @@ class User {
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
   /// other metadata.
   ///
-  /// If [forceRefresh] is `true`, the token returned will be refresh regardless
+  /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
   Future<IdTokenResult> getIdTokenResult([bool forceRefresh = false]) {
     return _delegate.getIdTokenResult(forceRefresh);
@@ -157,7 +149,10 @@ class User {
   ///    user. The fields `email`, `phoneNumber`, and `credential`
   ///    ([AuthCredential]) may be provided, depending on the type of
   ///    credential. You can recover from this error by signing in with
-  ///    `credential` directly via [signInWithCredential].
+  ///    `credential` directly via [signInWithCredential]. Please note, you will
+  ///    not recover from this error if you're using a [PhoneAuthCredential] to link
+  ///    a provider to an account. Once an attempt to link an account has been made,
+  ///    a new sms code is required to sign in the user.
   /// - **email-already-in-use**:
   ///  - Thrown if the email corresponding to the credential already exists
   ///    among your users. When thrown while linking a credential to an existing
@@ -185,9 +180,90 @@ class User {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredential> linkWithCredential(AuthCredential credential) async {
-    assert(credential != null);
     return UserCredential._(
-        _auth, await _delegate.linkWithCredential(credential));
+      _auth,
+      await _delegate.linkWithCredential(credential),
+    );
+  }
+
+  /// Links the user account with the given provider.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **provider-already-linked**:
+  ///  - Thrown if the provider has already been linked to the user. This error
+  ///    is thrown even if this is not the same provider's account that is
+  ///    currently linked to the user.
+  /// - **invalid-credential**:
+  ///  - Thrown if the provider's credential is not valid. This can happen if it
+  ///    has already expired when calling link, or if it used invalid token(s).
+  ///    See the Firebase documentation for your provider, and make sure you
+  ///    pass in the correct parameters to the credential method.
+  /// - **credential-already-in-use**:
+  ///  - Thrown if the account corresponding to the credential already exists
+  ///    among your users, or is already linked to a Firebase User. For example,
+  ///    this error could be thrown if you are upgrading an anonymous user to a
+  ///    Google user by linking a Google credential to it and the Google
+  ///    credential used is already associated with an existing Firebase Google
+  ///    user. The fields `email`, `phoneNumber`, and `credential`
+  ///    ([AuthCredential]) may be provided, depending on the type of
+  ///    credential. You can recover from this error by signing in with
+  ///    `credential` directly via [signInWithCredential].
+  /// - **email-already-in-use**:
+  ///  - Thrown if the email corresponding to the credential already exists
+  ///    among your users. When thrown while linking a credential to an existing
+  ///    user, an `email` and `credential` ([AuthCredential]) fields are also
+  ///    provided. You have to link the credential to the existing user with
+  ///    that email if you wish to continue signing in with that credential.
+  ///    To do so, call [fetchSignInMethodsForEmail], sign in to `email` via one
+  ///    of the providers returned and then [User.linkWithCredential] the
+  ///    original credential to that newly signed in user.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the provider in the Firebase Console. Go
+  ///    to the Firebase Console for your project, in the Auth section and the
+  ///    Sign in Method tab and configure the provider.
+  Future<UserCredential> linkWithPopup(AuthProvider provider) async {
+    return UserCredential._(
+      _auth,
+      await _delegate.linkWithPopup(provider),
+    );
+  }
+
+  /// Links the user account with the given phone number.
+  ///
+  /// This method is only supported on web platforms. Use [verifyPhoneNumber] and
+  /// then [linkWithCredential] on these platforms.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **provider-already-linked**:
+  ///  - Thrown if the provider has already been linked to the user. This error
+  ///    is thrown even if this is not the same provider's account that is
+  ///    currently linked to the user.
+  /// - **captcha-check-failed**:
+  ///  - Thrown if the reCAPTCHA response token was invalid, expired, or if this
+  ///    method was called from a non-whitelisted domain.
+  /// - **invalid-phone-number**:
+  ///  - Thrown if the phone number has an invalid format.
+  /// - **quota-exceeded**:
+  ///  - Thrown if the SMS quota for the Firebase project has been exceeded.
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given phone number has been disabled.
+  /// - **credential-already-in-use**:
+  ///  - Thrown if the account corresponding to the phone number already exists
+  ///    among your users, or is already linked to a Firebase User.
+  /// - **operation-not-allowed**:
+  ///  - Thrown if you have not enabled the phone authentication provider in the
+  ///  Firebase Console. Go to the Firebase Console for your project, in the Auth
+  ///  section and the Sign in Method tab and configure the provider.
+  Future<ConfirmationResult> linkWithPhoneNumber(
+    String phoneNumber, [
+    RecaptchaVerifier? verifier,
+  ]) async {
+    assert(phoneNumber.isNotEmpty);
+    verifier ??= RecaptchaVerifier();
+    return ConfirmationResult._(
+      _auth,
+      await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate),
+    );
   }
 
   /// Re-authenticates a user using a fresh credential.
@@ -220,10 +296,12 @@ class User {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.
   Future<UserCredential> reauthenticateWithCredential(
-      AuthCredential credential) async {
-    assert(credential != null);
+    AuthCredential credential,
+  ) async {
     return UserCredential._(
-        _auth, await _delegate.reauthenticateWithCredential(credential));
+      _auth,
+      await _delegate.reauthenticateWithCredential(credential),
+    );
   }
 
   /// Refreshes the current user, if signed in.
@@ -234,8 +312,9 @@ class User {
   /// Sends a verification email to a user.
   ///
   /// The verification process is completed by calling [applyActionCode].
-  Future<void> sendEmailVerification(
-      [ActionCodeSettings actionCodeSettings]) async {
+  Future<void> sendEmailVerification([
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     await _delegate.sendEmailVerification(actionCodeSettings);
   }
 
@@ -246,7 +325,6 @@ class User {
   ///  - Thrown if the user does not have this provider linked or when the
   ///    provider ID given does not exist.
   Future<User> unlink(String providerId) async {
-    assert(providerId != null);
     return User._(_auth, await _delegate.unlink(providerId));
   }
 
@@ -270,7 +348,6 @@ class User {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updateEmail(String newEmail) async {
-    assert(newEmail != null);
     await _delegate.updateEmail(newEmail);
   }
 
@@ -288,7 +365,6 @@ class User {
   ///    threshold. Use [User.reauthenticateWithCredential] to resolve. This
   ///    does not apply if the user is anonymous.
   Future<void> updatePassword(String newPassword) async {
-    assert(newPassword != null);
     await _delegate.updatePassword(newPassword);
   }
 
@@ -302,13 +378,27 @@ class User {
   /// - **invalid-verification-id**:
   ///  - Thrown if the verification ID of the credential is not valid.
   Future<void> updatePhoneNumber(PhoneAuthCredential phoneCredential) async {
-    assert(phoneCredential != null);
     await _delegate.updatePhoneNumber(phoneCredential);
   }
 
+  /// Update the user name.
+  Future<void> updateDisplayName(String? displayName) {
+    return _delegate
+        .updateProfile(<String, String?>{'displayName': displayName});
+  }
+
+  /// Update the user's profile picture.
+  Future<void> updatePhotoURL(String? photoURL) {
+    return _delegate.updateProfile(<String, String?>{'photoURL': photoURL});
+  }
+
   /// Updates a user's profile data.
-  Future<void> updateProfile({String displayName, String photoURL}) async {
-    await _delegate.updateProfile(<String, String>{
+  @Deprecated(
+    'Will be removed in version 2.0.0. '
+    'Use updatePhotoURL and updateDisplayName instead.',
+  )
+  Future<void> updateProfile({String? displayName, String? photoURL}) {
+    return _delegate.updateProfile(<String, String?>{
       'displayName': displayName,
       'photoURL': photoURL,
     });
@@ -319,21 +409,26 @@ class User {
   ///
   /// If you have a custom email action handler, you can complete the
   /// verification process by calling [applyActionCode].
-  Future<void> verifyBeforeUpdateEmail(String newEmail,
-      [ActionCodeSettings actionCodeSettings]) async {
-    assert(newEmail != null);
+  Future<void> verifyBeforeUpdateEmail(
+    String newEmail, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) async {
     await _delegate.verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
   }
 
   @override
   String toString() {
-    return '$User(displayName: $displayName, email: $email, emailVerified: $emailVerified, isAnonymous: $isAnonymous, metadata: ${metadata.toString()}, phoneNumber: $phoneNumber, photoURL: $photoURL, providerData, ${providerData.toString()}, refreshToken: $refreshToken, tenantId: $tenantId, uid: $uid)';
+    return '$User('
+        'displayName: $displayName, '
+        'email: $email, '
+        'emailVerified: $emailVerified, '
+        'isAnonymous: $isAnonymous, '
+        'metadata: $metadata, '
+        'phoneNumber: $phoneNumber, '
+        'photoURL: $photoURL, '
+        'providerData, $providerData, '
+        'refreshToken: $refreshToken, '
+        'tenantId: $tenantId, '
+        'uid: $uid)';
   }
-}
-
-@Deprecated(
-    "Deprecated in favor of `User`. When updating your code it is recommended to namespace your 'firebase_auth' import to avoid class naming conflicts if you already have a 'User' class in your project e.g. `import 'package:firebase_auth/firebase_auth.dart' as auth;`, `User` then becomes `auth.User`.")
-// ignore: public_member_api_docs
-class FirebaseUser extends User {
-  FirebaseUser._(FirebaseAuth auth, UserPlatform user) : super._(auth, user);
 }

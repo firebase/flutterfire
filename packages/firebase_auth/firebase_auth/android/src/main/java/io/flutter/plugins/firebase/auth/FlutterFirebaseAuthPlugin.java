@@ -8,14 +8,12 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import android.app.Activity;
 import android.net.Uri;
-import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApiNotAvailableException;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.ActionCodeEmailInfo;
@@ -31,12 +29,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
@@ -46,6 +44,8 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -54,34 +54,31 @@ import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /** Flutter plugin for Firebase Auth. */
 public class FlutterFirebaseAuthPlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
 
+  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_auth";
+
   // Stores the instances of native AuthCredentials by their hashCode
   static final HashMap<Integer, AuthCredential> authCredentials = new HashMap<>();
 
-  private static final HashMap<String, FirebaseAuth.AuthStateListener> authListeners =
-      new HashMap<>();
-  private static final HashMap<String, FirebaseAuth.IdTokenListener> idTokenListeners =
-      new HashMap<>();
-  private static final HashMap<Integer, PhoneAuthProvider.ForceResendingToken>
-      forceResendingTokens = new HashMap<>();
-  private PluginRegistry.Registrar registrar;
+  @Nullable private BinaryMessenger messenger;
+
   private MethodChannel channel;
   private Activity activity;
+
+  private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
   @SuppressWarnings("unused")
   public static void registerWith(PluginRegistry.Registrar registrar) {
     FlutterFirebaseAuthPlugin instance = new FlutterFirebaseAuthPlugin();
-    instance.registrar = registrar;
     instance.initInstance(registrar.messenger());
   }
 
@@ -103,10 +100,11 @@ public class FlutterFirebaseAuthPlugin
   }
 
   private void initInstance(BinaryMessenger messenger) {
-    String channelName = "plugins.flutter.io/firebase_auth";
-    registerPlugin(channelName, this);
-    channel = new MethodChannel(messenger, channelName);
+    registerPlugin(METHOD_CHANNEL_NAME, this);
+    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
+
+    this.messenger = messenger;
   }
 
   @Override
@@ -116,9 +114,11 @@ public class FlutterFirebaseAuthPlugin
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    removeEventListeners();
     channel.setMethodCallHandler(null);
     channel = null;
+    messenger = null;
+
+    removeEventListeners();
   }
 
   @Override
@@ -141,64 +141,21 @@ public class FlutterFirebaseAuthPlugin
     activity = null;
   }
 
-  // Ensure any listeners are removed when the app
-  // is detached from the FlutterEngine
-  private void removeEventListeners() {
-    Iterator<?> authListenerIterator = authListeners.entrySet().iterator();
-
-    while (authListenerIterator.hasNext()) {
-      Map.Entry<?, ?> pair = (Map.Entry<?, ?>) authListenerIterator.next();
-      String appName = (String) pair.getKey();
-      FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-      FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
-      FirebaseAuth.AuthStateListener authListener =
-          (FirebaseAuth.AuthStateListener) pair.getValue();
-      firebaseAuth.removeAuthStateListener(authListener);
-      authListenerIterator.remove();
-    }
-
-    Iterator<?> idTokenListenerIterator = idTokenListeners.entrySet().iterator();
-
-    while (idTokenListenerIterator.hasNext()) {
-      Map.Entry<?, ?> pair = (Map.Entry<?, ?>) idTokenListenerIterator.next();
-      String appName = (String) pair.getKey();
-      FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-      FirebaseAuth firebaseAuth = FirebaseAuth.getInstance(firebaseApp);
-      FirebaseAuth.IdTokenListener authListener = (FirebaseAuth.IdTokenListener) pair.getValue();
-      firebaseAuth.removeIdTokenListener(authListener);
-      idTokenListenerIterator.remove();
-    }
-  }
-
   // Only access activity with this method.
+  @Nullable
   private Activity getActivity() {
-    return registrar != null ? registrar.activity() : activity;
+    return activity;
   }
 
-  private FirebaseAuth getAuth(Map<String, Object> arguments) {
+  static FirebaseAuth getAuth(Map<String, Object> arguments) {
     String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
     FirebaseApp app = FirebaseApp.getInstance(appName);
-    return FirebaseAuth.getInstance(app);
-  }
-
-  private MethodChannel.Result getMethodChannelResultHandler(String method) {
-    return new Result() {
-      @Override
-      public void success(@Nullable Object result) {
-        // Noop
-      }
-
-      @Override
-      public void error(
-          String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
-        Log.e(Constants.TAG, method + " error (" + errorCode + "): " + errorMessage);
-      }
-
-      @Override
-      public void notImplemented() {
-        Log.e(Constants.TAG, method + " has not been implemented");
-      }
-    };
+    FirebaseAuth auth = FirebaseAuth.getInstance(app);
+    String tenantId = (String) arguments.get(Constants.TENANT_ID);
+    if (tenantId != null) {
+      auth.setTenantId(tenantId);
+    }
+    return auth;
   }
 
   private FirebaseUser getCurrentUser(Map<String, Object> arguments) {
@@ -358,7 +315,7 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @SuppressWarnings("ConstantConditions")
-  private Map<String, Object> parseFirebaseUser(FirebaseUser firebaseUser) {
+  static Map<String, Object> parseFirebaseUser(FirebaseUser firebaseUser) {
     if (firebaseUser == null) {
       return null;
     }
@@ -371,19 +328,27 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
     output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
 
-    metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
-    metadata.put(Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
+    // TODO(Salakar): add an integration test to check for null, if possible
+    // See https://github.com/FirebaseExtended/flutterfire/issues/3643
+    final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
+    if (userMetadata != null) {
+      metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
+      metadata.put(
+          Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
+    }
     output.put(Constants.METADATA, metadata);
     output.put(Constants.PHONE_NUMBER, firebaseUser.getPhoneNumber());
     output.put(Constants.PHOTO_URL, parsePhotoUrl(firebaseUser.getPhotoUrl()));
     output.put(Constants.PROVIDER_DATA, parseUserInfoList(firebaseUser.getProviderData()));
     output.put(Constants.REFRESH_TOKEN, ""); // native does not provide refresh tokens
     output.put(Constants.UID, firebaseUser.getUid());
+    output.put(Constants.TENANT_ID, firebaseUser.getTenantId());
 
     return output;
   }
 
-  private List<Map<String, Object>> parseUserInfoList(List<? extends UserInfo> userInfoList) {
+  private static List<Map<String, Object>> parseUserInfoList(
+      List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
     for (UserInfo userInfo : userInfoList) {
@@ -396,7 +361,7 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @SuppressWarnings("ConstantConditions")
-  private Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
+  private static Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
     Map<String, Object> output = new HashMap<>();
 
     output.put(Constants.DISPLAY_NAME, userInfo.getDisplayName());
@@ -409,7 +374,7 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  private String parsePhotoUrl(Uri photoUri) {
+  private static String parsePhotoUrl(Uri photoUri) {
     if (photoUri == null) {
       return null;
     }
@@ -485,63 +450,31 @@ public class FlutterFirebaseAuthPlugin
     return output;
   }
 
-  @SuppressWarnings("ConstantConditions")
-  private Task<Void> registerChangeListeners(Map<String, Object> arguments) {
+  private Task<String> registerIdTokenListener(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
-          FirebaseAuth firebaseAuth = getAuth(arguments);
+          final FirebaseAuth auth = getAuth(arguments);
+          final IdTokenChannelStreamHandler handler = new IdTokenChannelStreamHandler(auth);
+          final String name = METHOD_CHANNEL_NAME + "/id-token/" + auth.getApp().getName();
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          return name;
+        });
+  }
 
-          FirebaseAuth.AuthStateListener authStateListener = authListeners.get(appName);
-          FirebaseAuth.IdTokenListener idTokenListener = idTokenListeners.get(appName);
-
-          Map<String, Object> event = new HashMap<>();
-          event.put(Constants.APP_NAME, appName);
-
-          if (authStateListener == null) {
-            FirebaseAuth.AuthStateListener newAuthStateListener =
-                auth -> {
-                  FirebaseUser user = auth.getCurrentUser();
-
-                  if (user == null) {
-                    event.put(Constants.USER, null);
-                  } else {
-                    event.put(Constants.USER, parseFirebaseUser(user));
-                  }
-
-                  channel.invokeMethod(
-                      "Auth#authStateChanges",
-                      event,
-                      getMethodChannelResultHandler("Auth#authStateChanges"));
-                };
-
-            firebaseAuth.addAuthStateListener(newAuthStateListener);
-            authListeners.put(appName, newAuthStateListener);
-          }
-
-          if (idTokenListener == null) {
-            FirebaseAuth.IdTokenListener newIdTokenChangeListener =
-                auth -> {
-                  FirebaseUser user = auth.getCurrentUser();
-
-                  if (user == null) {
-                    event.put(Constants.USER, null);
-                  } else {
-                    event.put(Constants.USER, parseFirebaseUser(user));
-                  }
-
-                  channel.invokeMethod(
-                      "Auth#idTokenChanges",
-                      event,
-                      getMethodChannelResultHandler("Auth#idTokenChanges"));
-                };
-
-            firebaseAuth.addIdTokenListener(newIdTokenChangeListener);
-            idTokenListeners.put(appName, newIdTokenChangeListener);
-          }
-
-          return null;
+  private Task<String> registerAuthStateListener(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final FirebaseAuth auth = getAuth(arguments);
+          final AuthStateChannelStreamHandler handler = new AuthStateChannelStreamHandler(auth);
+          final String name = METHOD_CHANNEL_NAME + "/auth-state/" + auth.getApp().getName();
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          return name;
         });
   }
 
@@ -673,9 +606,35 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-  // Settings are a no-op on Android
-  private Task<Void> setSettings() {
-    return Tasks.call(cachedThreadPool, () -> null);
+  private Task<Void> setSettings(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          FirebaseAuth firebaseAuth = getAuth(arguments);
+          Boolean appVerificationDisabledForTesting =
+              (Boolean) arguments.get(Constants.APP_VERIFICATION_DISABLED_FOR_TESTING);
+          Boolean forceRecaptchaFlow = (Boolean) arguments.get(Constants.FORCE_RECAPTCHA_FLOW);
+          String phoneNumber = (String) arguments.get(Constants.PHONE_NUMBER);
+          String smsCode = (String) arguments.get(Constants.SMS_CODE);
+
+          if (appVerificationDisabledForTesting != null) {
+            firebaseAuth
+                .getFirebaseAuthSettings()
+                .setAppVerificationDisabledForTesting(appVerificationDisabledForTesting);
+          }
+
+          if (forceRecaptchaFlow != null) {
+            firebaseAuth.getFirebaseAuthSettings().forceRecaptchaFlowForTesting(forceRecaptchaFlow);
+          }
+
+          if (phoneNumber != null && smsCode != null) {
+            firebaseAuth
+                .getFirebaseAuthSettings()
+                .setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, smsCode);
+          }
+
+          return null;
+        });
   }
 
   private Task<Map<String, Object>> signInAnonymously(Map<String, Object> arguments) {
@@ -752,6 +711,18 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
+  private Task<Void> useEmulator(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          FirebaseAuth firebaseAuth = getAuth(arguments);
+          String host = (String) arguments.get(Constants.HOST);
+          int port = (int) arguments.get(Constants.PORT);
+          firebaseAuth.useEmulator(host, port);
+          return null;
+        });
+  }
+
   private Task<Map<String, Object>> verifyPasswordResetCode(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -765,107 +736,25 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-  private Task<Void> verifyPhoneNumber(Map<String, Object> arguments) {
+  private Task<String> verifyPhoneNumber(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          FirebaseAuth firebaseAuth = getAuth(arguments);
-          String phoneNumber =
-              (String) Objects.requireNonNull(arguments.get(Constants.PHONE_NUMBER));
-          int handle = (int) Objects.requireNonNull(arguments.get(Constants.HANDLE));
-          int timeout = (int) Objects.requireNonNull(arguments.get(Constants.TIMEOUT));
+          String eventChannelName = METHOD_CHANNEL_NAME + "/phone/" + UUID.randomUUID().toString();
+          EventChannel channel = new EventChannel(messenger, eventChannelName);
+          PhoneNumberVerificationStreamHandler handler =
+              new PhoneNumberVerificationStreamHandler(
+                  getActivity(),
+                  arguments,
+                  credential -> {
+                    int hashCode = credential.hashCode();
+                    authCredentials.put(hashCode, credential);
+                  });
 
-          Map<String, Object> event = new HashMap<>();
-          event.put(Constants.HANDLE, handle);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
 
-          PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks =
-              new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                @Override
-                public void onVerificationCompleted(
-                    @NonNull PhoneAuthCredential phoneAuthCredential) {
-                  int phoneAuthCredentialHashCode = phoneAuthCredential.hashCode();
-                  authCredentials.put(phoneAuthCredentialHashCode, phoneAuthCredential);
-                  event.put(Constants.TOKEN, phoneAuthCredentialHashCode);
-
-                  channel.invokeMethod(
-                      "Auth#phoneVerificationCompleted",
-                      event,
-                      getMethodChannelResultHandler("Auth#phoneVerificationCompleted"));
-                }
-
-                @Override
-                public void onVerificationFailed(@NonNull FirebaseException e) {
-                  Map<String, Object> error = new HashMap<>();
-                  error.put("message", e.getLocalizedMessage());
-                  error.put("details", getExceptionDetails(e));
-                  event.put("error", error);
-
-                  channel.invokeMethod(
-                      "Auth#phoneVerificationFailed",
-                      event,
-                      getMethodChannelResultHandler("Auth#phoneVerificationFailed"));
-                }
-
-                @Override
-                public void onCodeSent(
-                    @NonNull String verificationId,
-                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                  int forceResendingTokenHashCode = token.hashCode();
-                  forceResendingTokens.put(forceResendingTokenHashCode, token);
-                  event.put(Constants.VERIFICATION_ID, verificationId);
-                  event.put(Constants.FORCE_RESENDING_TOKEN, forceResendingTokenHashCode);
-
-                  channel.invokeMethod(
-                      "Auth#phoneCodeSent",
-                      event,
-                      getMethodChannelResultHandler("Auth#phoneCodeSent"));
-                }
-
-                @Override
-                public void onCodeAutoRetrievalTimeOut(@NonNull String verificationId) {
-                  event.put(Constants.VERIFICATION_ID, verificationId);
-
-                  channel.invokeMethod(
-                      "Auth#phoneCodeAutoRetrievalTimeout",
-                      event,
-                      getMethodChannelResultHandler("Auth#phoneCodeAutoRetrievalTimeout"));
-                }
-              };
-
-          // Allows the auto-retrieval flow to be tested.
-          // See https://firebase.google.com/docs/auth/android/phone-auth#integration-testing
-          if (arguments.get(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING) != null) {
-            String autoRetrievedSmsCodeForTesting =
-                (String)
-                    Objects.requireNonNull(
-                        arguments.get(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING));
-
-            firebaseAuth
-                .getFirebaseAuthSettings()
-                .setAutoRetrievedSmsCodeForPhoneNumber(phoneNumber, autoRetrievedSmsCodeForTesting);
-          }
-
-          PhoneAuthOptions.Builder phoneAuthOptionsBuilder =
-              new PhoneAuthOptions.Builder(firebaseAuth);
-          phoneAuthOptionsBuilder.setActivity(getActivity());
-          phoneAuthOptionsBuilder.setPhoneNumber(phoneNumber);
-          phoneAuthOptionsBuilder.setCallbacks(callbacks);
-          phoneAuthOptionsBuilder.setTimeout((long) timeout, TimeUnit.MILLISECONDS);
-
-          if (arguments.get(Constants.FORCE_RESENDING_TOKEN) != null) {
-            int forceResendingTokenHashCode =
-                (int) Objects.requireNonNull(arguments.get(Constants.FORCE_RESENDING_TOKEN));
-
-            PhoneAuthProvider.ForceResendingToken forceResendingToken =
-                forceResendingTokens.get(forceResendingTokenHashCode);
-
-            if (forceResendingToken != null) {
-              phoneAuthOptionsBuilder.setForceResendingToken(forceResendingToken);
-            }
-          }
-
-          PhoneAuthProvider.verifyPhoneNumber(phoneAuthOptionsBuilder.build());
-          return null;
+          return eventChannelName;
         });
   }
 
@@ -1087,12 +976,18 @@ public class FlutterFirebaseAuthPlugin
               (Map<String, String>) Objects.requireNonNull(arguments.get(Constants.PROFILE));
           UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
 
-          if (profile.get(Constants.DISPLAY_NAME) != null) {
-            builder.setDisplayName(profile.get(Constants.DISPLAY_NAME));
+          if (profile.containsKey(Constants.DISPLAY_NAME)) {
+            String displayName = profile.get(Constants.DISPLAY_NAME);
+            builder.setDisplayName(displayName);
           }
 
-          if (profile.get(Constants.PHOTO_URL) != null) {
-            builder.setPhotoUri(Uri.parse(profile.get(Constants.PHOTO_URL)));
+          if (profile.containsKey(Constants.PHOTO_URL)) {
+            String photoURL = profile.get(Constants.PHOTO_URL);
+            if (photoURL != null) {
+              builder.setPhotoUri(Uri.parse(photoURL));
+            } else {
+              builder.setPhotoUri(null);
+            }
           }
 
           Tasks.await(firebaseUser.updateProfile(builder.build()));
@@ -1129,11 +1024,14 @@ public class FlutterFirebaseAuthPlugin
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    Task<?> methodCallTask;
+    final Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Auth#registerChangeListeners":
-        methodCallTask = registerChangeListeners(call.arguments());
+      case "Auth#registerIdTokenListener":
+        methodCallTask = registerIdTokenListener(call.arguments());
+        break;
+      case "Auth#registerAuthStateListener":
+        methodCallTask = registerAuthStateListener(call.arguments());
         break;
       case "Auth#applyActionCode":
         methodCallTask = applyActionCode(call.arguments());
@@ -1163,7 +1061,7 @@ public class FlutterFirebaseAuthPlugin
         methodCallTask = setLanguageCode(call.arguments());
         break;
       case "Auth#setSettings":
-        methodCallTask = setSettings();
+        methodCallTask = setSettings(call.arguments());
         break;
       case "Auth#signInAnonymously":
         methodCallTask = signInAnonymously(call.arguments());
@@ -1179,6 +1077,9 @@ public class FlutterFirebaseAuthPlugin
         break;
       case "Auth#signOut":
         methodCallTask = signOut(call.arguments());
+        break;
+      case "Auth#useEmulator":
+        methodCallTask = useEmulator(call.arguments());
         break;
       case "Auth#verifyPasswordResetCode":
         methodCallTask = verifyPasswordResetCode(call.arguments());
@@ -1265,7 +1166,7 @@ public class FlutterFirebaseAuthPlugin
         });
   }
 
-  private Map<String, Object> getExceptionDetails(Exception exception) {
+  static Map<String, Object> getExceptionDetails(Exception exception) {
     Map<String, Object> details = new HashMap<>();
 
     if (exception == null) {
@@ -1348,8 +1249,16 @@ public class FlutterFirebaseAuthPlugin
         () -> {
           removeEventListeners();
           authCredentials.clear();
-          forceResendingTokens.clear();
           return null;
         });
+  }
+
+  private void removeEventListeners() {
+    for (EventChannel eventChannel : streamHandlers.keySet()) {
+      StreamHandler streamHandler = streamHandlers.get(eventChannel);
+      streamHandler.onCancel(null);
+      eventChannel.setStreamHandler(null);
+    }
+    streamHandlers.clear();
   }
 }

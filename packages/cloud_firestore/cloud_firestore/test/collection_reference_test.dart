@@ -11,20 +11,21 @@ import './mock.dart';
 
 void main() {
   setupCloudFirestoreMocks();
-  FirebaseFirestore firestore;
-  FirebaseFirestore firestoreSecondary;
+  late FirebaseFirestore firestore;
+  late FirebaseFirestore firestoreSecondary;
 
-  group("$CollectionReference", () {
+  group('$CollectionReference', () {
     setUpAll(() async {
       await Firebase.initializeApp();
       FirebaseApp secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: FirebaseOptions(
-            apiKey: '123',
-            appId: '123',
-            messagingSenderId: '123',
-            projectId: '123',
-          ));
+        name: 'foo',
+        options: const FirebaseOptions(
+          apiKey: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          projectId: '123',
+        ),
+      );
 
       firestore = FirebaseFirestore.instance;
       firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp);
@@ -36,6 +37,13 @@ void main() {
       CollectionReference ref = firestore.collection('foo');
 
       expect(ref.firestore, equals(firestore));
+    });
+
+    test('toString', () async {
+      expect(
+        firestore.collection('foo').toString(),
+        'CollectionReference<Map<String, dynamic>>(foo)',
+      );
     });
 
     test('equality', () {
@@ -91,9 +99,7 @@ void main() {
 
     test('path must be non-empty strings', () {
       DocumentReference docRef = firestore.doc('foo/bar');
-      expect(() => firestore.collection(null), throwsAssertionError);
       expect(() => firestore.collection(''), throwsAssertionError);
-      expect(() => docRef.collection(null), throwsAssertionError);
       expect(() => docRef.collection(''), throwsAssertionError);
     });
 
@@ -101,7 +107,9 @@ void main() {
       DocumentReference docRef = firestore.doc('foo/bar');
       expect(() => firestore.collection('foo/bar'), throwsAssertionError);
       expect(
-          () => firestore.collection('foo/bar/baz/quu'), throwsAssertionError);
+        () => firestore.collection('foo/bar/baz/quu'),
+        throwsAssertionError,
+      );
       expect(() => docRef.collection('foo/bar'), throwsAssertionError);
       expect(() => docRef.collection('foo/bar/baz/quu'), throwsAssertionError);
     });
@@ -116,7 +124,7 @@ void main() {
       CollectionReference colRef = firestore.collection('test-collection');
       DocumentReference docRef = colRef.doc('test-document');
 
-      for (var path in badPaths) {
+      for (final path in badPaths) {
         expect(() => firestore.collection(path), throwsAssertionError);
         expect(() => firestore.doc(path), throwsAssertionError);
         expect(() => colRef.doc(path), throwsAssertionError);
@@ -124,30 +132,25 @@ void main() {
       }
     });
 
-    group('add()', () {
-      test('data must not be null', () {
-        CollectionReference ref = firestore.collection('foo');
-        expect(() => ref.add(null), throwsAssertionError);
-      });
-    });
-
     group('validate', () {
       test('path must be non-empty strings', () {
         DocumentReference docRef = firestore.doc('foo/bar');
-        expect(() => firestore.collection(null), throwsAssertionError);
         expect(() => firestore.collection(''), throwsAssertionError);
-        expect(() => docRef.collection(null), throwsAssertionError);
         expect(() => docRef.collection(''), throwsAssertionError);
       });
 
       test('path must be odd length', () {
         DocumentReference docRef = firestore.doc('foo/bar');
         expect(() => firestore.collection('foo/bar'), throwsAssertionError);
-        expect(() => firestore.collection('foo/bar/baz/quu'),
-            throwsAssertionError);
+        expect(
+          () => firestore.collection('foo/bar/baz/quu'),
+          throwsAssertionError,
+        );
         expect(() => docRef.collection('foo/bar'), throwsAssertionError);
         expect(
-            () => docRef.collection('foo/bar/baz/quu'), throwsAssertionError);
+          () => docRef.collection('foo/bar/baz/quu'),
+          throwsAssertionError,
+        );
       });
 
       test('must not have empty segments', () {
@@ -160,17 +163,178 @@ void main() {
         CollectionReference colRef = firestore.collection('test-collection');
         DocumentReference docRef = colRef.doc('test-document');
 
-        for (String path in badPaths) {
+        for (final String path in badPaths) {
           expect(() => firestore.collection(path), throwsAssertionError);
           expect(() => firestore.doc(path), throwsAssertionError);
           expect(() => colRef.doc(path), throwsAssertionError);
           expect(() => docRef.collection(path), throwsAssertionError);
         }
       });
+    });
 
-      test('add() data must not be null', () {
-        CollectionReference ref = firestore.collection('foo');
-        expect(() => ref.add(null), throwsAssertionError);
+    group('withConverter', () {
+      test('implements ==', () {
+        int fromFirestore(
+          DocumentSnapshot snapshot,
+          SnapshotOptions? options,
+        ) =>
+            42;
+        Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
+            {};
+
+        final foo = firestore.collection('foo');
+        final bar = firestore.collection('bar');
+
+        final intFoo = foo.withConverter<int>(
+          fromFirestore: fromFirestore,
+          toFirestore: toFirestore,
+        );
+
+        // utilities to check == in both directions as it is possible that
+        // a == b is true but b == a is false since the former invoke a's == operator
+        // while the latter invoke b's == operator
+        void expectEqual(Object? a, Object? b) {
+          expect(a, b);
+          expect(b, a);
+        }
+
+        void expectNotEqual(Object? a, Object? b) {
+          expect(a, isNot(b));
+          expect(b, isNot(a));
+        }
+
+        expectEqual(
+          foo.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          intFoo,
+        );
+
+        expectNotEqual(
+          bar.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          intFoo,
+        );
+
+        expectNotEqual(
+          foo.withConverter<Object>(
+            fromFirestore: fromFirestore,
+            toFirestore: toFirestore,
+          ),
+          intFoo,
+        );
+
+        expectNotEqual(
+          foo.withConverter<int>(
+            fromFirestore: (_, __) => 42,
+            toFirestore: toFirestore,
+          ),
+          intFoo,
+        );
+
+        expectNotEqual(
+          foo.withConverter<int>(
+            fromFirestore: fromFirestore,
+            toFirestore: (_, __) => {},
+          ),
+          intFoo,
+        );
+      });
+
+      test('toString', () {
+        final foo = firestore.collection('foo');
+
+        expect(
+          foo
+              .withConverter<int>(
+                fromFirestore: (map, _) => 42,
+                toFirestore: (value, _) => {},
+              )
+              .toString(),
+          'CollectionReference<int>(foo)',
+        );
+
+        expect(
+          foo
+              .withConverter<double>(
+                fromFirestore: (map, _) => 42,
+                toFirestore: (value, _) => {},
+              )
+              .toString(),
+          'CollectionReference<double>(foo)',
+        );
+      });
+
+      test('id', () {
+        final foo = firestore.collection('foo');
+
+        expect(
+          foo
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
+              .id,
+          foo.id,
+        );
+      });
+
+      test('path', () {
+        final subCollection =
+            firestore.collection('foo').doc('42').collection('bar');
+
+        expect(
+          subCollection
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
+              .path,
+          subCollection.path,
+        );
+      });
+
+      test('parent', () {
+        final subCollection =
+            firestore.collection('foo').doc('42').collection('bar');
+
+        expect(
+          subCollection
+              .withConverter(
+                fromFirestore: (_, __) => 42,
+                toFirestore: (_, __) => {},
+              )
+              .parent,
+          subCollection.parent,
+        );
+      });
+
+      test('doc', () {
+        final foo = firestore.collection('foo');
+
+        int fromFirestore(
+          DocumentSnapshot snapshot,
+          SnapshotOptions? options,
+        ) =>
+            42;
+        Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
+            {};
+
+        expect(
+          foo
+              .withConverter(
+                fromFirestore: fromFirestore,
+                toFirestore: toFirestore,
+              )
+              .doc('42'),
+          foo.doc('42').withConverter(
+                fromFirestore: fromFirestore,
+                toFirestore: toFirestore,
+              ),
+        );
       });
     });
   });

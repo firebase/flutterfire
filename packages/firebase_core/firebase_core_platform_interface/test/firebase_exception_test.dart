@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -23,6 +24,17 @@ void main() {
           FirebaseException(plugin: 'foo', message: 'bar', code: 'baz');
 
       expect(e.toString(), '[foo/baz] bar');
+    });
+
+    test('should return a formatted message with a stack trace', () async {
+      FirebaseException e = FirebaseException(
+          plugin: 'foo',
+          message: 'bar',
+          code: 'baz',
+          stackTrace: StackTrace.current);
+
+      // Anything with a stack trace adds 2 blanks lines following the message.
+      expect(e.toString(), startsWith('[foo/baz] bar\n\n'));
     });
 
     test('should override the == operator', () async {

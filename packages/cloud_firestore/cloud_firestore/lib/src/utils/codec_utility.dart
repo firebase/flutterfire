@@ -5,8 +5,9 @@
 part of cloud_firestore;
 
 class _CodecUtility {
-  static Map<String, dynamic> replaceValueWithDelegatesInMap(
-      Map<dynamic, dynamic> data) {
+  static Map<String, dynamic>? replaceValueWithDelegatesInMap(
+    Map<dynamic, dynamic>? data,
+  ) {
     if (data == null) {
       return null;
     }
@@ -15,15 +16,17 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic> replaceValueWithDelegatesInArray(List<dynamic> data) {
+  static List<dynamic>? replaceValueWithDelegatesInArray(List<dynamic>? data) {
     if (data == null) {
       return null;
     }
-    return List.from(data).map((value) => valueEncode(value)).toList();
+    return List.from(data).map(valueEncode).toList();
   }
 
-  static Map<String, dynamic> replaceDelegatesWithValueInMap(
-      Map<dynamic, dynamic> data, FirebaseFirestore firestore) {
+  static Map<String, dynamic>? replaceDelegatesWithValueInMap(
+    Map<dynamic, dynamic>? data,
+    FirebaseFirestore firestore,
+  ) {
     if (data == null) {
       return null;
     }
@@ -32,8 +35,10 @@ class _CodecUtility {
     return output;
   }
 
-  static List<dynamic> replaceDelegatesWithValueInArray(
-      List<dynamic> data, FirebaseFirestore firestore) {
+  static List<dynamic>? replaceDelegatesWithValueInArray(
+    List<dynamic>? data,
+    FirebaseFirestore firestore,
+  ) {
     if (data == null) {
       return null;
     }
@@ -43,7 +48,7 @@ class _CodecUtility {
   }
 
   static dynamic valueEncode(dynamic value) {
-    if (value is DocumentReference) {
+    if (value is _JsonDocumentReference) {
       return value._delegate;
     } else if (value is List) {
       return replaceValueWithDelegatesInArray(value);
@@ -55,7 +60,7 @@ class _CodecUtility {
 
   static dynamic valueDecode(dynamic value, FirebaseFirestore firestore) {
     if (value is DocumentReferencePlatform) {
-      return DocumentReference._(firestore, value);
+      return _JsonDocumentReference(firestore, value);
     } else if (value is List) {
       return replaceDelegatesWithValueInArray(value, firestore);
     } else if (value is Map<dynamic, dynamic>) {

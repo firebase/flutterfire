@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -5,10 +6,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
-final String kMockProviderId = 'test.com';
+const String kMockProviderId = 'test.com';
 
 void main() {
-  TestOAuthProvider oAuthProvider;
+  late TestOAuthProvider oAuthProvider;
 
   setUpAll(() {
     oAuthProvider = TestOAuthProvider(kMockProviderId);
@@ -18,10 +19,6 @@ void main() {
     group('Constructor', () {
       test('returns an instance of [OAuthProvider]', () {
         expect(oAuthProvider, isA<OAuthProvider>());
-      });
-
-      test('throws [AssertionError] when providerId is null', () {
-        expect(() => TestOAuthProvider(null), throwsAssertionError);
       });
     });
 
@@ -35,10 +32,6 @@ void main() {
       expect(oAuthProvider.scopes.length, 0);
     });
 
-    test('parameters', () {
-      expect(oAuthProvider.parameters, isA<Object>());
-    });
-
     group('addScope()', () {
       test('adds a new scope', () {
         String kMockScope = 'repo';
@@ -48,10 +41,6 @@ void main() {
         expect(result.scopes, isA<List<String>>());
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
-      });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => oAuthProvider.addScope(null), throwsAssertionError);
       });
     });
 
@@ -66,20 +55,17 @@ void main() {
         expect(result.parameters['allow_signup'], isA<String>());
         expect(result.parameters['allow_signup'], equals('false'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => oAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('credential()', () {
-      final String kMockAccessToken = 'test-token';
-      final String kMockIdToken = 'id';
-      final String kMockRawNonce = 'test-raw-nonce';
+      const String kMockAccessToken = 'test-token';
+      const String kMockSecret = 'test-secret';
+      const String kMockIdToken = 'id';
+      const String kMockRawNonce = 'test-raw-nonce';
       test('creates a new [OAuthCredential]', () {
         final result = oAuthProvider.credential(
             accessToken: kMockAccessToken,
+            secret: kMockSecret,
             idToken: kMockIdToken,
             rawNonce: kMockRawNonce);
 
@@ -88,6 +74,7 @@ void main() {
         expect(result.idToken, equals(kMockIdToken));
         expect(result.rawNonce, equals(kMockRawNonce));
         expect(result.accessToken, equals(kMockAccessToken));
+        expect(result.secret, equals(kMockSecret));
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals('oauth'));
       });
@@ -96,5 +83,5 @@ void main() {
 }
 
 class TestOAuthProvider extends OAuthProvider {
-  TestOAuthProvider(providerId) : super(providerId);
+  TestOAuthProvider(String providerId) : super(providerId);
 }

@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class FlutterFirebaseFirestoreException extends Exception {
+public class FlutterFirebaseFirestoreException extends Exception {
   private static final String ERROR_ABORTED =
       "The operation was aborted, typically due to a concurrency issue like transaction aborts, etc.";
   private static final String ERROR_ALREADY_EXISTS =
@@ -42,7 +42,8 @@ class FlutterFirebaseFirestoreException extends Exception {
   private final String code;
   private final String message;
 
-  FlutterFirebaseFirestoreException(FirebaseFirestoreException nativeException, Throwable cause) {
+  public FlutterFirebaseFirestoreException(
+      FirebaseFirestoreException nativeException, Throwable cause) {
     super(nativeException != null ? nativeException.getMessage() : "", cause);
 
     String code = null;
@@ -78,7 +79,8 @@ class FlutterFirebaseFirestoreException extends Exception {
             break;
           case "FAILED_PRECONDITION":
             code = "failed-precondition";
-            if (foundMessage.contains("query requires an index")) {
+            if (foundMessage.contains("query requires an index")
+                || foundMessage.contains("ensure it has been indexed")) {
               message = foundMessage;
             } else {
               message = ERROR_FAILED_PRECONDITION;
@@ -153,7 +155,8 @@ class FlutterFirebaseFirestoreException extends Exception {
         case FAILED_PRECONDITION:
           code = "failed-precondition";
           if (nativeException.getMessage() != null
-              && nativeException.getMessage().contains("query requires an index")) {
+                  && nativeException.getMessage().contains("query requires an index")
+              || nativeException.getMessage().contains("ensure it has been indexed")) {
             message = nativeException.getMessage();
           } else {
             message = ERROR_FAILED_PRECONDITION;

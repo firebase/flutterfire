@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -21,7 +22,15 @@ import '../method_channel/method_channel_firebase_auth.dart';
 abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
-  final FirebaseApp appInstance;
+  final FirebaseApp? appInstance;
+
+  /// The current Auth instance's tenant ID.
+  ///
+  /// When you set the tenant ID of an Auth instance, all future sign-in/sign-up
+  /// operations will pass this tenant ID and sign in or sign up users to the
+  /// specified tenant project. When set to null, users are signed in to the
+  /// parent project. By default, this is set to `null`.
+  String? tenantId;
 
   /// Create an instance using [app]
   FirebaseAuthPlatform({this.appInstance}) : super(token: _token);
@@ -32,14 +41,16 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
       return Firebase.app();
     }
 
-    return appInstance;
+    return appInstance!;
   }
 
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor(
-      {FirebaseApp app, Map<dynamic, dynamic> pluginConstants}) {
+  factory FirebaseAuthPlatform.instanceFor({
+    required FirebaseApp app,
+    required Map<dynamic, dynamic> pluginConstants,
+  }) {
     return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
         languageCode: pluginConstants['APP_LANGUAGE_CODE'],
         currentUser: pluginConstants['APP_CURRENT_USER'] == null
@@ -52,18 +63,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseAuth]
   /// if no other implementation was provided.
   static FirebaseAuthPlatform get instance {
-    if (_instance == null) {
-      _instance = MethodChannelFirebaseAuth.instance;
-    }
-
-    return _instance;
+    _instance ??= MethodChannelFirebaseAuth.instance;
+    return _instance!;
   }
 
-  static FirebaseAuthPlatform _instance;
+  static FirebaseAuthPlatform? _instance;
 
   /// Sets the [FirebaseAuthPlatform.instance]
   static set instance(FirebaseAuthPlatform instance) {
-    assert(instance != null);
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -71,7 +78,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseAuthPlatform delegateFor({FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -82,8 +89,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// calls.
   @protected
   FirebaseAuthPlatform setInitialValues({
-    Map<String, dynamic> currentUser,
-    String languageCode,
+    Map<String, dynamic>? currentUser,
+    String? languageCode,
   }) {
     throw UnimplementedError('setInitialValues() is not implemented');
   }
@@ -94,25 +101,36 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// You should not use this getter to determine the users current state,
   /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
   /// subscribe to updates.
-  UserPlatform get currentUser {
-    throw UnimplementedError("get.currentUser is not implemented");
+  UserPlatform? get currentUser {
+    throw UnimplementedError('get.currentUser is not implemented');
   }
 
   /// Sets the current user for the instance.
-  set currentUser(UserPlatform userPlatform) {
-    throw UnimplementedError("set.currentUser is not implemented");
+  set currentUser(UserPlatform? userPlatform) {
+    throw UnimplementedError('set.currentUser is not implemented');
   }
 
   /// The current Auth instance's language code.
   ///
   /// See [setLanguageCode] to update the language code.
-  String get languageCode {
-    throw UnimplementedError("languageCode is not implemented");
+  String? get languageCode {
+    throw UnimplementedError('languageCode is not implemented');
   }
 
   /// Sends a Stream event to a [authStateChanges] stream controller.
-  void sendAuthChangesEvent(String appName, UserPlatform userPlatform) {
-    throw UnimplementedError("sendAuthChangesEvent() is not implemented");
+  void sendAuthChangesEvent(String appName, UserPlatform? userPlatform) {
+    throw UnimplementedError('sendAuthChangesEvent() is not implemented');
+  }
+
+  /// Changes this instance to point to an Auth emulator running locally.
+  ///
+  /// Set the [host] and [port] of the local emulator, such as "localhost"
+  /// with port 9099
+  ///
+  /// Note: Must be called immediately, prior to accessing auth methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  Future<void> useAuthEmulator(String host, int port) {
+    throw UnimplementedError('useAuthEmulator() is not implemented');
   }
 
   /// Applies a verification code sent to the user by email or other out-of-band
@@ -132,7 +150,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<void> applyActionCode(String code) {
-    throw UnimplementedError("applyActionCode() is not implemented");
+    throw UnimplementedError('applyActionCode() is not implemented');
   }
 
   /// Checks a verification code sent to the user by email or other out-of-band
@@ -154,7 +172,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///    have happened if the user was deleted between when the action code was
   ///    issued and when this method was called.
   Future<ActionCodeInfo> checkActionCode(String code) {
-    throw UnimplementedError("checkActionCode() is not implemented");
+    throw UnimplementedError('checkActionCode() is not implemented');
   }
 
   /// Completes the password reset process, given a confirmation code and new
@@ -176,7 +194,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **weak-password**:
   ///  - Thrown if the new password is not strong enough.
   Future<void> confirmPasswordReset(String code, String newPassword) {
-    throw UnimplementedError("confirmPasswordReset() is not implemented");
+    throw UnimplementedError('confirmPasswordReset() is not implemented');
   }
 
   /// Tries to create a new user account with the given email address and
@@ -193,9 +211,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **weak-password**:
   ///  - Thrown if the password is not strong enough.
   Future<UserCredentialPlatform> createUserWithEmailAndPassword(
-      String email, String password) {
+    String email,
+    String password,
+  ) {
     throw UnimplementedError(
-        "createUserWithEmailAndPassword() is not implemented");
+      'createUserWithEmailAndPassword() is not implemented',
+    );
   }
 
   /// Returns a list of sign-in methods that can be used to sign in a given
@@ -226,7 +247,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) {
-    assert(emailLink != null);
     return (emailLink.contains('mode=signIn') ||
             emailLink.contains('mode%3DsignIn')) &&
         (emailLink.contains('oobCode=') || emailLink.contains('oobCode%3D'));
@@ -234,14 +254,14 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out).
-  Stream<UserPlatform> authStateChanges() {
+  Stream<UserPlatform?> authStateChanges() {
     throw UnimplementedError('authStateChanges() is not implemented');
   }
 
   /// Notifies about changes to the user's sign-in state (such as sign-in or
   /// sign-out)
   /// and also token refresh events.
-  Stream<UserPlatform> idTokenChanges() {
+  Stream<UserPlatform?> idTokenChanges() {
     throw UnimplementedError('idTokenChanges() is not implemented');
   }
 
@@ -250,18 +270,21 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// This is a superset of both [authStateChanges] and [idTokenChanges]. It
   /// provides events on all user changes, such as when credentials are linked,
   /// unlinked and when updates to the user profile are made. The purpose of
-  /// this Stream is to for listening to realtime updates to the user without
+  /// this Stream is for listening to realtime updates to the user state
+  /// (signed-in, signed-out, different user & token refresh) without
   /// manually having to call [reload] and then rehydrating changes to your
   /// application.
-  Stream<UserPlatform> userChanges() {
+  Stream<UserPlatform?> userChanges() {
     throw UnimplementedError('userChanges() is not implemented');
   }
 
   /// Triggers the Firebase Authentication backend to send a password-reset
   /// email to the given email address, which must correspond to an existing
   /// user of your app.
-  Future<void> sendPasswordResetEmail(String email,
-      [ActionCodeSettings actionCodeSettings]) {
+  Future<void> sendPasswordResetEmail(
+    String email, [
+    ActionCodeSettings? actionCodeSettings,
+  ]) {
     throw UnimplementedError('sendPasswordResetEmail() is not implemented');
   }
 
@@ -277,7 +300,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **user-not-found**:
   ///  - Thrown if there is no user corresponding to the email address.
   Future<void> sendSignInLinkToEmail(
-      String email, ActionCodeSettings actionCodeSettings) {
+    String email,
+    ActionCodeSettings actionCodeSettings,
+  ) {
     throw UnimplementedError('sendSignInLinkToEmail() is not implemented');
   }
 
@@ -299,7 +324,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Updates the current instance with the provided settings.
   ///
-  /// [appVerificationDisabledForTesting] This setting only applies to iOS and
+  /// [appVerificationDisabledForTesting] This setting applies to android, iOS and
   ///   web platforms. When set to `true`, this property disables app
   ///   verification for the purpose of testing phone authentication. For this
   ///   property to take effect, it needs to be set before handling a reCAPTCHA
@@ -313,16 +338,33 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   ///   The default value is `false` (app verification is enabled).
   ///
-  /// [userAccessGroup] This setting only applies to iOS and MacOS platforms.
-  ///   When set, it allows you to share authentication state between
-  ///   applications. Set the property to your team group ID or set to `null`
-  ///   to remove sharing capabilities.
+  ///  [forceRecaptchaFlow] This setting applies to android only. When set to 'true',
+  ///  it forces the application verification to use the web reCAPTCHA flow for Phone Authentication.
+  ///  Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() will skip the SafetyNet verification flow and use the reCAPTCHA flow instead.
+  ///  Calling this method a second time will overwrite the previously passed parameter.
+  ///
+  ///  [phoneNumber] & [smsCode] These settings apply to android only. The phone number and SMS code here must have been configured in the Firebase Console (Authentication > Sign In Method > Phone).
+  ///  Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() with the same phone number as the one that is configured here will have onVerificationCompleted() triggered as the callback.
+  ///  Calling this method a second time will overwrite the previously passed parameters. Only one number can be configured at a given time.
+  ///  Calling this method with either parameter set to null removes this functionality until valid parameters are passed.
+  ///  Verifying a phone number other than the one configured here will trigger normal behaviour. If the phone number is configured as a test phone number in the console, the regular testing flow occurs. Otherwise, normal phone number verification will take place.
+  ///  When this is set and PhoneAuthProvider#verifyPhoneNumber() is called with a matching phone number, PhoneAuthProvider.OnVerificationStateChangedCallbacks.onCodeAutoRetrievalTimeOut(String) will never be called.
+  ///
+  ///  [userAccessGroup] This setting only applies to iOS and MacOS platforms.
+  ///  When set, it allows you to share authentication state between
+  ///  applications. Set the property to your team group ID or set to `null`
+  ///  to remove sharing capabilities.
   ///
   ///   Key Sharing capabilities must be enabled for your app via XCode (Project
   ///   settings > Capabilities). To learn more, visit the
   ///   [Apple documentation](https://developer.apple.com/documentation/security/keychain_services/keychain_items/sharing_access_to_keychain_items_among_a_collection_of_apps).
-  Future<void> setSettings(
-      {bool appVerificationDisabledForTesting, String userAccessGroup}) {
+  Future<void> setSettings({
+    bool? appVerificationDisabledForTesting,
+    String? userAccessGroup,
+    String? phoneNumber,
+    String? smsCode,
+    bool? forceRecaptchaFlow,
+  }) {
     throw UnimplementedError('setSettings() is not implemented');
   }
 
@@ -405,7 +447,8 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredentialPlatform> signInWithCredential(
-      AuthCredential credential) async {
+    AuthCredential credential,
+  ) async {
     throw UnimplementedError('signInWithCredential() is not implemented');
   }
 
@@ -446,7 +489,9 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  - Thrown if the password is invalid for the given email, or the account
   ///    corresponding to the email does not have a password set.
   Future<UserCredentialPlatform> signInWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     throw UnimplementedError('signInWithEmailAndPassword() is not implemented');
   }
 
@@ -466,13 +511,25 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// - **user-disabled**:
   ///  - Thrown if the user corresponding to the given email has been disabled.
   Future<UserCredentialPlatform> signInWithEmailLink(
-      String email, String emailLink) async {
+    String email,
+    String emailLink,
+  ) async {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 
-  // ignore: public_member_api_docs
-  Future<ConfirmationResultPlatform> signInWithPhoneNumber(String phoneNumber,
-      RecaptchaVerifierFactoryPlatform applicationVerifier) async {
+  /// Starts a sign-in flow for a phone number.
+  ///
+  /// You can optionally provide a [RecaptchaVerifier] instance to control the
+  /// reCAPTCHA widget apperance and behaviour.
+  ///
+  /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
+  /// with the users SMS verification code to complete the authentication flow.
+  ///
+  /// This method is only available on web based platforms.
+  Future<ConfirmationResultPlatform> signInWithPhoneNumber(
+    String phoneNumber,
+    RecaptchaVerifierFactoryPlatform applicationVerifier,
+  ) async {
     throw UnimplementedError('signInWithPhoneNumber() is not implemented');
   }
 
@@ -497,7 +554,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
 
   /// Signs out the current user.
   ///
-  /// If successful, it also signs the user in into the app and updates
+  /// If successful, it also updates
   /// any [authStateChanges], [idTokenChanges] or [userChanges] stream
   /// listeners.
   Future<void> signOut() async {
@@ -566,15 +623,17 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
-  Future<void> verifyPhoneNumber(
-      {@required String phoneNumber,
-      @required PhoneVerificationCompleted verificationCompleted,
-      @required PhoneVerificationFailed verificationFailed,
-      @required PhoneCodeSent codeSent,
-      @required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
-      @visibleForTesting String autoRetrievedSmsCodeForTesting,
-      Duration timeout = const Duration(seconds: 30),
-      int forceResendingToken}) {
+  Future<void> verifyPhoneNumber({
+    required String phoneNumber,
+    required PhoneVerificationCompleted verificationCompleted,
+    required PhoneVerificationFailed verificationFailed,
+    required PhoneCodeSent codeSent,
+    required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
+    Duration timeout = const Duration(seconds: 30),
+    int? forceResendingToken,
+    // ignore: invalid_use_of_visible_for_testing_member
+    @visibleForTesting String? autoRetrievedSmsCodeForTesting,
+  }) {
     throw UnimplementedError('verifyPhoneNumber() is not implemented');
   }
 }

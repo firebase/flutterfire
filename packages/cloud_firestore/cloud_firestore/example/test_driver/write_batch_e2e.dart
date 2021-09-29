@@ -10,32 +10,84 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runWriteBatchTests() {
   group('$WriteBatch', () {
-    FirebaseFirestore firestore;
+    late FirebaseFirestore firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
     });
 
-    Future<CollectionReference> initializeTest(String id) async {
-      CollectionReference collection =
+    Future<CollectionReference<Map<String, dynamic>>> initializeTest(
+      String id,
+    ) async {
+      CollectionReference<Map<String, dynamic>> collection =
           firestore.collection('flutter-tests/$id/query-tests');
-      QuerySnapshot snapshot = await collection.get();
-      await Future.forEach(snapshot.docs, (DocumentSnapshot documentSnapshot) {
+      QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
+
+      await Future.forEach(snapshot.docs, (
+        DocumentSnapshot<Map<String, dynamic>> documentSnapshot,
+      ) {
         return documentSnapshot.reference.delete();
       });
       return collection;
     }
 
-    test('performs batch operations', () async {
-      CollectionReference collection = await initializeTest('write-batch-ops');
+    test('works with withConverter', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('with-converter-batch');
       WriteBatch batch = firestore.batch();
 
-      DocumentReference doc1 = await collection.doc('doc1'); // delete
-      DocumentReference doc2 = await collection.doc('doc2'); // set
-      DocumentReference doc3 = await collection.doc('doc3'); // update
-      DocumentReference doc4 = await collection.doc('doc4'); // update w/ merge
-      DocumentReference doc5 =
-          await collection.doc('doc5'); // update w/ mergeFields
+      DocumentReference<int> doc = collection.doc('doc1').withConverter(
+            fromFirestore: (snapshot, options) {
+              return snapshot.data()!['value'] as int;
+            },
+            toFirestore: (value, options) => {'value': value},
+          );
+
+      var snapshot = await doc.get();
+
+      expect(snapshot.exists, false);
+
+      batch.set<int>(doc, 42);
+
+      await batch.commit();
+      snapshot = await doc.get();
+
+      expect(snapshot.exists, true);
+      expect(snapshot.data(), 42);
+
+      batch = firestore.batch();
+      batch.update(doc, {'value': 21});
+
+      await batch.commit();
+      snapshot = await doc.get();
+
+      expect(snapshot.exists, true);
+      expect(snapshot.data(), 21);
+
+      batch = firestore.batch();
+      batch.delete(doc);
+
+      await batch.commit();
+      snapshot = await doc.get();
+
+      expect(snapshot.exists, false);
+    });
+
+    test('performs batch operations', () async {
+      CollectionReference<Map<String, dynamic>> collection =
+          await initializeTest('write-batch-ops');
+      WriteBatch batch = firestore.batch();
+
+      DocumentReference<Map<String, dynamic>> doc1 =
+          collection.doc('doc1'); // delete
+      DocumentReference<Map<String, dynamic>> doc2 =
+          collection.doc('doc2'); // set
+      DocumentReference<Map<String, dynamic>> doc3 =
+          collection.doc('doc3'); // update
+      DocumentReference<Map<String, dynamic>> doc4 =
+          collection.doc('doc4'); // update w/ merge
+      DocumentReference<Map<String, dynamic>> doc5 =
+          collection.doc('doc5'); // update w/ mergeFields
 
       await Future.wait([
         doc1.set({'foo': 'bar'}),
@@ -52,41 +104,38 @@ void runWriteBatchTests() {
 
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
-        batch.set(doc5, <String, dynamic>{'bar': 'ben'},
-            SetOptions(mergeFields: ['bar']));
+        batch.set(
+          doc5,
+          <String, dynamic>{'bar': 'ben'},
+          SetOptions(mergeFields: ['bar']),
+        );
       }
 
       await batch.commit();
 
-      QuerySnapshot snapshot = await collection.get();
+      QuerySnapshot<Map<String, dynamic>> snapshot = await collection.get();
 
       expect(snapshot.docs.length, equals(4));
       expect(snapshot.docs.where((doc) => doc.id == 'doc1').isEmpty, isTrue);
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc2').data(),
-          equals(<String, dynamic>{
-            'bar': 'baz',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc2').data(),
+        equals(<String, dynamic>{'bar': 'baz'}),
+      );
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc3').data(),
-          equals(<String, dynamic>{
-            'foo': 'bar',
-            'bar': 'ben',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc3').data(),
+        equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+      );
       expect(
-          snapshot.docs.firstWhere((doc) => doc.id == 'doc4').data(),
-          equals(<String, dynamic>{
-            'foo': 'bar',
-            'bar': 'ben',
-          }));
+        snapshot.docs.firstWhere((doc) => doc.id == 'doc4').data(),
+        equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+      );
+      // ignore: todo
       // TODO(ehesp): firebase-dart does not support mergeFields
       if (!kIsWeb) {
         expect(
-            snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
-            equals(<String, dynamic>{
-              'foo': 'bar',
-              'bar': 'ben',
-            }));
+          snapshot.docs.firstWhere((doc) => doc.id == 'doc5').data(),
+          equals(<String, dynamic>{'foo': 'bar', 'bar': 'ben'}),
+        );
       }
     });
   });

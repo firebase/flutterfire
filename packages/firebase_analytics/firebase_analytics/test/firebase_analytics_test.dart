@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -14,7 +15,7 @@ void main() {
   final FirebaseAnalytics analytics = FirebaseAnalytics();
   const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
-  MethodCall methodCall;
+  MethodCall? methodCall;
 
   setUp(() async {
     channel.setMockMethodCallHandler((MethodCall m) async {
@@ -92,9 +93,6 @@ void main() {
       // non-alpha first character
       expect(analytics.setUserProperty(name: '0test', value: 'test-value'),
           throwsArgumentError);
-      // null
-      expect(analytics.setUserProperty(name: null, value: 'test-value'),
-          throwsArgumentError);
       // blank
       expect(analytics.setUserProperty(name: '', value: 'test-value'),
           throwsArgumentError);
@@ -116,7 +114,7 @@ void main() {
     });
 
     test('setSessionTimeoutDuration', () async {
-      await analytics.android.setSessionTimeoutDuration(234);
+      await analytics.android!.setSessionTimeoutDuration(234);
       expect(
         methodCall,
         isMethodCall(
@@ -142,7 +140,7 @@ void main() {
     test('logEvent log events', () async {
       await analytics.logEvent(
         name: 'test-event',
-        parameters: <String, dynamic>{'a': 'b'},
+        parameters: <String, Object>{'a': 'b'},
       );
       expect(
         methodCall,
@@ -164,14 +162,17 @@ void main() {
       expect(analytics.logEvent(name: 'firebase_foo'), throwsArgumentError);
     });
 
-    void smokeTest(String testFunctionName, Future<void> testFunction()) {
+    void smokeTest(
+      String testFunctionName,
+      Future<void> Function() testFunction,
+    ) {
       test('$testFunctionName works', () async {
         await testFunction();
-        expect(methodCall.arguments['name'], testFunctionName);
+        expect(methodCall!.arguments['name'], testFunctionName);
       });
     }
 
-    smokeTest('add_payment_info', () => analytics.logAddPaymentInfo());
+    smokeTest('add_payment_info', analytics.logAddPaymentInfo);
 
     smokeTest(
         'add_to_cart',
@@ -191,9 +192,9 @@ void main() {
               quantity: 5,
             ));
 
-    smokeTest('app_open', () => analytics.logAppOpen());
+    smokeTest('app_open', analytics.logAppOpen);
 
-    smokeTest('begin_checkout', () => analytics.logBeginCheckout());
+    smokeTest('begin_checkout', analytics.logBeginCheckout);
 
     smokeTest(
         'campaign_details',
@@ -210,9 +211,9 @@ void main() {
               value: 34,
             ));
 
-    smokeTest('ecommerce_purchase', () => analytics.logEcommercePurchase());
+    smokeTest('ecommerce_purchase', analytics.logEcommercePurchase);
 
-    smokeTest('generate_lead', () => analytics.logGenerateLead());
+    smokeTest('generate_lead', analytics.logGenerateLead);
 
     smokeTest(
         'join_group',
@@ -239,7 +240,7 @@ void main() {
               success: 1,
             ));
 
-    smokeTest('login', () => analytics.logLogin());
+    smokeTest('login', analytics.logLogin);
 
     smokeTest(
         'login',
@@ -262,7 +263,7 @@ void main() {
               quantity: 5,
             ));
 
-    smokeTest('purchase_refund', () => analytics.logPurchaseRefund());
+    smokeTest('purchase_refund', analytics.logPurchaseRefund);
 
     smokeTest(
         'search',
@@ -299,9 +300,9 @@ void main() {
               value: 345,
             ));
 
-    smokeTest('tutorial_begin', () => analytics.logTutorialBegin());
+    smokeTest('tutorial_begin', analytics.logTutorialBegin);
 
-    smokeTest('tutorial_complete', () => analytics.logTutorialComplete());
+    smokeTest('tutorial_complete', analytics.logTutorialComplete);
 
     smokeTest(
         'unlock_achievement',
@@ -335,14 +336,17 @@ void main() {
     });
 
     void testRequiresValueAndCurrencyTogether(
-        String methodName, Future<void> testFn()) {
+      String methodName,
+      Future<void> Function() testFn,
+    ) {
       test('$methodName requires value and currency together', () async {
-        try {
-          testFn();
-          fail('Expected ArgumentError');
-        } on ArgumentError catch (error) {
-          expect(error.message, valueAndCurrencyMustBeTogetherError);
-        }
+        expect(
+          testFn,
+          throwsA(
+            isA<ArgumentError>().having((e) => e.message, 'message',
+                valueAndCurrencyMustBeTogetherError),
+          ),
+        );
       });
     }
 

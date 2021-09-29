@@ -5,11 +5,16 @@ on:
     paths:
       - "packages/firebase_analytics/**"
       - ".github/workflows/firebase_analytics.yaml"
+      # Ensure this workflow runs if the Firebase Android SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/android/gradle.properties"
+      # Ensure this workflow runs if the Firebase iOS SDK version gets bumped.
+      - "packages/firebase_core/firebase_core/ios/firebase_sdk_version.rb"
   push:
     branches:
       - master
     paths-ignore:
       - "docs/**"
+      - "**.md"
 
 env:
   FLUTTERFIRE_PLUGIN_SCOPE: "*firebase_analytics*"
@@ -20,7 +25,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -34,7 +39,9 @@ jobs:
         with:
           api-level: 28
           arch: x86_64
-          target: google_apis
+          # Firebase Analytics works without Google Play Services, so we don't use the `googleapis`
+          # emulator target as it's considerably slower on CI.
+          target: default
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 
@@ -42,7 +49,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -58,11 +65,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
-        run: ./.github/workflows/scripts/install-flutter.sh beta
+        run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh

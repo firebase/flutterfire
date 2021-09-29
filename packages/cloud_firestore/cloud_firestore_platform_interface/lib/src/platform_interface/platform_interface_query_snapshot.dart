@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -27,7 +28,7 @@ class QuerySnapshotPlatform extends PlatformInterface {
   /// This is used by the app-facing [QuerySnapshot] to ensure that
   /// the object in which it's going to delegate calls has been
   /// constructed properly.
-  static verifyExtends(QuerySnapshotPlatform instance) {
+  static void verifyExtends(QuerySnapshotPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
   }
 

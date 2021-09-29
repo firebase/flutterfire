@@ -1,5 +1,11 @@
 # Machine Learning Vision for Firebase
 
+> **This package is now discontinued** since these APIs are no longer available in the latest Firebase SDKs.
+> As an alternative you can switch to Google's standalone ML Kit library via [google_ml_kit](https://pub.dev/packages/google_ml_kit)
+> for on-device vision APIs. For calling the Cloud Vision API from your app the recommended approach is using Firebase
+> Authentication and Functions, which gives you a managed, serverless gateway to Google Cloud Vision APIs. For an example
+> Functions project see the [vision-annotate-images](https://github.com/firebase/functions-samples/tree/master/vision-annotate-images) sample project.
+
 [![pub package](https://img.shields.io/pub/v/firebase_ml_vision.svg)](https://pub.dev/packages/firebase_ml_vision)
 
 A Flutter plugin to use the capabilities of [Firebase ML](https://firebase.google.com/docs/ml), which includes all of Firebase's cloud-based ML features, and [ML Kit](https://developers.google.com/ml-kit), a standalone library for on-device ML, which can be used with or without Firebase.
@@ -8,7 +14,7 @@ For Flutter plugins for other Firebase products, see [README.md](https://github.
 
 ## Usage
 
-To use this plugin, add `firebase_ml_vision` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure Firebase for each platform project: Android and iOS (see the example folder or https://codelabs.developers.google.com/codelabs/flutter-firebase/#4 for step by step details).
+To use this plugin, add `firebase_ml_vision` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/). You must also configure Firebase for each platform project: Android and iOS (see the example folder).
 
 ### Android
 If you're using the on-device `ImageLabeler`, include the latest matching [ML Kit: Image Labeling](https://firebase.google.com/support/release-notes/android) dependency in your app-level build.gradle file.
@@ -57,13 +63,20 @@ You may also need to update your app's deployment target to 9.0 using Xcode. Oth
 compilation errors.
 
 If you're using one of the on-device APIs, include the corresponding ML Kit library model in your
-`Podfile`. Then run `pod update` in a terminal within the same directory as your `Podfile`.
+`Podfile` as indicated below. Then run `pod update` in a terminal within the same directory as your `Podfile`.
 
-```
-pod 'Firebase/MLVisionBarcodeModel'
-pod 'Firebase/MLVisionFaceModel'
-pod 'Firebase/MLVisionLabelModel'
-pod 'Firebase/MLVisionTextModel'
+```ruby
+# ...
+target 'Runner' do
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  # ...
+  # Include any of the following for the APIs you are using:
+  pod 'Firebase/MLVisionBarcodeModel'
+  pod 'Firebase/MLVisionFaceModel'
+  pod 'Firebase/MLVisionLabelModel'
+  pod 'Firebase/MLVisionTextModel'
+  # ...
+end
 ```
 
 ## Using an ML Vision Detector
@@ -92,7 +105,7 @@ final DocumentTextRecognizer cloudDocumentTextRecognizer = FirebaseVision.instan
 You can also configure all detectors, except on-device `TextRecognizer`, with desired options.
 
 ```dart
-final ImageLabeler labeler = FirebaseVision.instance.imageLabler(
+final ImageLabeler labeler = FirebaseVision.instance.imageLabeler(
   ImageLabelerOptions(confidenceThreshold: 0.75),
 );
 ```

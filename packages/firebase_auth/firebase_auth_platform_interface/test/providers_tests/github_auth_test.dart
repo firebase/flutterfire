@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -6,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestGithubAuthProvider githubAuthProvider;
-  final String kMockProviderId = 'github.com';
+  late TestGithubAuthProvider githubAuthProvider;
+  const String kMockProviderId = 'github.com';
   setUpAll(() {
     githubAuthProvider = TestGithubAuthProvider();
   });
@@ -46,10 +47,6 @@ void main() {
         expect(result.scopes.length, 1);
         expect(result.scopes[0], equals(kMockScope));
       });
-
-      test('throws [AssertionError] when scope is null', () {
-        expect(() => githubAuthProvider.addScope(null), throwsAssertionError);
-      });
     });
 
     group('setCustomParameters()', () {
@@ -63,15 +60,10 @@ void main() {
         expect(result.parameters['allow_signup'], isA<String>());
         expect(result.parameters['allow_signup'], equals('false'));
       });
-
-      test('throws [AssertionError] when customOAuthParameters is null', () {
-        expect(() => githubAuthProvider.setCustomParameters(null),
-            throwsAssertionError);
-      });
     });
 
     group('GithubAuthProvider.credential()', () {
-      final String kMockAccessToken = 'test-token';
+      const String kMockAccessToken = 'test-token';
       test('creates a new [GithubAuthCredential]', () {
         final result = GithubAuthProvider.credential(kMockAccessToken);
         expect(result, isA<OAuthCredential>());
@@ -80,10 +72,6 @@ void main() {
         expect(result.accessToken, kMockAccessToken);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when accessToken is null', () {
-        expect(() => GithubAuthProvider.credential(null), throwsAssertionError);
       });
     });
   });

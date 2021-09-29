@@ -1,6 +1,6 @@
 const webpack = require('webpack');
 const plugins = require('../plugins');
-const { fetchPluginVersion } = require('../api');
+const { fetchPluginVersions } = require('../api');
 
 module.exports = function sourceVersions() {
   return {
@@ -16,8 +16,9 @@ module.exports = function sourceVersions() {
         if (version_overrides && version_overrides[pub]) {
           versions += `PUB_${pub.toUpperCase()}=${version_overrides[pub]}`;
         } else {
-          const version = await fetchPluginVersion(pub);
-          versions += `PUB_${pub.toUpperCase()}=${version}`;
+          const [nns, ns] = await fetchPluginVersions(pub);
+          versions += `PUB_${pub.toUpperCase()}=${nns}\n`;
+          versions += `PUB_NS_${pub.toUpperCase()}=${ns || 'N/A'}`;
         }
 
         if (i < plugins.length - 1) versions += '\n';
@@ -43,9 +44,11 @@ module.exports = function sourceVersions() {
           new webpack.DefinePlugin(
             plugins.reduce((current, plugin) => {
               const envVar = `PUB_${plugin.pub.toUpperCase()}`;
+              const nsEnvVar = `PUB_NS_${plugin.pub.toUpperCase()}`;
               return {
                 ...current,
                 [envVar]: JSON.stringify(process.env[envVar] || ''),
+                [nsEnvVar]: JSON.stringify(process.env[nsEnvVar] || ''),
               };
             }, {}),
           ),

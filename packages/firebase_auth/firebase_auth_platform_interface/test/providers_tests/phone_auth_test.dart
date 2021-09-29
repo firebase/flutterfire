@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -6,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 
 void main() {
-  TestPhoneAuthProvider phoneAuthProvider;
-  final String kMockProviderId = 'phone';
+  late TestPhoneAuthProvider phoneAuthProvider;
+  const String kMockProviderId = 'phone';
   setUpAll(() {
     phoneAuthProvider = TestPhoneAuthProvider();
   });
@@ -28,30 +29,18 @@ void main() {
     });
 
     group('PhoneAuthProvider.credential()', () {
-      final String kMockVerificationId = 'test-verification-id';
-      final String kMockSmsCode = 'test-sms-code';
+      const String kMockVerificationId = 'test-verification-id';
+      const String kMockSmsCode = 'test-sms-code';
       test('creates a new [PhoneAuthCredential]', () {
         final result = PhoneAuthProvider.credential(
-            verificationId: kMockVerificationId, smsCode: kMockSmsCode);
+          verificationId: kMockVerificationId,
+          smsCode: kMockSmsCode,
+        );
 
         expect(result, isA<AuthCredential>());
         expect(result.token, isNull);
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals(kMockProviderId));
-      });
-
-      test('throws [AssertionError] when verificationId is null', () {
-        expect(
-            () => PhoneAuthProvider.credential(
-                verificationId: null, smsCode: kMockSmsCode),
-            throwsAssertionError);
-      });
-
-      test('throws [AssertionError] when smsCode is null', () {
-        expect(
-            () => PhoneAuthProvider.credential(
-                verificationId: kMockVerificationId, smsCode: null),
-            throwsAssertionError);
       });
     });
   });

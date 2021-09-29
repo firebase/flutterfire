@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2018, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -41,11 +42,15 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
       return;
     }
 
-    await MethodChannelFirebaseFirestore.channel
-        .invokeMethod<void>('WriteBatch#commit', <String, dynamic>{
-      'firestore': _firestore,
-      'writes': _writes,
-    }).catchError(catchPlatformException);
+    try {
+      await MethodChannelFirebaseFirestore.channel
+          .invokeMethod<void>('WriteBatch#commit', <String, dynamic>{
+        'firestore': _firestore,
+        'writes': _writes,
+      });
+    } catch (e) {
+      throw convertPlatformException(e);
+    }
   }
 
   @override
@@ -59,7 +64,7 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
 
   @override
   void set(String documentPath, Map<String, dynamic> data,
-      [SetOptions options]) {
+      [SetOptions? options]) {
     _assertNotCommitted();
     _writes.add(<String, dynamic>{
       'path': documentPath,

@@ -4,11 +4,6 @@ title: Web Installation
 
 Before using FlutterFire on the web, you must first import the Firebase JavaScript SDK and initialize Firebase.
 
-:::caution
-Support for web is currently limited. We are working to bring full support for web to all plugins. To learn more, visit
-the <a href="https://github.com/FirebaseExtended/flutterfire/issues/2582"><b>FlutterFire Roadmap</b></a>.
-:::
-
 ## Add Firebase SDKs
 
 The only way to currently add the Firebase SDKs to your Flutter web project is by importing the scripts from the
@@ -33,11 +28,11 @@ once this becomes available._
 
 ## Initializing Firebase
 
-The next step is to initialize Firebase using your project's credentials. Create a new web app (or choose an existing one)
+The next step is to initialize Firebase using your project configuration. Create a new web app (or choose an existing one)
 on the [Firebase Console](https://console.firebase.google.com/project/_/settings/general/web) and copy the configuration
 details.
 
-Initialize Firebase using these credentials, placing the following script below the CDN imports added above:
+Initialize Firebase using these configuration details, placing the following script below the CDN imports added above:
 
 ```html {7-21} title="web/index.html"
 <html>
@@ -45,7 +40,7 @@ Initialize Firebase using these credentials, placing the following script below 
   <body>
     <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
 
-    <!-- Firebase Credentials -->
+    <!-- Firebase Configuration -->
     <script>
       var firebaseConfig = {
         apiKey: "...",
@@ -62,7 +57,6 @@ Initialize Firebase using these credentials, placing the following script below 
       firebase.initializeApp(firebaseConfig);
     </script>
 
-    <script src="main.dart.js" type="application/javascript"></script>
   </body>
 </html>
 ```

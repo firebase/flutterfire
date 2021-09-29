@@ -1,6 +1,9 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
+// @dart=2.9
 
 import 'dart:async';
 
@@ -96,11 +99,13 @@ void main() {
 
       expect(await interstitial.load(), true);
       expect(
-          await interstitial.show(
-              anchorOffset: 60.0,
-              horizontalCenterOffset: 10.0,
-              anchorType: AnchorType.top),
-          true);
+        await interstitial.show(
+          anchorOffset: 60,
+          horizontalCenterOffset: 10,
+          anchorType: AnchorType.top,
+        ),
+        true,
+      );
       expect(await interstitial.dispose(), true);
 
       expect(log, <Matcher>[
@@ -125,13 +130,14 @@ void main() {
       log.clear();
 
       expect(
-          await RewardedVideoAd.instance.load(
-              adUnitId: RewardedVideoAd.testAdUnitId,
-              targetingInfo: const MobileAdTargetingInfo()),
-          true);
+        await RewardedVideoAd.instance.load(
+          adUnitId: RewardedVideoAd.testAdUnitId,
+        ),
+        true,
+      );
 
-      RewardedVideoAd.instance.userId = "user-id";
-      RewardedVideoAd.instance.customData = "custom-data";
+      RewardedVideoAd.instance.userId = 'user-id';
+      RewardedVideoAd.instance.customData = 'custom-data';
 
       expect(await RewardedVideoAd.instance.show(), true);
 
@@ -141,11 +147,11 @@ void main() {
           'targetingInfo': <String, String>{'requestAgent': 'flutter-alpha'},
         }),
         isMethodCall('setRewardedVideoAdUserId', arguments: <String, dynamic>{
-          'userId': "user-id",
+          'userId': 'user-id',
         }),
         isMethodCall('setRewardedVideoAdCustomData',
             arguments: <String, dynamic>{
-              'customData': "custom-data",
+              'customData': 'custom-data',
             }),
         isMethodCall('showRewardedVideoAd', arguments: null),
       ]);

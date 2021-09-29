@@ -1,15 +1,16 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:tflite/tflite.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:firebase_ml_custom/firebase_ml_custom.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(
@@ -26,24 +27,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final ImagePicker _picker = ImagePicker();
   File _image;
   List<Map<dynamic, dynamic>> _labels;
+
   //When the model is ready, _loaded changes to trigger the screen state change.
   Future<String> _loaded = loadModel();
 
   /// Triggers selection of an image and the consequent inference.
   Future<void> getImageLabels() async {
     try {
-      final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().getImage(source: ImageSource.gallery);
       final image = File(pickedFile.path);
       if (image == null) {
         return;
       }
-      var labels = List<Map>.from(await Tflite.runModelOnImage(
-        path: image.path,
-        imageStd: 127.5,
-      ));
+      // TODO TFLite plugin is broken, see https://github.com/shaqian/flutter_tflite/issues/139#issuecomment-836596852
+      // var labels = List<Map>.from(await Tflite.runModelOnImage(
+      //   path: image.path,
+      //   imageStd: 127.5,
+      // ));
+      var labels = List<Map>.from([]);
       setState(() {
         _labels = labels;
         _image = image;
@@ -58,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   /// Gets the model ready for inference on images.
   static Future<String> loadModel() async {
     final modelFile = await loadModelFromFirebase();
-    return await loadTFLiteModel(modelFile);
+    return loadTFLiteModel(modelFile);
   }
 
   /// Downloads custom model from the Firebase console and return its file.
@@ -96,21 +100,21 @@ class _MyAppState extends State<MyApp> {
   /// In this case interpreter provided by tflite plugin.
   static Future<String> loadTFLiteModel(File modelFile) async {
     try {
-      final appDirectory = await getApplicationDocumentsDirectory();
-      final labelsData =
-          await rootBundle.load("assets/labels_mobilenet_v1_224.txt");
-      final labelsFile =
-          await File(appDirectory.path + "/_labels_mobilenet_v1_224.txt")
-              .writeAsBytes(labelsData.buffer.asUint8List(
-                  labelsData.offsetInBytes, labelsData.lengthInBytes));
-
-      assert(await Tflite.loadModel(
-            model: modelFile.path,
-            labels: labelsFile.path,
-            isAsset: false,
-          ) ==
-          "success");
-      return "Model is loaded";
+      // TODO TFLite plugin is broken, see https://github.com/shaqian/flutter_tflite/issues/139#issuecomment-836596852
+      // final appDirectory = await getApplicationDocumentsDirectory();
+      // final labelsData =
+      //     await rootBundle.load('assets/labels_mobilenet_v1_224.txt');
+      // final labelsFile =
+      //     await File('${appDirectory.path}/_labels_mobilenet_v1_224.txt')
+      //         .writeAsBytes(labelsData.buffer.asUint8List(
+      //             labelsData.offsetInBytes, labelsData.lengthInBytes));
+      // assert(await Tflite.loadModel(
+      //       model: modelFile.path,
+      //       labels: labelsFile.path,
+      //       isAsset: false,
+      //     ) ==
+      //     'success');
+      return 'Model is loaded';
     } catch (exception) {
       print(
           'Failed on loading your model to the TFLite interpreter: $exception');
@@ -127,9 +131,10 @@ class _MyAppState extends State<MyApp> {
       ),
       body: Column(
         children: [
-          _image != null
-              ? Image.file(_image)
-              : Text('Please select image to analyze.'),
+          if (_image != null)
+            Image.file(_image)
+          else
+            const Text('Please select image to analyze.'),
           Column(
             children: _labels != null
                 ? _labels.map((label) {
@@ -141,16 +146,16 @@ class _MyAppState extends State<MyApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImageLabels,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   /// In case of error shows unrecoverable error screen.
   Widget errorScreen() {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: Text("Error loading model. Please check the logs."),
+        child: Text('Error loading model. Please check the logs.'),
       ),
     );
   }
@@ -162,13 +167,12 @@ class _MyAppState extends State<MyApp> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+          children: const <Widget>[
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: 20),
               child: CircularProgressIndicator(),
             ),
-            Text("Please make sure that you are using wifi."),
+            Text('Please make sure that you are using wifi.'),
           ],
         ),
       ),
@@ -176,6 +180,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   /// Shows different screens based on the state of the custom model.
+  @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: Theme.of(context).textTheme.headline2,

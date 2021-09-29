@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -13,9 +14,9 @@ void main() {
     MaterialApp(
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => _ExampleList(),
-        '/$PictureScanner': (BuildContext context) => PictureScanner(),
+        '/$PictureScanner': (BuildContext context) => const PictureScanner(),
         '/$CameraPreviewScanner': (BuildContext context) =>
-            CameraPreviewScanner(),
+            const CameraPreviewScanner(),
         '/$MaterialBarcodeScanner': (BuildContext context) =>
             const MaterialBarcodeScanner(),
       },

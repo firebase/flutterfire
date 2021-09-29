@@ -1,3 +1,75 @@
+## 1.1.0
+
+ - **FEAT**: detect the version of the Firebase JS SDK that is in use and warn if the version is incompatible with FlutterFire.
+ - **FEAT**: upgrade Firebase JS SDK version to 8.6.1.
+
+## 1.0.3
+
+ - **DOCS**: Add missing homepage/repository links (#6054).
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: publish packages.
+ - **CHORE**: bump min Dart SDK constraint to 2.12.0 (#5430).
+ - **CHORE**: publish packages (#5429).
+ - **CHORE**: publish packages.
+
+## 1.0.2
+
+ - **FIX**: cannot store null values in firestore on the web (#5335).
+
+## 1.0.1
+
+ - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+
+## 1.0.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 1.0.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `1.0.0-1.0.nullsafety.0`.
+
+## 0.3.0-1.0.nullsafety.1
+
+ - **REFACTOR**: pubspec & dependency updates (#4932).
+ - **FIX**: Analysis error with firebase_core/web (#4836).
+ - **CHORE**: update PromiseJsImpl resolve/reject to match expected types.
+
+## 0.3.0-1.0.nullsafety.0
+
+ - Bump "firebase_core_web" to `0.3.0-1.0.nullsafety.0`.
+
+## 0.3.0-nullsafety.0
+
+Major bump for the null-safety version to respect the versioning convention.
+
+## 0.2.2-nullsafety.1
+
+ - Bump `firebase_core` dependency version.
+
+## 0.2.2-nullsafety.0
+
+ - **REFACTOR**: Migrate to non-nullable types (#4656).
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+1
+
+ - **REFACTOR**: ignore typedefs.
+ - **FIX**: ensure list items are converted (#4076).
+
+## 0.2.1
+
+ - **FEAT**: migrate firebase interop files to local repository (#3973).
+ - **CHORE**: promote to stable version.
+ - **CHORE**: remove android directory from web plugins (#3199).
+
 ## 0.2.0
 
 * DEPRECATED: `FirebaseApp.configure` method is now deprecated in favor of the `Firebase.initializeApp` method.

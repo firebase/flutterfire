@@ -24,15 +24,8 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
-// Optionally override the Firebase BoM SDK version that FlutterFire uses.
-// rootProject.ext {
-//     set("FlutterFire", [
-//             FirebaseSDKVersion: "25.3.1",
-//     ])
-// }
-
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     lintOptions {
         disable 'InvalidPackage'

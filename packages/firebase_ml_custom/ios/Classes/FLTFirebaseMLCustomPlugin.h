@@ -4,7 +4,7 @@
 
 #import <Flutter/Flutter.h>
 
-#import "Firebase/Firebase.h"
+#import <Firebase/Firebase.h>
 
 /** A flutter plugin for accessing the Firebase ML APIs for custom models. */
 @interface FLTFirebaseMLCustomPlugin : NSObject <FlutterPlugin>

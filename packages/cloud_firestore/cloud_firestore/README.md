@@ -1,3 +1,5 @@
+[<img src="https://raw.githubusercontent.com/FirebaseExtended/flutterfire/master/resources/flutter_favorite.png" width="200" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
+
 # Cloud Firestore Plugin for Flutter
 
 A Flutter plugin to use the [Cloud Firestore API](https://firebase.google.com/docs/firestore/).
@@ -8,8 +10,7 @@ To learn more about Firebase Cloud Firestore, please visit the [Firebase website
 
 ## Getting Started
 
-To get started with Cloud Firestore for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview) available
- at [https://firebase.flutter.dev](https://firebase.flutter.dev)
+To get started with Cloud Firestore for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore/overview).
 
 ## Usage
 

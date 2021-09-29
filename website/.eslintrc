@@ -2,13 +2,20 @@
   "parser": "@typescript-eslint/parser",
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "prettier/@typescript-eslint",
     "plugin:prettier/recommended",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "prettier"
   ],
   "parserOptions": {
-    "ecmaVersion": 2020, // Allows for the parsing of modern ECMAScript features
-    "sourceType": "module" // Allows for the use of imports
+    "ecmaVersion": 2020,
+    // Allows for the parsing of modern ECMAScript features
+    "sourceType": "module"
+    // Allows for the use of imports
+  },
+  "settings": {
+    "react": {
+      "version": "17.0.0"
+    }
   },
   "env": {
     "es6": true,
@@ -18,6 +25,7 @@
     "react/display-name": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/camelcase": 0,
-    "@typescript-eslint/ban-ts-ignore": 0
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/no-var-requires": 0
   }
 }

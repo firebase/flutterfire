@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -35,21 +36,30 @@ void main() {
 
 class ImplementsFirebasePlatform implements FirebasePlatform {
   @override
-  Future<FirebaseAppPlatform> initializeApp(
-          {String name, FirebaseOptions options}) =>
-      null;
-
-  @override
-  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
-    return null;
+  Future<FirebaseAppPlatform> initializeApp({
+    String? name,
+    FirebaseOptions? options,
+  }) async {
+    return FakeFirebaseAppPlatform();
   }
 
   @override
-  List<FirebaseAppPlatform> get apps => null;
+  FirebaseAppPlatform app([String name = defaultFirebaseAppName]) {
+    return FakeFirebaseAppPlatform();
+  }
+
+  @override
+  List<FirebaseAppPlatform> get apps => [];
 }
+
+// ignore: avoid_implementing_value_types
+class FakeFirebaseAppPlatform extends Fake implements FirebaseAppPlatform {}
 
 class ExtendsFirebasePlatform extends FirebasePlatform {}
 
 class FirebaseCoreMockPlatform extends Mock
-    with MockPlatformInterfaceMixin
-    implements FirebasePlatform {}
+    with
+        // ignore: prefer_mixin, plugin_platform_interface needs to migrate to use `mixin`
+        MockPlatformInterfaceMixin
+    implements
+        FirebasePlatform {}

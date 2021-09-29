@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -25,19 +26,18 @@ enum CloudTextModelType { sparse, dense }
 ///     await textRecognizer.processImage(image);
 /// ```
 class TextRecognizer {
-  final ModelType modelType;
-  final CloudTextRecognizerOptions _cloudOptions;
-  final int _handle;
-
   TextRecognizer._({
-    CloudTextRecognizerOptions cloudOptions,
-    @required this.modelType,
-    @required int handle,
+    CloudTextRecognizerOptions? cloudOptions,
+    required this.modelType,
+    required int handle,
   })  : _cloudOptions = cloudOptions,
         _handle = handle,
-        assert(modelType != null),
         assert((modelType == ModelType.cloud && cloudOptions != null) ||
             (modelType == ModelType.onDevice && cloudOptions == null));
+
+  final ModelType modelType;
+  final CloudTextRecognizerOptions? _cloudOptions;
+  final int _handle;
 
   bool _hasBeenOpened = false;
   bool _isClosed = false;
@@ -45,20 +45,18 @@ class TextRecognizer {
   /// Detects [VisionText] from a [FirebaseVisionImage].
   Future<VisionText> processImage(FirebaseVisionImage visionImage) async {
     assert(!_isClosed);
-    assert(visionImage != null);
 
     _hasBeenOpened = true;
     Map<String, dynamic> options = {'modelType': _enumToString(modelType)};
 
     if (_cloudOptions != null) {
       options.addAll({
-        'hintedLanguages': _cloudOptions.hintedLanguages,
-        'textModelType': _enumToString(_cloudOptions.textModelType),
+        'hintedLanguages': _cloudOptions!.hintedLanguages,
+        'textModelType': _enumToString(_cloudOptions!.textModelType),
       });
     }
 
-    final Map<String, dynamic> reply =
-        await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
+    final reply = await FirebaseVision.channel.invokeMapMethod<String, dynamic>(
       'TextRecognizer#processImage',
       <String, dynamic>{
         'handle': _handle,
@@ -66,13 +64,13 @@ class TextRecognizer {
       }..addAll(visionImage._serialize()),
     );
 
-    return VisionText._(reply);
+    return VisionText._(reply!);
   }
 
   /// Releases resources used by this recognizer.
   Future<void> close() {
     if (!_hasBeenOpened) _isClosed = true;
-    if (_isClosed) return Future<void>.value(null);
+    if (_isClosed) return Future<void>.value();
 
     _isClosed = true;
     return FirebaseVision.channel.invokeMethod<void>(
@@ -87,22 +85,6 @@ class TextRecognizer {
 /// Hinted languages and text model type may provide better results if text
 /// language and density are known prior to inference.
 class CloudTextRecognizerOptions {
-  /// Language hints for text recognition.
-  ///
-  /// In most cases, an empty value yields the best results since it enables
-  /// automatic language detection.
-  ///
-  /// Each language code parameter typically consists of a BCP-47 identifier.
-  /// See //cloud.google.com/vision/docs/languages for more details.
-  final List<String> hintedLanguages;
-
-  /// Sets model type for cloud text recognition.
-  /// Choosing 'sparse' or 'dense' option will lead the recognizer to use one of
-  /// two different models, which differ by handling text densities in an image.
-  ///
-  /// Default setting is 'sparse'.
-  final CloudTextModelType textModelType;
-
   /// Constructor for [CloudTextRecognizerOptions].
   ///
   /// For Latin alphabet based languages, setting language hints is not needed.
@@ -110,9 +92,26 @@ class CloudTextRecognizerOptions {
   /// In cases, when the language of the text in the image is known, setting
   /// a hint will help get better results (although it will be a significant
   /// hindrance if the hint is wrong).
-  const CloudTextRecognizerOptions(
-      {this.hintedLanguages, this.textModelType = CloudTextModelType.sparse})
-      : assert(textModelType != null);
+  const CloudTextRecognizerOptions({
+    this.hintedLanguages,
+    this.textModelType = CloudTextModelType.sparse,
+  });
+
+  /// Language hints for text recognition.
+  ///
+  /// In most cases, an empty value yields the best results since it enables
+  /// automatic language detection.
+  ///
+  /// Each language code parameter typically consists of a BCP-47 identifier.
+  /// See //cloud.google.com/vision/docs/languages for more details.
+  final List<String>? hintedLanguages;
+
+  /// Sets model type for cloud text recognition.
+  /// Choosing 'sparse' or 'dense' option will lead the recognizer to use one of
+  /// two different models, which differ by handling text densities in an image.
+  ///
+  /// Default setting is 'sparse'.
+  final CloudTextModelType textModelType;
 }
 
 /// Recognized text in an image.
@@ -123,7 +122,7 @@ class VisionText {
             .map<TextBlock>((dynamic block) => TextBlock._(block)));
 
   /// String representation of the recognized text.
-  final String text;
+  final String? text;
 
   /// All recognized text broken down into individual blocks/paragraphs.
   final List<TextBlock> blocks;
@@ -140,8 +139,7 @@ abstract class TextContainer {
                 data['height'],
               )
             : null,
-        confidence =
-            data['confidence'] == null ? null : data['confidence'].toDouble(),
+        confidence = data['confidence']?.toDouble(),
         cornerPoints = List<Offset>.unmodifiable(
             data['points'].map<Offset>((dynamic point) => Offset(
                   point[0],
@@ -157,12 +155,12 @@ abstract class TextContainer {
   /// The point (0, 0) is defined as the upper-left corner of the image.
   ///
   /// Could be null even if text is found.
-  final Rect boundingBox;
+  final Rect? boundingBox;
 
   /// The confidence of the recognized text block.
   ///
   /// The value is null for onDevice text recognizer.
-  final double confidence;
+  final double? confidence;
 
   /// The four corner points in clockwise direction starting with top-left.
   ///
@@ -183,7 +181,7 @@ abstract class TextContainer {
   ///
   /// Returned in reading order for the language. For Latin, this is top to
   /// bottom within a Block, and left-to-right within a Line.
-  final String text;
+  final String? text;
 }
 
 /// A block of text (think of it as a paragraph) as deemed by the OCR engine.

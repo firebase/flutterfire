@@ -11,12 +11,12 @@ part of cloud_firestore;
 /// Once committed, no further operations can be performed on the [WriteBatch],
 /// nor can it be committed again.
 class WriteBatch {
-  final FirebaseFirestore _firestore;
-  final WriteBatchPlatform _delegate;
-
   WriteBatch._(this._firestore, this._delegate) {
     WriteBatchPlatform.verifyExtends(_delegate);
   }
+
+  final FirebaseFirestore _firestore;
+  final WriteBatchPlatform _delegate;
 
   /// Commits all of the writes in this write batch as a single atomic unit.
   ///
@@ -25,9 +25,10 @@ class WriteBatch {
 
   /// Deletes the document referred to by [document].
   void delete(DocumentReference document) {
-    assert(document != null);
-    assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+    assert(
+      document.firestore == _firestore,
+      'the document provided is from a different Firestore instance',
+    );
     return _delegate.delete(document.path);
   }
 
@@ -37,38 +38,42 @@ class WriteBatch {
   ///
   /// If [SetOptions] are provided, the data will be merged into an existing
   /// document instead of overwriting.
-  void set(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
-    assert(document != null);
-    assert(data != null);
-    assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
-    return _delegate.set(document.path,
-        _CodecUtility.replaceValueWithDelegatesInMap(data), options);
-  }
+  void set<T>(
+    DocumentReference<T> document,
+    T data, [
+    SetOptions? options,
+  ]) {
+    assert(
+      document.firestore == _firestore,
+      'the document provided is from a different Firestore instance',
+    );
 
-  @Deprecated("Deprecated in favor of `.set`")
-  // ignore: public_member_api_docs
-  void setData(DocumentReference document, Map<String, dynamic> data,
-      [SetOptions options]) {
-    return set(document, data, options);
+    Map<String, dynamic> firestoreData;
+    if (document is _JsonDocumentReference) {
+      firestoreData = data as Map<String, dynamic>;
+    } else {
+      final withConverterDoc = document as _WithConverterDocumentReference<T>;
+      firestoreData = withConverterDoc._toFirestore(data, options);
+    }
+
+    return _delegate.set(
+      document.path,
+      _CodecUtility.replaceValueWithDelegatesInMap(firestoreData)!,
+      options,
+    );
   }
 
   /// Updates a given [document].
   ///
   /// If the document does not yet exist, an exception will be thrown.
   void update(DocumentReference document, Map<String, dynamic> data) {
-    assert(document != null);
-    assert(data != null);
-    assert(document.firestore == _firestore,
-        "the document provided is from a different Firestore instance");
+    assert(
+      document.firestore == _firestore,
+      'the document provided is from a different Firestore instance',
+    );
     return _delegate.update(
-        document.path, _CodecUtility.replaceValueWithDelegatesInMap(data));
-  }
-
-  @Deprecated("Deprecated in favor of `.update`")
-  // ignore: public_member_api_docs
-  void updateData(DocumentReference document, Map<String, dynamic> data) {
-    return update(document, data);
+      document.path,
+      _CodecUtility.replaceValueWithDelegatesInMap(data)!,
+    );
   }
 }

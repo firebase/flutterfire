@@ -1,10 +1,10 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
-import 'package:flutter/material.dart';
 
 const _kProviderId = 'facebook.com';
 
@@ -15,7 +15,7 @@ const _kProviderId = 'facebook.com';
 /// (such as [signInWithPopup]):
 ///
 /// ```dart
-/// FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+/// var facebookProvider = FacebookAuthProvider();
 /// facebookProvider.addScope('user_birthday');
 /// facebookProvider.setCustomParameters({
 ///   'display': 'popup',
@@ -31,7 +31,7 @@ const _kProviderId = 'facebook.com';
 ///
 /// ```dart
 /// String accessToken = '...'; // From 3rd party provider
-/// FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+/// var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
 ///
 /// FirebaseAuth.instance.signInWithCredential(facebookAuthCredential)
 ///   .then(...);
@@ -39,6 +39,13 @@ const _kProviderId = 'facebook.com';
 class FacebookAuthProvider extends AuthProvider {
   /// Creates a new instance.
   FacebookAuthProvider() : super(_kProviderId);
+
+  /// Create a new [FacebookAuthCredential] from a provided [accessToken];
+  static OAuthCredential credential(String accessToken) {
+    return FacebookAuthCredential._credential(
+      accessToken,
+    );
+  }
 
   /// This corresponds to the sign-in method identifier.
   static String get FACEBOOK_SIGN_IN_METHOD {
@@ -65,7 +72,6 @@ class FacebookAuthProvider extends AuthProvider {
 
   /// Adds Facebook OAuth scope.
   FacebookAuthProvider addScope(String scope) {
-    assert(scope != null);
     _scopes.add(scope);
     return this;
   }
@@ -73,24 +79,10 @@ class FacebookAuthProvider extends AuthProvider {
   /// Sets the OAuth custom parameters to pass in a Facebook OAuth
   /// request for popup and redirect sign-in operations.
   FacebookAuthProvider setCustomParameters(
-      Map<dynamic, dynamic> customOAuthParameters) {
-    assert(customOAuthParameters != null);
+    Map<dynamic, dynamic> customOAuthParameters,
+  ) {
     _parameters = customOAuthParameters;
     return this;
-  }
-
-  /// Create a new [FacebookAuthCredential] from a provided [accessToken];
-  static OAuthCredential credential(String accessToken) {
-    assert(accessToken != null);
-    return FacebookAuthCredential._credential(
-      accessToken,
-    );
-  }
-
-  @Deprecated('Deprecated in favor of `FacebookAuthProvider.credential()`')
-  // ignore: public_member_api_docs
-  static AuthCredential getCredential(String token) {
-    return FacebookAuthProvider.credential(token);
   }
 }
 
@@ -98,7 +90,7 @@ class FacebookAuthProvider extends AuthProvider {
 /// [FacebookAuthProvider.credential].
 class FacebookAuthCredential extends OAuthCredential {
   FacebookAuthCredential._({
-    @required String accessToken,
+    required String accessToken,
   }) : super(
             providerId: _kProviderId,
             signInMethod: _kProviderId,

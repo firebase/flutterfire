@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,7 +8,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:path/path.dart' as path;
@@ -20,10 +20,6 @@ part 'text_recognizer.dart';
 part 'document_text_recognizer.dart';
 
 void main() {
-  final Completer<String> completer = Completer<String>();
-  enableFlutterDriverExtension(handler: (_) => completer.future);
-  tearDownAll(() => completer.complete(null));
-
   group('$FirebaseVision', () {
     barcodeDetectorTests();
     faceDetectorTests();
@@ -42,7 +38,7 @@ Future<String> _loadImage(String assetFilename) async {
 
   final String tmpFilename = path.join(
     directory.path,
-    "tmp${nextHandle++}.jpg",
+    'tmp${nextHandle++}.jpg',
   );
 
   final ByteData data = await rootBundle.load(assetFilename);

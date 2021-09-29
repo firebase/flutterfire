@@ -1,6 +1,8 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+
 @TestOn('browser')
 import 'dart:js' as js;
 
@@ -17,26 +19,30 @@ void main() {
   group('$FirebaseCoreWeb', () {
     setUp(() async {
       firebaseMock = FirebaseMock(
-          app: js.allowInterop((String name) => FirebaseAppMock(
-                name: name,
-                options: FirebaseAppOptionsMock(
-                    apiKey: 'abc',
-                    appId: '123',
-                    messagingSenderId: 'msg',
-                    projectId: 'test'),
-              )));
+        app: js.allowInterop(
+          (String name) => FirebaseAppMock(
+            name: name,
+            options: FirebaseAppOptionsMock(
+                apiKey: 'abc',
+                appId: '123',
+                messagingSenderId: 'msg',
+                projectId: 'test'),
+          ),
+        ),
+      );
 
       FirebasePlatform.instance = FirebaseCoreWeb();
     });
 
     test('.apps', () {
-      js.context['firebase']['apps'] = js.JsArray<dynamic>();
+      (js.context['firebase'] as js.JsObject)['apps'] = js.JsArray<dynamic>();
       final List<FirebaseApp> apps = Firebase.apps;
       expect(apps, hasLength(0));
     });
 
     test('.app()', () async {
-      js.context['firebase']['app'] = js.allowInterop((String name) {
+      (js.context['firebase'] as js.JsObject)['app'] =
+          js.allowInterop((String name) {
         return js.JsObject.jsify(<String, dynamic>{
           'name': name,
           'options': <String, String>{
@@ -47,20 +53,22 @@ void main() {
           },
         });
       });
+
       final FirebaseApp app = Firebase.app('foo');
+
       expect(app.name, equals('foo'));
 
-      final FirebaseOptions options = await app.options;
-      expect(options.apiKey, equals('abc'));
-      expect(options.appId, equals('123'));
-      expect(options.messagingSenderId, equals('msg'));
-      expect(options.projectId, equals('test'));
+      expect(app.options.apiKey, equals('abc'));
+      expect(app.options.appId, equals('123'));
+      expect(app.options.messagingSenderId, equals('msg'));
+      expect(app.options.projectId, equals('test'));
     });
 
     test('.initializeApp()', () async {
       bool appConfigured = false;
 
-      js.context['firebase']['app'] = js.allowInterop((String name) {
+      (js.context['firebase'] as js.JsObject)['app'] =
+          js.allowInterop((String name) {
         if (appConfigured) {
           return js.JsObject.jsify(<String, dynamic>{
             'name': name,
@@ -75,7 +83,7 @@ void main() {
           return null;
         }
       });
-      js.context['firebase']['initializeApp'] =
+      (js.context['firebase'] as js.JsObject)['initializeApp'] =
           js.allowInterop((js.JsObject options, String name) {
         appConfigured = true;
         return js.JsObject.jsify(<String, dynamic>{
@@ -92,10 +100,9 @@ void main() {
           projectId: 'test',
         ),
       );
-      expect(app.name, equals('foo'));
 
-      final FirebaseOptions options = await app.options;
-      expect(options.appId, equals('123'));
+      expect(app.name, equals('foo'));
+      expect(app.options.appId, equals('123'));
     });
   });
 }

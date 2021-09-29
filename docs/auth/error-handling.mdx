@@ -26,6 +26,9 @@ try {
 Each method provides various error codes and messages depending on the type of authentication invocation type. The
 [Reference API](https://pub.dev/documentation/firebase_auth/latest/) provides up-to-date details on the errors for each method.
 
+Other errors such as `too-many-requests` or `operation-not-allowed` may be thrown if you reach the Firebase Authentication quota,
+or have not enabled a specific auth provider.
+
 ## Handling `account-exists-with-different-credential` Errors
 
 If you enabled the One account per email address setting in the [Firebase console](https://console.firebase.google.com/project/_/authentication/providers),
@@ -38,7 +41,7 @@ To complete the sign-in flow to the intended provider, the user has to first sig
 FirebaseAuth auth = FirebaseAuth.instance;
 
 // Create a credential from a Google Sign-in Request
-GoogleAuthCredential googleAuthCredential = GoogleAuthProvider.credential(accessToken: 'xxxx');
+var googleAuthCredential = GoogleAuthProvider.credential(accessToken: 'xxxx');
 
 try {
   // Attempt to sign in the user in with Google
@@ -76,7 +79,7 @@ try {
     if (userSignInMethods.first == 'facebook.com') {
       // Create a new Facebook credential
       String accessToken = await triggerFacebookAuthentication();
-      FacebookAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
+      var facebookAuthCredential = FacebookAuthProvider.credential(accessToken);
 
       // Sign the user in with the credential
       UserCredential userCredential = await auth.signInWithCredential(facebookAuthCredential);

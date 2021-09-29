@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -15,7 +16,7 @@ class TestTransaction extends TransactionPlatform {
 void main() {
   initializeMethodChannel();
 
-  group("$TransactionPlatform()", () {
+  group('$TransactionPlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp(
         name: 'testApp',
@@ -28,67 +29,67 @@ void main() {
       );
     });
 
-    test("constructor", () {
+    test('constructor', () {
       final transaction = TestTransaction._();
       expect(transaction, isInstanceOf<TransactionPlatform>());
     });
 
-    test("verifyExtends()", () {
+    test('verifyExtends()', () {
       final transaction = TestTransaction._();
       TransactionPlatform.verifyExtends(transaction);
       expect(transaction, isInstanceOf<TransactionPlatform>());
     });
 
-    test("throws if .commands", () {
+    test('throws if .commands', () {
       final transaction = TestTransaction._();
       try {
         transaction.commands;
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("commands is not implemented"));
+        expect(e.message, equals('commands is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .get", () async {
+    test('throws if .get', () async {
       final transaction = TestTransaction._();
       try {
         await transaction.get('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("get() is not implemented"));
+        expect(e.message, equals('get() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .delete", () {
+    test('throws if .delete', () {
       final transaction = TestTransaction._();
       try {
         transaction.delete('foo');
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("delete() is not implemented"));
+        expect(e.message, equals('delete() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .update", () {
+    test('throws if .update', () {
       final transaction = TestTransaction._();
       try {
         transaction.update('foo', {});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("update() is not implemented"));
+        expect(e.message, equals('update() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');
     });
 
-    test("throws if .set", () {
+    test('throws if .set', () {
       final transaction = TestTransaction._();
       try {
         transaction.set('foo', {});
       } on UnimplementedError catch (e) {
-        expect(e.message, equals("set() is not implemented"));
+        expect(e.message, equals('set() is not implemented'));
         return;
       }
       fail('Should have thrown an [UnimplementedError]');

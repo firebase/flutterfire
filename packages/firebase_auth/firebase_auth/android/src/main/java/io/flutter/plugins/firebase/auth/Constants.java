@@ -42,6 +42,7 @@ public class Constants {
   public static final String ADDITIONAL_USER_INFO = "additionalUserInfo";
   public static final String CREATION_TIME = "creationTime";
   public static final String LAST_SIGN_IN_TIME = "lastSignInTime";
+  public static final String TENANT_ID = "tenantId";
 
   // Auth
   public static final String PROVIDERS = "providers";
@@ -56,7 +57,6 @@ public class Constants {
   public static final String ACCESS_TOKEN = "accessToken";
   public static final String CODE = "code";
   public static final String RAW_NONCE = "rawNonce";
-  public static final String HANDLE = "handle";
   public static final String EMAIL_LINK = "emailLink";
   public static final String VERIFICATION_ID = "verificationId";
   public static final String SMS_CODE = "smsCode";
@@ -77,4 +77,10 @@ public class Constants {
   public static final String HANDLE_CODE_IN_APP = "handleCodeInApp";
   public static final String ACTION_CODE_SETTINGS = "actionCodeSettings";
   public static final String AUTO_RETRIEVED_SMS_CODE_FOR_TESTING = "autoRetrievedSmsCodeForTesting";
+  public static final String HOST = "host";
+  public static final String PORT = "port";
+  public static final String NAME = "name";
+  public static final String APP_VERIFICATION_DISABLED_FOR_TESTING =
+      "appVerificationDisabledForTesting";
+  public static final String FORCE_RECAPTCHA_FLOW = "forceRecaptchaFlow";
 }
