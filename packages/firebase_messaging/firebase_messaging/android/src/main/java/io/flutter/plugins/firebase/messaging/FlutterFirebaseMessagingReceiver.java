@@ -23,6 +23,9 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
       ContextHolder.setApplicationContext(context.getApplicationContext());
     }
 
+    // Pass null value to RemoteMessage constructor will lead to crash.
+    if (intent.getExtras() == null) return;
+
     RemoteMessage remoteMessage = new RemoteMessage(intent.getExtras());
 
     // Store the RemoteMessage if the message contains a notification payload.
