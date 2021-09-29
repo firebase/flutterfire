@@ -1,3 +1,7 @@
+## 3.1.1
+
+ - **FIX**: use Locale.ROOT while processing error code (#6946).
+
 ## 3.1.0
 
  - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).

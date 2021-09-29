@@ -22,9 +22,10 @@ enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 /// [FirebasePerformancePlatform] methods.
 abstract class FirebasePerformancePlatform extends PlatformInterface {
   /// Create an instance using [app].
-  FirebasePerformancePlatform({this.appInstance}) : super(token: Object());
+  FirebasePerformancePlatform({this.appInstance}) : super(token: _token);
 
   static FirebasePerformancePlatform? _instance;
+  static final Object _token = Object();
 
   /// The current default [FirebasePerformancePlatform] instance.
   ///
@@ -36,7 +37,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
 
   /// Sets the [FirebasePerformancePlatform] instance.
   static set instance(FirebasePerformancePlatform instance) {
-    PlatformInterface.verifyToken(instance, Object());
+    PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
 

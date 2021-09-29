@@ -108,6 +108,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
+  Settings get settings {
+    return const Settings();
+  }
+
+  @override
   set settings(Settings settings) {
     int? cacheSizeBytes;
 

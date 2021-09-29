@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:math';
+part of firebase_database_platform_interface;
 
 // ignore: avoid_classes_with_only_static_members
 /// Utility class for generating Firebase child node keys.

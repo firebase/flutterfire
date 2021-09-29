@@ -6,6 +6,7 @@
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:collection/collection.dart';
 import 'package:cloud_firestore_web/src/utils/encode_utility.dart';
+import 'package:flutter/material.dart';
 
 import 'internals.dart';
 import 'interop/firestore.dart' as firestore_interop;
@@ -41,12 +42,13 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      firestore.hashCode ^
-      _path.hashCode ^
-      isCollectionGroupQuery.hashCode ^
-      const DeepCollectionEquality().hash(parameters);
+  int get hashCode => hashValues(
+        runtimeType,
+        firestore,
+        _path,
+        isCollectionGroupQuery,
+        const DeepCollectionEquality().hash(parameters),
+      );
 
   QueryWeb _copyWithParameters(Map<String, dynamic> parameters) {
     return QueryWeb(

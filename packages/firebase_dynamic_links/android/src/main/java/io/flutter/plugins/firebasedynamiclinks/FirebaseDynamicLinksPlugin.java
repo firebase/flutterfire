@@ -209,8 +209,8 @@ public class FirebaseDynamicLinksPlugin
   }
 
   private void handleGetInitialDynamicLink(final Result result) {
-    // If there's no activity, then there's no initial dynamic link.
-    if (activity == null) {
+    // If there's no activity or initial Intent, then there's no initial dynamic link.
+    if (activity == null || activity.getIntent() == null) {
       result.success(null);
       return;
     }

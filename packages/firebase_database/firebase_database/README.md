@@ -33,3 +33,17 @@ Plugin issues that are not specific to Flutterfire can be filed in the [Flutter 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+
+### Testing
+The unit test is in `test` directory which you can run using `flutter test`.
+The integration test is in `example/test_driver/firebase_database_e2e.dart` which you can run on an emulator:
+```
+cd example
+flutter drive --target=./test_driver/firebase_database_e2e.dart
+```
+
+To test the web implementation, [download and run ChromeDriver](https://flutter.dev/docs/testing/integration-tests#running-in-a-browser), and then run `flutter_drive`:
+
+```
+flutter drive --target=./test_driver/firebase_database_e2e.dart  -d web-server --release --browser-name=chrome --web-port=8080
+```

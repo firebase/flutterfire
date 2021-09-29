@@ -12,63 +12,29 @@ class FirebaseDatabase {
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
-  FirebaseDatabase({this.app, this.databaseURL}) {
-    if (_initialized) return;
-    _channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'Event':
-          final Event event = Event._(call.arguments);
-          _observers[call.arguments['handle']]?.add(event);
-          return null;
-        case 'Error':
-          final DatabaseError error = DatabaseError._(call.arguments['error']);
-          _observers[call.arguments['handle']]?.addError(error);
-          return null;
-        case 'DoTransaction':
-          final MutableData mutableData =
-              MutableData.private(call.arguments['snapshot']);
-          final MutableData updated =
-              await _transactions[call.arguments['transactionKey']]!(
-                  mutableData);
-          return <String, dynamic>{'value': updated.value};
-        default:
-          throw MissingPluginException(
-            '${call.method} method not implemented on the Dart side.',
-          );
-      }
-    });
-    _initialized = true;
+
+  DatabasePlatform? _delegatePackingProperty;
+
+  DatabasePlatform get _delegate {
+    _delegatePackingProperty ??= DatabasePlatform.instance;
+    return _delegatePackingProperty!;
   }
 
-  static final Map<int, StreamController<Event>> _observers =
-      <int, StreamController<Event>>{};
-
-  static final Map<int, TransactionHandler> _transactions =
-      <int, TransactionHandler>{};
-
-  static bool _initialized = false;
+  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
+      : _delegatePackingProperty = app != null || databaseURL != null
+            ? DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL)
+            : DatabasePlatform.instance;
 
   static FirebaseDatabase _instance = FirebaseDatabase();
-
-  final MethodChannel _channel = const MethodChannel(
-    'plugins.flutter.io/firebase_database',
-  );
-
-  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
-  ///
-  /// If null, the default [FirebaseApp] is used.
-  final FirebaseApp? app;
-
-  /// The URL to which this [FirebaseDatabase] belongs
-  ///
-  /// If null, the URL of the specified [FirebaseApp] is used
-  final String? databaseURL;
 
   /// Gets the instance of FirebaseDatabase for the default Firebase app.
   static FirebaseDatabase get instance => _instance;
 
+  @visibleForTesting
+  static MethodChannel get channel => MethodChannelDatabase.channel;
+
   /// Gets a DatabaseReference for the root of your Firebase Database.
-  DatabaseReference reference() => DatabaseReference._(this, <String>[]);
+  DatabaseReference reference() => DatabaseReference._(_delegate.reference());
 
   /// Attempts to sets the database persistence to [enabled].
   ///
@@ -89,15 +55,7 @@ class FirebaseDatabase {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool? result = await _channel.invokeMethod<bool>(
-      'FirebaseDatabase#setPersistenceEnabled',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled,
-      },
-    );
-    return result!;
+    return _delegate.setPersistenceEnabled(enabled);
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -118,53 +76,26 @@ class FirebaseDatabase {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool? result = await _channel.invokeMethod<bool>(
-      'FirebaseDatabase#setPersistenceCacheSizeBytes',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'cacheSize': cacheSize,
-      },
-    );
-    return result!;
+    return _delegate.setPersistenceCacheSizeBytes(cacheSize);
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
   Future<void> setLoggingEnabled(bool enabled) {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#setLoggingEnabled',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled
-      },
-    );
+    return _delegate.setLoggingEnabled(enabled);
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#goOnline',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    return _delegate.goOnline();
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#goOffline',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    return _delegate.goOffline();
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -178,12 +109,6 @@ class FirebaseDatabase {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return _channel.invokeMethod<void>(
-      'FirebaseDatabase#purgeOutstandingWrites',
-      <String, dynamic>{
-        'app': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    return _delegate.purgeOutstandingWrites();
   }
 }

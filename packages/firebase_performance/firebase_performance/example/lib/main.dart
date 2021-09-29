@@ -37,6 +37,8 @@ class _MetricHttpClient extends BaseClient {
 
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
+    // Custom network monitoring is not supported for web.
+    // https://firebase.google.com/docs/perf-mon/custom-network-traces?platform=android
     final HttpMetric metric = FirebasePerformance.instance
         .newHttpMetric(request.url.toString(), HttpMethod.Get);
 
@@ -88,9 +90,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _togglePerformanceCollection() async {
+    // No-op for web.
     await _performance
         .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
 
+    // Always true for web.
     final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
     setState(() {
       _isPerformanceCollectionEnabled = isEnabled;
@@ -143,6 +147,7 @@ class _MyAppState extends State<MyApp> {
     for (int i = 0; i < 10000000; i++) {
       sum += i;
     }
+    // Trace.setMetric is no-op for web
     await trace.setMetric('sum', sum);
     await trace.stop();
 

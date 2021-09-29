@@ -1,3 +1,7 @@
+## 3.0.3
+
+ - **FIX**: android V2 embedding (#6982).
+
 ## 3.0.2
 
  - Update a dependency to the latest release.
