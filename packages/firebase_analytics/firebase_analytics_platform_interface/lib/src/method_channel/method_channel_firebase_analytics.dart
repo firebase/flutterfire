@@ -37,7 +37,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     required String name,
     Map<String, Object?>? parameters,
   }) {
-    return _channel.invokeMethod<void>('logEvent', <String, Object?>{
+    return _channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
       'name': name,
       'parameters': parameters,
     });
@@ -45,10 +45,13 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setConsent(
-      Map<ConsentType, ConsentStatus> consentSettings) async {
+      {ConsentStatus? adStorage, ConsentStatus? analyticsStorage}) async {
     return _channel.invokeMethod<void>(
-      'setConsent',
-      consentSettings,
+      'Analytics#setConsent',
+      <String, Object?>{
+        'adStorage': adStorage,
+        'analyticsStorage': analyticsStorage,
+      },
     );
   }
 
@@ -56,7 +59,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) async {
     return _channel.invokeMethod<void>(
-      'setDefaultEventParameters',
+      'Analytics#setDefaultEventParameters',
       defaultParameters,
     );
   }
@@ -64,14 +67,14 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     return _channel.invokeMethod<void>(
-      'setAnalyticsCollectionEnabled',
+      'Analytics#setAnalyticsCollectionEnabled',
       enabled,
     );
   }
 
   @override
   Future<void> setUserId(String? id) {
-    return _channel.invokeMethod<void>('setUserId', id);
+    return _channel.invokeMethod<void>('Analytics#setUserId', id);
   }
 
   @override
@@ -79,7 +82,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     required String? screenName,
     String? screenClassOverride,
   }) {
-    return _channel.invokeMethod<void>('setCurrentScreen', <String, String?>{
+    return _channel
+        .invokeMethod<void>('Analytics#setCurrentScreen', <String, String?>{
       'screenName': screenName,
       'screenClassOverride': screenClassOverride,
     });
@@ -90,7 +94,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     required String name,
     required String? value,
   }) {
-    return _channel.invokeMethod<void>('setUserProperty', <String, String?>{
+    return _channel
+        .invokeMethod<void>('Analytics#setUserProperty', <String, String?>{
       'name': name,
       'value': value,
     });
@@ -98,12 +103,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> resetAnalyticsData() {
-    return _channel.invokeMethod<void>('resetAnalyticsData');
+    return _channel.invokeMethod<void>('Analytics#resetAnalyticsData');
   }
 
   @override
   Future<void> setSessionTimeoutDuration(int milliseconds) {
     return _channel.invokeMethod<void>(
-        'setSessionTimeoutDuration', milliseconds);
+        'Analytics#setSessionTimeoutDuration', milliseconds);
   }
 }

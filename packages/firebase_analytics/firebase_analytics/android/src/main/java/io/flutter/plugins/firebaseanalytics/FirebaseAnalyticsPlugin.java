@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -18,11 +19,14 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
+import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin {
+public class FirebaseAnalyticsPlugin
+    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
   // Only set registrar for v1 embedder.
@@ -102,28 +106,34 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   }
 
   @Override
-  public void onMethodCall(MethodCall call, @NonNull Result result) {
+  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     switch (call.method) {
-      case "logEvent":
+      case "Analytics#logEvent":
         handleLogEvent(call, result);
         break;
-      case "setUserId":
+      case "Analytics#setUserId":
         handleSetUserId(call, result);
         break;
-      case "setCurrentScreen":
+      case "Analytics#setCurrentScreen":
         handleSetCurrentScreen(call, result);
         break;
-      case "setAnalyticsCollectionEnabled":
+      case "Analytics#setAnalyticsCollectionEnabled":
         handleSetAnalyticsCollectionEnabled(call, result);
         break;
-      case "setSessionTimeoutDuration":
+      case "Analytics#setSessionTimeoutDuration":
         handleSetSessionTimeoutDuration(call, result);
         break;
-      case "setUserProperty":
+      case "Analytics#setUserProperty":
         handleSetUserProperty(call, result);
         break;
-      case "resetAnalyticsData":
+      case "Analytics#resetAnalyticsData":
         handleResetAnalyticsData(result);
+        break;
+      case "Analytics#setConsent":
+        setConsent(call, result);
+        break;
+      case "Analytics#setDefaultEventParameters":
+        setDefaultEventParameters(call, result);
         break;
       default:
         result.notImplemented();
@@ -178,5 +188,50 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   private void handleResetAnalyticsData(Result result) {
     firebaseAnalytics.resetAnalyticsData();
     result.success(null);
+  }
+
+  private void setConsent(MethodCall call, Result result) {
+    final String adStorage = call.argument("adStorage");
+    final String analyticsStorage = call.argument("analyticsStorage");
+    HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
+        new HashMap<>();
+
+    if (adStorage != null) {
+      FirebaseAnalytics.ConsentStatus adStorageStatus =
+          adStorage.equals(io.flutter.plugins.firebaseanalytics.Constants.DENIED)
+              ? FirebaseAnalytics.ConsentStatus.DENIED
+              : FirebaseAnalytics.ConsentStatus.GRANTED;
+
+      parameters.put(FirebaseAnalytics.ConsentType.AD_STORAGE, adStorageStatus);
+    }
+
+    if (analyticsStorage != null) {
+      FirebaseAnalytics.ConsentStatus analyticsStorageStatus =
+          analyticsStorage.equals(io.flutter.plugins.firebaseanalytics.Constants.DENIED)
+              ? FirebaseAnalytics.ConsentStatus.DENIED
+              : FirebaseAnalytics.ConsentStatus.GRANTED;
+
+      parameters.put(FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE, analyticsStorageStatus);
+    }
+
+    firebaseAnalytics.setConsent(parameters);
+    result.success(null);
+  }
+
+  private void setDefaultEventParameters(MethodCall call, Result result) {
+    HashMap<String, Object> parameters = call.arguments();
+
+    firebaseAnalytics.setDefaultEventParameters(createBundleFromMap(parameters));
+    result.success(null);
+  }
+
+  @Override
+  public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
+    return null;
+  }
+
+  @Override
+  public Task<Void> didReinitializeFirebaseCore() {
+    return null;
   }
 }

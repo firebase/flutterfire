@@ -73,10 +73,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.logEvent(name: name, parameters: parameters);
   }
 
-  // Sets the applicable end user consent state.
-  Future<void> setConsent(
-      Map<ConsentType, ConsentStatus> consentSettings) async {
-    await _delegate.setConsent(consentSettings);
+  // Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
+  Future<void> setConsent({
+    ConsentStatus? adStorage,
+    ConsentStatus? analyticsStorage,
+  }) async {
+    await _delegate.setConsent({
+      adStorage,
+      analyticsStorage,
+    });
   }
 
   // Adds parameters that will be set on every event logged from the SDK, including automatic ones.
