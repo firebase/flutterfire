@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart' show visibleForTesting, protected;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../../firebase_analytics_platform_interface.dart';
 import '../method_channel/method_channel_firebase_analytics.dart';
 
 /// The interface that implementations of `firebase_analytics` must extend.
@@ -118,5 +119,11 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> setSessionTimeoutDuration(int milliseconds) {
     throw UnimplementedError(
         'setSessionTimeoutDuration() is not implemented on this platform');
+  }
+
+  /// Sets the applicable end user consent state.
+  Future<void> setConsent(Map<ConsentType, ConsentStatus> consentSettings) {
+    throw UnimplementedError(
+        'setConsent() is not implemented on this platform');
   }
 }

@@ -73,6 +73,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.logEvent(name: name, parameters: parameters);
   }
 
+  // Sets the applicable end user consent state.
+  Future<void> setConsent(
+      Map<ConsentType, ConsentStatus> consentSettings) async {
+    await _delegate.setConsent(consentSettings);
+  }
+
   /// Sets whether analytics collection is enabled for this app on this device.
   ///
   /// This setting is persisted across app sessions. By default it is enabled.

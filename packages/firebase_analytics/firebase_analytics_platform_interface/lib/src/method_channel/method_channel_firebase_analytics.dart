@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/services.dart';
 
+import '../../firebase_analytics_platform_interface.dart';
 import '../platform_interface/platform_interface_firebase_analytics.dart';
 
 /// The method channel implementation of [FirebaseAnalyticsPlatform].
@@ -40,6 +41,14 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
       'name': name,
       'parameters': parameters,
     });
+  }
+
+  @override
+  Future<void> setConsent(Map<ConsentType, ConsentStatus> consentSettings) async {
+    return _channel.invokeMethod<void>(
+      'setConsent',
+      consentSettings,
+    );
   }
 
   @override
