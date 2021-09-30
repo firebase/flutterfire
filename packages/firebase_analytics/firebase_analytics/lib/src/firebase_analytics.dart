@@ -78,10 +78,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     ConsentStatus? adStorage,
     ConsentStatus? analyticsStorage,
   }) async {
-    await _delegate.setConsent({
-      adStorage,
-      analyticsStorage,
-    });
+    await _delegate.setConsent(
+      adStorage:adStorage,
+      analyticsStorage:analyticsStorage,
+    );
   }
 
   // Adds parameters that will be set on every event logged from the SDK, including automatic ones.
