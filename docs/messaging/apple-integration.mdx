@@ -204,7 +204,7 @@ service extension. This is not a required step.
 
 - From Xcode top menu go to: **File > New > Target...**
 - A modal will present a list of possible targets, scroll down or use the filter to select "Notification Service Extension". Press Next.
-- Add a product name (use `ImageNotification` to follow along) and click **Finish**.
+- Add a product name (use `ImageNotification` to follow along), set `Language` to `Objective-C` and click **Finish**.
 - Enable the scheme by clicking **Activate**.
 
 <Image
@@ -245,7 +245,7 @@ At this point everything should still be running normally. This is the final ste
 + #import "FirebaseMessaging.h"
 ```
 
-- Replace everything from line 25 to 28 with the extension helper:
+- Replace everything from line 24 to 27 with the extension helper:
 
 ```diff
 - // Modify the notification content here...

@@ -119,6 +119,32 @@ void runInstanceTests() {
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
+      test('accepts a Storage emulator url', () {
+        const url =
+            'http://localhost:9199/v0/b/react-native-firebase-testing.appspot.com/o/1mbTestFile.gif?alt=media';
+        Reference ref = storage.refFromURL(url);
+        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.name, '1mbTestFile.gif');
+        expect(ref.fullPath, '1mbTestFile.gif');
+      });
+
+      test('accepts a https url including port number', () {
+        const url =
+            'https://firebasestorage.googleapis.com:433/v0/b/react-native-firebase-testing.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
+        Reference ref = storage.refFromURL(url);
+        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.name, '1mbTestFile.gif');
+        expect(ref.fullPath, 'nested/path/segments/1mbTestFile.gif');
+
+        const googleUrl =
+            'https://storage.googleapis.com/react-native-firebase-testing.appspot.com/pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241';
+        Reference refGoogle = storage.refFromURL(googleUrl);
+        expect(refGoogle.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(refGoogle.name, '4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
+        expect(refGoogle.fullPath,
+            'pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
+      });
+
       test('throws an error if https url could not be parsed', () async {
         try {
           storage.refFromURL('https://invertase.io');

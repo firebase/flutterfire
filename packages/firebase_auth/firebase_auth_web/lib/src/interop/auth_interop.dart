@@ -33,7 +33,7 @@ abstract class AuthJsImpl {
   external bool isSignInWithEmailLink(String emailLink);
   external AuthSettings get settings;
   external String get languageCode;
-  external set languageCode(String s);
+  external set languageCode(String? s);
   external Func0 onAuthStateChanged(
     dynamic nextOrObserver, [
     Func1? opt_error,

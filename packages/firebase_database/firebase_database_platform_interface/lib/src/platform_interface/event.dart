@@ -32,6 +32,12 @@ class EventPlatform {
             _data['snapshot']! as Map<Object?, Object?>,
             _data['childKeys'] as List<Object?>?);
 
+  /// create [EventPlatform] from [DataSnapshotPlatform]
+  EventPlatform.fromDataSnapshotPlatform(
+    this.snapshot,
+    this.previousSiblingKey,
+  );
+
   final DataSnapshotPlatform snapshot;
 
   final String? previousSiblingKey;
@@ -51,10 +57,9 @@ class DataSnapshotPlatform {
 
     if (dataValue is Map<Object?, Object?> && childKeys != null) {
       value = {for (final key in childKeys) key: dataValue[key]};
-    } else if (dataValue is List<Object?>) {
-      value = childKeys!
-          .map((key) => dataValue[int.parse(key! as String)])
-          .toList();
+    } else if (dataValue is List<Object?> && childKeys != null) {
+      value =
+          childKeys.map((key) => dataValue[int.parse(key! as String)]).toList();
     } else {
       value = dataValue;
     }
@@ -71,10 +76,17 @@ class DataSnapshotPlatform {
   final bool exists;
 }
 
-/// A SataSnapshot class which can be mutated. Specially used with transactions.
+/// A dataSnapshot class which can be mutated. Specially used with transactions.
 class MutableData {
   @visibleForTesting
   MutableData.private(this._data);
+
+  /// generate [MutableData] from key and value
+  MutableData(String key, dynamic value)
+      : _data = {
+          'key': key,
+          'value': value,
+        };
 
   final Map<dynamic, dynamic> _data;
 

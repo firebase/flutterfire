@@ -1,3 +1,8 @@
+## 8.3.3
+
+ - **DOCS**: boolean parameters are not supported for GA custom definitions. (#7037).
+ - **CHORE**: update gradle for analytics example app (#7053).
+
 ## 8.3.2
 
  - **FIX**: Fix incorrect type name in error message (#6917).

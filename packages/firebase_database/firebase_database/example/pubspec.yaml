@@ -26,6 +26,8 @@ dependency_overrides:
     path: ../
   firebase_database_platform_interface:
     path: ../../firebase_database_platform_interface
+  firebase_database_web:
+    path: ../../firebase_database_web
 
 dev_dependencies:
   drive: 1.0.0-1.0.nullsafety.0

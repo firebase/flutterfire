@@ -1,3 +1,8 @@
+## 3.1.2
+
+ - **FIX**: allow setLanguage to accept null (#7050).
+ - **CHORE**: remove google-signin plugin temporarily to fix CI (#7047).
+
 ## 3.1.1
 
  - **FIX**: use Locale.ROOT while processing error code (#6946).

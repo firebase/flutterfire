@@ -1,3 +1,8 @@
+## 0.7.1+1
+
+ - **DOCS**: remove usage of private link address (#6986).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 0.7.1
 
  - **FIX**: fix the token verification. (#6912).
