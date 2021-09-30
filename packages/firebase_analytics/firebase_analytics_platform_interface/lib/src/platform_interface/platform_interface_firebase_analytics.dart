@@ -126,4 +126,11 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError(
         'setConsent() is not implemented on this platform');
   }
+
+  /// Sets the applicable end user consent state.
+  Future<void> setDefaultEventParameters(
+      Map<String, Object> defaultParameters) {
+    throw UnimplementedError(
+        'setDefaultEventParameters() is not implemented on this platform');
+  }
 }

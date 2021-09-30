@@ -79,6 +79,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     await _delegate.setConsent(consentSettings);
   }
 
+  // Adds parameters that will be set on every event logged from the SDK, including automatic ones.
+  Future<void> setDefaultEventParameters(
+      Map<String, Object> defaultParameters) async {
+    await _delegate.setDefaultEventParameters(defaultParameters);
+  }
+
   /// Sets whether analytics collection is enabled for this app on this device.
   ///
   /// This setting is persisted across app sessions. By default it is enabled.

@@ -44,10 +44,20 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setConsent(Map<ConsentType, ConsentStatus> consentSettings) async {
+  Future<void> setConsent(
+      Map<ConsentType, ConsentStatus> consentSettings) async {
     return _channel.invokeMethod<void>(
       'setConsent',
       consentSettings,
+    );
+  }
+
+  @override
+  Future<void> setDefaultEventParameters(
+      Map<String, Object> defaultParameters) async {
+    return _channel.invokeMethod<void>(
+      'setDefaultEventParameters',
+      defaultParameters,
     );
   }
 
