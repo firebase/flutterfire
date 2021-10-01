@@ -270,7 +270,7 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               autocorrect: false,
               validator: (String? value) {
-                if (value!.isNotEmpty) {
+                if (value != null && value.isNotEmpty) {
                   var uri = Uri.parse(value);
                   if (uri.isAbsolute) {
                     //You can get the data with dart:io or http and check it here
@@ -287,9 +287,9 @@ class _UpdateUserDialogState extends State<UpdateUserDialog> {
       actions: [
         TextButton(
           onPressed: () {
-            widget.user!.updateProfile(
-                displayName: _nameController!.text,
-                photoURL: _urlController!.text);
+            widget.user!.updateDisplayName(_nameController!.text);
+            widget.user!.updatePhotoURL(_urlController!.text);
+
             Navigator.of(context).pop();
           },
           child: const Text('Update'),
