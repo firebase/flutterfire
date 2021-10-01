@@ -181,7 +181,7 @@ String emulatorCreateCustomToken(
     'sub': 'firebase-auth-emulator@example.com',
     'uid': uid,
   };
-  if (claims != null && claims.isNotEmpty) {
+  if (claims.isNotEmpty) {
     jwtBody['claims'] = claims;
   }
   if (tenantId.isNotEmpty) {

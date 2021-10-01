@@ -168,8 +168,7 @@ void runUserTests() {
           await FirebaseAuth.instance.currentUser!
               .linkWithCredential(PhoneAuthProvider.credential(
             verificationId: storedVerificationId,
-            smsCode: await (emulatorPhoneVerificationCode(testPhoneNumber)
-                as FutureOr<String>),
+            smsCode: (await emulatorPhoneVerificationCode(testPhoneNumber))!,
           ));
           expect(FirebaseAuth.instance.currentUser, equals(isA<User>()));
           expect(FirebaseAuth.instance.currentUser!.phoneNumber,
