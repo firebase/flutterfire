@@ -402,9 +402,8 @@ void runInstanceTests() {
         );
 
         // Confirm with the emulator that it triggered an email sending code.
-        final oobCode =
-            await (emulatorOutOfBandCode(email, EmulatorOobCodeType.emailSignIn)
-                as FutureOr<EmulatorOobCode>);
+        final oobCode = (await emulatorOutOfBandCode(
+            email, EmulatorOobCodeType.emailSignIn))!;
         expect(oobCode, isNotNull);
         expect(oobCode.email, email);
         expect(oobCode.type, EmulatorOobCodeType.emailSignIn);
@@ -458,8 +457,7 @@ void runInstanceTests() {
 
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {
-        Function successCallback =
-            (UserCredential currentUserCredential) async {
+        Future successCallback(UserCredential currentUserCredential) async {
           var currentUser = currentUserCredential.user!;
 
           expect(currentUser, isA<User>());
@@ -473,11 +471,10 @@ void runInstanceTests() {
           expect(additionalUserInfo, isInstanceOf<Object>());
 
           await FirebaseAuth.instance.signOut();
-        };
+        }
 
-        await FirebaseAuth.instance
-            .signInAnonymously()
-            .then((_) async => successCallback());
+        final userCred = await FirebaseAuth.instance.signInAnonymously();
+        await successCallback(userCred);
       });
     });
 

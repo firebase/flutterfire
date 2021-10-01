@@ -39,7 +39,7 @@ void runUserTests() {
 
       test('should catch error', () async {
         // Setup
-        User? user;
+        late User user;
         UserCredential userCredential;
 
         userCredential =
@@ -47,14 +47,14 @@ void runUserTests() {
           email: email,
           password: testPassword,
         );
-        user = userCredential.user;
+        user = userCredential.user!;
 
         // needed for method to throw an error
         await FirebaseAuth.instance.signOut();
 
         try {
           // Test
-          await user!.getIdToken();
+          await user.getIdToken();
         } on FirebaseAuthException catch (_) {
           return;
         } catch (e) {
@@ -67,16 +67,16 @@ void runUserTests() {
     group('getIdTokenResult()', () {
       test('should return a valid IdTokenResult Object', () async {
         // Setup
-        User? user;
+        late User user;
         UserCredential userCredential;
 
         userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: email, password: testPassword);
-        user = userCredential.user;
+        user = userCredential.user!;
 
         // Test
-        final idTokenResult = await user!.getIdTokenResult();
+        final idTokenResult = await user.getIdTokenResult();
 
         // Assertions
         expect(idTokenResult.token.runtimeType, equals(String));
@@ -843,16 +843,16 @@ void runUserTests() {
     group('delete()', () {
       test('should delete a user', () async {
         // Setup
-        User? user;
+        late User user;
         UserCredential userCredential;
 
         userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: email, password: testPassword);
-        user = userCredential.user;
+        user = userCredential.user!;
 
         // Test
-        await user!.delete();
+        await user.delete();
 
         // Assertions
         expect(FirebaseAuth.instance.currentUser, equals(null));
@@ -870,19 +870,19 @@ void runUserTests() {
       test('should throw an error on delete when no user is signed in',
           () async {
         // Setup
-        User? user;
+        late User user;
         UserCredential userCredential;
 
         userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: email, password: testPassword);
-        user = userCredential.user;
+        user = userCredential.user!;
 
         await FirebaseAuth.instance.signOut();
 
         try {
           // Test
-          await user!.delete();
+          await user.delete();
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, 'no-current-user');
