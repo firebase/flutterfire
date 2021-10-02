@@ -32,7 +32,7 @@ class FirebaseException implements Exception {
     this.message,
     String? code,
     this.stackTrace,
-  }), this.code = code ?? 'unknown';
+  }): this.code = code ?? 'unknown';
 
   /// The plugin the exception is for.
   ///
