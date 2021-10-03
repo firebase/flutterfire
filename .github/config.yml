@@ -1,1 +1,2 @@
-.circleci/config.yml
+- name: GitHub Script
+  uses: actions/github-script@v5.0.0
