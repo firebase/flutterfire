@@ -170,7 +170,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
         cachedThreadPool,
         () -> {
           String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-          boolean enabled = (boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
+          Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
           FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
           firebaseApp.setDataCollectionDefaultEnabled(enabled);
           return null;
