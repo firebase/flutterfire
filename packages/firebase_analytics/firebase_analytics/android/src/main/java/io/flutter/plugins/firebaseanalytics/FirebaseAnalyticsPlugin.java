@@ -27,12 +27,7 @@ public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin
   // Only set activity for v2 embedder. Always access activity from getActivity() method.
   private Activity activity;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
-    instance.registrar = registrar;
-    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
-  }
-
+  @SuppressWarnings("unchecked")
   private static Bundle createBundleFromMap(Map<String, Object> map) {
     if (map == null) {
       return null;
