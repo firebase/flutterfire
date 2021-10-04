@@ -144,16 +144,17 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
       return;
     }
 
+    FlutterLoader loader = new FlutterLoader();
     Handler mainHandler = new Handler(Looper.getMainLooper());
     Runnable myRunnable =
         () -> {
-          io.flutter.view.FlutterMain.startInitialization(ContextHolder.getApplicationContext());
-          io.flutter.view.FlutterMain.ensureInitializationCompleteAsync(
+          loader.startInitialization(ContextHolder.getApplicationContext());
+          loader.ensureInitializationCompleteAsync(
               ContextHolder.getApplicationContext(),
               null,
               mainHandler,
               () -> {
-                String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
+                String appBundlePath = loader.findAppBundlePath();
                 AssetManager assets = ContextHolder.getApplicationContext().getAssets();
                 if (isNotRunning()) {
                   if (shellArgs != null) {
