@@ -10,6 +10,16 @@
 
 NSString *const kConsentGranted = @"granted";
 NSString *const kConsentDenied = @"denied";
+NSString *const kName = @"name";
+NSString *const kValue = @"value";
+NSString *const kEventName = @"eventName";
+NSString *const kParameters = @"parameters";
+NSString *const kScreenName = @"screenName";
+NSString *const kScreenClassOverride = @"screenClassOverride";
+NSString *const kEnabled = @"enabled";
+NSString *const kAdStorage = @"adStorage";
+NSString *const kAnalyticsStorage = @"analyticsStorage";
+
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_analytics";
 
@@ -77,8 +87,8 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 #pragma mark - Firebase Analytics API
 
 - (void)logEvent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *eventName = arguments[@"name"];
-  id parameterMap = arguments[@"parameters"];
+  NSString *eventName = arguments[kEventName];
+  id parameterMap = arguments[kParameters];
 
   if (parameterMap != [NSNull null]) {
     [FIRAnalytics logEventWithName:eventName parameters:parameterMap];
@@ -97,8 +107,8 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (void)setCurrentScreen:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *screenName = arguments[@"screenName"];
-  NSString *screenClassOverride = arguments[@"screenClassOverride"];
+  NSString *screenName = arguments[kScreenName];
+  NSString *screenClassOverride = arguments[kScreenClassOverride];
   [FIRAnalytics logEventWithName:@"screen_view"
                       parameters:@{
                         @"screen_name" : screenName,
@@ -108,27 +118,26 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (void)setUserProperty:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *name = arguments[@"name"];
-  NSString *value = arguments[@"value"];
+  NSString *name = arguments[kName];
+  NSString *value = arguments[kValue];
   [FIRAnalytics setUserPropertyString:value forName:name];
   result.success(nil);
 }
 
 - (void)setAnalyticsCollectionEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *enabled = arguments;
+  NSNumber *enabled = arguments[kEnabled];
   [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
   result.success(nil);
 }
 
 - (void)resetAnalyticsData:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *enabled = arguments;
-  [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
+  [FIRAnalytics resetAnalyticsData];
   result.success(nil);
 }
 
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *adStorage = arguments[@"adStorage"];
-  NSString *analyticsStorage = arguments[@"analyticsStorage"];
+  NSString *adStorage = arguments[kAdStorage];
+  NSString *analyticsStorage = arguments[kAnalyticsStorage];
   NSMutableDictionary<FIRConsentType, FIRConsentStatus> * parameters = [[NSMutableDictionary alloc] init];;
   
   if(adStorage != NULL){
@@ -146,7 +155,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (void)setDefaultEventParameters:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  id parameters = arguments;
+  id parameters = arguments[kParameters];
   [FIRAnalytics setDefaultEventParameters:parameters];
   result.success(nil);
 }
