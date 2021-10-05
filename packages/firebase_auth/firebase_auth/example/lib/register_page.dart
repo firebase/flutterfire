@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_signin_button/button_builder.dart';
@@ -25,7 +23,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool _success;
+  bool? _success;
   String _userEmail = '';
 
   @override
@@ -35,60 +33,63 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text(widget.title),
       ),
       body: Form(
-          key: _formKey,
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: const InputDecoration(labelText: 'Email'),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
+        key: _formKey,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  validator: (String? value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  obscureText: true,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  alignment: Alignment.center,
+                  child: SignInButtonBuilder(
+                    icon: Icons.person_add,
+                    backgroundColor: Colors.blueGrey,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await _register();
                       }
-                      return null;
                     },
+                    text: 'Register',
                   ),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(labelText: 'Password'),
-                    validator: (String value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    obscureText: true,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    alignment: Alignment.center,
-                    child: SignInButtonBuilder(
-                      icon: Icons.person_add,
-                      backgroundColor: Colors.blueGrey,
-                      onPressed: () async {
-                        if (_formKey.currentState.validate()) {
-                          await _register();
-                        }
-                      },
-                      text: 'Register',
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Text(_success == null
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    _success == null
                         ? ''
-                        : (_success
+                        : (_success!
                             ? 'Successfully registered $_userEmail'
-                            : 'Registration failed')),
-                  )
-                ],
-              ),
+                            : 'Registration failed'),
+                  ),
+                )
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 
@@ -102,7 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // Example code for registration.
   Future<void> _register() async {
-    final User user = (await _auth.createUserWithEmailAndPassword(
+    final User? user = (await _auth.createUserWithEmailAndPassword(
       email: _emailController.text,
       password: _passwordController.text,
     ))
@@ -110,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (user != null) {
       setState(() {
         _success = true;
-        _userEmail = user.email;
+        _userEmail = user.email ?? '';
       });
     } else {
       _success = false;
