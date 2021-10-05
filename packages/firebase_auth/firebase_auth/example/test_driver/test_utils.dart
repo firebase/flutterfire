@@ -1,5 +1,4 @@
 // ignore_for_file: require_trailing_commas
-// @dart = 2.9
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -8,6 +7,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -36,10 +36,10 @@ class EmulatorOobCode {
     this.oobLink,
   });
 
-  final EmulatorOobCodeType type;
-  final String email;
-  final String oobCode;
-  final String oobLink;
+  final EmulatorOobCodeType? type;
+  final String? email;
+  final String? oobCode;
+  final String? oobLink;
 }
 
 enum EmulatorOobCodeType {
@@ -86,7 +86,7 @@ Future<void> emulatorDisableUser(String uid) async {
 
 /// Retrieve a sms phone authentication code that may have been sent for a specific
 /// phone number.
-Future<String> emulatorPhoneVerificationCode(String phoneNumber) async {
+Future<String?> emulatorPhoneVerificationCode(String phoneNumber) async {
   final response = await http.get(
     Uri.parse(
         'http://$testEmulatorHost:$testEmulatorPort/emulator/v1/projects/$_testFirebaseProjectId/verificationCodes'),
@@ -105,7 +105,7 @@ Future<String> emulatorPhoneVerificationCode(String phoneNumber) async {
 
 /// Retrieve a out of band authentication code from the emulator. Useful for testing
 /// APIs such as email verification and password resetting.
-Future<EmulatorOobCode> emulatorOutOfBandCode(
+Future<EmulatorOobCode?> emulatorOutOfBandCode(
   String email,
   EmulatorOobCodeType type,
 ) async {
@@ -117,7 +117,7 @@ Future<EmulatorOobCode> emulatorOutOfBandCode(
     },
   );
 
-  String requestType;
+  String? requestType;
   switch (type) {
     case EmulatorOobCodeType.emailSignIn:
       requestType = 'EMAIL_SIGNIN';
@@ -135,10 +135,9 @@ Future<EmulatorOobCode> emulatorOutOfBandCode(
 
   final responseBody = Map<String, dynamic>.from(jsonDecode(response.body));
   final oobCodes = List<Map<String, dynamic>>.from(responseBody['oobCodes']);
-  final oobCode = oobCodes.reversed.firstWhere(
+  final oobCode = oobCodes.reversed.firstWhereOrNull(
     (oobCode) =>
         oobCode['email'] == email && oobCode['requestType'] == requestType,
-    orElse: () => null,
   );
 
   if (oobCode == null) {
@@ -182,7 +181,7 @@ String emulatorCreateCustomToken(
     'sub': 'firebase-auth-emulator@example.com',
     'uid': uid,
   };
-  if (claims != null && claims.isNotEmpty) {
+  if (claims.isNotEmpty) {
     jwtBody['claims'] = claims;
   }
   if (tenantId.isNotEmpty) {
