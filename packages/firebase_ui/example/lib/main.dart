@@ -44,9 +44,9 @@ class FirebaseAuthUIExample extends StatelessWidget {
             AppleProviderConfiguration(),
             FacebookProviderConfiguration(),
             TwitterProviderConfiguration(
-              apiKey: 'FQodF7ffKY3Xp7TxiiSeOcJtL',
+              apiKey: 'YEXSiWv5UeCHyy0c61O2LBC3B',
               apiSecretKey:
-                  'MyEtRndTKlDuSFXGwGg3JfxWkJVsPksvaCpM4vCm1kckRwxcag',
+                  'DOd9dCCRFgtnqMDQT7A68YuGZtvcO4WP1mEFS4mEJAUooM4yaE',
               redirectURI: 'ffire://',
             ),
           ],
