@@ -38,7 +38,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? parameters,
   }) {
     return _channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
-      'name': name,
+      'eventName': name,
       'parameters': parameters,
     });
   }
@@ -68,7 +68,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     return _channel.invokeMethod<void>(
       'Analytics#setAnalyticsCollectionEnabled',
-      enabled,
+      <String, bool?>{
+        'enabled': enabled,
+      },
     );
   }
 
@@ -109,6 +111,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setSessionTimeoutDuration(int milliseconds) {
     return _channel.invokeMethod<void>(
-        'Analytics#setSessionTimeoutDuration', milliseconds);
+        'Analytics#setSessionTimeoutDuration', <String, int>{
+      'milliseconds': milliseconds,
+    });
   }
 }

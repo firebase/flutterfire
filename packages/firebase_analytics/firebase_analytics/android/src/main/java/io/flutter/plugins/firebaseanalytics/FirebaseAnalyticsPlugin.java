@@ -4,12 +4,12 @@
 
 package io.flutter.plugins.firebaseanalytics;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -18,26 +18,25 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /** Flutter plugin for Firebase Analytics. */
 public class FirebaseAnalyticsPlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
-  private FirebaseAnalytics firebaseAnalytics;
-  private MethodChannel methodChannel;
-  // Only set registrar for v1 embedder.
-  private PluginRegistry.Registrar registrar;
-  // Only set activity for v2 embedder. Always access activity from getActivity() method.
-  private Activity activity;
+  private FirebaseAnalytics analytics;
+  private MethodChannel channel;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
-    instance.registrar = registrar;
-    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
+  private void initInstance(BinaryMessenger messenger, Context context) {
+    analytics = FirebaseAnalytics.getInstance(context);
+    String channelName = "plugins.flutter.io/firebase_analytics";
+    channel = new MethodChannel(messenger, channelName);
+    channel.setMethodCallHandler(this);
+    FlutterFirebasePluginRegistry.registerPlugin(channelName, this);
   }
 
   private static Bundle createBundleFromMap(Map<String, Object> map) {
@@ -89,149 +88,198 @@ public class FirebaseAnalyticsPlugin
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
-  }
-
-  private void onAttachedToEngine(Context applicationContext, BinaryMessenger binaryMessenger) {
-    FirebaseApp.initializeApp(applicationContext);
-    firebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
-    methodChannel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_analytics");
-    methodChannel.setMethodCallHandler(this);
+    initInstance(binding.getBinaryMessenger(), binding.getApplicationContext());
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    firebaseAnalytics = null;
-    methodChannel = null;
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
+    Task<?> methodCallTask;
+
     switch (call.method) {
       case "Analytics#logEvent":
-        handleLogEvent(call, result);
+        methodCallTask = handleLogEvent(call.arguments());
         break;
       case "Analytics#setUserId":
-        handleSetUserId(call, result);
+        methodCallTask = handleSetUserId(call.arguments());
         break;
       case "Analytics#setCurrentScreen":
-        handleSetCurrentScreen(call, result);
+        methodCallTask = handleSetCurrentScreen(call.arguments());
         break;
       case "Analytics#setAnalyticsCollectionEnabled":
-        handleSetAnalyticsCollectionEnabled(call, result);
+        methodCallTask = handleSetAnalyticsCollectionEnabled(call.arguments());
         break;
       case "Analytics#setSessionTimeoutDuration":
-        handleSetSessionTimeoutDuration(call, result);
+        methodCallTask = handleSetSessionTimeoutDuration(call.arguments());
         break;
       case "Analytics#setUserProperty":
-        handleSetUserProperty(call, result);
+        methodCallTask = handleSetUserProperty(call.arguments());
         break;
       case "Analytics#resetAnalyticsData":
-        handleResetAnalyticsData(result);
+        methodCallTask = handleResetAnalyticsData();
         break;
       case "Analytics#setConsent":
-        setConsent(call, result);
+        methodCallTask = setConsent(call.arguments());
         break;
       case "Analytics#setDefaultEventParameters":
-        setDefaultEventParameters(call, result);
+        methodCallTask = setDefaultEventParameters(call.arguments());
         break;
       default:
         result.notImplemented();
-        break;
-    }
-  }
-
-  private void handleLogEvent(MethodCall call, Result result) {
-    final String eventName = call.argument("name");
-    final Map<String, Object> map = call.argument("parameters");
-    final Bundle parameterBundle = createBundleFromMap(map);
-    firebaseAnalytics.logEvent(eventName, parameterBundle);
-    result.success(null);
-  }
-
-  private void handleSetUserId(MethodCall call, Result result) {
-    final String id = (String) call.arguments;
-    firebaseAnalytics.setUserId(id);
-    result.success(null);
-  }
-
-  private void handleSetCurrentScreen(MethodCall call, Result result) {
-    final String screenName = call.argument("screenName");
-    final String screenClassOverride = call.argument("screenClassOverride");
-    Bundle parameterBundle = new Bundle();
-    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
-    parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
-    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
-    result.success(null);
-  }
-
-  private void handleSetAnalyticsCollectionEnabled(MethodCall call, Result result) {
-    final Boolean enabled = call.arguments();
-    firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
-    result.success(null);
-  }
-
-  private void handleSetSessionTimeoutDuration(MethodCall call, Result result) {
-    final Integer milliseconds = call.arguments();
-    firebaseAnalytics.setSessionTimeoutDuration(milliseconds);
-    result.success(null);
-  }
-
-  private void handleSetUserProperty(MethodCall call, Result result) {
-    final String name = call.argument("name");
-    final String value = call.argument("value");
-
-    firebaseAnalytics.setUserProperty(name, value);
-    result.success(null);
-  }
-
-  private void handleResetAnalyticsData(Result result) {
-    firebaseAnalytics.resetAnalyticsData();
-    result.success(null);
-  }
-
-  private void setConsent(MethodCall call, Result result) {
-    final String adStorage = call.argument("adStorage");
-    final String analyticsStorage = call.argument("analyticsStorage");
-    HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
-        new HashMap<>();
-
-    if (adStorage != null) {
-      FirebaseAnalytics.ConsentStatus adStorageStatus =
-          adStorage.equals(io.flutter.plugins.firebaseanalytics.Constants.DENIED)
-              ? FirebaseAnalytics.ConsentStatus.DENIED
-              : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-      parameters.put(FirebaseAnalytics.ConsentType.AD_STORAGE, adStorageStatus);
+        return;
     }
 
-    if (analyticsStorage != null) {
-      FirebaseAnalytics.ConsentStatus analyticsStorageStatus =
-          analyticsStorage.equals(io.flutter.plugins.firebaseanalytics.Constants.DENIED)
-              ? FirebaseAnalytics.ConsentStatus.DENIED
-              : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-      parameters.put(FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE, analyticsStorageStatus);
-    }
-
-    firebaseAnalytics.setConsent(parameters);
-    result.success(null);
+    methodCallTask.addOnCompleteListener(
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            String message =
+                exception != null ? exception.getMessage() : "An unknown error occurred";
+            result.error("firebase_analytics", message, null);
+          }
+        });
   }
 
-  private void setDefaultEventParameters(MethodCall call, Result result) {
-    HashMap<String, Object> parameters = call.arguments();
+  private Task<Void> handleLogEvent(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final String eventName =
+              (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
+          final Map<String, Object> map =
+              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.PARAMETERS));
+          final Bundle parameterBundle = createBundleFromMap(map);
+          analytics.logEvent(eventName, parameterBundle);
+          return null;
+        });
+  }
 
-    firebaseAnalytics.setDefaultEventParameters(createBundleFromMap(parameters));
-    result.success(null);
+  private Task<Void> handleSetUserId(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final String id = (String) Objects.requireNonNull(arguments.get(Constants.USER_ID));
+          analytics.setUserId(id);
+          return null;
+        });
+  }
+
+  private Task<Void> handleSetCurrentScreen(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final String screenName =
+              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_NAME));
+          final String screenClassOverride =
+              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_CLASS_OVERRIDE));
+          Bundle parameterBundle = new Bundle();
+          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
+          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
+          analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
+          return null;
+        });
+  }
+
+  private Task<Void> handleSetAnalyticsCollectionEnabled(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final Boolean enabled =
+              (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
+          analytics.setAnalyticsCollectionEnabled(enabled);
+          return null;
+        });
+  }
+
+  private Task<Void> handleSetSessionTimeoutDuration(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final Integer milliseconds =
+              (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
+          analytics.setSessionTimeoutDuration(milliseconds);
+          return null;
+        });
+  }
+
+  private Task<Void> handleSetUserProperty(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final String name = (String) Objects.requireNonNull(arguments.get(Constants.NAME));
+          final String value = (String) Objects.requireNonNull(arguments.get(Constants.VALUE));
+          analytics.setUserProperty(name, value);
+          return null;
+        });
+  }
+
+  private Task<Void> handleResetAnalyticsData() {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          analytics.resetAnalyticsData();
+          return null;
+        });
+  }
+
+  private Task<Void> setConsent(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final String adStorage = (String) arguments.get(Constants.AD_STORAGE);
+          final String analyticsStorage = (String) arguments.get(Constants.ANALYTICS_STORAGE);
+          HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
+              new HashMap<>();
+
+          if (adStorage != null) {
+            FirebaseAnalytics.ConsentStatus adStorageStatus =
+                adStorage.equals(Constants.DENIED)
+                    ? FirebaseAnalytics.ConsentStatus.DENIED
+                    : FirebaseAnalytics.ConsentStatus.GRANTED;
+
+            parameters.put(FirebaseAnalytics.ConsentType.AD_STORAGE, adStorageStatus);
+          }
+
+          if (analyticsStorage != null) {
+            FirebaseAnalytics.ConsentStatus analyticsStorageStatus =
+                analyticsStorage.equals(Constants.DENIED)
+                    ? FirebaseAnalytics.ConsentStatus.DENIED
+                    : FirebaseAnalytics.ConsentStatus.GRANTED;
+
+            parameters.put(FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE, analyticsStorageStatus);
+          }
+
+          analytics.setConsent(parameters);
+          return null;
+        });
+  }
+
+  private Task<Void> setDefaultEventParameters(final Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          Map<String, Object> parameters = Objects.requireNonNull(arguments);
+          analytics.setDefaultEventParameters(createBundleFromMap(parameters));
+          return null;
+        });
   }
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return null;
+    return Tasks.call(() -> new HashMap<String, Object>() {});
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return null;
+    return Tasks.call(() -> null);
   }
 }
