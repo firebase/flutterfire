@@ -28,7 +28,6 @@ import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.StandardMethodCodec;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
@@ -72,12 +71,7 @@ public class FlutterFirebaseFirestorePlugin
 
   protected static FirebaseFirestore getCachedFirebaseFirestoreInstanceForKey(String key) {
     synchronized (firestoreInstanceCache) {
-      FirebaseFirestore existingInstance = firestoreInstanceCache.get(key);
-      if (existingInstance != null) {
-        return existingInstance;
-      }
-
-      return null;
+      return firestoreInstanceCache.get(key);
     }
   }
 
@@ -98,12 +92,6 @@ public class FlutterFirebaseFirestorePlugin
         firestoreInstanceCache.remove(key);
       }
     }
-  }
-
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterFirebaseFirestorePlugin instance = new FlutterFirebaseFirestorePlugin();
-    instance.activity.set(registrar.activity());
-    instance.initInstance(registrar.messenger());
   }
 
   @Override
