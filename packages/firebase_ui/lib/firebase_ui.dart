@@ -23,5 +23,5 @@ export 'src/auth/oauth/oauth_providers.dart'
 
 export 'src/dynamic_links/initializer.dart';
 
-export 'src/firebase_ui_app.dart';
+export 'src/firebase_ui_init.dart';
 export 'src/firebase_app_initializer.dart';
