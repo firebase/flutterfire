@@ -21,14 +21,18 @@ class OAuthFlow extends AuthFlow implements OAuthController {
 
   @override
   Future<void> signInWithProvider<T extends OAuthProvider>() async {
-    final initializer = resolveInitializer<FirebaseUIAuthInitializer>();
-    final config =
-        initializer.configOf<OAuthProviderConfiguration>(providerIdOf<T>());
-    final provider = config.createProvider();
+    try {
+      final initializer = resolveInitializer<FirebaseUIAuthInitializer>();
+      final id = providerIdOf<T>();
+      final config = initializer.configOf<OAuthProviderConfiguration>(id);
+      final provider = config.createProvider();
 
-    value = const SigningIn();
-    final oauthCredential = await provider.signIn();
+      value = const SigningIn();
+      final oauthCredential = await provider.signIn();
 
-    setCredential(oauthCredential);
+      setCredential(oauthCredential);
+    } on Exception catch (e) {
+      value = AuthFailed(e);
+    }
   }
 }
