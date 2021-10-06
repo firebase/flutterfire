@@ -7,12 +7,12 @@ import '../auth_state.dart';
 typedef SurfaceBuilder = Widget Function(BuildContext context, Widget child);
 
 class SignInForm extends StatefulWidget {
-  final SurfaceBuilder surfaceBuilder;
+  final SurfaceBuilder? surfaceBuilder;
   final List<Widget> children;
 
   const SignInForm({
     Key? key,
-    required this.surfaceBuilder,
+    this.surfaceBuilder,
     this.children = const <Widget>[],
   }) : super(key: key);
 
@@ -23,6 +23,10 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm>
     with SingleTickerProviderStateMixin {
   AuthAction action = AuthAction.signIn;
+
+  late SurfaceBuilder surfaceBuilder =
+      widget.surfaceBuilder ?? _defaultSurfaceBuilder;
+
   late final TabController ctrl = TabController(length: 2, vsync: this)
     ..addListener(() {
       setState(() {
@@ -38,6 +42,8 @@ class _SignInFormState extends State<SignInForm>
       Tab(text: 'Sign up'),
     ],
   );
+
+  Widget _defaultSurfaceBuilder(BuildContext context, Widget child) => child;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +88,7 @@ class _SignInFormState extends State<SignInForm>
           laptop: 6,
           desktop: 6,
         ),
-        child: widget.surfaceBuilder(context, content),
+        child: surfaceBuilder(context, content),
       ),
     );
   }
