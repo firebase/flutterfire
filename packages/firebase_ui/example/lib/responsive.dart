@@ -26,7 +26,7 @@ class App extends StatelessWidget {
           margin: EdgeInsets.zero,
         ),
       ),
-      builder: FirebaseUIApp.builder,
+      builder: FirebaseUIInit.builder,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Firebase UI Responsive'),

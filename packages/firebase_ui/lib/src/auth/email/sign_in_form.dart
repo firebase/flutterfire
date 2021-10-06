@@ -1,6 +1,5 @@
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/responsive.dart';
-import 'package:firebase_ui/src/i10n/i10n.dart';
 import 'package:flutter/material.dart';
 
 import '../auth_state.dart';
@@ -116,7 +115,6 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   @override
   Widget build(BuildContext context) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
-    final l = FirebaseUILocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
