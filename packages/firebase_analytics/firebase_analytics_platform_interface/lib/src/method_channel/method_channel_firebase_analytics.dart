@@ -36,6 +36,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
+    // TODO - callOptions only used for web. Warn user?
+    CallOptions? callOptions,
   }) {
     return _channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
       'eventName': name,
@@ -75,14 +77,19 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setUserId(String? id) {
+  Future<void> setUserId({
+    String? id,
+    CallOptions? callOptions,
+  }) {
     return _channel.invokeMethod<void>('Analytics#setUserId', id);
   }
 
   @override
   Future<void> setCurrentScreen({
-    required String? screenName,
+    String? screenName,
     String? screenClassOverride,
+    // TODO warn user callOptions only used for web
+    CallOptions? callOptions,
   }) {
     return _channel
         .invokeMethod<void>('Analytics#setCurrentScreen', <String, String?>{
@@ -94,10 +101,11 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setUserProperty({
     required String name,
-    required String? value,
+    required Object value,
+    CallOptions? callOptions,
   }) {
     return _channel
-        .invokeMethod<void>('Analytics#setUserProperty', <String, String?>{
+        .invokeMethod<void>('Analytics#setUserProperty', <String, Object?>{
       'name': name,
       'value': value,
     });

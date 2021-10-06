@@ -20,7 +20,7 @@ import '../method_channel/method_channel_firebase_analytics.dart';
 /// `implements` this interface will be broken by newly added
 /// [FirebaseAnalyticsPlatform] methods.
 abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
-  /// Create an instance using [app] and [region].
+  /// Create an instance using [app]
   FirebaseAnalyticsPlatform(this.app) : super(token: _token);
 
   /// Only mock implementations should set this to `true`.
@@ -65,10 +65,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Logs the given event [name] with the given [parameters].
-  Future<void> logEvent({
-    required String name,
-    Map<String, Object?>? parameters,
-  }) {
+  Future<void> logEvent(
+      {required String name,
+      Map<String, Object?>? parameters,
+      CallOptions? callOptions}) {
     throw UnimplementedError('logEvent() is not implemented on this platform');
   }
 
@@ -81,7 +81,10 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// Sets the user id.
   ///
   /// Setting a null [id] removes the user id.
-  Future<void> setUserId(String? id) {
+  Future<void> setUserId({
+    String? id,
+    CallOptions? callOptions,
+  }) {
     throw UnimplementedError('setUserId() is not implemented on this platform');
   }
 
@@ -90,8 +93,9 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   ///
   /// Setting a null [screenName] clears the current screen name.
   Future<void> setCurrentScreen({
-    required String? screenName,
+    String? screenName,
     String? screenClassOverride,
+    CallOptions? callOptions,
   }) {
     throw UnimplementedError(
         'setCurrentScreen() is not implemented on this platform');
@@ -102,7 +106,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// Setting a null [value] removes the user property.
   Future<void> setUserProperty({
     required String name,
-    required String? value,
+    required Object value,
+    CallOptions? callOptions,
   }) {
     throw UnimplementedError(
         'setUserProperty() is not implemented on this platform');

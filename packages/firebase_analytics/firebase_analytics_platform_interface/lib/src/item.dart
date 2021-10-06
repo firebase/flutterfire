@@ -11,66 +11,100 @@ class Item {
   // ignore: public_member_api_docs
   @protected
   Item({
-    this.brand,
-    this.category,
-    this.category2,
-    this.category3,
-    this.category4,
-    this.category5,
-    this.id,
-    this.listName,
-    this.listId,
-    this.name,
-    this.variant,
+    this.affilitation,
+    this.coupon,
+    this.creative_name,
+    this.creative_slot,
+    this.discount,
+    this.index,
+    this.item_brand,
+    this.item_category,
+    this.item_category2,
+    this.item_category3,
+    this.item_category4,
+    this.item_category5,
+    this.item_id,
+    this.item_list_id,
+    this.item_list_name,
+    this.item_name,
+    this.item_variant,
+    this.location_id,
+    this.price,
+    this.promotion_id,
+    this.promotion_name,
+    this.quantity,
   });
 
-  /// Item brand.
-  final String? brand;
+  /// Affiliation.
+  final String? affilitation;
 
-  /// Item category
-  final String? category;
+  final String? coupon;
 
-  /// Item category
-  final String? category2;
+  final String? creative_name;
 
-  /// Item category
-  final String? category3;
+  final String? creative_slot;
 
-  /// Item category
-  final String? category4;
+  final String? discount;
 
-  /// Item category
-  final String? category5;
+  final int? index;
 
-  /// The ID of the list in which the item was presented to the user
-  final String? listId;
+  final String? item_brand;
 
-  /// The name of the list in which the item was presented to the user
-  final String? listName;
+  final String? item_category;
 
-  /// Item ID
-  final String? id;
+  final String? item_category2;
 
-  /// Item name
-  final String? name;
+  final String? item_category3;
 
-  /// Item variant
-  final String? variant;
+  final String? item_category4;
+
+  final String? item_category5;
+
+  final String? item_id;
+
+  final String? item_list_id;
+
+  final String? item_list_name;
+
+  final String? item_name;
+
+  final String? item_variant;
+
+  final String? location_id;
+
+  final String? price;
+
+  final String? promotion_id;
+
+  final String? promotion_name;
+
+  final String? quantity;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
-      'brand': brand,
-      'category': category,
-      'category2': category2,
-      'category3': category3,
-      'category4': category4,
-      'category5': category5,
-      'listId': listId,
-      'listName': listName,
-      'id': id,
-      'name': name,
-      'variant': variant,
+      'affilitation': affilitation,
+      'coupon': coupon,
+      'creative_name': creative_name,
+      'creative_slot': creative_slot,
+      'discount': discount,
+      'index': index,
+      'item_brand': item_brand,
+      'item_category': item_category,
+      'item_category2': item_category2,
+      'item_category3': item_category3,
+      'item_category4': item_category4,
+      'item_category5': item_category5,
+      'item_id': item_id,
+      'item_list_id': item_list_id,
+      'item_list_name': item_list_name,
+      'item_name': item_name,
+      'item_variant': item_variant,
+      'location_id': location_id,
+      'price': price,
+      'promotion_id': promotion_id,
+      'promotion_name': promotion_name,
+      'quantity': quantity,
     };
   }
 

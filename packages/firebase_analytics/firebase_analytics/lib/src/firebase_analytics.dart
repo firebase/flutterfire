@@ -56,8 +56,11 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
           : null;
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
-  Future<void> logEvent(
-      {required String name, Map<String, Object?>? parameters}) async {
+  Future<void> logEvent({
+    required String name,
+    Map<String, Object?>? parameters,
+    CallOptions? callOptions,
+  }) async {
     if (_reservedEventNames.contains(name)) {
       throw ArgumentError.value(
           name, 'name', 'Event name is reserved and cannot be used');
@@ -70,7 +73,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
           'Prefix "$kReservedPrefix" is reserved and cannot be used.');
     }
 
-    await _delegate.logEvent(name: name, parameters: parameters);
+    await _delegate.logEvent(
+        name: name, parameters: parameters, callOptions: callOptions);
   }
 
   // Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
@@ -79,8 +83,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     ConsentStatus? analyticsStorage,
   }) async {
     await _delegate.setConsent(
-      adStorage:adStorage,
-      analyticsStorage:analyticsStorage,
+      adStorage: adStorage,
+      analyticsStorage: analyticsStorage,
     );
   }
 
@@ -104,8 +108,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// This feature must be used in accordance with [Google's Privacy Policy][1].
   ///
   /// [1]: https://www.google.com/policies/privacy/
-  Future<void> setUserId(String? id) async {
-    await _delegate.setUserId(id);
+  Future<void> setUserId({String? id, CallOptions? callOptions}) async {
+    await _delegate.setUserId(id: id, callOptions: callOptions);
   }
 
   /// Sets the current [screenName], which specifies the current visual context
@@ -127,12 +131,15 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   ///  * https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.html#setCurrentScreen(android.app.Activity, java.lang.String, java.lang.String)
   ///  * https://firebase.google.com/docs/reference/ios/firebaseanalytics/api/reference/Classes/FIRAnalytics#setscreennamescreenclass
-  Future<void> setCurrentScreen(
-      {required String? screenName,
-      String screenClassOverride = 'Flutter'}) async {
+  Future<void> setCurrentScreen({
+    required String? screenName,
+    String screenClassOverride = 'Flutter',
+    CallOptions? callOptions,
+  }) async {
     await _delegate.setCurrentScreen(
       screenName: screenName,
       screenClassOverride: screenClassOverride,
+      callOptions: callOptions,
     );
   }
 
@@ -150,8 +157,11 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// user property names.
   ///
   /// Setting a null [value] removes the user property.
-  Future<void> setUserProperty(
-      {required String name, required String? value}) async {
+  Future<void> setUserProperty({
+    required String name,
+    required Object value,
+    CallOptions? callOptions,
+  }) async {
     if (name.isEmpty ||
         name.length > 24 ||
         name.indexOf(_alpha) != 0 ||
@@ -164,7 +174,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       throw ArgumentError.value(name, 'name', '"firebase_" prefix is reserved');
     }
 
-    await _delegate.setUserProperty(name: name, value: value);
+    await _delegate.setUserProperty(
+        name: name, value: value, callOptions: callOptions);
   }
 
   /// Clears all analytics data for this app from the device and resets the app instance id.
@@ -184,14 +195,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? paymentType,
     double? value,
     List<Item>? items,
+    CallOptions? callOptions,
   }) {
-    return logEvent(name: 'add_payment_info', parameters: {
-      _COUPON: coupon,
-      _CURRENCY: currency,
-      _PAYMENT_TYPE: paymentType,
-      _VALUE: value,
-      _ITEMS: items,
-    });
+    return logEvent(
+      name: 'add_payment_info',
+      parameters: {
+        _COUPON: coupon,
+        _CURRENCY: currency,
+        _PAYMENT_TYPE: paymentType,
+        _VALUE: value,
+        _ITEMS: items,
+      },
+      callOptions: callOptions,
+    );
   }
 
   /// Logs the standard `add_shipping_info` event.
@@ -206,14 +222,19 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? value,
     String? shippingTier,
     List<Item>? items,
+    CallOptions? callOptions,
   }) {
-    return logEvent(name: 'add_shipping_info', parameters: {
-      _COUPON: coupon,
-      _CURRENCY: currency,
-      _SHIPPING_TIER: shippingTier,
-      _VALUE: value,
-      _ITEMS: items,
-    });
+    return logEvent(
+      name: 'add_shipping_info',
+      parameters: {
+        _COUPON: coupon,
+        _CURRENCY: currency,
+        _SHIPPING_TIER: shippingTier,
+        _VALUE: value,
+        _ITEMS: items,
+      },
+      callOptions: callOptions,
+    );
   }
 
   /// Logs the standard `add_to_cart` event.
@@ -229,6 +250,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<Item>? items,
     double? value,
     String? currency,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -239,6 +261,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
         _CURRENCY: currency,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -254,6 +277,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     List<Item>? items,
     double? value,
     String? currency,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -264,6 +288,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
         _CURRENCY: currency,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -282,6 +307,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? adUnitName,
     double? value,
     String? currency,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -295,14 +321,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
         _CURRENCY: currency,
       }),
+      callOptions: callOptions,
     );
   }
 
   /// Logs the standard `app_open` event.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#APP_OPEN
-  Future<void> logAppOpen() {
-    return logEvent(name: 'app_open');
+  Future<void> logAppOpen({CallOptions? callOptions}) {
+    return logEvent(
+      name: 'app_open',
+      callOptions: callOptions,
+    );
   }
 
   /// Logs the standard `begin_checkout` event.
@@ -319,6 +349,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     List<Item>? items,
     String? coupon,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -330,6 +361,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEMS: items,
         _COUPON: coupon,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -346,6 +378,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? content,
     String? aclid,
     String? cp1,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'campaign_details',
@@ -358,6 +391,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ACLID: aclid,
         _CP1: cp1,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -371,6 +405,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logEarnVirtualCurrency({
     required String virtualCurrencyName,
     required num value,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'earn_virtual_currency',
@@ -378,6 +413,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VIRTUAL_CURRENCY_NAME: virtualCurrencyName,
         _VALUE: value,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -392,6 +428,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logGenerateLead({
     String? currency,
     double? value,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -401,6 +438,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _CURRENCY: currency,
         _VALUE: value,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -413,12 +451,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#JOIN_GROUP
   Future<void> logJoinGroup({
     required String groupId,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'join_group',
       parameters: filterOutNulls(<String, Object?>{
         _GROUP_ID: groupId,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -432,6 +472,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelUp({
     required int level,
     String? character,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'level_up',
@@ -439,6 +480,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _LEVEL: level,
         _CHARACTER: character,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -447,12 +489,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LEVEL_START
   Future<void> logLevelStart({
     required String levelName,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'level_start',
       parameters: filterOutNulls(<String, Object?>{
         _LEVEL_NAME: levelName,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -462,6 +506,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logLevelEnd({
     required String levelName,
     int? success,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'level_end',
@@ -469,6 +514,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _LEVEL_NAME: levelName,
         _SUCCESS: success,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -478,12 +524,16 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// has logged in.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#LOGIN
-  Future<void> logLogin({String? loginMethod}) {
+  Future<void> logLogin({
+    String? loginMethod,
+    CallOptions? callOptions,
+  }) {
     return logEvent(
       name: 'login',
       parameters: filterOutNulls(<String, Object?>{
         _METHOD: loginMethod,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -499,6 +549,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     required int score,
     int? level,
     String? character,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'post_score',
@@ -507,6 +558,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _LEVEL: level,
         _CHARACTER: character,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -526,6 +578,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     double? shipping,
     String? transactionId,
     String? affiliation,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -541,6 +594,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _TRANSACTION_ID: transactionId,
         _AFFILIATION: affiliation,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -553,6 +607,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<Item>? items,
+    CallOptions? callOptions,
   }) {
     _requireValueAndCurrencyTogether(value, currency);
 
@@ -563,6 +618,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
         _ITEMS: items,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -574,6 +630,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   Future<void> logScreenView({
     String? screenClass,
     String? screenName,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'screen_view',
@@ -581,6 +638,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _SCREEN_CLASS: screenClass,
         _SCREEN_NAME: screenName,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -593,6 +651,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? itemListId,
     String? itemListName,
     List<Item>? items,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'select_item',
@@ -601,6 +660,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _ITEM_LIST_NAME: itemListName,
         _ITEMS: items,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -616,6 +676,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? locationId,
     String? promotionId,
     String? promotionName,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'select_promotion',
@@ -627,6 +688,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _PROMOTION_ID: promotionId,
         _PROMOTION_NAME: promotionName,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -639,6 +701,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? currency,
     double? value,
     List<Item>? items,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'view_cart',
@@ -647,6 +710,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         _VALUE: value,
         _ITEMS: items,
       }),
+      callOptions: callOptions,
     );
   }
 
@@ -667,20 +731,24 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     String? startDate,
     String? endDate,
     String? travelClass,
+    CallOptions? callOptions,
   }) {
     return logEvent(
       name: 'search',
-      parameters: filterOutNulls(<String, Object?>{
-        _SEARCH_TERM: searchTerm,
-        _NUMBER_OF_NIGHTS: numberOfNights,
-        _NUMBER_OF_ROOMS: numberOfRooms,
-        _NUMBER_OF_PASSENGERS: numberOfPassengers,
-        _ORIGIN: origin,
-        _DESTINATION: destination,
-        _START_DATE: startDate,
-        _END_DATE: endDate,
-        _TRAVEL_CLASS: travelClass,
-      }),
+      parameters: filterOutNulls(
+        <String, Object?>{
+          _SEARCH_TERM: searchTerm,
+          _NUMBER_OF_NIGHTS: numberOfNights,
+          _NUMBER_OF_ROOMS: numberOfRooms,
+          _NUMBER_OF_PASSENGERS: numberOfPassengers,
+          _ORIGIN: origin,
+          _DESTINATION: destination,
+          _START_DATE: startDate,
+          _END_DATE: endDate,
+          _TRAVEL_CLASS: travelClass,
+        },
+      ),
+      callOptions: callOptions,
     );
   }
 

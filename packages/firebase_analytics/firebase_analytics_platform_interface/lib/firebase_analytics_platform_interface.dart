@@ -8,3 +8,4 @@ library firebase_analytics_platform_interface;
 export 'src/platform_interface/platform_interface_firebase_analytics.dart';
 export 'src/item.dart';
 export 'src/types.dart';
+export 'src/call_options.dart';
