@@ -21,7 +21,6 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import java.util.ArrayList;
@@ -35,12 +34,6 @@ public class FlutterFirebaseCrashlyticsPlugin
     implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   public static final String TAG = "FLTFirebaseCrashlytics";
   private MethodChannel channel;
-
-  /** Plugin registration. */
-  public static void registerWith(Registrar registrar) {
-    FlutterFirebaseCrashlyticsPlugin instance = new FlutterFirebaseCrashlyticsPlugin();
-    instance.initInstance(registrar.messenger());
-  }
 
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_crashlytics";

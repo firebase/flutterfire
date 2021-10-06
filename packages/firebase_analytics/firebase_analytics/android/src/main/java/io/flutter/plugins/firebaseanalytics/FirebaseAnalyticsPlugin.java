@@ -17,7 +17,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -25,17 +24,10 @@ import java.util.Map;
 public class FirebaseAnalyticsPlugin implements MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics firebaseAnalytics;
   private MethodChannel methodChannel;
-  // Only set registrar for v1 embedder.
-  private PluginRegistry.Registrar registrar;
   // Only set activity for v2 embedder. Always access activity from getActivity() method.
   private Activity activity;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FirebaseAnalyticsPlugin instance = new FirebaseAnalyticsPlugin();
-    instance.registrar = registrar;
-    instance.onAttachedToEngine(registrar.context(), registrar.messenger());
-  }
-
+  @SuppressWarnings("unchecked")
   private static Bundle createBundleFromMap(Map<String, Object> map) {
     if (map == null) {
       return null;
