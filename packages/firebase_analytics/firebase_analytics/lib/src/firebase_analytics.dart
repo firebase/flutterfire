@@ -9,7 +9,7 @@ part of firebase_analytics;
 /// Firebase Analytics API.
 class FirebaseAnalytics extends FirebasePluginPlatform {
   FirebaseAnalytics._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_crashlytics');
+      : super(app.name, 'plugins.flutter.io/firebase_analytics');
 
   static Map<String, FirebaseAnalytics> _firebaseAnalyticsInstances = {};
 
@@ -23,12 +23,18 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
-  //  Analytics does not yet support multiple Firebase Apps. Default app only.
-  /// Returns an instance using a specified [FirebaseApp].
+  //  Analytics supports multiple Firebase Apps for web only. Default app only for iOS & android.
   factory FirebaseAnalytics._instanceFor({required FirebaseApp app}) {
-    return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
-      return FirebaseAnalytics._(app: app);
-    });
+    if (kIsWeb) {
+      return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
+        return FirebaseAnalytics._(app: app);
+      });
+    }
+
+    throw PlatformException(
+        code: 'default-app',
+        message: 'Analytics has multi-app support for web only.',
+    );
   }
 
   /// The [FirebaseApp] for this current [FirebaseAnalytics] instance.

@@ -45,7 +45,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// The current default [FirebaseAnalyticsPlatform] instance.
   ///
-  /// It will always default to [MethodChannelFirebaseFunctions]
+  /// It will always default to [MethodChannelFirebaseAnalytics]
   /// if no other implementation was provided.
   static FirebaseAnalyticsPlatform get instance {
     return _instance ??= MethodChannelFirebaseAnalytics.instance;
