@@ -17,7 +17,7 @@ void main() {
 class FirebaseAuthUIExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FirebaseUIApp(
+    return FirebaseUIInit(
       initializers: [
         FirebaseUIAppInitializer(),
         FirebaseUIDynamicLinksInitializer(),
@@ -60,7 +60,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
             border: OutlineInputBorder(),
           ),
         ),
-        builder: FirebaseUIApp.builder,
+        builder: FirebaseUIInit.builder,
         home: const AuthResolver(),
       ),
     );
