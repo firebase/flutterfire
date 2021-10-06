@@ -25,7 +25,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
       : super.fromJsObject(jsObject);
   static final _expando = Expando<Analytics>();
 
-  /// Creates a new Functions from a [jsObject].
+  /// Creates a new Analytics instance from a [jsObject].
   static Analytics getInstance(analytics_interop.AnalyticsJsImpl jsObject) {
     return _expando[jsObject] ??= Analytics._fromJsObject(jsObject);
   }
