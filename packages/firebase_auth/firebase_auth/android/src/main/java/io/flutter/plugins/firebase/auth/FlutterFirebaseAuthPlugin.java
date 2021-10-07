@@ -76,12 +76,6 @@ public class FlutterFirebaseAuthPlugin
 
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
-  @SuppressWarnings("unused")
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterFirebaseAuthPlugin instance = new FlutterFirebaseAuthPlugin();
-    instance.initInstance(registrar.messenger());
-  }
-
   static Map<String, Object> parseAuthCredential(AuthCredential authCredential) {
     if (authCredential == null) {
       return null;

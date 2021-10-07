@@ -52,24 +52,6 @@ public class FirebaseDynamicLinksPlugin
    */
   public FirebaseDynamicLinksPlugin() {}
 
-  /**
-   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
-   *
-   * <p>Calling this will register the plugin with the passed registrar. However, plugins
-   * initialized this way won't react to changes in activity or context.
-   *
-   * @param registrar attaches this plugin's {@link
-   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to the registrar's {@link
-   *     io.flutter.plugin.common.BinaryMessenger}.
-   */
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = createChannel(registrar.messenger());
-    final FirebaseDynamicLinksPlugin plugin =
-        new FirebaseDynamicLinksPlugin(registrar.activity(), channel);
-    registrar.addNewIntentListener(plugin);
-    channel.setMethodCallHandler(plugin);
-  }
-
   private static MethodChannel createChannel(final BinaryMessenger messenger) {
     return new MethodChannel(messenger, "plugins.flutter.io/firebase_dynamic_links");
   }

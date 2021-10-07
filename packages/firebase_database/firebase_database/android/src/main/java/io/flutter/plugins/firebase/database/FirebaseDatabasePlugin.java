@@ -17,20 +17,6 @@ public class FirebaseDatabasePlugin implements FlutterPlugin {
   private MethodChannel channel;
   private MethodCallHandlerImpl methodCallHandler;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    final FirebaseDatabasePlugin plugin = new FirebaseDatabasePlugin();
-    plugin.setupMethodChannel(registrar.messenger());
-
-    registrar.addViewDestroyListener(
-        new ViewDestroyListener() {
-          @Override
-          public boolean onViewDestroy(FlutterNativeView view) {
-            plugin.cleanup();
-            return false;
-          }
-        });
-  }
-
   private void setupMethodChannel(BinaryMessenger messenger) {
     channel = new MethodChannel(messenger, "plugins.flutter.io/firebase_database");
     methodCallHandler = new MethodCallHandlerImpl(channel);

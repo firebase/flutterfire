@@ -35,11 +35,6 @@ public class FlutterFirebaseStoragePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private MethodChannel channel;
 
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterFirebaseStoragePlugin instance = new FlutterFirebaseStoragePlugin();
-    instance.initInstance(registrar.messenger());
-  }
-
   static Map<String, Object> parseMetadata(StorageMetadata storageMetadata) {
     if (storageMetadata == null) {
       return null;
