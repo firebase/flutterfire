@@ -56,7 +56,7 @@ class _SignInFormState extends State<SignInForm>
             children: [
               AuthFlowBuilder<EmailFlowController>(
                 action: action,
-                listener: (oldState, newState) {
+                listener: (oldState, newState, _) {
                   if (newState is AuthFailed) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

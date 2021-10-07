@@ -80,10 +80,13 @@ class _ProfileState extends State<Profile> {
                         ),
                         AuthFlowBuilder<OAuthController>(
                           action: AuthAction.link,
-                          listener: (_, newState) {
+                          listener: (_, newState, ctrl) {
                             if (newState is CredentialLinked) {
-                              u.reload();
-                              setState(() {});
+                              u.reload().then((_) {
+                                print(u.providerData);
+                                setState(() {});
+                              });
+                              ctrl.reset();
                             }
                           },
                           child: Row(

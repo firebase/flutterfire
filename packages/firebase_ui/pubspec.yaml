@@ -11,7 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^0.22.0
-  url_launcher: ^6.0.9
+  desktop_webview_auth:
+    git:
+      url: git://github.com/invertase/flutter_desktop_webview_auth.git
 
 dev_dependencies:
   crypto: ^3.0.1
@@ -26,7 +28,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   google_sign_in: ^5.0.7
-  sign_in_with_apple: ^3.0.0
+  sign_in_with_apple: ^3.1.0
   twitter_login: ^4.0.1
 
 # For information on the generic Dart part of this file, see the

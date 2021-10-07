@@ -13,9 +13,10 @@ typedef AuthFlowBuilderCallback<T extends AuthController> = Widget Function(
   Widget? child,
 );
 
-typedef StateTransitionListener = void Function(
+typedef StateTransitionListener<T extends AuthController> = void Function(
   AuthState oldState,
   AuthState newState,
+  T controller,
 );
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
@@ -83,13 +84,13 @@ class _AuthFlowBuilderState<T extends AuthController>
   }
 
   void onFlowStateChanged() {
-    widget.listener?.call(prevState!, flow.value);
+    widget.listener?.call(prevState!, flow.value, flow);
     prevState = flow.value;
   }
 
   @override
   void didUpdateWidget(covariant AuthFlowBuilder<AuthController> oldWidget) {
-    flow.action = action;
+    flow.action = widget.action ?? action;
     super.didUpdateWidget(oldWidget);
   }
 
