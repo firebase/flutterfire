@@ -27,7 +27,7 @@ class PhoneAuthFlow extends StatelessWidget {
             ),
             child: AuthFlowBuilder<PhoneVerificationController>(
               action: authMethod,
-              listener: (_, newState) {
+              listener: (_, newState, __) {
                 if (newState is SignedIn || newState is CredentialLinked) {
                   Navigator.of(context).pop();
                 }

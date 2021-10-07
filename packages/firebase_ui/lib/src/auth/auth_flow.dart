@@ -16,12 +16,14 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   @override
   final FirebaseAuth auth;
 
+  final AuthState initialState;
+
   @override
   AuthAction action;
 
   AuthFlow({
     required this.auth,
-    required AuthState initialState,
+    required this.initialState,
     required this.action,
   }) : super(initialState);
 
@@ -56,20 +58,25 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   }
 
   Future<void> onCredentialReceived(AuthCredential credential) async {
+    late AuthState finalState;
     try {
       switch (action) {
         case AuthAction.signIn:
           value = const SigningIn();
           final user = await signIn(credential);
-          value = SignedIn(user!);
+          finalState = SignedIn(user!);
           break;
         case AuthAction.link:
           value = CredentialReceived(credential);
           await link(credential);
-          value = CredentialLinked(credential);
+          finalState = CredentialLinked(credential);
           break;
         default:
           throw Exception('$action is not supported by $runtimeType');
+      }
+
+      if (value is! AuthFailed) {
+        value = finalState;
       }
     } on Exception catch (err) {
       value = AuthFailed(err);
@@ -78,5 +85,10 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
 
   T resolveInitializer<T>() {
     return getInitializerOfType<T>(context!);
+  }
+
+  @override
+  void reset() {
+    value = initialState;
   }
 }

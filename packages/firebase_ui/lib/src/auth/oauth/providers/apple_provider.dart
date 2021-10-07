@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
+import 'package:desktop_webview_auth/src/provider_args.dart';
+import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
@@ -53,6 +55,19 @@ class AppleProviderImpl extends Apple {
     );
 
     return oauthCredential;
+  }
+
+  @override
+  Future<fba.OAuthCredential> desktopSignIn() {
+    return signIn();
+  }
+
+  @override
+  ProviderArgs get desktopSignInArgs => throw UnimplementedError();
+
+  @override
+  fba.OAuthCredential fromDesktopAuthResult(AuthResult result) {
+    throw UnimplementedError();
   }
 }
 
