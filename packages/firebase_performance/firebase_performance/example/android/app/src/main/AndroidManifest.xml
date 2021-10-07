@@ -4,7 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="firebase_performance_example"
         android:icon="@mipmap/ic_launcher">
         <activity android:name="io.flutter.embedding.android.FlutterActivity"
