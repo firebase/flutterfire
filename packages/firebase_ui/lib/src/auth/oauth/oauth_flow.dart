@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
@@ -28,9 +30,16 @@ class OAuthFlow extends AuthFlow implements OAuthController {
       final provider = config.createProvider();
 
       value = const SigningIn();
-      final oauthCredential = await provider.signIn();
 
-      setCredential(oauthCredential);
+      late OAuthCredential credential;
+
+      if (Platform.isMacOS) {
+        credential = await provider.desktopSignIn();
+      } else {
+        credential = await provider.signIn();
+      }
+
+      setCredential(credential);
     } on Exception catch (e) {
       value = AuthFailed(e);
     }

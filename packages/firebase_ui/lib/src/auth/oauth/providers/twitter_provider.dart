@@ -1,3 +1,6 @@
+import 'package:desktop_webview_auth/src/provider_args.dart';
+import 'package:desktop_webview_auth/src/auth_result.dart';
+import 'package:desktop_webview_auth/twitter.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
@@ -9,18 +12,25 @@ import '../oauth_providers.dart';
 class TwitterProviderImpl extends Twitter {
   final String apiKey;
   final String apiSecretKey;
-  final String redirectURI;
+  final String redirectUri;
+
+  @override
+  late final desktopSignInArgs = TwitterSignInArgs(
+    apiKey: apiKey,
+    apiSecretKey: apiSecretKey,
+    redirectUri: redirectUri,
+  );
 
   late final _provider = TwitterLogin(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
-    redirectURI: redirectURI,
+    redirectURI: redirectUri,
   );
 
   TwitterProviderImpl({
     required this.apiKey,
     required this.apiSecretKey,
-    required this.redirectURI,
+    required this.redirectUri,
   });
 
   @override
@@ -30,6 +40,14 @@ class TwitterProviderImpl extends Twitter {
     return TwitterAuthProvider.credential(
       accessToken: result.authToken!,
       secret: result.authTokenSecret!,
+    );
+  }
+
+  @override
+  OAuthCredential fromDesktopAuthResult(AuthResult result) {
+    return TwitterAuthProvider.credential(
+      accessToken: result.accessToken,
+      secret: result.tokenSecret!,
     );
   }
 }
@@ -42,7 +60,7 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   late final _provider = TwitterProviderImpl(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
-    redirectURI: redirectURI,
+    redirectUri: redirectURI,
   );
 
   TwitterProviderConfiguration({
