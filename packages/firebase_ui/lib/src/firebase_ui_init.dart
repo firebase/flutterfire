@@ -3,8 +3,8 @@ import 'package:firebase_ui/responsive.dart';
 import 'package:firebase_ui/src/firebase_ui_initializer.dart';
 import 'package:flutter/material.dart';
 
-class FirebaseUIInit extends InheritedWidget {
-  static FirebaseUIInit? _instance;
+class FirebaseUI extends InheritedWidget {
+  static FirebaseUI? _instance;
 
   static Widget builder(BuildContext context, Widget? widget) {
     return ResponsiveGridOverlay(
@@ -15,16 +15,16 @@ class FirebaseUIInit extends InheritedWidget {
   final List<FirebaseUIInitializer> initializers;
   late final Map<Type, FirebaseUIInitializer> _initializersMap;
 
-  factory FirebaseUIInit({
+  factory FirebaseUI({
     required Widget child,
     required List<FirebaseUIInitializer> initializers,
   }) =>
-      _instance ??= FirebaseUIInit._(
+      _instance ??= FirebaseUI._(
         initializers: initializers,
         child: child,
       );
 
-  FirebaseUIInit._({
+  FirebaseUI._({
     required Widget child,
     required this.initializers,
   }) : super(child: child) {
@@ -38,7 +38,7 @@ class FirebaseUIInit extends InheritedWidget {
 
   static T getInitializerOfType<T>(BuildContext context) {
     final _initializersMap = context
-        .dependOnInheritedWidgetOfExactType<FirebaseUIInit>()!
+        .dependOnInheritedWidgetOfExactType<FirebaseUI>()!
         ._initializersMap;
 
     final initializer = _initializersMap[T];
@@ -63,7 +63,7 @@ class FirebaseUIInit extends InheritedWidget {
 
 mixin InitializerProvider {
   T getInitializerOfType<T>(BuildContext context) {
-    return FirebaseUIInit.getInitializerOfType<T>(context)!;
+    return FirebaseUI.getInitializerOfType<T>(context)!;
   }
 }
 
@@ -71,7 +71,7 @@ class FirebaseUIAppElement extends InheritedElement {
   FirebaseUIAppElement(InheritedWidget widget) : super(widget);
 
   @override
-  FirebaseUIInit get widget => super.widget as FirebaseUIInit;
+  FirebaseUI get widget => super.widget as FirebaseUI;
 
   @override
   Widget build() {

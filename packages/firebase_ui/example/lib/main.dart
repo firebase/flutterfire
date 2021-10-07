@@ -17,7 +17,7 @@ void main() {
 class FirebaseAuthUIExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FirebaseUIInit(
+    return FirebaseUI(
       initializers: [
         FirebaseUIAppInitializer(),
         FirebaseUIDynamicLinksInitializer(),
