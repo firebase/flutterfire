@@ -726,29 +726,29 @@ NSString *const kErrMsgInvalidCredential =
   }
 
   [currentUser
-      unlinkFromProvider:arguments[kArgumentProviderId]
-              completion:^(FIRUser *_Nullable user, NSError *_Nullable error) {
-                if (error != nil) {
-                  result.error(nil, nil, nil, error);
-                } else {
-                  [auth.currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                    if (reloadError != nil) {
-                      result.error(nil, nil, nil, reloadError);
-                    } else {
-                      // Note: On other SDKs `unlinkFromProvider` returns an AuthResult
-                      // instance, whereas the iOS SDK currently does not, so we manualy
-                      // construct a Dart representation of one here.
-                      result.success(@{
-                        @"additionalUserInfo" : [NSNull null],
-                        @"authCredential" : [NSNull null],
-                        @"user" : auth.currentUser
-                            ? [FLTFirebaseAuthPlugin getNSDictionaryFromUser:auth.currentUser]
-                            : [NSNull null],
-                      });
-                    }
-                  }];
-                }
-              }];
+    unlinkFromProvider:arguments[kArgumentProviderId]
+            completion:^(FIRUser *_Nullable user, NSError *_Nullable error) {
+              if (error != nil) {
+                result.error(nil, nil, nil, error);
+              } else {
+                [auth.currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                  if (reloadError != nil) {
+                    result.error(nil, nil, nil, reloadError);
+                  } else {
+                    // Note: On other SDKs `unlinkFromProvider` returns an AuthResult
+                    // instance, whereas the iOS SDK currently does not, so we manualy
+                    // construct a Dart representation of one here.
+                    result.success(@{
+                      @"additionalUserInfo" : [NSNull null],
+                      @"authCredential" : [NSNull null],
+                      @"user" : auth.currentUser
+                          ? [FLTFirebaseAuthPlugin getNSDictionaryFromUser:auth.currentUser]
+                          : [NSNull null],
+                    });
+                  }
+                }];
+              }
+            }];
 }
 
 - (void)userUpdateEmail:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -818,20 +818,20 @@ NSString *const kErrMsgInvalidCredential =
   }
 
   [currentUser
-      updatePhoneNumberCredential:(FIRPhoneAuthCredential *)credential
-                       completion:^(NSError *_Nullable error) {
-                         if (error != nil) {
-                           result.error(nil, nil, nil, error);
-                         } else {
-                           [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
-                             if (reloadError != nil) {
-                               result.error(nil, nil, nil, reloadError);
-                             } else {
-                               result.success(auth.currentUser);
-                             }
-                           }];
-                         }
-                       }];
+    updatePhoneNumberCredential:(FIRPhoneAuthCredential *)credential
+                     completion:^(NSError *_Nullable error) {
+                       if (error != nil) {
+                         result.error(nil, nil, nil, error);
+                       } else {
+                         [currentUser reloadWithCompletion:^(NSError *_Nullable reloadError) {
+                           if (reloadError != nil) {
+                             result.error(nil, nil, nil, reloadError);
+                           } else {
+                             result.success(auth.currentUser);
+                           }
+                         }];
+                       }
+                     }];
 #else
   NSLog(@"Updating a users phone number via Firebase Authentication is only supported on the iOS "
         @"platform.");
