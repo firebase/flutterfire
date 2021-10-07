@@ -7,9 +7,6 @@ package io.flutter.plugins.firebase.database;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.ViewDestroyListener;
-import io.flutter.view.FlutterNativeView;
 
 /** FirebaseDatabasePlugin */
 public class FirebaseDatabasePlugin implements FlutterPlugin {
