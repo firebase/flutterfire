@@ -64,7 +64,7 @@ class FirebaseDatabase {
   /// to `true`, the data will be persisted to on-device (disk) storage and will
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
-  Future<bool> setPersistenceEnabled(bool enabled) async {
+  Future<void> setPersistenceEnabled(bool enabled) async {
     return _delegate.setPersistenceEnabled(enabled);
   }
 
@@ -85,7 +85,7 @@ class FirebaseDatabase {
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+  Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
     return _delegate.setPersistenceCacheSizeBytes(cacheSize);
   }
 

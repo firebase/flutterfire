@@ -69,12 +69,12 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   /// On the web, real-time database offline mode work in Tunnel mode not with airplane mode.
   /// check the https://stackoverflow.com/a/32530269/3452078
   @override
-  Future<bool> setPersistenceEnabled(bool enabled) async {
+  Future<void> setPersistenceEnabled(bool enabled) async {
     throw UnsupportedError("setPersistenceEnabled() is not supported for web");
   }
 
   @override
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+  Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
     throw UnsupportedError(
         "setPersistenceCacheSizeBytes() is not supported for web");
   }
