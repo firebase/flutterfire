@@ -24,7 +24,9 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
     }
 
     if (intent.getExtras() == null) {
-      Log.d(TAG, "broadcast received but intent contained no extras to process RemoteMessage. Operation cancelled.");
+      Log.d(
+          TAG,
+          "broadcast received but intent contained no extras to process RemoteMessage. Operation cancelled.");
       return;
     }
 
