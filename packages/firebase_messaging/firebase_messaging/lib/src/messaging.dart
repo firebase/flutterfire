@@ -139,8 +139,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///  - On macOS, a notification will appear asking to grant permission.
   ///  - On Android, is it not required to call this method. If called however,
   ///    a [NotificationSettings] class will be returned with
-  ///    [NotificationSettings.authorizationStatus] returning
-  ///    [AuthorizationStatus.authorized].
+  ///    [NotificationSettings.authorizationStatus] returning the value whether 
+  ///    or not the app has notifications blocked in the system settings.
   ///  - On Web, a popup requesting the users permission is shown using the native browser API.
   ///
   /// Note that on iOS, if [provisional] is set to `true`, silent notification permissions will be
