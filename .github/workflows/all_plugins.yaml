@@ -32,9 +32,10 @@ jobs:
       - name: "Run Analyze"
         run: melos run analyze
       # TODO ML Custom has not been migrated to NNBD yet, so ignore checking it.
+      # TODO ODM has not been published yet and has some path dependencies.
       - name: "Pub Check"
         run: |
-          melos exec -c 1 --no-private --ignore="*example*" --ignore="*ml_custom*" --ignore="*admob*" -- \
+          melos exec -c 1 --no-private --ignore="*example*" --ignore="*odm*" --ignore="*ml_custom*" --ignore="*admob*" -- \
             pub publish --dry-run
 
   pub_get_check:

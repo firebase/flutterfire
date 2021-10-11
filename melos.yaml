@@ -117,6 +117,7 @@ scripts:
         - test
       ignore:
         - "*web*"
+        - "*odm*"
         - "*example*"
 
   test:web:
@@ -184,6 +185,50 @@ scripts:
   # Run all targets generally expected in CI for a full local quality check
   qualitycheck: >
     melos run clean:deep && melos clean && melos bootstrap && melos run lint:all && melos run build:all && melos run test:all
+
+  odm:test:
+    run: |
+      melos run odm:test:dart &&
+      melos run odm:test:flutter
+    description: Run all tests for the ODM.
+
+  odm:test:dart:
+    run: |
+      melos exec -- \
+        "dart test"
+    description: Run Dart tests for the ODM.
+    select-package:
+      dir-exists: "test"
+      depends-on: "test"
+      scope: "*odm*"
+
+  odm:test:flutter:
+    run: |
+      melos exec -- \
+        "flutter test"
+    description: Run Flutter tests for the ODM.
+    select-package:
+      dir-exists: "test"
+      no-depends-on: "test"
+      scope: "*odm*"
+
+  odm:example_build_runner:build:
+    run: |
+      melos exec -- \
+        "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run a build_runner build in the ODM example app.
+    select-package:
+      scope: "*odm_example*"
+
+  odm:example_build_runner:watch:
+    run: |
+      melos exec -c 5 -- \
+        "flutter pub run build_runner watch --delete-conflicting-outputs"
+    description: Run build_runner watch in the ODM example app.
+    select-package:
+      scope: "*odm_example*"
+
+  postbootstrap: melos run odm:example_build_runner:build
 
 dev_dependencies:
   pedantic: 1.8.0

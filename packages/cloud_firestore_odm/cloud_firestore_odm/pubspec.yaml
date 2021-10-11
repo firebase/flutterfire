@@ -1,0 +1,14 @@
+name: cloud_firestore_odm
+version: 1.0.0-dev.1
+
+environment:
+  sdk: ">=2.14.0-0.0.dev <3.0.0"
+
+dependencies:
+  cloud_firestore: ^2.5.3
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
