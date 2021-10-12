@@ -121,7 +121,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Sets the duration of inactivity that terminates the current session.
-  Future<void> setSessionTimeoutDuration(int milliseconds) {
+  Future<void> setSessionTimeoutDuration(Duration timeout) {
     throw UnimplementedError(
         'setSessionTimeoutDuration() is not implemented on this platform');
   }

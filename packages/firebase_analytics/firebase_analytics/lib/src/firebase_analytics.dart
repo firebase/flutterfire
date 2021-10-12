@@ -32,8 +32,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     }
 
     throw PlatformException(
-        code: 'default-app',
-        message: 'Analytics has multi-app support for web only.',
+      code: 'default-app',
+      message: 'Analytics has multi-app support for web only.',
     );
   }
 
@@ -45,21 +45,6 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     FirebaseApp defaultAppInstance = Firebase.app();
     return FirebaseAnalytics._instanceFor(app: defaultAppInstance);
   }
-
-  /// Namespace for analytics API available on Android only.
-  ///
-  /// The value of this field is `null` on non-Android platforms. If you are
-  /// writing cross-platform code, consider using null-aware operator when
-  /// accessing it.
-  ///
-  /// Example:
-  ///
-  ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  ///     analytics.android?.setSessionTimeoutDuration(true);
-  final FirebaseAnalyticsAndroid? android =
-      defaultTargetPlatform == TargetPlatform.android && !kIsWeb
-          ? FirebaseAnalyticsAndroid()
-          : null;
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
@@ -1002,17 +987,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
       }),
     );
   }
-}
-
-/// Android-specific analytics API.
-class FirebaseAnalyticsAndroid {
-  final _delegate = FirebaseAnalyticsPlatform.instance;
 
   /// Sets the duration of inactivity that terminates the current session.
   ///
-  /// The default value is 1800000 (30 minutes).
-  Future<void> setSessionTimeoutDuration(int milliseconds) async {
-    await _delegate.setSessionTimeoutDuration(milliseconds);
+  /// The default value is 1800000 milliseconds (30 minutes).
+  Future<void> setSessionTimeoutDuration(Duration timeout) async {
+    await _delegate.setSessionTimeoutDuration(timeout);
   }
 }
 

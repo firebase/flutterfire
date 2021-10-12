@@ -3,6 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:io';
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -117,10 +118,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setSessionTimeoutDuration(int milliseconds) {
-    return _channel.invokeMethod<void>(
-        'Analytics#setSessionTimeoutDuration', <String, int>{
-      'milliseconds': milliseconds,
-    });
+  Future<void> setSessionTimeoutDuration(Duration timeout) async {
+    if (Platform.isAndroid) {
+      return _channel.invokeMethod<void>(
+          'Analytics#setSessionTimeoutDuration', <String, int>{
+        'milliseconds': timeout.inMilliseconds,
+      });
+    }
   }
 }

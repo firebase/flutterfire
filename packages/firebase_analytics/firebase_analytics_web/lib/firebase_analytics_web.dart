@@ -80,4 +80,9 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
       callOptions: callOptions,
     );
   }
+
+  @override
+  Future<void> setSessionTimeoutDuration(Duration timeout) async {
+    // no setSessionTimeoutDuration() API for web
+  }
 }
