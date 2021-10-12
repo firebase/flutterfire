@@ -24,6 +24,10 @@ db.child('your_db_child').once().then((result) => print('result = $result'));
 
 See the `example` directory for a complete sample app using Firebase Realtime Database.
 
+You might also consider watching this getting started video.
+
+[![The Firebase Realtime Database and Flutter - Firecasts](https://img.youtube.com/vi/sXBJZD0fBa4/0.jpg)](https://www.youtube.com/watch?v=sXBJZD0fBa4)
+
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).

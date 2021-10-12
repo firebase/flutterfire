@@ -1,3 +1,7 @@
+## 3.1.2
+
+ - **FIX**: null-safety migration issue for web types (#7137).
+
 ## 3.1.1
 
  - **FIX**: allow setLanguage to accept null (#7050).

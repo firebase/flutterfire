@@ -97,23 +97,6 @@ public class FlutterFirebaseMessagingBackgroundService extends JobIntentService 
     FlutterFirebaseMessagingBackgroundExecutor.setUserCallbackHandle(callbackHandle);
   }
 
-  /**
-   * Sets the {@link io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback} used to
-   * register the plugins used by an application with the newly spawned background isolate.
-   *
-   * <p>This should be invoked in {@link MainApplication.onCreate} with {@link
-   * GeneratedPluginRegistrant} in applications using the V1 embedding API in order to use other
-   * plugins in the background isolate. For applications using the V2 embedding API, it is not
-   * necessary to set a {@link io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback} as
-   * plugins are registered automatically.
-   */
-  @SuppressWarnings({"deprecation", "JavadocReference"})
-  public static void setPluginRegistrant(
-      io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback callback) {
-    // Indirectly set in FlutterFirebaseMessagingBackgroundExecutor for backwards compatibility.
-    FlutterFirebaseMessagingBackgroundExecutor.setPluginRegistrant(callback);
-  }
-
   @Override
   public void onCreate() {
     super.onCreate();

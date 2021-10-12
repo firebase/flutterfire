@@ -1,3 +1,8 @@
+## 2.2.3
+
+ - **FIX**: switch usage of `dumpErrorToConsole` to `presentError` to remove duplicate logging (#7046).
+ - **CHORE**: remove unused deprecated V1 embedding for android (#7127).
+
 ## 2.2.2
 
  - Update a dependency to the latest release.
