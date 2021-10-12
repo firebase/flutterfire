@@ -6,60 +6,52 @@ package io.flutter.plugins.firebase.database;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
-import android.app.Activity;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
+import com.google.firebase.database.OnDisconnect;
+import com.google.firebase.database.Query;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.*;
-
-import io.flutter.plugin.common.PluginRegistry.Registrar;
+import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 
-/** FirebaseDatabasePlugin */
+/**
+ * FirebaseDatabasePlugin
+ */
 public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
 
-  private MethodChannel channel;
-  private MethodCallHandlerImpl methodCallHandler;
+  private MethodChannel methodChannel;
+  private BinaryMessenger messenger;
 
-  @SuppressWarnings("unused")
-  public static void registerWith(Registrar registrar) {
-    final FirebaseDatabasePlugin plugin = new FirebaseDatabasePlugin();
-    plugin.initInstance(registrar.messenger());
-
-    registrar.addViewDestroyListener(
-      view -> {
-        plugin.cleanup();
-        return false;
-      });
-  }
+  private final HashMap<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
+  private final HashMap<String, Integer> streamHandlerIds = new HashMap<>();
 
   private void initInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
-    channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
+    this.messenger = messenger;
+
+    methodChannel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
+    methodChannel.setMethodCallHandler(this);
   }
 
   FirebaseDatabase getDatabase(Map<String, Object> arguments) {
@@ -82,6 +74,12 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     final String path = (String) Objects.requireNonNull(arguments.get(Constants.PATH));
 
     return database.getReference(path);
+  }
+
+  private Query getQuery(Map<String, Object> arguments) {
+    final DatabaseReference ref = getReference(arguments);
+    final QueryBuilder qb = new QueryBuilder(ref);
+    return qb.build(arguments);
   }
 
   private Task<Void> goOnline(Map<String, Object> arguments) {
@@ -191,9 +189,8 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       () -> {
         final DatabaseReference ref = getReference(arguments);
 
-        final Map<String, Object> value;
-        value = (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
-
+        @SuppressWarnings("unchecked")
+        final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
         Tasks.await(ref.updateChildren(value));
 
         return null;
@@ -218,13 +215,122 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       cachedThreadPool,
       () -> {
         final DatabaseReference ref = getReference(arguments);
-        final TransactionHandler handler = new TransactionHandler(channel);
+        final TransactionHandler handler = new TransactionHandler(methodChannel);
 
         ref.runTransaction(handler);
 
         return Tasks.await(handler.getTask());
       });
   }
+
+  private Task<Map<String, Object>> queryGet(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        final Query query = getQuery(arguments);
+        final DataSnapshot snapshot = Tasks.await(query.get());
+        final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
+
+        return payload.withChildKeys().toMap();
+      });
+  }
+
+  private Task<Void> queryKeepSynced(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        final Query query = getQuery(arguments);
+        final boolean keepSynced = (Boolean) Objects.requireNonNull(arguments.get(Constants.VALUE));
+        query.keepSynced(keepSynced);
+
+        return null;
+      });
+  }
+
+  private Task<String> observe(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        final Query query = getQuery(arguments);
+        final String path = (String) arguments.get(Constants.PATH);
+        final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
+
+        final String eventChannelKey = METHOD_CHANNEL_NAME + path + "/" + eventType;
+        int id;
+
+        if (streamHandlerIds.containsKey(eventChannelKey)) {
+          id = Objects.requireNonNull(streamHandlerIds.get(eventChannelKey));
+          id++;
+        } else {
+          id = 0;
+        }
+
+        streamHandlerIds.put(eventChannelKey, id + 1);
+
+        final String eventChannelName = eventChannelKey + "?id=" + id;
+
+        final StreamHandler streamHandler = new EventStreamHandler(query);
+        final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
+        eventChannel.setStreamHandler(streamHandler);
+
+        streamHandlers.put(eventChannel, streamHandler);
+
+        return eventChannelName;
+      });
+  }
+
+  @SuppressWarnings("unchecked")
+  private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
+    return Tasks.call(cachedThreadPool, () -> {
+      final Object value = arguments.get(Constants.VALUE);
+      final Object priority = arguments.get(Constants.PRIORITY);
+
+      Task<Void> onDisconnectTask;
+      final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+
+      if (priority instanceof Double) {
+        onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
+      } else if (priority instanceof String) {
+        onDisconnectTask = onDisconnect.setValue(value, (String) priority);
+      } else {
+        final TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
+        onDisconnectTask = tcs.getTask();
+
+        onDisconnect.setValue(value, (Map<String, Object>) priority, (error, ref) -> {
+          if (error != null) {
+            tcs.setException(error.toException());
+          } else {
+            tcs.setResult(null);
+          }
+        });
+      }
+
+      Tasks.await(onDisconnectTask);
+      return null;
+    });
+  }
+
+  private Task<Void> updateOnDisconnect(Map<String, Object> arguments) {
+    return Tasks.call(cachedThreadPool, () -> {
+      final DatabaseReference ref = getReference(arguments);
+
+      @SuppressWarnings("unchecked")
+      final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
+
+      final Task<Void> task = ref.onDisconnect().updateChildren(value);
+      Tasks.await(task);
+      return null;
+    });
+  }
+
+  private Task<Void> cancelOnDisconnect(Map<String, Object> arguments) {
+    return Tasks.call(cachedThreadPool, () -> {
+      final DatabaseReference ref = getReference(arguments);
+      Tasks.await(ref.onDisconnect().cancel());
+      return null;
+    });
+  }
+
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
@@ -263,18 +369,22 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
         methodCallTask = runTransaction(arguments);
         break;
       case "OnDisconnect#set":
+        methodCallTask = setOnDisconnect(arguments);
         break;
       case "OnDisconnect#update":
+        methodCallTask = updateOnDisconnect(arguments);
         break;
       case "OnDisconnect#cancel":
+        methodCallTask = cancelOnDisconnect(arguments);
         break;
       case "Query#get":
+        methodCallTask = queryGet(arguments);
         break;
       case "Query#keepSynced":
+        methodCallTask = queryKeepSynced(arguments);
         break;
       case "Query#observe":
-        break;
-      case "Query#removeObserver":
+        methodCallTask = observe(arguments);
         break;
       default:
         result.notImplemented();
@@ -287,11 +397,18 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
           result.success(task.getResult());
         } else {
           Exception exception = task.getException();
-          result.error(
-            "firebase_database",
-            "something went wrong",
-            new HashMap<String, Object>()
-            );
+
+          FlutterFirebaseDatabaseException e;
+
+          if (exception instanceof FlutterFirebaseDatabaseException) {
+            e = (FlutterFirebaseDatabaseException) exception;
+          } else if (exception instanceof DatabaseException) {
+            e = FlutterFirebaseDatabaseException.fromDatabaseException((DatabaseException) exception);
+          } else {
+            e = FlutterFirebaseDatabaseException.fromException(exception);
+          }
+
+          result.error(e.getCode(), e.getMessage(), e.getAdditionalData());
         }
       });
   }
@@ -310,9 +427,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
     return Tasks.call(
       cachedThreadPool,
-      () -> {
-        return new HashMap<>();
-      });
+      HashMap::new);
   }
 
   @Override
@@ -326,8 +441,15 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
   }
 
   private void cleanup() {
-    methodCallHandler.cleanup();
-    methodCallHandler = null;
-    channel.setMethodCallHandler(null);
+    methodChannel.setMethodCallHandler(null);
+
+    for (EventChannel eventChannel : streamHandlers.keySet()) {
+      StreamHandler streamHandler = Objects.requireNonNull(streamHandlers.get(eventChannel));
+      streamHandler.onCancel(null);
+      eventChannel.setStreamHandler(null);
+    }
+
+    streamHandlers.clear();
+    streamHandlerIds.clear();
   }
 }
