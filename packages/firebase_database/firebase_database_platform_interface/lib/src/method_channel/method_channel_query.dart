@@ -18,25 +18,33 @@ class MethodChannelQuery extends QueryPlatform {
           pathComponents: pathComponents,
         );
 
+  static Map<String, Stream<EventPlatform>> events = {};
+
   @override
   Stream<EventPlatform> observe(EventType eventType) async* {
-    final channelName =
-        await MethodChannelDatabase.channel.invokeMethod<String>(
+    const channel = MethodChannelDatabase.channel;
+
+    final createArgs = <String, dynamic>{
+      'appName': database.app?.name,
+      'databaseURL': database.databaseURL,
+      'path': path,
+      'parameters': parameters,
+      'eventType': eventType.toString(),
+    };
+
+    final listenArgs = <String, String>{'eventType': eventType.toString()};
+
+    final channelName = await channel.invokeMethod<String>(
       'Query#observe',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'parameters': parameters,
-        'eventType': eventType.toString(),
-      },
+      createArgs,
     );
 
-    final eventChannel = EventChannel(channelName!);
-
-    yield* eventChannel
-        .receiveBroadcastStream()
+    events[channelName!] ??= EventChannel(channelName)
+        .receiveBroadcastStream(listenArgs)
         .map((event) => EventPlatform(event));
+
+    final eventStream = events[channelName]!;
+    yield* eventStream.where((event) => event.type == eventType);
   }
 
   /// Slash-delimited path representing the database location of this query.
@@ -53,6 +61,7 @@ class MethodChannelQuery extends QueryPlatform {
         'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path,
+        'parameters': parameters,
       },
     );
     if (result!.containsKey('error') && result['error'] != null) {

@@ -23,17 +23,38 @@ enum EventType {
   value,
 }
 
+const _eventTypesMap = {
+  'EventType.childAdded': EventType.childAdded,
+  'EventType.childRemoved': EventType.childRemoved,
+  'EventType.childChanged': EventType.childChanged,
+  'EventType.childMoved': EventType.childMoved,
+  'EventType.value': EventType.value,
+};
+
+EventType eventTypeFromString(String? value) {
+  if (value == null) throw Exception('EventType string is null');
+
+  if (!_eventTypesMap.containsKey(value)) {
+    throw Exception('Unknown event type: $value');
+  }
+
+  return _eventTypesMap[value]!;
+}
+
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
 class EventPlatform {
   EventPlatform(Map<Object?, Object?> _data)
-      : previousSiblingKey = _data['previousSiblingKey'] as String?,
+      // ingore: cast_nullable_to_non_nullable
+      : type = eventTypeFromString(_data['eventType'] as String?),
+        previousSiblingKey = _data['previousSiblingKey'] as String?,
         snapshot = DataSnapshotPlatform.fromJson(
             _data['snapshot']! as Map<Object?, Object?>,
             _data['childKeys'] as List<Object?>?);
 
   /// create [EventPlatform] from [DataSnapshotPlatform]
   EventPlatform.fromDataSnapshotPlatform(
+    this.type,
     this.snapshot,
     this.previousSiblingKey,
   );
@@ -41,6 +62,7 @@ class EventPlatform {
   final DataSnapshotPlatform snapshot;
 
   final String? previousSiblingKey;
+  final EventType type;
 }
 
 /// A DataSnapshot contains data from a Firebase Database location.

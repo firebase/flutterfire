@@ -22,6 +22,7 @@ public class Constants {
 
   public static final String COMMITTED = "committed";
 
+  public static final String PARAMETERS = "parameters";
   public static final String ORDER_BY = "orderBy";
   public static final Object CHILD = "child";
   public static final String ORDER_BY_CHILD_KEY = "orderByChildKey";

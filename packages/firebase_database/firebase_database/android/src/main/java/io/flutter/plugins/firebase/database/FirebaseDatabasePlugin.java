@@ -24,8 +24,10 @@ import com.google.firebase.database.OnDisconnect;
 import com.google.firebase.database.Query;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.flutter.Log;
@@ -39,7 +41,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 
 /**
@@ -52,7 +53,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
   private BinaryMessenger messenger;
 
   private final HashMap<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
-  private final HashMap<String, Integer> streamHandlerIds = new HashMap<>();
+  private final Set<String> eventChannels = new HashSet<>();
   private Activity activity;
 
   @Override
@@ -117,10 +118,14 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     return database.getReference(path);
   }
 
+  @SuppressWarnings("unchecked")
   private Query getQuery(Map<String, Object> arguments) {
     final DatabaseReference ref = getReference(arguments);
     final QueryBuilder qb = new QueryBuilder(ref);
-    return qb.build(arguments);
+
+    final Object params = arguments.get(Constants.PARAMETERS);
+    final Map<String, Object> queryParams = (Map<String, Object>) Objects.requireNonNull(params);
+    return qb.build(queryParams);
   }
 
   private Task<Void> goOnline(Map<String, Object> arguments) {
@@ -293,33 +298,40 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       });
   }
 
+  @SuppressWarnings("unchecked")
   private Task<String> observe(Map<String, Object> arguments) {
     return Tasks.call(
       cachedThreadPool,
       () -> {
         final Query query = getQuery(arguments);
         final String path = (String) arguments.get(Constants.PATH);
-        final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
 
-        final String eventChannelKey = METHOD_CHANNEL_NAME + "/" + path + "/" + eventType;
-        int id;
+        final Map<String, Object> parameters = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
+        final String queryParams = QueryBuilder.buildQueryParams(parameters);
 
-        if (streamHandlerIds.containsKey(eventChannelKey)) {
-          id = Objects.requireNonNull(streamHandlerIds.get(eventChannelKey));
-          id++;
-        } else {
-          id = 0;
+        String eventChannelName = METHOD_CHANNEL_NAME + "/" + path;
+
+        if (queryParams.length() > 0) {
+          eventChannelName = eventChannelName + "?" + queryParams;
         }
 
-        streamHandlerIds.put(eventChannelKey, id + 1);
+        Log.d("firebase_database", "Channel name: " + eventChannelName);
 
-        final String eventChannelName = eventChannelKey + "?id=" + id;
+        if (eventChannels.contains(eventChannelName)) {
+          Log.d("firebase_database", "got from cache");
+          return eventChannelName;
+        }
+
+        Log.d("firebase_database", "created new");
 
         final StreamHandler streamHandler = new EventStreamHandler(query);
         final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
         eventChannel.setStreamHandler(streamHandler);
 
         streamHandlers.put(eventChannel, streamHandler);
+
+        Log.d("firebase_database", "add " + eventChannelName + " to eventChannels map");
+        eventChannels.add(eventChannelName);
 
         return eventChannelName;
       });
@@ -498,6 +510,6 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     }
 
     streamHandlers.clear();
-    streamHandlerIds.clear();
+    eventChannels.clear();
   }
 }

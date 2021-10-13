@@ -45,24 +45,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    init();
+    super.initState();
+  }
+
+  Future<void> init() async {
     _counterRef = FirebaseDatabase.instance.ref('counter');
 
     final database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.ref('messages');
 
-    database.setLoggingEnabled(true);
+    try {
+      await database.setLoggingEnabled(true);
 
-    if (!kIsWeb) {
-      database.setPersistenceEnabled(true);
-      database.setPersistenceCacheSizeBytes(10000000);
-      _counterRef.keepSynced(true);
+      if (!kIsWeb) {
+        await database.setPersistenceEnabled(true);
+        await database.setPersistenceCacheSizeBytes(10000000);
+        await _counterRef.keepSynced(true);
+      }
+    } catch (err) {
+      print('Configuration failed: $err');
     }
 
-    _counterRef.get().then((DataSnapshot? snapshot) {
+    try {
+      final counterSnapshot = await _counterRef.get();
+
       print(
-        'Connected to directly configured database and read ${snapshot!.value}',
+        'Connected to directly configured database and read '
+        '${counterSnapshot.value}',
       );
-    });
+    } catch (err) {
+      print(err);
+    }
 
     _counterSubscription = _counterRef.onValue.listen(
       (Event event) {
@@ -90,8 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Error: ${error.code} ${error.message}');
       },
     );
-
-    super.initState();
   }
 
   @override

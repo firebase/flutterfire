@@ -1,12 +1,14 @@
 package io.flutter.plugins.firebase.database;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 public class QueryBuilder {
   private Query query;
@@ -14,6 +16,32 @@ public class QueryBuilder {
   public QueryBuilder(@NonNull DatabaseReference ref) {
     query = ref;
   }
+
+  static String buildQueryParams(@Nullable Map<String, Object> parameters) {
+    if (parameters == null) return "";
+
+    final TreeMap<String, Object> sortedParams = new TreeMap<>(parameters);
+
+    final StringBuilder qsb = new StringBuilder();
+    boolean empty = true;
+
+    for (String key : sortedParams.keySet()) {
+      if (empty) {
+        empty = false;
+      } else {
+        qsb.append('&');
+      }
+
+      final Object value = sortedParams.get(key);
+
+      qsb.append(key);
+      qsb.append('=');
+      qsb.append(value);
+    }
+
+    return qsb.toString();
+  }
+
 
   public Query build(Map<String, Object> parameters) {
     if (parameters == null) return query;

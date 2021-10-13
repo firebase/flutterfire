@@ -93,24 +93,42 @@ class QueryWeb extends QueryPlatform {
   Stream<EventPlatform> observe(EventType eventType) {
     switch (eventType) {
       case EventType.childAdded:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildAdded);
+        return _webStreamToPlatformStream(
+          eventType,
+          _firebaseQuery.onChildAdded,
+        );
       case EventType.childChanged:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildChanged);
+        return _webStreamToPlatformStream(
+          eventType,
+          _firebaseQuery.onChildChanged,
+        );
       case EventType.childMoved:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildMoved);
+        return _webStreamToPlatformStream(
+          eventType,
+          _firebaseQuery.onChildMoved,
+        );
       case EventType.childRemoved:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildRemoved);
+        return _webStreamToPlatformStream(
+          eventType,
+          _firebaseQuery.onChildRemoved,
+        );
       case EventType.value:
-        return _webStreamToPlatformStream(_firebaseQuery.onValue);
+        return _webStreamToPlatformStream(eventType, _firebaseQuery.onValue);
       default:
         throw Exception("Invalid event type: $eventType");
     }
   }
 
   Stream<EventPlatform> _webStreamToPlatformStream(
-      Stream<database_interop.QueryEvent> stream) {
-    return stream.map((database_interop.QueryEvent event) =>
-        fromWebEventToPlatformEvent(event));
+    EventType eventType,
+    Stream<database_interop.QueryEvent> stream,
+  ) {
+    return stream.map(
+      (database_interop.QueryEvent event) => fromWebEventToPlatformEvent(
+        eventType,
+        event,
+      ),
+    );
   }
 
   QueryPlatform _withQuery(newQuery) {
