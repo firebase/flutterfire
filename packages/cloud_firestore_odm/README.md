@@ -182,9 +182,8 @@ To do that, you first must create a root collection as described previously. Fro
 annotations to a collection reference for defining sub-collections:
 
 ```dart
-
 @Collection<Person>('/persons')
-@Collection<Friend>('/persons/*/friends', name: 'friends') // defines a sub-collection "friends"
+@Collection<Friend>('/persons/*/friends') // defines a sub-collection "friends"
 final personsRef = PersonCollectionReference();
 ```
 
@@ -195,6 +194,26 @@ void main() async {
   PersonDocumentReference johnRef = personsRef.doc('john');
 
   FriendQuerySnapshot johnFriends = await johnRef.friends.get();
+}
+```
+
+#### Specifying a custom name for the sub-collection
+
+The `@Collection` annotation allows specifying a custom name to access your 
+collection reference.
+
+This is helpful in the event where you want your sub-collection to be manipulated
+using a name other than the collection ID:
+
+```dart
+@Collection<Person>('/persons')
+@Collection<Friend>('/persons/*/friends', name: 'myFriendList')
+final personsRef = PersonCollectionReference();
+
+void main() async {
+  PersonDocumentReference johnRef = personsRef.doc('john');
+
+  FriendQuerySnapshot johnFriends = await johnRef.myFriendList.get();
 }
 ```
 
