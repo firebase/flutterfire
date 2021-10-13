@@ -59,7 +59,7 @@ Once you've defined your models (or updated them) you'll need run the code gener
 Build once:
 
 ```sh
-flutter pub run build_runner watch --delete-conflicting-outputs
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
 Or, continuously watch for changes and rebuild with the following command:
