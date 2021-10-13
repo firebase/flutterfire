@@ -235,7 +235,7 @@ class MyWidget extends StatelessWidget {
           if (!snapshot.hasData) return Text('loading');
 
           Person? person = snapshot.requireData.data();
-          if (person == null) return Text('The document "john" does not exists"');
+          if (person == null) return Text('The document "john" does not exist.');
 
           return Text(person.name);
         }
@@ -261,7 +261,7 @@ This includes:
   personsRef.whereAge(isGreaterThan: 18);
   ```
 
-Collections also contains more classical methods like `personsRef.limit(1)`.
+Collections also contain more classical methods like `personsRef.limit(1)`.
 
 Queries can then be used with `FirestoreBuilder` as usual:
 
