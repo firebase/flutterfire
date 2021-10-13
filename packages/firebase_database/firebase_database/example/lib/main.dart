@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -14,10 +13,13 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp app = await Firebase.initializeApp();
-  runApp(MaterialApp(
-    title: 'Flutter Database Example',
-    home: MyHomePage(app: app),
-  ));
+
+  runApp(
+    MaterialApp(
+      title: 'Flutter Database Example',
+      home: MyHomePage(app: app),
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -43,10 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    super.initState();
-    // Demonstrates configuring to the database using a default instance
     _counterRef = FirebaseDatabase.instance.ref('counter');
-    // Demonstrates configuring the database directly
+
     final database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.ref('messages');
 
@@ -60,27 +60,38 @@ class _MyHomePageState extends State<MyHomePage> {
 
     _counterRef.get().then((DataSnapshot? snapshot) {
       print(
-          'Connected to directly configured database and read ${snapshot!.value}');
+        'Connected to directly configured database and read ${snapshot!.value}',
+      );
     });
 
-    _counterSubscription = _counterRef.onValue.listen((Event event) {
-      setState(() {
-        _error = null;
-        _counter = event.snapshot.value ?? 0;
-      });
-    }, onError: (Object o) {
-      final DatabaseError error = o as DatabaseError;
-      setState(() {
-        _error = error;
-      });
-    });
-    _messagesSubscription =
-        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
-    }, onError: (Object o) {
-      final DatabaseError error = o as DatabaseError;
-      print('Error: ${error.code} ${error.message}');
-    });
+    _counterSubscription = _counterRef.onValue.listen(
+      (Event event) {
+        setState(() {
+          _error = null;
+          _counter = event.snapshot.value ?? 0;
+        });
+      },
+      onError: (Object o) {
+        final DatabaseError error = o as DatabaseError;
+        setState(() {
+          _error = error;
+        });
+      },
+    );
+
+    final messagesQuery = _messagesRef.limitToLast(10);
+
+    _messagesSubscription = messagesQuery.onChildAdded.listen(
+      (Event event) {
+        print('Child added: ${event.snapshot.value}');
+      },
+      onError: (Object o) {
+        final DatabaseError error = o as DatabaseError;
+        print('Error: ${error.code} ${error.message}');
+      },
+    );
+
+    super.initState();
   }
 
   @override
@@ -99,15 +110,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _incrementAsTransaction() async {
-    // Increment counter in transaction.
-    final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) {
+    final transactionResult = await _counterRef.runTransaction((mutableData) {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });
 
     if (transactionResult.committed) {
-      await _messagesRef.push().set(<String, String>{
+      final newMessageRef = _messagesRef.push();
+      await newMessageRef.set(<String, String>{
         _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
       });
     } else {
@@ -118,6 +128,21 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  Future<void> _deleteMessage(DataSnapshot snapshot) async {
+    final messageRef = _messagesRef.child(snapshot.key!);
+    await messageRef.remove();
+  }
+
+  void _setAnchorToBottom(bool? value) {
+    if (value == null) {
+      return;
+    }
+
+    setState(() {
+      _anchorToBottom = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('Flutter Database Example'),
       ),
       body: Column(
-        children: <Widget>[
+        children: [
           Flexible(
             child: Center(
               child: _error == null
@@ -139,19 +164,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ElevatedButton(
-              onPressed: () async {
-                await _incrementAsTransaction();
-              },
-              child: const Text('Increment as transaction')),
+            onPressed: _incrementAsTransaction,
+            child: const Text('Increment as transaction'),
+          ),
           ListTile(
             leading: Checkbox(
-              onChanged: (bool? value) {
-                if (value != null) {
-                  setState(() {
-                    _anchorToBottom = value;
-                  });
-                }
-              },
+              onChanged: _setAnchorToBottom,
               value: _anchorToBottom,
             ),
             title: const Text('Anchor to bottom'),
@@ -161,19 +179,15 @@ class _MyHomePageState extends State<MyHomePage> {
               key: ValueKey<bool>(_anchorToBottom),
               query: _messagesRef,
               reverse: _anchorToBottom,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
+              itemBuilder: (context, snapshot, animation, index) {
                 return SizeTransition(
                   sizeFactor: animation,
                   child: ListTile(
                     trailing: IconButton(
-                      onPressed: () =>
-                          _messagesRef.child(snapshot.key!).remove(),
+                      onPressed: () => _deleteMessage(snapshot),
                       icon: const Icon(Icons.delete),
                     ),
-                    title: Text(
-                      '$index: ${snapshot.value.toString()}',
-                    ),
+                    title: Text('$index: ${snapshot.value.toString()}'),
                   ),
                 );
               },
