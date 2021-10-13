@@ -206,8 +206,8 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
 
   /// Unlinks a provider with [providerId] from a user account.
   Future<User> unlink(String providerId) =>
-      handleThenable(jsObject.unlink(providerId)).then(
-          User.getInstance as FutureOr<User> Function(auth_interop.UserJsImpl));
+      handleThenable(jsObject.unlink(providerId))
+          .then((user) => User.getInstance(user)!);
 
   /// Updates the user's e-mail address to [newEmail].
   Future<void> updateEmail(String newEmail) =>

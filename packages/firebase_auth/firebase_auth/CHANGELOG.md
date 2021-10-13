@@ -1,3 +1,7 @@
+## 3.1.3
+
+ - **REFACTOR**: migrate example app to null-safety (#7111).
+
 ## 3.1.2
 
  - **FIX**: allow setLanguage to accept null (#7050).

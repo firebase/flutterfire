@@ -14,7 +14,6 @@ import com.google.firebase.FirebaseOptions;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,19 +57,6 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
 
   private FlutterFirebaseCorePlugin(Context applicationContext) {
     this.applicationContext = applicationContext;
-  }
-
-  /**
-   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
-   *
-   * <p>Calling this will register the plugin with the passed registrar. However plugins initialized
-   * this way won't react to changes in activity or context, unlike {@link
-   * FlutterFirebaseCorePlugin}.
-   */
-  @SuppressWarnings("unused")
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FlutterFirebaseCorePlugin(registrar.context()));
   }
 
   @Override
@@ -184,7 +170,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
         cachedThreadPool,
         () -> {
           String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-          boolean enabled = (boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
+          Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
           FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
           firebaseApp.setDataCollectionDefaultEnabled(enabled);
           return null;

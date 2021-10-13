@@ -1,3 +1,7 @@
+## 10.0.5
+
+ - **FIX**: remove https port number from `downloadUrl` for `iOS` (#7097).
+
 ## 10.0.4
 
  - **FIX**: fix localhost url parsing for Storage Emulator (#7003).
