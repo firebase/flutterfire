@@ -39,7 +39,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   final FirebaseApp? app;
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAnalyticsPlatform.instanceFor({FirebaseApp? app}) {
+  factory FirebaseAnalyticsPlatform.instanceFor({required FirebaseApp app}) {
     return FirebaseAnalyticsPlatform.instance.delegateFor(app: app);
   }
 
@@ -57,10 +57,9 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  /// Enables delegates to create new instances of themselves if a none default
-  /// [FirebaseApp] instance or region is required by the user.
+  /// Enables delegates to create new instances of themselves
   @protected
-  FirebaseAnalyticsPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

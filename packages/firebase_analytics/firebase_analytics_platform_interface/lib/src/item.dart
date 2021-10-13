@@ -83,28 +83,50 @@ class Item {
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
-      'affilitation': affilitation,
-      'coupon': coupon,
-      'creative_name': creative_name,
-      'creative_slot': creative_slot,
-      'discount': discount,
-      'index': index,
-      'item_brand': item_brand,
-      'item_category': item_category,
-      'item_category2': item_category2,
-      'item_category3': item_category3,
-      'item_category4': item_category4,
-      'item_category5': item_category5,
-      'item_id': item_id,
-      'item_list_id': item_list_id,
-      'item_list_name': item_list_name,
-      'item_name': item_name,
-      'item_variant': item_variant,
-      'location_id': location_id,
-      'price': price,
-      'promotion_id': promotion_id,
-      'promotion_name': promotion_name,
-      'quantity': quantity,
+      if(affilitation != null)
+        'affilitation': affilitation,
+      if(coupon != null)
+        'coupon': coupon,
+      if(creative_name != null)
+        'creative_name': creative_name,
+      if(creative_slot != null)
+        'creative_slot': creative_slot,
+      if(discount != null)
+        'discount': discount,
+      if(index != null)
+        'index': index,
+      if(item_brand != null)
+        'item_brand': item_brand,
+      if(item_category != null)
+        'item_category': item_category,
+      if(item_category2 != null)
+        'item_category2': item_category2,
+      if(item_category3 != null)
+        'item_category3': item_category3,
+      if(item_category4 != null)
+        'item_category4': item_category4,
+      if(item_category5 != null)
+        'item_category5': item_category5,
+      if(item_id != null)
+        'item_id': item_id,
+      if(item_list_id != null)
+        'item_list_id': item_list_id,
+      if(item_list_name != null)
+        'item_list_name': item_list_name,
+      if(item_name != null)
+        'item_name': item_name,
+      if(item_variant != null)
+        'item_variant': item_variant,
+      if(location_id != null)
+        'location_id': location_id,
+      if(price != null)
+        'price': price,
+      if(promotion_id != null)
+        'promotion_id': promotion_id,
+      if(promotion_name != null)
+        'promotion_name': promotion_name,
+      if(quantity != null)
+        'quantity': quantity,
     };
   }
 

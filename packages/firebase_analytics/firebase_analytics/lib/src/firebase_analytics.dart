@@ -24,8 +24,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }
 
   //  Analytics supports multiple Firebase Apps for web only. Default app only for iOS & android.
-  factory FirebaseAnalytics._instanceFor({required FirebaseApp app}) {
-    if (kIsWeb) {
+  factory FirebaseAnalytics.instanceFor({required FirebaseApp app}) {
+    if (kIsWeb || app.name == defaultFirebaseAppName) {
       return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
         return FirebaseAnalytics._(app: app);
       });
@@ -43,7 +43,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAnalytics get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
-    return FirebaseAnalytics._instanceFor(app: defaultAppInstance);
+    return FirebaseAnalytics.instanceFor(app: defaultAppInstance);
   }
 
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
@@ -62,6 +62,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     if (name.startsWith(kReservedPrefix)) {
       throw ArgumentError.value(name, 'name',
           'Prefix "$kReservedPrefix" is reserved and cannot be used.');
+    }
+
+    if (parameters?['items'] is List<Item>) {
+      parameters!['items'] = (parameters['items'] as List<Item>)
+          .map((item) => item.asMap())
+          .toList();
     }
 
     await _delegate.logEvent(

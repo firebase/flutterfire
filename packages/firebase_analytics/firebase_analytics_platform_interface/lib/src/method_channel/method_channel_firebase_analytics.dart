@@ -16,7 +16,7 @@ import '../platform_interface/platform_interface_firebase_analytics.dart';
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseAnalytics({FirebaseApp? app}) : super(app);
+  MethodChannelFirebaseAnalytics({required FirebaseApp app}) : super(app);
 
   /// Internal stub class initializer.
   ///
@@ -30,8 +30,14 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return MethodChannelFirebaseAnalytics._();
   }
 
-  static const MethodChannel _channel =
+  static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
+
+  /// Gets a [FirebaseAnalyticsPlatform]
+  @override
+  FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
+    return MethodChannelFirebaseAnalytics(app: app);
+  }
 
   @override
   Future<void> logEvent({
@@ -40,7 +46,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     // TODO - callOptions only used for web. Warn user?
     CallOptions? callOptions,
   }) {
-    return _channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+    return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
       'eventName': name,
       'parameters': parameters,
     });
@@ -49,7 +55,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setConsent(
       {ConsentStatus? adStorage, ConsentStatus? analyticsStorage}) async {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'Analytics#setConsent',
       <String, Object?>{
         'adStorage': adStorage,
@@ -61,7 +67,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) async {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'Analytics#setDefaultEventParameters',
       defaultParameters,
     );
@@ -69,7 +75,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
-    return _channel.invokeMethod<void>(
+    return channel.invokeMethod<void>(
       'Analytics#setAnalyticsCollectionEnabled',
       <String, bool?>{
         'enabled': enabled,
@@ -82,7 +88,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) {
-    return _channel.invokeMethod<void>('Analytics#setUserId', id);
+    return channel.invokeMethod<void>('Analytics#setUserId', id);
   }
 
   @override
@@ -92,7 +98,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     // TODO warn user callOptions only used for web
     CallOptions? callOptions,
   }) {
-    return _channel
+    return channel
         .invokeMethod<void>('Analytics#setCurrentScreen', <String, String?>{
       'screenName': screenName,
       'screenClassOverride': screenClassOverride,
@@ -105,7 +111,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     required Object value,
     CallOptions? callOptions,
   }) {
-    return _channel
+    return channel
         .invokeMethod<void>('Analytics#setUserProperty', <String, Object?>{
       'name': name,
       'value': value,
@@ -114,13 +120,13 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> resetAnalyticsData() {
-    return _channel.invokeMethod<void>('Analytics#resetAnalyticsData');
+    return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
   }
 
   @override
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     if (Platform.isAndroid) {
-      return _channel.invokeMethod<void>(
+      return channel.invokeMethod<void>(
           'Analytics#setSessionTimeoutDuration', <String, int>{
         'milliseconds': timeout.inMilliseconds,
       });
