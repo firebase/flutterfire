@@ -16,16 +16,9 @@ class MethodChannelDatabase extends DatabasePlatform {
       : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
+      print(call.method);
+
       switch (call.method) {
-        case 'Event':
-          EventPlatform event = EventPlatform(call.arguments);
-          _observers[call.arguments['handle']]?.add(event);
-          return null;
-        case 'Error':
-          final DatabaseErrorPlatform error =
-              DatabaseErrorPlatform(call.arguments['error']);
-          _observers[call.arguments['handle']]?.addError(error);
-          return null;
         case 'DoTransaction':
           final MutableData mutableData =
               MutableData.private(call.arguments['snapshot']);
@@ -93,16 +86,15 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   @override
-  Future<bool> setPersistenceEnabled(bool enabled) async {
-    final bool? result = await channel.invokeMethod<bool>(
+  Future<void> setPersistenceEnabled(bool enabled) async {
+    await channel.invokeMethod<void>(
       'FirebaseDatabase#setPersistenceEnabled',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
         'enabled': enabled,
       },
     );
-    return result!;
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -123,27 +115,26 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   @override
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
-    final bool? result = await channel.invokeMethod<bool>(
+  Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
+    return channel.invokeMethod<void>(
       'FirebaseDatabase#setPersistenceCacheSizeBytes',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
         'cacheSize': cacheSize,
       },
     );
-    return result!;
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
   @override
-  Future<void> setLoggingEnabled(bool enabled) {
-    return channel.invokeMethod<void>(
+  Future<void> setLoggingEnabled(bool enabled) async {
+    await channel.invokeMethod<void>(
       'FirebaseDatabase#setLoggingEnabled',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
         'enabled': enabled
       },
@@ -157,7 +148,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     return channel.invokeMethod<void>(
       'FirebaseDatabase#goOnline',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
       },
     );
@@ -170,7 +161,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     return channel.invokeMethod<void>(
       'FirebaseDatabase#goOffline',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
       },
     );
@@ -191,7 +182,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     return channel.invokeMethod<void>(
       'FirebaseDatabase#purgeOutstandingWrites',
       <String, dynamic>{
-        'app': app?.name,
+        'appName': app?.name,
         'databaseURL': databaseURL,
       },
     );

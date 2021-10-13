@@ -21,7 +21,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     return MethodChannelDatabase.channel.invokeMethod<void>(
       'OnDisconnect#set',
       <String, dynamic>{
-        'app': database.app?.name,
+        'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path,
         'value': value,
@@ -38,7 +38,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     return MethodChannelDatabase.channel.invokeMethod<void>(
       'OnDisconnect#cancel',
       <String, dynamic>{
-        'app': database.app?.name,
+        'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path
       },
@@ -50,7 +50,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     return MethodChannelDatabase.channel.invokeMethod<void>(
       'OnDisconnect#update',
       <String, dynamic>{
-        'app': database.app?.name,
+        'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path,
         'value': value

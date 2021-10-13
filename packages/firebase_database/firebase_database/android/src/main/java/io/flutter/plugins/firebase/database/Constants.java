@@ -50,4 +50,6 @@ public class Constants {
   public static final String PREVIOUS_CHILD_NAME = "previousChildName";
 
   public static final String METHOD_DO_TRANSACTION = "DoTransaction";
+  public static final String TRANSACTION_KEY = "transactionKey";
+  public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
 }

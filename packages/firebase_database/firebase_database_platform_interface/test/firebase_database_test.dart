@@ -101,15 +101,15 @@ void main() {
     });
 
     test('setPersistenceEnabled', () async {
-      expect(await database.setPersistenceEnabled(false), true);
-      expect(await database.setPersistenceEnabled(true), true);
+      await database.setPersistenceEnabled(false);
+      await database.setPersistenceEnabled(true);
       expect(
         log,
         <Matcher>[
           isMethodCall(
             'FirebaseDatabase#setPersistenceEnabled',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
               'enabled': false,
             },
@@ -117,7 +117,7 @@ void main() {
           isMethodCall(
             'FirebaseDatabase#setPersistenceEnabled',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
               'enabled': true,
             },
@@ -127,14 +127,14 @@ void main() {
     });
 
     test('setPersistentCacheSizeBytes', () async {
-      expect(await database.setPersistenceCacheSizeBytes(42), true);
+      await database.setPersistenceCacheSizeBytes(42);
       expect(
         log,
         <Matcher>[
           isMethodCall(
             'FirebaseDatabase#setPersistenceCacheSizeBytes',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
               'cacheSize': 42,
             },
@@ -151,7 +151,7 @@ void main() {
           isMethodCall(
             'FirebaseDatabase#goOnline',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
             },
           ),
@@ -167,7 +167,7 @@ void main() {
           isMethodCall(
             'FirebaseDatabase#goOffline',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
             },
           ),
@@ -183,7 +183,7 @@ void main() {
           isMethodCall(
             'FirebaseDatabase#purgeOutstandingWrites',
             arguments: <String, dynamic>{
-              'app': app.name,
+              'appName': app.name,
               'databaseURL': databaseURL,
             },
           ),
@@ -207,7 +207,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
@@ -217,7 +217,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'bar',
                 'value': value,
@@ -227,7 +227,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'baz',
                 'value': {
@@ -250,7 +250,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#update',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
@@ -269,7 +269,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#setPriority',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'priority': priority,
@@ -294,7 +294,7 @@ void main() {
             isMethodCall(
               'DatabaseReference#runTransaction',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'transactionKey': 0,
@@ -326,7 +326,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
@@ -336,7 +336,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'bar',
                 'value': value,
@@ -346,7 +346,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'psi',
                 'value': value,
@@ -356,7 +356,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'por',
                 'value': value,
@@ -375,7 +375,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#update',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
@@ -392,7 +392,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#cancel',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
               },
@@ -408,7 +408,7 @@ void main() {
             isMethodCall(
               'OnDisconnect#set',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': null,
@@ -431,7 +431,7 @@ void main() {
             isMethodCall(
               'Query#keepSynced',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
@@ -467,7 +467,7 @@ void main() {
             isMethodCall(
               'Query#keepSynced',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': expectedParameters,
@@ -568,7 +568,7 @@ void main() {
             isMethodCall(
               'Query#observe',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
@@ -578,7 +578,7 @@ void main() {
             isMethodCall(
               'Query#removeObserver',
               arguments: <String, dynamic>{
-                'app': app.name,
+                'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},

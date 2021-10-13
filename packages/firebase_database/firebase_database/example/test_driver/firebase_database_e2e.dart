@@ -18,43 +18,48 @@ final List<Map<String, Object>> testDocuments = [
 
 late FirebaseDatabase database;
 
+Future<void> prepareData() async {
+  await database.ref('flutterfire').set(0);
+
+  final orderedRef = database.ref('ordered');
+
+  await Future.wait(testDocuments.map((map) {
+    String key = map['ref']! as String;
+    return orderedRef.child(key).set(map);
+  }));
+}
+
+const MAX_CACHE_SIZE = 100 * 1024 * 1024;
+const MIN_CACHE_SIZE = 1042 * 1024;
+
 void testsMain() {
   setUpAll(() async {
+    database = FirebaseDatabase.instance;
     await Firebase.initializeApp();
   });
 
-  setUp(() async {
-    database = FirebaseDatabase.instance;
-    await database.ref('flutterfire').set(0);
-
-    final orderedRef = database.ref('ordered');
-
-    await Future.wait(testDocuments.map((map) {
-      String key = map['ref']! as String;
-      return orderedRef.child(key).set(map);
-    }));
-  });
-
-  group('FirebaseDatabase', () {
+  group('FirebaseDatabase configuration', () {
     test('setPersistenceCacheSizeBytes Integer', () async {
-      await database.setPersistenceCacheSizeBytes(2147483647);
+      await database.setPersistenceCacheSizeBytes(MIN_CACHE_SIZE);
       // Skipped because it is not supported on web
     }, skip: kIsWeb);
 
     test('setPersistenceCacheSizeBytes Long', () async {
-      await database.setPersistenceCacheSizeBytes(2147483648);
+      await database.setPersistenceCacheSizeBytes(MAX_CACHE_SIZE);
       // Skipped because it is not supported on web
     }, skip: kIsWeb);
 
     test('setLoggingEnabled to true', () async {
       await database.setLoggingEnabled(true);
-      // Skipped because it needs to be initialized first on android.
-    }, skip: !kIsWeb && Platform.isAndroid);
+    });
 
     test('setLoggingEnabled to false', () async {
       await database.setLoggingEnabled(false);
-      // Skipped because it needs to be initialized first on android.
-    }, skip: !kIsWeb && Platform.isAndroid);
+    });
+  });
+
+  group('DatabaseReference', () {
+    setUp(prepareData);
 
     group('runTransaction', () {
       test('runTransaction', () async {
@@ -88,6 +93,8 @@ void testsMain() {
     });
 
     group('#ref()', () {
+      setUp(prepareData);
+
       test('returns a correct reference', () async {
         final ref = FirebaseDatabase.instance.ref('flutterfire');
         final snapshot = await ref.get();

@@ -19,44 +19,24 @@ class MethodChannelQuery extends QueryPlatform {
         );
 
   @override
-  Stream<EventPlatform> observe(EventType eventType) {
-    late Future<int> _handle;
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    late StreamController<EventPlatform> controller; // ignore: close_sinks
-    controller = StreamController<EventPlatform>.broadcast(
-      onListen: () {
-        _handle = MethodChannelDatabase.channel.invokeMethod<int>(
-          'Query#observe',
-          <String, dynamic>{
-            'app': database.app?.name,
-            'databaseURL': database.databaseURL,
-            'path': path,
-            'parameters': parameters,
-            'eventType': eventType.toString(),
-          },
-        ).then((value) {
-          MethodChannelDatabase._observers[value!] = controller;
-          return value;
-        });
-      },
-      onCancel: () {
-        _handle.then((int handle) async {
-          await MethodChannelDatabase.channel.invokeMethod<int>(
-            'Query#removeObserver',
-            <String, dynamic>{
-              'app': database.app?.name,
-              'databaseURL': database.databaseURL,
-              'path': path,
-              'parameters': parameters,
-              'handle': handle,
-            },
-          );
-          MethodChannelDatabase._observers.remove(handle);
-        });
+  Stream<EventPlatform> observe(EventType eventType) async* {
+    final channelName =
+        await MethodChannelDatabase.channel.invokeMethod<String>(
+      'Query#observe',
+      <String, dynamic>{
+        'appName': database.app?.name,
+        'databaseURL': database.databaseURL,
+        'path': path,
+        'parameters': parameters,
+        'eventType': eventType.toString(),
       },
     );
-    return controller.stream;
+
+    final eventChannel = EventChannel(channelName!);
+
+    yield* eventChannel
+        .receiveBroadcastStream()
+        .map((event) => EventPlatform(event));
   }
 
   /// Slash-delimited path representing the database location of this query.
@@ -70,7 +50,7 @@ class MethodChannelQuery extends QueryPlatform {
         await MethodChannelDatabase.channel.invokeMethod<Map<dynamic, dynamic>>(
       'Query#get',
       <String, dynamic>{
-        'app': database.app?.name,
+        'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path,
       },
@@ -212,7 +192,7 @@ class MethodChannelQuery extends QueryPlatform {
     return MethodChannelDatabase.channel.invokeMethod<void>(
       'Query#keepSynced',
       <String, dynamic>{
-        'app': database.app?.name,
+        'appName': database.app?.name,
         'databaseURL': database.databaseURL,
         'path': path,
         'parameters': parameters,

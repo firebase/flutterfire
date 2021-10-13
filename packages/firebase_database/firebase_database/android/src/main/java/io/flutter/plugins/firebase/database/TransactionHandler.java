@@ -1,5 +1,8 @@
 package io.flutter.plugins.firebase.database;
 
+import android.app.Activity;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,15 +16,20 @@ import com.google.firebase.database.Transaction.Handler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import io.flutter.plugin.common.MethodChannel;
 
 public class TransactionHandler implements Handler {
   private final MethodChannel channel;
   private final TaskCompletionSource<HashMap<String, Object>> transactionCompletionSource;
+  private final int transactionKey;
+  private final Activity activity;
 
-  public TransactionHandler(@NonNull MethodChannel channel) {
+  public TransactionHandler(@NonNull MethodChannel channel, int transactionKey, Activity activity) {
     this.channel = channel;
+    this.transactionKey = transactionKey;
+    this.activity = activity;
     this.transactionCompletionSource = new TaskCompletionSource<>();
   }
 
@@ -32,19 +40,20 @@ public class TransactionHandler implements Handler {
   @NonNull
   @Override
   public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+    final Map<String, Object> snapshotMap = new HashMap<>();
     final Map<String, Object> transactionArgs = new HashMap<>();
-    final Map<String, Object> snapshot = new HashMap<>();
 
-    snapshot.put(Constants.KEY, currentData.getKey());
-    snapshot.put(Constants.VALUE, currentData.getValue());
+    snapshotMap.put(Constants.KEY, currentData.getKey());
+    snapshotMap.put(Constants.VALUE, currentData.getValue());
 
-    transactionArgs.put(Constants.SNAPSHOT, snapshot);
+    transactionArgs.put(Constants.SNAPSHOT, snapshotMap);
+    transactionArgs.put(Constants.TRANSACTION_KEY, transactionKey);
 
     try {
-      final TransactionExecutor executor = new TransactionExecutor(channel);
+      final TransactionExecutor executor = new TransactionExecutor(channel, activity);
       final Map<String, Object> updatedData = executor.exec(transactionArgs);
 
-      currentData.setValue(updatedData);
+      currentData.setValue(updatedData.get(Constants.VALUE));
       return Transaction.success(currentData);
     } catch (Exception e) {
       return Transaction.abort();
@@ -54,7 +63,7 @@ public class TransactionHandler implements Handler {
   @Override
   public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
     if (error != null) {
-      transactionCompletionSource.setException(error.toException());
+      transactionCompletionSource.setException(FlutterFirebaseDatabaseException.fromDatabaseError(error));
     } else if (currentData != null) {
       final HashMap<String, Object> result = new HashMap<>();
       final HashMap<String, Object> snapshot = new HashMap<>();

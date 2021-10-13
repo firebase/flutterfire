@@ -49,10 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // Demonstrates configuring the database directly
     final database = FirebaseDatabase(app: widget.app);
     _messagesRef = database.ref('messages');
-    _counterRef.get().then((DataSnapshot? snapshot) {
-      print(
-          'Connected to directly configured database and read ${snapshot!.value}');
-    });
 
     database.setLoggingEnabled(true);
 
@@ -61,6 +57,12 @@ class _MyHomePageState extends State<MyHomePage> {
       database.setPersistenceCacheSizeBytes(10000000);
       _counterRef.keepSynced(true);
     }
+
+    _counterRef.get().then((DataSnapshot? snapshot) {
+      print(
+          'Connected to directly configured database and read ${snapshot!.value}');
+    });
+
     _counterSubscription = _counterRef.onValue.listen((Event event) {
       setState(() {
         _error = null;

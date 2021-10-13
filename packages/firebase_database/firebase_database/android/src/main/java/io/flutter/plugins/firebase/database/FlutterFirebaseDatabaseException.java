@@ -79,6 +79,10 @@ public class FlutterFirebaseDatabaseException extends Exception {
     final FlutterFirebaseDatabaseException ffdbException;
     final Map<String, Object> details = new HashMap<>();
 
+    if (code.equals(UNKNOWN_ERROR_CODE)) {
+      message = e.getMessage();
+    }
+
     details.put(KEY_CODE, code);
     details.put(KEY_MESSAGE, message);
     details.put(KEY_ADDITIONAL_DATA, new HashMap<>());
