@@ -1,4 +1,5 @@
 name: cloud_firestore_odm_generator
+description: A code generator for cloud_firestore_odm.
 version: 1.0.0-dev.1
 
 environment:

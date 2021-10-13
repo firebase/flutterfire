@@ -1,4 +1,5 @@
 name: cloud_firestore_odm
+description: An ODM for Firebase Cloud Firestore (cloud_firestore).
 version: 1.0.0-dev.1
 
 environment:
