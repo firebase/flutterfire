@@ -6,7 +6,7 @@ targets:
 
 builders:
   cloud_firestore_odm_generator:
-    import: "package:cloud_firestore_odm_generator/builder.dart"
+    import: "package:cloud_firestore_odm_generator/cloud_firestore_odm_generator.dart"
     builder_factories: ["firebase"]
     build_extensions: { ".dart": [".firebase.g.dart"] }
     auto_apply: dependents
