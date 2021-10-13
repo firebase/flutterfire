@@ -277,7 +277,7 @@ FirestoreBuilder<PersonQuerySnapshot>(
 #### Optimizing rebuilds
 
 Through `FirestoreBuilder`, it is possible to optionally optimize widget rebuilds, using the `select` method on a
-reference. The basic idea is: rather than listening to the entire snapshot, `select` allows us to listen to only a part
+reference. The basic idea is; rather than listening to the entire snapshot, `select` allows us to listen to only a part
 of the snapshot.
 
 For example, if we have a document that returns a `Person` instance, we could voluntarily only listen to that
@@ -292,7 +292,7 @@ FirestoreBuilder<String>(
 );
 ```
 
-By doing so, how `Text` will rebuild only when the person's name changes. If that person's age changes, this won't
+By doing so, now `Text` will rebuild only when the person's name changes. If that person's age changes, this won't
 rebuild our `Text`.
 
 ----
