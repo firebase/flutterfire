@@ -20,23 +20,25 @@ import '../method_channel/method_channel_firebase_analytics.dart';
 /// `implements` this interface will be broken by newly added
 /// [FirebaseAnalyticsPlatform] methods.
 abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
-  /// Create an instance using [app]
-  FirebaseAnalyticsPlatform(this.app) : super(token: _token);
+  /// The [FirebaseApp] this instance was initialized with.
+  @protected
+  FirebaseApp? appInstance;
 
-  /// Only mock implementations should set this to `true`.
-  ///
-  /// Mockito mocks implement this class with `implements` which is forbidden
-  /// (see class docs). This property provides a backdoor for mocks to skip the
-  /// verification that the class isn't implemented with `implements`.
-  @visibleForTesting
-  bool get isMock => false;
+  /// Create an instance using [app]
+  FirebaseAnalyticsPlatform({this.appInstance}) : super(token: _token);
 
   static final Object _token = Object();
 
   static FirebaseAnalyticsPlatform? _instance;
 
-  /// The [FirebaseApp] this instance was initialized with
-  final FirebaseApp? app;
+  /// Returns the [FirebaseApp] for the current instance.
+  FirebaseApp get app {
+    if (appInstance == null) {
+      return Firebase.app();
+    }
+
+    return appInstance!;
+  }
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAnalyticsPlatform.instanceFor({required FirebaseApp app}) {
@@ -68,13 +70,13 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
       {required String name,
       Map<String, Object?>? parameters,
       CallOptions? callOptions}) {
-    throw UnimplementedError('logEvent() is not implemented on this platform');
+    throw UnimplementedError('logEvent() is not implemented');
   }
 
   /// Sets whether analytics collection is enabled for this app.
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     throw UnimplementedError(
-        'setAnalyticsCollectionEnabled() is not implemented on this platform');
+        'setAnalyticsCollectionEnabled() is not implemented');
   }
 
   /// Sets the user id.
@@ -84,7 +86,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     String? id,
     CallOptions? callOptions,
   }) {
-    throw UnimplementedError('setUserId() is not implemented on this platform');
+    throw UnimplementedError('setUserId() is not implemented');
   }
 
   /// Sets the current screen name, which specifies the current visual context
@@ -97,7 +99,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     CallOptions? callOptions,
   }) {
     throw UnimplementedError(
-        'setCurrentScreen() is not implemented on this platform');
+        'setCurrentScreen() is not implemented');
   }
 
   /// Sets a user property to the given value.
@@ -109,20 +111,20 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     CallOptions? callOptions,
   }) {
     throw UnimplementedError(
-        'setUserProperty() is not implemented on this platform');
+        'setUserProperty() is not implemented');
   }
 
   /// Clears all analytics data for this app from the device and resets the app
   /// instance id.
   Future<void> resetAnalyticsData() {
     throw UnimplementedError(
-        'resetAnalyticsData() is not implemented on this platform');
+        'resetAnalyticsData() is not implemented');
   }
 
   /// Sets the duration of inactivity that terminates the current session.
   Future<void> setSessionTimeoutDuration(Duration timeout) {
     throw UnimplementedError(
-        'setSessionTimeoutDuration() is not implemented on this platform');
+        'setSessionTimeoutDuration() is not implemented');
   }
 
   /// Sets the applicable end user consent state.
@@ -131,13 +133,13 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     ConsentStatus? analyticsStorage,
   }) {
     throw UnimplementedError(
-        'setConsent() is not implemented on this platform');
+        'setConsent() is not implemented');
   }
 
   /// Sets the applicable end user consent state.
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) {
     throw UnimplementedError(
-        'setDefaultEventParameters() is not implemented on this platform');
+        'setDefaultEventParameters() is not implemented');
   }
 }

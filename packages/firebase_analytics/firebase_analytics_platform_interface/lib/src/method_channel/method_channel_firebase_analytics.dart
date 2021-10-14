@@ -1,5 +1,5 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -16,13 +16,13 @@ import '../platform_interface/platform_interface_firebase_analytics.dart';
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseAnalytics({required FirebaseApp app}) : super(app);
+  MethodChannelFirebaseAnalytics({required FirebaseApp app}) : super(appInstance: app);
 
   /// Internal stub class initializer.
   ///
   /// When the user code calls an analytics method, the real instance is
   /// then initialized via the [delegateFor] method.
-  MethodChannelFirebaseAnalytics._() : super(null);
+  MethodChannelFirebaseAnalytics._() : super(appInstance: null);
 
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
