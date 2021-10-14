@@ -6,7 +6,9 @@ A collection of packages that generate Firestore bindings for Dart classes, allo
 
 ## Getting started
 
-> This package is a development preview, APIs may change or be removed.
+> ❗ This package is a development preview, APIs may change or be removed.
+
+> 📝 Feedback or issues should be reported on [this discussion thread](https://github.com/FirebaseExtended/flutterfire/discussions/7182). 
 
 ### 1) Add the ODM `dependencies` to your `pubspec.yaml`:
 
