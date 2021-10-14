@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setMessage('setUserProperty succeeded');
   }
 
-  Item itemCreator(){
+  Item itemCreator() {
     return Item(
       affilitation: 'affil',
       coupon: 'coup',
@@ -145,17 +145,16 @@ class _MyHomePageState extends State<MyHomePage> {
     await widget.analytics.logBeginCheckout(
       value: 123,
       currency: 'USD',
-      items: [ itemCreator(), itemCreator()],
+      items: [itemCreator(), itemCreator()],
     );
     await widget.analytics.logCampaignDetails(
-      source: 'source',
-      medium: 'medium',
-      campaign: 'campaign',
-      term:'term',
-      content: 'content',
-      aclid: 'aclid',
-      cp1: 'cp1'
-    );
+        source: 'source',
+        medium: 'medium',
+        campaign: 'campaign',
+        term: 'term',
+        content: 'content',
+        aclid: 'aclid',
+        cp1: 'cp1');
     await widget.analytics.logEarnVirtualCurrency(
       virtualCurrencyName: 'bitcoin',
       value: 345.66,
@@ -208,16 +207,12 @@ class _MyHomePageState extends State<MyHomePage> {
     await widget.analytics.logTutorialBegin();
     await widget.analytics.logTutorialComplete();
     await widget.analytics.logUnlockAchievement(id: 'all Firebase API covered');
-    await widget.analytics.logViewItem(
-     currency: 'usd',
-      value: 1000,
-      items: [itemCreator()]
-    );
+    await widget.analytics
+        .logViewItem(currency: 'usd', value: 1000, items: [itemCreator()]);
     await widget.analytics.logViewItemList(
-      itemListId: 't-shirt-4321',
-      itemListName: 'green t-shirt',
-      items: [itemCreator()]
-    );
+        itemListId: 't-shirt-4321',
+        itemListName: 'green t-shirt',
+        items: [itemCreator()]);
     await widget.analytics.logViewSearchResults(
       searchTerm: 'test search term',
     );

@@ -98,8 +98,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     String? screenClassOverride,
     CallOptions? callOptions,
   }) {
-    throw UnimplementedError(
-        'setCurrentScreen() is not implemented');
+    throw UnimplementedError('setCurrentScreen() is not implemented');
   }
 
   /// Sets a user property to the given value.
@@ -110,21 +109,18 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     required Object value,
     CallOptions? callOptions,
   }) {
-    throw UnimplementedError(
-        'setUserProperty() is not implemented');
+    throw UnimplementedError('setUserProperty() is not implemented');
   }
 
   /// Clears all analytics data for this app from the device and resets the app
   /// instance id.
   Future<void> resetAnalyticsData() {
-    throw UnimplementedError(
-        'resetAnalyticsData() is not implemented');
+    throw UnimplementedError('resetAnalyticsData() is not implemented');
   }
 
   /// Sets the duration of inactivity that terminates the current session.
   Future<void> setSessionTimeoutDuration(Duration timeout) {
-    throw UnimplementedError(
-        'setSessionTimeoutDuration() is not implemented');
+    throw UnimplementedError('setSessionTimeoutDuration() is not implemented');
   }
 
   /// Sets the applicable end user consent state.
@@ -132,14 +128,12 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     ConsentStatus? adStorage,
     ConsentStatus? analyticsStorage,
   }) {
-    throw UnimplementedError(
-        'setConsent() is not implemented');
+    throw UnimplementedError('setConsent() is not implemented');
   }
 
   /// Sets the applicable end user consent state.
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) {
-    throw UnimplementedError(
-        'setDefaultEventParameters() is not implemented');
+    throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }
 }
