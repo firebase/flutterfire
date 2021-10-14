@@ -1102,27 +1102,13 @@ const String _DESTINATION = 'destination';
 /// The arrival date, check-out date, or rental end date for the item.
 const String _END_DATE = 'end_date';
 
-/// Indicates that the associated event should either
-/// extend the current session or start a new session
-/// if no session was active when the event was logged.
-// const String _EXTENDED_SESSION = 'extend_session';
-
-/// Flight number for travel events.
-const String _FLIGHT_NUMBER = 'flight_number';
-
 /// Group/clan/guild id.
 const String _GROUP_ID = 'group_id';
-
-/// Item category.
-const String _ITEM_CATEGORY = 'item_category';
 
 const String _ITEMS = 'items';
 
 /// Item ID.
 const String _ITEM_ID = 'item_id';
-
-/// The Google Place ID that corresponds to the associated item.
-const String _ITEM_LOCATION_ID = 'item_location_id';
 
 /// The location associated with the event.
 const String _LOCATION_ID = 'location_id';
@@ -1132,21 +1118,6 @@ const String _ITEM_LIST_ID = 'item_list_id';
 
 /// The ID of the list in which the item was presented to the user
 const String _ITEM_LIST_NAME = 'item_list_name';
-
-/// Item Brand.
-// const String _ITEM_BRAND = 'item_brand';
-
-/// Item Variant.
-// const String _ITEM_VARIANT = 'item_variant';
-
-/// The list in which the item was presented to the user.
-// const String _ITEM_LIST = 'item_list';
-
-/// The checkout step (1..N).
-const String _CHECKOUT_STEP = 'checkout_step';
-
-/// Some option on a step in an ecommerce flow.
-const String _CHECKOUT_OPTION = 'checkout_option';
 
 /// The name of a creative used in a promotional spot.
 const String _CREATIVE_NAME = 'creative_name';
@@ -1172,9 +1143,6 @@ const String _LEVEL_NAME = 'level_name';
 /// The result of an operation (long).
 const String _SUCCESS = 'success';
 
-/// Location.
-const String _LOCATION = 'location';
-
 /// `CAMPAIGN_DETAILS` medium; used to identify a medium such as email or
 /// cost-per-click (cpc).
 const String _MEDIUM = 'medium';
@@ -1192,9 +1160,6 @@ const String _NUMBER_OF_ROOMS = 'number_of_rooms';
 
 /// Flight or Travel origin.
 const String _ORIGIN = 'origin';
-
-/// Purchase price (double).
-const String _PRICE = 'price';
 
 /// Purchase quantity (long).
 const String _QUANTITY = 'quantity';
