@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
@@ -464,6 +465,20 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
             e = (FlutterFirebaseDatabaseException) exception;
           } else if (exception instanceof DatabaseException) {
             e = FlutterFirebaseDatabaseException.fromDatabaseException((DatabaseException) exception);
+          } else if (exception instanceof TimeoutException) {
+            final int transactionKey = (int) arguments.get(Constants.TRANSACTION_KEY);
+            final int transactionTimeout = (int) arguments.get(Constants.TRANSACTION_TIMEOUT);
+
+            final Map<String, Object> details = new HashMap<>();
+
+            details.put(Constants.TRANSACTION_KEY, transactionKey);
+            details.put(Constants.TRANSACTION_TIMEOUT, transactionTimeout);
+
+            e = new FlutterFirebaseDatabaseException(
+              Constants.TRANSACTION_TIMEOUT_CODE,
+              "Transaction" + transactionKey + "took longer than " + transactionTimeout + "ms",
+              details
+            );
           } else {
             e = FlutterFirebaseDatabaseException.fromException(exception);
           }

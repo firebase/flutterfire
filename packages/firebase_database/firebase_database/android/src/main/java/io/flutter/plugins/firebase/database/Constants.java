@@ -54,5 +54,6 @@ public class Constants {
   public static final String TRANSACTION_KEY = "transactionKey";
   public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
 
-  public static final String ILLEGAL_CONFIGURATION_POINT = "wrong-configuration-point";
+  public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";
+  public static final String TRANSACTION_TIMEOUT_CODE = "transaction-timeout";
 }

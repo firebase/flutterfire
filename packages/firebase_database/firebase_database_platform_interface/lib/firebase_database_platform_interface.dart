@@ -13,6 +13,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+export 'src/firebase_database_exception.dart';
+
 part 'src/method_channel/method_channel_database.dart';
 part 'src/method_channel/method_channel_database_reference.dart';
 part 'src/method_channel/method_channel_on_disconnect.dart';

@@ -38,20 +38,20 @@ public class TransactionExecutor {
         @SuppressWarnings("unchecked")
         public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
           String message = errorMessage;
-          Map<String, Object> addtionalData = new HashMap<>();
+          Map<String, Object> additionalData = new HashMap<>();
 
           if (message == null) {
             message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE;
           }
 
           if (errorDetails instanceof Map) {
-            addtionalData = (Map<String, Object>) errorDetails;
+            additionalData = (Map<String, Object>) errorDetails;
           }
 
           final FlutterFirebaseDatabaseException e = new FlutterFirebaseDatabaseException(
             errorCode,
             message,
-            addtionalData
+            additionalData
           );
 
           tcs.setException(e);

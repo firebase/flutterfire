@@ -16,11 +16,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
   static private final String MODULE = "firebase_database";
   static public final String UNKNOWN_ERROR_CODE = "unknown";
-  static public final String UNKNOWN_ERROR_MESSAGE = "An unknown error occured";
-
-  static private final String KEY_CODE = "code";
-  static private final String KEY_MESSAGE = "message";
-  static private final String KEY_ADDITIONAL_DATA = "additionalData";
+  static public final String UNKNOWN_ERROR_MESSAGE = "An unknown error occurred";
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
     final int errorCode = e.getCode();
@@ -83,10 +79,6 @@ public class FlutterFirebaseDatabaseException extends Exception {
       message = e.getMessage();
     }
 
-    details.put(KEY_CODE, code);
-    details.put(KEY_MESSAGE, message);
-    details.put(KEY_ADDITIONAL_DATA, new HashMap<>());
-
     ffdbException = new FlutterFirebaseDatabaseException(MODULE, message, details);
 
     return ffdbException;
@@ -115,19 +107,19 @@ public class FlutterFirebaseDatabaseException extends Exception {
       message = UNKNOWN_ERROR_MESSAGE;
     }
 
-    details.put(KEY_CODE, UNKNOWN_ERROR_CODE);
-    details.put(KEY_MESSAGE, message);
-    details.put(KEY_ADDITIONAL_DATA, new HashMap<>());
-
-    return new FlutterFirebaseDatabaseException(MODULE, UNKNOWN_ERROR_MESSAGE, details);
+    return new FlutterFirebaseDatabaseException(MODULE, message, details);
   }
 
-
   public FlutterFirebaseDatabaseException(
-    @NonNull String code, @NonNull String message, @NonNull Map<String, Object> additionalData) {
+    @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
     this.code = code;
     this.message = message;
-    this.additionalData = additionalData;
+
+    if (additionalData != null) {
+      this.additionalData = additionalData;
+    } else {
+      this.additionalData = new HashMap<>();
+    }
   }
 
   public String getCode() {
@@ -139,18 +131,6 @@ public class FlutterFirebaseDatabaseException extends Exception {
   }
 
   public Map<String, Object> getAdditionalData() {
-    if (!additionalData.containsKey(KEY_CODE)) {
-      additionalData.put(KEY_CODE, getCode());
-    }
-
-    if (!additionalData.containsKey(KEY_MESSAGE)) {
-      additionalData.put(KEY_MESSAGE, getMessage());
-    }
-
-    if (!additionalData.containsKey(KEY_ADDITIONAL_DATA)) {
-      additionalData.put(KEY_ADDITIONAL_DATA, new HashMap<>());
-    }
-
     return additionalData;
   }
 
