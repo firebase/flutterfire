@@ -19,6 +19,7 @@ NSString *const kScreenClassOverride = @"screenClassOverride";
 NSString *const kEnabled = @"enabled";
 NSString *const kAdStorage = @"adStorage";
 NSString *const kAnalyticsStorage = @"analyticsStorage";
+NSString *const kUserId = @"userId";
 
 
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_analytics";
@@ -100,7 +101,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (void)setUserId:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *userId = arguments;
+  NSString *userId = arguments[kUserId];
   [FIRAnalytics setUserID:userId];
   
   result.success(nil);

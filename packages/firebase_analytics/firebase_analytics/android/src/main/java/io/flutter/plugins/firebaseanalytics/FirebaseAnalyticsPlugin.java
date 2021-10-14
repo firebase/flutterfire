@@ -155,8 +155,7 @@ public class FirebaseAnalyticsPlugin
         () -> {
           final String eventName =
               (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
-          final Map<String, Object> map =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.PARAMETERS));
+          final Map<String, Object> map = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
           final Bundle parameterBundle = createBundleFromMap(map);
           analytics.logEvent(eventName, parameterBundle);
           return null;

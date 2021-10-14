@@ -1,25 +1,26 @@
 // ignore_for_file: require_trailing_commas
 
-// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
+// @dart=2.9
+import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
+void testsMain() {
   group('$FirebaseAnalytics', () {
-    late FirebaseAnalytics analytics;
+    /*late*/ FirebaseAnalytics analytics;
 
     setUpAll(() async {
       await Firebase.initializeApp();
       analytics = FirebaseAnalytics.instance;
     });
 
-    test('logEvent', () {
-      expect(analytics.logEvent(name: 'testing'), completes);
+    test('logEvent', () async {
+      await expectLater(analytics.logEvent(name: 'testing'), completes);
 
       Item ITEM = Item(
         affilitation: 'affil',
@@ -46,26 +47,28 @@ void main() {
         quantity: 'quantity',
       );
       // test custom event
-      expect(
-        analytics.logEvent(
-            name: 'testing-parameters',
-            parameters: {'foo': 'bar', 'baz': 500, 'items': ITEM}),
+      await expectLater(
+        analytics.logEvent(name: 'testing-parameters', parameters: {
+          'foo': 'bar',
+          'baz': 500,
+          'items': [ITEM],
+        }),
         completes,
       );
       // test 2 reserved events
-      expect(
+      await expectLater(
         analytics.logAdImpression(
           adPlatform: 'foo',
           adSource: 'bar',
           adFormat: 'baz',
           adUnitName: 'foo',
           currency: 'bar',
-          value: 100,
+          // value: 100,
         ),
         completes,
       );
 
-      expect(
+      await expectLater(
         analytics.logPurchase(
           currency: 'foo',
           coupon: 'bar',
@@ -82,17 +85,14 @@ void main() {
 
     test('setSessionTimeoutDuration', () async {
       await expectLater(
-          analytics.setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+          analytics
+              .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
           completes);
     });
 
     test('setAnalyticsCollectionEnabled', () async {
       await expectLater(
           analytics.setAnalyticsCollectionEnabled(true), completes);
-    });
-
-    test('setUserId', () async {
-      await expectLater(analytics.setUserId(id: 'foo'), completes);
     });
 
     test('setUserId', () async {
@@ -118,3 +118,5 @@ void main() {
     });
   });
 }
+
+void main() => drive.main(testsMain);

@@ -16,7 +16,8 @@ import '../platform_interface/platform_interface_firebase_analytics.dart';
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   /// Creates a new [MethodChannelFirebaseAnalytics] instance with an [app] and/or
   /// [region].
-  MethodChannelFirebaseAnalytics({required FirebaseApp app}) : super(appInstance: app);
+  MethodChannelFirebaseAnalytics({required FirebaseApp app})
+      : super(appInstance: app);
 
   /// Internal stub class initializer.
   ///
@@ -88,7 +89,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) {
-    return channel.invokeMethod<void>('Analytics#setUserId', id);
+    return channel.invokeMethod<void>('Analytics#setUserId', {'userId': id});
   }
 
   @override

@@ -73,28 +73,28 @@ const String ITEM_NAME = 'item_name';
 const String ACHIEVEMENT_ID = 'achievement_id';
 
 Item ITEM = Item(
-    affilitation: 'affil',
-    coupon: 'coup',
-    creative_name: 'creativeName',
-    creative_slot: 'creativeSlot',
-    discount: 'disc',
-    index: 3,
-    item_brand: 'itemBrand',
-    item_category: 'itemCategory',
-    item_category2: 'itemCategory2',
-    item_category3: 'itemCategory3',
-    item_category4: 'itemCategory4',
-    item_category5: 'itemCategory5',
-    item_id: 'itemId',
-    item_list_id: 'itemListId',
-    item_list_name: 'itemListName',
-    item_name: 'itemName',
-    item_variant: 'itemVariant',
-    location_id: 'locationId',
-    price: 'pri',
-    promotion_id: 'promotionId',
-    promotion_name: 'promotionName',
-    quantity: 'quantity',
+  affilitation: 'affil',
+  coupon: 'coup',
+  creative_name: 'creativeName',
+  creative_slot: 'creativeSlot',
+  discount: 'disc',
+  index: 3,
+  item_brand: 'itemBrand',
+  item_category: 'itemCategory',
+  item_category2: 'itemCategory2',
+  item_category3: 'itemCategory3',
+  item_category4: 'itemCategory4',
+  item_category5: 'itemCategory5',
+  item_id: 'itemId',
+  item_list_id: 'itemListId',
+  item_list_name: 'itemListName',
+  item_name: 'itemName',
+  item_variant: 'itemVariant',
+  location_id: 'locationId',
+  price: 'pri',
+  promotion_id: 'promotionId',
+  promotion_name: 'promotionName',
+  quantity: 'quantity',
 );
 
 void main() {
@@ -1074,7 +1074,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'Analytics#setUserId',
-              arguments: 'test-user-id',
+              arguments: {'userId': 'test-user-id'},
             )
           ],
         );
@@ -1141,7 +1141,7 @@ void main() {
           <Matcher>[
             isMethodCall(
               'Analytics#setAnalyticsCollectionEnabled',
-              arguments: {'enabled': false },
+              arguments: {'enabled': false},
             )
           ],
         );

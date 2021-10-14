@@ -43,7 +43,7 @@ void main() {
         <Matcher>[
           isMethodCall(
             'Analytics#setUserId',
-            arguments: 'test-user-id',
+            arguments: {'userId': 'test-user-id'},
           ),
         ],
       );
