@@ -30,7 +30,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import io.flutter.Log;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
@@ -91,6 +90,10 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
   }
 
   FirebaseDatabase getDatabase(Map<String, Object> arguments) {
+    return getDatabase(arguments, true);
+  }
+
+  FirebaseDatabase getDatabase(Map<String, Object> arguments, boolean applyConfig) {
     final FirebaseDatabase database;
     final String appName = (String) arguments.get(Constants.APP_NAME);
     final String databaseURL = (String) arguments.get(Constants.DATABASE_URL);
@@ -106,6 +109,10 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       database = FirebaseDatabase.getInstance(app, databaseURL);
     } else {
       database = FirebaseDatabase.getInstance(app);
+    }
+
+    if (applyConfig) {
+      DatabaseConfiguration.applyConfig(database);
     }
 
     return database;
@@ -162,10 +169,9 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     return Tasks.call(
       cachedThreadPool,
       () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
+        final FirebaseDatabase db = getDatabase(arguments, false);
         final boolean isEnabled = (boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-
-        database.setPersistenceEnabled(isEnabled);
+        DatabaseConfiguration.setPersistenceEnabled(db, isEnabled);
         return null;
       });
   }
@@ -174,7 +180,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     return Tasks.call(
       cachedThreadPool,
       () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
+        final FirebaseDatabase db = getDatabase(arguments, false);
         final Object size = Objects.requireNonNull(arguments.get(Constants.CACHE_SIZE));
         Long cacheSize = Constants.DEFAULT_CACHE_SIZE;
 
@@ -184,7 +190,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
           cacheSize = Long.valueOf((Integer) size);
         }
 
-        database.setPersistenceCacheSizeBytes(cacheSize);
+        DatabaseConfiguration.setPersistenceCacheSizeBytes(db, cacheSize);
         return null;
       });
   }
@@ -193,7 +199,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     return Tasks.call(
       cachedThreadPool,
       () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
+        final FirebaseDatabase db = getDatabase(arguments, false);
         final boolean isEnabled = (boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
 
         final Logger.Level logLevel;
@@ -204,7 +210,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
           logLevel = Constants.DISABLED_LOG_LEVEL;
         }
 
-        database.setLogLevel(logLevel);
+        DatabaseConfiguration.setLogLevel(db, logLevel);
 
         return null;
       });
@@ -264,6 +270,8 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
 
         final int transactionKey = (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
         final int transactionTimeout = (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_TIMEOUT));
+
+        final Activity activity = getActivity();
         final TransactionHandler handler = new TransactionHandler(methodChannel, transactionKey, activity);
 
         ref.runTransaction(handler);
@@ -489,6 +497,7 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       cachedThreadPool,
       () -> {
         cleanup();
+        DatabaseConfiguration.reload();
         return null;
       });
   }

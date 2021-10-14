@@ -53,4 +53,6 @@ public class Constants {
   public static final String METHOD_DO_TRANSACTION = "DoTransaction";
   public static final String TRANSACTION_KEY = "transactionKey";
   public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
+
+  public static final String ILLEGAL_CONFIGURATION_POINT = "wrong-configuration-point";
 }

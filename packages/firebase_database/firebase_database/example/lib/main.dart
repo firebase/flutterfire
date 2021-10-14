@@ -42,6 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
   DatabaseError? _error;
+  bool initialized = false;
 
   @override
   void initState() {
@@ -56,16 +57,21 @@ class _MyHomePageState extends State<MyHomePage> {
     _messagesRef = database.ref('messages');
 
     try {
-      await database.setLoggingEnabled(true);
+      await database.setLoggingEnabled(false);
 
       if (!kIsWeb) {
         await database.setPersistenceEnabled(true);
         await database.setPersistenceCacheSizeBytes(10000000);
-        await _counterRef.keepSynced(true);
       }
     } catch (err) {
       print('Configuration failed: $err');
     }
+
+    await _counterRef.keepSynced(true);
+
+    setState(() {
+      initialized = true;
+    });
 
     try {
       final counterSnapshot = await _counterRef.get();
@@ -157,6 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!initialized) return Container();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Database Example'),
