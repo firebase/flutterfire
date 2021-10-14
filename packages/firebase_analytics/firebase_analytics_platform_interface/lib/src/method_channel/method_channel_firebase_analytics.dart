@@ -40,11 +40,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return MethodChannelFirebaseAnalytics(app: app);
   }
 
+  /// Logs the given event [name] with the given [parameters].
+  /// [callOptions] are for web platform only.
   @override
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
-    // TODO - callOptions only used for web. Warn user?
     CallOptions? callOptions,
   }) {
     return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
@@ -53,6 +54,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     });
   }
 
+  /// Sets the applicable end user consent state.
   @override
   Future<void> setConsent(
       {ConsentStatus? adStorage, ConsentStatus? analyticsStorage}) async {
@@ -65,6 +67,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     );
   }
 
+  /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   @override
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) async {
@@ -74,6 +77,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     );
   }
 
+  /// Sets whether analytics collection is enabled for this app.
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     return channel.invokeMethod<void>(
@@ -84,6 +88,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     );
   }
 
+  /// Sets the user id.
+  /// Setting a null [id] removes the user id.
+  /// [callOptions] are for web platform only.
   @override
   Future<void> setUserId({
     String? id,
@@ -92,11 +99,15 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return channel.invokeMethod<void>('Analytics#setUserId', {'userId': id});
   }
 
+  /// Sets the current screen name, which specifies the current visual context
+  /// in your app.
+  ///
+  /// Setting a null [screenName] clears the current screen name.
+  /// [callOptions] are for web platform only.
   @override
   Future<void> setCurrentScreen({
     String? screenName,
     String? screenClassOverride,
-    // TODO warn user callOptions only used for web
     CallOptions? callOptions,
   }) {
     return channel
@@ -106,6 +117,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     });
   }
 
+  /// Sets a user property to the given value.
+  /// Setting a null [value] removes the user property.
+  /// [callOptions] are for web platform only.
   @override
   Future<void> setUserProperty({
     required String name,
@@ -119,11 +133,14 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     });
   }
 
+  /// Clears all analytics data for this app from the device and resets the app
+  /// instance id.
   @override
   Future<void> resetAnalyticsData() {
     return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
   }
 
+  /// Sets the duration of inactivity that terminates the current session.
   @override
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     if (Platform.isAndroid) {

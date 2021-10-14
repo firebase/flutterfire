@@ -46,7 +46,7 @@ void main() {
       const screenName = 'screenName';
       // screenClassOverride is discarded in web.
       analytics.setCurrentScreen(
-       screenName,
+        screenName,
       );
       verify(analytics.setCurrentScreen(screenName));
       verifyNoMoreInteractions(analytics);

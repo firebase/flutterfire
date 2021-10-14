@@ -80,8 +80,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Sets the user id.
-  ///
   /// Setting a null [id] removes the user id.
+  /// [callOptions] are for web platform only.
   Future<void> setUserId({
     String? id,
     CallOptions? callOptions,
@@ -93,6 +93,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// in your app.
   ///
   /// Setting a null [screenName] clears the current screen name.
+  /// [callOptions] are for web platform only.
   Future<void> setCurrentScreen({
     String? screenName,
     String? screenClassOverride,
@@ -102,8 +103,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Sets a user property to the given value.
-  ///
   /// Setting a null [value] removes the user property.
+  /// [callOptions] are for web platform only.
   Future<void> setUserProperty({
     required String name,
     required Object value,
@@ -131,7 +132,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('setConsent() is not implemented');
   }
 
-  /// Sets the applicable end user consent state.
+  /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
