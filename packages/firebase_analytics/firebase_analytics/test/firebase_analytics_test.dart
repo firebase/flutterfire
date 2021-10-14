@@ -94,10 +94,11 @@ Item ITEM = Item(
     price: 'pri',
     promotion_id: 'promotionId',
     promotion_name: 'promotionName',
-    quantity: 'quantity');
+    quantity: 'quantity',
+);
 
 void main() {
-  setupFirebaseanalyticsMocks();
+  setupFirebaseAnalyticsMocks();
 
   FirebaseAnalytics? analytics;
 
