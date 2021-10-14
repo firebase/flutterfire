@@ -16,8 +16,6 @@ class MethodChannelDatabase extends DatabasePlatform {
       : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
     channel.setMethodCallHandler((MethodCall call) async {
-      print(call.method);
-
       switch (call.method) {
         case 'DoTransaction':
           final MutableData mutableData =

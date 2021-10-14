@@ -10,8 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import io.flutter.plugin.common.EventChannel.EventSink;
 
 public class ChildEventsProxy extends EventsProxy implements ChildEventListener {
-  protected ChildEventsProxy(@NonNull EventSink eventSink) {
-    super(eventSink);
+  protected ChildEventsProxy(@NonNull EventSink eventSink, @NonNull String eventType) {
+    super(eventSink, eventType);
   }
 
   @Override

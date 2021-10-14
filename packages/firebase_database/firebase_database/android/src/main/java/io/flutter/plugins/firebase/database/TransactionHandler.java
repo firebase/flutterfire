@@ -1,7 +1,6 @@
 package io.flutter.plugins.firebase.database;
 
 import android.app.Activity;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +15,6 @@ import com.google.firebase.database.Transaction.Handler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import io.flutter.plugin.common.MethodChannel;
 

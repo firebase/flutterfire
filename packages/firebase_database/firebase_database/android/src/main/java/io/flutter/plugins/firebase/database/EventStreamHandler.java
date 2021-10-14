@@ -18,6 +18,7 @@ public class EventStreamHandler implements StreamHandler {
     this.query = query;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {
     final Map<String, Object> args = (Map<String, Object>) arguments;
@@ -27,7 +28,7 @@ public class EventStreamHandler implements StreamHandler {
       valueEventListener = new ValueEventsProxy(events);
       query.addValueEventListener(valueEventListener);
     } else {
-      childEventListener = new ChildEventsProxy(events);
+      childEventListener = new ChildEventsProxy(events, eventType);
       query.addChildEventListener(childEventListener);
     }
   }

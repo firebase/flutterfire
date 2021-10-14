@@ -6,11 +6,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.EventSink;
 
 public class ValueEventsProxy extends EventsProxy implements ValueEventListener {
-  protected ValueEventsProxy(EventChannel.EventSink eventSink) {
-    super(eventSink);
+  protected ValueEventsProxy(@NonNull EventSink eventSink) {
+    super(eventSink, Constants.EVENT_TYPE_VALUE);
   }
 
   @Override

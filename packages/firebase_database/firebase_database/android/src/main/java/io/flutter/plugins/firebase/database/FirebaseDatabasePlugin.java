@@ -307,30 +307,24 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
         final String path = (String) arguments.get(Constants.PATH);
 
         final Map<String, Object> parameters = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
+        final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
         final String queryParams = QueryBuilder.buildQueryParams(parameters);
 
-        String eventChannelName = METHOD_CHANNEL_NAME + "/" + path;
+        String eventChannelName = METHOD_CHANNEL_NAME + "/" + path + "/" + eventType;
 
         if (queryParams.length() > 0) {
           eventChannelName = eventChannelName + "?" + queryParams;
         }
 
-        Log.d("firebase_database", "Channel name: " + eventChannelName);
-
         if (eventChannels.contains(eventChannelName)) {
-          Log.d("firebase_database", "got from cache");
           return eventChannelName;
         }
-
-        Log.d("firebase_database", "created new");
 
         final StreamHandler streamHandler = new EventStreamHandler(query);
         final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
         eventChannel.setStreamHandler(streamHandler);
 
         streamHandlers.put(eventChannel, streamHandler);
-
-        Log.d("firebase_database", "add " + eventChannelName + " to eventChannels map");
         eventChannels.add(eventChannelName);
 
         return eventChannelName;
@@ -394,8 +388,6 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
     final Task<?> methodCallTask;
     final Map<String, Object> arguments = call.arguments();
 
-    Log.d("firebase_database", call.method + arguments);
-
     switch (call.method) {
       case "FirebaseDatabase#goOnline":
         methodCallTask = goOnline(arguments);
@@ -454,7 +446,6 @@ public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlu
       task -> {
         if (task.isSuccessful()) {
           final Object r = task.getResult();
-          Log.d("firebase_database", r == null ? "null" : r.toString());
           result.success(r);
         } else {
           Exception exception = task.getException();

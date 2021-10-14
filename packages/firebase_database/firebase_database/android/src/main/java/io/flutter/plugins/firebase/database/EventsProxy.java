@@ -14,9 +14,11 @@ import io.flutter.plugin.common.EventChannel;
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public abstract class EventsProxy {
   protected final EventChannel.EventSink eventSink;
+  private final String eventType;
 
-  protected EventsProxy(EventChannel.EventSink eventSink) {
+  protected EventsProxy(@NonNull EventChannel.EventSink eventSink, @NonNull String eventType) {
     this.eventSink = eventSink;
+    this.eventType = eventType;
   }
 
   Map<String, Object> buildAdditionalParams(@NonNull String eventType, @Nullable String previousChildName) {
@@ -31,6 +33,8 @@ public abstract class EventsProxy {
   }
 
   protected void sendEvent(@NonNull String eventType, DataSnapshot snapshot, @Nullable String previousChildName) {
+    if (!this.eventType.equals(eventType)) return;
+
     FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
     final Map<String, Object> additionalParams = buildAdditionalParams(eventType, previousChildName);
 

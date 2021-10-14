@@ -26,14 +26,11 @@ public class TransactionExecutor {
   }
 
   public Map<String, Object> exec(Map<String, Object> arguments) throws ExecutionException, InterruptedException {
-    Log.d("firebase_database", "calling DoTransaction with args: " + arguments);
-
     activity.runOnUiThread(() -> {
       channel.invokeMethod(Constants.METHOD_DO_TRANSACTION, arguments, new MethodChannel.Result() {
         @Override
         @SuppressWarnings("unchecked")
         public void success(@Nullable Object result) {
-          Log.d("firebase_database", "transaction result: " + result);
           tcs.setResult((HashMap<String, Object>) result);
         }
 

@@ -18,8 +18,6 @@ class MethodChannelQuery extends QueryPlatform {
           pathComponents: pathComponents,
         );
 
-  static Map<String, Stream<EventPlatform>> events = {};
-
   @override
   Stream<EventPlatform> observe(EventType eventType) async* {
     const channel = MethodChannelDatabase.channel;
@@ -39,12 +37,9 @@ class MethodChannelQuery extends QueryPlatform {
       createArgs,
     );
 
-    events[channelName!] ??= EventChannel(channelName)
+    yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
         .map((event) => EventPlatform(event));
-
-    final eventStream = events[channelName]!;
-    yield* eventStream.where((event) => event.type == eventType);
   }
 
   /// Slash-delimited path representing the database location of this query.
