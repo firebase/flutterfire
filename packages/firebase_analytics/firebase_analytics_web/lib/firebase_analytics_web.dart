@@ -20,7 +20,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   FirebaseAnalyticsWeb({FirebaseApp? app})
       : _webAnalytics =
             analytics_interop.getAnalyticsInstance(core_interop.app(app?.name)),
-        super(app);
+        super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
