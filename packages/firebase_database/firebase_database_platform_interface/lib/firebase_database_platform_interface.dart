@@ -9,12 +9,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database_platform_interface/src/method_channel/firebase_database_exception.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'src/method_channel/firebase_database_exception.dart';
 
+import 'src/method_channel/firebase_database_exception.dart';
 export 'src/method_channel/firebase_database_exception.dart';
 
 part 'src/method_channel/method_channel_database.dart';

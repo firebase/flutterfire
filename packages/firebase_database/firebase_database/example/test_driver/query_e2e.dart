@@ -1,14 +1,30 @@
 // ignore_for_file: require_trailing_commas
 
 import 'dart:async';
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
 
+final List<Map<String, Object>> testDocuments = [
+  {'ref': 'one', 'value': 23},
+  {'ref': 'two', 'value': 56},
+  {'ref': 'three', 'value': 9},
+  {'ref': 'four', 'value': 40}
+];
+
 void runQueryTests() {
-  group('$Query', () {
+  group('Query', () {
+    setUp(() async {
+      await database.ref('flutterfire').set(0);
+
+      final orderedRef = database.ref('ordered');
+
+      await Future.wait(testDocuments.map((map) {
+        String key = map['ref']! as String;
+        return orderedRef.child(key).set(map);
+      }));
+    });
+
     test('once', () async {
       final dataSnapshot = await database.ref('ordered/one').once();
       expect(dataSnapshot, isNot(null));
