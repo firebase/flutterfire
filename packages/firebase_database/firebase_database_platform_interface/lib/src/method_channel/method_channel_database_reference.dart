@@ -94,30 +94,38 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// child location will be deleted.
   @override
   Future<void> set(dynamic value, {dynamic priority}) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'DatabaseReference#set',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-        'priority': priority,
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'DatabaseReference#set',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'value': value,
+          'priority': priority,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Update the node with the `value`
   @override
   Future<void> update(Map<String, dynamic> value) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'DatabaseReference#update',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'DatabaseReference#update',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'value': value,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Sets a priority for the data at this Firebase Database location.
@@ -146,15 +154,19 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// as numbers only when they can be parsed as a 32-bit integer.
   @override
   Future<void> setPriority(dynamic priority) async {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'DatabaseReference#setPriority',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'priority': priority,
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'DatabaseReference#setPriority',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'priority': priority,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Remove the data at this Firebase Database location. Any data at child
@@ -201,18 +213,22 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       return TransactionResultPlatform(databaseError, committed, dataSnapshot);
     }
 
-    await MethodChannelDatabase.channel.invokeMethod<void>(
-      'DatabaseReference#runTransaction',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'transactionKey': transactionKey,
-        'transactionTimeout': timeout.inMilliseconds
-      },
-    ).then((dynamic response) {
-      completer.complete(toTransactionResult(response));
-    });
+    try {
+      await MethodChannelDatabase.channel.invokeMethod<void>(
+        'DatabaseReference#runTransaction',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'transactionKey': transactionKey,
+          'transactionTimeout': timeout.inMilliseconds
+        },
+      ).then((dynamic response) {
+        completer.complete(toTransactionResult(response));
+      });
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
 
     return completer.future;
   }

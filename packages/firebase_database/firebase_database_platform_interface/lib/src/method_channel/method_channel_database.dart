@@ -85,14 +85,18 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// network connectivity at that time).
   @override
   Future<void> setPersistenceEnabled(bool enabled) async {
-    await channel.invokeMethod<void>(
-      'FirebaseDatabase#setPersistenceEnabled',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled,
-      },
-    );
+    try {
+      await channel.invokeMethod<void>(
+        'FirebaseDatabase#setPersistenceEnabled',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+          'enabled': enabled,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -114,14 +118,18 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// or greater than 100 MB are not supported.
   @override
   Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
-    return channel.invokeMethod<void>(
-      'FirebaseDatabase#setPersistenceCacheSizeBytes',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-        'cacheSize': cacheSize,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'FirebaseDatabase#setPersistenceCacheSizeBytes',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+          'cacheSize': cacheSize,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
@@ -129,40 +137,52 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// By default, diagnostic logging is disabled.
   @override
   Future<void> setLoggingEnabled(bool enabled) async {
-    await channel.invokeMethod<void>(
-      'FirebaseDatabase#setLoggingEnabled',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-        'enabled': enabled
-      },
-    );
+    try {
+      await channel.invokeMethod<void>(
+        'FirebaseDatabase#setLoggingEnabled',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+          'enabled': enabled
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   @override
   Future<void> goOnline() {
-    return channel.invokeMethod<void>(
-      'FirebaseDatabase#goOnline',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'FirebaseDatabase#goOnline',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   @override
   Future<void> goOffline() {
-    return channel.invokeMethod<void>(
-      'FirebaseDatabase#goOffline',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'FirebaseDatabase#goOffline',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -177,12 +197,16 @@ class MethodChannelDatabase extends DatabasePlatform {
   /// Firebase Database backend.
   @override
   Future<void> purgeOutstandingWrites() {
-    return channel.invokeMethod<void>(
-      'FirebaseDatabase#purgeOutstandingWrites',
-      <String, dynamic>{
-        'appName': app?.name,
-        'databaseURL': databaseURL,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'FirebaseDatabase#purgeOutstandingWrites',
+        <String, dynamic>{
+          'appName': app?.name,
+          'databaseURL': databaseURL,
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 }

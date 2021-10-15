@@ -18,6 +18,8 @@ class MethodChannelQuery extends QueryPlatform {
           pathComponents: pathComponents,
         );
 
+  MethodChannel get channel => MethodChannelDatabase.channel;
+
   @override
   Stream<EventPlatform> observe(EventType eventType) async* {
     const channel = MethodChannelDatabase.channel;
@@ -49,25 +51,23 @@ class MethodChannelQuery extends QueryPlatform {
   /// Gets the most up-to-date result for this query.
   @override
   Future<DataSnapshotPlatform> get() async {
-    final result =
-        await MethodChannelDatabase.channel.invokeMethod<Map<dynamic, dynamic>>(
-      'Query#get',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'parameters': parameters,
-      },
-    );
-    if (result!.containsKey('error') && result['error'] != null) {
-      final errorMap = result['error'];
-      throw FirebaseException(
-        plugin: 'firebase_database',
-        code: 'get-failed',
-        message: errorMap['details'],
+    try {
+      final result = await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'Query#get',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'parameters': parameters,
+        },
       );
-    } else {
-      return DataSnapshotPlatform.fromJson(result['snapshot'], null);
+
+      return DataSnapshotPlatform.fromJson(
+        result!['snapshot'],
+        result['childKeys'],
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
     }
   }
 
@@ -193,16 +193,20 @@ class MethodChannelQuery extends QueryPlatform {
   /// it will not be evicted from the persistent disk cache.
   @override
   Future<void> keepSynced(bool value) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'Query#keepSynced',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'parameters': parameters,
-        'value': value
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'Query#keepSynced',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'parameters': parameters,
+          'value': value
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   MethodChannelQuery _copyWithParameters(Map<String, dynamic> parameters) {

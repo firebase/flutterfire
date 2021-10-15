@@ -18,16 +18,20 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
 
   @override
   Future<void> set(dynamic value, {dynamic priority}) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#set',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-        'priority': priority
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#set',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'value': value,
+          'priority': priority
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   @override
@@ -35,26 +39,34 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
 
   @override
   Future<void> cancel() {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#cancel',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#cancel',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 
   @override
   Future<void> update(Map<String, dynamic> value) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#update',
-      <String, dynamic>{
-        'appName': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value
-      },
-    );
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#update',
+        <String, dynamic>{
+          'appName': database.app?.name,
+          'databaseURL': database.databaseURL,
+          'path': path,
+          'value': value
+        },
+      );
+    } on PlatformException catch (e) {
+      throw FirebaseDatabaseException.fromPlatformException(e);
+    }
   }
 }
