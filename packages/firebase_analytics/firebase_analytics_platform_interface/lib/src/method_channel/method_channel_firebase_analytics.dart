@@ -44,7 +44,6 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
-    // TODO - callOptions only used for web. Warn user?
     CallOptions? callOptions,
   }) {
     return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{

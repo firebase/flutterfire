@@ -37,7 +37,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     required String name,
     Map<String, Object?>? parameters,
     CallOptions? callOptions,
-  }) async {
+  }) {
     return jsObject.logEvent(name, parameters, callOptions);
   }
 
@@ -71,7 +71,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     CallOptions? callOptions,
   }) {
     return jsObject.setUserProperties(
-      {'$name': value},
+      {name: value},
       callOptions,
     );
   }

@@ -23,7 +23,9 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         FirebaseAnalyticsPlatform.instanceFor(app: app);
   }
 
-  //  Analytics supports multiple Firebase Apps for web only. Default app only for iOS & android.
+  /// Returns an instance using a specified [FirebaseApp].
+  ///
+  /// Note; multi-app support is only supported on web.
   factory FirebaseAnalytics.instanceFor({required FirebaseApp app}) {
     if (kIsWeb || app.name == defaultFirebaseAppName) {
       return _firebaseAnalyticsInstances.putIfAbsent(app.name, () {
@@ -74,7 +76,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         name: name, parameters: parameters, callOptions: callOptions);
   }
 
-  // Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
+  /// Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
   Future<void> setConsent({
     ConsentStatus? adStorage,
     ConsentStatus? analyticsStorage,
@@ -85,7 +87,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  // Adds parameters that will be set on every event logged from the SDK, including automatic ones.
+  /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) async {
     await _delegate.setDefaultEventParameters(defaultParameters);

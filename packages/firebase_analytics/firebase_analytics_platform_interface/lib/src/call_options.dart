@@ -5,6 +5,9 @@
 
 import 'package:flutter/foundation.dart';
 
+/// Additional options that can be passed to Analytics method calls.
+///
+/// Note; these options are only used on the web.
 class CallOptions {
   // ignore: public_member_api_docs
   @protected
@@ -12,6 +15,7 @@ class CallOptions {
     required this.global,
   });
 
+  /// If true, this config or event call applies globally to all Google Analytics properties on the page.
   final bool global;
 
   /// Returns the current instance as a [Map].
