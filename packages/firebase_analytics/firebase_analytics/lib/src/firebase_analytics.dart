@@ -338,10 +338,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Logs the standard `begin_checkout` event.
   ///
   /// This event signifies that a user has begun the process of checking out.
-  /// Add this event to a funnel with your [logEcommercePurchase] event to
-  /// gauge the effectiveness of your checkout process. Note: If you supply the
-  /// [value] parameter, you must also supply the [currency] parameter so that
-  /// revenue metrics can be computed accurately.
+  /// Note: If you supply the [value] parameter, you must also supply the [currency]
+  /// parameter so that revenue metrics can be computed accurately.
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#BEGIN_CHECKOUT
   Future<void> logBeginCheckout({
