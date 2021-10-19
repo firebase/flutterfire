@@ -10,14 +10,14 @@
 
 NSString *const kConsentGranted = @"granted";
 NSString *const kConsentDenied = @"denied";
-// kName & kValue clashes with FLTFirebaseCorePlugin constants
+// kName, kEnabled & kValue clashes with FLTFirebaseCorePlugin constants
 NSString *const kNameAnalytics = @"name";
 NSString *const kValueAnalytics = @"value";
+NSString *const kEnabledAnalytics = @"enabled";
 NSString *const kEventName = @"eventName";
 NSString *const kParameters = @"parameters";
 NSString *const kScreenName = @"screenName";
 NSString *const kScreenClassOverride = @"screenClassOverride";
-NSString *const kEnabled = @"enabled";
 NSString *const kAdStorage = @"adStorage";
 NSString *const kAnalyticsStorage = @"analyticsStorage";
 NSString *const kUserId = @"userId";
@@ -127,7 +127,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 
 - (void)setAnalyticsCollectionEnabled:(id)arguments
                  withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSNumber *enabled = arguments[kEnabled];
+  NSNumber *enabled = arguments[kEnabledAnalytics];
   [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
   result.success(nil);
 }
