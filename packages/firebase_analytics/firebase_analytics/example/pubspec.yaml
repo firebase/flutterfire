@@ -16,6 +16,8 @@ dependencies:
 dependency_overrides:
   firebase_analytics_platform_interface:
     path: ../../firebase_analytics_platform_interface
+  firebase_analytics_web:
+    path: ../../../firebase_analytics/firebase_analytics_web
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
