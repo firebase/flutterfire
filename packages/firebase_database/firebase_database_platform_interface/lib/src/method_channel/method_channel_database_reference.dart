@@ -40,10 +40,11 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
   @override
-  DatabaseReferencePlatform? parent() {
+  DatabaseReferencePlatform? get parent {
     if (pathComponents.isEmpty) {
       return null;
     }
+
     return MethodChannelDatabaseReference(
       database: database,
       pathComponents: (List<String>.from(pathComponents))..removeLast(),
@@ -62,7 +63,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
   @override
-  String get key => pathComponents.last;
+  String? get key => pathComponents.isEmpty ? null : pathComponents.last;
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -192,45 +193,45 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       'Transaction timeout must be more than 0 milliseconds.',
     );
 
-    final completer = Completer<TransactionResultPlatform>();
+    const channel = MethodChannelDatabase.channel;
+    final handlers = MethodChannelDatabase._transactions;
+    final key = handlers.isEmpty ? 0 : handlers.keys.last + 1;
 
-    final int transactionKey = MethodChannelDatabase._transactions.isEmpty
-        ? 0
-        : MethodChannelDatabase._transactions.keys.last + 1;
-
-    MethodChannelDatabase._transactions[transactionKey] = transactionHandler;
-
-    TransactionResultPlatform toTransactionResult(Map<dynamic, dynamic> map) {
-      final DatabaseErrorPlatform? databaseError =
-          map['error'] != null ? DatabaseErrorPlatform(map['error']) : null;
-      final bool committed = map['committed'];
-      final DataSnapshotPlatform? dataSnapshot = map['snapshot'] != null
-          ? DataSnapshotPlatform.fromJson(map['snapshot'], null)
-          : null;
-
-      MethodChannelDatabase._transactions.remove(transactionKey);
-
-      return TransactionResultPlatform(databaseError, committed, dataSnapshot);
-    }
+    MethodChannelDatabase._transactions[key] = transactionHandler;
 
     try {
-      await MethodChannelDatabase.channel.invokeMethod<void>(
+      final result = await channel.invokeMethod(
         'DatabaseReference#runTransaction',
         <String, dynamic>{
           'appName': database.app?.name,
           'databaseURL': database.databaseURL,
           'path': path,
-          'transactionKey': transactionKey,
+          'transactionKey': key,
           'transactionTimeout': timeout.inMilliseconds
         },
-      ).then((dynamic response) {
-        completer.complete(toTransactionResult(response));
-      });
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
-    }
+      );
 
-    return completer.future;
+      return TransactionResultPlatform(
+        result!['committed'],
+        DataSnapshotPlatform.fromJson(result['snapshot'], result['childKeys']),
+      );
+    } on PlatformException catch (e) {
+      if (e.code == 'transaction-timeout') {
+        throw FirebaseDatabaseException.fromPlatformException(e);
+      }
+
+      final error = DatabaseErrorPlatform(e.details);
+      throw error;
+    } catch (e) {
+      if (e is DatabaseErrorPlatform) rethrow;
+
+      final error = DatabaseErrorPlatform({
+        'code': 'unknown',
+        'message': 'An unknown error occured',
+      });
+
+      throw error;
+    }
   }
 
   @override

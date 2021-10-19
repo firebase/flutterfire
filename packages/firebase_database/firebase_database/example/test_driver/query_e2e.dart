@@ -41,18 +41,6 @@ void runQueryTests() {
       expect(dataSnapshot.value['value'], 56);
     });
 
-    test('DataSnapshot.exists is false for no data', () async {
-      final databaseRef = database.ref('a-non-existing-reference');
-      final dataSnapshot = await databaseRef.get();
-      expect(dataSnapshot.exists, false);
-    });
-
-    test('DataSnapshot.exists is true for existing data', () async {
-      final databaseRef = database.ref('ordered/one');
-      final dataSnapshot = await databaseRef.get();
-      expect(dataSnapshot.exists, true);
-    });
-
     test('correct order returned from query', () async {
       final c = Completer<List<Map<String, dynamic>>>();
       final items = <Map<String, dynamic>>[];

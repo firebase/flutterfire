@@ -56,4 +56,8 @@ public class Constants {
 
   public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";
   public static final String TRANSACTION_TIMEOUT_CODE = "transaction-timeout";
+
+  public static final String ERROR_CODE = "code";
+  public static final String ERROR_MESSAGE = "message";
+  public static final String ERROR_DETAILS = "details";
 }

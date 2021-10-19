@@ -30,7 +30,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Gets a DatabaseReference for the parent location. If this instance
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
-  DatabaseReferencePlatform? parent() {
+  DatabaseReferencePlatform? get parent {
     throw UnimplementedError('parent() not implemented');
   }
 
@@ -41,7 +41,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
-  String get key => pathComponents.last;
+  String? get key => throw UnimplementedError('key() is not implemented');
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -111,13 +111,14 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Database servers will also be started.
   ///
   /// remove() is equivalent to calling set(null)
-  Future<void> remove() => set(null);
+  Future<void> remove() => throw UnimplementedError('remove() not implemented');
 
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
   Future<TransactionResultPlatform> runTransaction(
-      TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
+    TransactionHandler transactionHandler, {
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
     throw UnimplementedError('runTransaction() not implemented');
   }
 
@@ -142,18 +143,17 @@ class ServerValue {
 }
 
 /// Interface for [TransactionHandler]
-typedef TransactionHandler = MutableData Function(MutableData mutableData);
+typedef TransactionHandler = dynamic Function(dynamic value);
 
 /// Interface for [TransactionResultPlatform]
 class TransactionResultPlatform extends PlatformInterface {
   /// Constructor for [TransactionResultPlatform]
-  TransactionResultPlatform(this.error, this.committed, this.dataSnapshot)
-      : super(token: _token);
+  TransactionResultPlatform(
+    this.committed,
+    this.dataSnapshot,
+  ) : super(token: _token);
 
   static final Object _token = Object();
-
-  /// [DatabaseErrorPlatform] associated to this transaction result
-  final DatabaseErrorPlatform? error;
 
   /// [committed] status associated to this transaction result
   final bool committed;

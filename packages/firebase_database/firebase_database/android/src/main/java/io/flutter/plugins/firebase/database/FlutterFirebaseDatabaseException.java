@@ -73,13 +73,16 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
 
     final FlutterFirebaseDatabaseException ffdbException;
-    final Map<String, Object> details = new HashMap<>();
+    final Map<String, Object> additionalData = new HashMap<>();
+    final String errorDetails = e.getDetails();
+
+    additionalData.put(Constants.ERROR_DETAILS, errorDetails);
 
     if (code.equals(UNKNOWN_ERROR_CODE)) {
       message = e.getMessage();
     }
 
-    ffdbException = new FlutterFirebaseDatabaseException(MODULE, message, details);
+    ffdbException = new FlutterFirebaseDatabaseException(MODULE, message, additionalData);
 
     return ffdbException;
   }
@@ -120,6 +123,9 @@ public class FlutterFirebaseDatabaseException extends Exception {
     } else {
       this.additionalData = new HashMap<>();
     }
+
+    this.additionalData.put(Constants.ERROR_CODE, code);
+    this.additionalData.put(Constants.ERROR_MESSAGE, message);
   }
 
   public String getCode() {

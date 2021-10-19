@@ -41,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
-  DatabaseError? _error;
+  FirebaseDatabaseException? _error;
   bool initialized = false;
 
   @override
@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       },
       onError: (Object o) {
-        final DatabaseError error = o as DatabaseError;
+        final error = o as FirebaseDatabaseException;
         setState(() {
           _error = error;
         });
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print('Child added: ${event.snapshot.value}');
       },
       onError: (Object o) {
-        final DatabaseError error = o as DatabaseError;
+        final error = o as FirebaseDatabaseException;
         print('Error: ${error.code} ${error.message}');
       },
     );
@@ -128,21 +128,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _incrementAsTransaction() async {
-    final transactionResult = await _counterRef.runTransaction((mutableData) {
-      mutableData.value = (mutableData.value ?? 0) + 1;
-      return mutableData;
-    });
-
-    if (transactionResult.committed) {
-      final newMessageRef = _messagesRef.push();
-      await newMessageRef.set(<String, String>{
-        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
+    try {
+      final transactionResult = await _counterRef.runTransaction((mutableData) {
+        return (mutableData ?? 0) + 1;
       });
-    } else {
-      print('Transaction not committed.');
-      if (transactionResult.error != null) {
-        print(transactionResult.error!.message);
+
+      if (transactionResult.committed) {
+        final newMessageRef = _messagesRef.push();
+        await newMessageRef.set(<String, String>{
+          _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
+        });
       }
+    } on DatabaseError catch (e) {
+      print(e.message);
     }
   }
 

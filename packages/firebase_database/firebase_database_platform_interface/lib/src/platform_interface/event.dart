@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -85,6 +84,7 @@ class DataSnapshotPlatform {
     } else {
       value = dataValue;
     }
+
     return DataSnapshotPlatform(_data['key'] as String?, value);
   }
 
@@ -96,49 +96,4 @@ class DataSnapshotPlatform {
 
   /// Ascertains whether the value exists at the Firebase Database location.
   final bool exists;
-}
-
-/// A dataSnapshot class which can be mutated. Specially used with transactions.
-class MutableData {
-  @visibleForTesting
-  MutableData.private(this._data);
-
-  /// generate [MutableData] from key and value
-  MutableData(String key, dynamic value)
-      : _data = {
-          'key': key,
-          'value': value,
-        };
-
-  final Map<dynamic, dynamic> _data;
-
-  /// The key of the location that generated this MutableData.
-  String get key => _data['key'];
-
-  /// Returns the mutable contents of this MutableData as native types.
-  dynamic get value => _data['value'];
-
-  set value(dynamic newValue) => _data['value'] = newValue;
-}
-
-/// A DatabaseError contains code, message and details of a Firebase Database
-/// Error that results from a transaction operation at a Firebase Database
-/// location.
-class DatabaseErrorPlatform {
-  DatabaseErrorPlatform(this._data);
-
-  Map<dynamic, dynamic> _data;
-
-  /// One of the defined status codes, depending on the error.
-  int get code => _data['code'];
-
-  /// A human-readable description of the error.
-  String get message => _data['message'];
-
-  /// Human-readable details on the error and additional information.
-  String get details => _data['details'];
-
-  @override
-  // ignore: no_runtimetype_tostring
-  String toString() => '$runtimeType($code, $message, $details)';
 }

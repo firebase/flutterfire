@@ -24,15 +24,21 @@ class DatabaseReferenceWeb extends QueryWeb
 
   @override
   DatabaseReferencePlatform child(String path) {
-    return DatabaseReferenceWeb(_firebaseDatabase, database,
-        List<String>.from(pathComponents)..addAll(path.split("/")));
+    return DatabaseReferenceWeb(
+      _firebaseDatabase,
+      database,
+      List<String>.from(pathComponents)..addAll(path.split("/")),
+    );
   }
 
   @override
-  DatabaseReferencePlatform? parent() {
+  DatabaseReferencePlatform? get parent {
     if (pathComponents.isEmpty) return null;
-    return DatabaseReferenceWeb(_firebaseDatabase, database,
-        List<String>.from(pathComponents)..removeLast());
+    return DatabaseReferenceWeb(
+      _firebaseDatabase,
+      database,
+      List<String>.from(pathComponents)..removeLast(),
+    );
   }
 
   @override

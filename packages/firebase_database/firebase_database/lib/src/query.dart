@@ -28,29 +28,24 @@ class Query {
   }
 
   /// Fires when children are added.
-  Stream<Event> get onChildAdded => _queryPlatform.onChildAdded
-      .handleError((error) => DatabaseError._(error))
-      .map((item) => Event._(item));
+  Stream<Event> get onChildAdded =>
+      _queryPlatform.onChildAdded.map((item) => Event._(item));
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<Event> get onChildRemoved => _queryPlatform.onChildRemoved
-      .handleError((error) => DatabaseError._(error))
-      .map((item) => Event._(item));
+  Stream<Event> get onChildRemoved =>
+      _queryPlatform.onChildRemoved.map((item) => Event._(item));
 
   /// Fires when children are changed.
-  Stream<Event> get onChildChanged => _queryPlatform.onChildChanged
-      .handleError((error) => DatabaseError._(error))
-      .map((item) => Event._(item));
+  Stream<Event> get onChildChanged =>
+      _queryPlatform.onChildChanged.map((item) => Event._(item));
 
   /// Fires when children are moved.
-  Stream<Event> get onChildMoved => _queryPlatform.onChildMoved
-      .handleError((error) => DatabaseError._(error))
-      .map((item) => Event._(item));
+  Stream<Event> get onChildMoved =>
+      _queryPlatform.onChildMoved.map((item) => Event._(item));
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<Event> get onValue => _queryPlatform.onValue
-      .handleError((error) => DatabaseError._(error))
-      .map((item) => Event._(item));
+  Stream<Event> get onValue =>
+      _queryPlatform.onValue.map((item) => Event._(item));
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or

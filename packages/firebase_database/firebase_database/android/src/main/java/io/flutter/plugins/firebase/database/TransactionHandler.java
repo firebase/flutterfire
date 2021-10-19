@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.database;
 
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +21,7 @@ import io.flutter.plugin.common.MethodChannel;
 
 public class TransactionHandler implements Handler {
   private final MethodChannel channel;
-  private final TaskCompletionSource<HashMap<String, Object>> transactionCompletionSource;
+  private final TaskCompletionSource<Map<String, Object>> transactionCompletionSource;
   private final int transactionKey;
   private final Activity activity;
 
@@ -31,7 +32,7 @@ public class TransactionHandler implements Handler {
     this.transactionCompletionSource = new TaskCompletionSource<>();
   }
 
-  Task<HashMap<String, Object>> getTask() {
+  Task<Map<String, Object>> getTask() {
     return transactionCompletionSource.getTask();
   }
 
@@ -49,11 +50,12 @@ public class TransactionHandler implements Handler {
 
     try {
       final TransactionExecutor executor = new TransactionExecutor(channel, activity);
-      final Map<String, Object> updatedData = executor.exec(transactionArgs);
+      final Object updatedData = executor.exec(transactionArgs);
 
-      currentData.setValue(updatedData.get(Constants.VALUE));
+      currentData.setValue(updatedData);
       return Transaction.success(currentData);
     } catch (Exception e) {
+      Log.d("firebase_database", e.toString());
       return Transaction.abort();
     }
   }
@@ -63,16 +65,16 @@ public class TransactionHandler implements Handler {
     if (error != null) {
       transactionCompletionSource.setException(FlutterFirebaseDatabaseException.fromDatabaseError(error));
     } else if (currentData != null) {
-      final HashMap<String, Object> result = new HashMap<>();
-      final HashMap<String, Object> snapshot = new HashMap<>();
+      final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(currentData);
 
-      snapshot.put(Constants.KEY, currentData.getKey());
-      snapshot.put(Constants.VALUE, currentData.getValue());
+      final Map<String, Object> additionalParams = new HashMap<>();
+      additionalParams.put(Constants.COMMITTED, committed);
 
-      result.put(Constants.COMMITTED, committed);
-      result.put(Constants.SNAPSHOT, snapshot);
-
-      transactionCompletionSource.setResult(result);
+      transactionCompletionSource.setResult(
+          payload
+            .withChildKeys()
+            .withAdditionalParams(additionalParams).toMap()
+      );
     }
   }
 }

@@ -192,7 +192,14 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
     final onCompleteWrap = allowInterop((error, commited, snapshot) {
       if (error != null) {
-        c.completeError(DatabaseErrorPlatform(dartify(error)));
+        final dartified = dartify(error);
+
+        c.completeError(
+          FirebaseDatabaseException(
+            code: dartified['code'],
+            message: dartified['message'],
+          ),
+        );
       } else {
         c.complete(Transaction(
           committed: commited,

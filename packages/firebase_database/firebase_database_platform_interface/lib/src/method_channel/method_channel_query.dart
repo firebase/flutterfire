@@ -41,7 +41,11 @@ class MethodChannelQuery extends QueryPlatform {
 
     yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
-        .map((event) => EventPlatform(event));
+        .map((event) => EventPlatform(event))
+        .handleError(
+          (e) => throw FirebaseDatabaseException.fromPlatformException(e),
+          test: (err) => err is PlatformException,
+        );
   }
 
   /// Slash-delimited path representing the database location of this query.

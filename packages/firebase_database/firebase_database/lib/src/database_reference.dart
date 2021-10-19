@@ -29,11 +29,14 @@ class DatabaseReference extends Query {
   /// Gets a DatabaseReference for the parent location. If this instance
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
-  DatabaseReference? parent() {
-    if (_databaseReferencePlatform.pathComponents.isEmpty) {
+  DatabaseReference? get parent {
+    final _platformParent = _databaseReferencePlatform.parent;
+
+    if (_platformParent == null) {
       return null;
     }
-    return DatabaseReference._(_databaseReferencePlatform.parent()!);
+
+    return DatabaseReference._(_platformParent);
   }
 
   /// Gets a FIRDatabaseReference for the root location.
@@ -121,18 +124,18 @@ class DatabaseReference extends Query {
     TransactionHandler transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
   }) async {
-    TransactionResultPlatform transactionResult =
-        await _databaseReferencePlatform.runTransaction(
-      transactionHandler,
-      timeout: timeout,
-    );
-    return TransactionResult._(
-      transactionResult.error == null
-          ? null
-          : DatabaseError._(transactionResult.error!),
-      transactionResult.committed,
-      DataSnapshot._(transactionResult.dataSnapshot),
-    );
+    try {
+      final transactionResult = await _databaseReferencePlatform.runTransaction(
+        transactionHandler,
+        timeout: timeout,
+      );
+      return TransactionResult._(
+        transactionResult.committed,
+        DataSnapshot._(transactionResult.dataSnapshot),
+      );
+    } on DatabaseErrorPlatform catch (err) {
+      throw DatabaseError._(err);
+    }
   }
 
   OnDisconnect onDisconnect() {
@@ -141,9 +144,8 @@ class DatabaseReference extends Query {
 }
 
 class TransactionResult {
-  const TransactionResult._(this.error, this.committed, this.dataSnapshot);
+  const TransactionResult._(this.committed, this.dataSnapshot);
 
-  final DatabaseError? error;
   final bool committed;
   final DataSnapshot? dataSnapshot;
 }

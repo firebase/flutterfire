@@ -1,4 +1,4 @@
-import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 

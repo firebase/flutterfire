@@ -14,11 +14,13 @@ class FirebaseDatabaseException extends FirebaseException implements Exception {
         );
 
   static FirebaseDatabaseException fromPlatformException(
-    PlatformException exception,
-  ) {
+    PlatformException exception, [
+    StackTrace? stackTrace,
+  ]) {
     return FirebaseDatabaseException(
       code: exception.code,
       message: exception.message,
+      stackTrace: stackTrace,
     );
   }
 }

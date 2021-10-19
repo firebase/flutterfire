@@ -15,14 +15,15 @@ class MethodChannelDatabase extends DatabasePlatform {
   MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
       : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
+
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'DoTransaction':
-          final MutableData mutableData =
-              MutableData.private(call.arguments['snapshot']);
-          final MutableData updated =
-              _transactions[call.arguments['transactionKey']]!(mutableData);
-          return <String, dynamic>{'value': updated.value};
+          final key = call.arguments['transactionKey'];
+          final handler = _transactions[key]!;
+
+          final newVal = handler(call.arguments['snapshot']['value']);
+          return newVal;
         default:
           throw MissingPluginException(
             '${call.method} method not implemented on the Dart side.',
@@ -42,11 +43,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   @override
   String? appName() => app?.name;
 
-  static final Map<int, StreamController<EventPlatform>> _observers =
-      <int, StreamController<EventPlatform>>{};
-
-  static final Map<int, TransactionHandler> _transactions =
-      <int, TransactionHandler>{};
+  static final _transactions = <int, TransactionHandler>{};
 
   static bool _initialized = false;
 

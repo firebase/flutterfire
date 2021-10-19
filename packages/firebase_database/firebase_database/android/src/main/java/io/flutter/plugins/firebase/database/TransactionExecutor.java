@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 import io.flutter.plugin.common.MethodChannel;
 
 public class TransactionExecutor {
-  private final TaskCompletionSource<Map<String, Object>> tcs;
+  private final TaskCompletionSource<Object> tcs;
   private final MethodChannel channel;
   private final Activity activity;
 
@@ -25,13 +25,13 @@ public class TransactionExecutor {
     this.channel = channel;
   }
 
-  public Map<String, Object> exec(Map<String, Object> arguments) throws ExecutionException, InterruptedException {
+  public Object exec(Map<String, Object> arguments) throws ExecutionException, InterruptedException {
     activity.runOnUiThread(() -> {
       channel.invokeMethod(Constants.METHOD_DO_TRANSACTION, arguments, new MethodChannel.Result() {
         @Override
         @SuppressWarnings("unchecked")
         public void success(@Nullable Object result) {
-          tcs.setResult((HashMap<String, Object>) result);
+          tcs.setResult(result);
         }
 
         @Override
