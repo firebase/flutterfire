@@ -22,8 +22,8 @@ void main() {
     test('logEvent', () {
       const name = 'random';
       final parameters = {'a': 'b'};
-      analytics.logEvent(name:name, parameters: parameters);
-      verify(analytics.logEvent(name:name, parameters: parameters));
+      analytics.logEvent(name: name, parameters: parameters);
+      verify(analytics.logEvent(name: name, parameters: parameters));
       verifyNoMoreInteractions(analytics);
     });
 
@@ -36,8 +36,8 @@ void main() {
 
     test('setUserId', () {
       const userId = 'userId';
-      analytics.setUserId(id:userId);
-      verify(analytics.setUserId(id:userId));
+      analytics.setUserId(id: userId);
+      verify(analytics.setUserId(id: userId));
       verifyNoMoreInteractions(analytics);
     });
 
