@@ -231,6 +231,8 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       });
 
       throw error;
+    } finally {
+      handlers.remove(key);
     }
   }
 
