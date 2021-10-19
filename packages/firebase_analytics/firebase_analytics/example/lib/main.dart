@@ -154,7 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
         term: 'term',
         content: 'content',
         aclid: 'aclid',
-        cp1: 'cp1');
+        cp1: 'cp1',
+    );
     await widget.analytics.logEarnVirtualCurrency(
       virtualCurrencyName: 'bitcoin',
       value: 345.66,
@@ -177,6 +178,10 @@ class _MyHomePageState extends State<MyHomePage> {
       level: 70,
       character: 'tiefling cleric',
     );
+    await widget.analytics.logPurchase(
+      currency: 'USD',
+      transactionId: 'transaction-id'
+    );
     await widget.analytics.logSearch(
       searchTerm: 'hotel',
       numberOfNights: 2,
@@ -192,10 +197,30 @@ class _MyHomePageState extends State<MyHomePage> {
       contentType: 'test content type',
       itemId: 'test item id',
     );
+    await widget.analytics.logSelectPromotion(
+      creativeName: 'promotion name',
+      creativeSlot: 'promotion slot',
+      items: [itemCreator()],
+      locationId: 'United States'
+    );
+    await widget.analytics.logSelectItem(
+      items: [itemCreator(), itemCreator()],
+      itemListName: 't-shirt',
+      itemListId: '1234',
+    );
+    await widget.analytics.logScreenView(
+      screenName: 'tabs-page',
+    );
+    await widget.analytics.logViewCart(
+      currency: 'USD',
+      value: 123,
+      items: [itemCreator(), itemCreator()],
+    );
     await widget.analytics.logShare(
         contentType: 'test content type',
         itemId: 'test item id',
-        method: 'facebook');
+        method: 'facebook',
+    );
     await widget.analytics.logSignUp(
       signUpMethod: 'test sign up method',
     );
@@ -204,11 +229,28 @@ class _MyHomePageState extends State<MyHomePage> {
       virtualCurrencyName: 'bitcoin',
       value: 34,
     );
+    await widget.analytics.logViewPromotion(
+        creativeName: 'promotion name',
+        creativeSlot: 'promotion slot',
+        items: [itemCreator()],
+        locationId: 'United States',
+        promotionId: '1234',
+        promotionName: 'big sale',
+    );
+    await widget.analytics.logRefund(
+      currency: 'USD',
+      value: 123,
+      items: [itemCreator(), itemCreator()],
+    );
     await widget.analytics.logTutorialBegin();
     await widget.analytics.logTutorialComplete();
     await widget.analytics.logUnlockAchievement(id: 'all Firebase API covered');
     await widget.analytics
-        .logViewItem(currency: 'usd', value: 1000, items: [itemCreator()]);
+        .logViewItem(
+        currency: 'usd',
+        value: 1000,
+        items: [itemCreator()],
+    );
     await widget.analytics.logViewItemList(
         itemListId: 't-shirt-4321',
         itemListName: 'green t-shirt',
