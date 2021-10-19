@@ -7,7 +7,6 @@ package io.flutter.plugins.firebase.database;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 import android.app.Activity;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +46,7 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 /**
  * FirebaseDatabasePlugin
  */
+@SuppressWarnings("unused")
 public class FirebaseDatabasePlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, ActivityAware {
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
 
