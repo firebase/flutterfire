@@ -35,7 +35,7 @@ The plugin supports logging both custom and predefined events to Analytics.
 
 ### Custom events
 
-You can log custom events by calling the `logEvent` method. The method accepts a event name (which will
+You can log custom events by calling the `logEvent` method. The method accepts an event name (which will
 be shown in the Analytics dashboard), along with any additional parameters for the event.
 
 ```dart
@@ -62,11 +62,13 @@ await FirebaseAnalytics.instance
   .logBeginCheckout(
     value: 10.0,
     currency: 'USD',
-    items: [Item(
-      item_name: 'Socks',
-      item_id: 'xjw73ndnw',
-      price: '10.0'
-    )],
+    items: [
+      Item(
+        item_name: 'Socks',
+        item_id: 'xjw73ndnw',
+        price: '10.0'
+      ),
+    ],
     coupon: '10PERCENTOFF'
   );
 ```
@@ -119,7 +121,7 @@ Below is a table containing all predefined events available from the plugin:
 
 ## Screen tracking
 
-To help identify the areas of your application which users spend time, you can call the `setCurrentScreen` method:
+Use `setCurrentScreen` to track each unique screen the user is selecting and build a picture of the most relevant screens in your application:
 
 ```dart
 await FirebaseAnalytics.instance
@@ -130,7 +132,7 @@ await FirebaseAnalytics.instance
 
 ## Default Parameters
 
-If you have common parameters which need to be sent with each event, call the `setDefaultEventParameters` method:
+Use the `setDefaultEventParameters` method if you have common parameters which need to be sent with each event:
 
 ```dart
 await FirebaseAnalytics.instance
@@ -141,7 +143,7 @@ await FirebaseAnalytics.instance
 
 ## Setting user properties
 
-You can set the current analytics session to assign events to a user, by ID with the `setUserId` method:
+Use the `setUserId` method to set the current analytics session to assign events to the user's `id`:
 
 ```dart
 await FirebaseAnalytics.instance
