@@ -10,8 +10,9 @@
 
 NSString *const kConsentGranted = @"granted";
 NSString *const kConsentDenied = @"denied";
-NSString *const kName = @"name";
-NSString *const kValue = @"value";
+// kName & kValue clashes with FLTFirebaseCorePlugin constants
+NSString *const kNameAnalytics = @"name";
+NSString *const kValueAnalytics = @"value";
 NSString *const kEventName = @"eventName";
 NSString *const kParameters = @"parameters";
 NSString *const kScreenName = @"screenName";
@@ -118,8 +119,8 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (void)setUserProperty:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *name = arguments[kName];
-  NSString *value = arguments[kValue];
+  NSString *name = arguments[kNameAnalytics];
+  NSString *value = arguments[kValueAnalytics];
   [FIRAnalytics setUserPropertyString:value forName:name];
   result.success(nil);
 }
