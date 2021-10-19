@@ -3,7 +3,7 @@
 As part of our on-going work for [#2582](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Storage rework changes.
 
 Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
-documentation and updating unit and end-to-end tests (tested on Android, iOS & MacOS).
+documentation and updating unit and end-to-end tests (tested on Android & iOS).
 
 - **`FirebaseAnalytics`**
 
