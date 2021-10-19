@@ -1,5 +1,5 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -34,7 +34,10 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     CallOptions? callOptions,
   }) async {
     _webAnalytics.logEvent(
-        name: name, parameters: parameters ?? {}, callOptions: callOptions);
+      name: name,
+      parameters: parameters ?? {},
+      callOptions: callOptions,
+    );
   }
 
   @override
@@ -53,7 +56,10 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) async {
-    _webAnalytics.setUserId(id: id, callOptions: callOptions);
+    _webAnalytics.setUserId(
+      id: id,
+      callOptions: callOptions,
+    );
   }
 
   @override

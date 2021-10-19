@@ -63,7 +63,7 @@ void testsMain() {
           adFormat: 'baz',
           adUnitName: 'foo',
           currency: 'bar',
-          // value: 100,
+          value: 100,
         ),
         completes,
       );

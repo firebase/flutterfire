@@ -1,5 +1,5 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -133,7 +133,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-      Map<String, Object> defaultParameters) {
+    Map<String, Object> defaultParameters,
+  ) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }
 }

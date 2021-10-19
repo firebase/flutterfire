@@ -1,5 +1,5 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -17,15 +17,26 @@ import 'package:js/js.dart';
 abstract class AnalyticsJsImpl {
   external AppJsImpl get app;
 
-  external void logEvent(String eventName, Map<String, Object?>? parameters,
-      CallOptions? callOptions);
+  external void logEvent(
+    String eventName,
+    Map<String, Object?>? parameters,
+    CallOptions? callOptions,
+  );
 
   external void setAnalyticsCollectionEnabled(bool enabled);
 
-  external void setCurrentScreen(String? screenName, CallOptions? callOptions);
+  external void setCurrentScreen(
+    String? screenName,
+    CallOptions? callOptions,
+  );
 
-  external void setUserId(String? id, CallOptions? callOptions);
+  external void setUserId(
+    String? id,
+    CallOptions? callOptions,
+  );
 
   external void setUserProperties(
-      Map<String, Object> property, CallOptions? callOptions);
+    Map<String, Object> property,
+    CallOptions? callOptions,
+  );
 }

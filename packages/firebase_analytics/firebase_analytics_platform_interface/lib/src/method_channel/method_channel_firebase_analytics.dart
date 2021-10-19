@@ -56,8 +56,10 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   /// Sets the applicable end user consent state.
   @override
-  Future<void> setConsent(
-      {ConsentStatus? adStorage, ConsentStatus? analyticsStorage}) async {
+  Future<void> setConsent({
+    ConsentStatus? adStorage,
+    ConsentStatus? analyticsStorage,
+  }) async {
     return channel.invokeMethod<void>(
       'Analytics#setConsent',
       <String, Object?>{
@@ -96,7 +98,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) {
-    return channel.invokeMethod<void>('Analytics#setUserId', {'userId': id});
+    return channel.invokeMethod<void>(
+        'Analytics#setUserId', <String, String?>{'userId': id});
   }
 
   /// Sets the current screen name, which specifies the current visual context
