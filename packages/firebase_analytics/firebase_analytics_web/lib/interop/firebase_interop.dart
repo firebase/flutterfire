@@ -14,4 +14,4 @@ import 'package:js/js.dart';
 import 'analytics_interop.dart';
 
 @JS()
-external AnalyticsJsImpl app([AppJsImpl? app]);
+external AnalyticsJsImpl analytics([AppJsImpl? app]);

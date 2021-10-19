@@ -16,8 +16,8 @@ export 'analytics_interop.dart';
 /// Given an AppJSImp, return the Analytics instance.
 Analytics getAnalyticsInstance([App? app]) {
   return Analytics.getInstance(app != null
-      ? firebase_interop.app(app.jsObject)
-      : firebase_interop.app());
+      ? firebase_interop.analytics(app.jsObject)
+      : firebase_interop.analytics());
 }
 
 class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {

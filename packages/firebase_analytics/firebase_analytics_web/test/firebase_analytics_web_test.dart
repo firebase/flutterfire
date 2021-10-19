@@ -4,12 +4,11 @@
 // found in the LICENSE file.
 @TestOn('chrome')
 
-import 'package:firebase/firebase.dart';
 import 'package:firebase_analytics_web/firebase_analytics_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAnalytics extends Mock implements Analytics {}
+class MockAnalytics extends Mock implements FirebaseAnalyticsWeb {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +22,8 @@ void main() {
     test('logEvent', () {
       const name = 'random';
       final parameters = {'a': 'b'};
-      analytics.logEvent(name, parameters);
-      verify(analytics.logEvent(name, parameters));
+      analytics.logEvent(name:name, parameters: parameters);
+      verify(analytics.logEvent(name:name, parameters: parameters));
       verifyNoMoreInteractions(analytics);
     });
 
@@ -37,8 +36,8 @@ void main() {
 
     test('setUserId', () {
       const userId = 'userId';
-      analytics.setUserId(userId);
-      verify(analytics.setUserId(userId));
+      analytics.setUserId(id:userId);
+      verify(analytics.setUserId(id:userId));
       verifyNoMoreInteractions(analytics);
     });
 
@@ -46,22 +45,15 @@ void main() {
       const screenName = 'screenName';
       // screenClassOverride is discarded in web.
       analytics.setCurrentScreen(
-        screenName,
+        screenName: screenName,
       );
-      verify(analytics.setCurrentScreen(screenName));
+      verify(analytics.setCurrentScreen(screenName: screenName));
       verifyNoMoreInteractions(analytics);
     });
 
     test('setAnalyticsCollectionEnabled', () {
       analytics.setAnalyticsCollectionEnabled(true);
       verify(analytics.setAnalyticsCollectionEnabled(true));
-      verifyNoMoreInteractions(analytics);
-    });
-
-    test('setUserProperties', () {
-      final parameters = {'a': 'b'};
-      analytics.setUserProperties(parameters);
-      verify(analytics.setUserProperties(parameters));
       verifyNoMoreInteractions(analytics);
     });
   });

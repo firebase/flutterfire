@@ -7,7 +7,7 @@ import 'package:firebase_analytics_platform_interface/firebase_analytics_platfor
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+as core_interop;
 import 'interop/analytics.dart' as analytics_interop;
 
 /// Web implementation of [FirebaseAnalyticsPlatform]
@@ -19,12 +19,17 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseAnalyticsWeb({FirebaseApp? app})
       : _webAnalytics =
-            analytics_interop.getAnalyticsInstance(core_interop.app(app?.name)),
+  analytics_interop.getAnalyticsInstance(core_interop.app(app?.name)),
         super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
     FirebaseAnalyticsPlatform.instance = FirebaseAnalyticsWeb();
+  }
+
+  @override
+  FirebaseAnalyticsPlatform delegateFor({FirebaseApp? app}) {
+    return FirebaseAnalyticsWeb(app: app);
   }
 
   @override
