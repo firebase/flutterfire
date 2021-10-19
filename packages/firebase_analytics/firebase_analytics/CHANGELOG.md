@@ -1,3 +1,40 @@
+## 9.0.0-dev.1
+
+As part of our on-going work for [#2582](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Storage rework changes.
+
+Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests (tested on Android, iOS & MacOS).
+
+- **`FirebaseAnalytics`**
+
+- **DEPRECATED**: Constructing an instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
+- **DEPRECATED**: `android` namespace has been removed. Call `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
+- **DEPRECATED**: `logEcommercePurchase()` has been removed.
+- **DEPRECATED**: `logPresentOffer()` has been removed.
+- **DEPRECATED**: `logPurchaseRefund()` has been removed.
+- **DEPRECATED**: `logSetCheckoutOption()` has been removed.
+- **DEPRECATED**: `FirebaseAnalyticsObserver()` class has been removed.
+
+- **NEW**: `logAddShippingInfo()` added support for logging shipping information.
+- **NEW**: `logAdImpression()` added support for logging ad impression.
+- **NEW**: `logPurchase()` added support for logging a purchase.
+- **NEW**: `logRefund()` added support for logging a refund.
+- **NEW**: `logScreenView()` added support for logging a screen view.
+- **NEW**: `logSelectItem()` added support for logging a item that has been selected.
+- **NEW**: `logSelectPromotion()` added support for logging a promotion that has been selected.
+- **NEW**: `logViewCart()` added support for logging a view of the current cart.
+- **NEW**: `logViewPromotion()` added support for logging a view of the current promotion.
+- **NEW**: `setConsent()` added support for setting the applicable end user consent state (e.g., for device identifiers) for the app on this device.
+- **NEW**: `setDefaultEventParameters()` added support for setting default parameters that will be set on every event logged from the SDK, including automatic ones.
+
+- **UPDATED**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logAddToCart()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logAddToWishlist()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logBeginCheckout()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logRemoveFromCart()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logViewItem()` updated parameters to be logged in Analytics console.
+- **UPDATED**: `logViewItemList()` updated parameters to be logged in Analytics console.
+
 ## 8.3.3
 
  - **DOCS**: boolean parameters are not supported for GA custom definitions. (#7037).
