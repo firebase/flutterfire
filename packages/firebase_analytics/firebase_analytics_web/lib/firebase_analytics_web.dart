@@ -80,6 +80,11 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
+  Future<void> resetAnalyticsData() async {
+    // no resetAnalyticsData() API for web
+  }
+
+  @override
   Future<void> setUserProperty({
     required String name,
     required Object value,
