@@ -21,7 +21,6 @@ NSString *const kAdStorage = @"adStorage";
 NSString *const kAnalyticsStorage = @"analyticsStorage";
 NSString *const kUserId = @"userId";
 
-
 NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_analytics";
 
 @implementation FLTFirebaseAnalyticsPlugin {
@@ -46,7 +45,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
                                   binaryMessenger:[registrar messenger]];
   FLTFirebaseAnalyticsPlugin *instance = [FLTFirebaseAnalyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
-  
+
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
     [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
@@ -55,15 +54,15 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   FLTFirebaseMethodCallErrorBlock errorBlock =
-        ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-          NSError *_Nullable error) {
-          // `result.error` is not called in this plugin so this block does nothing.
-          result(nil);
-        };
-  
+      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+        NSError *_Nullable error) {
+        // `result.error` is not called in this plugin so this block does nothing.
+        result(nil);
+      };
+
   FLTFirebaseMethodCallResult *methodCallResult =
-        [FLTFirebaseMethodCallResult createWithSuccess:result andErrorBlock:errorBlock];
-  
+      [FLTFirebaseMethodCallResult createWithSuccess:result andErrorBlock:errorBlock];
+
   if ([@"Analytics#logEvent" isEqualToString:call.method]) {
     [self logEvent:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Analytics#setUserId" isEqualToString:call.method]) {
@@ -76,9 +75,9 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
     [self setAnalyticsCollectionEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Analytics#resetAnalyticsData" isEqualToString:call.method]) {
     [self resetAnalyticsData:call.arguments withMethodCallResult:methodCallResult];
-  } else if([@"Analytics#setConsent" isEqualToString:call.method]){
+  } else if ([@"Analytics#setConsent" isEqualToString:call.method]) {
     [self setConsent:call.arguments withMethodCallResult:methodCallResult];
-  } else if([@"Analytics#setDefaultEventParameters" isEqualToString:call.method]){
+  } else if ([@"Analytics#setDefaultEventParameters" isEqualToString:call.method]) {
     [self setDefaultEventParameters:call.arguments withMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
@@ -103,7 +102,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 - (void)setUserId:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *userId = arguments[kUserId];
   [FIRAnalytics setUserID:userId];
-  
+
   result.success(nil);
 }
 
@@ -125,13 +124,15 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
   result.success(nil);
 }
 
-- (void)setAnalyticsCollectionEnabled:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)setAnalyticsCollectionEnabled:(id)arguments
+                 withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSNumber *enabled = arguments[kEnabled];
   [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
   result.success(nil);
 }
 
-- (void)resetAnalyticsData:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)resetAnalyticsData:(id)arguments
+      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [FIRAnalytics resetAnalyticsData];
   result.success(nil);
 }
@@ -139,23 +140,30 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *adStorage = arguments[kAdStorage];
   NSString *analyticsStorage = arguments[kAnalyticsStorage];
-  NSMutableDictionary<FIRConsentType, FIRConsentStatus> * parameters = [[NSMutableDictionary alloc] init];;
-  
-  if(adStorage != NULL){
-    FIRConsentStatus adStorageConsent = [adStorage isEqualToString:kConsentDenied] ? FIRConsentStatusDenied : FIRConsentStatusGranted;
+  NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
+      [[NSMutableDictionary alloc] init];
+  ;
+
+  if (adStorage != NULL) {
+    FIRConsentStatus adStorageConsent = [adStorage isEqualToString:kConsentDenied]
+                                            ? FIRConsentStatusDenied
+                                            : FIRConsentStatusGranted;
     [parameters setObject:adStorageConsent forKey:FIRConsentTypeAdStorage];
   }
-  
-  if(analyticsStorage != NULL){
-    FIRConsentStatus analyticsStorageConsent = [analyticsStorage isEqualToString:kConsentDenied] ? FIRConsentStatusDenied : FIRConsentStatusGranted;
+
+  if (analyticsStorage != NULL) {
+    FIRConsentStatus analyticsStorageConsent = [analyticsStorage isEqualToString:kConsentDenied]
+                                                   ? FIRConsentStatusDenied
+                                                   : FIRConsentStatusGranted;
     [parameters setObject:analyticsStorageConsent forKey:FIRConsentTypeAnalyticsStorage];
   }
-  
+
   [FIRAnalytics setConsent:parameters];
   result.success(nil);
 }
 
-- (void)setDefaultEventParameters:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)setDefaultEventParameters:(id)arguments
+             withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   id parameters = arguments[kParameters];
   [FIRAnalytics setDefaultEventParameters:parameters];
   result.success(nil);
@@ -163,23 +171,23 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 
 #pragma mark - FLTFirebasePlugin
 
-- (void)didReinitializeFirebaseCore:(void (^ _Nonnull)(void))completion {
+- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion {
   completion();
 }
 
-- (NSString * _Nonnull)firebaseLibraryName {
+- (NSString *_Nonnull)firebaseLibraryName {
   return LIBRARY_NAME;
 }
 
-- (NSString * _Nonnull)firebaseLibraryVersion {
+- (NSString *_Nonnull)firebaseLibraryVersion {
   return LIBRARY_VERSION;
 }
 
-- (NSString * _Nonnull)flutterChannelName {
+- (NSString *_Nonnull)flutterChannelName {
   return kFLTFirebaseCrashlyticsChannelName;
 }
 
-- (NSDictionary * _Nonnull)pluginConstantsForFIRApp:(FIRApp * _Nonnull)firebaseApp {
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp {
   return @{};
 }
 

@@ -1148,7 +1148,8 @@ void main() {
       });
 
       test('setSessionTimeoutDuration', () async {
-        await analytics!.setSessionTimeoutDuration(Duration(milliseconds: 234));
+        await analytics!
+            .setSessionTimeoutDuration(const Duration(milliseconds: 234));
         expect(
           methodCallLog,
           <Matcher>[

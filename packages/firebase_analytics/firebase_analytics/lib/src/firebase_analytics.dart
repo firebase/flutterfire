@@ -67,6 +67,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     }
 
     if (parameters?['items'] is List<Item>) {
+      // ignore: cast_nullable_to_non_nullable
       parameters!['items'] = (parameters['items'] as List<Item>)
           .map((item) => item.asMap())
           .toList();
@@ -1162,9 +1163,6 @@ const String _NUMBER_OF_ROOMS = 'number_of_rooms';
 
 /// Flight or Travel origin.
 const String _ORIGIN = 'origin';
-
-/// Purchase quantity (long).
-const String _QUANTITY = 'quantity';
 
 /// Score in game (long).
 const String _SCORE = 'score';

@@ -18,6 +18,7 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
+  firebase_core_platform_interface: ^4.0.1
   flutter_test:
     sdk: flutter
   pedantic: ^1.8.0

@@ -97,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _testSetSessionTimeoutDuration() async {
     await widget.analytics
-        .setSessionTimeoutDuration(Duration(milliseconds: 20000));
+        .setSessionTimeoutDuration(const Duration(milliseconds: 20000));
     setMessage('setSessionTimeoutDuration succeeded');
   }
 

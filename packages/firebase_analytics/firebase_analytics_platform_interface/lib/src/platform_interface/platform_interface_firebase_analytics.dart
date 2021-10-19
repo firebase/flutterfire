@@ -5,7 +5,7 @@
 
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart' show visibleForTesting, protected;
+import 'package:meta/meta.dart' show protected;
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../../firebase_analytics_platform_interface.dart';
@@ -60,7 +60,6 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Enables delegates to create new instances of themselves
-  @protected
   FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }

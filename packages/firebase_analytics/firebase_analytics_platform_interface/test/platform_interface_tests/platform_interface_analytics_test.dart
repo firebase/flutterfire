@@ -133,7 +133,7 @@ void main() {
     test('throws if .setSessionTimeoutDuration() not implemented', () async {
       await expectLater(
         () => firebaseAnalyticsPlatform
-            .setSessionTimeoutDuration(Duration(milliseconds: 1000)),
+            .setSessionTimeoutDuration(const Duration(milliseconds: 1000)),
         throwsA(
           isA<UnimplementedError>().having((e) => e.message, 'message',
               'setSessionTimeoutDuration() is not implemented'),
