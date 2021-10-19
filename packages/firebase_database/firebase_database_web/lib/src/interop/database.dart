@@ -190,7 +190,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       return result;
     });
 
-    final onCompleteWrap = allowInterop((error, commited, snapshot) {
+    final onCompleteWrap = allowInterop((error, committed, snapshot) {
       if (error != null) {
         final dartified = dartify(error);
 
@@ -202,7 +202,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
         );
       } else {
         c.complete(Transaction(
-          committed: commited,
+          committed: committed,
           snapshot: DataSnapshot._fromJsObject(snapshot),
         ));
       }
@@ -230,7 +230,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 ///
 ///     Database database = firebase.database();
 ///     database.ref('messages').onValue.listen((QueryEvent e) {
-///       DataSnapshot datasnapshot = e.snapshot;
+///       DataSnapshot dataSnapshot = e.snapshot;
 ///       //...
 ///     });
 class QueryEvent {

@@ -9,7 +9,7 @@ class FirebaseDatabaseException extends FirebaseException implements Exception {
   }) : super(
           plugin: 'firebase_database',
           code: code ?? 'unknown',
-          message: message ?? 'An unknown error occured',
+          message: message ?? 'An unknown error occurred',
           stackTrace: stackTrace,
         );
 

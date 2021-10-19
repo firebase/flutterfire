@@ -227,7 +227,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
       final error = DatabaseErrorPlatform({
         'code': 'unknown',
-        'message': 'An unknown error occured',
+        'message': 'An unknown error occurred',
       });
 
       throw error;

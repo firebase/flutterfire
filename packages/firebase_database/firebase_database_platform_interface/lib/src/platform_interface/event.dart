@@ -44,12 +44,12 @@ EventType eventTypeFromString(String? value) {
 /// previous sibling, which can be used to order the snapshots.
 class EventPlatform {
   EventPlatform(Map<Object?, Object?> _data)
-      // ingore: cast_nullable_to_non_nullable
       : type = eventTypeFromString(_data['eventType'] as String?),
         previousSiblingKey = _data['previousSiblingKey'] as String?,
         snapshot = DataSnapshotPlatform.fromJson(
-            _data['snapshot']! as Map<Object?, Object?>,
-            _data['childKeys'] as List<Object?>?);
+          _data['snapshot']! as Map<Object?, Object?>,
+          _data['childKeys'] as List<Object?>?,
+        );
 
   /// create [EventPlatform] from [DataSnapshotPlatform]
   EventPlatform.fromDataSnapshotPlatform(
