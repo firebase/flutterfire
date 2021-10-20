@@ -255,9 +255,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Logs the standard `add_to_cart` event.
   ///
-  /// This event signifies that an item was added to a cart for purchase. Add
-  /// this event to a funnel with [logEcommercePurchase] to gauge the
-  /// effectiveness of your checkout process. Note: If you supply the
+  /// This event signifies that an item was added to a cart for purchase. Note: If you supply the
   /// [value] parameter, you must also supply the [currency] parameter so that
   /// revenue metrics can be computed accurately.
   ///
