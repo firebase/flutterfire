@@ -7,13 +7,21 @@ documentation and updating unit and end-to-end tests (tested on Android & iOS).
 
 - **`FirebaseAnalytics`**
 
-- **DEPRECATED**: Constructing an instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
-- **DEPRECATED**: `android` namespace has been removed. Call `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
-- **DEPRECATED**: `logEcommercePurchase()` has been removed.
-- **DEPRECATED**: `logPresentOffer()` has been removed.
-- **DEPRECATED**: `logPurchaseRefund()` has been removed.
-- **DEPRECATED**: `logSetCheckoutOption()` has been removed.
-- **DEPRECATED**: `FirebaseAnalyticsObserver()` class has been removed.
+- **DEPRECATED**: `android` namespace has been deprecated in favour of calling `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
+- **DEPRECATED**: `logEcommercePurchase()` has been deprecated in favour of using `logPurchase()`.
+- **DEPRECATED**: `logPresentOffer()` has been deprecated in favour of using `logViewPromotion()`.
+- **DEPRECATED**: `logPurchaseRefund()` has been deprecated in favour of using `logRefund()`.
+- **DEPRECATED**: `logSetCheckoutOption()` has been deprecated.
+
+- **BREAKING**: `FirebaseAnalyticsObserver()` class has been removed.
+- **BREAKING**: Constructing an instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
+- **BREAKING**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToWishlist()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logBeginCheckout()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logRemoveFromCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItem()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItemList()` updated parameters to be logged in Analytics console.
 
 - **NEW**: `logAddShippingInfo()` added support for logging shipping information.
 - **NEW**: `logAdImpression()` added support for logging ad impression.
@@ -27,13 +35,6 @@ documentation and updating unit and end-to-end tests (tested on Android & iOS).
 - **NEW**: `setConsent()` added support for setting the applicable end user consent state (e.g., for device identifiers) for the app on this device.
 - **NEW**: `setDefaultEventParameters()` added support for setting default parameters that will be set on every event logged from the SDK, including automatic ones.
 
-- **UPDATED**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logAddToCart()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logAddToWishlist()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logBeginCheckout()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logRemoveFromCart()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logViewItem()` updated parameters to be logged in Analytics console.
-- **UPDATED**: `logViewItemList()` updated parameters to be logged in Analytics console.
 
 ## 8.3.3
 
