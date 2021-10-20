@@ -297,6 +297,8 @@ FirestoreBuilder<String>(
 By doing so, now `Text` will rebuild only when the person's name changes. If that person's age changes, this won't
 rebuild our `Text`.
 
+> **Note**: This is a client only optimization. The underlying Firestore SDKs will still continue to subscribe to and receive updates for the entire snapshot and therefore this will not reduce any associated billing costs.
+
 ----
 
 ### Example
