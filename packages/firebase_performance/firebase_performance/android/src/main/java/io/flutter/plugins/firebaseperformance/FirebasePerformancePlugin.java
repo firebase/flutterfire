@@ -8,7 +8,6 @@ import android.util.SparseArray;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /**
  * Flutter plugin accessing Firebase Performance API.
@@ -20,21 +19,6 @@ public class FirebasePerformancePlugin implements FlutterPlugin, MethodChannel.M
 
   private final SparseArray<MethodChannel.MethodCallHandler> handlers = new SparseArray<>();
   private MethodChannel channel;
-
-  /**
-   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
-   *
-   * <p>Calling this will register the plugin with the passed registrar. However, plugins
-   * initialized this way won't react to changes in activity or context.
-   *
-   * @param registrar connects this plugin's {@link
-   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
-   *     io.flutter.plugin.common.BinaryMessenger}.
-   */
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new FirebasePerformancePlugin());
-  }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {

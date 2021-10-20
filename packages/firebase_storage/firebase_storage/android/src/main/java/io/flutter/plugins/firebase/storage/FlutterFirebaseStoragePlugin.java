@@ -21,7 +21,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
 import java.io.File;
@@ -34,11 +33,6 @@ import java.util.Objects;
 public class FlutterFirebaseStoragePlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private MethodChannel channel;
-
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterFirebaseStoragePlugin instance = new FlutterFirebaseStoragePlugin();
-    instance.initInstance(registrar.messenger());
-  }
 
   static Map<String, Object> parseMetadata(StorageMetadata storageMetadata) {
     if (storageMetadata == null) {

@@ -20,7 +20,6 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,12 +33,6 @@ public class FirebaseRemoteConfigPlugin
   static final String METHOD_CHANNEL = "plugins.flutter.io/firebase_remote_config";
 
   private MethodChannel channel;
-
-  @SuppressWarnings("deprecation") // Registrar deprecated (v1 plugin embedding).
-  public static void registerWith(Registrar registrar) {
-    FirebaseRemoteConfigPlugin plugin = new FirebaseRemoteConfigPlugin();
-    plugin.setupChannel(registrar.messenger());
-  }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {

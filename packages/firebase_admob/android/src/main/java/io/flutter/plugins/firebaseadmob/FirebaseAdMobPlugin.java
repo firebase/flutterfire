@@ -22,7 +22,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -65,28 +64,6 @@ public class FirebaseAdMobPlugin implements FlutterPlugin, ActivityAware, Method
      *     top of the FlutterView.
      */
     UnifiedNativeAdView createNativeAd(UnifiedNativeAd nativeAd, Map<String, Object> customOptions);
-  }
-
-  /**
-   * Registers a plugin with the v1 embedding api {@code io.flutter.plugin.common}.
-   *
-   * <p>Calling this will register the plugin with the passed registrar. However, plugins
-   * initialized this way won't react to changes in activity or context.
-   *
-   * @param registrar connects this plugin's {@link
-   *     io.flutter.plugin.common.MethodChannel.MethodCallHandler} to its {@link
-   *     io.flutter.plugin.common.BinaryMessenger}.
-   */
-  public static void registerWith(Registrar registrar) {
-    if (registrar.activity() == null) {
-      // If a background Flutter view tries to register the plugin, there will be no activity from the registrar.
-      // We stop the registering process immediately because the firebase_admob requires an activity.
-      return;
-    }
-
-    final FirebaseAdMobPlugin plugin = new FirebaseAdMobPlugin();
-    registrar.publish(plugin);
-    plugin.initializePlugin(registrar.context(), registrar.activity(), registrar.messenger());
   }
 
   /**
