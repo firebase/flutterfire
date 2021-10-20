@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
@@ -32,27 +33,31 @@ void runDatabaseReferenceTests() {
       expect(result.dataSnapshot!.value > value, true);
     });
 
-    test('throws exception if transaction timed out', () async {
-      const timeout = Duration(milliseconds: 1);
-      try {
-        await ref.runTransaction(
-          (value) {
-            final now = DateTime.now();
-            while (DateTime.now().difference(now) < timeout) {}
+    test(
+      'throws exception if transaction timed out',
+      () async {
+        const timeout = Duration(milliseconds: 1);
+        try {
+          await ref.runTransaction(
+            (value) {
+              final now = DateTime.now();
+              while (DateTime.now().difference(now) < timeout) {}
 
-            return (value ?? 0) + 1;
-          },
-          timeout: timeout,
-        );
+              return (value ?? 0) + 1;
+            },
+            timeout: timeout,
+          );
 
-        throw Exception('should timeout');
-      } catch (e) {
-        expect(e, isA<FirebaseDatabaseException>());
+          throw Exception('should timeout');
+        } catch (e) {
+          expect(e, isA<FirebaseDatabaseException>());
 
-        final dbException = e as FirebaseDatabaseException;
-        expect(dbException.code, 'transaction-timeout');
-      }
-    });
+          final dbException = e as FirebaseDatabaseException;
+          expect(dbException.code, 'transaction-timeout');
+        }
+      },
+      skip: kIsWeb,
+    );
 
     test('get primitive list values', () async {
       List<String> data = ['first', 'second'];

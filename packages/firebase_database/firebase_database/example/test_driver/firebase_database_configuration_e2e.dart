@@ -48,6 +48,7 @@ void runConfigurationTests() {
           expect(err, isA<FirebaseDatabaseException>());
         }
       },
+      skip: kIsWeb,
     );
   });
 }
