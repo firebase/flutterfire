@@ -57,7 +57,7 @@ void runDatabaseReferenceTests() {
     test('get primitive list values', () async {
       List<String> data = ['first', 'second'];
       final FirebaseDatabase database = FirebaseDatabase.instance;
-      final DatabaseReference ref = database.reference().child('list-values');
+      final DatabaseReference ref = database.ref('list-values');
 
       await ref.set({'list': data});
 
