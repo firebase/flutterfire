@@ -67,7 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Configuration failed: $err');
     }
 
-    await _counterRef.keepSynced(true);
+    if (!kIsWeb) {
+      await _counterRef.keepSynced(true);
+    }
 
     setState(() {
       initialized = true;

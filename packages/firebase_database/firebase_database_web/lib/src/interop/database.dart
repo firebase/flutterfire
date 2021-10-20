@@ -185,8 +185,17 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
     final c = Completer<Transaction>();
 
     final transactionUpdateWrap = allowInterop((update) {
-      final dartUpdate = MutableData('key', dartify(update));
-      final result = jsify(transactionUpdate(dartUpdate).value);
+      final dartUpdate = dartify(update);
+
+      late dynamic result;
+
+      try {
+        final dartResult = transactionUpdate(dartUpdate);
+        result = jsify(dartResult);
+      } on AbortTransaction catch (_) {
+        result = undefined;
+      }
+
       return result;
     });
 
@@ -194,12 +203,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       if (error != null) {
         final dartified = dartify(error);
 
-        c.completeError(
-          FirebaseDatabaseException(
-            code: dartified['code'],
-            message: dartified['message'],
-          ),
-        );
+        c.completeError(DatabaseErrorPlatform(dartified));
       } else {
         c.complete(Transaction(
           committed: committed,

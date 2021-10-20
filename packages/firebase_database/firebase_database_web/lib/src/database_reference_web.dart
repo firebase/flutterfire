@@ -93,16 +93,18 @@ class DatabaseReferenceWeb extends QueryWeb
       final transaction = await ref.transaction(transactionHandler);
 
       return TransactionResultPlatform(
-        null,
         transaction.committed,
         fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
       );
-    } on DatabaseErrorPlatform catch (e) {
-      return TransactionResultPlatform(
-        e,
-        false,
-        null,
-      );
+    } catch (e) {
+      if (e is DatabaseErrorPlatform) rethrow;
+
+      final error = DatabaseErrorPlatform({
+        'code': 'unknown',
+        'message': 'An unknown error occurred',
+      });
+
+      throw error;
     }
   }
 

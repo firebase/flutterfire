@@ -5,6 +5,9 @@
 
 // ignore_for_file: public_member_api_docs
 
+@JS('firebase.app')
+library firebase_interop.core.app;
+
 import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -110,3 +113,6 @@ bool _isBasicType(Object? value) {
 /// Resolves error.
 void Function(Object) resolveError(Completer c) =>
     allowInterop(c.completeError);
+
+@JS('undefined')
+external Object undefined;
