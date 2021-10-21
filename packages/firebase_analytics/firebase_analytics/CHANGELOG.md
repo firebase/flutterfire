@@ -1,3 +1,7 @@
+## 8.3.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 8.3.3
 
  - **DOCS**: boolean parameters are not supported for GA custom definitions. (#7037).

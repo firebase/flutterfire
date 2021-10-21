@@ -1,3 +1,7 @@
+## 3.0.5
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 3.0.4
 
  - Update a dependency to the latest release.

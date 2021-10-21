@@ -1,3 +1,7 @@
+## 2.0.11
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 2.0.10
 
  - **DOCS**: changed "ibn" to "ibi" iOS param name in long dynamic link example (#7081).
