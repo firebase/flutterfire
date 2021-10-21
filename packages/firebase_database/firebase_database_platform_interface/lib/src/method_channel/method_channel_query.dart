@@ -93,15 +93,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// than or equal to the given key.
   @override
   QueryPlatform startAt(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('startAt'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'startAt': value};
-    if (key != null) parameters['startAtKey'] = key;
-    return _copyWithParameters(parameters);
+    return _copyWithParameters(buildParamsWithStartAt(value, key: key));
   }
 
   /// Create a query constrained to only return child nodes with a value less
@@ -110,15 +102,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// than or equal to the given key.
   @override
   QueryPlatform endAt(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('endAt'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'endAt': value};
-    if (key != null) parameters['endAtKey'] = key;
-    return _copyWithParameters(parameters);
+    return _copyWithParameters(buildParamsWithEndAt(value, key: key));
   }
 
   /// Create a query constrained to only return child nodes with the given
@@ -127,29 +111,19 @@ class MethodChannelQuery extends QueryPlatform {
   /// If a key is provided, there is at most one such child as names are unique.
   @override
   QueryPlatform equalTo(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('equalTo'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'equalTo': value};
-    if (key != null) parameters['equalToKey'] = key;
-    return _copyWithParameters(parameters);
+    return _copyWithParameters(buildParamsWithEqualTo(value, key: key));
   }
 
   /// Create a query with limit and anchor it to the start of the window.
   @override
   QueryPlatform limitToFirst(int limit) {
-    assert(!parameters.containsKey('limitToFirst'));
-    return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
+    return _copyWithParameters(buildParamsWithLimitToFirst(limit));
   }
 
   /// Create a query with limit and anchor it to the end of the window.
   @override
   QueryPlatform limitToLast(int limit) {
-    assert(!parameters.containsKey('limitToLast'));
-    return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
+    return _copyWithParameters(buildParamsWithLimitToLast(limit));
   }
 
   /// Generate a view of the data sorted by values of a particular child key.
@@ -158,10 +132,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// [equalTo].
   @override
   QueryPlatform orderByChild(String key) {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(
-      <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
-    );
+    return _copyWithParameters(buildParamsWithOrderByChild(key));
   }
 
   /// Generate a view of the data sorted by key.
@@ -170,8 +141,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// [equalTo].
   @override
   QueryPlatform orderByKey() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
+    return _copyWithParameters(buildParamsWithOrderByKey());
   }
 
   /// Generate a view of the data sorted by value.
@@ -180,8 +150,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// [equalTo].
   @override
   QueryPlatform orderByValue() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
+    return _copyWithParameters(buildParamsWithOrderByValue());
   }
 
   /// Generate a view of the data sorted by priority.
@@ -190,8 +159,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// [equalTo].
   @override
   QueryPlatform orderByPriority() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
+    return _copyWithParameters(buildParamsWithOrderByPriority());
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
@@ -221,9 +189,7 @@ class MethodChannelQuery extends QueryPlatform {
     return MethodChannelQuery(
       database: database,
       pathComponents: pathComponents,
-      parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(this.parameters)..addAll(parameters),
-      ),
+      parameters: parameters,
     );
   }
 }

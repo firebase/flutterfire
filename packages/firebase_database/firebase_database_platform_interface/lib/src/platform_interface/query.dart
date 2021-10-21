@@ -141,4 +141,124 @@ abstract class QueryPlatform extends PlatformInterface {
   DatabaseReferencePlatform reference() {
     throw UnimplementedError('reference() not implemented');
   }
+
+  /// generate new parameters for the query by adding the startAt information.
+  Map<String, dynamic> buildParamsWithStartAt(dynamic value, {String? key}) {
+    assert(!this.parameters.containsKey('startAt'));
+    assert(value is String ||
+        value is bool ||
+        value is double ||
+        value is int ||
+        value == null);
+    final Map<String, dynamic> parameters = <String, dynamic>{'startAt': value};
+    if (key != null) parameters['startAtKey'] = key;
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(this.parameters)..addAll(parameters),
+    );
+  }
+
+  /// generate new parameters for the query by adding the endAt information.
+  Map<String, dynamic> buildParamsWithEndAt(dynamic value, {String? key}) {
+    assert(!this.parameters.containsKey('endAt'));
+    assert(value is String ||
+        value is bool ||
+        value is double ||
+        value is int ||
+        value == null);
+    final Map<String, dynamic> parameters = <String, dynamic>{'endAt': value};
+    if (key != null) parameters['endAtKey'] = key;
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(this.parameters)..addAll(parameters),
+    );
+  }
+
+  /// generate new parameters for the query by adding the equalTo information.
+  Map<String, dynamic> buildParamsWithEqualTo(dynamic value, {String? key}) {
+    assert(!this.parameters.containsKey('equalTo'));
+    assert(value is String ||
+        value is bool ||
+        value is double ||
+        value is int ||
+        value == null);
+    final Map<String, dynamic> parameters = <String, dynamic>{'equalTo': value};
+    if (key != null) parameters['equalToKey'] = key;
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(this.parameters)..addAll(parameters),
+    );
+  }
+
+  /// generate new parameters for the query by adding the limitToFirst information.
+  Map<String, dynamic> buildParamsWithLimitToFirst(int limit) {
+    assert(!parameters.containsKey('limitToFirst'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'limitToFirst': limit},
+        ),
+    );
+  }
+
+  /// generate new parameters for the query by adding the limitToLast information.
+  Map<String, dynamic> buildParamsWithLimitToLast(int limit) {
+    assert(!parameters.containsKey('limitToLast'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'limitToLast': limit},
+        ),
+    );
+  }
+
+  /// generate new parameters for the query by adding the orderByChild information.
+  Map<String, dynamic> buildParamsWithOrderByChild(String key) {
+    assert(!parameters.containsKey('orderBy'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
+        ),
+    );
+  }
+
+  /// generate new parameters for the query by adding the orderByKey information.
+  Map<String, dynamic> buildParamsWithOrderByKey() {
+    assert(!parameters.containsKey('orderBy'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'orderBy': 'key'},
+        ),
+    );
+  }
+
+  /// generate new parameters for the query by adding the orderByValue information.
+  Map<String, dynamic> buildParamsWithOrderByValue() {
+    assert(!parameters.containsKey('orderBy'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'orderBy': 'value'},
+        ),
+    );
+  }
+
+  /// generate new parameters for the query by adding the orderByPriority information.
+  Map<String, dynamic> buildParamsWithOrderByPriority() {
+    assert(!parameters.containsKey('orderBy'));
+
+    return Map<String, dynamic>.unmodifiable(
+      Map<String, dynamic>.from(parameters)
+        ..addAll(
+          <String, dynamic>{'orderBy': 'priority'},
+        ),
+    );
+  }
 }

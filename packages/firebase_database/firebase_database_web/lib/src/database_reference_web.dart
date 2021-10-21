@@ -20,6 +20,7 @@ class DatabaseReferenceWeb extends QueryWeb
           pathComponents.isEmpty
               ? firebaseDatabase.ref("/")
               : firebaseDatabase.ref(pathComponents.join("/")),
+          parameters: {},
         );
 
   @override

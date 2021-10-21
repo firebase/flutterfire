@@ -13,8 +13,13 @@ class QueryWeb extends QueryPlatform {
     this._firebaseDatabase,
     DatabasePlatform databasePlatform,
     List<String> pathComponents,
-    this._firebaseQuery,
-  ) : super(database: databasePlatform, pathComponents: pathComponents);
+    this._firebaseQuery, {
+    Map<String, dynamic> parameters = const <String, dynamic>{},
+  }) : super(
+          database: databasePlatform,
+          pathComponents: pathComponents,
+          parameters: parameters,
+        );
 
   @override
   DatabaseReferencePlatform reference() =>
@@ -38,47 +43,74 @@ class QueryWeb extends QueryPlatform {
 
   @override
   QueryPlatform startAt(dynamic value, {String? key}) {
-    return _withQuery(_firebaseQuery.startAt(value, key));
+    return _withQuery(
+      _firebaseQuery.startAt(value, key),
+      buildParamsWithStartAt(value, key: key),
+    );
   }
 
   @override
   QueryPlatform endAt(value, {String? key}) {
-    return _withQuery(_firebaseQuery.endAt(value, key));
+    return _withQuery(
+      _firebaseQuery.endAt(value, key),
+      buildParamsWithEndAt(value, key: key),
+    );
   }
 
   @override
   QueryPlatform equalTo(value, {String? key}) {
-    return _withQuery(_firebaseQuery.equalTo(value, key));
+    return _withQuery(
+      _firebaseQuery.equalTo(value, key),
+      buildParamsWithEqualTo(value, key: key),
+    );
   }
 
   @override
   QueryPlatform limitToFirst(int limit) {
-    return _withQuery(_firebaseQuery.limitToFirst(limit));
+    return _withQuery(
+      _firebaseQuery.limitToFirst(limit),
+      buildParamsWithLimitToFirst(limit),
+    );
   }
 
   @override
   QueryPlatform limitToLast(int limit) {
-    return _withQuery(_firebaseQuery.limitToLast(limit));
+    return _withQuery(
+      _firebaseQuery.limitToLast(limit),
+      buildParamsWithLimitToLast(limit),
+    );
   }
 
   @override
   QueryPlatform orderByChild(String key) {
-    return _withQuery(_firebaseQuery.orderByChild(key));
+    return _withQuery(
+      _firebaseQuery.orderByChild(key),
+      buildParamsWithOrderByChild(key),
+    );
   }
 
   @override
   QueryPlatform orderByKey() {
-    return _withQuery(_firebaseQuery.orderByKey());
+    return _withQuery(
+      _firebaseQuery.orderByKey(),
+      buildParamsWithOrderByKey(),
+    );
   }
 
   @override
   QueryPlatform orderByPriority() {
-    return _withQuery(_firebaseQuery.orderByPriority());
+    return _withQuery(
+      _firebaseQuery.orderByPriority(),
+      buildParamsWithOrderByPriority(),
+    );
   }
 
   @override
   QueryPlatform orderByValue() {
-    return _withQuery(_firebaseQuery.orderByValue());
+    return _withQuery(
+      _firebaseQuery.orderByValue(),
+      buildParamsWithOrderByValue(),
+    );
   }
 
   @override
@@ -110,12 +142,13 @@ class QueryWeb extends QueryPlatform {
         fromWebEventToPlatformEvent(event));
   }
 
-  QueryPlatform _withQuery(newQuery) {
+  QueryPlatform _withQuery(newQuery, Map<String, dynamic> parameters) {
     return QueryWeb(
       _firebaseDatabase,
       database,
       pathComponents,
       newQuery,
+      parameters: parameters,
     );
   }
 }
