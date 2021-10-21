@@ -99,9 +99,9 @@ class RemoteConfig extends core_interop
   }
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
-      utf8.encode(jsObject.getValue(key).asString()),
-      getSource(jsObject.getValue(key).getSource()),
-  );
+        utf8.encode(jsObject.getValue(key).asString()),
+        getSource(jsObject.getValue(key).getSource()),
+      );
 
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
