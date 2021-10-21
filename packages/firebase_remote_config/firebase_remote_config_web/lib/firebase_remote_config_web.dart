@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'interop/firebase_remote_config.dart' as remote_config_interop;
+import 'src/interop/firebase_remote_config.dart' as remote_config_interop;
 
 /// Web implementation of [FirebaseRemoteConfigPlatform].
 class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
@@ -40,6 +40,13 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   @override
   FirebaseRemoteConfigPlatform delegateFor({FirebaseApp? app}) {
     return FirebaseRemoteConfigWeb(app: app);
+  }
+
+  @override
+  FirebaseRemoteConfigPlatform setInitialValues({
+    required Map<dynamic, dynamic> remoteConfigValues,
+  }) {
+    return this;
   }
 
   /// Returns the [DateTime] of the last successful fetch.
@@ -108,8 +115,7 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   /// Returns a Map of all Remote Config parameters.
   @override
   Map<String, RemoteConfigValue> getAll() {
-    // TODO implement
-    throw UnimplementedError('getAll() is not implemented');
+    return _webRemoteConfig!.getAll();
   }
 
   /// Gets the value for a given key as a bool.
@@ -139,8 +145,7 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
   /// Gets the [RemoteConfigValue] for a given key.
   @override
   RemoteConfigValue getValue(String key) {
-    // TODO implement
-    throw UnimplementedError('getValue() is not implemented');
+    return _webRemoteConfig!.getValue(key);
   }
 
   /// Sets the [RemoteConfigSettings] for the current instance.

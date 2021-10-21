@@ -1,6 +1,7 @@
+import 'dart:convert' show utf8;
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-
+import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'firebase_interop.dart' as firebase_interop;
 import 'firebase_remote_config_interop.dart' as remote_config_interop;
 
@@ -97,6 +98,10 @@ class RemoteConfig extends core_interop
     return Map<String, RemoteConfigValue>.fromEntries(entries);
   }
 
+  RemoteConfigValue getValue(String key) => RemoteConfigValue(
+      utf8.encode(jsObject.getValue(key).asString()),
+      getSource(jsObject.getValue(key).getSource()));
+
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
   bool getBoolean(String key) => jsObject.getBoolean(key);
@@ -109,10 +114,6 @@ class RemoteConfig extends core_interop
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
   String getString(String key) => jsObject.getString(key);
 
-  ///  Gets the value for the given key.
-  RemoteConfigValue getValue(String key) =>
-      RemoteConfigValue._fromJsObject(jsObject.getValue(key));
-
   void setLogLevel(RemoteConfigLogLevel value) {
     jsObject.setLogLevel(
       const {
@@ -124,48 +125,17 @@ class RemoteConfig extends core_interop
   }
 }
 
-/// Wraps a value with metadata and type-safe getters.
-class RemoteConfigValue
-    extends core_interop.JsObjectWrapper<remote_config_interop.ValueJsImpl> {
-  RemoteConfigValue._fromJsObject(remote_config_interop.ValueJsImpl jsObject)
-      : super.fromJsObject(jsObject);
-
-  /// Gets the value as a boolean.
-  /// The following values (case insensitive) are interpreted as true:
-  /// `"1"`, `"true"`, `"t"`, `"yes"`, `"y"`, `"on"`. Other values are interpreted as false.
-  bool asBoolean() => jsObject.asBoolean();
-
-  ///  Gets the value as a number. Returns `0` if the value is not a number.
-  num asNumber() => jsObject.asNumber();
-
-  /// Gets the value as a string.
-  String asString() => jsObject.asString();
-
-  /// Returns the source of the value.
-  RemoteConfigValueSource getSource() {
-    switch (jsObject.getSource()) {
-      case 'static':
-        return RemoteConfigValueSource.static;
-      case 'default':
-        return RemoteConfigValueSource.defaults;
-      case 'remote':
-        return RemoteConfigValueSource.remote;
-      default:
-        throw UnimplementedError(jsObject.getSource());
-    }
+ValueSource getSource(String source) {
+  switch (source) {
+    case 'static':
+      return ValueSource.valueStatic;
+    case 'default':
+      return ValueSource.valueDefault;
+    case 'remote':
+      return ValueSource.valueRemote;
+    default:
+      throw UnimplementedError(source);
   }
-}
-
-/// Indicates the source of a value.
-enum RemoteConfigValueSource {
-  /// The value has not been defined. It was initialized by a static constant.
-  static,
-
-  /// The value was defined by default config.
-  defaults,
-
-  /// The value was defined by fetched config.
-  remote,
 }
 
 /// Defines configuration options for the Remote Config SDK.
