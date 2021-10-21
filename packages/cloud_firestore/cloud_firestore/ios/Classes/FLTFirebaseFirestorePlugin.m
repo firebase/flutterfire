@@ -5,6 +5,7 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
+#import <TargetConditionals.h>
 #import "Private/FLTDocumentSnapshotStreamHandler.h"
 #import "Private/FLTFirebaseFirestoreUtils.h"
 #import "Private/FLTLoadBundleStreamHandler.h"

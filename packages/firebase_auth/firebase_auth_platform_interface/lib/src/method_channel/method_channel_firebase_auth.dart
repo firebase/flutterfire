@@ -346,7 +346,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setLanguageCode(String languageCode) async {
+  Future<void> setLanguageCode(String? languageCode) async {
     try {
       Map<String, dynamic> data =
           (await channel.invokeMapMethod<String, dynamic>(

@@ -4,6 +4,7 @@
 //
 //  Created by Russell Wheatley on 05/05/2021.
 //
+#import <TargetConditionals.h>
 
 #if TARGET_OS_OSX
 #import <FlutterMacOS/FlutterMacOS.h>

@@ -1,3 +1,12 @@
+## 10.0.5
+
+ - **FIX**: remove https port number from `downloadUrl` for `iOS` (#7097).
+
+## 10.0.4
+
+ - **FIX**: fix localhost url parsing for Storage Emulator (#7003).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 10.0.3
 
  - **FIX**: accept google storage bucket urls (#6848).

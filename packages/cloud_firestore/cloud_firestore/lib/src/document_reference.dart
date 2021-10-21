@@ -13,6 +13,8 @@ part of cloud_firestore;
 @sealed
 @immutable
 abstract class DocumentReference<T extends Object?> {
+  DocumentReferencePlatform get _delegate;
+
   /// The Firestore instance associated with this document reference.
   FirebaseFirestore get firestore;
 
@@ -95,6 +97,7 @@ class _JsonDocumentReference
     DocumentReferencePlatform.verifyExtends(_delegate);
   }
 
+  @override
   final DocumentReferencePlatform _delegate;
 
   @override
@@ -232,6 +235,10 @@ class _WithConverterDocumentReference<T extends Object?>
       );
     });
   }
+
+  @override
+  DocumentReferencePlatform get _delegate =>
+      _originalDocumentReference._delegate;
 
   @override
   FirebaseFirestore get firestore => _originalDocumentReference.firestore;

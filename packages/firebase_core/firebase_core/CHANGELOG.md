@@ -1,3 +1,8 @@
+## 1.7.0
+
+ - **FEAT**: bump Firebase iOS SDK to `8.7.0` & Android SDK to `28.4.1` (#7083).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 1.6.0
 
  - **FEAT**: update Firebase Android SDK to `28.3.1` & Firebase iOS SDK to `8.6.0` (#6847).

@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
-  firebase_core: ^1.6.0
+  firebase_core: ^1.7.0
   flutter_driver:
     sdk: flutter
   flutter_test:

@@ -1,3 +1,8 @@
+## 2.0.10
+
+ - **DOCS**: changed "ibn" to "ibi" iOS param name in long dynamic link example (#7081).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 2.0.9
 
  - Update a dependency to the latest release.

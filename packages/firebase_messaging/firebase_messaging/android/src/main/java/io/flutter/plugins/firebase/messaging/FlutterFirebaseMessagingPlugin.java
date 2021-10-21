@@ -29,7 +29,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,14 +47,6 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   private Activity mainActivity;
   private RemoteMessage initialMessage;
 
-  @SuppressWarnings("unused")
-  public static void registerWith(Registrar registrar) {
-    FlutterFirebaseMessagingPlugin instance = new FlutterFirebaseMessagingPlugin();
-    instance.setActivity(registrar.activity());
-    registrar.addNewIntentListener(instance);
-    instance.initInstance(registrar.messenger());
-  }
-
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_messaging";
     channel = new MethodChannel(messenger, channelName);
@@ -72,23 +63,16 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     registerPlugin(channelName, this);
   }
 
-  private void onAttachedToEngine(Context context, BinaryMessenger binaryMessenger) {
-    initInstance(binaryMessenger);
-  }
-
-  private void setActivity(Activity flutterActivity) {
-    this.mainActivity = flutterActivity;
-  }
-
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    onAttachedToEngine(binding.getApplicationContext(), binding.getBinaryMessenger());
+    initInstance(binding.getBinaryMessenger());
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    LocalBroadcastManager.getInstance(ContextHolder.getApplicationContext())
-        .unregisterReceiver(this);
+    if (binding.getApplicationContext() != null) {
+      LocalBroadcastManager.getInstance(binding.getApplicationContext()).unregisterReceiver(this);
+    }
   }
 
   @Override

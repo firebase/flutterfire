@@ -1,3 +1,11 @@
+## 8.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: List of values erroring on transaction result (#7001).
+ - **CHORE**: update gradle version across packages (#7054).
+ - **BREAKING** **FEAT**: add initial support for Web.
+
 ## 7.2.2
 
  - **REFACTOR**: firebase_database_platform_interface (#6668).

@@ -13,8 +13,9 @@ dependencies:
     path: ../../../firebase_dynamic_links
   flutter:
     sdk: flutter
-  flutter_signin_button: ^1.0.0
-  google_sign_in: ^5.0.0-nullsafety
+  flutter_signin_button: ^2.0.0
+# Removed google_sign_in plugin temporarily until CI is fixed
+#  google_sign_in: ^5.1.0
 
 dependency_overrides:
   firebase_auth:
@@ -33,10 +34,10 @@ dependency_overrides:
     path: ../../../firebase_dynamic_links
 
 dev_dependencies:
-  drive: 0.1.0
+  drive: 1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
-  http: ^0.13.0
+  http: ^0.13.3
   test: any
 
 flutter:

@@ -875,7 +875,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   @override
   Query<T> endBeforeDocument(DocumentSnapshot documentSnapshot) {
-    return _mapQuery(_originalQuery.endAtDocument(documentSnapshot));
+    return _mapQuery(_originalQuery.endBeforeDocument(documentSnapshot));
   }
 
   @override
