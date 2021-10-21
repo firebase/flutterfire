@@ -11,7 +11,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
@@ -23,10 +22,6 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
         new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
     channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
     return channel;
-  }
-
-  public static void registerWith(Registrar registrar) {
-    setup(registrar.messenger());
   }
 
   public FirebaseInAppMessagingPlugin() {
