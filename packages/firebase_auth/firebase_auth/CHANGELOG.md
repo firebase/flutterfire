@@ -1,3 +1,8 @@
+## 3.1.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
 ## 3.1.3
 
  - **REFACTOR**: migrate example app to null-safety (#7111).

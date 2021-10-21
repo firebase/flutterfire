@@ -1,3 +1,7 @@
+## 3.1.3
+
+ - Update a dependency to the latest release.
+
 ## 3.1.2
 
  - **FIX**: null-safety migration issue for web types (#7137).
