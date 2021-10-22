@@ -1,9 +1,10 @@
-// ignore_for_file: require_trailing_commas
-
 import 'dart:async';
+import 'dart:math';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
+import 'utils/extensions.dart';
 
 final List<Map<String, Object>> testDocuments = [
   {'ref': 'one', 'value': 23},
@@ -12,20 +13,35 @@ final List<Map<String, Object>> testDocuments = [
   {'ref': 'four', 'value': 40}
 ];
 
+Future<void> setupOrderedData() async {
+  final orderedRef = database.ref('ordered');
+
+  await Future.wait(testDocuments.map((map) {
+    String key = map['ref']! as String;
+    return orderedRef.child(key).set(map);
+  }));
+}
+
+Future<void> setupPriorityData() async {
+  final priorityRef = database.ref('priority_test');
+
+  await Future.wait([
+    priorityRef.child('first').set(1, priority: 10),
+    priorityRef.child('second').set(2, priority: 1),
+    priorityRef.child('third').set(3, priority: 5),
+  ]);
+}
+
 void runQueryTests() {
   group('Query', () {
     setUp(() async {
       await database.ref('flutterfire').set(0);
 
-      final orderedRef = database.ref('ordered');
-
-      await Future.wait(testDocuments.map((map) {
-        String key = map['ref']! as String;
-        return orderedRef.child(key).set(map);
-      }));
+      await setupOrderedData();
+      await setupPriorityData();
     });
 
-    test('once', () async {
+    test('once()', () async {
       final dataSnapshot = await database.ref('ordered/one').once();
       expect(dataSnapshot, isNot(null));
       expect(dataSnapshot.key, 'one');
@@ -33,7 +49,7 @@ void runQueryTests() {
       expect(dataSnapshot.value['value'], 23);
     });
 
-    test('get', () async {
+    test('get()', () async {
       final dataSnapshot = await database.ref('ordered/two').get();
       expect(dataSnapshot, isNot(null));
       expect(dataSnapshot.key, 'two');
@@ -41,32 +57,44 @@ void runQueryTests() {
       expect(dataSnapshot.value['value'], 56);
     });
 
-    test('correct order returned from query', () async {
-      final c = Completer<List<Map<String, dynamic>>>();
-      final items = <Map<String, dynamic>>[];
+    test(
+      'throws "index-not-defined" if oredering applied to a ref with no index',
+      () async {
+        final ref = database.ref('messages');
+        try {
+          await ref.orderByValue().get();
+          throw Exception('should have thrown FirebaseDatabaseException');
+        } on FirebaseDatabaseException catch (e) {
+          expect(e.code, 'index-not-defined');
+          expect(
+            e.message!.startsWith('Index not defined, add ".indexOn": '),
+            true,
+          );
+        }
+      },
+    );
 
-      // ignore: unawaited_futures
-      database
-          .ref('ordered')
-          .orderByChild('value')
-          .onChildAdded
-          .forEach((element) {
-        items.add(element.snapshot.value.cast<String, dynamic>());
-        if (items.length == testDocuments.length) c.complete(items);
-      });
+    test('orderByChild()', () async {
+      final s = await database.ref('ordered').orderByChild('value').get();
 
-      final snapshots = await c.future;
-
-      final documents = snapshots.map((v) => v['value'] as int).toList();
-      final ordered = testDocuments.map((doc) => doc['value']).toList()..sort();
-
-      expect(documents[0], ordered[0]);
-      expect(documents[1], ordered[1]);
-      expect(documents[2], ordered[2]);
-      expect(documents[3], ordered[3]);
+      expect(s.keys, ['three', 'one', 'four', 'two']);
     });
 
-    test('limitToFirst', () async {
+    test('orderByPriority()', () async {
+      final ref = database.ref('priority_test');
+
+      final s = await ref.orderByPriority().get();
+      expect(s.keys, ['second', 'third', 'first']);
+    });
+
+    test('orderByValue()', () async {
+      final ref = database.ref('priority_test');
+
+      final s = await ref.orderByValue().get();
+      expect(s.keys, ['first', 'second', 'third']);
+    });
+
+    test('limitToFirst()', () async {
       final snapshot = await database.ref('ordered').limitToFirst(2).once();
       Map<dynamic, dynamic> data = snapshot.value;
       expect(data.length, 2);
@@ -79,7 +107,7 @@ void runQueryTests() {
       expect(data1.length, testDocuments.length);
     });
 
-    test('limitToLast', () async {
+    test('limitToLast()', () async {
       final snapshot = await database.ref('ordered').limitToLast(3).once();
       Map<dynamic, dynamic> data = snapshot.value;
       expect(data.length, 3);
@@ -92,7 +120,7 @@ void runQueryTests() {
       expect(data1.length, testDocuments.length);
     });
 
-    test('startAt & endAt', () async {
+    test('startAt() & endAt()', () async {
       // query to get the data that has key starts with t only
       final snapshot = await database
           .ref('ordered')
@@ -122,7 +150,23 @@ void runQueryTests() {
       expect(data1.length, 1);
     });
 
-    test('equalTo', () async {
+    test('endBefore()', () async {
+      final ref = database.ref('ordered');
+      final snapshot = await ref.orderByKey().endBefore('two').get();
+
+      expect(snapshot.keys, ['four', 'one', 'three']);
+    });
+
+    test('startAfter()', () async {
+      final ref = database.ref('priority_test');
+      final snapshot = await ref.orderByKey().startAfter('first').get();
+
+      final keys = List<String>.from(snapshot.value.keys);
+
+      expect(keys, ['second', 'third']);
+    });
+
+    test('equalTo()', () async {
       final snapshot =
           await database.ref('ordered').orderByKey().equalTo('one').once();
 
@@ -131,6 +175,126 @@ void runQueryTests() {
       expect(data.containsKey('one'), true);
       expect(data['one']['ref'], 'one');
       expect(data['one']['value'], 23);
+    });
+  });
+
+  group('Query subscriptions', () {
+    late final ref = database.ref('priority_test');
+
+    void verifyEventType(List<Event> events, EventType type) {
+      expect(
+        events.every((element) => element.type == type),
+        true,
+      );
+    }
+
+    setUp(() async {
+      await setupPriorityData();
+    });
+
+    test('onChildAdded emits correct events', () async {
+      final events = await ref.orderByPriority().onChildAdded.take(3).toList();
+      verifyEventType(events, EventType.childAdded);
+
+      final values = events.map((e) => e.snapshot.value).toList();
+      final siblingKeys = events.map((e) => e.previousSiblingKey).toList();
+
+      expect(values, [2, 3, 1]);
+      expect(siblingKeys, [null, 'second', 'third']);
+    });
+
+    test('onChildChanged emits correct events', () async {
+      final newValues = [
+        Random.secure().nextInt(255),
+        Random.secure().nextInt(255),
+      ];
+
+      final eventsFuture = ref.onChildChanged.take(2).toList();
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await ref.child('first').set(newValues[0]);
+      await ref.child('second').set(newValues[1]);
+
+      final events = await eventsFuture;
+
+      verifyEventType(events, EventType.childChanged);
+
+      final values = events.map((e) => e.snapshot.value).toList();
+      expect(values, newValues);
+    });
+
+    test('onValue emits correct events', () async {
+      final newValues = [
+        Random.secure().nextInt(255),
+        Random.secure().nextInt(255),
+      ];
+
+      final eventsFuture = ref.onValue.take(3).toList();
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await ref.child('first').set(newValues[0]);
+      await ref.child('second').set(newValues[1]);
+
+      final events = await eventsFuture;
+
+      verifyEventType(events, EventType.value);
+
+      expect(events[0].snapshot.keys, ['second', 'third', 'first']);
+
+      expect(events[0].snapshot.value['first'], 1);
+      expect(events[0].snapshot.value['second'], 2);
+      expect(events[0].snapshot.value['third'], 3);
+
+      expect(events[1].snapshot.keys, ['first', 'second', 'third']);
+
+      expect(events[1].snapshot.value['first'], newValues[0]);
+      expect(events[1].snapshot.value['second'], 2);
+      expect(events[1].snapshot.value['third'], 3);
+
+      expect(events[2].snapshot.keys, ['first', 'second', 'third']);
+
+      expect(events[2].snapshot.value['first'], newValues[0]);
+      expect(events[2].snapshot.value['second'], newValues[1]);
+      expect(events[2].snapshot.value['third'], 3);
+    });
+
+    test('onChildMoved emits correct events', () async {
+      final eventsFuture = ref.orderByPriority().onChildMoved.take(2).toList();
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await ref.child('second').setPriority(20);
+      await ref.child('first').setPriority(0);
+
+      final events = await eventsFuture;
+
+      final keys = events.map((e) => e.snapshot.key).toList();
+      final values = events.map((e) => e.snapshot.value).toList();
+      final siblingKeys = events.map((e) => e.previousSiblingKey).toList();
+
+      verifyEventType(events, EventType.childMoved);
+
+      expect(keys, ['second', 'first']);
+      expect(values, [2, 1]);
+      expect(siblingKeys, ['first', null]);
+    });
+
+    test('onChildRemoved emits correct events', () async {
+      final eventsFuture =
+          ref.orderByPriority().onChildRemoved.take(1).toList();
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      await ref.child('first').remove();
+
+      final events = await eventsFuture;
+      final event = events.first;
+
+      expect(event.type, EventType.childRemoved);
+      expect(event.snapshot.value, 1);
+      expect(event.snapshot.key, 'first');
     });
   });
 }

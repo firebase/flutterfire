@@ -14,6 +14,7 @@ import 'src/interop/database.dart' as database_interop;
 
 part './src/database_reference_web.dart';
 part './src/ondisconnect_web.dart';
+part './src/data_snapshot_web.dart';
 part './src/query_web.dart';
 part './src/utils/snapshot_utils.dart';
 

@@ -103,6 +103,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
 
   static FlutterFirebaseDatabaseException unknown(@Nullable String errorMessage) {
     final Map<String, Object> details = new HashMap<>();
+    String code = UNKNOWN_ERROR_CODE;
 
     String message = errorMessage;
 
@@ -110,7 +111,12 @@ public class FlutterFirebaseDatabaseException extends Exception {
       message = UNKNOWN_ERROR_MESSAGE;
     }
 
-    return new FlutterFirebaseDatabaseException(MODULE, message, details);
+    if (message.contains("Index not defined, add \".indexOn\"")) {
+      code = Constants.INDEX_NOT_DEFINED;
+      message = message.replaceFirst("java.lang.Exception: ", "");
+    }
+
+    return new FlutterFirebaseDatabaseException(code, message, details);
   }
 
   public FlutterFirebaseDatabaseException(

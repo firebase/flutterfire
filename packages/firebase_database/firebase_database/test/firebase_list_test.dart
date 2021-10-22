@@ -442,4 +442,24 @@ class MockDataSnapshot implements DataSnapshot {
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   int get hashCode => key.hashCode;
+
+  @override
+  void forEach(void Function(DataSnapshot snapshot) action) {
+    // TODO: implement forEach
+    throw UnimplementedError();
+  }
+
+  @override
+  bool hasChild(String path) {
+    // TODO: implement hasChild
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement hasChildren
+  bool get hasChildren => throw UnimplementedError();
+
+  @override
+  // TODO: implement numChildren
+  int? get numChildren => throw UnimplementedError();
 }

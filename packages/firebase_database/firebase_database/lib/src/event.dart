@@ -16,20 +16,3 @@ class Event {
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
   String? get previousSiblingKey => _delegate.previousSiblingKey;
 }
-
-/// A DataSnapshot contains data from a Firebase Database location.
-/// Any time you read Firebase data, you receive the data as a DataSnapshot.
-class DataSnapshot {
-  final DataSnapshotPlatform? _delegate;
-
-  DataSnapshot._(this._delegate);
-
-  /// The key of the location that generated this DataSnapshot.
-  String? get key => _delegate?.key;
-
-  /// Returns the contents of this data snapshot as native types.
-  dynamic get value => _delegate?.value;
-
-  /// Ascertains whether the value exists at the Firebase Database location.
-  bool get exists => _delegate?.exists ?? false;
-}

@@ -318,6 +318,16 @@ class Query<T extends database_interop.QueryJsImpl>
       ? jsObject.endAt(jsify(value))
       : jsObject.endAt(jsify(value), key));
 
+  /// Creates a [Query] with the specified ending point (exclusive)
+  /// The ending point is exclusive. If only a value is provided,
+  /// children with a value less than the specified value will be included in
+  /// the query. If a key is specified, then children must have a value lesss
+  /// than or equal to the specified value and a a key name less than the
+  /// specified key.
+  Query endBefore(value, [String? key]) => Query.fromJsObject(key == null
+      ? jsObject.endBefore(jsify(value))
+      : jsObject.endBefore(jsify(value), key));
+
   /// Returns a Query which includes children which match the specified [value].
   ///
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
@@ -412,6 +422,10 @@ class Query<T extends database_interop.QueryJsImpl>
             ? jsObject.startAt(jsify(value))
             : jsObject.startAt(jsify(value), key),
       );
+
+  Query startAfter(value, [String? key]) => Query.fromJsObject(key == null
+      ? jsObject.startAfter(jsify(value))
+      : jsObject.startAfter(jsify(value), key));
 
   /// Returns a String representation of Query object.
   @override

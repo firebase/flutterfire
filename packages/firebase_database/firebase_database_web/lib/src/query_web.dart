@@ -28,8 +28,21 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Future<DataSnapshotPlatform> get() async {
-    final snapshot = await _firebaseQuery.get();
-    return fromWebSnapshotToPlatformSnapShot(snapshot);
+    try {
+      final snapshot = await _firebaseQuery.get();
+      return fromWebSnapshotToPlatformSnapShot(snapshot);
+    } catch (e) {
+      if ((e as dynamic)
+          .message
+          .startsWith('Index not defined, add ".indexOn"')) {
+        throw FirebaseDatabaseException(
+          code: 'index-not-defined',
+          message: (e as dynamic).message,
+        );
+      }
+
+      rethrow;
+    }
   }
 
   @override
@@ -45,8 +58,18 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
+  QueryPlatform startAfter(value, {String? key}) {
+    return _withQuery(_firebaseQuery.startAfter(value, key));
+  }
+
+  @override
   QueryPlatform endAt(value, {String? key}) {
     return _withQuery(_firebaseQuery.endAt(value, key));
+  }
+
+  @override
+  QueryPlatform endBefore(value, {String? key}) {
+    return _withQuery(_firebaseQuery.endBefore(value, key));
   }
 
   @override

@@ -20,6 +20,10 @@ void runDatabaseReferenceTests() {
   });
 
   group('DatabaseReference.runTransaction', () {
+    setUp(() async {
+      await ref.set(0);
+    });
+
     test('executes transaction', () async {
       final snapshot = await ref.get();
 

@@ -39,6 +39,9 @@ class FirebaseDatabase {
   )
   DatabaseReference reference() => ref();
 
+  /// The [FirebaseApp] associated with the [FirebaseDatabase] instance
+  FirebaseApp? get app => _delegate.app;
+
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided path.
   /// If no path is provided, the Reference will point to the root of the Database.

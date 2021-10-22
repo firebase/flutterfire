@@ -20,8 +20,5 @@ EventPlatform fromWebEventToPlatformEvent(
 DataSnapshotPlatform fromWebSnapshotToPlatformSnapShot(
   database_interop.DataSnapshot snapshot,
 ) {
-  return DataSnapshotPlatform(
-    snapshot.key,
-    snapshot.val(),
-  );
+  return DataSnapshotWeb(snapshot);
 }

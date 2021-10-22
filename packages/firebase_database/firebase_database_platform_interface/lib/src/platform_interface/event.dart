@@ -96,4 +96,65 @@ class DataSnapshotPlatform {
 
   /// Ascertains whether the value exists at the Firebase Database location.
   final bool exists;
+
+  // Returns wheterh or not the DataSnapshot has any non-null child properties
+  bool get hasChildren {
+    return (value is Map && (value as Map).isNotEmpty) ||
+        (value is List && (value as List).isNotEmpty);
+  }
+
+  // Returns the number of child properties of this DataSnapshot.
+  int get numChildren {
+    if (value is Map) {
+      return (value as Map).length;
+    }
+
+    if (value is List) {
+      return (value as List).length;
+    }
+
+    return 0;
+  }
+
+  // Enumerates the top-level children in the DataSnapshot
+  void forEach(void Function(DataSnapshotPlatform element) iterator) {
+    if (value is Map) {
+      (value as Map).forEach((key, value) {
+        iterator(DataSnapshotPlatform(key, value));
+      });
+    }
+
+    if (value is List) {
+      for (int i = 0; i < (value as List).length; i++) {
+        iterator(DataSnapshotPlatform(i.toString(), value[i]));
+      }
+    }
+  }
+
+  // Returns true if the specified child path has (non-null) data.
+  bool hasChild(String path) {
+    final chunks = path.split('/').toList();
+    dynamic value = this.value;
+
+    while (value != null && chunks.isNotEmpty) {
+      final c = chunks.removeAt(0);
+
+      if (value is List) {
+        final index = int.tryParse(c);
+
+        if (index == null) return false;
+        if (index < 0) return false;
+        if (index > value.length - 1) return false;
+
+        value = value[index];
+        continue;
+      }
+
+      if (value is Map) {
+        value = value[c];
+      }
+    }
+
+    return value != null;
+  }
 }

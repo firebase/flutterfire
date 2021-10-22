@@ -4,6 +4,10 @@ import 'firebase_database_e2e.dart';
 
 void runDatabaseTests() {
   group('FirebaseDatabase.ref()', () {
+    setUp(() async {
+      await database.ref('flutterfire').set(0);
+    });
+
     test('returns a correct reference', () async {
       final snapshot = await database.ref('flutterfire').get();
       expect(snapshot.key, 'flutterfire');

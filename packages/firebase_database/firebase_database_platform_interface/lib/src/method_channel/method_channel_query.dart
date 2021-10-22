@@ -81,15 +81,24 @@ class MethodChannelQuery extends QueryPlatform {
   /// than or equal to the given key.
   @override
   QueryPlatform startAt(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('startAt'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'startAt': value};
-    if (key != null) parameters['startAtKey'] = key;
-    return _copyWithParameters(parameters);
+    return _addPaginationParameter(value, key, 'startAt');
+  }
+
+  /// Creates a query with the specified starting point (exclusive).
+  /// Using [startAt], [startAfter], [endBefore], [endAt] and [equalTo]
+  /// allows you to choose arbitrary starting and ending points for your
+  /// queries.
+  ///
+  /// The starting point is exclusive.
+  ///
+  /// If only a value is provided, children with a value greater than
+  /// the specified value will be included in the query.
+  /// If a key is specified, then children must have a value greater than
+  /// or equal to the specified value and a a key name greater than
+  /// the specified key.
+  @override
+  QueryPlatform startAfter(dynamic value, {String? key}) {
+    return _addPaginationParameter(value, key, 'startAfter');
   }
 
   /// Create a query constrained to only return child nodes with a value less
@@ -98,15 +107,12 @@ class MethodChannelQuery extends QueryPlatform {
   /// than or equal to the given key.
   @override
   QueryPlatform endAt(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('endAt'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'endAt': value};
-    if (key != null) parameters['endAtKey'] = key;
-    return _copyWithParameters(parameters);
+    return _addPaginationParameter(value, key, 'endAt');
+  }
+
+  @override
+  QueryPlatform endBefore(dynamic value, {String? key}) {
+    return _addPaginationParameter(value, key, 'endBefore');
   }
 
   /// Create a query constrained to only return child nodes with the given
@@ -115,14 +121,20 @@ class MethodChannelQuery extends QueryPlatform {
   /// If a key is provided, there is at most one such child as names are unique.
   @override
   QueryPlatform equalTo(dynamic value, {String? key}) {
-    assert(!this.parameters.containsKey('equalTo'));
-    assert(value is String ||
-        value is bool ||
-        value is double ||
-        value is int ||
-        value == null);
-    final Map<String, dynamic> parameters = <String, dynamic>{'equalTo': value};
-    if (key != null) parameters['equalToKey'] = key;
+    return _addPaginationParameter(value, key, 'equalTo');
+  }
+
+  QueryPlatform _addPaginationParameter(
+    dynamic value,
+    String? paginationKey,
+    String parameterKey,
+  ) {
+    assert(!this.parameters.containsKey(parameterKey));
+    assert(value is String || value is bool || value is num || value == null);
+
+    final parameters = <String, dynamic>{parameterKey: value};
+    if (paginationKey != null) parameters['${parameterKey}Key'] = paginationKey;
+
     return _copyWithParameters(parameters);
   }
 

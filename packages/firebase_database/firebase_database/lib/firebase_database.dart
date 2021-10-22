@@ -22,6 +22,7 @@ export 'package:firebase_database_platform_interface/firebase_database_platform_
 
 part 'src/database_reference.dart';
 part 'src/database_error.dart';
+part 'src/data_snapshot.dart';
 part 'src/event.dart';
 part 'src/firebase_database.dart';
 part 'src/on_disconnect.dart';

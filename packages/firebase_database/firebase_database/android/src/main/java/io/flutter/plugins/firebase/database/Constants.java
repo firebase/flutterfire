@@ -30,8 +30,14 @@ public class Constants {
   public static final String START_AT = "startAt";
   public static final String START_AT_KEY = "startAtKey";
 
+  public static final String START_AFTER = "startAfter";
+  public static final String START_AFTER_KEY = "startAfterKey";
+
   public static final String END_AT = "endAt";
   public static final String END_AT_KEY = "endAtKey";
+
+  public static final String END_BEFORE = "endBefore";
+  public static final String END_BEFORE_KEY = "endBeforeKey";
 
   public static final String EQUAL_TO = "equalTo";
   public static final String EQUAL_TO_KEY = "equalToKey";
@@ -48,14 +54,16 @@ public class Constants {
   public static final String EVENT_TYPE_VALUE = "EventType.value";
 
   public static final String CHILD_KEYS = "childKeys";
-  public static final String PREVIOUS_CHILD_NAME = "previousChildName";
+  public static final String PREVIOUS_CHILD_NAME = "previousSiblingKey";
 
   public static final String METHOD_DO_TRANSACTION = "DoTransaction";
   public static final String TRANSACTION_KEY = "transactionKey";
   public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
 
+  // Custom error codes
   public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";
   public static final String TRANSACTION_TIMEOUT_CODE = "transaction-timeout";
+  public static final String INDEX_NOT_DEFINED = "index-not-defined";
 
   public static final String ERROR_CODE = "code";
   public static final String ERROR_MESSAGE = "message";

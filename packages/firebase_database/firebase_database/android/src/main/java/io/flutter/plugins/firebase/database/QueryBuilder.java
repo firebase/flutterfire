@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -46,20 +47,33 @@ public class QueryBuilder {
   public Query build(Map<String, Object> parameters) {
     if (parameters == null) return query;
 
-    for (String key : parameters.keySet()) {
-      final Object value = parameters.get(key);
+    Map<String, Object> params = new HashMap<>(parameters);
+
+    if (parameters.containsKey(Constants.ORDER_BY)) {
+      final Object value = parameters.get(Constants.ORDER_BY);
+      orderBy(value, parameters);
+
+      params.remove(Constants.ORDER_BY);
+    }
+
+    for (String key : params.keySet()) {
+      final Object value = params.get(key);
 
       if (Constants.ORDER_BY.equals(key)) {
-        orderBy(value, parameters);
+        orderBy(value, params);
       } else if (Constants.START_AT.equals(key)) {
-        startAt(value, parameters);
+        startAt(value, params);
+      } else if (Constants.START_AFTER.equals(key)) {
+        startAfter(value, params);
       } else if (Constants.END_AT.equals(key)) {
-        endAt(value, parameters);
+        endAt(value, params);
+      } else if (Constants.END_BEFORE.equals(key)) {
+        endBefore(value, params);
       } else if (Constants.EQUAL_TO.equals(key)) {
-        equalTo(value, parameters);
-      } else if (Constants.LIMIT_TO_FIRST.equals(key)) {
+        equalTo(value, params);
+      } else if (Constants.LIMIT_TO_FIRST.equals(key) && value != null) {
         limitToFirst((int) value);
-      } else if (Constants.LIMIT_TO_LAST.equals(key)) {
+      } else if (Constants.LIMIT_TO_LAST.equals(key) && value != null) {
         limitToLast((int) value);
       }
     }
@@ -92,6 +106,28 @@ public class QueryBuilder {
     }
   }
 
+  private void startAfter(Object value, Map<String, Object> parameters) {
+    final String key = (String) parameters.get(Constants.START_AFTER_KEY);
+
+    if (value instanceof Boolean) {
+      if (key == null) {
+        query = query.startAfter((Boolean) value);
+      } else {
+        query = query.startAfter((Boolean) value, key);
+      }
+    } else if (value instanceof Number) {
+      if (key == null) {
+        query = query.startAfter(((Number) value).doubleValue());
+      } else {
+        query = query.startAfter(((Number) value).doubleValue(), key);
+      }
+    } else if (key == null) {
+      query = query.startAfter((String) value);
+    } else {
+      query = query.startAfter((String) value, key);
+    }
+  }
+
   private void endAt(Object value, Map<String, Object> parameters) {
     final String key = (String) parameters.get(Constants.END_AT_KEY);
 
@@ -101,6 +137,28 @@ public class QueryBuilder {
       query = query.endAt(((Number) value).doubleValue(), key);
     } else {
       query = query.endAt((String) value, key);
+    }
+  }
+
+  private void endBefore(Object value, Map<String, Object> parameters) {
+    final String key = (String) parameters.get(Constants.END_BEFORE_KEY);
+
+    if (value instanceof Boolean) {
+      if (key == null) {
+        query = query.endBefore((Boolean) value);
+      } else {
+        query = query.endBefore((Boolean) value, key);
+      }
+    } else if (value instanceof Number) {
+      if (key == null) {
+        query = query.endBefore(((Number) value).doubleValue());
+      } else {
+        query = query.endBefore(((Number) value).doubleValue(), key);
+      }
+    } else if (key == null) {
+      query = query.endBefore((String) value);
+    } else {
+      query = query.endBefore((String) value, key);
     }
   }
 
