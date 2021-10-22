@@ -1,3 +1,7 @@
+## 2.2.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 2.2.3
 
  - **FIX**: switch usage of `dumpErrorToConsole` to `presentError` to remove duplicate logging (#7046).
