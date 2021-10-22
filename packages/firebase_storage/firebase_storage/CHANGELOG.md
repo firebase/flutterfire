@@ -1,3 +1,8 @@
+## 10.0.6
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
 ## 10.0.5
 
  - **FIX**: remove https port number from `downloadUrl` for `iOS` (#7097).
