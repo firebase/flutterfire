@@ -303,14 +303,27 @@ void runQueryTests() {
 
       await Future.delayed(const Duration(milliseconds: 300));
 
-      await ref.child('first').remove();
+      await ref.child('third').remove();
 
       final events = await eventsFuture;
       final event = events.first;
 
       expect(event.type, EventType.childRemoved);
-      expect(event.snapshot.value, 1);
-      expect(event.snapshot.key, 'first');
+      expect(event.snapshot.value, 3);
+      expect(event.snapshot.key, 'third');
+    });
+
+    // https://github.com/FirebaseExtended/flutterfire/issues/7048
+    test("sequential subscriptions don't override each other", () async {
+      final result = await Future.wait([
+        database.ref('ordered').onChildAdded.take(4).toList(),
+        database.ref('ordered').onChildAdded.take(4).toList(),
+      ]);
+
+      final values0 = result[0].map((e) => e.snapshot.value['value']).toList();
+      final values1 = result[1].map((e) => e.snapshot.value['value']).toList();
+
+      expect(values0, values1);
     });
   });
 }
