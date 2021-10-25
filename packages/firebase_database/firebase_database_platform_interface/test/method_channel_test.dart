@@ -77,12 +77,12 @@ void main() {
                 ),
                 (data) {
                   final decoded = channel.codec.decodeEnvelope(data!);
-                  updatedValue = decoded['value'].cast<String, dynamic>();
+                  updatedValue = decoded.cast<String, dynamic>();
                 },
               );
             }
 
-            await simulateTransaction(0, 'fakeKey', 'fakeValue');
+            await simulateTransaction(0, 'fakeKey', {'fakeKey': 'fakeValue'});
 
             return <String, dynamic>{
               'error': null,
@@ -282,6 +282,7 @@ void main() {
 
       test('runTransaction', () async {
         final ref = database.ref('foo');
+
         final result = await ref.runTransaction((value) {
           return {
             ...value,
