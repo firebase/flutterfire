@@ -75,7 +75,7 @@ void runQueryTests() {
     );
 
     test('orderByChild()', () async {
-      final s = await database.ref('ordered').orderByChild('value').get();
+      final s = await database.ref('ordered').orderByChild('value').once();
 
       expect(s.keys, ['three', 'one', 'four', 'two']);
     });
@@ -90,7 +90,7 @@ void runQueryTests() {
     test('orderByValue()', () async {
       final ref = database.ref('priority_test');
 
-      final s = await ref.orderByValue().get();
+      final s = await ref.orderByValue().once();
       expect(s.keys, ['first', 'second', 'third']);
     });
 
@@ -103,6 +103,7 @@ void runQueryTests() {
           .ref('ordered')
           .limitToFirst(testDocuments.length + 2)
           .once();
+
       Map<dynamic, dynamic> data1 = snapshot1.value;
       expect(data1.length, testDocuments.length);
     });

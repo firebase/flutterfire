@@ -71,7 +71,7 @@ void runDataSnapshotTests() {
         ref.child('third').set(18),
       ]);
 
-      final s = await ref.orderByValue().get();
+      final s = await ref.orderByValue().once();
       final keys = [];
 
       s.forEach((snapshot) {
