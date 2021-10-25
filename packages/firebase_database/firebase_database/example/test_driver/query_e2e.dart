@@ -123,7 +123,7 @@ void runQueryTests() {
       expect(data1.length, testDocuments.length);
     });
 
-    test('startAt() & endAt()', () async {
+    test('startAt() & endAt() once', () async {
       // query to get the data that has key starts with t only
       final snapshot = await database
           .ref('ordered')
@@ -151,6 +151,19 @@ void runQueryTests() {
       Map<dynamic, dynamic> data1 = snapshot1.value;
       // as the endAt is equal to 'three' and this will skip the data with key 'two'.
       expect(data1.length, 1);
+    });
+
+    // https://github.com/FirebaseExtended/flutterfire/issues/7221
+    test('startAt() & endAt() get', () async {
+      final s = await database
+          .ref('ordered')
+          .orderByChild('value')
+          .startAt(9)
+          .endAt(40)
+          .get();
+
+      final keys = Set.from(s.value.keys);
+      expect(keys.containsAll(['four', 'one', 'three']), true);
     });
 
     test('endBefore()', () async {
