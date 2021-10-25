@@ -33,13 +33,6 @@ abstract class QueryPlatform extends PlatformInterface {
     throw UnimplementedError('observe() not implemented');
   }
 
-  Map<String, dynamic> buildArguments() {
-    return <String, dynamic>{
-      ...parameters,
-      'path': path,
-    };
-  }
-
   /// Listens for a single value event and then stops listening.
   Future<DataSnapshotPlatform> once() async => (await onValue.first).snapshot;
 

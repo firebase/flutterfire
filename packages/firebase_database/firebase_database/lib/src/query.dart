@@ -14,10 +14,6 @@ class Query {
   /// Slash-delimited path representing the database location of this query.
   String get path => _queryPlatform.path;
 
-  Map<String, dynamic> buildArguments() {
-    return _queryPlatform.buildArguments();
-  }
-
   /// Listens for a single value event and then stops listening.
   Future<DataSnapshot> once() async =>
       DataSnapshot._(await _queryPlatform.once());
