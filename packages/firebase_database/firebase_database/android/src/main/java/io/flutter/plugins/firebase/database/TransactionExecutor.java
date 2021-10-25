@@ -1,17 +1,13 @@
 package io.flutter.plugins.firebase.database;
 
 import android.app.Activity;
-
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
-
+import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-
-import io.flutter.plugin.common.MethodChannel;
 
 public class TransactionExecutor {
   private final TaskCompletionSource<Object> tcs;
@@ -24,41 +20,47 @@ public class TransactionExecutor {
     this.channel = channel;
   }
 
-  public Object exec(Map<String, Object> arguments) throws ExecutionException, InterruptedException {
-    activity.runOnUiThread(() -> channel.invokeMethod(Constants.METHOD_DO_TRANSACTION, arguments, new MethodChannel.Result() {
-      @Override
-      public void success(@Nullable Object result) {
-        tcs.setResult(result);
-      }
+  public Object exec(Map<String, Object> arguments)
+      throws ExecutionException, InterruptedException {
+    activity.runOnUiThread(
+        () ->
+            channel.invokeMethod(
+                Constants.METHOD_DO_TRANSACTION,
+                arguments,
+                new MethodChannel.Result() {
+                  @Override
+                  public void success(@Nullable Object result) {
+                    tcs.setResult(result);
+                  }
 
-      @Override
-      @SuppressWarnings("unchecked")
-      public void error(String errorCode, @Nullable String errorMessage, @Nullable Object errorDetails) {
-        String message = errorMessage;
-        Map<String, Object> additionalData = new HashMap<>();
+                  @Override
+                  @SuppressWarnings("unchecked")
+                  public void error(
+                      String errorCode,
+                      @Nullable String errorMessage,
+                      @Nullable Object errorDetails) {
+                    String message = errorMessage;
+                    Map<String, Object> additionalData = new HashMap<>();
 
-        if (message == null) {
-          message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE;
-        }
+                    if (message == null) {
+                      message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE;
+                    }
 
-        if (errorDetails instanceof Map) {
-          additionalData = (Map<String, Object>) errorDetails;
-        }
+                    if (errorDetails instanceof Map) {
+                      additionalData = (Map<String, Object>) errorDetails;
+                    }
 
-        final FlutterFirebaseDatabaseException e = new FlutterFirebaseDatabaseException(
-          errorCode,
-          message,
-          additionalData
-        );
+                    final FlutterFirebaseDatabaseException e =
+                        new FlutterFirebaseDatabaseException(errorCode, message, additionalData);
 
-        tcs.setException(e);
-      }
+                    tcs.setException(e);
+                  }
 
-      @Override
-      public void notImplemented() {
-        // never called
-      }
-    }));
+                  @Override
+                  public void notImplemented() {
+                    // never called
+                  }
+                }));
 
     return Tasks.await(tcs.getTask());
   }

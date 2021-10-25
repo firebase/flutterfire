@@ -2,10 +2,8 @@ package io.flutter.plugins.firebase.database;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +12,9 @@ public class FlutterFirebaseDatabaseException extends Exception {
   private final String message;
   private final Map<String, Object> additionalData;
 
-  static private final String MODULE = "firebase_database";
-  static public final String UNKNOWN_ERROR_CODE = "unknown";
-  static public final String UNKNOWN_ERROR_MESSAGE = "An unknown error occurred";
+  private static final String MODULE = "firebase_database";
+  public static final String UNKNOWN_ERROR_CODE = "unknown";
+  public static final String UNKNOWN_ERROR_MESSAGE = "An unknown error occurred";
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
     final int errorCode = e.getCode();
@@ -71,7 +69,6 @@ public class FlutterFirebaseDatabaseException extends Exception {
         break;
     }
 
-
     final FlutterFirebaseDatabaseException ffdbException;
     final Map<String, Object> additionalData = new HashMap<>();
     final String errorDetails = e.getDetails();
@@ -120,7 +117,7 @@ public class FlutterFirebaseDatabaseException extends Exception {
   }
 
   public FlutterFirebaseDatabaseException(
-    @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
+      @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
     this.code = code;
     this.message = message;
 
@@ -145,5 +142,4 @@ public class FlutterFirebaseDatabaseException extends Exception {
   public Map<String, Object> getAdditionalData() {
     return additionalData;
   }
-
 }

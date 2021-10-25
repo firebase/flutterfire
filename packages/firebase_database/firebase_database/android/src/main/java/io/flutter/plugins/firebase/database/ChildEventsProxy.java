@@ -2,11 +2,9 @@ package io.flutter.plugins.firebase.database;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
 import io.flutter.plugin.common.EventChannel.EventSink;
 
 public class ChildEventsProxy extends EventsProxy implements ChildEventListener {
@@ -36,7 +34,8 @@ public class ChildEventsProxy extends EventsProxy implements ChildEventListener 
 
   @Override
   public void onCancelled(@NonNull DatabaseError error) {
-    final FlutterFirebaseDatabaseException e = FlutterFirebaseDatabaseException.fromDatabaseError(error);
+    final FlutterFirebaseDatabaseException e =
+        FlutterFirebaseDatabaseException.fromDatabaseError(error);
     eventSink.error(e.getCode(), e.getMessage(), e.getAdditionalData());
   }
 }

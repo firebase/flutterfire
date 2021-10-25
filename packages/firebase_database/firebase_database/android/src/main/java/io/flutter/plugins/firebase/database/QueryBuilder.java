@@ -2,10 +2,8 @@ package io.flutter.plugins.firebase.database;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +40,6 @@ public class QueryBuilder {
 
     return qsb.toString();
   }
-
 
   public Query build(Map<String, Object> parameters) {
     if (parameters == null) return query;
@@ -89,7 +86,8 @@ public class QueryBuilder {
     } else if (Constants.PRIORITY.equals(value)) {
       query = query.orderByPriority();
     } else if (Constants.CHILD.equals(value)) {
-      final String childKey = (String) Objects.requireNonNull(parameters.get(Constants.ORDER_BY_CHILD_KEY));
+      final String childKey =
+          (String) Objects.requireNonNull(parameters.get(Constants.ORDER_BY_CHILD_KEY));
       query = query.orderByChild(childKey);
     }
   }

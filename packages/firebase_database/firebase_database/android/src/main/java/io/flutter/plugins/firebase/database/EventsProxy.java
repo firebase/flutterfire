@@ -3,13 +3,10 @@ package io.flutter.plugins.firebase.database;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RestrictTo;
-
 import com.google.firebase.database.DataSnapshot;
-
+import io.flutter.plugin.common.EventChannel;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.flutter.plugin.common.EventChannel;
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public abstract class EventsProxy {
@@ -21,7 +18,8 @@ public abstract class EventsProxy {
     this.eventType = eventType;
   }
 
-  Map<String, Object> buildAdditionalParams(@NonNull String eventType, @Nullable String previousChildName) {
+  Map<String, Object> buildAdditionalParams(
+      @NonNull String eventType, @Nullable String previousChildName) {
     final Map<String, Object> params = new HashMap<>();
     params.put(Constants.EVENT_TYPE, eventType);
 
@@ -32,11 +30,13 @@ public abstract class EventsProxy {
     return params;
   }
 
-  protected void sendEvent(@NonNull String eventType, DataSnapshot snapshot, @Nullable String previousChildName) {
+  protected void sendEvent(
+      @NonNull String eventType, DataSnapshot snapshot, @Nullable String previousChildName) {
     if (!this.eventType.equals(eventType)) return;
 
     FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
-    final Map<String, Object> additionalParams = buildAdditionalParams(eventType, previousChildName);
+    final Map<String, Object> additionalParams =
+        buildAdditionalParams(eventType, previousChildName);
 
     eventSink.success(payload.withChildKeys().withAdditionalParams(additionalParams).toMap());
   }

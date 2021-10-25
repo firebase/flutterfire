@@ -1,11 +1,9 @@
 package io.flutter.plugins.firebase.database;
 
 import android.util.Log;
-
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger.Level;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +34,6 @@ class Config {
       }
     }
   }
-
 }
 
 public class DatabaseConfiguration {
@@ -70,21 +67,24 @@ public class DatabaseConfiguration {
     return config;
   }
 
-  public static void setLogLevel(FirebaseDatabase db, Level level) throws FlutterFirebaseDatabaseException {
+  public static void setLogLevel(FirebaseDatabase db, Level level)
+      throws FlutterFirebaseDatabaseException {
     checkConfigAppliedBeforeOtherOperations();
 
     final Config config = getConfigForDB(db);
     config.logLevel = level;
   }
 
-  public static void setPersistenceEnabled(FirebaseDatabase db, boolean isEnabled) throws FlutterFirebaseDatabaseException {
+  public static void setPersistenceEnabled(FirebaseDatabase db, boolean isEnabled)
+      throws FlutterFirebaseDatabaseException {
     checkConfigAppliedBeforeOtherOperations();
 
     final Config config = getConfigForDB(db);
     config.isPersistenceEnabled = isEnabled;
   }
 
-  public static void setPersistenceCacheSizeBytes(FirebaseDatabase db, Long size) throws FlutterFirebaseDatabaseException {
+  public static void setPersistenceCacheSizeBytes(FirebaseDatabase db, Long size)
+      throws FlutterFirebaseDatabaseException {
     checkConfigAppliedBeforeOtherOperations();
 
     final Config config = getConfigForDB(db);
@@ -96,24 +96,22 @@ public class DatabaseConfiguration {
     shouldWarn = true;
   }
 
-  private static void checkConfigAppliedBeforeOtherOperations() throws FlutterFirebaseDatabaseException {
+  private static void checkConfigAppliedBeforeOtherOperations()
+      throws FlutterFirebaseDatabaseException {
     if (shouldWarn) {
       if (!warningSent) {
         Log.w(
-          "firebase_database",
-          "Any changes to database configuration do not apply after hot restart. " +
-            "Re-launch the app to apply new configuration"
-        );
+            "firebase_database",
+            "Any changes to database configuration do not apply after hot restart. "
+                + "Re-launch the app to apply new configuration");
 
         warningSent = true;
       }
     } else if (isLocked) {
       throw new FlutterFirebaseDatabaseException(
-        Constants.ILLEGAL_CONFIGURATION_POINT_CODE,
-        "Firebase database should be configured before any other usage",
-        new HashMap<>()
-      );
+          Constants.ILLEGAL_CONFIGURATION_POINT_CODE,
+          "Firebase database should be configured before any other usage",
+          new HashMap<>());
     }
   }
-
 }

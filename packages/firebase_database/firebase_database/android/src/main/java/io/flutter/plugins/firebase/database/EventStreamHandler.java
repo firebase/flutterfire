@@ -3,11 +3,9 @@ package io.flutter.plugins.firebase.database;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Map;
-
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
+import java.util.Map;
 
 public class EventStreamHandler implements StreamHandler {
   private final Query query;

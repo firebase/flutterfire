@@ -2,10 +2,8 @@ package io.flutter.plugins.firebase.database;
 
 import android.app.Activity;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.database.DataSnapshot;
@@ -13,11 +11,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.Transaction.Handler;
-
+import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.flutter.plugin.common.MethodChannel;
 
 public class TransactionHandler implements Handler {
   private final MethodChannel channel;
@@ -61,9 +57,11 @@ public class TransactionHandler implements Handler {
   }
 
   @Override
-  public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+  public void onComplete(
+      @Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
     if (error != null) {
-      transactionCompletionSource.setException(FlutterFirebaseDatabaseException.fromDatabaseError(error));
+      transactionCompletionSource.setException(
+          FlutterFirebaseDatabaseException.fromDatabaseError(error));
     } else if (currentData != null) {
       final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(currentData);
 
@@ -71,10 +69,7 @@ public class TransactionHandler implements Handler {
       additionalParams.put(Constants.COMMITTED, committed);
 
       transactionCompletionSource.setResult(
-          payload
-            .withChildKeys()
-            .withAdditionalParams(additionalParams).toMap()
-      );
+          payload.withChildKeys().withAdditionalParams(additionalParams).toMap());
     }
   }
 }
