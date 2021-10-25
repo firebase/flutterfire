@@ -181,7 +181,6 @@ class ${data.queryReferenceImplName}
   }
 
   String _where(CollectionData data, {bool isAbstract = false}) {
-    // TODO support whereX(isEqual: null);
     // TODO handle JsonSerializable case change and JsonKey(name: ...)
     final buffer = StringBuffer();
 

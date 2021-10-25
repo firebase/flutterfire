@@ -61,13 +61,11 @@ class FakeCollectionReference<Value>
 
   @override
   QueryReference<FakeQuerySnapshot<Value>> limit(int limit) {
-    // TODO: implement limit
     throw UnimplementedError();
   }
 
   @override
   QueryReference<FakeQuerySnapshot<Value>> limitToLast(int limit) {
-    // TODO: implement limitToLast
     throw UnimplementedError();
   }
 }
