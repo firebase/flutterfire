@@ -16,10 +16,12 @@ final List<Map<String, Object>> testDocuments = [
 Future<void> setupOrderedData() async {
   final orderedRef = database.ref('ordered');
 
-  await Future.wait(testDocuments.map((map) {
-    String key = map['ref']! as String;
-    return orderedRef.child(key).set(map);
-  }));
+  await Future.wait(
+    testDocuments.map((map) {
+      String key = map['ref']! as String;
+      return orderedRef.child(key).set(map);
+    }),
+  );
 }
 
 Future<void> setupPriorityData() async {
