@@ -274,29 +274,46 @@ void main() {
       });
 
       group('endBefore', () {
-        // TODO uncomment when https://github.com/FirebaseExtended/flutterfire/pull/7075 is merged
-        // test('supports document snapshots', () async {
-        //   final collection = await initializeTest(MovieCollectionReference());
+        test('supports values', () async {
+          final collection = await initializeTest(MovieCollectionReference());
 
-        //   await collection.add(createMovie(title: 'A'));
-        //   final b = await collection.add(createMovie(title: 'B'));
-        //   await collection.add(createMovie(title: 'C'));
+          await collection.add(createMovie(title: 'A'));
+          await collection.add(createMovie(title: 'B'));
+          await collection.add(createMovie(title: 'C'));
 
-        //   final bSnap = await b.get();
+          final querySnap = await collection.orderByTitle(endAt: 'B').get();
 
-        //   final querySnap = await collection
-        //       .orderByTitle()
-        //       .endBeforeDocumentSnapshot(bSnap)
-        //       .get();
+          expect(
+            querySnap.docs,
+            [
+              isA<MovieQueryDocumentSnapshot>()
+                  .having((d) => d.data.title, 'data.title', 'A'),
+              isA<MovieQueryDocumentSnapshot>()
+                  .having((d) => d.data.title, 'data.title', 'B'),
+            ],
+          );
+        });
 
-        //   expect(
-        //     querySnap.docs,
-        //     [
-        //       isA<MovieQueryDocumentSnapshot>()
-        //           .having((d) => d.data.title, 'data.title', 'A'),
-        //     ],
-        //   );
-        // });
+        test('supports document snapshots', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.add(createMovie(title: 'A'));
+          final b = await collection.add(createMovie(title: 'B'));
+          await collection.add(createMovie(title: 'C'));
+
+          final bSnap = await b.get();
+
+          final querySnap =
+              await collection.orderByTitle(endBeforeDocument: bSnap).get();
+
+          expect(
+            querySnap.docs,
+            [
+              isA<MovieQueryDocumentSnapshot>()
+                  .having((d) => d.data.title, 'data.title', 'A'),
+            ],
+          );
+        });
       });
 
       group('startAt', () {
