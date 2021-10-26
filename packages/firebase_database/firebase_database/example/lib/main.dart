@@ -13,23 +13,13 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp app = await Firebase.initializeApp();
-  final database = FirebaseDatabase.instance;
 
-  await Future.wait([
-    database.ref('ordered').onChildAdded.forEach((element) {
-      print(element.snapshot);
-    }),
-    database.ref('ordered').onChildAdded.forEach((element) {
-      print(element.snapshot);
-    })
-  ]);
-
-  // runApp(
-  //   MaterialApp(
-  //     title: 'Flutter Database Example',
-  //     home: MyHomePage(app: app),
-  //   ),
-  // );
+  runApp(
+    MaterialApp(
+      title: 'Flutter Database Example',
+      home: MyHomePage(app: app),
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
