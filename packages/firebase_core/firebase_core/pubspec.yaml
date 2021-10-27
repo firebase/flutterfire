@@ -10,6 +10,7 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
+  firebase_core_desktop: ^0.1.1-dev.0
   firebase_core_platform_interface: ^4.0.1
   firebase_core_web: ^1.1.0
   flutter:
@@ -32,5 +33,9 @@ flutter:
         pluginClass: FLTFirebaseCorePlugin
       macos:
         pluginClass: FLTFirebaseCorePlugin
+      linux:
+        default_package: firebase_core_desktop
+      windows:
+        default_package: firebase_core_desktop
       web:
         default_package: firebase_core_web
