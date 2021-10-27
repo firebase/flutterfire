@@ -33,12 +33,6 @@ class FirebaseDatabase {
   @visibleForTesting
   static MethodChannel get channel => MethodChannelDatabase.channel;
 
-  @Deprecated(
-    'reference() is deprecated. '
-    "instead of db.reference().child('key') use db.ref('key')",
-  )
-  DatabaseReference reference() => ref();
-
   /// The [FirebaseApp] associated with the [FirebaseDatabase] instance
   FirebaseApp? get app => _delegate.app;
 
