@@ -16,7 +16,7 @@ class DatabaseErrorPlatform {
   final String message;
 
   /// Human-readable details on the error and additional information.
-  final String details;
+  final String? details;
 
   @override
   // ignore: no_runtimetype_tostring

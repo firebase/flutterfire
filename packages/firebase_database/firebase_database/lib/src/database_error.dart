@@ -4,18 +4,19 @@ part of firebase_database;
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
 class DatabaseError {
-  DatabaseErrorPlatform _delegate;
-
-  DatabaseError._(this._delegate);
+  DatabaseError._(DatabaseErrorPlatform _delegate)
+      : code = _delegate.code,
+        message = _delegate.message,
+        details = _delegate.details;
 
   /// One of the defined status codes, depending on the error.
-  int get code => _delegate.code;
+  int code;
 
   /// A human-readable description of the error.
-  String get message => _delegate.message;
+  String message;
 
   /// Human-readable details on the error and additional information.
-  String get details => _delegate.details;
+  String? details;
 
   @override
   // ignore: no_runtimetype_tostring
