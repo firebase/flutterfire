@@ -6,7 +6,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
+import '../../cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
