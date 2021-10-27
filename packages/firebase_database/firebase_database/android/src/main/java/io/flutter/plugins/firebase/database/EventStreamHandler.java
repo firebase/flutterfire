@@ -1,6 +1,5 @@
 package io.flutter.plugins.firebase.database;
 
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
