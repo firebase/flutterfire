@@ -4,18 +4,19 @@ part of firebase_database_platform_interface;
 /// Error that results from a transaction operation at a Firebase Database
 /// location.
 class DatabaseErrorPlatform {
-  DatabaseErrorPlatform(this._data);
-
-  Map<dynamic, dynamic> _data;
+  DatabaseErrorPlatform(Map<dynamic, dynamic> _data)
+      : code = _data['code'],
+        message = _data['message'],
+        details = _data['details'];
 
   /// One of the defined status codes, depending on the error.
-  int get code => _data['code'];
+  final int code;
 
   /// A human-readable description of the error.
-  String get message => _data['message'];
+  final String message;
 
   /// Human-readable details on the error and additional information.
-  String get details => _data['details'];
+  final String details;
 
   @override
   // ignore: no_runtimetype_tostring
