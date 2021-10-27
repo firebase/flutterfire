@@ -46,6 +46,10 @@ void runConfigurationTests() {
           throw Exception('should throw FirebaseDatabaseException');
         } catch (err) {
           expect(err, isA<FirebaseDatabaseException>());
+          expect(
+            (err as FirebaseDatabaseException).code,
+            'wrong-configuration-point',
+          );
         }
       },
       skip: kIsWeb,
