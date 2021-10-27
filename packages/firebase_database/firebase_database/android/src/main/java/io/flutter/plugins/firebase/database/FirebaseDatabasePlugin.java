@@ -308,6 +308,9 @@ public class FirebaseDatabasePlugin
 
   @SuppressWarnings("unchecked")
   private Task<String> observe(Map<String, Object> arguments) {
+    final FirebaseDatabase database = getDatabase(arguments);
+    final String appName = database.getApp().getName();
+
     final Query query = getQuery(arguments);
     final String path = (String) arguments.get(Constants.PATH);
 
@@ -316,8 +319,8 @@ public class FirebaseDatabasePlugin
     final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
     final String queryParams = QueryBuilder.buildQueryParams(parameters);
 
-    final String qs = queryParams.length() > 0 ? ("?" + queryParams) : "";
-    final String queryId = METHOD_CHANNEL_NAME + "/" + path + "/" + eventType + qs;
+    final String qs = "?appName=" + appName + "&" + (queryParams.length() > 0 ? queryParams : "");
+    final String queryId = METHOD_CHANNEL_NAME + "/query/" + path + "/" + eventType + qs;
     int listenersCount = 0;
 
     if (queryListenersCount.containsKey(queryId)) {
