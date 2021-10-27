@@ -32,10 +32,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -48,8 +46,7 @@ public class FirebaseDatabasePlugin
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
 
-  private final HashMap<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
-  private final Set<String> eventChannels = new HashSet<>();
+  private final Map<String, Integer> queryListenersCount = new HashMap<>();
   private Activity activity;
 
   @Override
@@ -311,34 +308,44 @@ public class FirebaseDatabasePlugin
 
   @SuppressWarnings("unchecked")
   private Task<String> observe(Map<String, Object> arguments) {
+    final Query query = getQuery(arguments);
+    final String path = (String) arguments.get(Constants.PATH);
+
+    final Map<String, Object> parameters =
+        (Map<String, Object>) arguments.get(Constants.PARAMETERS);
+    final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
+    final String queryParams = QueryBuilder.buildQueryParams(parameters);
+
+    final String qs = queryParams.length() > 0 ? ("?" + queryParams) : "";
+    final String queryId = METHOD_CHANNEL_NAME + "/" + path + "/" + eventType + qs;
+    int listenersCount = 0;
+
+    if (queryListenersCount.containsKey(queryId)) {
+      listenersCount = queryListenersCount.get(queryId) + 1;
+    }
+
+    queryListenersCount.put(queryId, listenersCount);
+
+    final String eventChannelName = queryId + "#" + listenersCount;
+
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final Query query = getQuery(arguments);
-          final String path = (String) arguments.get(Constants.PATH);
-
-          final Map<String, Object> parameters =
-              (Map<String, Object>) arguments.get(Constants.PARAMETERS);
-          final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
-          final String queryParams = QueryBuilder.buildQueryParams(parameters);
-
-          String eventChannelName = METHOD_CHANNEL_NAME + "/" + path + "/" + eventType;
-
-          if (queryParams.length() > 0) {
-            eventChannelName = eventChannelName + "?" + queryParams;
-          }
-
-          if (eventChannels.contains(eventChannelName)) {
-            return eventChannelName;
-          }
-
-          final StreamHandler streamHandler = new EventStreamHandler(query);
           final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
+
+          final StreamHandler streamHandler =
+              new EventStreamHandler(
+                  query,
+                  () -> {
+                    synchronized (queryListenersCount) {
+                      eventChannel.setStreamHandler(null);
+
+                      final int currentCount = queryListenersCount.get(queryId);
+                      queryListenersCount.put(queryId, currentCount - 1);
+                    }
+                  });
+
           eventChannel.setStreamHandler(streamHandler);
-
-          streamHandlers.put(eventChannel, streamHandler);
-          eventChannels.add(eventChannelName);
-
           return eventChannelName;
         });
   }
@@ -534,13 +541,6 @@ public class FirebaseDatabasePlugin
   }
 
   private void cleanup() {
-    for (EventChannel eventChannel : streamHandlers.keySet()) {
-      StreamHandler streamHandler = Objects.requireNonNull(streamHandlers.get(eventChannel));
-      streamHandler.onCancel(null);
-      eventChannel.setStreamHandler(null);
-    }
-
-    streamHandlers.clear();
-    eventChannels.clear();
+    queryListenersCount.clear();
   }
 }

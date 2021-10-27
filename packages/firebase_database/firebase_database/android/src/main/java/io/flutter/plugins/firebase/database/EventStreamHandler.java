@@ -1,5 +1,6 @@
 package io.flutter.plugins.firebase.database;
 
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -7,13 +8,19 @@ import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.Map;
 
+interface OnDispose {
+  void run();
+}
+
 public class EventStreamHandler implements StreamHandler {
   private final Query query;
   private ValueEventListener valueEventListener;
   private ChildEventListener childEventListener;
+  private final OnDispose onDispose;
 
-  public EventStreamHandler(Query query) {
+  public EventStreamHandler(Query query, OnDispose onDispose) {
     this.query = query;
+    this.onDispose = onDispose;
   }
 
   @SuppressWarnings("unchecked")
@@ -33,6 +40,8 @@ public class EventStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
+    this.onDispose.run();
+
     if (valueEventListener != null) {
       query.removeEventListener(valueEventListener);
       valueEventListener = null;

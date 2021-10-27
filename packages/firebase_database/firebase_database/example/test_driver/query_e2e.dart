@@ -227,7 +227,7 @@ void runQueryTests() {
 
       final eventsFuture = ref.onChildChanged.take(2).toList();
 
-      await Future.delayed(const Duration(milliseconds: 300));
+      await ref.onValue.first;
 
       await ref.child('first').set(newValues[0]);
       await ref.child('second').set(newValues[1]);
@@ -246,9 +246,7 @@ void runQueryTests() {
         Random.secure().nextInt(255),
       ];
 
-      final eventsFuture = ref.onValue.take(3).toList();
-
-      await Future.delayed(const Duration(milliseconds: 300));
+      final eventsFuture = ref.onValue.take(2).toList();
 
       await ref.child('first').set(newValues[0]);
       await ref.child('second').set(newValues[1]);
@@ -257,29 +255,19 @@ void runQueryTests() {
 
       verifyEventType(events, EventType.value);
 
-      expect(events[0].snapshot.keys, ['second', 'third', 'first']);
-
-      expect(events[0].snapshot.value['first'], 1);
+      expect(events[0].snapshot.value['first'], newValues[0]);
       expect(events[0].snapshot.value['second'], 2);
       expect(events[0].snapshot.value['third'], 3);
 
-      expect(events[1].snapshot.keys, ['first', 'second', 'third']);
-
       expect(events[1].snapshot.value['first'], newValues[0]);
-      expect(events[1].snapshot.value['second'], 2);
+      expect(events[1].snapshot.value['second'], newValues[1]);
       expect(events[1].snapshot.value['third'], 3);
-
-      expect(events[2].snapshot.keys, ['first', 'second', 'third']);
-
-      expect(events[2].snapshot.value['first'], newValues[0]);
-      expect(events[2].snapshot.value['second'], newValues[1]);
-      expect(events[2].snapshot.value['third'], 3);
     });
 
     test('onChildMoved emits correct events', () async {
       final eventsFuture = ref.orderByPriority().onChildMoved.take(2).toList();
 
-      await Future.delayed(const Duration(milliseconds: 300));
+      await ref.onValue.first;
 
       await ref.child('second').setPriority(20);
       await ref.child('first').setPriority(0);
@@ -301,7 +289,7 @@ void runQueryTests() {
       final eventsFuture =
           ref.orderByPriority().onChildRemoved.take(1).toList();
 
-      await Future.delayed(const Duration(milliseconds: 300));
+      await ref.onValue.first;
 
       await ref.child('third').remove();
 
