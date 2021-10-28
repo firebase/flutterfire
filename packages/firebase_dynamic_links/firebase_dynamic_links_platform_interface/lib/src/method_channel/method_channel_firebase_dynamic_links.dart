@@ -30,9 +30,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   );
 
   /// The [EventChannel] used for onLink
-  static EventChannel onLinkChannel(String id) {
+  static EventChannel onLinkChannel(String name) {
     return EventChannel(
-      'plugins.flutter.io/firebase_dynamic_links/onLink/$id',
+      name,
       channel.codec,
     );
   }
@@ -93,19 +93,19 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   @override
   Stream<PendingDynamicLinkData?> onLink() {
     StreamSubscription<dynamic>? snapshotStream;
-    late StreamController<PendingDynamicLinkData?> controller; // ignore: close_sinks
+    late StreamController<PendingDynamicLinkData?>
+        controller; // ignore: close_sinks
 
     controller = StreamController<PendingDynamicLinkData?>.broadcast(
       onListen: () async {
-        //TODO setup event channel. Make sure this all works.
-        final observerId =
-            await channel.invokeMethod<String>('FirebaseDynamicLinks#onLink');
+        // ignore: cast_nullable_to_non_nullable
+        String name = await channel.invokeMethod<String>(
+            'FirebaseDynamicLinks#onLink', <String, dynamic>{
+          'appName': app.name,
+        }) as String;
 
-        snapshotStream = onLinkChannel(observerId!).receiveBroadcastStream(
-          <String, dynamic>{
-            'appName': app.name,
-          },
-        ).listen((event) {
+        snapshotStream =
+            onLinkChannel(name).receiveBroadcastStream().listen((event) {
           controller.add(getPendingDynamicLinkDataFromMap(event));
         }, onError: (error, stack) {
           controller.addError(convertPlatformException(error), stack);
@@ -120,29 +120,29 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  MethodChannelDynamicLinkBuilder createLink(){
+  MethodChannelDynamicLinkBuilder createLink() {
     return MethodChannelDynamicLinkBuilder(this);
   }
 
-  // Future<dynamic> _handleMethod(MethodCall call) async {
-  //   switch (call.method) {
-  //     case 'onLinkSuccess':
-  //       PendingDynamicLinkData? linkData;
-  //       if (call.arguments != null) {
-  //         final Map<dynamic, dynamic>? data =
-  //             call.arguments.cast<dynamic, dynamic>();
-  //         linkData = getPendingDynamicLinkDataFromMap(data);
-  //       }
-  //       return _onLinkSuccess!(linkData);
-  //     case 'onLinkError':
-  //       final Map<dynamic, dynamic> data =
-  //           call.arguments.cast<dynamic, dynamic>();
-      //TODO use stream handler instead
-      // final OnLinkErrorException e = OnLinkErrorException._(
-      //     data['code'], data['message'], data['details']);
-      // return _onLinkError!(e);
-  //   }
-  // }
+// Future<dynamic> _handleMethod(MethodCall call) async {
+//   switch (call.method) {
+//     case 'onLinkSuccess':
+//       PendingDynamicLinkData? linkData;
+//       if (call.arguments != null) {
+//         final Map<dynamic, dynamic>? data =
+//             call.arguments.cast<dynamic, dynamic>();
+//         linkData = getPendingDynamicLinkDataFromMap(data);
+//       }
+//       return _onLinkSuccess!(linkData);
+//     case 'onLinkError':
+//       final Map<dynamic, dynamic> data =
+//           call.arguments.cast<dynamic, dynamic>();
+//TODO use stream handler instead
+// final OnLinkErrorException e = OnLinkErrorException._(
+//     data['code'], data['message'], data['details']);
+// return _onLinkError!(e);
+//   }
+// }
 }
 
 //TODO use exception in PI. Remove this.

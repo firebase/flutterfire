@@ -43,15 +43,15 @@ class MethodChannelDynamicLinkBuilder extends DynamicLinkBuilderPlatform {
 
   @override
   Future<ShortDynamicLink> buildShortLink(BuildDynamicLinkParameters parameters) async {
-    final Map<String, dynamic>? reply = await MethodChannelFirebaseDynamicLinks.channel
+    final Map<String, dynamic>? response = await MethodChannelFirebaseDynamicLinks.channel
         .invokeMapMethod<String, dynamic>(
         'DynamicLinkParameters#buildShortLink', _withChannelDefaults(parameters.asMap()));
-    return _parseShortLink(reply!);
+    return _parseShortLink(response!);
   }
 
 
-  ShortDynamicLink _parseShortLink(Map<String, dynamic> reply) {
-    final List<dynamic>? warnings = reply['warnings'];
-    return ShortDynamicLink(Uri.parse(reply['url']), warnings?.cast());
+  ShortDynamicLink _parseShortLink(Map<String, dynamic> response) {
+    final List<dynamic>? warnings = response['warnings'];
+    return ShortDynamicLink(Uri.parse(response['url']), warnings?.cast(), response['previewLink']);
   }
 }
