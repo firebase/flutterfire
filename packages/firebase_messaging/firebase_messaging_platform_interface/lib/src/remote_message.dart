@@ -9,7 +9,8 @@ import 'package:firebase_messaging_platform_interface/firebase_messaging_platfor
 class RemoteMessage {
   // ignore: public_member_api_docs
   const RemoteMessage(
-      {this.senderId,
+      {required this.rawData,
+      this.senderId,
       this.category,
       this.collapseKey,
       this.contentAvailable = false,
@@ -49,8 +50,12 @@ class RemoteMessage {
               int.parse(map['sentTime'].toString())),
       threadId: map['threadId'],
       ttl: map['ttl'],
+      rawData: map,
     );
   }
+
+  /// The raw data sent from firebase
+  final Map<String, dynamic> rawData;
 
   /// The ID of the upstream sender location.
   final String? senderId;

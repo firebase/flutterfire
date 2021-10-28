@@ -49,6 +49,7 @@ void main() {
     test('"RemoteMessage.fromMap" with every possible property expected', () {
       final message = RemoteMessage.fromMap(mockMessageMap!);
 
+      expect(message.rawData, mockMessageMap);
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
       expect(message.collapseKey, mockMessageMap!['collapseKey']);
@@ -79,6 +80,7 @@ void main() {
         () {
       final message = RemoteMessage.fromMap(mockNullableMessageMap);
 
+      expect(message.rawData, mockNullableMessageMap);
       expect(message.senderId, mockNullableMessageMap['senderId']);
       expect(message.category, mockNullableMessageMap['category']);
       expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
@@ -99,6 +101,7 @@ void main() {
       DateTime date = DateTime.now();
 
       final message = RemoteMessage(
+        rawData: mockMessageMap!,
         senderId: mockMessageMap!['senderId'],
         category: mockMessageMap!['category'],
         collapseKey: mockMessageMap!['collapseKey'],
@@ -114,6 +117,7 @@ void main() {
         ttl: mockMessageMap!['ttl'],
       );
 
+      expect(message.rawData, mockMessageMap);
       expect(message.senderId, mockMessageMap!['senderId']);
       expect(message.category, mockMessageMap!['category']);
       expect(message.collapseKey, mockMessageMap!['collapseKey']);
@@ -147,8 +151,10 @@ void main() {
         'ttl': null
       };
 
-      RemoteMessage message = const RemoteMessage();
+      final emptyMap = <String, dynamic>{};
+      RemoteMessage message = const RemoteMessage(rawData: {});
 
+      expect(message.rawData, emptyMap);
       expect(message.senderId, mockNullableMessageMap['senderId']);
       expect(message.category, mockNullableMessageMap['category']);
       expect(message.collapseKey, mockNullableMessageMap['collapseKey']);
