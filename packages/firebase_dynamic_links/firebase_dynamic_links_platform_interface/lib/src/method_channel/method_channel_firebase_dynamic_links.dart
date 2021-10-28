@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links_platform_interface/src/method_channel/method_channel_dynamic_link_builder.dart';
 import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
@@ -116,6 +117,11 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     );
 
     return controller.stream;
+  }
+
+  @override
+  MethodChannelDynamicLinkBuilder createLink(){
+    return MethodChannelDynamicLinkBuilder(this);
   }
 
   // Future<dynamic> _handleMethod(MethodCall call) async {

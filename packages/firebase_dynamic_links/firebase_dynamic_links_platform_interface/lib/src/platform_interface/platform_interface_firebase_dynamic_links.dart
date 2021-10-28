@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links_platform_interface/src/platform_interface/platform_interface_dynamic_link_builder.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -70,6 +71,10 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   /// Configures onLink listeners: it has two methods for success and failure.
   Stream<PendingDynamicLinkData?> onLink() {
     throw UnimplementedError('onLink() is not implemented');
+  }
+
+  DynamicLinkBuilderPlatform createLink(){
+    throw UnimplementedError('createLink() is not implemented');
   }
 
   @override
