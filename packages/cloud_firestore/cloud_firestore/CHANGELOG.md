@@ -1,3 +1,8 @@
+## 2.5.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7147).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
 ## 2.5.3
 
  - **FIX**: value encoding fails when using `DocumentReference` & `withConverter` (#7020).

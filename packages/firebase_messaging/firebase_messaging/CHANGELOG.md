@@ -1,3 +1,9 @@
+## 10.0.9
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **FIX**: Fix crash. If intent.getExtras() returns `null`, do not attempt to handle `RemoteMessage` #6759 (#7094).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
 ## 10.0.8
 
  - **FIX**: Fix crash on Android in onDetachedFromEngine (#7088).
