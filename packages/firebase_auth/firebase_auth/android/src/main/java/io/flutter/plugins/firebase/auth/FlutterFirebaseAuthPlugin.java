@@ -50,7 +50,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,12 +74,6 @@ public class FlutterFirebaseAuthPlugin
   private Activity activity;
 
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
-
-  @SuppressWarnings("unused")
-  public static void registerWith(PluginRegistry.Registrar registrar) {
-    FlutterFirebaseAuthPlugin instance = new FlutterFirebaseAuthPlugin();
-    instance.initInstance(registrar.messenger());
-  }
 
   static Map<String, Object> parseAuthCredential(AuthCredential authCredential) {
     if (authCredential == null) {

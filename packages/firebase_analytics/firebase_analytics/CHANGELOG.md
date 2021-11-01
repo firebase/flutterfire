@@ -1,4 +1,4 @@
-## 9.0.0-dev.1
+## UNRELEASED
 
 As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
 
@@ -35,6 +35,9 @@ documentation and updating unit and end-to-end tests.
 - **NEW**: `setConsent()` added support for setting the applicable end user consent state (e.g., for device identifiers) for the app on this device.
 - **NEW**: `setDefaultEventParameters()` added support for setting default parameters that will be set on every event logged from the SDK, including automatic ones.
 
+## 8.3.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
 
 ## 8.3.3
 

@@ -1,3 +1,8 @@
+## 0.7.1+2
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **CHORE**: update Gradle versions used in Android example app (#7054).
+
 ## 0.7.1+1
 
  - **DOCS**: remove usage of private link address (#6986).
