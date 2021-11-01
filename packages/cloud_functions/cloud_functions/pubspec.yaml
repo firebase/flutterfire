@@ -33,6 +33,12 @@ flutter:
       ios:
         pluginClass: FLTFirebaseFunctionsPlugin
       macos:
-        pluginClass: FLTFirebaseFunctionsPlugin
+        # pluginClass: FLTFirebaseFunctionsPlugin
+        # Temporary for development of Desktop packages
+        default_package: firebase_functions_desktop
+      linux:
+        default_package: firebase_functions_desktop
+      windows:
+        default_package: firebase_functions_desktop
       web:
         default_package: cloud_functions_web

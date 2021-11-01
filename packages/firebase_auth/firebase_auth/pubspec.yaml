@@ -37,7 +37,9 @@ flutter:
       ios:
         pluginClass: FLTFirebaseAuthPlugin
       macos:
-        pluginClass: FLTFirebaseAuthPlugin
+        # pluginClass: FLTFirebaseFunctionsPlugin
+        # Temporary for development of Desktop packages
+        default_package: firebase_auth_desktop
       linux:
         default_package: firebase_auth_desktop
       windows:

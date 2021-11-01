@@ -32,7 +32,9 @@ flutter:
       ios:
         pluginClass: FLTFirebaseCorePlugin
       macos:
-        pluginClass: FLTFirebaseCorePlugin
+        # pluginClass: FLTFirebaseFunctionsPlugin
+        # Temporary for development of Desktop packages
+        default_package: firebase_core_desktop
       linux:
         default_package: firebase_core_desktop
       windows:
