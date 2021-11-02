@@ -7,36 +7,27 @@ package io.flutter.plugins.firebasedynamiclinks;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.dynamiclinks.DynamicLink;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
+import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,24 +35,20 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-
 public class FirebaseDynamicLinksPlugin
-  implements FlutterFirebasePlugin, FlutterPlugin, ActivityAware, MethodCallHandler, NewIntentListener {
+    implements FlutterFirebasePlugin,
+        FlutterPlugin,
+        ActivityAware,
+        MethodCallHandler,
+        NewIntentListener {
   private final AtomicReference<Activity> activity = new AtomicReference<>(null);
 
   private MethodChannel channel;
-  @Nullable
-  private BinaryMessenger messenger;
+  @Nullable private BinaryMessenger messenger;
 
-  private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
-
+  private final Map<EventChannel, GetLinkStreamHandler> streamHandlers = new HashMap<>();
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
-
-
-  private static MethodChannel createChannel(final BinaryMessenger messenger) {
-    return new MethodChannel(messenger, "plugins.flutter.io/firebase_dynamic_links");
-  }
 
   private void initInstance(BinaryMessenger messenger) {
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
@@ -70,7 +57,6 @@ public class FirebaseDynamicLinksPlugin
 
     this.messenger = messenger;
   }
-
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -82,14 +68,12 @@ public class FirebaseDynamicLinksPlugin
     channel.setMethodCallHandler(null);
     channel = null;
     messenger = null;
-//TODO add this for listening to events
-//    removeEventListeners();
+    removeEventListeners();
   }
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
     activity.set(binding.getActivity());
-    //TODO make sure I'm using this feature. if not, remove.
     binding.addOnNewIntentListener(this);
   }
 
@@ -120,37 +104,14 @@ public class FirebaseDynamicLinksPlugin
     return FirebaseDynamicLinks.getInstance(app);
   }
 
-  //TODO make sure I'm using this properly
   @Override
   public boolean onNewIntent(Intent intent) {
-    FirebaseDynamicLinks.getInstance()
-      .getDynamicLink(intent)
-      .addOnSuccessListener(
-        new OnSuccessListener<PendingDynamicLinkData>() {
-          @Override
-          public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-            if (pendingDynamicLinkData != null) {
-              Map<String, Object> dynamicLink =
-                Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
-              channel.invokeMethod("onLinkSuccess", dynamicLink);
-            }
-          }
-        })
-      .addOnFailureListener(
-        new OnFailureListener() {
-          @Override
-          public void onFailure(Exception e) {
-            Map<String, Object> exception = new HashMap<>();
-            exception.put("code", e.getClass().getSimpleName());
-            exception.put("message", e.getMessage());
-            exception.put("details", null);
-            channel.invokeMethod("onLinkError", exception);
-          }
-        });
-
+    // Passes intent to every listener for different app instances the user may create
+    for (GetLinkStreamHandler instance : streamHandlers.values()) {
+      instance.sinkEvent(intent);
+    }
     return false;
   }
-
 
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
@@ -175,26 +136,27 @@ public class FirebaseDynamicLinksPlugin
         methodCallTask = getDynamicLink(dynamicLinks, call.argument("url"));
         break;
       case "FirebaseDynamicLinks#onLink":
-        methodCallTask = registerGetLinkListener(Objects.requireNonNull(call.argument(Constants.APP_NAME)), dynamicLinks);
+        methodCallTask =
+            registerGetLinkListener(
+                Objects.requireNonNull(call.argument(Constants.APP_NAME)), dynamicLinks);
         break;
       default:
         result.notImplemented();
         return;
     }
 
-
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(
-            Constants.DEFAULT_ERROR_CODE,
-            exception != null ? exception.getMessage() : null,
-            Utils.getExceptionDetails(exception));
-        }
-      });
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            result.error(
+                Constants.DEFAULT_ERROR_CODE,
+                exception != null ? exception.getMessage() : null,
+                Utils.getExceptionDetails(exception));
+          }
+        });
   }
 
   private String buildUrl(Map<String, Object> arguments) {
@@ -203,70 +165,71 @@ public class FirebaseDynamicLinksPlugin
     return urlBuilder.buildDynamicLink().getUri().toString();
   }
 
-  private Task<Map<String, Object>> buildShortLink(DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> dynamicLinkParametersOptions) {
+  private Task<Map<String, Object>> buildShortLink(
+      DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> dynamicLinkParametersOptions) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        Integer suffix = null;
+        cachedThreadPool,
+        () -> {
+          Integer suffix = null;
 
-        if (dynamicLinkParametersOptions != null) {
-          Integer shortDynamicLinkPathLength =
-            (Integer) dynamicLinkParametersOptions.get("shortDynamicLinkPathLength");
-          if (shortDynamicLinkPathLength != null) {
-            switch (shortDynamicLinkPathLength) {
-              case 0:
-                suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
-                break;
-              case 1:
-                suffix = ShortDynamicLink.Suffix.SHORT;
-                break;
-              default:
-                break;
+          if (dynamicLinkParametersOptions != null) {
+            Integer shortDynamicLinkPathLength =
+                (Integer) dynamicLinkParametersOptions.get("shortDynamicLinkPathLength");
+            if (shortDynamicLinkPathLength != null) {
+              switch (shortDynamicLinkPathLength) {
+                case 0:
+                  suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
+                  break;
+                case 1:
+                  suffix = ShortDynamicLink.Suffix.SHORT;
+                  break;
+                default:
+                  break;
+              }
             }
           }
-        }
 
-        Map<String, Object> result = new HashMap<>();
-        ShortDynamicLink shortLink;
-        if (suffix != null) {
-          shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
-        } else {
-          shortLink = Tasks.await(urlBuilder.buildShortDynamicLink());
-        }
-        List<String> warnings = new ArrayList<>();
+          Map<String, Object> result = new HashMap<>();
+          ShortDynamicLink shortLink;
+          if (suffix != null) {
+            shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
+          } else {
+            shortLink = Tasks.await(urlBuilder.buildShortDynamicLink());
+          }
+          List<String> warnings = new ArrayList<>();
 
-        for (ShortDynamicLink.Warning warning : shortLink.getWarnings()) {
-          warnings.add(warning.getMessage());
-        }
+          for (ShortDynamicLink.Warning warning : shortLink.getWarnings()) {
+            warnings.add(warning.getMessage());
+          }
 
-        result.put("url", shortLink.getShortLink());
-        result.put("warnings", warnings);
-        result.put("previewLink", shortLink.getPreviewLink());
+          result.put("url", shortLink.getShortLink());
+          result.put("warnings", warnings);
+          result.put("previewLink", shortLink.getPreviewLink());
 
-        return result;
-      }
-    );
+          return result;
+        });
   }
 
-  private Task<Map<String, Object>> getDynamicLink(FirebaseDynamicLinks dynamicLinks, @Nullable String url) {
+  private Task<Map<String, Object>> getDynamicLink(
+      FirebaseDynamicLinks dynamicLinks, @Nullable String url) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        PendingDynamicLinkData pendingDynamicLink;
+        cachedThreadPool,
+        () -> {
+          PendingDynamicLinkData pendingDynamicLink;
 
-        if (url != null) {
-          pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
-        } else {
-          // If there's no activity or initial Intent, then there's no initial dynamic link.
-          if (activity.get() == null || activity.get().getIntent() == null) {
-            return null;
+          if (url != null) {
+            pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
+          } else {
+            // If there's no activity or initial Intent, then there's no initial dynamic link.
+            if (activity.get() == null || activity.get().getIntent() == null) {
+              return null;
+            }
+            pendingDynamicLink =
+                Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
           }
-          pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
-        }
 
-        return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
-      }
-    );
+          return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
+        });
   }
 
   private DynamicLink.Builder setupParameters(Map<String, Object> arguments) {
@@ -278,14 +241,15 @@ public class FirebaseDynamicLinksPlugin
     dynamicLinkBuilder.setDomainUriPrefix(uriPrefix);
     dynamicLinkBuilder.setLink(Uri.parse(link));
 
-    Map<String, Object> androidParameters = (Map<String, Object>) arguments.get("androidParameters");
+    Map<String, Object> androidParameters =
+        (Map<String, Object>) arguments.get("androidParameters");
     if (androidParameters != null) {
       String packageName = valueFor("packageName", androidParameters);
       String fallbackUrl = valueFor("fallbackUrl", androidParameters);
       Integer minimumVersion = valueFor("minimumVersion", androidParameters);
 
       DynamicLink.AndroidParameters.Builder builder =
-        new DynamicLink.AndroidParameters.Builder(packageName);
+          new DynamicLink.AndroidParameters.Builder(packageName);
 
       if (fallbackUrl != null) builder.setFallbackUrl(Uri.parse(fallbackUrl));
       if (minimumVersion != null) builder.setMinimumVersion(minimumVersion);
@@ -293,7 +257,8 @@ public class FirebaseDynamicLinksPlugin
       dynamicLinkBuilder.setAndroidParameters(builder.build());
     }
 
-    Map<String, Object> googleAnalyticsParameters = (Map<String, Object>) arguments.get("googleAnalyticsParameters");
+    Map<String, Object> googleAnalyticsParameters =
+        (Map<String, Object>) arguments.get("googleAnalyticsParameters");
     if (googleAnalyticsParameters != null) {
       String campaign = valueFor("campaign", googleAnalyticsParameters);
       String content = valueFor("content", googleAnalyticsParameters);
@@ -302,7 +267,7 @@ public class FirebaseDynamicLinksPlugin
       String term = valueFor("term", googleAnalyticsParameters);
 
       DynamicLink.GoogleAnalyticsParameters.Builder builder =
-        new DynamicLink.GoogleAnalyticsParameters.Builder();
+          new DynamicLink.GoogleAnalyticsParameters.Builder();
 
       if (campaign != null) builder.setCampaign(campaign);
       if (content != null) builder.setContent(content);
@@ -335,15 +300,15 @@ public class FirebaseDynamicLinksPlugin
       dynamicLinkBuilder.setIosParameters(builder.build());
     }
 
-    Map<String, Object> itunesConnectAnalyticsParameters = (Map<String, Object>)
-      arguments.get("itunesConnectAnalyticsParameters");
+    Map<String, Object> itunesConnectAnalyticsParameters =
+        (Map<String, Object>) arguments.get("itunesConnectAnalyticsParameters");
     if (itunesConnectAnalyticsParameters != null) {
       String affiliateToken = valueFor("affiliateToken", itunesConnectAnalyticsParameters);
       String campaignToken = valueFor("campaignToken", itunesConnectAnalyticsParameters);
       String providerToken = valueFor("providerToken", itunesConnectAnalyticsParameters);
 
       DynamicLink.ItunesConnectAnalyticsParameters.Builder builder =
-        new DynamicLink.ItunesConnectAnalyticsParameters.Builder();
+          new DynamicLink.ItunesConnectAnalyticsParameters.Builder();
 
       if (affiliateToken != null) builder.setAffiliateToken(affiliateToken);
       if (campaignToken != null) builder.setCampaignToken(campaignToken);
@@ -352,26 +317,28 @@ public class FirebaseDynamicLinksPlugin
       dynamicLinkBuilder.setItunesConnectAnalyticsParameters(builder.build());
     }
 
-    Map<String, Object> navigationInfoParameters = (Map<String, Object>) arguments.get("navigationInfoParameters");
+    Map<String, Object> navigationInfoParameters =
+        (Map<String, Object>) arguments.get("navigationInfoParameters");
     if (navigationInfoParameters != null) {
       Boolean forcedRedirectEnabled = valueFor("forcedRedirectEnabled", navigationInfoParameters);
 
       DynamicLink.NavigationInfoParameters.Builder builder =
-        new DynamicLink.NavigationInfoParameters.Builder();
+          new DynamicLink.NavigationInfoParameters.Builder();
 
       if (forcedRedirectEnabled != null) builder.setForcedRedirectEnabled(forcedRedirectEnabled);
 
       dynamicLinkBuilder.setNavigationInfoParameters(builder.build());
     }
 
-    Map<String, Object> socialMetaTagParameters = (Map<String, Object>) arguments.get("socialMetaTagParameters");
+    Map<String, Object> socialMetaTagParameters =
+        (Map<String, Object>) arguments.get("socialMetaTagParameters");
     if (socialMetaTagParameters != null) {
       String description = valueFor("description", socialMetaTagParameters);
       String imageUrl = valueFor("imageUrl", socialMetaTagParameters);
       String title = valueFor("title", socialMetaTagParameters);
 
       DynamicLink.SocialMetaTagParameters.Builder builder =
-        new DynamicLink.SocialMetaTagParameters.Builder();
+          new DynamicLink.SocialMetaTagParameters.Builder();
 
       if (description != null) builder.setDescription(description);
       if (imageUrl != null) builder.setImageUrl(Uri.parse(imageUrl));
@@ -383,17 +350,18 @@ public class FirebaseDynamicLinksPlugin
     return dynamicLinkBuilder;
   }
 
-  private Task<String> registerGetLinkListener(@NonNull String appName, FirebaseDynamicLinks dynamicLinks) {
+  private Task<String> registerGetLinkListener(
+      @NonNull String appName, FirebaseDynamicLinks dynamicLinks) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final GetLinkStreamHandler handler = new GetLinkStreamHandler(dynamicLinks);
-        final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
-        final EventChannel channel = new EventChannel(messenger, name);
-        channel.setStreamHandler(handler);
-        streamHandlers.put(channel, handler);
-        return name;
-      });
+        cachedThreadPool,
+        () -> {
+          final GetLinkStreamHandler handler = new GetLinkStreamHandler(dynamicLinks);
+          final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          return name;
+        });
   }
 
   private static <T> T valueFor(String key, Map<String, Object> map) {
@@ -410,20 +378,21 @@ public class FirebaseDynamicLinksPlugin
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        removeEventListeners();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          removeEventListeners();
+          return null;
+        });
   }
 
-  private void removeEventListeners(){
+  private void removeEventListeners() {
     for (EventChannel eventChannel : streamHandlers.keySet()) {
       StreamHandler streamHandler = streamHandlers.get(eventChannel);
       assert streamHandler != null;
       streamHandler.onCancel(null);
       eventChannel.setStreamHandler(null);
     }
+
     streamHandlers.clear();
   }
 }

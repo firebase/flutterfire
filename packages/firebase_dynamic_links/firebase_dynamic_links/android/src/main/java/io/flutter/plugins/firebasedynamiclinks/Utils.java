@@ -1,11 +1,8 @@
 package io.flutter.plugins.firebasedynamiclinks;
 
 import android.net.Uri;
-
 import androidx.annotation.Nullable;
-
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +19,7 @@ public class Utils {
   }
 
   static Map<String, Object> getMapFromPendingDynamicLinkData(
-    PendingDynamicLinkData pendingDynamicLinkData) {
+      PendingDynamicLinkData pendingDynamicLinkData) {
     Map<String, Object> dynamicLink = new HashMap<>();
 
     Uri link = pendingDynamicLinkData.getLink();
@@ -30,7 +27,7 @@ public class Utils {
 
     Map<String, Object> utmParameters = new HashMap<>();
 
-    for(String key : pendingDynamicLinkData.getUtmParameters().keySet()){
+    for (String key : pendingDynamicLinkData.getUtmParameters().keySet()) {
       utmParameters.put(key, pendingDynamicLinkData.getUtmParameters().get(key).toString());
     }
 
