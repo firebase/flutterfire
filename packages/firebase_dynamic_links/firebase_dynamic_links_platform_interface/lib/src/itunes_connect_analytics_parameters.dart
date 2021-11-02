@@ -13,8 +13,8 @@ class ItunesConnectAnalyticsParameters {
   final String? providerToken;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'affiliateToken': affiliateToken,
-    'campaignToken': campaignToken,
-    'providerToken': providerToken,
-  };
+        'affiliateToken': affiliateToken,
+        'campaignToken': campaignToken,
+        'providerToken': providerToken,
+      };
 }

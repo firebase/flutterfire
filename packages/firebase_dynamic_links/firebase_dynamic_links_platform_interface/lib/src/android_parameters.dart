@@ -1,4 +1,3 @@
-
 /// The Dynamic Link Android parameters.
 class AndroidParameters {
   const AndroidParameters(
@@ -21,8 +20,8 @@ class AndroidParameters {
   final String packageName;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'fallbackUrl': fallbackUrl?.toString(),
-    'minimumVersion': minimumVersion,
-    'packageName': packageName,
-  };
+        'fallbackUrl': fallbackUrl?.toString(),
+        'minimumVersion': minimumVersion,
+        'packageName': packageName,
+      };
 }

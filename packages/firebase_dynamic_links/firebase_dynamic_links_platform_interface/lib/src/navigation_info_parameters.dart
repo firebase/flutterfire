@@ -14,6 +14,6 @@ class NavigationInfoParameters {
   final bool? forcedRedirectEnabled;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'forcedRedirectEnabled': forcedRedirectEnabled,
-  };
+        'forcedRedirectEnabled': forcedRedirectEnabled,
+      };
 }

@@ -47,12 +47,12 @@ class IosParameters {
   final String? minimumVersion;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'appStoreId': appStoreId,
-    'bundleId': bundleId,
-    'customScheme': customScheme,
-    'fallbackUrl': fallbackUrl?.toString(),
-    'ipadBundleId': ipadBundleId,
-    'ipadFallbackUrl': ipadFallbackUrl?.toString(),
-    'minimumVersion': minimumVersion,
-  };
+        'appStoreId': appStoreId,
+        'bundleId': bundleId,
+        'customScheme': customScheme,
+        'fallbackUrl': fallbackUrl?.toString(),
+        'ipadBundleId': ipadBundleId,
+        'ipadFallbackUrl': ipadFallbackUrl?.toString(),
+        'minimumVersion': minimumVersion,
+      };
 }

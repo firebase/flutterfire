@@ -43,7 +43,8 @@ abstract class DynamicLinkBuilderPlatform extends PlatformInterface {
   }
 
   /// Generate a short Dynamic Link URL.
-  Future<ShortDynamicLink> buildShortLink(BuildDynamicLinkParameters parameters) async {
+  Future<ShortDynamicLink> buildShortLink(
+      BuildDynamicLinkParameters parameters) async {
     throw UnimplementedError('buildShortLink() is not implemented');
   }
 }

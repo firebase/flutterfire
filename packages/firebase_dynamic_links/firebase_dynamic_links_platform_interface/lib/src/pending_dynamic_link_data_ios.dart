@@ -8,5 +8,3 @@ class PendingDynamicLinkDataIOS {
   /// declares higher [minimumVersion] than currently installed.
   final String? minimumVersion;
 }
-
-

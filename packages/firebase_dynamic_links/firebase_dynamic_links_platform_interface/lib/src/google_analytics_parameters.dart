@@ -31,10 +31,10 @@ class GoogleAnalyticsParameters {
   final String? term;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'campaign': campaign,
-    'content': content,
-    'medium': medium,
-    'source': source,
-    'term': term,
-  };
+        'campaign': campaign,
+        'content': content,
+        'medium': medium,
+        'source': source,
+        'term': term,
+      };
 }

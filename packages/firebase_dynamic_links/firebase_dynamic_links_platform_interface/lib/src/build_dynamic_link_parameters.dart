@@ -62,17 +62,17 @@ class BuildDynamicLinkParameters {
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() => <String, dynamic>{
-    'androidParameters': androidParameters?.data,
-    'uriPrefix': uriPrefix,
-    'dynamicLinkParametersOptions': dynamicLinkParametersOptions?.data,
-    'googleAnalyticsParameters': googleAnalyticsParameters?.data,
-    'iosParameters': iosParameters?.data,
-    'itunesConnectAnalyticsParameters':
-    itunesConnectAnalyticsParameters?.data,
-    'link': link.toString(),
-    'navigationInfoParameters': navigationInfoParameters?.data,
-    'socialMetaTagParameters': socialMetaTagParameters?.data,
-  };
+        'androidParameters': androidParameters?.data,
+        'uriPrefix': uriPrefix,
+        'dynamicLinkParametersOptions': dynamicLinkParametersOptions?.data,
+        'googleAnalyticsParameters': googleAnalyticsParameters?.data,
+        'iosParameters': iosParameters?.data,
+        'itunesConnectAnalyticsParameters':
+            itunesConnectAnalyticsParameters?.data,
+        'link': link.toString(),
+        'navigationInfoParameters': navigationInfoParameters?.data,
+        'socialMetaTagParameters': socialMetaTagParameters?.data,
+      };
 
   @override
   String toString() {

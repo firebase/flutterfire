@@ -1,4 +1,5 @@
 import 'short_dynamic_link_path_length.dart';
+
 /// Options class for defining how Dynamic Link URLs are generated.
 class DynamicLinkParametersOptions {
   const DynamicLinkParametersOptions({this.shortDynamicLinkPathLength});
@@ -7,6 +8,6 @@ class DynamicLinkParametersOptions {
   final ShortDynamicLinkPathLength? shortDynamicLinkPathLength;
 
   Map<String, dynamic> get data => <String, dynamic>{
-    'shortDynamicLinkPathLength': shortDynamicLinkPathLength?.index,
-  };
+        'shortDynamicLinkPathLength': shortDynamicLinkPathLength?.index,
+      };
 }

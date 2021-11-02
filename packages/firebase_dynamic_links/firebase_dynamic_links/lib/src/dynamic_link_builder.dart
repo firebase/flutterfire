@@ -25,10 +25,8 @@ class DynamicLinkBuilder {
     return _delegate.buildUrl(parameters);
   }
 
-  Future<ShortDynamicLink> buildShortLink(BuildDynamicLinkParameters parameters) async {
+  Future<ShortDynamicLink> buildShortLink(
+      BuildDynamicLinkParameters parameters) async {
     return _delegate.buildShortLink(parameters);
   }
 }
-
-
-

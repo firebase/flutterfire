@@ -1,5 +1,6 @@
 import 'pending_dynamic_link_data_android.dart';
 import 'pending_dynamic_link_data_ios.dart';
+
 /// Provides data from received dynamic link.
 class PendingDynamicLinkData {
   const PendingDynamicLinkData(this.link, this.android, this.ios);

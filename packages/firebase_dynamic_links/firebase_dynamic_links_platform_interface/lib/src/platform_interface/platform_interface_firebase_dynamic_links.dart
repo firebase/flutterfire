@@ -60,7 +60,7 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
-  Future<PendingDynamicLinkData?> getInitialLink(){
+  Future<PendingDynamicLinkData?> getInitialLink() {
     throw UnimplementedError('getInitialLink() is not implemented');
   }
 
@@ -73,7 +73,7 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
     throw UnimplementedError('onLink() is not implemented');
   }
 
-  DynamicLinkBuilderPlatform createLink(){
+  DynamicLinkBuilderPlatform createLink() {
     throw UnimplementedError('createLink() is not implemented');
   }
 

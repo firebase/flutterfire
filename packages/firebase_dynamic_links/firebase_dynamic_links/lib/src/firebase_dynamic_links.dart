@@ -71,6 +71,6 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
   }
 
   DynamicLinkBuilder createLink() {
-   return DynamicLinkBuilder._(this, _delegate.createLink());
+    return DynamicLinkBuilder._(this, _delegate.createLink());
   }
 }
