@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -250,6 +251,18 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         });
   }
 
+  private Task<Map<String, Integer>> getPermissions() {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final Map<String, Integer> permissions = new HashMap<>();
+          final boolean areNotificationsEnabled =
+              NotificationManagerCompat.from(mainActivity).areNotificationsEnabled();
+          permissions.put("authorizationStatus", areNotificationsEnabled ? 1 : 0);
+          return permissions;
+        });
+  }
+
   @Override
   public void onMethodCall(final MethodCall call, @NonNull final Result result) {
     Task<?> methodCallTask;
@@ -318,6 +331,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         break;
       case "Messaging#setAutoInitEnabled":
         methodCallTask = setAutoInitEnabled(call.arguments());
+        break;
+      case "Messaging#requestPermission":
+      case "Messaging#getNotificationSettings":
+        methodCallTask = getPermissions();
         break;
       default:
         result.notImplemented();

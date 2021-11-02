@@ -132,7 +132,7 @@ void main() {
           criticalAlert: anyNamed('criticalAlert'),
           provisional: anyNamed('provisional'),
           sound: anyNamed('sound'),
-        )).thenAnswer((_) => Future.value(androidNotificationSettings));
+        )).thenAnswer((_) => Future.value(defaultNotificationSettings));
 
         // true values
         await messaging!.requestPermission(
