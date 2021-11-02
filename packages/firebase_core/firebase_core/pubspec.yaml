@@ -10,7 +10,6 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core_desktop: ^0.1.1-dev.0
   firebase_core_platform_interface: ^4.0.1
   firebase_core_web: ^1.1.0
   flutter:
@@ -22,6 +21,9 @@ dev_dependencies:
     sdk: flutter
   mockito: ^5.0.0
   plugin_platform_interface: ^2.0.0
+
+dependency_overrides:
+  firebase_core_desktop: ^0.1.1-dev.0
 
 flutter:
   plugin:
