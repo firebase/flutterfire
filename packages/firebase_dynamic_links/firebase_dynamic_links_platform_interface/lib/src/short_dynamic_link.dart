@@ -5,8 +5,8 @@ class ShortDynamicLink {
   /// Short url value.
   final Uri shortUrl;
 
-  /// Gets the preview link to show the link flow chart..
-  final Uri previewLink;
+  /// Gets the preview link to show the link flow chart. Android only.
+  final Uri? previewLink;
 
   /// Information about potential warnings on link creation.
   final List<String>? warnings;
