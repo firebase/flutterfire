@@ -5,6 +5,7 @@
 #import "Private/FLTOnLinkStreamHandler.h"
 #import "Public/FLTFirebaseDynamicLinksPlugin.h"
 
+
 @implementation FLTOnLinkStreamHandler {
   FlutterEventSink events;
 }
@@ -15,39 +16,19 @@
   return self;
 }
 
-- (void) sinkEvent {
-  
+- (void) sinkEvent:(id)event {
+  // Can be data or error
+  events(event);
 }
 
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)eventHandler {
   events = eventHandler;
-//  bool __block initialAuthState = YES;
-//
-//  _listener =
-//      [_auth addAuthStateDidChangeListener:^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-//        if (initialAuthState) {
-//          initialAuthState = NO;
-//          return;
-//        }
-//
-//        if (user) {
-//          events(@{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]});
-//        } else {
-//          events(@{
-//            @"user" : [NSNull null],
-//          });
-//        }
-//      }];
 
   return nil;
 }
 
 - (FlutterError *)onCancelWithArguments:(id)arguments {
-//  if (_listener) {
-//    [_auth removeAuthStateDidChangeListener:_listener];
-//  }
-//  _listener = nil;
-//
+  // Do nothing
   return nil;
 }
 

@@ -19,9 +19,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FLTOnLinkStreamHandler : NSObject <FlutterStreamHandler>
-
 - (instancetype)init;
-
+- (void) sinkEvent:(id)dynamicLinkData;
 @end
 
 NS_ASSUME_NONNULL_END
