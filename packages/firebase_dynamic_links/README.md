@@ -69,7 +69,7 @@ To shorten a long Dynamic Link, use the DynamicLinkParameters.shortenUrl method.
 ```dart
 final ShortDynamicLink shortenedLink = await DynamicLinkParameters.shortenUrl(
   Uri.parse('https://example.page.link/?link=https://example.com/&apn=com.example.android&ibi=com.example.ios'),
-  DynamicLinkParametersOptions(ShortDynamicLinkPathLength.unguessable),
+  DynamicLinkParametersOptions(shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable),
 );
 
 final Uri shortUrl = shortenedLink.shortUrl;
