@@ -9,7 +9,9 @@ import java.util.Map;
 public class Utils {
   static Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
     Map<String, Object> details = new HashMap<>();
-    details.put("code", "unknown");
+      // There aren't any Dynamic Link Exceptions in the reference:
+      // https://firebase.google.com/docs/reference/android/com/google/firebase/dynamiclinks/package-summary
+      details.put("code", "unknown");
     if (exception != null) {
       details.put("message", exception.getMessage());
     } else {
