@@ -94,7 +94,7 @@ The `authorizationStatus` property can return a value which can be used to deter
 - `notDetermined`: The user has not yet chosen whether to grant permission.
 - `provisional`: The user granted provisional permission (see [Provisional Permission](permissions#provisional-permission)).
 
-> On Android `authorizationStatus` is always `authorized`.
+> On Android `authorizationStatus` will return `authorized` if the user has not disabled notifications for the app via the operating systems settings.
 
 The other properties on `NotificationSettings` return whether a specific permission is enabled, disabled or not supported on the current
 device.
