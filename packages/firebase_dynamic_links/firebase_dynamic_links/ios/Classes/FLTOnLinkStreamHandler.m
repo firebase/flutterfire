@@ -5,18 +5,17 @@
 #import "Private/FLTOnLinkStreamHandler.h"
 #import "Public/FLTFirebaseDynamicLinksPlugin.h"
 
-
 @implementation FLTOnLinkStreamHandler {
   FlutterEventSink events;
 }
 
 - (instancetype)init {
   self = [super init];
-  
+
   return self;
 }
 
-- (void) sinkEvent:(id)event {
+- (void)sinkEvent:(id)event {
   // Can be data or error
   events(event);
 }
