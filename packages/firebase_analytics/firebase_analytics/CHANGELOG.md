@@ -1,3 +1,40 @@
+## UNRELEASED
+
+As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
+
+Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests.
+
+- **`FirebaseAnalytics`**
+
+- **DEPRECATED**: `android` namespace has been deprecated in favour of calling `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
+- **DEPRECATED**: `logEcommercePurchase()` has been deprecated in favour of using `logPurchase()`.
+- **DEPRECATED**: `logPresentOffer()` has been deprecated in favour of using `logViewPromotion()`.
+- **DEPRECATED**: `logPurchaseRefund()` has been deprecated in favour of using `logRefund()`.
+- **DEPRECATED**: `logSetCheckoutOption()` has been deprecated.
+
+- **BREAKING**: `FirebaseAnalyticsObserver()` class has been removed.
+- **BREAKING**: Constructing an instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
+- **BREAKING**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToWishlist()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logBeginCheckout()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logRemoveFromCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItem()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItemList()` updated parameters to be logged in Analytics console.
+
+- **NEW**: `logAddShippingInfo()` added support for logging shipping information.
+- **NEW**: `logAdImpression()` added support for logging ad impression.
+- **NEW**: `logPurchase()` added support for logging a purchase.
+- **NEW**: `logRefund()` added support for logging a refund.
+- **NEW**: `logScreenView()` added support for logging a screen view.
+- **NEW**: `logSelectItem()` added support for logging a item that has been selected.
+- **NEW**: `logSelectPromotion()` added support for logging a promotion that has been selected.
+- **NEW**: `logViewCart()` added support for logging a view of the current cart.
+- **NEW**: `logViewPromotion()` added support for logging a view of the current promotion.
+- **NEW**: `setConsent()` added support for setting the applicable end user consent state (e.g., for device identifiers) for the app on this device.
+- **NEW**: `setDefaultEventParameters()` added support for setting default parameters that will be set on every event logged from the SDK, including automatic ones.
+
 ## 8.3.4
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).

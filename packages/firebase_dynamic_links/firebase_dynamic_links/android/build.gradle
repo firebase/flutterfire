@@ -41,16 +41,16 @@ android {
     targetCompatibility JavaVersion.VERSION_1_8
   }
   defaultConfig {
-    minSdkVersion 16
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+      minSdkVersion 19
+      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
   lintOptions {
-    disable 'InvalidPackage'
+      disable 'InvalidPackage'
   }
   dependencies {
-    api firebaseCoreProject
-    implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-    implementation 'com.google.firebase:firebase-dynamic-links'
+      api firebaseCoreProject
+      implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
+      implementation 'com.google.firebase:firebase-dynamic-links'
   }
 }
 

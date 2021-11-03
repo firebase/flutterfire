@@ -14,6 +14,7 @@ dependencies:
   firebase_core: ^1.8.0
   firebase_core_platform_interface: ^4.0.1
   firebase_remote_config_platform_interface: ^0.3.0+7
+  firebase_remote_config_web: ^0.1.0
   flutter:
     sdk: flutter
 

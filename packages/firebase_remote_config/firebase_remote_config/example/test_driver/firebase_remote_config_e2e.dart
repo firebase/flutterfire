@@ -54,7 +54,7 @@ void testsMain() {
       expect(remoteConfig.settings.minimumFetchInterval,
           const Duration(seconds: 88));
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 10, milliseconds: 500),
+          fetchTimeout: const Duration(seconds: 10),
           minimumFetchInterval: Duration.zero));
       expect(remoteConfig.settings.fetchTimeout, const Duration(seconds: 10));
       expect(remoteConfig.settings.minimumFetchInterval, Duration.zero);
