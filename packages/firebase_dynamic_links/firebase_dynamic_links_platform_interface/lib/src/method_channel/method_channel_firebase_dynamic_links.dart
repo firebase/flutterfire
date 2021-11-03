@@ -76,8 +76,8 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   @override
   Future<PendingDynamicLinkData?> getInitialLink() async {
     final Map<String, dynamic>? linkData =
-        await channel.invokeMapMethod<String, dynamic>(
-            'FirebaseDynamicLinks#getInitialLink');
+    await channel.invokeMapMethod<String, dynamic>(
+        'FirebaseDynamicLinks#getInitialLink');
 
     return getPendingDynamicLinkDataFromMap(linkData);
   }
@@ -86,7 +86,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   Future<PendingDynamicLinkData?> getDynamicLink(Uri url) async {
     final Map<String, dynamic>? linkData = await channel
         .invokeMapMethod<String, dynamic>('FirebaseDynamicLinks#getDynamicLink',
-            <String, dynamic>{'url': url.toString()});
+        <String, dynamic>{'url': url.toString()});
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
@@ -94,7 +94,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   Stream<PendingDynamicLinkData?> onLink() {
     StreamSubscription<dynamic>? snapshotStream;
     late StreamController<PendingDynamicLinkData?>
-        controller; // ignore: close_sinks
+    controller; // ignore: close_sinks
 
     controller = StreamController<PendingDynamicLinkData?>.broadcast(
       onListen: () async {
@@ -106,10 +106,10 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
         snapshotStream =
             onLinkChannel(name).receiveBroadcastStream().listen((event) {
-          controller.add(getPendingDynamicLinkDataFromMap(event));
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+              controller.add(getPendingDynamicLinkDataFromMap(event));
+            }, onError: (error, stack) {
+              controller.addError(convertPlatformException(error), stack);
+            });
       },
       onCancel: () {
         snapshotStream?.cancel();
@@ -123,31 +123,4 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   MethodChannelDynamicLinkBuilder createLink() {
     return MethodChannelDynamicLinkBuilder(this);
   }
-
-// Future<dynamic> _handleMethod(MethodCall call) async {
-//   switch (call.method) {
-//     case 'onLinkSuccess':
-//       PendingDynamicLinkData? linkData;
-//       if (call.arguments != null) {
-//         final Map<dynamic, dynamic>? data =
-//             call.arguments.cast<dynamic, dynamic>();
-//         linkData = getPendingDynamicLinkDataFromMap(data);
-//       }
-//       return _onLinkSuccess!(linkData);
-//     case 'onLinkError':
-//       final Map<dynamic, dynamic> data =
-//           call.arguments.cast<dynamic, dynamic>();
-//TODO use stream handler instead
-// final OnLinkErrorException e = OnLinkErrorException._(
-//     data['code'], data['message'], data['details']);
-// return _onLinkError!(e);
-//   }
-// }
 }
-
-//TODO use exception in PI. Remove this.
-// /// This object is returned by the handler when an error occurs.
-// class OnLinkErrorException extends PlatformException {
-//   OnLinkErrorException._(String code, String? message, dynamic details)
-//       : super(code: code, message: message, details: details);
-// }
