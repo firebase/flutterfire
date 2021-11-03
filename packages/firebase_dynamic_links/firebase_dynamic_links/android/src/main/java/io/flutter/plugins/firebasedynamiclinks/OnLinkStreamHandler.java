@@ -38,6 +38,6 @@ public class OnLinkStreamHandler implements StreamHandler {
 
   @Override
   public void onCancel(Object arguments) {
-    // do nothing
+    // Do nothing
   }
 }
