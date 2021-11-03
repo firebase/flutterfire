@@ -46,7 +46,7 @@ public class FirebaseDynamicLinksPlugin
   private MethodChannel channel;
   @Nullable private BinaryMessenger messenger;
 
-  private final Map<EventChannel, GetLinkStreamHandler> streamHandlers = new HashMap<>();
+  private final Map<EventChannel, OnLinkStreamHandler> streamHandlers = new HashMap<>();
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
 
@@ -107,7 +107,7 @@ public class FirebaseDynamicLinksPlugin
   @Override
   public boolean onNewIntent(Intent intent) {
     // Passes intent to every listener for different app instances the user may create
-    for (GetLinkStreamHandler instance : streamHandlers.values()) {
+    for (OnLinkStreamHandler instance : streamHandlers.values()) {
       instance.sinkEvent(intent);
     }
     return false;
@@ -137,7 +137,7 @@ public class FirebaseDynamicLinksPlugin
         break;
       case "FirebaseDynamicLinks#onLink":
         methodCallTask =
-            registerGetLinkListener(
+            registerOnLinkListener(
                 Objects.requireNonNull(call.argument(Constants.APP_NAME)), dynamicLinks);
         break;
       default:
@@ -233,7 +233,7 @@ public class FirebaseDynamicLinksPlugin
   }
 
   private DynamicLink.Builder setupParameters(Map<String, Object> arguments) {
-    DynamicLink.Builder dynamicLinkBuilder = FirebaseDynamicLinks.getInstance().createDynamicLink();
+    DynamicLink.Builder dynamicLinkBuilder = getDynamicLinkInstance(arguments).createDynamicLink();
 
     String uriPrefix = (String) arguments.get("uriPrefix");
     String link = (String) arguments.get("link");
@@ -350,12 +350,12 @@ public class FirebaseDynamicLinksPlugin
     return dynamicLinkBuilder;
   }
 
-  private Task<String> registerGetLinkListener(
+  private Task<String> registerOnLinkListener(
       @NonNull String appName, FirebaseDynamicLinks dynamicLinks) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final GetLinkStreamHandler handler = new GetLinkStreamHandler(dynamicLinks);
+          final OnLinkStreamHandler handler = new OnLinkStreamHandler(dynamicLinks);
           final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
           final EventChannel channel = new EventChannel(messenger, name);
           channel.setStreamHandler(handler);
