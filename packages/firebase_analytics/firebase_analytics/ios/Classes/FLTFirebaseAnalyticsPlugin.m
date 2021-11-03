@@ -22,7 +22,7 @@ NSString *const kAdStorage = @"adStorage";
 NSString *const kAnalyticsStorage = @"analyticsStorage";
 NSString *const kUserId = @"userId";
 
-NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_analytics";
+NSString *const kFLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_analytics";
 
 @implementation FLTFirebaseAnalyticsPlugin {
 }
@@ -42,7 +42,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseCrashlyticsChannelName
+      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseAnalyticsChannelName
                                   binaryMessenger:[registrar messenger]];
   FLTFirebaseAnalyticsPlugin *instance = [FLTFirebaseAnalyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
@@ -185,7 +185,7 @@ NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/fireba
 }
 
 - (NSString *_Nonnull)flutterChannelName {
-  return kFLTFirebaseCrashlyticsChannelName;
+  return kFLTFirebaseAnalyticsChannelName;
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp {
