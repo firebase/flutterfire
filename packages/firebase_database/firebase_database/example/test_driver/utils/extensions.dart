@@ -4,7 +4,7 @@ extension KeysGetter on DataSnapshot {
   List<String> get keys {
     final keys = <String>[];
 
-    forEach((snapshot) {
+    children.forEach((snapshot) {
       keys.add(snapshot.key!);
     });
 

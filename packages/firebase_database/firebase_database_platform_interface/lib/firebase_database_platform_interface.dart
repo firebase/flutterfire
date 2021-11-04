@@ -24,6 +24,7 @@ part 'src/method_channel/method_channel_query.dart';
 part 'src/method_channel/utils/push_id_generator.dart';
 part 'src/platform_interface/database_reference.dart';
 part 'src/platform_interface/database_error.dart';
+part 'src/platform_interface/data_snapshot.dart';
 part 'src/platform_interface/event.dart';
 part 'src/platform_interface/on_disconnect.dart';
 part 'src/platform_interface/query.dart';

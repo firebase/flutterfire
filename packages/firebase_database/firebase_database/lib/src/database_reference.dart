@@ -75,7 +75,31 @@ class DatabaseReference extends Query {
     return _databaseReferencePlatform.set(value, priority: priority);
   }
 
-  /// Update the node with the `value`
+  /// Writes multiple values to the Database at once.
+  ///
+  /// The values argument contains multiple property-value pairs that will be
+  /// written to the Database together. Each child property can either be a
+  /// simple property (for example, "name") or a relative path (for example,
+  /// "name/first") from the current location to the data to update.
+  ///
+  /// As opposed to the [set] method, [update] can be use to selectively update
+  /// only the referenced properties at the current location
+  /// (instead of replacing all the child properties at the current location).
+  ///
+  /// The effect of the write will be visible immediately, and the corresponding
+  /// events ('value', 'child_added', etc.) will be triggered. Synchronization
+  /// of the data to the Firebase servers will also be started, and the
+  /// returned [Future] will resolve when complete.
+  ///
+  /// A single [update] will generate a single "value" event at the location
+  /// where the [update] was performed, regardless of how many children were modified.
+  ///
+  /// Note that modifying data with [update] will cancel any pending transactions
+  /// at that location, so extreme care should be taken if mixing [update] and
+  /// [runTransaction] to modify the same data.
+  ///
+  /// Passing null to a [Map] value in [update] will remove the remove the value
+  /// at the specified location.
   Future<void> update(Map<String, dynamic> value) {
     return _databaseReferencePlatform.update(value);
   }

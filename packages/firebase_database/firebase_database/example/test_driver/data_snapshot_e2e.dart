@@ -26,22 +26,22 @@ void runDataSnapshotTests() {
       expect(s.key, 'flutterfire');
     });
 
-    test('hasChildren is true if snapshot has children', () async {
+    test('children.isNotEmpty is true if snapshot has children', () async {
       final s = await database.ref('ordered').get();
-      expect(s.hasChildren, true);
+      expect(s.children.isNotEmpty, true);
     });
 
-    test("hasChildren is false if snapshot doesn't have children", () async {
+    test("children.isNotEmpty is false if snapshot doesn't have children", () async {
       final s = await database.ref('flutterfire').get();
-      expect(s.hasChildren, false);
+      expect(s.children.isNotEmpty, false);
     });
 
-    test('numChildren returns a correct number of children', () async {
+    test('children.length returns a correct number of children', () async {
       final os = await database.ref('ordered').get();
       final fs = await database.ref('flutterfire').get();
 
-      expect(os.numChildren, 4);
-      expect(fs.numChildren, 0);
+      expect(os.children.length, 4);
+      expect(fs.children.length, 0);
     });
 
     test(
@@ -62,7 +62,7 @@ void runDataSnapshotTests() {
       },
     );
 
-    test('forEach iterates over children in a correct order', () async {
+    test('.children iterates over children in a correct order', () async {
       final ref = database.ref('priority_test');
 
       await Future.wait([
@@ -74,7 +74,7 @@ void runDataSnapshotTests() {
       final s = await ref.orderByValue().once();
       final keys = [];
 
-      s.forEach((snapshot) {
+      s.children.forEach((snapshot) {
         keys.add(snapshot.key);
       });
 

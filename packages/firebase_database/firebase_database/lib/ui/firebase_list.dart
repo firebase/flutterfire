@@ -105,8 +105,8 @@ class FirebaseList extends ListBase<DataSnapshot>
 
   void _onChildAdded(Event event) {
     int index = 0;
-    if (event.previousSiblingKey != null) {
-      index = _indexForKey(event.previousSiblingKey!) + 1;
+    if (event.previousChildKey != null) {
+      index = _indexForKey(event.previousChildKey!) + 1;
     }
     _snapshots.insert(index, event.snapshot);
     onChildAdded!(index, event.snapshot);
@@ -129,8 +129,8 @@ class FirebaseList extends ListBase<DataSnapshot>
     _snapshots.removeAt(fromIndex);
 
     int toIndex = 0;
-    if (event.previousSiblingKey != null) {
-      final prevIndex = _indexForKey(event.previousSiblingKey!);
+    if (event.previousChildKey != null) {
+      final prevIndex = _indexForKey(event.previousChildKey!);
       toIndex = prevIndex + 1;
     }
     _snapshots.insert(toIndex, event.snapshot);

@@ -213,7 +213,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
       return TransactionResultPlatform(
         result!['committed'],
-        DataSnapshotPlatform.fromJson(result['snapshot'], result['childKeys']),
+        DataSnapshotPlatform.fromJson(result['snapshot'], this),
       );
     } on PlatformException catch (e) {
       if (e.code == 'transaction-timeout') {

@@ -213,10 +213,10 @@ void runQueryTests() {
       verifyEventType(events, EventType.childAdded);
 
       final values = events.map((e) => e.snapshot.value).toList();
-      final siblingKeys = events.map((e) => e.previousSiblingKey).toList();
+      final childKeys = events.map((e) => e.previousChildKey).toList();
 
       expect(values, [2, 3, 1]);
-      expect(siblingKeys, [null, 'second', 'third']);
+      expect(childKeys, [null, 'second', 'third']);
     });
 
     test('onChildChanged emits correct events', () async {
@@ -276,13 +276,13 @@ void runQueryTests() {
 
       final keys = events.map((e) => e.snapshot.key).toList();
       final values = events.map((e) => e.snapshot.value).toList();
-      final siblingKeys = events.map((e) => e.previousSiblingKey).toList();
+      final childKeys = events.map((e) => e.previousChildKey).toList();
 
       verifyEventType(events, EventType.childMoved);
 
       expect(keys, ['second', 'first']);
       expect(values, [2, 1]);
-      expect(siblingKeys, ['first', null]);
+      expect(childKeys, ['first', null]);
     });
 
     test('onChildRemoved emits correct events', () async {

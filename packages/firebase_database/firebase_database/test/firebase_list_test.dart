@@ -389,32 +389,32 @@ class ListChange {
 }
 
 class MockEvent implements Event {
-  MockEvent(this.type, this.previousSiblingKey, this.snapshot);
+  MockEvent(this.type, this.previousChildKey, this.snapshot);
 
   @override
   final EventType type;
 
   @override
-  final String? previousSiblingKey;
+  final String? previousChildKey;
 
   @override
   final DataSnapshot snapshot;
 
   @override
   // ignore: no_runtimetype_tostring
-  String toString() => '$runtimeType[$previousSiblingKey, $snapshot]';
+  String toString() => '$runtimeType[$previousChildKey, $snapshot]';
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
   bool operator ==(Object o) {
     return o is MockEvent &&
-        previousSiblingKey == o.previousSiblingKey &&
+        previousChildKey == o.previousChildKey &&
         snapshot == o.snapshot;
   }
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => previousSiblingKey.hashCode;
+  int get hashCode => previousChildKey.hashCode;
 }
 
 class MockDataSnapshot implements DataSnapshot {
@@ -444,22 +444,25 @@ class MockDataSnapshot implements DataSnapshot {
   int get hashCode => key.hashCode;
 
   @override
-  void forEach(void Function(DataSnapshot snapshot) action) {
-    // TODO: implement forEach
-    throw UnimplementedError();
-  }
-
-  @override
   bool hasChild(String path) {
     // TODO: implement hasChild
     throw UnimplementedError();
   }
 
   @override
-  // TODO: implement hasChildren
-  bool get hasChildren => throw UnimplementedError();
+  DataSnapshot child(String path) {
+    throw UnimplementedError();
+  }
 
   @override
-  // TODO: implement numChildren
-  int? get numChildren => throw UnimplementedError();
+  // TODO: implement priority
+  Object? get priority => throw UnimplementedError();
+
+  @override
+  // TODO: implement ref
+  DatabaseReference get ref => throw UnimplementedError();
+
+  @override
+  // TODO: implement children
+  Iterable<DataSnapshot> get children => throw UnimplementedError();
 }

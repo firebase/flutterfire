@@ -14,5 +14,5 @@ class Event {
 
   EventType get type => _delegate.type;
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
-  String? get previousSiblingKey => _delegate.previousSiblingKey;
+  String? get previousChildKey => _delegate.previousChildKey;
 }

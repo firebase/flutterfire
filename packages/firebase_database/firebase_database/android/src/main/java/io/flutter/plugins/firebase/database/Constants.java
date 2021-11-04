@@ -54,7 +54,7 @@ public class Constants {
   public static final String EVENT_TYPE_VALUE = "EventType.value";
 
   public static final String CHILD_KEYS = "childKeys";
-  public static final String PREVIOUS_CHILD_NAME = "previousSiblingKey";
+  public static final String PREVIOUS_CHILD_NAME = "previousChildKey";
 
   public static final String METHOD_DO_TRANSACTION = "DoTransaction";
   public static final String TRANSACTION_KEY = "transactionKey";
