@@ -3,15 +3,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database_platform_interface/src/platform_interface/platform_interface_database.dart';
+import 'package:firebase_database_platform_interface/src/platform_interface/platform_interface_database_reference.dart';
+import 'package:flutter/services.dart';
+
+import 'method_channel_database_reference.dart';
+import 'utils/exception.dart';
 
 /// The entry point for accessing a FirebaseDatabase.
 ///
 /// You can get an instance by calling [FirebaseDatabase.instance].
 class MethodChannelDatabase extends DatabasePlatform {
-  /// Gets an instance of [FirebaseDatabase].
-  ///
-  /// If [app] is specified, its options should include a [databaseURL].
   MethodChannelDatabase({FirebaseApp? app, String? databaseURL})
       : super(app: app, databaseURL: databaseURL) {
     if (_initialized) return;
@@ -20,7 +23,7 @@ class MethodChannelDatabase extends DatabasePlatform {
       switch (call.method) {
         case 'DoTransaction':
           final key = call.arguments['transactionKey'];
-          final handler = _transactions[key]!;
+          final handler = transactions[key]!;
 
           final newVal = handler(call.arguments['snapshot']['value']);
           return newVal;
@@ -33,19 +36,17 @@ class MethodChannelDatabase extends DatabasePlatform {
     _initialized = true;
   }
 
-  @override
-  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) =>
-      MethodChannelDatabase(
-        app: app,
-        databaseURL: databaseURL,
-      );
-
-  @override
-  String? appName() => app?.name;
-
-  static final _transactions = <int, TransactionHandler>{};
+  static final transactions = <int, TransactionHandler>{};
 
   static bool _initialized = false;
+
+  /// Gets a [DatabasePlatform] with specific arguments such as a different
+  /// [FirebaseApp].
+  @override
+  DatabasePlatform delegateFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    return MethodChannelDatabase(app: app, databaseURL: databaseURL);
+  }
 
   /// The [MethodChannel] used to communicate with the native plugin
   static const MethodChannel channel =
@@ -86,13 +87,13 @@ class MethodChannelDatabase extends DatabasePlatform {
       await channel.invokeMethod<void>(
         'FirebaseDatabase#setPersistenceEnabled',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
           'enabled': enabled,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -119,13 +120,13 @@ class MethodChannelDatabase extends DatabasePlatform {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#setPersistenceCacheSizeBytes',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
           'cacheSize': cacheSize,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -138,13 +139,13 @@ class MethodChannelDatabase extends DatabasePlatform {
       await channel.invokeMethod<void>(
         'FirebaseDatabase#setLoggingEnabled',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
           'enabled': enabled
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -156,12 +157,12 @@ class MethodChannelDatabase extends DatabasePlatform {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#goOnline',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -173,12 +174,12 @@ class MethodChannelDatabase extends DatabasePlatform {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#goOffline',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -198,12 +199,12 @@ class MethodChannelDatabase extends DatabasePlatform {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#purgeOutstandingWrites',
         <String, dynamic>{
-          'appName': app?.name,
+          'appName': app!.name,
           'databaseURL': databaseURL,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 }

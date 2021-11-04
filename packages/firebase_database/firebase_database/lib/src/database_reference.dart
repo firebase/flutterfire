@@ -18,9 +18,6 @@ class DatabaseReference extends Query {
 
   DatabaseReference._(this._delegate) : super._(_delegate);
 
-  /// Obtains a [DatabaseReference] corresponding to this query's location.
-  DatabaseReference get ref => DatabaseReference._(_delegate.ref);
-
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
   /// a deeper slash-separated path (e.g. ‘fred/name/first’).
@@ -150,18 +147,15 @@ class DatabaseReference extends Query {
     TransactionHandler transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
   }) async {
-    try {
-      final transactionResult = await _delegate.runTransaction(
-        transactionHandler,
-        timeout: timeout,
-      );
-      return TransactionResult._(
-        transactionResult.committed,
-        DataSnapshot._(transactionResult.dataSnapshot),
-      );
-    } on DatabaseErrorPlatform catch (err) {
-      throw DatabaseError._(err);
-    }
+    final transactionResult = await _delegate.runTransaction(
+      transactionHandler,
+      timeout: timeout,
+    );
+
+    return TransactionResult._(
+      transactionResult.committed,
+      DataSnapshot._(transactionResult.dataSnapshot),
+    );
   }
 
   /// Returns an [OnDisconnect] instance.

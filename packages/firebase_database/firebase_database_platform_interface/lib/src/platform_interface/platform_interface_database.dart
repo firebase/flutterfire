@@ -1,53 +1,67 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database;
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:meta/meta.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-/// The entry point for accessing a Firebase Database. You can get an instance
-/// by calling `FirebaseDatabase.instance` or `FirebaseDatabase.instanceFor()`.
-class FirebaseDatabase extends FirebasePluginPlatform {
-  FirebaseDatabase._({required this.app, this.databaseURL})
-      : super(app.name, 'plugins.flutter.io/firebase_database');
+import '../method_channel/method_channel_database.dart';
 
-  /// The [FirebaseApp] for this current [FirebaseDatabase] instance.
-  FirebaseApp app;
-
-  /// A custom Database URL for this instance.
-  String? databaseURL;
-
-  static final Map<String, FirebaseDatabase> _cachedInstances = {};
-
-  /// Returns an instance using the default [FirebaseApp].
-  static FirebaseDatabase get instance {
-    return FirebaseDatabase.instanceFor(
-      app: Firebase.app(),
-    );
-  }
-
-  /// Returns an instance using a specified [FirebaseApp].
-  static FirebaseDatabase instanceFor(
-      {required FirebaseApp app, String? databaseURL}) {
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
-    }
-
-    FirebaseDatabase newInstance =
-        FirebaseDatabase._(app: app, databaseURL: databaseURL);
-    _cachedInstances[app.name] = newInstance;
-
-    return newInstance;
-  }
+/// Defines an interface to work with [FirebaseDatabase] on web and mobile
+abstract class DatabasePlatform extends PlatformInterface {
+  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
+  ///
+  /// If null, the default [FirebaseApp] is used.
+  final FirebaseApp? app;
 
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
-  DatabasePlatform? _delegatePackingProperty;
 
-  DatabasePlatform get _delegate {
-    return _delegatePackingProperty ??= DatabasePlatform.instance;
+  DatabasePlatform({this.app, this.databaseURL}) : super(token: _token);
+
+  static final Object _token = Object();
+
+  /// Create an instance using [app] using the existing implementation
+  factory DatabasePlatform.instanceFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    return DatabasePlatform.instance
+        .delegateFor(app: app, databaseURL: databaseURL);
   }
+
+  /// The current default [DatabasePlatform] instance.
+  ///
+  /// It will always default to [MethodChannelDatabase]
+  /// if no web implementation was provided.
+  static DatabasePlatform? _instance;
+
+  /// The current default [DatabasePlatform] instance.
+  ///
+  /// It will always default to [MethodChannelDatabase]
+  /// if no other implementation was provided.
+  static DatabasePlatform get instance {
+    return _instance ??= MethodChannelDatabase();
+  }
+
+  static set instance(DatabasePlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
+  /// Enables delegates to create new instances of themselves if a none default
+  /// [FirebaseApp] instance is required by the user.
+  @protected
+  DatabasePlatform delegateFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    throw UnimplementedError('delegateFor() is not implemented');
+  }
+
+  /// The URL to which this [FirebaseDatabase] belongs
+  ///
+  /// If null, the URL of the specified [FirebaseApp] is used
+  final String? databaseURL;
 
   /// Changes this instance to point to a FirebaseDatabase emulator running locally.
   ///
@@ -57,22 +71,12 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
   void useDatabaseEmulator(String host, int port) {
-    // TODO emulator support... Check Firestore, it handles android ports.
-    // _delegate.useEmulator(host, port);
+    throw UnimplementedError('useDatabaseEmulator() not implemented');
   }
 
-  /// Returns a [DatabaseReference] representing the location in the Database
-  /// corresponding to the provided path.
-  /// If no path is provided, the Reference will point to the root of the Database.
-  DatabaseReference ref([String? path]) {
-    return DatabaseReference._(_delegate.ref(path));
-  }
-
-  /// Returns a [DatabaseReference] representing the location in the Database
-  /// corresponding to the provided Firebase URL.
-  DatabaseReference refFromURL(String url) {
-    // TODO Ref from URL support
-    return DatabaseReference._(_delegate.ref('/'));
+  /// Gets a DatabaseReference for the root of your Firebase Database.
+  DatabaseReferencePlatform ref([String? path]) {
+    throw UnimplementedError('ref() not implemented');
   }
 
   /// Attempts to sets the database persistence to [enabled].
@@ -94,7 +98,7 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
   Future<void> setPersistenceEnabled(bool enabled) async {
-    return _delegate.setPersistenceEnabled(enabled);
+    throw UnimplementedError('setPersistenceEnabled() not implemented');
   }
 
   /// Attempts to set the size of the persistence cache.
@@ -115,26 +119,26 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
   Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
-    return _delegate.setPersistenceCacheSizeBytes(cacheSize);
+    throw UnimplementedError('setPersistenceCacheSizeBytes() not implemented');
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
   Future<void> setLoggingEnabled(bool enabled) {
-    return _delegate.setLoggingEnabled(enabled);
+    throw UnimplementedError('setLoggingEnabled() not implemented');
   }
 
   /// Resumes our connection to the Firebase Database backend after a previous
   /// [goOffline] call.
   Future<void> goOnline() {
-    return _delegate.goOnline();
+    throw UnimplementedError('goOnline() not implemented');
   }
 
   /// Shuts down our connection to the Firebase Database backend until
   /// [goOnline] is called.
   Future<void> goOffline() {
-    return _delegate.goOffline();
+    throw UnimplementedError('goOffline() not implemented');
   }
 
   /// The Firebase Database client automatically queues writes and sends them to
@@ -148,6 +152,6 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// affected event listeners, and the client will not (re-)send them to the
   /// Firebase Database backend.
   Future<void> purgeOutstandingWrites() {
-    return _delegate.purgeOutstandingWrites();
+    throw UnimplementedError('purgeOutstandingWrites() not implemented');
   }
 }

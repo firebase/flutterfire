@@ -3,7 +3,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:flutter/services.dart';
+
+import 'method_channel_data_snapshot.dart';
+import 'method_channel_database.dart';
+import 'method_channel_database_event.dart';
+import 'method_channel_database_reference.dart';
+import 'utils/exception.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
@@ -21,7 +28,7 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannel get channel => MethodChannelDatabase.channel;
 
   @override
-  Stream<EventPlatform> observe(EventType eventType) async* {
+  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) async* {
     const channel = MethodChannelDatabase.channel;
 
     final createArgs = <String, dynamic>{
@@ -41,9 +48,9 @@ class MethodChannelQuery extends QueryPlatform {
 
     yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
-        .map((event) => EventPlatform(event))
+        .map((event) => MethodChannelDatabaseEvent(ref, event))
         .handleError(
-          (e) => throw FirebaseDatabaseException.fromPlatformException(e),
+          (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,
         );
   }
@@ -56,7 +63,7 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get() async {
     try {
-      final result = await channel.invokeMethod<Map<dynamic, dynamic>>(
+      final result = await channel.invokeMethod<Map<String, dynamic>>(
         'Query#get',
         <String, dynamic>{
           'appName': database.app?.name,
@@ -66,12 +73,9 @@ class MethodChannelQuery extends QueryPlatform {
         },
       );
 
-      return DataSnapshotPlatform.fromJson(
-        result!['snapshot'],
-        result['childKeys'],
-      );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+      return MethodChannelDataSnapshot(ref, result!);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -80,7 +84,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
   @override
-  QueryPlatform startAt(dynamic value, {String? key}) {
+  QueryPlatform startAt(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'startAt');
   }
 
@@ -97,7 +101,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// or equal to the specified value and a a key name greater than
   /// the specified key.
   @override
-  QueryPlatform startAfter(dynamic value, {String? key}) {
+  QueryPlatform startAfter(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'startAfter');
   }
 
@@ -106,12 +110,12 @@ class MethodChannelQuery extends QueryPlatform {
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
   @override
-  QueryPlatform endAt(dynamic value, {String? key}) {
+  QueryPlatform endAt(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'endAt');
   }
 
   @override
-  QueryPlatform endBefore(dynamic value, {String? key}) {
+  QueryPlatform endBefore(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'endBefore');
   }
 
@@ -120,7 +124,7 @@ class MethodChannelQuery extends QueryPlatform {
   ///
   /// If a key is provided, there is at most one such child as names are unique.
   @override
-  QueryPlatform equalTo(dynamic value, {String? key}) {
+  QueryPlatform equalTo(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'equalTo');
   }
 
@@ -210,18 +214,18 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(bool value) {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      return channel.invokeMethod<void>(
         'Query#keepSynced',
         <String, dynamic>{
-          'appName': database.app?.name,
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
           'parameters': parameters,
           'value': value
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 

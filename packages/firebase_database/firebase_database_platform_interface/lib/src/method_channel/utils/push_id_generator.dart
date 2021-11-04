@@ -3,9 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'dart:math';
 
-// ignore: avoid_classes_with_only_static_members
 /// Utility class for generating Firebase child node keys.
 ///
 /// Since the Flutter plugin API is asynchronous, there's no way for us

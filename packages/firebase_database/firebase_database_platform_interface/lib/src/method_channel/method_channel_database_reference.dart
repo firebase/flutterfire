@@ -3,7 +3,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+
+import 'method_channel_data_snapshot.dart';
+import 'method_channel_database.dart';
+import 'method_channel_on_disconnect.dart';
+import 'method_channel_query.dart';
+import 'utils/exception.dart';
+import 'utils/push_id_generator.dart';
 
 /// DatabaseReference represents a particular location in your Firebase
 /// Database and can be used for reading or writing data to that location.
@@ -94,38 +101,38 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
   @override
-  Future<void> set(dynamic value, {dynamic priority}) {
+  Future<void> set(Object? value, {Object? priority}) {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#set',
         <String, dynamic>{
-          'appName': database.app?.name,
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
           'value': value,
           'priority': priority,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
   /// Update the node with the `value`
   @override
-  Future<void> update(Map<String, dynamic> value) {
+  Future<void> update(Map<String, Object?> value) {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#update',
         <String, dynamic>{
-          'appName': database.app?.name,
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
           'value': value,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -154,19 +161,19 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
   @override
-  Future<void> setPriority(dynamic priority) async {
+  Future<void> setPriority(Object? priority) async {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#setPriority',
         <String, dynamic>{
-          'appName': database.app?.name,
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
           'priority': priority,
         },
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -194,16 +201,16 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     );
 
     const channel = MethodChannelDatabase.channel;
-    final handlers = MethodChannelDatabase._transactions;
+    final handlers = MethodChannelDatabase.transactions;
     final key = handlers.isEmpty ? 0 : handlers.keys.last + 1;
 
-    MethodChannelDatabase._transactions[key] = transactionHandler;
+    MethodChannelDatabase.transactions[key] = transactionHandler;
 
     try {
       final result = await channel.invokeMethod(
         'DatabaseReference#runTransaction',
         <String, dynamic>{
-          'appName': database.app?.name,
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
           'transactionKey': key,
@@ -213,24 +220,11 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
 
       return TransactionResultPlatform(
         result!['committed'],
-        DataSnapshotPlatform.fromJson(result['snapshot'], this),
+        // TODO can this be null? The TransactionResultPlatform suggests so
+        MethodChannelDataSnapshot(ref, result['snapshot']),
       );
-    } on PlatformException catch (e) {
-      if (e.code == 'transaction-timeout') {
-        throw FirebaseDatabaseException.fromPlatformException(e);
-      }
-
-      final error = DatabaseErrorPlatform(e.details);
-      throw error;
-    } catch (e) {
-      if (e is DatabaseErrorPlatform) rethrow;
-
-      final error = DatabaseErrorPlatform({
-        'code': 'unknown',
-        'message': 'An unknown error occurred',
-      });
-
-      throw error;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     } finally {
       handlers.remove(key);
     }

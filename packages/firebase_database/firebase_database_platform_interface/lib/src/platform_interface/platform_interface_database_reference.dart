@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// DatabaseReference represents a particular location in your Firebase
 /// Database and can be used for reading or writing data to that location.
@@ -159,6 +160,5 @@ class TransactionResultPlatform extends PlatformInterface {
   final bool committed;
 
   /// [DataSnapshotPlatform] status associated to this transaction result
-
   final DataSnapshotPlatform? dataSnapshot;
 }

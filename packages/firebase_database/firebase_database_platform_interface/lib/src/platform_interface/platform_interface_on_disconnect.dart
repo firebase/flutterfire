@@ -2,7 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The [onDisconnect] class allows you to write or clear data when your client disconnects from the Database server.
 /// These updates occur whether your client disconnects cleanly or not, so you can rely on them to clean up data even if a connection is dropped or a client crashes.
@@ -20,7 +21,7 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
   final DatabaseReferencePlatform ref;
 
   /// Ensures the data at this location is set to the specified value when the client is disconnected
-  Future<void> set(dynamic value, {dynamic priority}) {
+  Future<void> set(Object? value, {Object? priority}) {
     throw UnimplementedError('set() not implemented');
   }
 
@@ -33,7 +34,7 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
   }
 
   /// Writes multiple values at this location when the client is disconnected
-  Future<void> update(Map<String, dynamic> value) {
+  Future<void> update(Map<String, Object?> value) {
     throw UnimplementedError('update() not implemented');
   }
 }
