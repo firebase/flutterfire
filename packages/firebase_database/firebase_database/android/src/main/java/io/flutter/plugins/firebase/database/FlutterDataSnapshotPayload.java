@@ -17,9 +17,11 @@ public class FlutterDataSnapshotPayload {
 
     final String key = snapshot.getKey();
     final Object value = snapshot.getValue();
+    final Object priority = snapshot.getPriority();
 
     snapshotMap.put(Constants.KEY, key);
     snapshotMap.put(Constants.VALUE, value);
+    snapshotMap.put(Constants.PRIORITY, priority);
   }
 
   FlutterDataSnapshotPayload withAdditionalParams(Map<String, Object> params) {
