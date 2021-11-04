@@ -5,13 +5,53 @@
 
 part of firebase_core_web;
 
+class FirebaseWebService {
+  String module;
+
+  FirebaseWebService(this.module);
+}
+
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
+  static Map<String, FirebaseWebService> _services = {};
+
+  /// Internally registers a Firebase Service to be initialized.
+  static void registerService(FirebaseWebService service) {
+    _services.putIfAbsent(service.module, () => service);
+  }
+
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
   static void registerWith(Registrar registrar) {
     FirebasePlatform.instance = FirebaseCoreWeb();
+  }
+
+  Future<void> _injectScript(String src) async {
+    ScriptElement script = ScriptElement();
+    script.src = src;
+    assert(document.head != null);
+    document.head!.append(script);
+    await script.onLoad.first;
+  }
+
+  Future<void> _initializeCore() async {
+    // If Firebase is already available, core has already been initialized
+    // (or the user has added the scripts to their html file).
+    if (context['firebase'] != null) {
+      return;
+    }
+
+    String version = context['flutterfire_sdk_version'] ?? '8.6.1';
+
+    // This must come first
+    await _injectScript(
+        'https://www.gstatic.com/firebasejs/$version/firebase-app.js');
+
+    await Future.wait(_services.values.map((service) {
+      return _injectScript(
+          'https://www.gstatic.com/firebasejs/$version/firebase-${service.module}.js');
+    }));
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
@@ -30,6 +70,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String? name,
     FirebaseOptions? options,
   }) async {
+    await _initializeCore();
+
     firebase.App? app;
 
     if (name == defaultFirebaseAppName) {
