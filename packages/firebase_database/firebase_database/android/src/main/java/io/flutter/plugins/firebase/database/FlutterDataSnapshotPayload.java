@@ -1,6 +1,8 @@
 package io.flutter.plugins.firebase.database;
 
 import com.google.firebase.database.DataSnapshot;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class FlutterDataSnapshotPayload {
   FlutterDataSnapshotPayload withChildKeys() {
     final int childrenCount = (int) dataSnapshot.getChildrenCount();
     if (childrenCount == 0) {
+      payloadMap.put(Constants.CHILD_KEYS, new ArrayList<>());
       return this;
     }
 
