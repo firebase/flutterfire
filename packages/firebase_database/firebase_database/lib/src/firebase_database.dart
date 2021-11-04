@@ -6,13 +6,43 @@
 part of firebase_database;
 
 /// The entry point for accessing a Firebase Database. You can get an instance
-/// by calling `FirebaseDatabase.instance`. To access a location in the database
-/// and read or write data, use `ref()`.
-class FirebaseDatabase {
+/// by calling `FirebaseDatabase.instance` or `FirebaseDatabase.instanceFor()`.
+class FirebaseDatabase extends FirebasePluginPlatform {
+  FirebaseDatabase._({required this.app, this.databaseURL})
+      : super(app.name, 'plugins.flutter.io/firebase_database');
+
+  /// The [FirebaseApp] for this current [FirebaseDatabase] instance.
+  FirebaseApp app;
+
+  /// A custom Database URL for this instance.
+  String? databaseURL;
+
+  static final Map<String, FirebaseDatabase> _cachedInstances = {};
+
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseDatabase get instance {
+    return FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+    );
+  }
+
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseDatabase instanceFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    if (_cachedInstances.containsKey(app.name)) {
+      return _cachedInstances[app.name]!;
+    }
+
+    FirebaseDatabase newInstance =
+        FirebaseDatabase._(app: app, databaseURL: databaseURL);
+    _cachedInstances[app.name] = newInstance;
+
+    return newInstance;
+  }
+
   /// Gets an instance of [FirebaseDatabase].
   ///
   /// If [app] is specified, its options should include a [databaseURL].
-
   DatabasePlatform? _delegatePackingProperty;
 
   DatabasePlatform get _delegate {
@@ -20,21 +50,8 @@ class FirebaseDatabase {
     return _delegatePackingProperty!;
   }
 
-  FirebaseDatabase({FirebaseApp? app, String? databaseURL})
-      : _delegatePackingProperty = app != null || databaseURL != null
-            ? DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL)
-            : DatabasePlatform.instance;
-
-  static FirebaseDatabase _instance = FirebaseDatabase();
-
-  /// Gets the instance of FirebaseDatabase for the default Firebase app.
-  static FirebaseDatabase get instance => _instance;
-
   @visibleForTesting
   static MethodChannel get channel => MethodChannelDatabase.channel;
-
-  /// The [FirebaseApp] associated with the [FirebaseDatabase] instance
-  FirebaseApp? get app => _delegate.app;
 
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided path.
