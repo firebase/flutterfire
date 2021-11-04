@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-11-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- [`cloud_firestore` - `v3.0.0`](#cloud_firestore---v300)
+- [`firebase_dynamic_links` - `v3.0.0`](#firebase_dynamic_links---v300)
+- [`firebase_messaging` - `v11.0.0`](#firebase_messaging---v1100)
+
+Packages with other changes:
+
+- [`firebase_core` - `v1.9.0`](#firebase_core---v190)
+- [`firebase_in_app_messaging` - `v0.5.0+12`](#firebase_in_app_messaging---v05012)
+- [`firebase_messaging_platform_interface` - `v3.0.8`](#firebase_messaging_platform_interface---v308)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_crashlytics` - `v2.2.5`
+- `firebase_crashlytics_platform_interface` - `v3.1.5`
+- `firebase_auth` - `v3.1.5`
+- `firebase_auth_web` - `v3.1.4`
+- `firebase_auth_platform_interface` - `v6.1.3`
+- `firebase_remote_config` - `v1.0.0-dev.1`
+- `firebase_remote_config_web` - `v1.0.0-dev.1`
+- `firebase_remote_config_platform_interface` - `v1.0.0-dev.1`
+- `firebase_database_web` - `v0.1.0+2`
+- `firebase_database` - `v8.0.2`
+- `firebase_database_platform_interface` - `v0.1.0+2`
+- `cloud_firestore_web` - `v2.4.5`
+- `cloud_firestore_platform_interface` - `v5.4.4`
+- `firebase_messaging_web` - `v2.0.8`
+- `firebase_analytics_platform_interface` - `v3.0.0-dev.1`
+- `firebase_analytics` - `v9.0.0-dev.1`
+- `firebase_analytics_web` - `v0.4.0-dev.1`
+- `firebase_app_check_platform_interface` - `v0.0.1+8`
+- `firebase_app_check` - `v0.0.2+4`
+- `firebase_app_check_web` - `v0.0.1+8`
+- `cloud_functions_web` - `v4.0.15`
+- `cloud_functions` - `v3.0.6`
+- `cloud_functions_platform_interface` - `v5.0.13`
+- `firebase_storage_web` - `v3.0.5`
+- `firebase_storage_platform_interface` - `v4.0.5`
+- `firebase_storage` - `v10.0.7`
+- `firebase_performance_platform_interface` - `v0.0.1+6`
+- `firebase_performance` - `v0.7.1+3`
+
+---
+
+#### `cloud_firestore` - `v3.0.0`
+
+- **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
+#### `firebase_dynamic_links` - `v3.0.0`
+
+- **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
+#### `firebase_in_app_messaging` - `v0.6.0`
+
+- **BREAKING** **REFACTOR**: update Firebase Analytics plugin to match latest Firebase APIs (#7032).
+
+#### `firebase_messaging` - `v11.0.0`
+
+- **FIX**: Add Android implementation to get notification permissions (#7168).
+- **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
+#### `firebase_core` - `v1.9.0`
+
+- **FEAT**: bump Firebase Android SDK version to `29.0.0` (#7296).
+- **FEAT**: bump Firebase iOS SDK to `8.9.0` (#7289).
+
+#### `firebase_in_app_messaging` - `v0.5.0+12`
+
+- **REFACTOR**: update example app to use latest Firebase Analytics plugin APIs.
+
+#### `firebase_messaging_platform_interface` - `v3.0.8`
+
+- **FIX**: Add Android implementation to get notification permissions (#7168).
+
+
 ## 2021-10-21
 
 ### Changes

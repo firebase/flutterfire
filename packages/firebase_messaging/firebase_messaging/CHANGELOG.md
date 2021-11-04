@@ -1,3 +1,10 @@
+## 11.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Add Android implementation to get notification permissions (#7168).
+ - **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
 ## 10.0.9
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
