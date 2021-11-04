@@ -6,102 +6,76 @@ part of firebase_database_web;
 
 /// An implementation of [QueryPlatform] which proxies calls to js objects
 class QueryWeb extends QueryPlatform {
-  final database_interop.Database _firebaseDatabase;
-  final database_interop.Query _firebaseQuery;
+  final DatabasePlatform _database;
+  final database_interop.Query _queryDelegate;
 
   QueryWeb(
-    this._firebaseDatabase,
-    DatabasePlatform databasePlatform,
-    List<String> pathComponents,
-    this._firebaseQuery,
-  ) : super(database: databasePlatform, pathComponents: pathComponents);
+    this._database,
+    this._queryDelegate,
+  ) : super(database: _database);
 
   @override
   DatabaseReferencePlatform get ref =>
-      DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
-
-  @override
-  String get path => pathComponents.join('/');
+      DatabaseReferenceWeb(_database, _queryDelegate.ref);
 
   @override
   Future<DataSnapshotPlatform> get() async {
-    try {
-      final snapshot = await _firebaseQuery.get();
-      return fromWebSnapshotToPlatformSnapShot(snapshot);
-    } catch (e) {
-      if ((e as dynamic)
-          .message
-          .startsWith('Index not defined, add ".indexOn"')) {
-        throw FirebaseDatabaseException(
-          code: 'index-not-defined',
-          message: (e as dynamic).message,
-        );
-      }
-
-      rethrow;
-    }
+    return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
   }
 
   @override
-  Future<DataSnapshotPlatform> once() async {
-    return fromWebSnapshotToPlatformSnapShot(
-      (await _firebaseQuery.once("value")).snapshot,
-    );
+  QueryPlatform startAt(Object? value, {String? key}) {
+    return QueryWeb(_database, _queryDelegate.startAt(value, key));
   }
 
   @override
-  QueryPlatform startAt(dynamic value, {String? key}) {
-    return _withQuery(_firebaseQuery.startAt(value, key));
+  QueryPlatform startAfter(Object? value, {String? key}) {
+    return QueryWeb(_database, _queryDelegate.startAfter(value, key));
   }
 
   @override
-  QueryPlatform startAfter(value, {String? key}) {
-    return _withQuery(_firebaseQuery.startAfter(value, key));
+  QueryPlatform endAt(Object? value, {String? key}) {
+    return QueryWeb(_database, _queryDelegate.endAt(value, key));
   }
 
   @override
-  QueryPlatform endAt(value, {String? key}) {
-    return _withQuery(_firebaseQuery.endAt(value, key));
+  QueryPlatform endBefore(Object? value, {String? key}) {
+    return QueryWeb(_database, _queryDelegate.endBefore(value, key));
   }
 
   @override
-  QueryPlatform endBefore(value, {String? key}) {
-    return _withQuery(_firebaseQuery.endBefore(value, key));
-  }
-
-  @override
-  QueryPlatform equalTo(value, {String? key}) {
-    return _withQuery(_firebaseQuery.equalTo(value, key));
+  QueryPlatform equalTo(Object? value, {String? key}) {
+    return QueryWeb(_database, _queryDelegate.equalTo(value, key));
   }
 
   @override
   QueryPlatform limitToFirst(int limit) {
-    return _withQuery(_firebaseQuery.limitToFirst(limit));
+    return QueryWeb(_database, _queryDelegate.limitToFirst(limit));
   }
 
   @override
   QueryPlatform limitToLast(int limit) {
-    return _withQuery(_firebaseQuery.limitToLast(limit));
+    return QueryWeb(_database, _queryDelegate.limitToLast(limit));
   }
 
   @override
   QueryPlatform orderByChild(String key) {
-    return _withQuery(_firebaseQuery.orderByChild(key));
+    return QueryWeb(_database, _queryDelegate.orderByChild(key));
   }
 
   @override
   QueryPlatform orderByKey() {
-    return _withQuery(_firebaseQuery.orderByKey());
+    return QueryWeb(_database, _queryDelegate.orderByKey());
   }
 
   @override
   QueryPlatform orderByPriority() {
-    return _withQuery(_firebaseQuery.orderByPriority());
+    return QueryWeb(_database, _queryDelegate.orderByPriority());
   }
 
   @override
   QueryPlatform orderByValue() {
-    return _withQuery(_firebaseQuery.orderByValue());
+    return QueryWeb(_database, _queryDelegate.orderByValue());
   }
 
   @override
@@ -110,53 +84,45 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
-  Stream<EventPlatform> observe(EventType eventType) {
+  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) {
     switch (eventType) {
-      case EventType.childAdded:
+      case DatabaseEventType.childAdded:
         return _webStreamToPlatformStream(
           eventType,
-          _firebaseQuery.onChildAdded,
+          _queryDelegate.onChildAdded,
         );
-      case EventType.childChanged:
+      case DatabaseEventType.childChanged:
         return _webStreamToPlatformStream(
           eventType,
-          _firebaseQuery.onChildChanged,
+          _queryDelegate.onChildChanged,
         );
-      case EventType.childMoved:
+      case DatabaseEventType.childMoved:
         return _webStreamToPlatformStream(
           eventType,
-          _firebaseQuery.onChildMoved,
+          _queryDelegate.onChildMoved,
         );
-      case EventType.childRemoved:
+      case DatabaseEventType.childRemoved:
         return _webStreamToPlatformStream(
           eventType,
-          _firebaseQuery.onChildRemoved,
+          _queryDelegate.onChildRemoved,
         );
-      case EventType.value:
-        return _webStreamToPlatformStream(eventType, _firebaseQuery.onValue);
+      case DatabaseEventType.value:
+        return _webStreamToPlatformStream(eventType, _queryDelegate.onValue);
       default:
         throw Exception("Invalid event type: $eventType");
     }
   }
 
-  Stream<EventPlatform> _webStreamToPlatformStream(
-    EventType eventType,
+  Stream<DatabaseEventPlatform> _webStreamToPlatformStream(
+    DatabaseEventType eventType,
     Stream<database_interop.QueryEvent> stream,
   ) {
     return stream.map(
-      (database_interop.QueryEvent event) => fromWebEventToPlatformEvent(
+      (database_interop.QueryEvent event) => webEventToPlatformEvent(
+        ref,
         eventType,
         event,
       ),
-    );
-  }
-
-  QueryPlatform _withQuery(newQuery) {
-    return QueryWeb(
-      _firebaseDatabase,
-      database,
-      pathComponents,
-      newQuery,
     );
   }
 }

@@ -93,7 +93,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   String get key => jsObject.key;
 
   /// The parent location of a DatabaseReference.
-  DatabaseReference get parent =>
+  DatabaseReference? get parent =>
       DatabaseReference.getInstance(jsObject.parent);
 
   /// The root location of a DatabaseReference.
@@ -179,9 +179,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ///
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
-    TransactionHandler transactionUpdate, [
-    bool applyLocally = true,
-  ]) async {
+      TransactionHandler transactionUpdate, bool applyLocally) async {
     final c = Completer<Transaction>();
 
     final transactionUpdateWrap = allowInterop((update) {

@@ -10,9 +10,6 @@ abstract class QueryPlatform extends PlatformInterface {
   /// The Database instance associated with this query
   final DatabasePlatform database;
 
-  /// The pathComponents associated with this query
-  final List<String> pathComponents;
-
   /// The parameters associated with this query
   final Map<String, dynamic> parameters;
 
@@ -21,12 +18,13 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Create a [QueryPlatform] instance
   QueryPlatform({
     required this.database,
-    required this.pathComponents,
     this.parameters = const <String, dynamic>{},
   }) : super(token: _token);
 
-  /// Slash-delimited path representing the database location of this query.
-  String get path => throw UnimplementedError('path not implemented');
+  /// Returns the path to this reference.
+  String get path {
+    throw UnimplementedError('get path not implemented');
+  }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
   DatabaseReferencePlatform get ref {
@@ -37,9 +35,6 @@ abstract class QueryPlatform extends PlatformInterface {
   Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) {
     throw UnimplementedError('observe() not implemented');
   }
-
-  /// Listens for a single value event and then stops listening.
-  Future<DataSnapshotPlatform> once() async => (await onValue.first).snapshot;
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshotPlatform> get() {

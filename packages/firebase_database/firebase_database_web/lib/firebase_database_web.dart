@@ -12,10 +12,11 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/database.dart' as database_interop;
 
+part './src/data_snapshot_web.dart';
 part './src/database_reference_web.dart';
 part './src/ondisconnect_web.dart';
-part './src/data_snapshot_web.dart';
 part './src/query_web.dart';
+part './src/database_event_web.dart';
 part './src/utils/snapshot_utils.dart';
 
 /// Web implementation for [DatabasePlatform]
@@ -39,19 +40,14 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
         super(app: app, databaseURL: databaseURL);
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) =>
-      FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
-
-  @override
-  String? appName() => app?.name;
+  DatabasePlatform delegateFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    return FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
+  }
 
   @override
   DatabaseReferencePlatform ref([String? path]) {
-    return DatabaseReferenceWeb(
-      _firebaseDatabase,
-      this,
-      path?.split('/').toList() ?? const <String>[],
-    );
+    return DatabaseReferenceWeb(this, _firebaseDatabase.ref(path));
   }
 
   /// This is not supported on web. However,

@@ -10,69 +10,60 @@ class DatabaseReferenceWeb extends QueryWeb
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
-    database_interop.Database firebaseDatabase,
-    DatabasePlatform databasePlatform,
-    List<String> pathComponents,
-  ) : super(
-          firebaseDatabase,
-          databasePlatform,
-          pathComponents,
-          pathComponents.isEmpty
-              ? firebaseDatabase.ref()
-              : firebaseDatabase.ref(pathComponents.join("/")),
-        );
+    this._database,
+    this._delegate,
+  ) : super(_database, _delegate);
+
+  final DatabasePlatform _database;
+
+  final database_interop.DatabaseReference _delegate;
 
   @override
   DatabaseReferencePlatform child(String path) {
-    return DatabaseReferenceWeb(
-      _firebaseDatabase,
-      database,
-      List<String>.from(pathComponents)..addAll(path.split("/")),
-    );
+    return DatabaseReferenceWeb(_database, _delegate.child(path));
   }
 
   @override
   DatabaseReferencePlatform? get parent {
-    if (pathComponents.isEmpty) return null;
-    return DatabaseReferenceWeb(
-      _firebaseDatabase,
-      database,
-      List<String>.from(pathComponents)..removeLast(),
-    );
+    database_interop.DatabaseReference? parent = _delegate.parent;
+
+    if (parent == null) {
+      return null;
+    }
+
+    return DatabaseReferenceWeb(_database, parent);
   }
 
   @override
   DatabaseReferencePlatform root() {
-    return DatabaseReferenceWeb(_firebaseDatabase, database, <String>[]);
+    return DatabaseReferenceWeb(_database, _delegate.root);
   }
 
   @override
-  String get key => pathComponents.last;
+  String get key => _delegate.key;
 
   @override
   DatabaseReferencePlatform push() {
-    final String key = PushIdGenerator.generatePushChildName();
-    final List<String> childPath = List<String>.from(pathComponents)..add(key);
-    return DatabaseReferenceWeb(_firebaseDatabase, database, childPath);
+    return DatabaseReferenceWeb(_database, _delegate.push());
   }
 
   @override
-  Future<void> set(value, {priority}) {
+  Future<void> set(Object? value, {Object? priority}) {
     if (priority == null) {
-      return _firebaseQuery.ref.set(value);
+      return _delegate.set(value);
     } else {
-      return _firebaseQuery.ref.setWithPriority(value, priority);
+      return _delegate.setWithPriority(value, priority);
     }
   }
 
   @override
   Future<void> update(Map<String, dynamic> value) {
-    return _firebaseQuery.ref.update(value);
+    return _delegate.update(value);
   }
 
   @override
   Future<void> setPriority(priority) {
-    return _firebaseQuery.ref.setPriority(priority);
+    return _delegate.setPriority(priority);
   }
 
   @override
@@ -87,29 +78,35 @@ class DatabaseReferenceWeb extends QueryWeb
   Future<TransactionResultPlatform> runTransaction(
     transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
+    bool applyLocally = true,
   }) async {
-    try {
-      final ref = _firebaseQuery.ref;
-      final transaction = await ref.transaction(transactionHandler);
+    // TODO This needs a TransactionResultWeb (I think)
+    // return TransactionResultPlatform(await _delegate.transaction(transactionHandler, applyLocally));
 
-      return TransactionResultPlatform(
-        transaction.committed,
-        fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
-      );
-    } catch (e) {
-      if (e is DatabaseErrorPlatform) rethrow;
 
-      final error = DatabaseErrorPlatform({
-        'code': 'unknown',
-        'message': 'An unknown error occurred',
-      });
-
-      throw error;
-    }
+    // OLD CODE
+    // try {
+    //   final ref = _firebaseQuery.ref;
+    //   final transaction = await ref.transaction(transactionHandler);
+    //
+    //   return TransactionResultPlatform(
+    //     transaction.committed,
+    //     fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
+    //   );
+    // } catch (e) {
+    //   if (e is DatabaseErrorPlatform) rethrow;
+    //
+    //   final error = DatabaseErrorPlatform({
+    //     'code': 'unknown',
+    //     'message': 'An unknown error occurred',
+    //   });
+    //
+    //   throw error;
+    // }
   }
 
   @override
   OnDisconnectPlatform onDisconnect() {
-    return OnDisconnectWeb._(_firebaseQuery.ref.onDisconnect(), database, this);
+    return OnDisconnectWeb._(_delegate.onDisconnect(), database, this);
   }
 }

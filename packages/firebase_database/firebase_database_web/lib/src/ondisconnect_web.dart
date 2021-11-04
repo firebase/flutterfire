@@ -6,32 +6,33 @@ part of firebase_database_web;
 
 /// Web implementation for firebase [OnDisconnectPlatform]
 class OnDisconnectWeb extends OnDisconnectPlatform {
-  final database_interop.OnDisconnect _onDisconnect;
+  final database_interop.OnDisconnect _delegate;
 
   OnDisconnectWeb._(
-    this._onDisconnect,
+    this._delegate,
     DatabasePlatform database,
     DatabaseReferencePlatform ref,
   ) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(value, {priority}) {
-    if (priority != null) return _onDisconnect.set(value);
-    return _onDisconnect.setWithPriority(value, priority);
+  Future<void> set(Object? value, {Object? priority}) {
+    // TODO how do you set a null priority value?
+    if (priority == null) return _delegate.set(value);
+    return _delegate.setWithPriority(value, priority);
   }
 
   @override
   Future<void> remove() {
-    return _onDisconnect.remove();
+    return _delegate.remove();
   }
 
   @override
   Future<void> cancel() {
-    return _onDisconnect.cancel();
+    return _delegate.cancel();
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
-    return _onDisconnect.update(value);
+  Future<void> update(Map<String, Object?> value) {
+    return _delegate.update(value);
   }
 }
