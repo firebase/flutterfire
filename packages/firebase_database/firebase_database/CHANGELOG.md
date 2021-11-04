@@ -1,3 +1,41 @@
+## 8.0.1
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **FIX**: issue where using `List` values would error on transaction result (#7001).
+ - **DOCS**: update README with latest Firebase RTDB YouTube tutorial (#7149).
+ - **CHORE**: update Gradle versions used in Android example app (#7054).
+
+## 8.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: List of values erroring on transaction result (#7001).
+ - **CHORE**: update gradle version across packages (#7054).
+ - **BREAKING** **FEAT**: add initial support for Web.
+
+## 7.2.2
+
+ - **REFACTOR**: firebase_database_platform_interface (#6668).
+ - **CHORE**: release firebase_database_platform_interface.
+ - **CHORE**: fix analyze issues (#6977).
+
+## 7.2.1
+
+ - Update a dependency to the latest release.
+
+## 7.2.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: DataSnapshot is always present (#6754).
+ - **FEAT**: allow diagnostic logging for android/ios (#6763).
+ - **FEAT**: DataSnapshot.exists property.
+
+## 7.1.2
+
+ - **DOCS**: update database example with increment() (#6518).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 7.1.1
 
  - Update a dependency to the latest release.

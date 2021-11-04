@@ -1,3 +1,23 @@
+## 0.5.0+11
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
+## 0.5.0+10
+
+ - Update a dependency to the latest release.
+
+## 0.5.0+9
+
+ - Update a dependency to the latest release.
+
+## 0.5.0+8
+
+ - Update a dependency to the latest release.
+
+## 0.5.0+7
+
+ - Update a dependency to the latest release.
+
 ## 0.5.0+6
 
  - Update a dependency to the latest release.

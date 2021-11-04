@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -22,14 +23,13 @@ class MethodChannelCollectionReference extends MethodChannelQuery
     implements
 // ignore: avoid_implementing_value_types
         CollectionReferencePlatform {
-  late Pointer _pointer;
-
   /// Create a [MethodChannelCollectionReference] instance.
   MethodChannelCollectionReference(
       FirebaseFirestorePlatform firestore, String path)
-      : super(firestore, path) {
-    _pointer = Pointer(path);
-  }
+      : _pointer = Pointer(path),
+        super(firestore, path);
+
+  final Pointer _pointer;
 
   /// Returns the identifier of this referenced collection.
   @override

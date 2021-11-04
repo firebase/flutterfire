@@ -4,5 +4,8 @@
 
 #import <Flutter/Flutter.h>
 
-@interface FLTFirebaseAnalyticsPlugin : NSObject <FlutterPlugin>
+#import <Foundation/Foundation.h>
+#import <firebase_core/FLTFirebasePlugin.h>
+
+@interface FLTFirebaseAnalyticsPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end

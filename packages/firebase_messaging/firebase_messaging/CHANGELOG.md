@@ -1,3 +1,35 @@
+## 10.0.9
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **FIX**: Fix crash. If intent.getExtras() returns `null`, do not attempt to handle `RemoteMessage` #6759 (#7094).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 10.0.8
+
+ - **FIX**: Fix crash on Android in onDetachedFromEngine (#7088).
+ - **CHORE**: update gradle version across packages (#7054).
+ - **CHORE**: migrate example app to null-safety (#6990).
+
+## 10.0.7
+
+ - **FIX**: was creating a new instance each time (#6961).
+
+## 10.0.6
+
+ - **FIX**: revert onMessage event handler commit which causes another bug (#6878).
+ - **FIX**: allow messages when device is in idle mode (#6730).
+ - **FIX**: onMessage event handler for notifcations with `contentAvailable:true` (#6838).
+
+## 10.0.5
+
+ - Update a dependency to the latest release.
+
+## 10.0.4
+
+ - **DOCS**: update web example in line with flutter 2.2.0 generated `index.html` (#6398).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 10.0.3
 
  - **DOCS**: update web example in line with flutter 2.2.0 generated `index.html` (#6398).

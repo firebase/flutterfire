@@ -1,3 +1,19 @@
+## 0.2.0+4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **CHORE**: update Gradle versions used in Android example app (#7054).
+
+## 0.2.0+3
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+
+## 0.2.0+2
+
+ - **DOCS**: fix typo in README.md (#6411).
+ - **DOCS**: removing extra `)` in sample (#6412).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 0.2.0+1
 
  - **REFACTOR**: replace usage of deprecated & removed Image Picker API.

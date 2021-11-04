@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -13,6 +14,8 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseMessagingPlatform? _delegatePackingProperty;
 
+  static Map<String, FirebaseMessaging> _firebaseMessagingInstances = {};
+
   FirebaseMessagingPlatform get _delegate {
     return _delegatePackingProperty ??= FirebaseMessagingPlatform.instanceFor(
         app: app, pluginConstants: pluginConstants);
@@ -26,31 +29,17 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseMessaging get instance {
-    return FirebaseMessaging._(app: Firebase.app());
+    FirebaseApp defaultAppInstance = Firebase.app();
+    return FirebaseMessaging._instanceFor(app: defaultAppInstance);
   }
 
   //  Messaging does not yet support multiple Firebase Apps. Default app only.
-  /// Returns an instance using a specified [FirebaseApp]
-  ///
-  /// If [app] is not provided, the default Firebase app will be used.
-  // static FirebaseMessaging instanceFor({
-  //   FirebaseApp app,
-  // }) {
-  //   app ??= Firebase.app();
-  //   assert(app != null);
-  //
-  //   String key = '${app.name}';
-  //   if (_cachedInstances.containsKey(key)) {
-  //     return _cachedInstances[key];
-  //   }
-  //
-  //   FirebaseMessaging newInstance = FirebaseMessaging._(app: app);
-  //   _cachedInstances[key] = newInstance;
-  //
-  //   return newInstance;
-  // }
-  //
-  // static final Map<String, FirebaseMessaging> _cachedInstances = {};
+  /// Returns an instance using a specified [FirebaseApp].
+  factory FirebaseMessaging._instanceFor({required FirebaseApp app}) {
+    return _firebaseMessagingInstances.putIfAbsent(app.name, () {
+      return FirebaseMessaging._(app: app);
+    });
+  }
 
   /// Returns a Stream that is called when an incoming FCM payload is received whilst
   /// the Flutter instance is in the foreground.
@@ -79,6 +68,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// This provided handler must be a top-level function and cannot be
   /// anonymous otherwise an [ArgumentError] will be thrown.
+  // ignore: use_setters_to_change_properties
   static void onBackgroundMessage(BackgroundMessageHandler handler) {
     FirebaseMessagingPlatform.onBackgroundMessage = handler;
   }
@@ -147,10 +137,9 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   ///  - On iOS, a dialog is shown requesting the users permission.
   ///  - On macOS, a notification will appear asking to grant permission.
-  ///  - On Android, is it not required to call this method. If called however,
-  ///    a [NotificationSettings] class will be returned with
-  ///    [NotificationSettings.authorizationStatus] returning
-  ///    [AuthorizationStatus.authorized].
+  ///  - On Android, a [NotificationSettings] class will be returned with the
+  ///    value of [NotificationSettings.authorizationStatus] indicating whether
+  ///    the app has notifications enabled or blocked in the system settings.
   ///  - On Web, a popup requesting the users permission is shown using the native browser API.
   ///
   /// Note that on iOS, if [provisional] is set to `true`, silent notification permissions will be

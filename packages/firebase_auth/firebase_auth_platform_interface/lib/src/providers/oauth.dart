@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -49,6 +50,7 @@ class OAuthProvider extends AuthProvider {
   /// Create a new [OAuthCredential] from a provided [accessToken];
   OAuthCredential credential({
     String? accessToken,
+    String? secret,
     String? idToken,
     String? rawNonce,
   }) {
@@ -56,6 +58,7 @@ class OAuthProvider extends AuthProvider {
       providerId: providerId,
       signInMethod: 'oauth',
       accessToken: accessToken,
+      secret: secret,
       idToken: idToken,
       rawNonce: rawNonce,
     );

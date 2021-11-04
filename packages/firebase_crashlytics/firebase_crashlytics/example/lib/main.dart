@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -18,26 +19,28 @@ const _kShouldTestAsyncErrorOnInit = false;
 
 // Toggle this for testing Crashlytics in your app locally.
 const _kTestingCrashlytics = true;
-//ignore: avoid_void_async
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    authDomain: 'react-native-firebase-testing.firebaseapp.com',
-    projectId: 'react-native-firebase-testing',
-  ));
 
-  runZonedGuarded(() {
+void main() async {
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+          appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+          messagingSenderId: '448618578101',
+          authDomain: 'react-native-firebase-testing.firebaseapp.com',
+          projectId: 'react-native-firebase-testing',
+        )
+    );
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(MyApp());
-  }, FirebaseCrashlytics.instance.recordError);
+  }, (error, stackTrace) {
+    FirebaseCrashlytics.instance.recordError(error, stackTrace);
+  });
 }
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -65,14 +68,6 @@ class _MyAppState extends State<MyApp> {
       await FirebaseCrashlytics.instance
           .setCrashlyticsCollectionEnabled(!kDebugMode);
     }
-
-    // Pass all uncaught errors to Crashlytics.
-    Function originalOnError = FlutterError.onError;
-    FlutterError.onError = (FlutterErrorDetails errorDetails) async {
-      await FirebaseCrashlytics.instance.recordFlutterError(errorDetails);
-      // Forward to original handler.
-      originalOnError(errorDetails);
-    };
 
     if (_kShouldTestAsyncErrorOnInit) {
       await _testAsyncErrorOnInit();

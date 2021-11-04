@@ -1,8 +1,7 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-// @dart=2.9
 
 import 'dart:async';
 import 'dart:convert';
@@ -37,10 +36,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 /// Create a [AndroidNotificationChannel] for heads up notifications
-AndroidNotificationChannel channel;
+late AndroidNotificationChannel channel;
 
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -106,7 +105,7 @@ class MessagingExampleApp extends StatelessWidget {
 int _messageCount = 0;
 
 /// The API endpoint here accepts a raw FCM payload for demonstration purposes.
-String constructFCMPayload(String token) {
+String constructFCMPayload(String? token) {
   _messageCount++;
   return jsonEncode({
     'token': token,
@@ -128,14 +127,14 @@ class Application extends StatefulWidget {
 }
 
 class _Application extends State<Application> {
-  String _token;
+  String? _token;
 
   @override
   void initState() {
     super.initState();
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {
+        .then((RemoteMessage? message) {
       if (message != null) {
         Navigator.pushNamed(context, '/message',
             arguments: MessageArguments(message, true));
@@ -143,8 +142,8 @@ class _Application extends State<Application> {
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification?.android;
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
@@ -215,7 +214,7 @@ class _Application extends State<Application> {
           if (defaultTargetPlatform == TargetPlatform.iOS ||
               defaultTargetPlatform == TargetPlatform.macOS) {
             print('FlutterFire Messaging Example: Getting APNs token...');
-            String token = await FirebaseMessaging.instance.getAPNSToken();
+            String? token = await FirebaseMessaging.instance.getAPNSToken();
             print('FlutterFire Messaging Example: Got APNs token: $token');
           } else {
             print(

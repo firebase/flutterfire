@@ -1,9 +1,11 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 
@@ -19,24 +21,14 @@ Map<String, dynamic> _initialParameters = Map<String, dynamic>.unmodifiable({
 });
 
 /// Represents a query over the data at a particular location.
+@immutable
 abstract class QueryPlatform extends PlatformInterface {
-  /// The [FirebaseFirestorePlatform] interface for this current query.
-  final FirebaseFirestorePlatform firestore;
-
-  /// Stores the instances query modifier filters.
-  Map<String, dynamic> parameters;
-
   /// Create a [QueryPlatform] instance
   QueryPlatform(this.firestore, Map<String, dynamic>? params)
       : parameters = params ?? _initialParameters,
         super(token: _token);
 
   static final Object _token = Object();
-
-  /// Returns whether the current query is targetted at a collection group.
-  bool get isCollectionGroupQuery {
-    throw UnimplementedError('isCollectionGroupQuery is not implemented');
-  }
 
   /// Throws an [AssertionError] if [instance] does not extend
   /// [QueryPlatform].
@@ -48,6 +40,17 @@ abstract class QueryPlatform extends PlatformInterface {
     if (instance is! CollectionReferencePlatform) {
       PlatformInterface.verifyToken(instance, _token);
     }
+  }
+
+  /// The [FirebaseFirestorePlatform] interface for this current query.
+  final FirebaseFirestorePlatform firestore;
+
+  /// Stores the instances query modifier filters.
+  final Map<String, dynamic> parameters;
+
+  /// Returns whether the current query is targetted at a collection group.
+  bool get isCollectionGroupQuery {
+    throw UnimplementedError('isCollectionGroupQuery is not implemented');
   }
 
   /// Creates and returns a new [QueryPlatform] that ends at the provided document

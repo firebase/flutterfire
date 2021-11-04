@@ -1,3 +1,45 @@
+## 2.5.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7147).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 2.5.3
+
+ - **FIX**: value encoding fails when using `DocumentReference` & `withConverter` (#7020).
+ - **FIX**: propagate query index link  to firebase console for user (#7087).
+ - **FIX**: fixed a bug where `withConverter.endBeforeDocument` incorrectly behaved as `endAtDocument`.
+ - **FIX**: an issue where `Query.==` throws when using `withConverter` (#6997).
+ - **CHORE**: update gradle version across packages (#7054).
+
+## 2.5.2
+
+ - **REVERT**: Firestore cache snapshot connections with underlying native listener (#6819) (#6974).
+ - **CHORE**: Reduce hash conflicts on objects (#6928).
+
+## 2.5.1
+
+ - Update a dependency to the latest release.
+
+## 2.5.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: transactionHandler was losing ref to self in blocks (#6791).
+ - **FIX**: allow querying on 'is not null' properties (#6788).
+ - **FIX**: improve query filter assertions (#6627).
+ - **FEAT**: cache snapshot connections with underlying native listener (#6819).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+ - **DOCS**: Transaction timeout correction (#6761).
+
+## 2.4.0
+
+ - **FIX**: export PersistenceSettings (#6603).
+ - **FIX**: Fixed variable name (#6564).
+ - **FIX**: withConverter examples in docs (#6438).
+ - **FIX**: DocumentReference @sealed annotation (#6436).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 2.3.0
 
  - **FIX**: withConverter examples in docs (#6438).

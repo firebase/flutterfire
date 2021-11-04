@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -51,7 +52,10 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
   void initState() {
     super.initState();
 
-    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[]);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: <SystemUiOverlay>[],
+    );
     SystemChrome.setPreferredOrientations(
       <DeviceOrientation>[DeviceOrientation.portraitUp],
     );
@@ -272,10 +276,13 @@ class _MaterialBarcodeScannerState extends State<MaterialBarcodeScanner>
     _barcodeDetector.close();
 
     SystemChrome.setPreferredOrientations(<DeviceOrientation>[]);
-    SystemChrome.setEnabledSystemUIOverlays(<SystemUiOverlay>[
-      SystemUiOverlay.top,
-      SystemUiOverlay.bottom,
-    ]);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: <SystemUiOverlay>[
+        SystemUiOverlay.top,
+        SystemUiOverlay.bottom,
+      ],
+    );
 
     super.dispose();
   }

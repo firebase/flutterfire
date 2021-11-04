@@ -30,53 +30,57 @@ void runDocumentChangeTests() {
       return collection;
     }
 
-    test('can add/update values to null in the document', () async {
-      CollectionReference<Map<String, dynamic>> collection =
-          await initializeTest('null-test');
-      DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
+    test(
+      'can add/update values to null in the document',
+      () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('null-test');
+        DocumentReference<Map<String, dynamic>> doc1 = collection.doc('doc1');
 
-      await expectLater(
-        doc1.snapshots(),
-        emits(
-          isA<DocumentSnapshot<Map<String, dynamic>>>()
-              .having((q) => q.exists, 'exists', false),
-        ),
-      );
+        await expectLater(
+          doc1.snapshots(),
+          emits(
+            isA<DocumentSnapshot<Map<String, dynamic>>>()
+                .having((q) => q.exists, 'exists', false),
+          ),
+        );
 
-      await doc1.set(<String, Object?>{
-        'key': null,
-        'key2': 42,
-      });
+        await doc1.set(<String, Object?>{
+          'key': null,
+          'key2': 42,
+        });
 
-      await expectLater(
-        doc1.snapshots(),
-        emits(
-          isA<DocumentSnapshot<Map<String, dynamic>>>()
-              .having((q) => q.exists, 'exists', true)
-              .having((q) => q.data(), 'data()', <String, Object?>{
-            'key': null,
-            'key2': 42,
-          }),
-        ),
-      );
+        await expectLater(
+          doc1.snapshots(),
+          emits(
+            isA<DocumentSnapshot<Map<String, dynamic>>>()
+                .having((q) => q.exists, 'exists', true)
+                .having((q) => q.data(), 'data()', <String, Object?>{
+              'key': null,
+              'key2': 42,
+            }),
+          ),
+        );
 
-      await doc1.set({
-        'key': null,
-        'key2': null,
-      });
+        await doc1.set({
+          'key': null,
+          'key2': null,
+        });
 
-      await expectLater(
-        doc1.snapshots(),
-        emits(
-          isA<DocumentSnapshot<Map<String, dynamic>>>()
-              .having((q) => q.exists, 'exists', true)
-              .having((q) => q.data(), 'data()', <String, Object?>{
-            'key': null,
-            'key2': null,
-          }),
-        ),
-      );
-    }, timeout: const Timeout.factor(8));
+        await expectLater(
+          doc1.snapshots(),
+          emits(
+            isA<DocumentSnapshot<Map<String, dynamic>>>()
+                .having((q) => q.exists, 'exists', true)
+                .having((q) => q.data(), 'data()', <String, Object?>{
+              'key': null,
+              'key2': null,
+            }),
+          ),
+        );
+      },
+      timeout: const Timeout.factor(8),
+    );
 
     test('returns the correct metadata when adding and removing', () async {
       CollectionReference<Map<String, dynamic>> collection =
@@ -90,31 +94,38 @@ void runDocumentChangeTests() {
           collection.snapshots();
       int call = 0;
 
-      StreamSubscription subscription = stream
-          .listen(expectAsync1((QuerySnapshot<Map<String, dynamic>> snapshot) {
-        call++;
-        if (call == 1) {
-          expect(snapshot.docs.length, equals(1));
-          expect(snapshot.docChanges.length, equals(1));
-          expect(snapshot.docChanges[0], isA<DocumentChange>());
-          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
-          expect(change.newIndex, equals(0));
-          expect(change.oldIndex, equals(-1));
-          expect(change.type, equals(DocumentChangeType.added));
-          expect(change.doc.data()!['name'], equals('doc1'));
-        } else if (call == 2) {
-          expect(snapshot.docs.length, equals(0));
-          expect(snapshot.docChanges.length, equals(1));
-          expect(snapshot.docChanges[0], isA<DocumentChange>());
-          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
-          expect(change.newIndex, equals(-1));
-          expect(change.oldIndex, equals(0));
-          expect(change.type, equals(DocumentChangeType.removed));
-          expect(change.doc.data()!['name'], equals('doc1'));
-        } else {
-          fail('Should not have been called');
-        }
-      }, count: 2, reason: 'Stream should only have been called twice.'));
+      StreamSubscription subscription = stream.listen(
+        expectAsync1(
+          (QuerySnapshot<Map<String, dynamic>> snapshot) {
+            call++;
+            if (call == 1) {
+              expect(snapshot.docs.length, equals(1));
+              expect(snapshot.docChanges.length, equals(1));
+              expect(snapshot.docChanges[0], isA<DocumentChange>());
+              DocumentChange<Map<String, dynamic>> change =
+                  snapshot.docChanges[0];
+              expect(change.newIndex, equals(0));
+              expect(change.oldIndex, equals(-1));
+              expect(change.type, equals(DocumentChangeType.added));
+              expect(change.doc.data()!['name'], equals('doc1'));
+            } else if (call == 2) {
+              expect(snapshot.docs.length, equals(0));
+              expect(snapshot.docChanges.length, equals(1));
+              expect(snapshot.docChanges[0], isA<DocumentChange>());
+              DocumentChange<Map<String, dynamic>> change =
+                  snapshot.docChanges[0];
+              expect(change.newIndex, equals(-1));
+              expect(change.oldIndex, equals(0));
+              expect(change.type, equals(DocumentChangeType.removed));
+              expect(change.doc.data()!['name'], equals('doc1'));
+            } else {
+              fail('Should not have been called');
+            }
+          },
+          count: 2,
+          reason: 'Stream should only have been called twice.',
+        ),
+      );
 
       await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.delete();
@@ -136,31 +147,37 @@ void runDocumentChangeTests() {
           collection.orderBy('value').snapshots();
 
       int call = 0;
-      StreamSubscription subscription = stream
-          .listen(expectAsync1((QuerySnapshot<Map<String, dynamic>> snapshot) {
-        call++;
-        if (call == 1) {
-          expect(snapshot.docs.length, equals(3));
-          expect(snapshot.docChanges.length, equals(3));
-          snapshot.docChanges.asMap().forEach(
-              (int index, DocumentChange<Map<String, dynamic>> change) {
-            expect(change.oldIndex, equals(-1));
-            expect(change.newIndex, equals(index));
-            expect(change.type, equals(DocumentChangeType.added));
-            expect(change.doc.data()!['value'], equals(index + 1));
-          });
-        } else if (call == 2) {
-          expect(snapshot.docs.length, equals(3));
-          expect(snapshot.docChanges.length, equals(1));
-          DocumentChange<Map<String, dynamic>> change = snapshot.docChanges[0];
-          expect(change.oldIndex, equals(0));
-          expect(change.newIndex, equals(2));
-          expect(change.type, equals(DocumentChangeType.modified));
-          expect(change.doc.id, equals('doc1'));
-        } else {
-          fail('Should not have been called');
-        }
-      }, count: 2, reason: 'Stream should only have been called twice.'));
+      StreamSubscription subscription = stream.listen(
+        expectAsync1(
+          (QuerySnapshot<Map<String, dynamic>> snapshot) {
+            call++;
+            if (call == 1) {
+              expect(snapshot.docs.length, equals(3));
+              expect(snapshot.docChanges.length, equals(3));
+              snapshot.docChanges.asMap().forEach(
+                  (int index, DocumentChange<Map<String, dynamic>> change) {
+                expect(change.oldIndex, equals(-1));
+                expect(change.newIndex, equals(index));
+                expect(change.type, equals(DocumentChangeType.added));
+                expect(change.doc.data()!['value'], equals(index + 1));
+              });
+            } else if (call == 2) {
+              expect(snapshot.docs.length, equals(3));
+              expect(snapshot.docChanges.length, equals(1));
+              DocumentChange<Map<String, dynamic>> change =
+                  snapshot.docChanges[0];
+              expect(change.oldIndex, equals(0));
+              expect(change.newIndex, equals(2));
+              expect(change.type, equals(DocumentChangeType.modified));
+              expect(change.doc.id, equals('doc1'));
+            } else {
+              fail('Should not have been called');
+            }
+          },
+          count: 2,
+          reason: 'Stream should only have been called twice.',
+        ),
+      );
 
       await Future.delayed(const Duration(seconds: 1)); // Ensure listener fires
       await doc1.update({'value': 4});

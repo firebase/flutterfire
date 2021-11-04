@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // @dart = 2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:flutter_test/flutter_test.dart';
@@ -58,7 +59,7 @@ void testsMain() {
       expect(remoteConfig.settings.minimumFetchInterval,
           const Duration(seconds: 88));
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 10, milliseconds: 500),
+          fetchTimeout: const Duration(seconds: 10),
           minimumFetchInterval: Duration.zero));
       expect(remoteConfig.settings.fetchTimeout, const Duration(seconds: 10));
       expect(remoteConfig.settings.minimumFetchInterval, Duration.zero);

@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,6 +8,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -58,9 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
       print(
           'Connected to directly configured database and read ${snapshot!.value}');
     });
-    database.setPersistenceEnabled(true);
-    database.setPersistenceCacheSizeBytes(10000000);
-    _counterRef.keepSynced(true);
+
+    database.setLoggingEnabled(true);
+
+    if (!kIsWeb) {
+      database.setPersistenceEnabled(true);
+      database.setPersistenceCacheSizeBytes(10000000);
+      _counterRef.keepSynced(true);
+    }
     _counterSubscription = _counterRef.onValue.listen((Event event) {
       setState(() {
         _error = null;
@@ -99,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _incrementAsTransaction() async {
     // Increment counter in transaction.
     final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) async {
+        await _counterRef.runTransaction((MutableData mutableData) {
       mutableData.value = (mutableData.value ?? 0) + 1;
       return mutableData;
     });

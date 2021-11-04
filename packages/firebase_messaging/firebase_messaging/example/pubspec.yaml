@@ -12,7 +12,7 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^3.0.0
+  flutter_local_notifications: ^8.2.0
   http: ^0.13.0
 
 dependency_overrides:
@@ -32,7 +32,7 @@ dependency_overrides:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  drive: 0.1.0
+  drive: ^1.0.0-1.0.nullsafety.0
   flutter_driver:
     sdk: flutter
   test: any

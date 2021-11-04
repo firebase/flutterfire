@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -65,7 +66,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
       } catch (e) {
         // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
         // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
-        if (e.toString().contains("Cannot read property 'app' of undefined")) {
+        if (e.toString().contains('Cannot read properties of undefined')) {
           throw coreNotInitialized();
         }
 

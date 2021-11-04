@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -107,6 +108,11 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
+  Settings get settings {
+    return const Settings();
+  }
+
+  @override
   set settings(Settings settings) {
     int? cacheSizeBytes;
 
@@ -133,6 +139,14 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// Enable persistence of Firestore data.
   @override
   Future<void> enablePersistence([PersistenceSettings? settings]) {
+    if (settings != null) {
+      firestore_interop.PersistenceSettings interopSettings =
+          firestore_interop.PersistenceSettings(
+              synchronizeTabs: settings.synchronizeTabs);
+
+      return guard(() => _webFirestore.enablePersistence(interopSettings));
+    }
+
     return guard(_webFirestore.enablePersistence);
   }
 

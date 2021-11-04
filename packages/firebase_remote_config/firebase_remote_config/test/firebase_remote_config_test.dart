@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -211,6 +212,15 @@ void main() {
       test('should call delegate method', () {
         remoteConfig.setDefaults(mockParameters);
         verify(mockRemoteConfigPlatform.setDefaults(mockDefaultParameters));
+      });
+
+      test('should throw when non-primitive value is passed', () {
+        expect(
+          () => remoteConfig.setDefaults({
+            'key': {'nested': 'object'}
+          }),
+          throwsArgumentError,
+        );
       });
     });
   });

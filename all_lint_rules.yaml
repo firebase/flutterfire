@@ -1,7 +1,6 @@
 # Copyright 2021 The Chromium Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # in the LICENSE file.
-
 linter:
   rules:
     - always_declare_return_types
@@ -61,6 +60,7 @@ linter:
     - constant_identifier_names
     - control_flow_in_finally
     - curly_braces_in_flow_control_structures
+    - depend_on_referenced_packages
     - deprecated_consistency
     - diagnostic_describe_all_properties
     - directives_ordering
@@ -68,6 +68,7 @@ linter:
     - empty_catches
     - empty_constructor_bodies
     - empty_statements
+    - eol_at_end_of_file
     - exhaustive_cases
     - file_names
     - flutter_style_todos
@@ -79,6 +80,7 @@ linter:
     - leading_newlines_in_multiline_strings
     - library_names
     - library_prefixes
+    - library_private_types_in_public_api
     - lines_longer_than_80_chars
     - list_remove_unrelated_type
     - literal_only_boolean_expressions
@@ -89,6 +91,7 @@ linter:
     - no_logic_in_create_state
     - no_runtimeType_toString
     - non_constant_identifier_names
+    - noop_primitive_operations
     - null_check_on_nullable_type_parameter
     - null_closures
     - omit_local_variable_types
@@ -116,6 +119,7 @@ linter:
     - prefer_final_fields
     - prefer_final_in_for_each
     - prefer_final_locals
+    - prefer_final_parameters
     - prefer_for_elements_to_map_fromIterable
     - prefer_foreach
     - prefer_function_declarations_over_variables
@@ -131,6 +135,7 @@ linter:
     - prefer_is_not_operator
     - prefer_iterable_whereType
     - prefer_mixin
+    - prefer_null_aware_method_calls
     - prefer_null_aware_operators
     - prefer_relative_imports
     - prefer_single_quotes
@@ -140,6 +145,7 @@ linter:
     - provide_deprecation_message
     - public_member_api_docs
     - recursive_getters
+    - require_trailing_commas
     - sized_box_for_whitespace
     - slash_for_doc_comments
     - sort_child_properties_last
@@ -184,6 +190,7 @@ linter:
     - use_rethrow_when_possible
     - use_setters_to_change_properties
     - use_string_buffers
+    - use_test_throws_matchers
     - use_to_and_as_if_applicable
     - valid_regexps
     - void_checks

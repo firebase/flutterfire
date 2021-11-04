@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <Firebase/Firebase.h>
+#import <TargetConditionals.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
-#import "Firebase/Firebase.h"
 
 #import "Private/FLTAuthStateChannelStreamHandler.h"
 #import "Private/FLTIdTokenChannelStreamHandler.h"
@@ -424,7 +425,18 @@ NSString *const kErrMsgInvalidCredential =
   [auth signInWithCredential:credential
                   completion:^(FIRAuthDataResult *authResult, NSError *error) {
                     if (error != nil) {
-                      result.error(nil, nil, nil, error);
+                      NSDictionary *userInfo = [error userInfo];
+                      NSError *underlyingError = [userInfo objectForKey:NSUnderlyingErrorKey];
+
+                      NSDictionary *firebaseDictionary =
+                          underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
+
+                      if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
+                        // error from firebase-ios-sdk is buried in underlying error.
+                        result.error(nil, firebaseDictionary[@"message"], nil, nil);
+                      } else {
+                        result.error(nil, nil, nil, error);
+                      }
                     } else {
                       result.success(authResult);
                     }

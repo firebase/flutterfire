@@ -1,4 +1,4 @@
-// @dart = 2.9
+// ignore_for_file: require_trailing_commas
 
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -23,7 +23,7 @@ void runInstanceTests() {
       expect(currentUser.uid, isInstanceOf<String>());
       expect(currentUser.email, equals(testEmail));
       expect(currentUser.isAnonymous, isFalse);
-      expect(currentUser.uid, equals(FirebaseAuth.instance.currentUser.uid));
+      expect(currentUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
       var additionalUserInfo = currentUserCredential.additionalUserInfo;
       expect(additionalUserInfo, isInstanceOf<Object>());
@@ -33,8 +33,8 @@ void runInstanceTests() {
     }
 
     group('authStateChanges()', () {
-      StreamSubscription subscription;
-      StreamSubscription subscription2;
+      StreamSubscription? subscription;
+      StreamSubscription? subscription2;
 
       tearDown(() async {
         await subscription?.cancel();
@@ -49,20 +49,20 @@ void runInstanceTests() {
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(testEmail);
-        String uid = FirebaseAuth.instance.currentUser.uid;
+        String uid = FirebaseAuth.instance.currentUser!.uid;
 
-        Stream<User> stream = FirebaseAuth.instance.authStateChanges();
+        Stream<User?> stream = FirebaseAuth.instance.authStateChanges();
         int call = 0;
 
-        subscription = stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User? user) {
           call++;
           if (call == 1) {
-            expect(user.uid, isA<String>());
+            expect(user!.uid, isA<String>());
             expect(user.uid, equals(uid)); // initial user
           } else if (call == 2) {
             expect(user, isNull); // logged out
           } else if (call == 3) {
-            expect(user.uid, isA<String>());
+            expect(user!.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
           } else {
             fail('Should not have been called');
@@ -76,8 +76,8 @@ void runInstanceTests() {
     });
 
     group('idTokenChanges()', () {
-      StreamSubscription subscription;
-      StreamSubscription subscription2;
+      StreamSubscription? subscription;
+      StreamSubscription? subscription2;
 
       tearDown(() async {
         await subscription?.cancel();
@@ -92,19 +92,19 @@ void runInstanceTests() {
       test('calls callback with the current user and when auth state changes',
           () async {
         await ensureSignedIn(testEmail);
-        String uid = FirebaseAuth.instance.currentUser.uid;
+        String uid = FirebaseAuth.instance.currentUser!.uid;
 
-        Stream<User> stream = FirebaseAuth.instance.idTokenChanges();
+        Stream<User?> stream = FirebaseAuth.instance.idTokenChanges();
         int call = 0;
 
-        subscription = stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User? user) {
           call++;
           if (call == 1) {
-            expect(user.uid, equals(uid)); // initial user
+            expect(user!.uid, equals(uid)); // initial user
           } else if (call == 2) {
             expect(user, isNull); // logged out
           } else if (call == 3) {
-            expect(user.uid, isA<String>());
+            expect(user!.uid, isA<String>());
             expect(user.uid != uid, isTrue); // anonymous user
           } else {
             fail('Should not have been called');
@@ -118,36 +118,71 @@ void runInstanceTests() {
     });
 
     group('userChanges()', () {
-      StreamSubscription subscription;
+      late StreamSubscription subscription;
       tearDown(() async {
         await subscription.cancel();
+      });
+
+      test('fires once on first initialization of FirebaseAuth', () async {
+        // Fixes a very specific bug: https://github.com/FirebaseExtended/flutterfire/issues/3628
+        // If the first initialization of FirebaseAuth involves the listeners userChanges() or idTokenChanges()
+        // the user will receive two events. Why? The native SDK listener will always fire an event upon initial
+        // listen. FirebaseAuth also sends an initial synthetic event. We send a synthetic event because, ordinarily, the user will
+        // not use a listener as the first occurrence of FirebaseAuth. We, therefore, mimic native behaviour by sending an
+        // event. This test proves the logic of PR: https://github.com/FirebaseExtended/flutterfire/pull/6560
+
+        // Requires a fresh app.
+        FirebaseApp second = await Firebase.initializeApp(
+            name: 'test-init',
+            options: const FirebaseOptions(
+              apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+              appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
+              messagingSenderId: '448618578101',
+              projectId: 'react-native-firebase-testing',
+              authDomain: 'react-native-firebase-testing.firebaseapp.com',
+              iosClientId:
+                  '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+            ));
+
+        Stream<User?> stream =
+            FirebaseAuth.instanceFor(app: second).userChanges();
+
+        subscription = stream.listen(
+          expectAsync1(
+            (User? user) {},
+            count: 1,
+            reason: 'Stream should only call once',
+          ),
+        );
+
+        await Future.delayed(const Duration(seconds: 2));
       });
 
       test('calls callback with the current user and when user state changes',
           () async {
         await ensureSignedIn(testEmail);
 
-        Stream<User> stream = FirebaseAuth.instance.userChanges();
+        Stream<User?> stream = FirebaseAuth.instance.userChanges();
         int call = 0;
 
-        subscription = stream.listen(expectAsync1((User user) {
+        subscription = stream.listen(expectAsync1((User? user) {
           call++;
           if (call == 1) {
-            expect(user.displayName, isNull); // initial user
+            expect(user!.displayName, isNull); // initial user
           } else if (call == 2) {
-            expect(user.displayName, equals('updatedName')); // updated profile
+            expect(user!.displayName, equals('updatedName')); // updated profile
           } else {
             fail('Should not have been called');
           }
         }, count: 2, reason: 'Stream should only have been called 2 times'));
 
-        await FirebaseAuth.instance.currentUser
+        await FirebaseAuth.instance.currentUser!
             .updateDisplayName('updatedName');
 
-        await FirebaseAuth.instance.currentUser.reload();
+        await FirebaseAuth.instance.currentUser!.reload();
 
         expect(
-          FirebaseAuth.instance.currentUser.displayName,
+          FirebaseAuth.instance.currentUser!.displayName,
           equals('updatedName'),
         );
       });
@@ -207,15 +242,15 @@ void runInstanceTests() {
 
         Function successCallback = (UserCredential newUserCredential) async {
           expect(newUserCredential.user, isA<User>());
-          User newUser = newUserCredential.user;
+          User newUser = newUserCredential.user!;
 
           expect(newUser.uid, isA<String>());
           expect(newUser.email, equals(email));
           expect(newUser.emailVerified, isFalse);
           expect(newUser.isAnonymous, isFalse);
-          expect(newUser.uid, equals(FirebaseAuth.instance.currentUser.uid));
+          expect(newUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
-          var additionalUserInfo = newUserCredential.additionalUserInfo;
+          var additionalUserInfo = newUserCredential.additionalUserInfo!;
           expect(additionalUserInfo, isA<AdditionalUserInfo>());
           expect(additionalUserInfo.isNewUser, isTrue);
 
@@ -225,7 +260,7 @@ void runInstanceTests() {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: email, password: testPassword)
-            .then(successCallback);
+            .then(successCallback as Function(UserCredential));
       });
 
       test('fails if creating a user which already exists', () async {
@@ -326,9 +361,9 @@ void runInstanceTests() {
               email: email, password: testPassword);
 
           await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-          await FirebaseAuth.instance.currentUser.delete();
+          await FirebaseAuth.instance.currentUser!.delete();
         } catch (e) {
-          await FirebaseAuth.instance.currentUser.delete();
+          await FirebaseAuth.instance.currentUser!.delete();
           fail(e.toString());
         }
       });
@@ -367,14 +402,14 @@ void runInstanceTests() {
         );
 
         // Confirm with the emulator that it triggered an email sending code.
-        final oobCode =
-            await emulatorOutOfBandCode(email, EmulatorOobCodeType.emailSignIn);
+        final oobCode = (await emulatorOutOfBandCode(
+            email, EmulatorOobCodeType.emailSignIn))!;
         expect(oobCode, isNotNull);
         expect(oobCode.email, email);
         expect(oobCode.type, EmulatorOobCodeType.emailSignIn);
 
         // Confirm the continue url was passed through to backend correctly.
-        final url = Uri.parse(oobCode.oobLink);
+        final url = Uri.parse(oobCode.oobLink!);
         expect(url.queryParameters['continueUrl'], Uri.encodeFull(continueUrl));
       });
     });
@@ -422,24 +457,24 @@ void runInstanceTests() {
 
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {
-        Function successCallback =
-            (UserCredential currentUserCredential) async {
-          var currentUser = currentUserCredential.user;
+        Future successCallback(UserCredential currentUserCredential) async {
+          var currentUser = currentUserCredential.user!;
 
           expect(currentUser, isA<User>());
           expect(currentUser.uid, isA<String>());
           expect(currentUser.email, isNull);
           expect(currentUser.isAnonymous, isTrue);
           expect(
-              currentUser.uid, equals(FirebaseAuth.instance.currentUser.uid));
+              currentUser.uid, equals(FirebaseAuth.instance.currentUser!.uid));
 
           var additionalUserInfo = currentUserCredential.additionalUserInfo;
           expect(additionalUserInfo, isInstanceOf<Object>());
 
           await FirebaseAuth.instance.signOut();
-        };
+        }
 
-        await FirebaseAuth.instance.signInAnonymously().then(successCallback);
+        final userCred = await FirebaseAuth.instance.signInAnonymously();
+        await successCallback(userCred);
       });
     });
 
@@ -510,7 +545,7 @@ void runInstanceTests() {
     group('signInWithCustomToken()', () {
       test('signs in with custom auth token', () async {
         final userCredential = await FirebaseAuth.instance.signInAnonymously();
-        final uid = userCredential.user.uid;
+        final uid = userCredential.user!.uid;
         final claims = {
           'roles': [
             {'role': 'member'},
@@ -527,15 +562,15 @@ void runInstanceTests() {
         final customTokenUserCredential =
             await FirebaseAuth.instance.signInWithCustomToken(customToken);
 
-        expect(customTokenUserCredential.user.uid, equals(uid));
-        expect(FirebaseAuth.instance.currentUser.uid, equals(uid));
+        expect(customTokenUserCredential.user!.uid, equals(uid));
+        expect(FirebaseAuth.instance.currentUser!.uid, equals(uid));
 
         final idTokenResult =
-            await FirebaseAuth.instance.currentUser.getIdTokenResult();
+            await FirebaseAuth.instance.currentUser!.getIdTokenResult();
 
-        expect(idTokenResult.claims['roles'], isA<List>());
-        expect(idTokenResult.claims['roles'][0], isA<Map>());
-        expect(idTokenResult.claims['roles'][0]['role'], 'member');
+        expect(idTokenResult.claims!['roles'], isA<List>());
+        expect(idTokenResult.claims!['roles'][0], isA<Map>());
+        expect(idTokenResult.claims!['roles'][0]['role'], 'member');
       });
     });
 
@@ -634,7 +669,7 @@ void runInstanceTests() {
               verificationFailed: (FirebaseAuthException e) {
                 completer.complete(e);
               },
-              codeSent: (String verificationId, int resetToken) {
+              codeSent: (String verificationId, int? resetToken) {
                 return completer
                     .completeError(Exception('Should not have been called'));
               },
@@ -643,7 +678,7 @@ void runInstanceTests() {
                     .completeError(Exception('Should not have been called'));
               }));
 
-          return completer.future;
+          return completer.future as FutureOr<Exception>;
         }
 
         Exception e = await getError();
@@ -676,7 +711,7 @@ void runInstanceTests() {
                 return completer
                     .completeError(Exception('Should not have been called'));
               },
-              codeSent: (String verificationId, int resetToken) {
+              codeSent: (String verificationId, int? resetToken) {
                 return completer
                     .completeError(Exception('Should not have been called'));
               },
@@ -685,7 +720,7 @@ void runInstanceTests() {
                     .completeError(Exception('Should not have been called'));
               }));
 
-          return completer.future;
+          return completer.future as FutureOr<PhoneAuthCredential>;
         }
 
         PhoneAuthCredential credential = await getCredential();
@@ -720,7 +755,7 @@ void runInstanceTests() {
             .signInWithEmailAndPassword(
                 email: 'test-tenant@email.com', password: 'fake-password');
 
-        expect(userCredential.user.tenantId, tenantId);
+        expect(userCredential.user!.tenantId, tenantId);
       });
       // todo(russellwheatley85): get/set tenantId and authenticating user via auth emulator is not possible at the moment.
     }, skip: true);

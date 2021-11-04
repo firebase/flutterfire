@@ -1,3 +1,30 @@
+## 1.8.0
+
+ - **FEAT**: Firebase iOS SDK version bumped to `8.8.0` (#7213).
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 1.7.0
+
+ - **FEAT**: bump Firebase iOS SDK to `8.7.0` & Android SDK to `28.4.1` (#7083).
+ - **CHORE**: update gradle version across packages (#7054).
+
+## 1.6.0
+
+ - **FEAT**: update Firebase Android SDK to `28.3.1` & Firebase iOS SDK to `8.6.0` (#6847).
+
+## 1.5.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: lower iOS & macOS deployment targets for relevant plugins (#6757).
+ - **FEAT**: iOS sdk version bump 8.5.0. (#6786).
+
+## 1.4.0
+
+ - **FEAT**: bump Firebase iOS SDK version to 8.3.0 (#6568).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+
 ## 1.3.0
 
  - **FEAT**: Upgrade Firebase Android BoM version to 28.1.0 (#6338).

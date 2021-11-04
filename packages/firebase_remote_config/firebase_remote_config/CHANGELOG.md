@@ -1,3 +1,31 @@
+## 0.11.0+2
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 0.11.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.11.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FIX**: check value types before passing them to native (#6817).
+
+## 0.10.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.10.0+4
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: propagate error message (#6834).
+
+## 0.10.0+3
+
+ - Update a dependency to the latest release.
+
 ## 0.10.0+2
 
  - Update a dependency to the latest release.

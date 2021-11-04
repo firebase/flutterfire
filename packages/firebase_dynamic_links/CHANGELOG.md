@@ -1,3 +1,26 @@
+## 2.0.11
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
+## 2.0.10
+
+ - **DOCS**: changed "ibn" to "ibi" iOS param name in long dynamic link example (#7081).
+ - **CHORE**: update gradle version across packages (#7054).
+
+## 2.0.9
+
+ - Update a dependency to the latest release.
+
+## 2.0.8
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **DOCS**: fix readme example (#6790).
+
+## 2.0.7
+
+ - Update a dependency to the latest release.
+
 ## 2.0.6
 
  - Update a dependency to the latest release.

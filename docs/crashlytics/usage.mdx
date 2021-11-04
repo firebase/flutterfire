@@ -77,7 +77,7 @@ FirebaseCrashlytics.instance.crash();
 Your app should exit immediately after calling this method. After opening your app again after the crash
 Firebase Crashlytics will upload the crash report to the Firebase Console.
 
-The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
+The error will be shown on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
 `This is a test crash caused by calling .crash() in Dart.`
 
 ## Crash types
@@ -188,16 +188,17 @@ To catch such errors, you can use `runZonedGuarded` like do:
 
 ```dart
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runZonedGuarded<Future<void>>(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
     // The following lines are the same as previously explained in "Handling uncaught errors"
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
     runApp(MyApp());
-  }, FirebaseCrashlytics.instance.recordError);
+  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 ```
+Note that you must call `WidgetsFlutterBinding.ensureInitialized()` inside `runZonedGuarded`. Error handling wouldn’t work if `WidgetsFlutterBinding.ensureInitialized()` was called from the outside.
 
 ### Errors outside of Flutter
 

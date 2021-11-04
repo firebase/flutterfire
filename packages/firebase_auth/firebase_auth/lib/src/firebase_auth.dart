@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -69,6 +70,47 @@ class FirebaseAuth extends FirebasePluginPlatform {
     }
 
     return null;
+  }
+
+  /// Changes this instance to point to an Auth emulator running locally.
+  ///
+  /// Set the [origin] of the local emulator, such as "http://localhost:9099"
+  ///
+  /// Note: Must be called immediately, prior to accessing auth methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  ///
+  /// Note: auth emulator is not supported for web yet. firebase-js-sdk does not support
+  /// auth.useEmulator until v8.2.4, but FlutterFire does not support firebase-js-sdk v8+ yet
+  @Deprecated(
+    'Will be removed in future release. '
+    'Use useAuthEmulator().',
+  )
+  Future<void> useEmulator(String origin) async {
+    assert(origin.isNotEmpty);
+    String mappedOrigin = origin;
+
+    // Android considers localhost as 10.0.2.2 - automatically handle this for users.
+    if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+      if (mappedOrigin.startsWith('http://localhost')) {
+        mappedOrigin =
+            mappedOrigin.replaceFirst('http://localhost', 'http://10.0.2.2');
+      } else if (mappedOrigin.startsWith('http://127.0.0.1')) {
+        mappedOrigin =
+            mappedOrigin.replaceFirst('http://127.0.0.1', 'http://10.0.2.2');
+      }
+    }
+
+    // Native calls take the host and port split out
+    final hostPortRegex = RegExp(r'^http:\/\/([\w\d.]+):(\d+)$');
+    final RegExpMatch? match = hostPortRegex.firstMatch(mappedOrigin);
+    if (match == null) {
+      throw ArgumentError('firebase.auth().useEmulator() origin format error');
+    }
+    // Two non-empty groups in RegExp match - which is null-tested - these are non-null now
+    final String host = match.group(1)!;
+    final int port = int.parse(match.group(2)!);
+
+    await useAuthEmulator(host, port);
   }
 
   /// Changes this instance to point to an Auth emulator running locally.
@@ -326,7 +368,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// On web platforms, if `null` is provided as the [languageCode] the Firebase
   /// project default language will be used. On native platforms, the device
   /// language will be used.
-  Future<void> setLanguageCode(String languageCode) {
+  Future<void> setLanguageCode(String? languageCode) {
     return _delegate.setLanguageCode(languageCode);
   }
 

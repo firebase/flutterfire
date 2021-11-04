@@ -1,3 +1,24 @@
+## 5.4.3
+
+ - Update a dependency to the latest release.
+
+## 5.4.2
+
+ - Update a dependency to the latest release.
+
+## 5.4.1
+
+ - Update a dependency to the latest release.
+
+## 5.4.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+
+## 5.3.0
+
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+
 ## 5.2.0
 
  - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).

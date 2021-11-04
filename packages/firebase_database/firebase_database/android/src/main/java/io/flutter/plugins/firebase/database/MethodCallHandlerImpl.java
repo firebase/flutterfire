@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Logger;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
@@ -40,11 +41,11 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
   private MethodChannel channel;
 
   private final Handler handler = new Handler();
-  private static final String EVENT_TYPE_CHILD_ADDED = "_EventType.childAdded";
-  private static final String EVENT_TYPE_CHILD_REMOVED = "_EventType.childRemoved";
-  private static final String EVENT_TYPE_CHILD_CHANGED = "_EventType.childChanged";
-  private static final String EVENT_TYPE_CHILD_MOVED = "_EventType.childMoved";
-  private static final String EVENT_TYPE_VALUE = "_EventType.value";
+  private static final String EVENT_TYPE_CHILD_ADDED = "EventType.childAdded";
+  private static final String EVENT_TYPE_CHILD_REMOVED = "EventType.childRemoved";
+  private static final String EVENT_TYPE_CHILD_CHANGED = "EventType.childChanged";
+  private static final String EVENT_TYPE_CHILD_MOVED = "EventType.childMoved";
+  private static final String EVENT_TYPE_VALUE = "EventType.value";
 
   // Handles are ints used as indexes into the sparse array of active observers
   private int nextHandle = 0;
@@ -329,6 +330,19 @@ class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
             // Database is already in use, e.g. after hot reload/restart.
             result.success(false);
           }
+          break;
+        }
+
+      case "FirebaseDatabase#setLoggingEnabled":
+        {
+          boolean enabled = call.argument("enabled");
+
+          if (enabled) {
+            database.setLogLevel(Logger.Level.DEBUG);
+          } else {
+            database.setLogLevel(Logger.Level.INFO);
+          }
+          result.success(null);
           break;
         }
 

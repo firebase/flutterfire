@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -109,8 +110,8 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
   );
 }
 
-/// Used to return [NotificationSettings] for all Android devices.
-const NotificationSettings androidNotificationSettings = NotificationSettings(
+// Default [NotificationSettings] for platforms which do not require permissions
+const NotificationSettings defaultNotificationSettings = NotificationSettings(
   authorizationStatus: AuthorizationStatus.authorized,
   alert: AppleNotificationSetting.notSupported,
   announcement: AppleNotificationSetting.notSupported,

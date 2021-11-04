@@ -68,7 +68,7 @@ To shorten a long Dynamic Link, use the DynamicLinkParameters.shortenUrl method.
 
 ```dart
 final ShortDynamicLink shortenedLink = await DynamicLinkParameters.shortenUrl(
-  Uri.parse('https://example.page.link/?link=https://example.com/&apn=com.example.android&ibn=com.example.ios'),
+  Uri.parse('https://example.page.link/?link=https://example.com/&apn=com.example.android&ibi=com.example.ios'),
   DynamicLinkParametersOptions(ShortDynamicLinkPathLength.unguessable),
 );
 
@@ -146,8 +146,8 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
 
   void initDynamicLinks() async {
     FirebaseDynamicLinks.instance.onLink(
-      onSuccess: (PendingDynamicLinkData dynamicLink) async {
-        final Uri deepLink = dynamicLink?.link;
+      onSuccess: (PendingDynamicLinkData? dynamicLink) async {
+        final Uri? deepLink = dynamicLink?.link;
 
         if (deepLink != null) {
           Navigator.pushNamed(context, deepLink.path);
@@ -159,8 +159,8 @@ class MyHomeWidgetState extends State<MyHomeWidget> {
       }
     );
     
-    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
-    final Uri deepLink = data?.link;
+    final PendingDynamicLinkData? data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
       Navigator.pushNamed(context, deepLink.path);

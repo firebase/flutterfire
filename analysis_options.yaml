@@ -43,6 +43,9 @@ linter:
 
     #############
 
+    # Far too verbose, and not that big of a deal when using parameter_assignments
+    prefer_final_parameters: false
+
     # Personal preference. I don't find it more readable
     cascade_invocations: false
 

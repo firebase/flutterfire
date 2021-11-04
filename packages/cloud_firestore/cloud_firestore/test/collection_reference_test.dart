@@ -18,13 +18,14 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       FirebaseApp secondaryApp = await Firebase.initializeApp(
-          name: 'foo',
-          options: const FirebaseOptions(
-            apiKey: '123',
-            appId: '123',
-            messagingSenderId: '123',
-            projectId: '123',
-          ));
+        name: 'foo',
+        options: const FirebaseOptions(
+          apiKey: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          projectId: '123',
+        ),
+      );
 
       firestore = FirebaseFirestore.instance;
       firestoreSecondary = FirebaseFirestore.instanceFor(app: secondaryApp);
@@ -106,7 +107,9 @@ void main() {
       DocumentReference docRef = firestore.doc('foo/bar');
       expect(() => firestore.collection('foo/bar'), throwsAssertionError);
       expect(
-          () => firestore.collection('foo/bar/baz/quu'), throwsAssertionError);
+        () => firestore.collection('foo/bar/baz/quu'),
+        throwsAssertionError,
+      );
       expect(() => docRef.collection('foo/bar'), throwsAssertionError);
       expect(() => docRef.collection('foo/bar/baz/quu'), throwsAssertionError);
     });
@@ -139,11 +142,15 @@ void main() {
       test('path must be odd length', () {
         DocumentReference docRef = firestore.doc('foo/bar');
         expect(() => firestore.collection('foo/bar'), throwsAssertionError);
-        expect(() => firestore.collection('foo/bar/baz/quu'),
-            throwsAssertionError);
+        expect(
+          () => firestore.collection('foo/bar/baz/quu'),
+          throwsAssertionError,
+        );
         expect(() => docRef.collection('foo/bar'), throwsAssertionError);
         expect(
-            () => docRef.collection('foo/bar/baz/quu'), throwsAssertionError);
+          () => docRef.collection('foo/bar/baz/quu'),
+          throwsAssertionError,
+        );
       });
 
       test('must not have empty segments', () {
@@ -168,7 +175,9 @@ void main() {
     group('withConverter', () {
       test('implements ==', () {
         int fromFirestore(
-                DocumentSnapshot snapshot, SnapshotOptions? options) =>
+          DocumentSnapshot snapshot,
+          SnapshotOptions? options,
+        ) =>
             42;
         Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
             {};
@@ -307,7 +316,9 @@ void main() {
         final foo = firestore.collection('foo');
 
         int fromFirestore(
-                DocumentSnapshot snapshot, SnapshotOptions? options) =>
+          DocumentSnapshot snapshot,
+          SnapshotOptions? options,
+        ) =>
             42;
         Map<String, dynamic> toFirestore(Object value, SetOptions? options) =>
             {};

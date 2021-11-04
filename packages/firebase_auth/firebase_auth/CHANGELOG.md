@@ -1,3 +1,47 @@
+## 3.1.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 3.1.3
+
+ - **REFACTOR**: migrate example app to null-safety (#7111).
+
+## 3.1.2
+
+ - **FIX**: allow setLanguage to accept null (#7050).
+ - **CHORE**: remove google-signin plugin temporarily to fix CI (#7047).
+
+## 3.1.1
+
+ - **FIX**: use Locale.ROOT while processing error code (#6946).
+
+## 3.1.0
+
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
+## 3.0.2
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: precise error message is propagated (#6793).
+ - **FIX**: Use angle bracket import consistently when importing Firebase.h for iOS (#5891).
+ - **FIX**: stop idTokenChanges & userChanges firing twice on initial listen (#6560).
+
+## 3.0.1
+
+ - **FIX**: reinstate deprecated emulator apis (#6626).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **DOCS**: phone provider account linking update (#6465).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: verifyPhoneNumber() example (#6476).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

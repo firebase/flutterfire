@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -13,18 +14,21 @@ import '../firestore_interop.dart' hide FieldValue;
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object? jsObject) {
   return core_interop.dartify(jsObject, (Object? object) {
+    if (object == null) {
+      return null;
+    }
     if (util.instanceof(object, DocumentReferenceJsConstructor)) {
-      return DocumentReference.getInstance(object! as DocumentReferenceJsImpl);
+      return DocumentReference.getInstance(object as DocumentReferenceJsImpl);
     }
     if (util.instanceof(object, GeoPointConstructor)) {
       return object;
     }
     if (util.instanceof(object, TimestampJsConstructor)) {
       return DateTime.fromMillisecondsSinceEpoch(
-          (object! as TimestampJsImpl).toMillis());
+          (object as TimestampJsImpl).toMillis());
     }
     if (util.instanceof(object, BlobConstructor)) {
-      return object! as Blob;
+      return object as BlobJsImpl;
     }
     return null;
   });
@@ -49,12 +53,12 @@ dynamic jsify(Object? dartObject) {
       return jsifyFieldValue(object);
     }
 
-    if (object is Blob) {
+    if (object is BlobJsImpl) {
       return object;
     }
 
     // NOTE: if the firestore JS lib is not imported, we'll get a DDC warning here
-    if (object is GeoPoint) {
+    if (object is GeoPointJsImpl) {
       return dartObject;
     }
 

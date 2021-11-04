@@ -1,3 +1,32 @@
+## 2.4.4
+
+ - Update a dependency to the latest release.
+
+## 2.4.3
+
+ - Update a dependency to the latest release.
+
+## 2.4.2
+
+ - **FIX**: implement missing getter for settings on Firestore web (#6930).
+ - **CHORE**: Reduce hash conflicts on objects (#6928).
+
+## 2.4.1
+
+ - Update a dependency to the latest release.
+
+## 2.4.0
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **FIX**: blob was being parsed as geopoint. (#6728).
+ - **FEAT**: override ==/hashCode for Firestore Queries (#6797).
+
+## 2.3.0
+
+ - **FIX**: export PersistenceSettings (#6603).
+ - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).
+ - **CHORE**: publish packages (#6513).
+
 ## 2.2.0
 
  - **FEAT**: useFirestoreEmulator(host, port) API for firestore (#6428).

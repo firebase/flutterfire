@@ -1,3 +1,33 @@
+## 0.7.1+2
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **CHORE**: update Gradle versions used in Android example app (#7054).
+
+## 0.7.1+1
+
+ - **DOCS**: remove usage of private link address (#6986).
+ - **CHORE**: update gradle version across packages (#7054).
+
+## 0.7.1
+
+ - **FIX**: fix the token verification. (#6912).
+ - **FEAT**: add web support to the plugin (#6920).
+ - **CHORE**: fix analyze issues (#6977).
+
+## 0.7.0+9
+
+ - **REFACTOR**: create interface plugin that federates the main plugin (#6851).
+
+## 0.7.0+8
+
+ - Update a dependency to the latest release.
+
+## 0.7.0+7
+
+ - **REFACTOR**: add all perf API usage to the firebase_performance example app.
+ - **REFACTOR**: move plugin to a subdirectory.
+ - **CHORE**: update v2 embedding support (#6506).
+
 ## 0.7.0+6
 
  - **REFACTOR**: add all perf API usage to the firebase_performance example app.

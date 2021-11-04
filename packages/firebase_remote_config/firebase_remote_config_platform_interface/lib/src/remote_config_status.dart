@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 /// The outcome of the last attempt to fetch config from the
 /// Firebase Remote Config server.
 enum RemoteConfigFetchStatus {

@@ -13,6 +13,8 @@ part of cloud_firestore;
 @sealed
 @immutable
 abstract class DocumentReference<T extends Object?> {
+  DocumentReferencePlatform get _delegate;
+
   /// The Firestore instance associated with this document reference.
   FirebaseFirestore get firestore;
 
@@ -95,6 +97,7 @@ class _JsonDocumentReference
     DocumentReferencePlatform.verifyExtends(_delegate);
   }
 
+  @override
   final DocumentReferencePlatform _delegate;
 
   @override
@@ -147,18 +150,23 @@ class _JsonDocumentReference
   }
 
   @override
-  Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots(
-      {bool includeMetadataChanges = false}) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> snapshots({
+    bool includeMetadataChanges = false,
+  }) {
     return _delegate
         .snapshots(includeMetadataChanges: includeMetadataChanges)
-        .map((delegateSnapshot) =>
-            _JsonDocumentSnapshot(firestore, delegateSnapshot));
+        .map(
+          (delegateSnapshot) =>
+              _JsonDocumentSnapshot(firestore, delegateSnapshot),
+        );
   }
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return _delegate.set(
-        _CodecUtility.replaceValueWithDelegatesInMap(data)!, options);
+      _CodecUtility.replaceValueWithDelegatesInMap(data)!,
+      options,
+    );
   }
 
   @override
@@ -229,6 +237,10 @@ class _WithConverterDocumentReference<T extends Object?>
   }
 
   @override
+  DocumentReferencePlatform get _delegate =>
+      _originalDocumentReference._delegate;
+
+  @override
   FirebaseFirestore get firestore => _originalDocumentReference.firestore;
 
   @override
@@ -296,7 +308,11 @@ class _WithConverterDocumentReference<T extends Object?>
 
   @override
   int get hashCode => hashValues(
-      runtimeType, _originalDocumentReference, _fromFirestore, _toFirestore);
+        runtimeType,
+        _originalDocumentReference,
+        _fromFirestore,
+        _toFirestore,
+      );
 
   @override
   String toString() => 'DocumentReference<$T>($path)';

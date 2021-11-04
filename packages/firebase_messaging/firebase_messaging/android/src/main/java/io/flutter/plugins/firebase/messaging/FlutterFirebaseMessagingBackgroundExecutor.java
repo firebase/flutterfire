@@ -17,7 +17,7 @@ import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.embedding.engine.FlutterShellArgs;
 import io.flutter.embedding.engine.dart.DartExecutor;
 import io.flutter.embedding.engine.dart.DartExecutor.DartCallback;
-import io.flutter.embedding.engine.plugins.shim.ShimPluginRegistry;
+import io.flutter.embedding.engine.loader.FlutterLoader;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -39,8 +39,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   private static final String CALLBACK_HANDLE_KEY = "callback_handle";
   private static final String USER_CALLBACK_HANDLE_KEY = "user_callback_handle";
 
-  private static io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
-      pluginRegistrantCallback;
   private final AtomicBoolean isCallbackDispatcherReady = new AtomicBoolean(false);
   /**
    * The {@link MethodChannel} that connects the Android side of this plugin with the background
@@ -49,19 +47,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   private MethodChannel backgroundChannel;
 
   private FlutterEngine backgroundFlutterEngine;
-
-  /**
-   * Sets the {@code io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback} used to
-   * register plugins with the newly spawned isolate.
-   *
-   * <p>Note: this is only necessary for applications using the V1 engine embedding API as plugins
-   * are automatically registered via reflection in the V2 engine embedding API. If not set,
-   * background message callbacks will not be able to utilize functionality from other plugins.
-   */
-  public static void setPluginRegistrant(
-      io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback callback) {
-    pluginRegistrantCallback = callback;
-  }
 
   /**
    * Sets the Dart callback handle for the Dart method that is responsible for initializing the
@@ -124,8 +109,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * <ul>
    *   <li>The given callback must correspond to a registered Dart callback. If the handle does not
    *       resolve to a Dart callback then this method does nothing.
-   *   <li>A static {@link #pluginRegistrantCallback} must exist, otherwise a {@link
-   *       PluginRegistrantException} will be thrown.
    * </ul>
    */
   public void startBackgroundIsolate() {
@@ -153,8 +136,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
    * <ul>
    *   <li>The given {@code callbackHandle} must correspond to a registered Dart callback. If the
    *       handle does not resolve to a Dart callback then this method does nothing.
-   *   <li>A static {@link #pluginRegistrantCallback} must exist, otherwise a {@link
-   *       PluginRegistrantException} will be thrown.
    * </ul>
    */
   public void startBackgroundIsolate(long callbackHandle, FlutterShellArgs shellArgs) {
@@ -163,16 +144,17 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
       return;
     }
 
+    FlutterLoader loader = new FlutterLoader();
     Handler mainHandler = new Handler(Looper.getMainLooper());
     Runnable myRunnable =
         () -> {
-          io.flutter.view.FlutterMain.startInitialization(ContextHolder.getApplicationContext());
-          io.flutter.view.FlutterMain.ensureInitializationCompleteAsync(
+          loader.startInitialization(ContextHolder.getApplicationContext());
+          loader.ensureInitializationCompleteAsync(
               ContextHolder.getApplicationContext(),
               null,
               mainHandler,
               () -> {
-                String appBundlePath = io.flutter.view.FlutterMain.findAppBundlePath();
+                String appBundlePath = loader.findAppBundlePath();
                 AssetManager assets = ContextHolder.getApplicationContext().getAssets();
                 if (isNotRunning()) {
                   if (shellArgs != null) {
@@ -199,13 +181,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
                       new DartCallback(assets, appBundlePath, flutterCallback);
 
                   executor.executeDartCallback(dartCallback);
-
-                  // The pluginRegistrantCallback should only be set in the V1 embedding as
-                  // plugin registration is done via reflection in the V2 embedding.
-                  if (pluginRegistrantCallback != null) {
-                    pluginRegistrantCallback.registerWith(
-                        new ShimPluginRegistry(backgroundFlutterEngine));
-                  }
                 }
               });
         };

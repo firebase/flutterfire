@@ -1,3 +1,29 @@
+## 6.1.2
+
+ - Update a dependency to the latest release.
+
+## 6.1.1
+
+ - **TEST**: Fix pre-existing HintCode.UNNECESSARY_TYPE_CHECK_TRUE (#6931).
+ - **FIX**: allow setLanguage to accept null (#7050).
+
+## 6.1.0
+
+ - **FEAT**: Add support for `secret` on `OAuthCredential` on web (#6830).
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
+## 6.0.1
+
+ - Update a dependency to the latest release.
+
+## 6.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: publish packages (#6513).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
 ## 5.0.0
 
 > Note: This release has breaking changes.

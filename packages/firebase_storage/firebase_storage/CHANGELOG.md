@@ -1,3 +1,39 @@
+## 10.0.6
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 10.0.5
+
+ - **FIX**: remove https port number from `downloadUrl` for `iOS` (#7097).
+
+## 10.0.4
+
+ - **FIX**: fix localhost url parsing for Storage Emulator (#7003).
+ - **CHORE**: update gradle version across packages (#7054).
+
+## 10.0.3
+
+ - **FIX**: accept google storage bucket urls (#6848).
+
+## 10.0.2
+
+ - Update a dependency to the latest release.
+
+## 10.0.1
+
+ - **FIX**: reinstate deprecated emulator apis (#6626).
+
+## 10.0.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Use `mappedHost` instead of `host` (#6539).
+ - **CHORE**: update v2 embedding support (#6506).
+ - **CHORE**: rm deprecated jcenter repository (#6431).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update.
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
 ## 9.0.0
 
 > Note: This release has breaking changes.

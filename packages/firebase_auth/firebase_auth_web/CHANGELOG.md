@@ -1,3 +1,32 @@
+## 3.1.3
+
+ - Update a dependency to the latest release.
+
+## 3.1.2
+
+ - **FIX**: null-safety migration issue for web types (#7137).
+
+## 3.1.1
+
+ - **FIX**: allow setLanguage to accept null (#7050).
+
+## 3.1.0
+
+ - **FEAT**: Add support for `secret` on `OAuthCredential` on web (#6830).
+ - **FEAT**: expose linkWithPopup() & correctly parse credentials in exceptions (#6562).
+
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **FEAT**: setSettings now possible for android (#6367).
+ - **CHORE**: catch native error verifyBeforeUpdateEmail() (#6473).
+ - **BREAKING** **FEAT**: use<product>Emulator(host, port) API update (#6439).
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

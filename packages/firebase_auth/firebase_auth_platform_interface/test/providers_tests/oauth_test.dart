@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -58,11 +59,13 @@ void main() {
 
     group('credential()', () {
       const String kMockAccessToken = 'test-token';
+      const String kMockSecret = 'test-secret';
       const String kMockIdToken = 'id';
       const String kMockRawNonce = 'test-raw-nonce';
       test('creates a new [OAuthCredential]', () {
         final result = oAuthProvider.credential(
             accessToken: kMockAccessToken,
+            secret: kMockSecret,
             idToken: kMockIdToken,
             rawNonce: kMockRawNonce);
 
@@ -71,6 +74,7 @@ void main() {
         expect(result.idToken, equals(kMockIdToken));
         expect(result.rawNonce, equals(kMockRawNonce));
         expect(result.accessToken, equals(kMockAccessToken));
+        expect(result.secret, equals(kMockSecret));
         expect(result.providerId, equals(kMockProviderId));
         expect(result.signInMethod, equals('oauth'));
       });

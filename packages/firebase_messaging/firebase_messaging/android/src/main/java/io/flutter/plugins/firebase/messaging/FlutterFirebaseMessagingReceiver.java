@@ -23,6 +23,13 @@ public class FlutterFirebaseMessagingReceiver extends BroadcastReceiver {
       ContextHolder.setApplicationContext(context.getApplicationContext());
     }
 
+    if (intent.getExtras() == null) {
+      Log.d(
+          TAG,
+          "broadcast received but intent contained no extras to process RemoteMessage. Operation cancelled.");
+      return;
+    }
+
     RemoteMessage remoteMessage = new RemoteMessage(intent.getExtras());
 
     // Store the RemoteMessage if the message contains a notification payload.

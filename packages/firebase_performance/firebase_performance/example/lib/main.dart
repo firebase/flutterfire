@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -6,20 +7,24 @@
 
 import 'dart:async';
 
-import 'package:http/http.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
-import 'package:firebase_performance/firebase_performance.dart';
-
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 void myLog(String msg) {
   print('My Log: $msg');
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  MyApp({Key key}) : super(key: key);
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -32,6 +37,8 @@ class _MetricHttpClient extends BaseClient {
 
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
+    // Custom network monitoring is not supported for web.
+    // https://firebase.google.com/docs/perf-mon/custom-network-traces?platform=android
     final HttpMetric metric = FirebasePerformance.instance
         .newHttpMetric(request.url.toString(), HttpMethod.Get);
 
@@ -83,9 +90,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _togglePerformanceCollection() async {
+    // No-op for web.
     await _performance
         .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
 
+    // Always true for web.
     final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
     setState(() {
       _isPerformanceCollectionEnabled = isEnabled;
@@ -138,6 +147,7 @@ class _MyAppState extends State<MyApp> {
     for (int i = 0; i < 10000000; i++) {
       sum += i;
     }
+    // Trace.setMetric is no-op for web
     await trace.setMetric('sum', sum);
     await trace.stop();
 

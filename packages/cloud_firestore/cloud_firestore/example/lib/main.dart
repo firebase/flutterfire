@@ -95,21 +95,7 @@ class FilmList extends StatefulWidget {
 }
 
 class _FilmListState extends State<FilmList> {
-  late Query<Movie> _moviesQuery;
-  late Stream<QuerySnapshot<Movie>> _movies;
-
-  @override
-  void initState() {
-    super.initState();
-    _updateMoviesQuery(MovieQuery.year);
-  }
-
-  void _updateMoviesQuery(MovieQuery query) {
-    setState(() {
-      _moviesQuery = moviesRef.queryBy(query);
-      _movies = _moviesQuery.snapshots();
-    });
-  }
+  MovieQuery query = MovieQuery.year;
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +122,7 @@ class _FilmListState extends State<FilmList> {
         ),
         actions: <Widget>[
           PopupMenuButton<MovieQuery>(
-            onSelected: _updateMoviesQuery,
+            onSelected: (value) => setState(() => query = value),
             icon: const Icon(Icons.sort),
             itemBuilder: (BuildContext context) {
               return [
@@ -181,7 +167,7 @@ class _FilmListState extends State<FilmList> {
         ],
       ),
       body: StreamBuilder<QuerySnapshot<Movie>>(
-        stream: _movies,
+        stream: moviesRef.queryBy(query).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(

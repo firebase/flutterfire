@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -6,7 +7,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:cloud_firestore_platform_interface/src/internal/pointer.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'method_channel_firestore.dart';
 import 'method_channel_query_snapshot.dart';
@@ -16,21 +19,20 @@ import 'utils/exception.dart';
 /// An implementation of [QueryPlatform] that uses [MethodChannel] to
 /// communicate with Firebase plugins.
 class MethodChannelQuery extends QueryPlatform {
-  /// Flags whether the current query is for a collection group.
-  @override
-  final bool isCollectionGroupQuery;
-
   /// Create a [MethodChannelQuery] from a [path] and optional [parameters]
   MethodChannelQuery(
     FirebaseFirestorePlatform _firestore,
     String path, {
     Map<String, dynamic>? parameters,
     this.isCollectionGroupQuery = false,
-  }) : super(_firestore, parameters) {
-    _pointer = Pointer(path);
-  }
+  })  : _pointer = Pointer(path),
+        super(_firestore, parameters);
 
-  late Pointer _pointer;
+  /// Flags whether the current query is for a collection group.
+  @override
+  final bool isCollectionGroupQuery;
+
+  final Pointer _pointer;
 
   /// Returns the Document path that that this query relates to.
   String get path {
@@ -206,4 +208,23 @@ class MethodChannelQuery extends QueryPlatform {
       'where': conditions,
     });
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is MethodChannelQuery &&
+        other.firestore == firestore &&
+        other._pointer == _pointer &&
+        other.isCollectionGroupQuery == isCollectionGroupQuery &&
+        const DeepCollectionEquality().equals(other.parameters, parameters);
+  }
+
+  @override
+  int get hashCode => hashValues(
+        runtimeType,
+        firestore,
+        _pointer,
+        isCollectionGroupQuery,
+        const DeepCollectionEquality().hash(parameters),
+      );
 }

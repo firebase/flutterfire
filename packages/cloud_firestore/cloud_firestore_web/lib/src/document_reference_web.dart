@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -6,7 +7,7 @@ import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_inte
 
 import 'internals.dart';
 import 'utils/web_utils.dart';
-import 'utils/codec_utility.dart';
+import 'utils/encode_utility.dart';
 import 'interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for Firestore [DocumentReferencePlatform].
@@ -30,7 +31,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
     return guard(
       () => _delegate.set(
-        CodecUtility.encodeMapData(data)!,
+        EncodeUtility.encodeMapData(data)!,
         convertSetOptions(options),
       ),
     );
@@ -38,7 +39,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> update(Map<String, dynamic> data) {
-    return guard(() => _delegate.update(CodecUtility.encodeMapData(data)!));
+    return guard(() => _delegate.update(EncodeUtility.encodeMapData(data)!));
   }
 
   @override

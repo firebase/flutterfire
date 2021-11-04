@@ -9,6 +9,7 @@ part of cloud_firestore;
 /// Can construct refined [Query] objects by adding filters and ordering.
 // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
 @sealed
+@immutable
 abstract class Query<T extends Object?> {
   /// The [FirebaseFirestore] instance of this query.
   FirebaseFirestore get firestore;
@@ -645,17 +646,18 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     if (whereIn != null) addCondition(field, 'in', whereIn);
     if (whereNotIn != null) addCondition(field, 'not-in', whereNotIn);
     if (isNull != null) {
-      assert(
-          isNull,
-          'isNull can only be set to true. '
-          'Use isEqualTo to filter on non-null values.');
-      addCondition(field, '==', null);
+      if (isNull == true) {
+        addCondition(field, '==', null);
+      } else {
+        addCondition(field, '!=', null);
+      }
     }
 
     dynamic hasInequality;
     bool hasIn = false;
     bool hasNotIn = false;
     bool hasNotEqualTo = false;
+    bool hasNotEqualToOperatorAndNotDocumentIdField = false;
     bool hasArrayContains = false;
     bool hasArrayContainsAny = false;
     bool hasDocumentIdField = false;
@@ -678,17 +680,19 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
         );
       }
 
-      if (field == FieldPath.documentId) {
+      if (field != FieldPath.documentId && hasDocumentIdField) {
         assert(
-          !hasNotEqualTo,
-          "You cannot use '!=' filters with a FieldPath.documentId field.",
+          operator != '!=',
+          "You cannot use '!=' filters whilst using a FieldPath.documentId field in another filter.",
         );
-        hasDocumentIdField = true;
       }
 
-      if (value == null) {
-        assert(operator == '==',
-            'You can only perform equals comparisons on null.');
+      if (field == FieldPath.documentId) {
+        assert(
+          !hasNotEqualToOperatorAndNotDocumentIdField,
+          "You cannot use FieldPath.documentId field whilst using a '!=' filter on a different field.",
+        );
+        hasDocumentIdField = true;
       }
 
       if (operator == 'in' ||
@@ -715,9 +719,12 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       if (operator == '!=') {
         assert(!hasNotEqualTo, "You cannot use '!=' filters more than once.");
         assert(!hasNotIn, "You cannot use '!=' filters with 'not-in' filters.");
-        assert(!hasDocumentIdField,
-            "You cannot use a FieldPath.documentId field with '!=' filters.");
+
         hasNotEqualTo = true;
+
+        if (field != FieldPath.documentId) {
+          hasNotEqualToOperatorAndNotDocumentIdField = true;
+        }
       }
 
       if (isNotIn(operator)) {
@@ -750,8 +757,10 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       }
 
       if (operator == 'array-contains-any' || operator == 'in') {
-        assert(!(hasIn && hasArrayContainsAny),
-            "You cannot use 'in' filters with 'array-contains-any' filters.");
+        assert(
+          !(hasIn && hasArrayContainsAny),
+          "You cannot use 'in' filters with 'array-contains-any' filters.",
+        );
       }
 
       if (operator == 'array-contains' || operator == 'array-contains-any') {
@@ -788,6 +797,17 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _JsonQuery &&
+        other.firestore == firestore &&
+        other._delegate == _delegate;
+  }
+
+  @override
+  int get hashCode => hashValues(runtimeType, firestore, _delegate);
 }
 
 class _WithConverterQuery<T extends Object?> implements Query<T> {
@@ -829,11 +849,13 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
   Stream<QuerySnapshot<T>> snapshots({bool includeMetadataChanges = false}) {
     return _originalQuery
         .snapshots(includeMetadataChanges: includeMetadataChanges)
-        .map((snapshot) => _WithConverterQuerySnapshot<T>(
-              snapshot,
-              _fromFirestore,
-              _toFirestore,
-            ));
+        .map(
+          (snapshot) => _WithConverterQuerySnapshot<T>(
+            snapshot,
+            _fromFirestore,
+            _toFirestore,
+          ),
+        );
   }
 
   @override
@@ -853,7 +875,7 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
 
   @override
   Query<T> endBeforeDocument(DocumentSnapshot documentSnapshot) {
-    return _mapQuery(_originalQuery.endAtDocument(documentSnapshot));
+    return _mapQuery(_originalQuery.endBeforeDocument(documentSnapshot));
   }
 
   @override
@@ -935,4 +957,17 @@ class _WithConverterQuery<T extends Object?> implements Query<T> {
       toFirestore,
     );
   }
+
+  @override
+  bool operator ==(Object other) {
+    return runtimeType == other.runtimeType &&
+        other is _WithConverterQuery<T> &&
+        other._fromFirestore == _fromFirestore &&
+        other._toFirestore == _toFirestore &&
+        other._originalQuery == _originalQuery;
+  }
+
+  @override
+  int get hashCode =>
+      hashValues(runtimeType, _fromFirestore, _toFirestore, _originalQuery);
 }

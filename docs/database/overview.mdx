@@ -3,10 +3,6 @@ title: Realtime Database
 sidebar_label: Overview
 ---
 
-:::caution
-This is a beta FlutterFire plugin and therefore is not yet production quality.
-:::
-
 ##  What does it do?
 
 The Firebase Realtime Database is a cloud-hosted database. Data is stored as JSON and
@@ -28,10 +24,6 @@ values={[
 <TabItem value="legacy">
 </TabItem>
 <TabItem value="null-safe">
-
-:::caution
-This package version is not null safe migrated yet, but has been implemented to be compatible with other null safe FlutterFire packages.
-:::
 
 Ensure you're using the Flutter `stable` channel:
 
@@ -98,7 +90,17 @@ $ flutter pub get
 
 ### 3. (Web Only) Add the SDK
 
-> Web is currently not supported. See the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
+If using FlutterFire on the web, add the [`firebase-database`](!firebase_database) JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-database.js"></script>
+  </body>
+</html>
+```
 
 ### 4. Rebuild your app
 

@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -75,9 +76,7 @@ void main() {
   };
 
   Future<void> mockSignIn() async {
-    if (auth is FirebaseAuthPlatform) {
-      await auth.signInAnonymously();
-    }
+    await auth.signInAnonymously();
   }
 
   void verifyUser(UserPlatform user) {

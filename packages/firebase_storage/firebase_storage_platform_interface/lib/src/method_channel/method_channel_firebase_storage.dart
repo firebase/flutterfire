@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,8 +8,8 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-import '../../firebase_storage_platform_interface.dart';
 import './utils/exception.dart';
+import '../../firebase_storage_platform_interface.dart';
 import 'method_channel_reference.dart';
 import 'method_channel_task_snapshot.dart';
 

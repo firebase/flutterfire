@@ -130,8 +130,10 @@ class FirebaseFirestore extends FirebasePluginPlatform {
 
   /// Reads a [QuerySnapshot] if a namedQuery has been retrieved and passed as a [Buffer] to [loadBundle()]. To read from cache, pass [GetOptions.source] value as [Source.cache].
   /// To read from the Firestore backend, use [GetOptions.source] as [Source.server].
-  Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(String name,
-      {GetOptions options = const GetOptions()}) async {
+  Future<QuerySnapshot<Map<String, dynamic>>> namedQueryGet(
+    String name, {
+    GetOptions options = const GetOptions(),
+  }) async {
     QuerySnapshotPlatform snapshotDelegate =
         await _delegate.namedQueryGet(name, options: options);
     return _JsonQuerySnapshot(FirebaseFirestore.instance, snapshotDelegate);
@@ -209,14 +211,19 @@ class FirebaseFirestore extends FirebasePluginPlatform {
   /// reads are performed before any writes. Transactions must be performed
   /// while online. Otherwise, reads will fail, and the final commit will fail.
   ///
-  /// By default transactions are limited to 5 seconds of execution time. This
+  /// By default transactions are limited to 30 seconds of execution time. This
   /// timeout can be adjusted by setting the timeout parameter.
-  Future<T> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) async {
+  Future<T> runTransaction<T>(
+    TransactionHandler<T> transactionHandler, {
+    Duration timeout = const Duration(seconds: 30),
+  }) async {
     late T output;
-    await _delegate.runTransaction((transaction) async {
-      output = await transactionHandler(Transaction._(this, transaction));
-    }, timeout: timeout);
+    await _delegate.runTransaction(
+      (transaction) async {
+        output = await transactionHandler(Transaction._(this, transaction));
+      },
+      timeout: timeout,
+    );
 
     return output;
   }
