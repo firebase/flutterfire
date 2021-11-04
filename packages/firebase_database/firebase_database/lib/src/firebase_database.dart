@@ -71,6 +71,13 @@ class FirebaseDatabase extends FirebasePluginPlatform {
     return DatabaseReference._(_delegate.ref(path));
   }
 
+  /// Returns a [DatabaseReference] representing the location in the Database
+  /// corresponding to the provided Firebase URL.
+  DatabaseReference refFromURL(String url) {
+    // TODO Ref from URL support
+    return DatabaseReference._(_delegate.ref('/'));
+  }
+
   /// Attempts to sets the database persistence to [enabled].
   ///
   /// This property must be set before calling methods on database references
