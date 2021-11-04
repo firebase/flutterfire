@@ -1,7 +1,7 @@
 name: FlutterFire
 
 packages:
-  - packages/**
+  - packages/cloud_firestore/**
 
 ignore:
   # TODO Excluded - pending rewrite to use latest SDKs.
