@@ -31,10 +31,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }) async {
     firebase.App? app;
 
-    if (name == defaultFirebaseAppName) {
-      throw noDefaultAppInitialization();
-    }
-
     if (name == null) {
       assert(() {
         try {
