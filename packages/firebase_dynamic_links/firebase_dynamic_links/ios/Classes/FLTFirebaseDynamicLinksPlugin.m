@@ -11,16 +11,10 @@
 NSString *const kFLTFirebaseDynamicLinksChannelName = @"plugins.flutter.io/firebase_dynamic_links";
 NSString *const kAppName = @"appName";
 NSString *const kUrl = @"url";
+NSString *const kCode = @"code";
+NSString *const kMessage = @"message";
 NSString *const kDynamicLinkParametersOptions = @"dynamicLinkParametersOptions";
 NSString *const kDefaultAppName = @"[DEFAULT]";
-
-static FlutterError *convertFlutterError(NSError *error) {
-  return [FLTFirebasePlugin
-      createFlutterErrorFromCode:[NSString stringWithFormat:@"%d", (int)error.code]
-                         message:error.domain
-                 optionalDetails:nil
-              andOptionalNSError:error];
-}
 
 static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamicLink) {
   if (dynamicLink != nil) {
@@ -38,16 +32,31 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
   }
 }
 
-static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
+static NSDictionary *getDictionaryFromNSError(NSError *error) {
+  NSString *code = @"unknown";
+  NSString *message = @"An unknown error has occurred.";
   if (error == nil) {
-    return nil;
+    return @{
+          kCode : code,
+          kMessage : message,
+          @"additionalData" : @{},
+        };
   }
 
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
-  dictionary[@"code"] = error.code;
-  dictionary[@"message"] = error.message;
-  dictionary[@"details"] = error.details;
-  return dictionary;
+  dictionary[kCode] = [NSString stringWithFormat:@"%d", (int)error.code];
+  dictionary[kMessage] = [error localizedDescription];
+  id additionalData = [NSMutableDictionary dictionary];
+
+  if([error userInfo] != nil){
+    additionalData = [error userInfo];
+  }
+
+  return @{
+    kCode : code,
+    kMessage : message,
+    @"additionalData" : additionalData,
+  };
 }
 
 @implementation FLTFirebaseDynamicLinksPlugin {
@@ -108,16 +117,15 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
     if (code == nil) {
-      NSString *code = @"unknown";
-      NSString *message = @"An unknown error has occurred.";
-      details = @{
-        @"code" : code,
-        @"message" : message,
-      };
+      NSDictionary *errorDetails = getDictionaryFromNSError(error);
+      code = errorDetails[kCode];
+      message = errorDetails[kMessage];
+      details = errorDetails;
     } else {
       details = @{
-        @"code" : code,
-        @"message" : message,
+        kCode : code,
+        kMessage : message,
+        @"additionalData" : @{},
       };
     }
 
@@ -213,8 +221,8 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
   _initiated = YES;
   NSMutableDictionary *dict = getDictionaryFromDynamicLink(_initialLink);
-  if (dict == nil && self.flutterError != nil) {
-    result.error(self.flutterError.code, self.flutterError.message, self.flutterError.details, nil);
+  if (dict == nil && self.initialError != nil) {
+    result.error(nil, nil, nil, self.initialError);
   } else {
     result.success(dict);
   }
@@ -312,12 +320,18 @@ static NSMutableDictionary *getDictionaryFromFlutterError(FlutterError *error) {
 // Used to action events from firebase-ios-sdk custom & universal dynamic link event listeners
 - (void)onDeepLinkResult:(FIRDynamicLink *_Nullable)dynamicLink error:(NSError *_Nullable)error {
   if (error) {
-    FlutterError *flutterError = convertFlutterError(error);
 
     if (_initialLink == nil) {
       // store initial error to pass back to user if getInitialLink is called
-      _flutterError = flutterError;
+      _initialError = error;
     }
+
+    NSDictionary * errorDetails = getDictionaryFromNSError(error);
+
+    FlutterError * flutterError = [FLTFirebasePlugin createFlutterErrorFromCode:errorDetails[kCode]
+                                                 message:errorDetails[kMessage]
+                                         optionalDetails:errorDetails
+                               andOptionalNSError:error];
 
     NSLog(@"FLTFirebaseDynamicLinks: Unknown error occurred when attempting to handle a dynamic "
           @"link: %@",

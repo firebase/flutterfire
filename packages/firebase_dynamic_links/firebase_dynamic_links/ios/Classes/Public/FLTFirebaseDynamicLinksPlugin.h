@@ -3,10 +3,11 @@
 // found in the LICENSE file.
 
 #import <Flutter/Flutter.h>
+#import <firebase_core/FLTFirebasePlugin.h>
 
 @interface FLTFirebaseDynamicLinksPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 
-@property(nonatomic, retain) FlutterError *flutterError;
+@property(nonatomic, retain) NSError *initialError;
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
 @property(nonatomic, retain) FlutterMethodChannel *channel;
 @property(nonatomic, retain) FIRDynamicLink *initialLink;
