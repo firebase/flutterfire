@@ -9,28 +9,30 @@ part of firebase_database;
 /// Database and can be used for reading or writing data to that location.
 ///
 /// This class is the starting point for all Firebase Database operations.
-/// After you’ve obtained your first DatabaseReference via
-/// `FirebaseDatabase.ref()`, you can use it to read data
+/// After you’ve obtained your first `DatabaseReference` via
+/// `FirebaseDatabase.instance.ref()`, you can use it to read data
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 class DatabaseReference extends Query {
-  DatabaseReferencePlatform _databaseReferencePlatform;
+  DatabaseReferencePlatform _delegate;
 
-  DatabaseReference._(this._databaseReferencePlatform)
-      : super._(_databaseReferencePlatform);
+  DatabaseReference._(this._delegate) : super._(_delegate);
+
+  /// Obtains a [DatabaseReference] corresponding to this query's location.
+  DatabaseReference get ref => DatabaseReference._(_delegate.ref);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
   /// a deeper slash-separated path (e.g. ‘fred/name/first’).
   DatabaseReference child(String path) {
-    return DatabaseReference._(_databaseReferencePlatform.child(path));
+    return DatabaseReference._(_delegate.child(path));
   }
 
   /// Gets a DatabaseReference for the parent location. If this instance
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
   DatabaseReference? get parent {
-    final _platformParent = _databaseReferencePlatform.parent;
+    final _platformParent = _delegate.parent;
 
     if (_platformParent == null) {
       return null;
@@ -39,14 +41,14 @@ class DatabaseReference extends Query {
     return DatabaseReference._(_platformParent);
   }
 
-  /// Gets a FIRDatabaseReference for the root location.
-  DatabaseReference root() {
-    return DatabaseReference._(_databaseReferencePlatform.root());
+  /// Gets a [DatabaseReference] for the root location.
+  DatabaseReference get root {
+    return DatabaseReference._(_delegate.root());
   }
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
-  String get key => _databaseReferencePlatform.pathComponents.last;
+  String get key => _delegate.pathComponents.last;
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -56,7 +58,7 @@ class DatabaseReference extends Query {
   /// client-generated timestamp so that the resulting list will be
   /// chronologically-sorted.
   DatabaseReference push() {
-    return DatabaseReference._(_databaseReferencePlatform.push());
+    return DatabaseReference._(_delegate.push());
   }
 
   /// Write `value` to the location with the specified `priority` if applicable.
@@ -71,8 +73,8 @@ class DatabaseReference extends Query {
   ///
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
-  Future<void> set(dynamic value, {dynamic priority}) {
-    return _databaseReferencePlatform.set(value, priority: priority);
+  Future<void> set(Object? value, {Object? priority}) {
+    return _delegate.set(value, priority: priority);
   }
 
   /// Writes multiple values to the Database at once.
@@ -100,8 +102,8 @@ class DatabaseReference extends Query {
   ///
   /// Passing null to a [Map] value in [update] will remove the remove the value
   /// at the specified location.
-  Future<void> update(Map<String, dynamic> value) {
-    return _databaseReferencePlatform.update(value);
+  Future<void> update(Map<String, Object?> value) {
+    return _delegate.update(value);
   }
 
   /// Sets a priority for the data at this Firebase Database location.
@@ -128,8 +130,8 @@ class DatabaseReference extends Query {
   /// Note that priorities are parsed and ordered as IEEE 754 double-precision
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
-  Future<void> setPriority(dynamic priority) async {
-    return _databaseReferencePlatform.setPriority(priority);
+  Future<void> setPriority(Object? priority) async {
+    return _delegate.setPriority(priority);
   }
 
   /// Remove the data at this Firebase Database location. Any data at child
@@ -149,7 +151,7 @@ class DatabaseReference extends Query {
     Duration timeout = const Duration(seconds: 5),
   }) async {
     try {
-      final transactionResult = await _databaseReferencePlatform.runTransaction(
+      final transactionResult = await _delegate.runTransaction(
         transactionHandler,
         timeout: timeout,
       );
@@ -162,8 +164,9 @@ class DatabaseReference extends Query {
     }
   }
 
+  /// Returns an [OnDisconnect] instance.
   OnDisconnect onDisconnect() {
-    return OnDisconnect._(_databaseReferencePlatform.onDisconnect());
+    return OnDisconnect._(_delegate.onDisconnect());
   }
 }
 

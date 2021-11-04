@@ -46,12 +46,23 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   DatabasePlatform? _delegatePackingProperty;
 
   DatabasePlatform get _delegate {
-    _delegatePackingProperty ??= DatabasePlatform.instance;
-    return _delegatePackingProperty!;
+    return _delegatePackingProperty ??= DatabasePlatform.instance;
   }
 
   @visibleForTesting
   static MethodChannel get channel => MethodChannelDatabase.channel;
+
+  /// Changes this instance to point to a FirebaseDatabase emulator running locally.
+  ///
+  /// Set the [host] of the local emulator, such as "localhost"
+  /// Set the [port] of the local emulator, such as "9000" (default is 9000)
+  ///
+  /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
+  /// Do not use with production credentials as emulator traffic is not encrypted.
+  void useDatabaseEmulator(String host, int port) {
+    // TODO emulator support... Check Firestore, it handles android ports.
+    // _delegate.useEmulator(host, port);
+  }
 
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided path.

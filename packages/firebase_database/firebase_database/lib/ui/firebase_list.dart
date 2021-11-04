@@ -6,7 +6,7 @@
 import 'dart:collection';
 
 import '../firebase_database.dart'
-    show DatabaseError, DataSnapshot, Event, Query;
+    show DatabaseError, DataSnapshot, DatabaseEvent, Query;
 import 'utils/stream_subscriber_mixin.dart';
 
 typedef ChildCallback = void Function(int index, DataSnapshot snapshot);
@@ -19,7 +19,7 @@ typedef ErrorCallback = void Function(DatabaseError error);
 class FirebaseList extends ListBase<DataSnapshot>
     with
         // ignore: prefer_mixin
-        StreamSubscriberMixin<Event> {
+        StreamSubscriberMixin<DatabaseEvent> {
   FirebaseList({
     required this.query,
     this.onChildAdded,
@@ -103,7 +103,7 @@ class FirebaseList extends ListBase<DataSnapshot>
     throw FallThroughError();
   }
 
-  void _onChildAdded(Event event) {
+  void _onChildAdded(DatabaseEvent event) {
     int index = 0;
     if (event.previousChildKey != null) {
       index = _indexForKey(event.previousChildKey!) + 1;
@@ -112,19 +112,19 @@ class FirebaseList extends ListBase<DataSnapshot>
     onChildAdded!(index, event.snapshot);
   }
 
-  void _onChildRemoved(Event event) {
+  void _onChildRemoved(DatabaseEvent event) {
     final index = _indexForKey(event.snapshot.key!);
     _snapshots.removeAt(index);
     onChildRemoved!(index, event.snapshot);
   }
 
-  void _onChildChanged(Event event) {
+  void _onChildChanged(DatabaseEvent event) {
     final index = _indexForKey(event.snapshot.key!);
     _snapshots[index] = event.snapshot;
     onChildChanged!(index, event.snapshot);
   }
 
-  void _onChildMoved(Event event) {
+  void _onChildMoved(DatabaseEvent event) {
     final fromIndex = _indexForKey(event.snapshot.key!);
     _snapshots.removeAt(fromIndex);
 
@@ -137,7 +137,7 @@ class FirebaseList extends ListBase<DataSnapshot>
     onChildMoved!(fromIndex, toIndex, event.snapshot);
   }
 
-  void _onValue(Event event) {
+  void _onValue(DatabaseEvent event) {
     onValue!(event.snapshot);
   }
 

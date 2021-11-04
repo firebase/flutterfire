@@ -5,14 +5,18 @@
 
 part of firebase_database;
 
-/// `Event` encapsulates a DataSnapshot and possibly also the key of its
+/// `DatabaseEvent` encapsulates a DataSnapshot and possibly also the key of its
 /// previous sibling, which can be used to order the snapshots.
-class Event {
+class DatabaseEvent {
   final EventPlatform _delegate;
 
-  Event._(this._delegate);
+  DatabaseEvent._(this._delegate);
 
+  /// The type of event.
   EventType get type => _delegate.type;
+
+  /// The [DataSnapshot] for this event.
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
+
   String? get previousChildKey => _delegate.previousChildKey;
 }

@@ -14,7 +14,7 @@ class DataSnapshot {
   DatabaseReference get ref => DatabaseReference._(_delegate.ref);
 
   /// Returns the contents of this data snapshot as native types.
-  dynamic get value => _delegate.value;
+  Object? get value => _delegate.value;
 
   /// Gets the priority value of the data in this [DataSnapshot].
   Object? get priority => _delegate.priority;
