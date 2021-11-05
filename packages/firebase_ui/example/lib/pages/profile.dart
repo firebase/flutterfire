@@ -1,9 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui/auth/apple.dart';
+import 'package:firebase_ui/auth/facebook.dart';
+import 'package:firebase_ui/auth/google.dart';
+import 'package:firebase_ui/auth/twitter.dart';
 import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/responsive.dart';
+import 'package:firebase_ui_example/config.dart';
 import 'package:firebase_ui_example/widgets/email_verification_button.dart';
 import 'package:firebase_ui_example/widgets/user_field_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'phone_auth_flow.dart';
 
@@ -78,31 +84,33 @@ class _ProfileState extends State<Profile> {
                           'Link providers',
                           style: Theme.of(context).textTheme.overline,
                         ),
-                        AuthFlowBuilder<OAuthController>(
-                          action: AuthAction.link,
-                          listener: (_, newState, ctrl) {
+                        AuthStateListener<AuthController>(
+                          listener: (oldState, newState, controller) {
                             if (newState is CredentialLinked) {
                               u.reload().then((_) {
-                                print(u.providerData);
                                 setState(() {});
+                                controller.reset();
                               });
-                              ctrl.reset();
                             }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               if (!u.isProviderLinked<Google>())
-                                ProviderButton.icon<Google>(),
+                                const GoogleSignInIconButton(),
                               if (!u.isProviderLinked<Apple>())
-                                ProviderButton.icon<Apple>(),
+                                const AppleSignInIconButton(),
                               if (!u.isProviderLinked<Twitter>())
-                                ProviderButton.icon<Twitter>(),
+                                const TwitterSignInIconButton(
+                                  apiKey: TWITTER_API_KEY,
+                                  apiSecretKey: TWITTER_API_SECRET_KEY,
+                                  redirectUri: TWITTER_REDIRECT_URI,
+                                ),
                               if (!u.isProviderLinked<Facebook>())
-                                ProviderButton.icon<Facebook>(),
+                                const FacebookSignInIconButton(),
                             ],
                           ),
-                        ),
+                        )
                       ],
                     ),
                   )

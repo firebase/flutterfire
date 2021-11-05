@@ -1,6 +1,10 @@
+import 'package:firebase_ui/auth/apple.dart';
+import 'package:firebase_ui/auth/facebook.dart';
+import 'package:firebase_ui/auth/twitter.dart';
+import 'package:firebase_ui_example/config.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/responsive.dart';
+import 'package:firebase_ui/auth/google.dart';
 
 import 'phone_auth_flow.dart';
 
@@ -13,8 +17,8 @@ class Login extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Login'),
       ),
-      body: Body(
-        child: SignInForm(
+      body: SingleChildScrollView(
+        child: EmailSignInForm(
           surfaceBuilder: (context, child) {
             return Card(child: child);
           },
@@ -33,23 +37,20 @@ class Login extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16).copyWith(top: 0),
-              child: AuthFlowBuilder<OAuthController>(
-                action: AuthAction.signIn,
-                builder: (_, state, __, child) {
-                  if (state is SigningIn) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  return child!;
-                },
-                child: Column(
-                  children: const [
-                    ProviderButton<Google>(),
-                    ProviderButton<Apple>(),
-                    ProviderButton<Twitter>(),
-                    ProviderButton<Facebook>(),
-                  ],
-                ),
+              child: Column(
+                children: const [
+                  GoogleSignInButton(
+                    clientId: GOOGLE_CLIENT_ID,
+                    redirectUri: GOOGLE_REDIRECT_URI,
+                  ),
+                  AppleSignInButton(),
+                  TwitterSignInButton(
+                    apiKey: TWITTER_API_KEY,
+                    apiSecretKey: TWITTER_API_SECRET_KEY,
+                    redirectUri: TWITTER_REDIRECT_URI,
+                  ),
+                  FacebookSignInButton(),
+                ],
               ),
             ),
           ],
