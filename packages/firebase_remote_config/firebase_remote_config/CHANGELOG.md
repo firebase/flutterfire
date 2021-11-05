@@ -1,3 +1,12 @@
+## 1.0.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.0
+
+ - **FEAT**: Add initial platform support for Web.
+ - Bump "firebase_remote_config" to stable versioning `0.x.x` -> `x.x.x`.
+
 ## 0.11.0+2
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).

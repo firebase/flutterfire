@@ -1,3 +1,7 @@
+## 2.2.5
+
+ - Update a dependency to the latest release.
+
 ## 2.2.4
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).

@@ -1,3 +1,7 @@
+## 0.5.0+12
+
+ - **REFACTOR**: update example app to use latest Firebase Analytics plugin APIs.
+
 ## 0.5.0+11
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
