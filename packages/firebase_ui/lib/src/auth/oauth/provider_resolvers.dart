@@ -1,4 +1,3 @@
-import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/auth/oauth/buttons/apple_provider_button_style.dart';
 import 'package:firebase_ui/src/auth/oauth/buttons/facebook_provider_button_style.dart';
 import 'package:firebase_ui/src/auth/oauth/buttons/google_provider_button_style.dart';
@@ -7,6 +6,7 @@ import 'package:firebase_ui/src/auth/oauth/buttons/twitter_provider_button.dart'
 import 'package:flutter/widgets.dart';
 
 import 'oauth_providers.dart';
+import 'social_icons.dart';
 
 const GOOGLE_PROVIDER_ID = 'google.com';
 const APPLE_PROVIDER_ID = 'apple.com';

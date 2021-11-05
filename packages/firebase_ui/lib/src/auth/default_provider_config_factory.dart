@@ -1,6 +1,8 @@
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/src/auth/provider_configuration.dart';
+
+import 'email/email_provider_configuration.dart';
+import 'phone/phone_provider_configuration.dart';
 
 ProviderConfiguration createDefaltProviderConfig<T extends AuthController>() {
   switch (T) {

@@ -8,6 +8,7 @@ import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 
 import 'package:twitter_login/twitter_login.dart';
 
+import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
 class TwitterProviderImpl extends Twitter {

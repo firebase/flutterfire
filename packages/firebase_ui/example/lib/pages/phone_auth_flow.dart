@@ -1,6 +1,7 @@
-import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/responsive.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/responsive.dart';
 
 class PhoneAuthFlow extends StatelessWidget {
   final AuthAction authMethod;
