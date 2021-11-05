@@ -90,6 +90,7 @@ class MethodChannelFirebase extends FirebasePlatform {
             'options': options.asMap
           },
         ))!);
+        defaultApp = appInstances[defaultFirebaseAppName];
       }
 
       // If there is no native default app and the user didnt provide options to
@@ -98,11 +99,18 @@ class MethodChannelFirebase extends FirebasePlatform {
         throw coreNotInitialized();
       }
 
-      // If there is a native default app and the user provided options,
-      // then throw because they're trying to re-initialize an app which doesn't
-      // exist?
+      // If there is a native default app and the user provided options do a soft
+      // check to see if options are roughly identical (so we don't unnecessarily
+      // throw on minor differences such as platform specific keys missing
+      // e.g. hot reloads/restarts).
       if (defaultApp != null && options != null) {
-        throw duplicateApp(defaultFirebaseAppName);
+        if (options.apiKey != defaultApp.options.apiKey ||
+            options.databaseURL != defaultApp.options.databaseURL ||
+            options.storageBucket != defaultApp.options.storageBucket) {
+          // Options are different; throw.
+          throw duplicateApp(defaultFirebaseAppName);
+        }
+        // Options are roughly the same; so we'll return the existing app.
       }
 
       return appInstances[defaultFirebaseAppName]!;

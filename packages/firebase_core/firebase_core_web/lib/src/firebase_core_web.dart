@@ -64,7 +64,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
         app = firebase.app();
 
         if (options != null) {
-          throw duplicateApp(defaultFirebaseAppName);
+          // If there is a default app already and the user provided options do a soft
+          // check to see if options are roughly identical (so we don't unnecessarily
+          // throw on minor differences such as platform specific keys missing,
+          // e.g. hot reloads/restarts).
+          if (options.apiKey != app.options.apiKey ||
+              options.databaseURL != app.options.databaseURL ||
+              options.storageBucket != app.options.storageBucket) {
+            // Options are different; throw.
+            throw duplicateApp(defaultFirebaseAppName);
+          }
+          // Options are roughly the same; so we'll return the existing app.
         }
       } catch (e) {
         // If the options check failed
