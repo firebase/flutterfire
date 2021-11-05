@@ -62,7 +62,16 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
       try {
         app = firebase.app();
+
+        if (options != null) {
+          throw duplicateApp(defaultFirebaseAppName);
+        }
       } catch (e) {
+        // If the options check failed
+        if (e is FirebaseException) {
+          rethrow;
+        }
+
         // TODO(ehesp): Better way of catching this in interop?
         if (e.toString().contains('Cannot read properties of undefined')) {
           throw coreNotInitialized();
@@ -70,6 +79,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
         // If there is no firebase default app, but the user provided options,
         // create it.
+        // ignore: invariant_booleans
         if (app == null && options != null) {
           app = firebase.initializeApp(
             apiKey: options.apiKey,
