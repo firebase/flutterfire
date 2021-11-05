@@ -45,7 +45,7 @@ class DatabaseReference extends Query {
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
-  String get key => _delegate.pathComponents.last;
+  String? get key => _delegate.key;
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -146,10 +146,12 @@ class DatabaseReference extends Query {
   Future<TransactionResult> runTransaction(
     TransactionHandler transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
+    bool applyLocally = true,
   }) async {
     final transactionResult = await _delegate.runTransaction(
       transactionHandler,
       timeout: timeout,
+      applyLocally: applyLocally,
     );
 
     return TransactionResult._(

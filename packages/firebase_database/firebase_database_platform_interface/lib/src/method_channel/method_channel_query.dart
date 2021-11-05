@@ -17,13 +17,19 @@ class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery({
     required DatabasePlatform database,
-    required List<String> pathComponents,
+    required this.pathComponents,
     Map<String, dynamic> parameters = const <String, dynamic>{},
   }) : super(
           database: database,
           parameters: parameters,
-          pathComponents: pathComponents,
         );
+
+  final List<String> pathComponents;
+
+  @override
+  String get path {
+    return pathComponents.join('/');
+  }
 
   MethodChannel get channel => MethodChannelDatabase.channel;
 
@@ -54,10 +60,6 @@ class MethodChannelQuery extends QueryPlatform {
           test: (err) => err is PlatformException,
         );
   }
-
-  /// Slash-delimited path representing the database location of this query.
-  @override
-  String get path => pathComponents.join('/');
 
   /// Gets the most up-to-date result for this query.
   @override

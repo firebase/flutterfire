@@ -11,15 +11,8 @@ class Query {
 
   final QueryPlatform _queryDelegate;
 
-  /// Slash-delimited path representing the database location of this query.
-  String get path => _queryDelegate.path;
-
   /// Obtains a [DatabaseReference] corresponding to this query's location.
   DatabaseReference get ref => DatabaseReference._(_queryDelegate.ref);
-
-  /// Listens for a single value event and then stops listening.
-  Future<DataSnapshot> once() async =>
-      DataSnapshot._(await _queryDelegate.once());
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {

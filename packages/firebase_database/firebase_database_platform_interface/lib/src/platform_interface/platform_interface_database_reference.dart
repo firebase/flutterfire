@@ -18,8 +18,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Create a [DatabaseReferencePlatform] using [pathComponents]
   DatabaseReferencePlatform._(
     DatabasePlatform database,
-    List<String> pathComponents,
-  ) : super(database: database, pathComponents: pathComponents);
+  ) : super(database: database);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
@@ -119,6 +118,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   Future<TransactionResultPlatform> runTransaction(
     TransactionHandler transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
+    bool applyLocally = true,
   }) async {
     throw UnimplementedError('runTransaction() not implemented');
   }

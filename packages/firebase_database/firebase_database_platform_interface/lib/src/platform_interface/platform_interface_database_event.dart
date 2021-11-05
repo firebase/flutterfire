@@ -31,9 +31,7 @@ const _eventTypesMap = {
   'DatabaseEventType.value': DatabaseEventType.value,
 };
 
-DatabaseEventType eventTypeFromString(String? value) {
-  if (value == null) throw Exception('DatabaseEventType string is null');
-
+DatabaseEventType eventTypeFromString(String value) {
   if (!_eventTypesMap.containsKey(value)) {
     throw Exception('Unknown event type: $value');
   }

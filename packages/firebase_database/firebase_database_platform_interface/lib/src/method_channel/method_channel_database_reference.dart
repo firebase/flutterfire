@@ -194,6 +194,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   Future<TransactionResultPlatform> runTransaction(
     TransactionHandler transactionHandler, {
     Duration timeout = const Duration(seconds: 5),
+    bool applyLocally = true,
   }) async {
     assert(
       timeout.inMilliseconds > 0,
@@ -213,6 +214,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
           'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': path,
+          'applyLocally': applyLocally,
           'transactionKey': key,
           'transactionTimeout': timeout.inMilliseconds
         },
@@ -221,7 +223,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       return TransactionResultPlatform(
         result!['committed'],
         // TODO can this be null? The TransactionResultPlatform suggests so
-        MethodChannelDataSnapshot(ref, result['snapshot']),
+        MethodChannelDataSnapshot(this, result['snapshot']),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
