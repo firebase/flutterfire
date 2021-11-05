@@ -58,7 +58,7 @@ public class Constants {
 
   public static final String METHOD_DO_TRANSACTION = "DoTransaction";
   public static final String TRANSACTION_KEY = "transactionKey";
-  public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
+  public static final String TRANSACTION_APPLY_LOCALLY = "transactionApplyLocally";
 
   // Custom error codes
   public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";

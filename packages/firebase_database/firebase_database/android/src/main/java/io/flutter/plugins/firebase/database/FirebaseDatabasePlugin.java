@@ -231,6 +231,18 @@ public class FirebaseDatabasePlugin
         });
   }
 
+  private Task<Void> setValueWithPriority(Map<String, Object> arguments) {
+    return Tasks.call(
+      cachedThreadPool,
+      () -> {
+        final DatabaseReference ref = getReference(arguments);
+        final Object value = arguments.get(Constants.VALUE);
+        final Object priority = arguments.get(Constants.PRIORITY);
+        Tasks.await(ref.setValue(value, priority));
+        return null;
+      });
+  }
+
   private Task<Void> update(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -250,10 +262,8 @@ public class FirebaseDatabasePlugin
         cachedThreadPool,
         () -> {
           final DatabaseReference ref = getReference(arguments);
-          final Object priority = Objects.requireNonNull(arguments.get(Constants.PRIORITY));
-
+          final Object priority = arguments.get(Constants.PRIORITY);
           Tasks.await(ref.setPriority(priority));
-
           return null;
         });
   }
@@ -266,16 +276,16 @@ public class FirebaseDatabasePlugin
 
           final int transactionKey =
               (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
-          final int transactionTimeout =
-              (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_TIMEOUT));
+          final boolean transactionApplyLocally =
+            (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
 
           final Activity activity = getActivity();
           final TransactionHandler handler =
               new TransactionHandler(methodChannel, transactionKey, activity);
 
-          ref.runTransaction(handler);
+          ref.runTransaction(handler, transactionApplyLocally);
 
-          Tasks.await(handler.getTask(), transactionTimeout, TimeUnit.MILLISECONDS);
+          Tasks.await(handler.getTask());
 
           return Tasks.await(handler.getTask());
         });
@@ -440,6 +450,9 @@ public class FirebaseDatabasePlugin
         break;
       case "DatabaseReference#set":
         methodCallTask = setValue(arguments);
+        break;
+      case "DatabaseReference#setWithPriority":
+        methodCallTask = setValueWithPriority(arguments);
         break;
       case "DatabaseReference#update":
         methodCallTask = update(arguments);
