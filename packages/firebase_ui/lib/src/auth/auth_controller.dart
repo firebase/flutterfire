@@ -25,12 +25,10 @@ abstract class AuthController {
   }
 
   AuthAction get action;
-
   FirebaseAuth get auth;
 
   Future<User?> signIn(AuthCredential credential);
   Future<void> link(AuthCredential credential);
-
   void reset();
 }
 

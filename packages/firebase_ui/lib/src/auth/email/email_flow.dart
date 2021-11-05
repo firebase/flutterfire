@@ -1,10 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart'
     show
+        ActionCodeSettings,
         AuthCredential,
         EmailAuthCredential,
         EmailAuthProvider,
         FirebaseAuth,
         UserCredential;
+
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart'
+    show FirebaseDynamicLinks;
 import 'package:firebase_ui/firebase_ui.dart';
 
 import 'package:firebase_ui/src/auth/auth_controller.dart';
@@ -34,41 +38,36 @@ class EmailVerified extends AuthState {}
 abstract class EmailFlowController extends AuthController {
   void setEmailAndPassword(String email, String password);
   Future<void> verifyEmail();
+  Future<void> verifyDeepLink(Uri deepLink);
 }
 
 class EmailFlow extends AuthFlow implements EmailFlowController {
   EmailFlow({
-    required FirebaseAuth auth,
-    required AuthAction action,
+    required this.config,
+    FirebaseAuth? auth,
+    AuthAction? action,
   }) : super(
           action: action,
           initialState: AwaitingEmailAndPassword(),
           auth: auth,
         );
 
+  final EmailProviderConfiguration config;
+
   @override
   void setEmailAndPassword(String email, String password) {
-    setCredential(
-      EmailAuthProvider.credential(email: email, password: password),
+    final credential = EmailAuthProvider.credential(
+      email: email,
+      password: password,
     );
+
+    setCredential(credential);
   }
 
   @override
-  Future<void> verifyEmail() async {
-    final authInitializer = resolveInitializer<FirebaseUIAuthInitializer>();
-    final deepLinks = resolveInitializer<FirebaseUIDynamicLinksInitializer>();
-
-    final settings = authInitializer
-        .configOf<EmailProviderConfiguration>(EMAIL_PROVIDER_ID)
-        .actionCodeSettings;
-
-    value = AwaitingEmailVerification();
-    await authInitializer.auth.currentUser!.sendEmailVerification(settings);
-
-    final link = await deepLinks.awaitLink();
-
+  Future<void> verifyDeepLink(Uri deepLink) async {
     try {
-      final code = link.queryParameters['oobCode']!;
+      final code = deepLink.queryParameters['oobCode']!;
       await auth.checkActionCode(code);
       await auth.applyActionCode(code);
       await auth.currentUser!.reload();
@@ -77,6 +76,14 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
     } on Exception catch (e) {
       value = EmailVerificationFailed(e);
     }
+  }
+
+  @override
+  Future<void> verifyEmail([ActionCodeSettings? actionCodeSettings]) async {
+    final settings = actionCodeSettings ?? config.actionCodeSettings;
+
+    value = AwaitingEmailVerification();
+    await auth.currentUser!.sendEmailVerification(settings);
   }
 
   @override
@@ -90,7 +97,6 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
 
         value = UserCreated(userCredential);
 
-        // TODO(@lesnitsky): handle email verification
         await signIn(credential);
       } else {
         await super.onCredentialReceived(credential);

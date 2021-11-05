@@ -6,7 +6,7 @@ import '../provider_configuration.dart';
 const EMAIL_PROVIDER_ID = 'password';
 
 class EmailProviderConfiguration extends ProviderConfiguration {
-  final ActionCodeSettings actionCodeSettings;
+  final ActionCodeSettings? actionCodeSettings;
 
   @override
   final providerId = EMAIL_PROVIDER_ID;
@@ -14,10 +14,10 @@ class EmailProviderConfiguration extends ProviderConfiguration {
   @override
   final controllerType = EmailFlowController;
 
-  EmailProviderConfiguration({required this.actionCodeSettings});
+  EmailProviderConfiguration({this.actionCodeSettings});
 
   @override
-  AuthFlow createFlow(FirebaseAuth auth, AuthAction action) {
-    return EmailFlow(auth: auth, action: action);
+  AuthFlow createFlow(FirebaseAuth? auth, AuthAction? action) {
+    return EmailFlow(auth: auth, action: action, config: this);
   }
 }

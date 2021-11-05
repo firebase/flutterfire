@@ -39,38 +39,43 @@ class PhoneVerificationAuthFlow extends AuthFlow
   final _smsCodeCompleter = Completer<String>();
 
   PhoneVerificationAuthFlow({
-    required FirebaseAuth auth,
-    required AuthAction action,
+    FirebaseAuth? auth,
+    AuthAction? action,
   }) : super(auth: auth, initialState: AwatingPhoneNumber(), action: action);
 
   @override
   Future<void> acceptPhoneNumber(String phoneNumber) async {
     value = SMSCodeRequested();
 
-    await auth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (credential) {
-        value = PhoneVerified(credential);
-        setCredential(credential);
-      },
-      verificationFailed: (exception) {
-        value = PhoneVerificationFailed(exception);
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        value = SMSCodeSent(resendToken);
-        final code = await _smsCodeCompleter.future;
-        final credential = PhoneAuthProvider.credential(
-          verificationId: verificationId,
-          smsCode: code,
-        );
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (credential) async {
+          value = PhoneVerified(credential);
+          await Future.delayed(const Duration(milliseconds: 300));
+          setCredential(credential);
+        },
+        verificationFailed: (exception) {
+          value = PhoneVerificationFailed(exception);
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          value = SMSCodeSent(resendToken);
+          final code = await _smsCodeCompleter.future;
+          final credential = PhoneAuthProvider.credential(
+            verificationId: verificationId,
+            smsCode: code,
+          );
 
-        setCredential(credential);
-      },
-      codeAutoRetrievalTimeout: (verificationId) {
-        // TODO: handle this properly
-        throw Exception('code autoresolution failed');
-      },
-    );
+          setCredential(credential);
+        },
+        codeAutoRetrievalTimeout: (verificationId) {
+          // TODO: handle this properly
+          throw Exception('code autoresolution failed');
+        },
+      );
+    } on Exception catch (err) {
+      value = AuthFailed(err);
+    }
   }
 
   @override

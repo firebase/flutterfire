@@ -1,6 +1,7 @@
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/facebook.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -16,10 +17,21 @@ class FacebookProviderImpl extends Facebook {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final user = await _provider.login();
-    final credential = FacebookAuthProvider.credential(user.accessToken!.token);
+    final result = await _provider.login();
 
-    return credential;
+    switch (result.status) {
+      case LoginStatus.success:
+        final credential =
+            FacebookAuthProvider.credential(result.accessToken!.token);
+
+        return credential;
+      case LoginStatus.cancelled:
+        throw AuthCancelledException();
+      case LoginStatus.failed:
+        throw Exception(result.message);
+      case LoginStatus.operationInProgress:
+        throw Exception('Previous login request is not complete');
+    }
   }
 
   @override

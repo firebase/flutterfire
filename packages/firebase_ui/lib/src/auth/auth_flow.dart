@@ -1,31 +1,51 @@
+// ignore_file: unnecessary_this
+
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../firebase_ui_init.dart';
 import 'auth_state.dart';
 import 'auth_controller.dart';
 
-abstract class AuthFlow extends ValueNotifier<AuthState>
-    with InitializerProvider
-    implements AuthController {
-  BuildContext? context;
+class AuthCancelledException implements Exception {
+  AuthCancelledException([this.message = 'User has cancelled auth']);
 
+  final String message;
+}
+
+abstract class AuthFlow extends ValueNotifier<AuthState>
+    implements AuthController {
   @override
   final FirebaseAuth auth;
-
   final AuthState initialState;
+  AuthAction? _action;
 
   @override
-  AuthAction action;
+  AuthAction get action {
+    if (_action != null) {
+      return _action!;
+    }
+
+    if (auth.currentUser != null) {
+      return AuthAction.link;
+    }
+
+    return AuthAction.signIn;
+  }
+
+  set action(AuthAction value) {
+    _action = value;
+  }
 
   AuthFlow({
-    required this.auth,
+    FirebaseAuth? auth,
+    AuthAction? action,
     required this.initialState,
-    required this.action,
-  }) : super(initialState);
+  })  : auth = auth ?? FirebaseAuth.instance,
+        _action = action,
+        super(initialState);
 
   void setCredential(AuthCredential credential) {
     onCredentialReceived(credential);
@@ -81,10 +101,6 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
     } on Exception catch (err) {
       value = AuthFailed(err);
     }
-  }
-
-  T resolveInitializer<T>() {
-    return getInitializerOfType<T>(context!);
   }
 
   @override

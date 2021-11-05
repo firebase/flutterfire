@@ -1,11 +1,93 @@
-import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_flow.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../oauth_providers.dart';
+import 'oauth_provider_button_style.dart';
+
+typedef ErrorCallback = void Function(Exception e);
+
+abstract class ProviderButtonFlowFactoryWidget<T extends StatefulWidget>
+    extends StatefulWidget {
+  const ProviderButtonFlowFactoryWidget({Key? key}) : super(key: key);
+
+  OAuthFlow createFlow(T widget);
+  Widget get child;
+
+  @override
+  _ProviderButtonFlowFactoryWidgetState createState() =>
+      _ProviderButtonFlowFactoryWidgetState();
+}
+
+class _ProviderButtonFlowFactoryWidgetState
+    extends State<ProviderButtonFlowFactoryWidget> {
+  late final flow = widget.createFlow(widget);
+
+  @override
+  Widget build(BuildContext context) {
+    return ProviderButtonContainer(
+      flow: flow,
+      child: widget.child,
+    );
+  }
+}
+
+class ProviderButtonContainer extends StatelessWidget {
+  final Widget child;
+  final OAuthFlow flow;
+  final ErrorCallback? onError;
+
+  const ProviderButtonContainer({
+    Key? key,
+    this.onError,
+    required this.flow,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthFlowBuilder<OAuthController>(
+      flow: flow,
+      listener: (prevState, state, controller) {
+        if (state is AuthFailed) {
+          onError?.call(state.exception);
+        }
+      },
+      child: child,
+    );
+  }
+}
+
+class LoadingIndicator extends StatelessWidget {
+  final double size;
+  final double borderWidth;
+  final OAuthProviderButtonStyle style;
+
+  const LoadingIndicator({
+    Key? key,
+    required this.size,
+    required this.borderWidth,
+    required this.style,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: CircularProgressIndicator(
+          strokeWidth: borderWidth * 2,
+          valueColor: AlwaysStoppedAnimation<Color>(style.color),
+        ),
+      ),
+    );
+  }
+}
 
 class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
   final double size;
@@ -24,7 +106,7 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
 
   void signIn(BuildContext context) {
     final ctrl = AuthController.ofType<OAuthController>(context);
-    ctrl.signInWithProvider<T>();
+    ctrl.signInWithProvider();
   }
 
   @override
@@ -35,6 +117,20 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
     final borderRadius = size / 3;
     const borderWidth = 1.0;
     final iconBorderRadius = borderRadius - borderWidth;
+
+    bool isLoading = AuthState.of(context) is SigningIn;
+
+    final content = isLoading
+        ? const SizedBox.shrink()
+        : Text(
+            'Sign in with $T',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              height: 1.1,
+              color: style.color,
+              fontSize: size,
+            ),
+          );
 
     return Container(
       margin: EdgeInsets.symmetric(vertical: margin),
@@ -51,30 +147,23 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(iconBorderRadius),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: _height,
-                      height: _height,
-                      child: SvgPicture.asset(
-                        style.iconSrc,
-                        package: 'firebase_ui',
-                        width: size,
-                        height: size,
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        'Sign in with $T',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          height: 1.1,
-                          color: style.color,
-                          fontSize: size,
+                child: SizedBox(
+                  height: _height,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: _height,
+                        height: _height,
+                        child: SvgPicture.asset(
+                          style.iconSrc,
+                          package: 'firebase_ui',
+                          width: size,
+                          height: size,
                         ),
                       ),
-                    ),
-                  ],
+                      Expanded(child: content),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -85,11 +174,20 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(borderRadius),
                 onTap: () {
+                  if (isLoading) return;
                   signIn(context);
                 },
               ),
             ),
-          )
+          ),
+          if (isLoading)
+            Positioned.fill(
+              child: LoadingIndicator(
+                size: size,
+                borderWidth: borderWidth,
+                style: style,
+              ),
+            ),
         ],
       ),
     );
@@ -103,6 +201,7 @@ class ProviderIconButton<T extends OAuthProvider> extends ProviderButton<T> {
   Widget build(BuildContext context) {
     final style = buttonStyle<T>().withBrightness(Theme.of(context).brightness);
     final borderRadius = BorderRadius.circular(size / 6);
+    bool isLoading = AuthState.of(context) is SigningIn;
 
     return Container(
       width: size,
@@ -116,12 +215,18 @@ class ProviderIconButton<T extends OAuthProvider> extends ProviderButton<T> {
         children: [
           ClipRRect(
             borderRadius: borderRadius,
-            child: SvgPicture.asset(
-              style.iconSrc,
-              package: 'firebase_ui',
-              width: size,
-              height: size,
-            ),
+            child: isLoading
+                ? LoadingIndicator(
+                    borderWidth: 1,
+                    size: size / 2,
+                    style: style,
+                  )
+                : SvgPicture.asset(
+                    style.iconSrc,
+                    package: 'firebase_ui',
+                    width: size,
+                    height: size,
+                  ),
           ),
           Positioned.fill(
             child: Material(

@@ -1,3 +1,4 @@
+import 'package:firebase_ui/auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show AuthCredential, User;
 
@@ -50,5 +51,49 @@ class AuthStateProvider extends InheritedWidget {
   @override
   bool updateShouldNotify(AuthStateProvider oldWidget) {
     return state != oldWidget.state;
+  }
+}
+
+class AuthStateTransition<T extends AuthController> extends Notification {
+  final AuthState from;
+  final AuthState to;
+  final T controller;
+
+  AuthStateTransition(this.from, this.to, this.controller);
+}
+
+typedef AuthStateListenerCallback<T extends AuthController> = bool? Function(
+  AuthState oldState,
+  AuthState state,
+  T controller,
+);
+
+class AuthStateListener<T extends AuthController> extends StatelessWidget {
+  final Widget child;
+  final AuthStateListenerCallback<T> listener;
+
+  const AuthStateListener({
+    Key? key,
+    required this.child,
+    required this.listener,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is AuthStateTransition<T>) {
+          return listener(
+                notification.from,
+                notification.to,
+                notification.controller,
+              ) ??
+              false;
+        }
+
+        return false;
+      },
+      child: child,
+    );
   }
 }

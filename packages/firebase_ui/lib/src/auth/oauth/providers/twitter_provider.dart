@@ -2,6 +2,7 @@ import 'package:desktop_webview_auth/src/provider_args.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 
@@ -37,10 +38,19 @@ class TwitterProviderImpl extends Twitter {
   Future<OAuthCredential> signIn() async {
     final result = await _provider.login();
 
-    return TwitterAuthProvider.credential(
-      accessToken: result.authToken!,
-      secret: result.authTokenSecret!,
-    );
+    switch (result.status) {
+      case null:
+        throw Exception('Unknown sign in result');
+      case TwitterLoginStatus.loggedIn:
+        return TwitterAuthProvider.credential(
+          accessToken: result.authToken!,
+          secret: result.authTokenSecret!,
+        );
+      case TwitterLoginStatus.cancelledByUser:
+        throw AuthCancelledException();
+      case TwitterLoginStatus.error:
+        throw Exception(result.errorMessage);
+    }
   }
 
   @override
