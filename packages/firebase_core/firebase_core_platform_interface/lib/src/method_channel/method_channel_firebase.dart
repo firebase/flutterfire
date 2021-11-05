@@ -76,10 +76,12 @@ class MethodChannelFirebase extends FirebasePlatform {
     // If no name is provided, attempt to get the default Firebase app instance.
     // If no instance is available, the user has not set up Firebase correctly for
     // their platform.
-    if (name == null) {
+    if (name == null || name == defaultFirebaseAppName) {
       MethodChannelFirebaseApp? defaultApp =
           appInstances[defaultFirebaseAppName];
-      // If options are present & no default app has been setup, the user is trying to initialize default from dart
+
+      // If options are present & no default app has been setup, the user is
+      // trying to initialize default from dart
       if (defaultApp == null && options != null) {
         _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
           'Firebase#initializeApp',
@@ -90,8 +92,17 @@ class MethodChannelFirebase extends FirebasePlatform {
         ))!);
       }
 
+      // If there is no native default app and the user didnt provide options to
+      // create one, throw.
       if (defaultApp == null && options == null) {
         throw coreNotInitialized();
+      }
+
+      // If there is a native default app and the user provided options,
+      // then throw because they're trying to re-initialize an app which doesn't
+      // exist?
+      if (defaultApp != null && options != null) {
+        throw duplicateApp(defaultFirebaseAppName);
       }
 
       return appInstances[defaultFirebaseAppName]!;

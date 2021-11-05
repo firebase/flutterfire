@@ -32,7 +32,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }) async {
     firebase.App? app;
 
-    if (name == null) {
+    if (name == null || name == defaultFirebaseAppName) {
       assert(() {
         try {
           if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
@@ -49,8 +49,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             );
           }
         } catch (e) {
-          // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-          // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+          // TODO(ehesp): Better way of catching this in interop?
           if (e
               .toString()
               .contains("Cannot read property 'SDK_VERSION' of undefined")) {
@@ -64,17 +63,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
       try {
         app = firebase.app();
       } catch (e) {
-        // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-        // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+        // TODO(ehesp): Better way of catching this in interop?
         if (e.toString().contains('Cannot read properties of undefined')) {
           throw coreNotInitialized();
         }
 
-        bool noDefaultApp = e
-            .toString()
-            .contains("No Firebase App '[DEFAULT]' has been created");
-
-        if (noDefaultApp && options != null) {
+        // If there is no firebase default app, but the user provided options,
+        // create it.
+        if (app == null && options != null) {
           app = firebase.initializeApp(
             apiKey: options.apiKey,
             authDomain: options.authDomain,
@@ -108,8 +104,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-        // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+        // TODO(ehesp): Better way of catching this in interop?
         if (e
             .toString()
             .contains("Cannot read property 'initializeApp' of undefined")) {
