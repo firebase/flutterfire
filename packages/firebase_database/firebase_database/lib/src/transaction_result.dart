@@ -8,4 +8,14 @@ class TransactionResult {
   TransactionResultPlatform _delegate;
 
   TransactionResult._(this._delegate);
+
+  /// The [committed] status associated to this transaction result.
+  bool get committed {
+    return _delegate.committed;
+  }
+
+  /// The [DataSnapshot] associated to this transaction result.
+  DataSnapshot get snapshot {
+    return DataSnapshot._(_delegate.snapshot);
+  }
 }
