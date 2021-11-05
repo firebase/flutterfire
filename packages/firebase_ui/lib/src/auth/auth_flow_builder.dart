@@ -1,6 +1,11 @@
+import 'package:firebase_ui/auth/facebook.dart';
+import 'package:firebase_ui/auth/google.dart';
 import 'package:firebase_ui/firebase_ui.dart';
+import 'package:firebase_ui/src/auth/oauth/default_provider_config_factory.dart';
+import 'package:firebase_ui/src/auth/provider_configuration.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart' show AuthCredential;
+import 'package:firebase_auth/firebase_auth.dart'
+    show AuthCredential, FirebaseAuth;
 
 import 'auth_controller.dart';
 import 'auth_flow.dart';
@@ -20,10 +25,13 @@ typedef StateTransitionListener<T extends AuthController> = void Function(
 );
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
-  final AuthFlowBuilderCallback<T>? builder;
+  final FirebaseAuth? auth;
   final AuthAction? action;
-  final Function(AuthCredential credential)? onComplete;
+  final ProviderConfiguration? config;
+  final AuthFlow? flow;
+  final AuthFlowBuilderCallback<T>? builder;
   final Widget? child;
+  final Function(AuthCredential credential)? onComplete;
   final StateTransitionListener? listener;
 
   const AuthFlowBuilder({
@@ -33,6 +41,9 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     this.onComplete,
     this.child,
     this.listener,
+    this.config,
+    this.auth,
+    this.flow,
   })  : assert(
           builder != null || child != null,
           'Either child or builder should be provided',
@@ -44,7 +55,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
 }
 
 class _AuthFlowBuilderState<T extends AuthController>
-    extends State<AuthFlowBuilder> with InitializerProvider {
+    extends State<AuthFlowBuilder> {
   @override
   AuthFlowBuilder<T> get widget => super.widget as AuthFlowBuilder<T>;
   AuthFlowBuilderCallback<T> get builder => widget.builder ?? _defaultBuilder;
@@ -60,30 +71,25 @@ class _AuthFlowBuilderState<T extends AuthController>
     return widget.child!;
   }
 
-  void initializeFlow() {
-    if (initialized) return;
+  @override
+  void initState() {
+    super.initState();
+    flow = widget.flow ?? createFlow();
+    action = widget.action ??
+        (flow.auth.currentUser != null ? AuthAction.link : AuthAction.signIn);
 
-    final initializer =
-        getInitializerOfType<FirebaseUIAuthInitializer>(context);
-
-    if (widget.action == null) {
-      action = widget.action!;
-    } else if (initializer.auth.currentUser == null) {
-      action = AuthAction.signIn;
-    } else {
-      action = AuthAction.link;
-    }
-
-    flow = initializer.createFlow<T>(action);
-
-    flow.context = context;
     flow.addListener(onFlowStateChanged);
-
     prevState = flow.value;
     initialized = true;
   }
 
+  AuthFlow createFlow() {
+    final config = widget.config ?? createDefaltProviderConfig<T>();
+    return config.createFlow(widget.auth, widget.action);
+  }
+
   void onFlowStateChanged() {
+    AuthStateTransition(prevState!, flow.value, flow as T).dispatch(context);
     widget.listener?.call(prevState!, flow.value, flow);
     prevState = flow.value;
   }
@@ -96,8 +102,6 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   @override
   Widget build(BuildContext context) {
-    initializeFlow();
-
     return AuthControllerProvider(
       action: flow.action,
       ctrl: flow,

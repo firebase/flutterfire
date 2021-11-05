@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:desktop_webview_auth/google.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
+import 'package:firebase_ui/auth.dart';
 
 import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
@@ -21,7 +22,12 @@ class GoogleProviderImpl extends Google {
   @override
   Future<OAuthCredential> signIn() async {
     final user = await _provider.signIn();
-    final auth = await user!.authentication;
+
+    if (user == null) {
+      throw AuthCancelledException();
+    }
+
+    final auth = await user.authentication;
 
     final credential = GoogleAuthProvider.credential(
       accessToken: auth.accessToken,
@@ -56,8 +62,8 @@ class GoogleProviderConfiguration extends OAuthProviderConfiguration {
   );
 
   GoogleProviderConfiguration({
-    required this.clientId,
-    required this.redirectUri,
+    this.clientId,
+    this.redirectUri,
   });
 
   @override

@@ -142,8 +142,10 @@ class SMSCodeInputState extends State<SMSCodeInput> {
   @override
   void didChangeDependencies() {
     final authState = AuthState.of(context);
+    print('got new authState $authState');
 
     if (authState is PhoneVerified) {
+      print(authState);
       controller.text = authState.credential.smsCode!;
     }
 

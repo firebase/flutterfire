@@ -6,21 +6,21 @@ import '../auth_state.dart';
 
 typedef SurfaceBuilder = Widget Function(BuildContext context, Widget child);
 
-class SignInForm extends StatefulWidget {
+class EmailSignInForm extends StatefulWidget {
   final SurfaceBuilder? surfaceBuilder;
   final List<Widget> children;
 
-  const SignInForm({
+  const EmailSignInForm({
     Key? key,
     this.surfaceBuilder,
     this.children = const <Widget>[],
   }) : super(key: key);
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<EmailSignInForm> createState() => _EmailSignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm>
+class _EmailSignInFormState extends State<EmailSignInForm>
     with SingleTickerProviderStateMixin {
   AuthAction action = AuthAction.signIn;
 
@@ -88,7 +88,12 @@ class _SignInFormState extends State<SignInForm>
           laptop: 6,
           desktop: 6,
         ),
-        child: surfaceBuilder(context, content),
+        child: surfaceBuilder(
+          context,
+          IntrinsicHeight(
+            child: content,
+          ),
+        ),
       ),
     );
   }
