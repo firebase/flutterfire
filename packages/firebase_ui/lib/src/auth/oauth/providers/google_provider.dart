@@ -9,6 +9,7 @@ import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
 class GoogleProviderImpl extends Google {

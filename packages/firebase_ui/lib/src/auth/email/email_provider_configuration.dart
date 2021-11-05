@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui/firebase_ui.dart';
 
+import '../auth_controller.dart';
+import '../auth_flow.dart';
 import '../provider_configuration.dart';
+import 'email_flow.dart';
 
 const EMAIL_PROVIDER_ID = 'password';
 

@@ -6,6 +6,7 @@ import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
+import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
 class FacebookProviderImpl extends Facebook {

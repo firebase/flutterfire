@@ -1,7 +1,8 @@
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/firebase_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../auth_state.dart';
 
 class NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;

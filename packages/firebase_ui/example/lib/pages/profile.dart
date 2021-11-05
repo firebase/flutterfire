@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/auth/apple.dart';
 import 'package:firebase_ui/auth/facebook.dart';
 import 'package:firebase_ui/auth/google.dart';
 import 'package:firebase_ui/auth/twitter.dart';
-import 'package:firebase_ui/firebase_ui.dart';
 import 'package:firebase_ui/responsive.dart';
 import 'package:firebase_ui_example/config.dart';
 import 'package:firebase_ui_example/widgets/email_verification_button.dart';

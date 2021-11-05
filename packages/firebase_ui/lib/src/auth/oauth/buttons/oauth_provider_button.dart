@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-
-import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
-import 'package:firebase_ui/src/auth/oauth/oauth_flow.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../auth_controller.dart';
+import '../../auth_flow_builder.dart';
+import '../../auth_state.dart';
+import '../oauth_flow.dart';
 import '../oauth_providers.dart';
+import '../provider_resolvers.dart';
 import 'oauth_provider_button_style.dart';
 
 typedef ErrorCallback = void Function(Exception e);

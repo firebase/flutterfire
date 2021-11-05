@@ -1,7 +1,4 @@
-import 'package:firebase_ui/auth/facebook.dart';
-import 'package:firebase_ui/auth/google.dart';
-import 'package:firebase_ui/firebase_ui.dart';
-import 'package:firebase_ui/src/auth/oauth/default_provider_config_factory.dart';
+import 'package:firebase_ui/src/auth/default_provider_config_factory.dart';
 import 'package:firebase_ui/src/auth/provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
