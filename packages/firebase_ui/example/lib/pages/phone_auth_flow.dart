@@ -27,12 +27,15 @@ class PhoneAuthFlow extends StatelessWidget {
             ),
             child: AuthFlowBuilder<PhoneVerificationController>(
               action: authMethod,
+              config: PhoneProviderConfiguration(),
               listener: (_, newState, __) {
+                print('listener $newState');
                 if (newState is SignedIn || newState is CredentialLinked) {
                   Navigator.of(context).pop();
                 }
               },
               builder: (_, state, ctrl, __) {
+                print('builder $state');
                 if (state is AwatingPhoneNumber) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,13 +58,11 @@ class PhoneAuthFlow extends StatelessWidget {
                   );
                 }
 
-                if (state is SMSCodeRequested ||
-                    state is CredentialReceived ||
-                    state is PhoneVerified) {
+                if (state is SMSCodeRequested || state is CredentialReceived) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (state is SMSCodeSent) {
+                if (state is SMSCodeSent || state is PhoneVerified) {
                   final key = GlobalKey<SMSCodeInputState>();
                   return Column(
                     children: [
@@ -76,7 +77,8 @@ class PhoneAuthFlow extends StatelessWidget {
                   );
                 }
 
-                return Text('Unknown auth flow state $state');
+                print('Unknown auth flow state $state');
+                return const SizedBox.shrink();
               },
             ),
           ),
