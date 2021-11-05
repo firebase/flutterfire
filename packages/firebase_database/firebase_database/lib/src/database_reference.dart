@@ -58,7 +58,7 @@ class DatabaseReference extends Query {
     return DatabaseReference._(_delegate.push());
   }
 
-  /// Write `value` to the location with the specified `priority` if applicable.
+  /// Write a `value` to the location.
   ///
   /// This will overwrite any data at this location and all child locations.
   ///
@@ -70,8 +70,24 @@ class DatabaseReference extends Query {
   ///
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
-  Future<void> set(Object? value, {Object? priority}) {
-    return _delegate.set(value, priority: priority);
+  Future<void> set(Object? value) {
+    return _delegate.set(value);
+  }
+
+  /// Write a `value` to the location with the specified `priority` if applicable.
+  ///
+  /// This will overwrite any data at this location and all child locations.
+  ///
+  /// Data types that are allowed are String, boolean, int, double, Map, List.
+  ///
+  /// The effect of the write will be visible immediately and the corresponding
+  /// events will be triggered. Synchronization of the data to the Firebase
+  /// Database servers will also be started.
+  ///
+  /// Passing null for the new value means all data at this location or any
+  /// child location will be deleted.
+  Future<void> setWithPriority(Object? value, Object? priority) {
+    return _delegate.setWithPriority(value, priority);
   }
 
   /// Writes multiple values to the Database at once.
@@ -145,30 +161,16 @@ class DatabaseReference extends Query {
   /// this Firebase Database location.
   Future<TransactionResult> runTransaction(
     TransactionHandler transactionHandler, {
-    Duration timeout = const Duration(seconds: 5),
     bool applyLocally = true,
   }) async {
-    final transactionResult = await _delegate.runTransaction(
+    return TransactionResult._(await _delegate.runTransaction(
       transactionHandler,
-      timeout: timeout,
       applyLocally: applyLocally,
-    );
-
-    return TransactionResult._(
-      transactionResult.committed,
-      DataSnapshot._(transactionResult.dataSnapshot),
-    );
+    ));
   }
 
   /// Returns an [OnDisconnect] instance.
   OnDisconnect onDisconnect() {
     return OnDisconnect._(_delegate.onDisconnect());
   }
-}
-
-class TransactionResult {
-  const TransactionResult._(this.committed, this.dataSnapshot);
-
-  final bool committed;
-  final DataSnapshot? dataSnapshot;
 }

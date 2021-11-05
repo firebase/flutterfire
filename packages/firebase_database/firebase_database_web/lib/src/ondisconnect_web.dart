@@ -15,24 +15,47 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
   ) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(Object? value, {Object? priority}) {
-    // TODO how do you set a null priority value?
-    if (priority == null) return _delegate.set(value);
-    return _delegate.setWithPriority(value, priority);
+  Future<void> set(Object? value) async {
+    try {
+      await _delegate.set(value);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
-  Future<void> remove() {
-    return _delegate.remove();
+  Future<void> setWithPriority(Object? value, Object? priority) async {
+    try {
+      await _delegate.setWithPriority(value, priority);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
-  Future<void> cancel() {
-    return _delegate.cancel();
+  Future<void> remove() async {
+    try {
+      await _delegate.remove();
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
-  Future<void> update(Map<String, Object?> value) {
-    return _delegate.update(value);
+  Future<void> cancel() async {
+    try {
+      await _delegate.cancel();
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
+  }
+
+  @override
+  Future<void> update(Map<String, Object?> value) async {
+    try {
+      await _delegate.update(value);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 }

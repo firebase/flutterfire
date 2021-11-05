@@ -17,10 +17,27 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
       : super(database: database, ref: ref);
 
   @override
-  Future<void> set(Object? value, {Object? priority}) {
+  Future<void> set(Object? value) {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#set',
+        <String, Object?>{
+          'appName': database.app!.name,
+          'databaseURL': database.databaseURL,
+          'path': ref.path,
+          'value': value,
+        },
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  Future<void> setWithPriority(Object? value, Object? priority) {
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#setWithPriority',
         <String, Object?>{
           'appName': database.app!.name,
           'databaseURL': database.databaseURL,

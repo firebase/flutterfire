@@ -5,15 +5,16 @@
 
 import 'dart:collection';
 
-import '../firebase_database.dart'
-    show DatabaseError, DataSnapshot, DatabaseEvent, Query;
+import 'package:firebase_core/firebase_core.dart';
+
+import '../firebase_database.dart' show DataSnapshot, DatabaseEvent, Query;
 import 'utils/stream_subscriber_mixin.dart';
 
 typedef ChildCallback = void Function(int index, DataSnapshot snapshot);
 typedef ChildMovedCallback = void Function(
     int fromIndex, int toIndex, DataSnapshot snapshot);
 typedef ValueCallback = void Function(DataSnapshot snapshot);
-typedef ErrorCallback = void Function(DatabaseError error);
+typedef ErrorCallback = void Function(FirebaseException error);
 
 /// Sorts the results of `query` on the client side using `DataSnapshot.key`.
 class FirebaseList extends ListBase<DataSnapshot>
@@ -142,7 +143,6 @@ class FirebaseList extends ListBase<DataSnapshot>
   }
 
   void _onError(Object o) {
-    final DatabaseError error = o as DatabaseError;
-    onError?.call(error);
+    onError?.call(o as FirebaseException);
   }
 }

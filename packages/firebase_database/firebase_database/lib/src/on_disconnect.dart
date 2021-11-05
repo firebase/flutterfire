@@ -29,8 +29,15 @@ class OnDisconnect {
   /// Ensures the data at this location is set to the specified value when the
   /// client is disconnected (due to closing the browser, navigating to a new
   /// page, or network issues).
-  Future<void> set(Object? value, {Object? priority}) {
-    return _delegate.set(value, priority: priority);
+  Future<void> set(Object? value) {
+    return _delegate.set(value);
+  }
+
+  /// Ensures the data at this location is set with a priority to the specified
+  /// value when the client is disconnected (due to closing the browser,
+  /// navigating to a new page, or network issues).
+  Future<void> setWithPriority(Object? value, Object? priority) {
+    return _delegate.setWithPriority(value, priority);
   }
 
   /// Ensures the data at this location is deleted when the client is

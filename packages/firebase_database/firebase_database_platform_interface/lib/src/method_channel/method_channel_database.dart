@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database_platform_interface/src/platform_interface/platform_interface_database.dart';
-import 'package:firebase_database_platform_interface/src/platform_interface/platform_interface_database_reference.dart';
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter/services.dart';
 
 import 'method_channel_database_reference.dart';

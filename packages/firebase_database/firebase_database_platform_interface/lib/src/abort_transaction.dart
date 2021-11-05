@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 
-class AbortTransaction extends FirebaseException {
-  AbortTransaction()
+class AbortTransactionException extends FirebaseException {
+  AbortTransactionException()
       : super(
           plugin: 'firebase_database',
           code: 'abort-transaction',

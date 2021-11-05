@@ -10,11 +10,9 @@ class DatabaseReferenceWeb extends QueryWeb
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
-    this._database,
+    DatabasePlatform _database,
     this._delegate,
   ) : super(_database, _delegate);
-
-  final DatabasePlatform _database;
 
   final database_interop.DatabaseReference _delegate;
 
@@ -48,22 +46,39 @@ class DatabaseReferenceWeb extends QueryWeb
   }
 
   @override
-  Future<void> set(Object? value, {Object? priority}) {
-    if (priority == null) {
-      return _delegate.set(value);
-    } else {
-      return _delegate.setWithPriority(value, priority);
+  Future<void> set(Object? value) async {
+    try {
+      await _delegate.set(value);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
     }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
-    return _delegate.update(value);
+  Future<void> setWithPriority(Object? value, Object? priority) async {
+    try {
+      await _delegate.setWithPriority(value, priority);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
-  Future<void> setPriority(priority) {
-    return _delegate.setPriority(priority);
+  Future<void> update(Map<String, dynamic> value) async {
+    try {
+      await _delegate.update(value);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
+  }
+
+  @override
+  Future<void> setPriority(priority) async {
+    try {
+      await _delegate.setPriority(priority);
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
@@ -71,38 +86,19 @@ class DatabaseReferenceWeb extends QueryWeb
     return set(null);
   }
 
-  /// on the web, [timeout] parameter is ignored.
-  /// transaction((_) => null) doesn't work when compiled to JS
-  /// probably because of https://github.com/dart-lang/sdk/issues/24088
+  // transaction((_) => null) doesn't work when compiled to JS
+  // https://github.com/dart-lang/sdk/issues/24088
   @override
   Future<TransactionResultPlatform> runTransaction(
-    transactionHandler, {
-    Duration timeout = const Duration(seconds: 5),
+    TransactionHandler transactionHandler, {
     bool applyLocally = true,
   }) async {
-    // TODO This needs a TransactionResultWeb (I think)
-    // return TransactionResultPlatform(await _delegate.transaction(transactionHandler, applyLocally));
-
-
-    // OLD CODE
-    // try {
-    //   final ref = _firebaseQuery.ref;
-    //   final transaction = await ref.transaction(transactionHandler);
-    //
-    //   return TransactionResultPlatform(
-    //     transaction.committed,
-    //     fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
-    //   );
-    // } catch (e) {
-    //   if (e is DatabaseErrorPlatform) rethrow;
-    //
-    //   final error = DatabaseErrorPlatform({
-    //     'code': 'unknown',
-    //     'message': 'An unknown error occurred',
-    //   });
-    //
-    //   throw error;
-    // }
+    try {
+      return TransactionResultWeb._(
+          this, await _delegate.transaction(transactionHandler, applyLocally));
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override

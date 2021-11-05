@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_web/firebase_database_web.dart'
+    show convertFirebaseFunctionsException;
 import 'package:flutter/widgets.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -190,7 +192,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       try {
         final dartResult = transactionUpdate(dartUpdate);
         result = jsify(dartResult);
-      } on AbortTransaction catch (_) {
+      } on AbortTransactionException catch (_) {
         result = undefined;
       }
 
@@ -201,7 +203,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       if (error != null) {
         final dartified = dartify(error);
 
-        c.completeError(DatabaseErrorPlatform(dartified));
+        c.completeError(convertFirebaseFunctionsException(dartified));
       } else {
         c.complete(Transaction(
           committed: committed,

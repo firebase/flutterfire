@@ -5,6 +5,7 @@
 library firebase_database_web;
 
 import 'dart:async';
+import 'dart:js_util' as util;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
@@ -13,10 +14,19 @@ import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'src/interop/database.dart' as database_interop;
 
 part './src/data_snapshot_web.dart';
-part './src/database_reference_web.dart';
-part './src/ondisconnect_web.dart';
-part './src/query_web.dart';
+
 part './src/database_event_web.dart';
+
+part './src/database_reference_web.dart';
+
+part './src/ondisconnect_web.dart';
+
+part './src/query_web.dart';
+
+part './src/transaction_result_web.dart';
+
+part './src/utils/exception.dart';
+
 part './src/utils/snapshot_utils.dart';
 
 /// Web implementation for [DatabasePlatform]
@@ -77,12 +87,20 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   Future<void> goOnline() async {
-    _firebaseDatabase.goOnline();
+    try {
+      _firebaseDatabase.goOnline();
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
   Future<void> goOffline() async {
-    _firebaseDatabase.goOffline();
+    try {
+      _firebaseDatabase.goOffline();
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override

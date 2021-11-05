@@ -21,7 +21,12 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
   final DatabaseReferencePlatform ref;
 
   /// Ensures the data at this location is set to the specified value when the client is disconnected
-  Future<void> set(Object? value, {Object? priority}) {
+  Future<void> set(Object? value) {
+    throw UnimplementedError('set() not implemented');
+  }
+
+  /// TODO
+  Future<void> setWithPriority(Object? value, Object? priority) {
     throw UnimplementedError('set() not implemented');
   }
 

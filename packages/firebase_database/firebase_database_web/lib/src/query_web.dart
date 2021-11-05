@@ -20,7 +20,11 @@ class QueryWeb extends QueryPlatform {
 
   @override
   Future<DataSnapshotPlatform> get() async {
-    return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
+    try {
+      return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
+    } catch (e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    }
   }
 
   @override
@@ -117,12 +121,16 @@ class QueryWeb extends QueryPlatform {
     DatabaseEventType eventType,
     Stream<database_interop.QueryEvent> stream,
   ) {
-    return stream.map(
+    return stream
+        .map(
       (database_interop.QueryEvent event) => webEventToPlatformEvent(
         ref,
         eventType,
         event,
       ),
-    );
+    )
+        .handleError((e, s) {
+      throw convertFirebaseFunctionsException(e, s);
+    });
   }
 }

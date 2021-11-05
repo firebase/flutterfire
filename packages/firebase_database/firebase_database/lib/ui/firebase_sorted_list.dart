@@ -5,8 +5,9 @@
 
 import 'dart:collection';
 
-import '../firebase_database.dart'
-    show DatabaseError, DataSnapshot, DatabaseEvent, Query;
+import 'package:firebase_core/firebase_core.dart';
+
+import '../firebase_database.dart' show DataSnapshot, DatabaseEvent, Query;
 import 'firebase_list.dart' show ChildCallback, ErrorCallback, ValueCallback;
 import 'utils/stream_subscriber_mixin.dart';
 
@@ -122,7 +123,6 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
   }
 
   void _onError(Object o) {
-    final DatabaseError error = o as DatabaseError;
-    onError?.call(error);
+    onError?.call(o as FirebaseException);
   }
 }
