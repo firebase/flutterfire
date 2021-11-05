@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -45,9 +46,9 @@ void runConfigurationTests() {
           await database.setLoggingEnabled(true);
           throw Exception('should throw FirebaseDatabaseException');
         } catch (err) {
-          expect(err, isA<FirebaseDatabaseException>());
+          expect(err, isA<FirebaseException>());
           expect(
-            (err as FirebaseDatabaseException).code,
+            (err as FirebaseException).code,
             'wrong-configuration-point',
           );
         }

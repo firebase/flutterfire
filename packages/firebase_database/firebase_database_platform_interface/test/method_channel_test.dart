@@ -321,9 +321,12 @@ void main() {
         const int priority = 42;
         final DatabaseReferencePlatform ref = database.ref();
         await ref.child('foo').onDisconnect().set(value);
-        await ref.child('bar').onDisconnect().set(value, priority: priority);
-        await ref.child('psi').onDisconnect().set(value, priority: 'priority');
-        await ref.child('por').onDisconnect().set(value, priority: value);
+        await ref.child('bar').onDisconnect().setWithPriority(value, priority);
+        await ref
+            .child('psi')
+            .onDisconnect()
+            .setWithPriority(value, 'priority');
+        await ref.child('por').onDisconnect().setWithPriority(value, value);
         expect(
           log,
           <Matcher>[
@@ -497,7 +500,7 @@ void main() {
           );
         }
 
-        final errors = AsyncQueue<FirebaseDatabaseException>();
+        final errors = AsyncQueue<FirebaseException>();
 
         final subscription = query.onValue.listen((_) {}, onError: errors.add);
         await Future<void>.delayed(Duration.zero);
@@ -505,8 +508,8 @@ void main() {
         await simulateError('Bad foo');
         await simulateError('Bad bar');
 
-        final FirebaseDatabaseException error1 = await errors.remove();
-        final FirebaseDatabaseException error2 = await errors.remove();
+        final FirebaseException error1 = await errors.remove();
+        final FirebaseException error2 = await errors.remove();
 
         await subscription.cancel();
 

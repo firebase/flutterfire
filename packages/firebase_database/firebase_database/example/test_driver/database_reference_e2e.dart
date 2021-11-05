@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
@@ -27,41 +26,15 @@ void runDatabaseReferenceTests() {
     test('executes transaction', () async {
       final snapshot = await ref.get();
 
-      final value = snapshot.value ?? 0;
+      final value = (snapshot.value ?? 0) as int;
 
       final result = await ref.runTransaction((value) {
         return (value as int? ?? 0) + 1;
       });
 
       expect(result.committed, true);
-      expect(result.dataSnapshot!.value > value, true);
+      expect((result.snapshot.value ?? 0) as int > value, true);
     });
-
-    test(
-      'throws exception if transaction timed out',
-      () async {
-        const timeout = Duration(milliseconds: 1);
-        try {
-          await ref.runTransaction(
-            (value) {
-              final now = DateTime.now();
-              while (DateTime.now().difference(now) < timeout) {}
-
-              return (value ?? 0) + 1;
-            },
-            timeout: timeout,
-          );
-
-          throw Exception('should timeout');
-        } catch (e) {
-          expect(e, isA<FirebaseDatabaseException>());
-
-          final dbException = e as FirebaseDatabaseException;
-          expect(dbException.code, 'transaction-timeout');
-        }
-      },
-      skip: kIsWeb,
-    );
 
     test('get primitive list values', () async {
       List<String> data = ['first', 'second'];
@@ -74,7 +47,9 @@ void runDatabaseReferenceTests() {
         return mutableData;
       });
 
-      expect(transactionResult.dataSnapshot!.value['list'], data);
+      var value = transactionResult.snapshot.value as dynamic;
+      expect(value, isNotNull);
+      expect(value['list'], data);
     });
   });
 
@@ -91,13 +66,13 @@ void runDatabaseReferenceTests() {
       final ref = database.ref('priority_test');
 
       await Future.wait([
-        ref.child('first').set(1, priority: 10),
-        ref.child('second').set(2, priority: 1),
-        ref.child('third').set(3, priority: 5),
+        ref.child('first').setWithPriority(1, 10),
+        ref.child('second').setWithPriority(2, 1),
+        ref.child('third').setWithPriority(3, 5),
       ]);
 
-      final v = await ref.get();
-      final keys = List<String>.from(v.value.keys);
+      final snapshot = await ref.get();
+      final keys = List<String>.from((snapshot.value as dynamic).keys);
 
       expect(keys, ['second', 'third', 'first']);
     });
@@ -125,9 +100,9 @@ void runDatabaseReferenceTests() {
         await ref.update({'first': newValue});
 
         final snapshot = await ref.get();
-        expect(snapshot.value['first'], newValue);
-        expect(snapshot.value['second'], 2);
-        expect(snapshot.value['third'], 3);
+        expect((snapshot.value as dynamic)['first'], newValue);
+        expect((snapshot.value as dynamic)['second'], 2);
+        expect((snapshot.value as dynamic)['third'], 3);
       },
     );
   });
@@ -138,7 +113,7 @@ void runDatabaseReferenceTests() {
     test('updates the priority of the node', () async {
       final ref = database.ref('priority_test');
       final snapshot = await ref.get();
-      final currentOrder = List<String>.from(snapshot.value.keys);
+      final currentOrder = List<String>.from((snapshot.value as dynamic).keys);
 
       for (int i = 0; i < currentOrder.length; i++) {
         final key = currentOrder[currentOrder.length - 1 - i];
@@ -146,7 +121,7 @@ void runDatabaseReferenceTests() {
       }
 
       final newSnapshot = await ref.get();
-      final newOrder = List<String>.from(newSnapshot.value.keys);
+      final newOrder = List<String>.from((newSnapshot.value as dynamic).keys);
 
       expect(newOrder, currentOrder.reversed.toList());
     });

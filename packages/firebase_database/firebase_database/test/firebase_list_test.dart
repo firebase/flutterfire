@@ -16,21 +16,21 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   group('FirebaseList', () {
-    late StreamController<Event> onChildAddedStreamController;
-    late StreamController<Event> onChildRemovedStreamController;
-    late StreamController<Event> onChildChangedStreamController;
-    late StreamController<Event> onChildMovedStreamController;
-    late StreamController<Event> onValue;
+    late StreamController<DatabaseEvent> onChildAddedStreamController;
+    late StreamController<DatabaseEvent> onChildRemovedStreamController;
+    late StreamController<DatabaseEvent> onChildChangedStreamController;
+    late StreamController<DatabaseEvent> onChildMovedStreamController;
+    late StreamController<DatabaseEvent> onValue;
     late MockQuery query;
     late FirebaseList list;
     late Completer<ListChange> callbackCompleter;
 
     setUp(() {
-      onChildAddedStreamController = StreamController<Event>();
-      onChildRemovedStreamController = StreamController<Event>();
-      onChildChangedStreamController = StreamController<Event>();
-      onChildMovedStreamController = StreamController<Event>();
-      onValue = StreamController<Event>();
+      onChildAddedStreamController = StreamController<DatabaseEvent>();
+      onChildRemovedStreamController = StreamController<DatabaseEvent>();
+      onChildChangedStreamController = StreamController<DatabaseEvent>();
+      onChildMovedStreamController = StreamController<DatabaseEvent>();
+      onValue = StreamController<DatabaseEvent>();
       query = MockQuery(
         onChildAddedStreamController.stream,
         onChildRemovedStreamController.stream,
@@ -71,22 +71,22 @@ void main() {
       return result;
     }
 
-    Future<ListChange> processChildAddedEvent(Event event) {
+    Future<ListChange> processChildAddedEvent(DatabaseEvent event) {
       onChildAddedStreamController.add(event);
       return resetCompleterOnCallback();
     }
 
-    Future<ListChange> processChildRemovedEvent(Event event) {
+    Future<ListChange> processChildRemovedEvent(DatabaseEvent event) {
       onChildRemovedStreamController.add(event);
       return resetCompleterOnCallback();
     }
 
-    Future<ListChange> processChildChangedEvent(Event event) {
+    Future<ListChange> processChildChangedEvent(DatabaseEvent event) {
       onChildChangedStreamController.add(event);
       return resetCompleterOnCallback();
     }
 
-    Future<ListChange> processChildMovedEvent(Event event) {
+    Future<ListChange> processChildMovedEvent(DatabaseEvent event) {
       onChildMovedStreamController.add(event);
       return resetCompleterOnCallback();
     }

@@ -35,13 +35,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   late DatabaseReference _counterRef;
   late DatabaseReference _messagesRef;
-  late StreamSubscription<Event> _counterSubscription;
-  late StreamSubscription<Event> _messagesSubscription;
+  late StreamSubscription<DatabaseEvent> _counterSubscription;
+  late StreamSubscription<DatabaseEvent> _messagesSubscription;
   bool _anchorToBottom = false;
 
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
-  FirebaseDatabaseException? _error;
+  FirebaseException? _error;
   bool initialized = false;
 
   @override
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> init() async {
     _counterRef = FirebaseDatabase.instance.ref('counter');
 
-    final database = FirebaseDatabase(app: widget.app);
+    final database = FirebaseDatabase.instanceFor(app: widget.app);
     _messagesRef = database.ref('messages');
 
     try {
@@ -87,14 +87,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     _counterSubscription = _counterRef.onValue.listen(
-      (Event event) {
+      (DatabaseEvent event) {
         setState(() {
           _error = null;
-          _counter = event.snapshot.value ?? 0;
+          _counter = (event.snapshot.value ?? 0) as int;
         });
       },
       onError: (Object o) {
-        final error = o as FirebaseDatabaseException;
+        final error = o as FirebaseException;
         setState(() {
           _error = error;
         });
@@ -104,11 +104,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final messagesQuery = _messagesRef.limitToLast(10);
 
     _messagesSubscription = messagesQuery.onChildAdded.listen(
-      (Event event) {
+      (DatabaseEvent event) {
         print('Child added: ${event.snapshot.value}');
       },
       onError: (Object o) {
-        final error = o as FirebaseDatabaseException;
+        final error = o as FirebaseException;
         print('Error: ${error.code} ${error.message}');
       },
     );
@@ -138,10 +138,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (transactionResult.committed) {
         final newMessageRef = _messagesRef.push();
         await newMessageRef.set(<String, String>{
-          _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
+          _kTestKey: '$_kTestValue ${transactionResult.snapshot.value}'
         });
       }
-    } on DatabaseError catch (e) {
+    } on FirebaseException catch (e) {
       print(e.message);
     }
   }

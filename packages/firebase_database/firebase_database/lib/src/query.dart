@@ -19,6 +19,12 @@ class Query {
     return DataSnapshot._(await _queryDelegate.get());
   }
 
+  /// Listens for exactly one event of the specified event type, and then stops listening.
+  Future<DataSnapshot> once() async {
+    DatabaseEventPlatform event = await _queryDelegate.onValue.first;
+    return DataSnapshot._(event.snapshot);
+  }
+
   /// Fires when children are added.
   Stream<DatabaseEvent> get onChildAdded =>
       _queryDelegate.onChildAdded.map((item) => DatabaseEvent._(item));

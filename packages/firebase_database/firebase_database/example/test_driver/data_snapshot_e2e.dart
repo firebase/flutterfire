@@ -18,7 +18,7 @@ void runDataSnapshotTests() {
       });
 
       expect(transactionResult.committed, true);
-      expect(transactionResult.dataSnapshot!.value, {'v': 'vala'});
+      expect(transactionResult.snapshot.value, {'v': 'vala'});
     });
 
     test('#key returns correct key', () async {
@@ -31,7 +31,8 @@ void runDataSnapshotTests() {
       expect(s.children.isNotEmpty, true);
     });
 
-    test("children.isNotEmpty is false if snapshot doesn't have children", () async {
+    test("children.isNotEmpty is false if snapshot doesn't have children",
+        () async {
       final s = await database.ref('flutterfire').get();
       expect(s.children.isNotEmpty, false);
     });
@@ -71,10 +72,10 @@ void runDataSnapshotTests() {
         ref.child('third').set(18),
       ]);
 
-      final s = await ref.orderByValue().once();
+      final snapshot = await ref.orderByValue().once();
       final keys = [];
 
-      s.children.forEach((snapshot) {
+      snapshot.children.forEach((snapshot) {
         keys.add(snapshot.key);
       });
 
