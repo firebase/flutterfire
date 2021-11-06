@@ -9,8 +9,6 @@ dependencies:
     path: ../
   firebase_core:
     path: ../../../firebase_core/firebase_core
-  firebase_dynamic_links:
-    path: ../../../firebase_dynamic_links
   flutter:
     sdk: flutter
   flutter_signin_button: ^2.0.0
@@ -30,8 +28,6 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
-  firebase_dynamic_links:
-    path: ../../../firebase_dynamic_links
 
 dev_dependencies:
   drive: 1.0.0-1.0.nullsafety.1

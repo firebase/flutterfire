@@ -13,14 +13,17 @@ import 'interop/analytics.dart' as analytics_interop;
 /// Web implementation of [FirebaseAnalyticsPlatform]
 class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   /// instance of Analytics from the web plugin
-  final analytics_interop.Analytics _webAnalytics;
+  analytics_interop.Analytics? _webAnalytics;
+
+  /// Lazily initialize [_webAnalytics] on first method call
+  analytics_interop.Analytics get _delegate {
+    return _webAnalytics ??=
+        analytics_interop.getAnalyticsInstance(core_interop.app(app.name));
+  }
 
   /// Builds an instance of [FirebaseAnalyticsWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseAnalyticsWeb({FirebaseApp? app})
-      : _webAnalytics =
-            analytics_interop.getAnalyticsInstance(core_interop.app(app?.name)),
-        super(appInstance: app);
+  FirebaseAnalyticsWeb({FirebaseApp? app}) : super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -38,7 +41,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? parameters,
     CallOptions? callOptions,
   }) async {
-    _webAnalytics.logEvent(
+    _delegate.logEvent(
       name: name,
       parameters: parameters ?? {},
       callOptions: callOptions,
@@ -53,7 +56,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    _webAnalytics.setAnalyticsCollectionEnabled(enabled: enabled);
+    _delegate.setAnalyticsCollectionEnabled(enabled: enabled);
   }
 
   @override
@@ -61,7 +64,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) async {
-    _webAnalytics.setUserId(
+    _delegate.setUserId(
       id: id,
       callOptions: callOptions,
     );
@@ -73,7 +76,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? screenClassOverride,
     CallOptions? callOptions,
   }) async {
-    _webAnalytics.setCurrentScreen(
+    _delegate.setCurrentScreen(
       screenName: screenName,
       callOptions: callOptions,
     );
@@ -90,7 +93,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     required Object value,
     CallOptions? callOptions,
   }) async {
-    _webAnalytics.setUserProperty(
+    _delegate.setUserProperty(
       name: name,
       value: value,
       callOptions: callOptions,
