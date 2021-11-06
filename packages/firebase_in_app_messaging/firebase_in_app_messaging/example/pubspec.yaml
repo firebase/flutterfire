@@ -8,9 +8,9 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2
   firebase_analytics:
-    path: ../../firebase_analytics/firebase_analytics
+    path: ../../../firebase_analytics/firebase_analytics
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
   firebase_in_app_messaging:
     path: ../
   flutter:
@@ -18,11 +18,11 @@ dependencies:
 
 dependency_overrides:
   firebase_core:
-    path: ../../firebase_core/firebase_core
+    path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
-    path: ../../firebase_core/firebase_core_platform_interface
+    path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
-    path: ../../firebase_core/firebase_core_web
+    path: ../../../firebase_core/firebase_core_web
 
 dev_dependencies:
   e2e: ^0.7.0+1
