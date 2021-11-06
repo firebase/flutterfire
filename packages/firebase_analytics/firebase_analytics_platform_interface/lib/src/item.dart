@@ -1,15 +1,10 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
-
 /// Interface that defines the required attributes of an analytics Item.
 /// https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Param
 class Item {
-  // ignore: public_member_api_docs
-  @protected
   Item({
     this.affilitation,
     this.coupon,

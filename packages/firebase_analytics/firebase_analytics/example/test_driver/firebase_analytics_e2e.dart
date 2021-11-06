@@ -1,9 +1,6 @@
-// ignore_for_file: require_trailing_commas
-
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-// @dart=2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
@@ -12,10 +9,19 @@ import 'package:flutter_test/flutter_test.dart';
 
 void testsMain() {
   group('$FirebaseAnalytics', () {
-    /*late*/ FirebaseAnalytics analytics;
+    late FirebaseAnalytics analytics;
 
     setUpAll(() async {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+          appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+          storageBucket: 'react-native-firebase-testing.appspot.com',
+          databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+          messagingSenderId: '448618578101',
+          projectId: 'react-native-firebase-testing',
+        ),
+      );
       analytics = FirebaseAnalytics.instance;
     });
 
@@ -48,11 +54,14 @@ void testsMain() {
       );
       // test custom event
       await expectLater(
-        analytics.logEvent(name: 'testing-parameters', parameters: {
-          'foo': 'bar',
-          'baz': 500,
-          'items': [ITEM],
-        }),
+        analytics.logEvent(
+          name: 'testing-parameters',
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+            'items': [ITEM],
+          },
+        ),
         completes,
       );
       // test 2 reserved events

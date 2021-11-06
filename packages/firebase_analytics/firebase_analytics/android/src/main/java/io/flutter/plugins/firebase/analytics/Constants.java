@@ -1,4 +1,4 @@
-package io.flutter.plugins.firebaseanalytics;
+package io.flutter.plugins.firebase.analytics;
 
 public class Constants {
   public static final String AD_STORAGE = "adStorage";

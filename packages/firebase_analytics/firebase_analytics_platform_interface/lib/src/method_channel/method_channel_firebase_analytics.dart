@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -113,10 +112,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     String? screenClassOverride,
     CallOptions? callOptions,
   }) {
-    return channel
-        .invokeMethod<void>('Analytics#setCurrentScreen', <String, String?>{
-      'screenName': screenName,
-      'screenClassOverride': screenClassOverride,
+    return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+      'eventName': 'screen_view',
+      'parameters': <String, String?>{
+        'screen_name': screenName,
+        'screen_class': screenClassOverride,
+      },
     });
   }
 

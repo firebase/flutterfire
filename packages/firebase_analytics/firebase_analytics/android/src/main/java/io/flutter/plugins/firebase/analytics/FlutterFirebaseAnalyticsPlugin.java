@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebaseanalytics;
+package io.flutter.plugins.firebase.analytics;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin
+public class FlutterFirebaseAnalyticsPlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics analytics;
   private MethodChannel channel;
@@ -110,9 +110,6 @@ public class FirebaseAnalyticsPlugin
       case "Analytics#setUserId":
         methodCallTask = handleSetUserId(call.arguments());
         break;
-      case "Analytics#setCurrentScreen":
-        methodCallTask = handleSetCurrentScreen(call.arguments());
-        break;
       case "Analytics#setAnalyticsCollectionEnabled":
         methodCallTask = handleSetAnalyticsCollectionEnabled(call.arguments());
         break;
@@ -168,22 +165,6 @@ public class FirebaseAnalyticsPlugin
         () -> {
           final String id = (String) Objects.requireNonNull(arguments.get(Constants.USER_ID));
           analytics.setUserId(id);
-          return null;
-        });
-  }
-
-  private Task<Void> handleSetCurrentScreen(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final String screenName =
-              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_NAME));
-          final String screenClassOverride =
-              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_CLASS_OVERRIDE));
-          Bundle parameterBundle = new Bundle();
-          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
-          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
-          analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
           return null;
         });
   }
