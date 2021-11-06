@@ -1,3 +1,7 @@
+## 0.5.0+13
+
+ - Update a dependency to the latest release.
+
 ## 0.5.0+12
 
  - **REFACTOR**: update example app to use latest Firebase Analytics plugin APIs.

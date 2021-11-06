@@ -1,3 +1,7 @@
+## 4.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 4.0.1
 
  - **FIX**: Fix FirebaseOptions hashCode (#3263).

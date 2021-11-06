@@ -1,3 +1,7 @@
+## 9.0.0-dev.2
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 9.0.0-dev.1
 
  - Update a dependency to the latest release.
