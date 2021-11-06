@@ -32,11 +32,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   }) async {
     firebase.App? app;
 
-    if (name == defaultFirebaseAppName) {
-      throw noDefaultAppInitialization();
-    }
-
-    if (name == null) {
+    if (name == null || name == defaultFirebaseAppName) {
       assert(() {
         try {
           if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
@@ -53,8 +49,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             );
           }
         } catch (e) {
-          // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-          // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+          // TODO(ehesp): Better way of catching this in interop?
           if (e
               .toString()
               .contains("Cannot read property 'SDK_VERSION' of undefined")) {
@@ -67,14 +62,48 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
       try {
         app = firebase.app();
+
+        if (options != null) {
+          // If there is a default app already and the user provided options do a soft
+          // check to see if options are roughly identical (so we don't unnecessarily
+          // throw on minor differences such as platform specific keys missing,
+          // e.g. hot reloads/restarts).
+          if (options.apiKey != app.options.apiKey ||
+              options.databaseURL != app.options.databaseURL ||
+              options.storageBucket != app.options.storageBucket) {
+            // Options are different; throw.
+            throw duplicateApp(defaultFirebaseAppName);
+          }
+          // Options are roughly the same; so we'll return the existing app.
+        }
       } catch (e) {
-        // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-        // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+        // If the options check failed
+        if (e is FirebaseException) {
+          rethrow;
+        }
+
+        // TODO(ehesp): Better way of catching this in interop?
         if (e.toString().contains('Cannot read properties of undefined')) {
           throw coreNotInitialized();
         }
 
-        rethrow;
+        // If there is no firebase default app, but the user provided options,
+        // create it.
+        // ignore: invariant_booleans
+        if (app == null && options != null) {
+          app = firebase.initializeApp(
+            apiKey: options.apiKey,
+            authDomain: options.authDomain,
+            databaseURL: options.databaseURL,
+            projectId: options.projectId,
+            storageBucket: options.storageBucket,
+            messagingSenderId: options.messagingSenderId,
+            appId: options.appId,
+            measurementId: options.measurementId,
+          );
+        } else {
+          rethrow;
+        }
       }
     } else {
       assert(
@@ -95,8 +124,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           measurementId: options.measurementId,
         );
       } catch (e) {
-        // TODO(ehesp): Catch JsNotLoadedError error once firebase-dart supports
-        // it. See https://github.com/FirebaseExtended/firebase-dart/issues/97
+        // TODO(ehesp): Better way of catching this in interop?
         if (e
             .toString()
             .contains("Cannot read property 'initializeApp' of undefined")) {

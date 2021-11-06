@@ -41,10 +41,9 @@ void main() {
 
   testWidgets('Firebase.apps', (WidgetTester tester) async {
     List<FirebaseApp> apps = Firebase.apps;
-
-    expect(apps.length, 2);
-    expect(apps[1].name, testAppName);
-    expect(apps[1].options, testAppOptions);
+    expect(apps.length, 1);
+    expect(apps[0].name, testAppName);
+    expect(apps[0].options, testAppOptions);
   });
 
   testWidgets('Firebase.app()', (WidgetTester tester) async {
@@ -64,13 +63,13 @@ void main() {
   testWidgets('FirebaseApp.delete()', (WidgetTester tester) async {
     await Firebase.initializeApp(name: 'SecondaryApp', options: testAppOptions);
 
-    expect(Firebase.apps.length, 3);
+    expect(Firebase.apps.length, 2);
 
     FirebaseApp app = Firebase.app('SecondaryApp');
 
     await app.delete();
 
-    expect(Firebase.apps.length, 2);
+    expect(Firebase.apps.length, 1);
   });
 
   testWidgets('FirebaseApp.setAutomaticDataCollectionEnabled()',

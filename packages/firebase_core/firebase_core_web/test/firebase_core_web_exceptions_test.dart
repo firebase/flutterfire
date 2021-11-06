@@ -33,14 +33,6 @@ void main() {
       FirebasePlatform.instance = FirebaseCoreWeb();
     });
 
-    test('should throw exception if trying to initialize default app',
-        () async {
-      await expectLater(
-        () => Firebase.initializeApp(name: defaultFirebaseAppName),
-        throwsA(noDefaultAppInitialization()),
-      );
-    });
-
     group('secondary apps', () {
       test('should throw exception if no options are provided with a named app',
           () async {
