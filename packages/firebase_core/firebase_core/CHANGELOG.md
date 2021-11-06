@@ -1,3 +1,7 @@
+## 1.10.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 1.9.0
 
  - **FEAT**: bump Firebase Android SDK version to `29.0.0` (#7296).

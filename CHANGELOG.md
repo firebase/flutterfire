@@ -3,6 +3,156 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-11-06
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`cloud_firestore` - `v3.1.0`](#cloud_firestore---v310)
+- [`cloud_firestore_web` - `v2.5.0`](#cloud_firestore_web---v250)
+- [`cloud_functions` - `v3.1.0`](#cloud_functions---v310)
+- [`cloud_functions_web` - `v4.1.0`](#cloud_functions_web---v410)
+- [`firebase_analytics` - `v9.0.0-dev.2`](#firebase_analytics---v900-dev2)
+- [`firebase_analytics_web` - `v0.4.0-dev.2`](#firebase_analytics_web---v040-dev2)
+- [`firebase_app_check` - `v0.0.3`](#firebase_app_check---v003)
+- [`firebase_app_check_web` - `v0.0.2`](#firebase_app_check_web---v002)
+- [`firebase_auth` - `v3.2.0`](#firebase_auth---v320)
+- [`firebase_auth_web` - `v3.2.0`](#firebase_auth_web---v320)
+- [`firebase_core` - `v1.10.0`](#firebase_core---v1100)
+- [`firebase_core_platform_interface` - `v4.1.0`](#firebase_core_platform_interface---v410)
+- [`firebase_core_web` - `v1.2.0`](#firebase_core_web---v120)
+- [`firebase_crashlytics` - `v2.3.0`](#firebase_crashlytics---v230)
+- [`firebase_database` - `v8.1.0`](#firebase_database---v810)
+- [`firebase_database_web` - `v0.1.1`](#firebase_database_web---v011)
+- [`firebase_messaging` - `v11.1.0`](#firebase_messaging---v1110)
+- [`firebase_messaging_web` - `v2.1.0`](#firebase_messaging_web---v210)
+- [`firebase_performance_web` - `v0.0.2`](#firebase_performance_web---v002)
+- [`firebase_remote_config` - `v1.0.0-dev.2`](#firebase_remote_config---v100-dev2)
+- [`firebase_remote_config_web` - `v1.0.0-dev.2`](#firebase_remote_config_web---v100-dev2)
+- [`firebase_storage` - `v10.1.0`](#firebase_storage---v1010)
+- [`firebase_storage_web` - `v3.1.0`](#firebase_storage_web---v310)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_in_app_messaging` - `v0.5.0+13`
+- `firebase_crashlytics_platform_interface` - `v3.1.6`
+- `firebase_auth_platform_interface` - `v6.1.4`
+- `firebase_remote_config_platform_interface` - `v1.0.0-dev.2`
+- `firebase_database_platform_interface` - `v0.1.0+3`
+- `firebase_dynamic_links` - `v3.0.1`
+- `cloud_firestore_platform_interface` - `v5.4.5`
+- `firebase_messaging_platform_interface` - `v3.0.9`
+- `firebase_analytics_platform_interface` - `v3.0.0-dev.2`
+- `firebase_app_check_platform_interface` - `v0.0.1+9`
+- `cloud_functions_platform_interface` - `v5.0.14`
+- `firebase_storage_platform_interface` - `v4.0.6`
+- `firebase_performance_platform_interface` - `v0.0.1+7`
+- `firebase_performance` - `v0.7.1+4`
+
+---
+
+#### `cloud_firestore` - `v3.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `cloud_firestore_web` - `v2.5.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `cloud_functions` - `v3.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `cloud_functions_web` - `v4.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_analytics` - `v9.0.0-dev.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_analytics_web` - `v0.4.0-dev.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_app_check` - `v0.0.3`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_app_check_web` - `v0.0.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_auth` - `v3.2.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_auth_web` - `v3.2.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_core` - `v1.10.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_core_platform_interface` - `v4.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_core_web` - `v1.2.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_crashlytics` - `v2.3.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_database` - `v8.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_database_web` - `v0.1.1`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_messaging` - `v11.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_messaging_web` - `v2.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_performance_web` - `v0.0.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_remote_config` - `v1.0.0-dev.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_remote_config_web` - `v1.0.0-dev.2`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_storage` - `v10.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+#### `firebase_storage_web` - `v3.1.0`
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+
 ## 2021-11-04
 
 ### Changes

@@ -1,3 +1,7 @@
+## 11.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 11.0.0
 
 > Note: This release has breaking changes.
