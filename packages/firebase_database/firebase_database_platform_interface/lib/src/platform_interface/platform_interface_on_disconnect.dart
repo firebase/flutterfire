@@ -12,6 +12,12 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
   OnDisconnectPlatform({required this.database, required this.ref})
       : super(token: _token);
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [OnDisconnectPlatform].
+  static void verifyExtends(OnDisconnectPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   static final Object _token = Object();
 
   /// The Database instance associated with this [OnDisconnectPlatform] class

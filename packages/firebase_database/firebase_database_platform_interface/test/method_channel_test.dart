@@ -1,4 +1,4 @@
-// ignore_for_file: require_trailing_commas
+// ignore_for_file: require_trailing_commas, avoid_relative_lib_imports
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -10,6 +10,10 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../lib/src/method_channel/method_channel_database.dart';
+import '../lib/src/method_channel/method_channel_database_reference.dart';
+import '../lib/src/method_channel/method_channel_on_disconnect.dart';
+import '../lib/src/method_channel/method_channel_query.dart';
 import 'test_common.dart';
 
 void main() {
@@ -200,7 +204,7 @@ void main() {
         };
         const int priority = 42;
         await database.ref('foo').set(value);
-        await database.ref('bar').set(value, priority: priority);
+        await database.ref('bar').setWithPriority(value, priority);
         await database.ref('baz').set(serverValue);
         expect(
           log,
@@ -309,7 +313,7 @@ void main() {
         expect(result.committed, equals(true));
 
         expect(
-          result.dataSnapshot!.value,
+          result.snapshot.value,
           equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}),
         );
       });
@@ -547,7 +551,8 @@ void main() {
           };
         }
 
-        final AsyncQueue<EventPlatform> events = AsyncQueue<EventPlatform>();
+        final AsyncQueue<DatabaseEventPlatform> events =
+            AsyncQueue<DatabaseEventPlatform>();
 
         // Subscribe and allow subscription to complete.
         final subscription = query.onValue.listen(events.add);
@@ -556,8 +561,8 @@ void main() {
         await simulateEvent(createValueEvent(1));
         await simulateEvent(createValueEvent(2));
 
-        final EventPlatform event1 = await events.remove();
-        final EventPlatform event2 = await events.remove();
+        final DatabaseEventPlatform event1 = await events.remove();
+        final DatabaseEventPlatform event2 = await events.remove();
 
         expect(event1.snapshot.key, path);
         expect(event1.snapshot.value, 1);

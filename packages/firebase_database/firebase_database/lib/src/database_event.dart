@@ -10,7 +10,9 @@ part of firebase_database;
 class DatabaseEvent {
   final DatabaseEventPlatform _delegate;
 
-  DatabaseEvent._(this._delegate);
+  DatabaseEvent._(this._delegate) {
+    DatabaseEventPlatform.verifyExtends(_delegate);
+  }
 
   /// The type of event.
   DatabaseEventType get type => _delegate.type;

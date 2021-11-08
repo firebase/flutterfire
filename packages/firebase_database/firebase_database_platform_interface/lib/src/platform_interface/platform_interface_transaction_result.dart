@@ -15,6 +15,12 @@ class TransactionResultPlatform extends PlatformInterface {
     this.committed,
   ) : super(token: _token);
 
+  /// Throws an [AssertionError] if [instance] does not extend
+  /// [TransactionResultPlatform].
+  static void verifyExtends(TransactionResultPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+
   static final Object _token = Object();
 
   /// The [committed] status associated to this transaction result.

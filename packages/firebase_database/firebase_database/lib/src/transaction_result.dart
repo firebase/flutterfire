@@ -7,7 +7,9 @@ part of firebase_database;
 class TransactionResult {
   TransactionResultPlatform _delegate;
 
-  TransactionResult._(this._delegate);
+  TransactionResult._(this._delegate) {
+    TransactionResultPlatform.verifyExtends(_delegate);
+  }
 
   /// The [committed] status associated to this transaction result.
   bool get committed {

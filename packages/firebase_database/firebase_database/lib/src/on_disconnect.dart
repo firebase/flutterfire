@@ -24,7 +24,9 @@ part of firebase_database;
 class OnDisconnect {
   OnDisconnectPlatform _delegate;
 
-  OnDisconnect._(this._delegate);
+  OnDisconnect._(this._delegate) {
+    OnDisconnectPlatform.verifyExtends(_delegate);
+  }
 
   /// Ensures the data at this location is set to the specified value when the
   /// client is disconnected (due to closing the browser, navigating to a new

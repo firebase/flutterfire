@@ -5,7 +5,9 @@ part of firebase_database;
 class DataSnapshot {
   final DataSnapshotPlatform _delegate;
 
-  DataSnapshot._(this._delegate);
+  DataSnapshot._(this._delegate) {
+    DataSnapshotPlatform.verifyExtends(_delegate);
+  }
 
   /// The key of the location that generated this DataSnapshot.
   String? get key => _delegate.key;

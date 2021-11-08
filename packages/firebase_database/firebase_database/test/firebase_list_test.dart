@@ -95,7 +95,7 @@ void main() {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
       expect(
         await processChildAddedEvent(MockEvent(
-          EventType.childAdded,
+          DatabaseEventType.childAdded,
           null,
           snapshot,
         )),
@@ -108,13 +108,13 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot2,
       ));
       expect(
         await processChildAddedEvent(MockEvent(
-          EventType.childAdded,
+          DatabaseEventType.childAdded,
           null,
           snapshot1,
         )),
@@ -127,13 +127,13 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot1,
       ));
       expect(
         await processChildAddedEvent(MockEvent(
-          EventType.childAdded,
+          DatabaseEventType.childAdded,
           'key10',
           snapshot2,
         )),
@@ -145,13 +145,13 @@ void main() {
     test('can remove from singleton list', () async {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot,
       ));
       expect(
         await processChildRemovedEvent(MockEvent(
-          EventType.childRemoved,
+          DatabaseEventType.childRemoved,
           null,
           snapshot,
         )),
@@ -164,18 +164,18 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot2,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot1,
       ));
       expect(
         await processChildRemovedEvent(MockEvent(
-          EventType.childRemoved,
+          DatabaseEventType.childRemoved,
           null,
           snapshot1,
         )),
@@ -188,18 +188,18 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot2,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot1,
       ));
       expect(
         await processChildRemovedEvent(MockEvent(
-          EventType.childRemoved,
+          DatabaseEventType.childRemoved,
           'key10',
           snapshot2,
         )),
@@ -214,23 +214,23 @@ void main() {
       final DataSnapshot snapshot2b = MockDataSnapshot('key20', 25);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot3,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot2a,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot1,
       ));
       expect(
         await processChildChangedEvent(
-          MockEvent(EventType.childChanged, 'key10', snapshot2b),
+          MockEvent(DatabaseEventType.childChanged, 'key10', snapshot2b),
         ),
         ListChange.at(1, snapshot2b),
       );
@@ -241,24 +241,24 @@ void main() {
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot3,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot2,
       ));
       await processChildAddedEvent(MockEvent(
-        EventType.childAdded,
+        DatabaseEventType.childAdded,
         null,
         snapshot1,
       ));
       expect(
         await processChildMovedEvent(
           MockEvent(
-            EventType.childMoved,
+            DatabaseEventType.childMoved,
             'key30',
             snapshot1,
           ),
@@ -270,11 +270,11 @@ void main() {
   });
 
   test('FirebaseList listeners are optional', () {
-    final onChildAddedStreamController = StreamController<Event>();
-    final onChildRemovedStreamController = StreamController<Event>();
-    final onChildChangedStreamController = StreamController<Event>();
-    final onChildMovedStreamController = StreamController<Event>();
-    final onValue = StreamController<Event>();
+    final onChildAddedStreamController = StreamController<DatabaseEvent>();
+    final onChildRemovedStreamController = StreamController<DatabaseEvent>();
+    final onChildChangedStreamController = StreamController<DatabaseEvent>();
+    final onChildMovedStreamController = StreamController<DatabaseEvent>();
+    final onValue = StreamController<DatabaseEvent>();
     addTearDown(() {
       onChildChangedStreamController.close();
       onChildRemovedStreamController.close();
@@ -301,11 +301,11 @@ void main() {
   });
 
   test('FirebaseSortedList listeners are optional', () {
-    final onChildAddedStreamController = StreamController<Event>();
-    final onChildRemovedStreamController = StreamController<Event>();
-    final onChildChangedStreamController = StreamController<Event>();
-    final onChildMovedStreamController = StreamController<Event>();
-    final onValue = StreamController<Event>();
+    final onChildAddedStreamController = StreamController<DatabaseEvent>();
+    final onChildRemovedStreamController = StreamController<DatabaseEvent>();
+    final onChildChangedStreamController = StreamController<DatabaseEvent>();
+    final onChildMovedStreamController = StreamController<DatabaseEvent>();
+    final onValue = StreamController<DatabaseEvent>();
     addTearDown(() {
       onChildChangedStreamController.close();
       onChildRemovedStreamController.close();
@@ -342,19 +342,19 @@ class MockQuery extends Mock implements Query {
   );
 
   @override
-  final Stream<Event> onChildAdded;
+  final Stream<DatabaseEvent> onChildAdded;
 
   @override
-  final Stream<Event> onChildRemoved;
+  final Stream<DatabaseEvent> onChildRemoved;
 
   @override
-  final Stream<Event> onChildChanged;
+  final Stream<DatabaseEvent> onChildChanged;
 
   @override
-  final Stream<Event> onChildMoved;
+  final Stream<DatabaseEvent> onChildMoved;
 
   @override
-  final Stream<Event> onValue;
+  final Stream<DatabaseEvent> onValue;
 }
 
 class ListChange {
@@ -388,11 +388,11 @@ class ListChange {
   int get hashCode => index;
 }
 
-class MockEvent implements Event {
+class MockEvent implements DatabaseEvent {
   MockEvent(this.type, this.previousChildKey, this.snapshot);
 
   @override
-  final EventType type;
+  final DatabaseEventType type;
 
   @override
   final String? previousChildKey;
