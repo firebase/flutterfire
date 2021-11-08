@@ -40,7 +40,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) async {
     return guard(() {
       return _delegate.logEvent(
@@ -69,7 +69,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setUserId({
     String? id,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) async {
     return guard(() {
       return _delegate.setUserId(
@@ -83,7 +83,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> setCurrentScreen({
     String? screenName,
     String? screenClassOverride,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) async {
     return guard(() {
       return _delegate.setCurrentScreen(
@@ -102,7 +102,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   Future<void> setUserProperty({
     required String name,
     required Object value,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) async {
     return guard(() {
       return _delegate.setUserProperty(

@@ -71,12 +71,12 @@ const String CONTENT_TYPE = 'content_type';
 const String ITEM_NAME = 'item_name';
 const String ACHIEVEMENT_ID = 'achievement_id';
 
-Item ITEM = Item(
+AnalyticsEventItem ITEM = AnalyticsEventItem(
   affiliation: 'affil',
   coupon: 'coup',
   creativeName: 'creativeName',
   creativeSlot: 'creativeSlot',
-  discount: 'disc',
+  discount: 2.22,
   index: 3,
   itemBrand: 'itemBrand',
   itemCategory: 'itemCategory',
@@ -90,10 +90,11 @@ Item ITEM = Item(
   itemName: 'itemName',
   itemVariant: 'itemVariant',
   locationId: 'locationId',
-  price: 'pri',
+  price: 9.99,
+  currency: 'USD',
   promotionId: 'promotionId',
   promotionName: 'promotionName',
-  quantity: 'quantity',
+  quantity: 1,
 );
 
 void main() {

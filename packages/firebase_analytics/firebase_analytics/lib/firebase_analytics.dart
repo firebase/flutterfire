@@ -13,7 +13,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 export 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart'
-    show Item, CallOptions;
+    show AnalyticsEventItem, AnalyticsCallOptions;
 import 'package:flutter/widgets.dart';
 
 part 'src/firebase_analytics.dart';

@@ -67,7 +67,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     throw UnimplementedError('logEvent() is not implemented');
   }
@@ -84,7 +84,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// [callOptions] are for web platform only.
   Future<void> setUserId({
     String? id,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     throw UnimplementedError('setUserId() is not implemented');
   }
@@ -97,7 +97,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> setCurrentScreen({
     String? screenName,
     String? screenClassOverride,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     throw UnimplementedError('setCurrentScreen() is not implemented');
   }
@@ -108,7 +108,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   Future<void> setUserProperty({
     required String name,
     required Object value,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     throw UnimplementedError('setUserProperty() is not implemented');
   }

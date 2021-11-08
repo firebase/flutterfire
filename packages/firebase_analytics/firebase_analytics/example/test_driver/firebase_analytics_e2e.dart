@@ -28,12 +28,12 @@ void testsMain() {
     test('logEvent', () async {
       await expectLater(analytics.logEvent(name: 'testing'), completes);
 
-      Item ITEM = Item(
+      AnalyticsEventItem ITEM = AnalyticsEventItem(
         affiliation: 'affil',
         coupon: 'coup',
         creativeName: 'creativeName',
         creativeSlot: 'creativeSlot',
-        discount: 'disc',
+        discount: 2.22,
         index: 3,
         itemBrand: 'itemBrand',
         itemCategory: 'itemCategory',
@@ -47,10 +47,11 @@ void testsMain() {
         itemName: 'itemName',
         itemVariant: 'itemVariant',
         locationId: 'locationId',
-        price: 'pri',
+        price: 9.99,
+        currency: 'USD',
         promotionId: 'promotionId',
         promotionName: 'promotionName',
-        quantity: 'quantity',
+        quantity: 1,
       );
       // test custom event
       await expectLater(

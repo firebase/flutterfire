@@ -19,23 +19,23 @@ abstract class AnalyticsJsImpl {
   external void logEvent(
     String eventName,
     Map<String, Object?>? parameters,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   );
 
   external void setAnalyticsCollectionEnabled(bool enabled);
 
   external void setCurrentScreen(
     String? screenName,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   );
 
   external void setUserId(
     String? id,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   );
 
   external void setUserProperties(
     Map<String, Object> property,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   );
 }

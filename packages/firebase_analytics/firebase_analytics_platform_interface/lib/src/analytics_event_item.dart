@@ -4,9 +4,11 @@
 
 /// Interface that defines the required attributes of an analytics Item.
 /// https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Param
-class Item {
-  Item({
+/// https://developers.google.com/analytics/devguides/collection/ga4/reference/events
+class AnalyticsEventItem {
+  AnalyticsEventItem({
     this.affiliation,
+    this.currency,
     this.coupon,
     this.creativeName,
     this.creativeSlot,
@@ -30,50 +32,104 @@ class Item {
     this.quantity,
   });
 
-  /// Affiliation.
+  /// A product affiliation to designate a supplying company or brick and
+  /// mortar store location.
+  /// e.g. Google Store
   final String? affiliation;
 
+  /// The currency, in 3-letter ISO 4217 format.
+  /// If set, event-level currency is ignored.
+  /// Multiple currencies per event is not supported. Each item should set the
+  /// same currency.
+  /// e.g. USD
+  final String? currency;
+
+  /// The coupon name/code associated with the item.
+  /// e.g. SUMMER_FUN
   final String? coupon;
 
+  /// The name of the promotional creative.
   final String? creativeName;
 
+  /// The name of the promotional creative slot associated with the item.
   final String? creativeSlot;
 
-  final String? discount;
+  /// The monetary discount value associated with the item.
+  /// e.g. 2.22
+  final num? discount;
 
+  /// The index/position of the item in a list.
+  /// e.g. 5
   final int? index;
 
+  /// The brand of the item.
+  /// e.g. Google
   final String? itemBrand;
 
+  /// The category of the item. If used as part of a category hierarchy or
+  /// taxonomy then this will be the first category.
+  /// e.g. Apparel
   final String? itemCategory;
 
+  /// The second category hierarchy or additional taxonomy for the item.
+  /// e.g. Adult
   final String? itemCategory2;
 
+  /// The third category hierarchy or additional taxonomy for the item.
+  /// e.g. Shirts
   final String? itemCategory3;
 
+  /// The fourth category hierarchy or additional taxonomy for the item.
+  /// e.g. Crew
   final String? itemCategory4;
 
+  /// The fifth category hierarchy or additional taxonomy for the item.
+  /// e.g. Short sleeve
   final String? itemCategory5;
 
+  /// The ID of the item.
+  /// One of [itemId] or [itemName] is required.
+  /// e.g. SKU_12345
   final String? itemId;
 
+  /// The ID of the list in which the item was presented to the user.
+  /// e.g. related_products
   final String? itemListId;
 
+  /// The name of the list in which the item was presented to the user.
+  /// e.g. Related products
   final String? itemListName;
 
+  /// The name of the item.
+  /// One of [itemId] or [itemName] is required.
+  /// e.g. Stan and Friends Tee
   final String? itemName;
 
+  /// The item variant or unique code or description for additional item details/options.
+  /// e.g. green
   final String? itemVariant;
 
+  /// The location associated with the item. It's recommended to use the Google
+  /// Place ID that corresponds to the associated item. A custom location ID can
+  /// also be used.
+  /// e.g. L_12345
   final String? locationId;
 
-  final String? price;
+  /// The monetary price of the item, in units of the specified currency parameter.
+  /// e.g. 9.99
+  final num? price;
 
+  /// The ID of the promotion associated with the item.
+  /// e.g. P_12345
   final String? promotionId;
 
+  /// The name of the promotion associated with the item.
+  /// e.g. Summer Sale
   final String? promotionName;
 
-  final String? quantity;
+  /// Item quantity.
+  /// e.g. 1
+  final int? quantity;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
@@ -105,6 +161,6 @@ class Item {
 
   @override
   String toString() {
-    return '$Item($asMap)';
+    return '$AnalyticsEventItem($asMap)';
   }
 }

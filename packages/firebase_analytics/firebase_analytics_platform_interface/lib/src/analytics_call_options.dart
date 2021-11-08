@@ -4,8 +4,8 @@
 
 /// Additional options that can be passed to Analytics method calls.
 /// Note; these options are only used on the web.
-class CallOptions {
-  CallOptions({
+class AnalyticsCallOptions {
+  AnalyticsCallOptions({
     required this.global,
   });
 
@@ -21,6 +21,6 @@ class CallOptions {
 
   @override
   String toString() {
-    return '$CallOptions($asMap)';
+    return '$AnalyticsCallOptions($asMap)';
   }
 }

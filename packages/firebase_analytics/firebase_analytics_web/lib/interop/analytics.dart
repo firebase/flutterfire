@@ -37,7 +37,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   void logEvent({
     required String name,
     Map<String, Object?>? parameters,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     return jsObject.logEvent(name, parameters, callOptions);
   }
@@ -48,7 +48,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   void setCurrentScreen({
     String? screenName,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     return jsObject.setCurrentScreen(
       screenName,
@@ -58,7 +58,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   void setUserId({
     String? id,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     return jsObject.setUserId(
       id,
@@ -69,7 +69,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   void setUserProperty({
     required String name,
     required Object value,
-    CallOptions? callOptions,
+    AnalyticsCallOptions? callOptions,
   }) {
     return jsObject.setUserProperties(
       {name: value},
