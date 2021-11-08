@@ -20,6 +20,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   ///     analytics.android?.setSessionTimeoutDuration(true);
+  @Deprecated(
+      'Android namespace will be removed in future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()')
   final FirebaseAnalyticsAndroid? android =
       defaultTargetPlatform == TargetPlatform.android && !kIsWeb
           ? FirebaseAnalyticsAndroid()

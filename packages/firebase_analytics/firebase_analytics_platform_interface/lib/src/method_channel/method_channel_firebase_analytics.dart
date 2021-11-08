@@ -2,14 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
 import 'dart:async';
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:io';
 
+import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
-import '../../firebase_analytics_platform_interface.dart';
-import '../platform_interface/platform_interface_firebase_analytics.dart';
+import 'utils/exception.dart';
 
 /// The method channel implementation of [FirebaseAnalyticsPlatform].
 class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
@@ -33,125 +33,141 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_analytics');
 
-  /// Gets a [FirebaseAnalyticsPlatform]
   @override
   FirebaseAnalyticsPlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebaseAnalytics(app: app);
   }
 
-  /// Logs the given event [name] with the given [parameters].
-  /// [callOptions] are for web platform only.
   @override
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,
     CallOptions? callOptions,
   }) {
-    return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
-      'eventName': name,
-      'parameters': parameters,
-    });
+    try {
+      return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+        'eventName': name,
+        'parameters': parameters,
+      });
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets the applicable end user consent state.
   @override
   Future<void> setConsent({
     ConsentStatus? adStorage,
     ConsentStatus? analyticsStorage,
   }) async {
-    return channel.invokeMethod<void>(
-      'Analytics#setConsent',
-      <String, Object?>{
-        'adStorage': adStorage,
-        'analyticsStorage': analyticsStorage,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'Analytics#setConsent',
+        <String, Object?>{
+          'adStorage': adStorage,
+          'analyticsStorage': analyticsStorage,
+        },
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   @override
   Future<void> setDefaultEventParameters(
       Map<String, Object> defaultParameters) async {
-    return channel.invokeMethod<void>(
-      'Analytics#setDefaultEventParameters',
-      defaultParameters,
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'Analytics#setDefaultEventParameters',
+        defaultParameters,
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets whether analytics collection is enabled for this app.
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
-    return channel.invokeMethod<void>(
-      'Analytics#setAnalyticsCollectionEnabled',
-      <String, bool?>{
-        'enabled': enabled,
-      },
-    );
+    try {
+      return channel.invokeMethod<void>(
+        'Analytics#setAnalyticsCollectionEnabled',
+        <String, bool?>{
+          'enabled': enabled,
+        },
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets the user id.
-  /// Setting a null [id] removes the user id.
-  /// [callOptions] are for web platform only.
   @override
   Future<void> setUserId({
     String? id,
     CallOptions? callOptions,
   }) {
-    return channel.invokeMethod<void>(
-        'Analytics#setUserId', <String, String?>{'userId': id});
+    try {
+      return channel.invokeMethod<void>(
+          'Analytics#setUserId', <String, String?>{'userId': id});
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets the current screen name, which specifies the current visual context
-  /// in your app.
-  ///
-  /// Setting a null [screenName] clears the current screen name.
-  /// [callOptions] are for web platform only.
   @override
   Future<void> setCurrentScreen({
     String? screenName,
     String? screenClassOverride,
     CallOptions? callOptions,
   }) {
-    return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
-      'eventName': 'screen_view',
-      'parameters': <String, String?>{
-        'screen_name': screenName,
-        'screen_class': screenClassOverride,
-      },
-    });
+    try {
+      return channel.invokeMethod<void>('Analytics#logEvent', <String, Object?>{
+        'eventName': 'screen_view',
+        'parameters': <String, String?>{
+          'screen_name': screenName,
+          'screen_class': screenClassOverride,
+        },
+      });
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets a user property to the given value.
-  /// Setting a null [value] removes the user property.
-  /// [callOptions] are for web platform only.
   @override
   Future<void> setUserProperty({
     required String name,
     required Object value,
     CallOptions? callOptions,
   }) {
-    return channel
-        .invokeMethod<void>('Analytics#setUserProperty', <String, Object?>{
-      'name': name,
-      'value': value,
-    });
+    try {
+      return channel
+          .invokeMethod<void>('Analytics#setUserProperty', <String, Object?>{
+        'name': name,
+        'value': value,
+      });
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Clears all analytics data for this app from the device and resets the app
-  /// instance id.
   @override
   Future<void> resetAnalyticsData() {
-    return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
+    try {
+      return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
-  /// Sets the duration of inactivity that terminates the current session.
   @override
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
-    if (Platform.isAndroid) {
-      return channel.invokeMethod<void>(
-          'Analytics#setSessionTimeoutDuration', <String, int>{
-        'milliseconds': timeout.inMilliseconds,
-      });
+    try {
+      if (Platform.isAndroid) {
+        return channel.invokeMethod<void>(
+            'Analytics#setSessionTimeoutDuration', <String, int>{
+          'milliseconds': timeout.inMilliseconds,
+        });
+      }
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 }

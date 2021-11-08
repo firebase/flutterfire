@@ -6,99 +6,99 @@
 /// https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Param
 class Item {
   Item({
-    this.affilitation,
+    this.affiliation,
     this.coupon,
-    this.creative_name,
-    this.creative_slot,
+    this.creativeName,
+    this.creativeSlot,
     this.discount,
     this.index,
-    this.item_brand,
-    this.item_category,
-    this.item_category2,
-    this.item_category3,
-    this.item_category4,
-    this.item_category5,
-    this.item_id,
-    this.item_list_id,
-    this.item_list_name,
-    this.item_name,
-    this.item_variant,
-    this.location_id,
+    this.itemBrand,
+    this.itemCategory,
+    this.itemCategory2,
+    this.itemCategory3,
+    this.itemCategory4,
+    this.itemCategory5,
+    this.itemId,
+    this.itemListId,
+    this.itemListName,
+    this.itemName,
+    this.itemVariant,
+    this.locationId,
     this.price,
-    this.promotion_id,
-    this.promotion_name,
+    this.promotionId,
+    this.promotionName,
     this.quantity,
   });
 
   /// Affiliation.
-  final String? affilitation;
+  final String? affiliation;
 
   final String? coupon;
 
-  final String? creative_name;
+  final String? creativeName;
 
-  final String? creative_slot;
+  final String? creativeSlot;
 
   final String? discount;
 
   final int? index;
 
-  final String? item_brand;
+  final String? itemBrand;
 
-  final String? item_category;
+  final String? itemCategory;
 
-  final String? item_category2;
+  final String? itemCategory2;
 
-  final String? item_category3;
+  final String? itemCategory3;
 
-  final String? item_category4;
+  final String? itemCategory4;
 
-  final String? item_category5;
+  final String? itemCategory5;
 
-  final String? item_id;
+  final String? itemId;
 
-  final String? item_list_id;
+  final String? itemListId;
 
-  final String? item_list_name;
+  final String? itemListName;
 
-  final String? item_name;
+  final String? itemName;
 
-  final String? item_variant;
+  final String? itemVariant;
 
-  final String? location_id;
+  final String? locationId;
 
   final String? price;
 
-  final String? promotion_id;
+  final String? promotionId;
 
-  final String? promotion_name;
+  final String? promotionName;
 
   final String? quantity;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
-      if (affilitation != null) 'affilitation': affilitation,
+      if (affiliation != null) 'affiliation': affiliation,
       if (coupon != null) 'coupon': coupon,
-      if (creative_name != null) 'creative_name': creative_name,
-      if (creative_slot != null) 'creative_slot': creative_slot,
+      if (creativeName != null) 'creative_name': creativeName,
+      if (creativeSlot != null) 'creative_slot': creativeSlot,
       if (discount != null) 'discount': discount,
       if (index != null) 'index': index,
-      if (item_brand != null) 'item_brand': item_brand,
-      if (item_category != null) 'item_category': item_category,
-      if (item_category2 != null) 'item_category2': item_category2,
-      if (item_category3 != null) 'item_category3': item_category3,
-      if (item_category4 != null) 'item_category4': item_category4,
-      if (item_category5 != null) 'item_category5': item_category5,
-      if (item_id != null) 'item_id': item_id,
-      if (item_list_id != null) 'item_list_id': item_list_id,
-      if (item_list_name != null) 'item_list_name': item_list_name,
-      if (item_name != null) 'item_name': item_name,
-      if (item_variant != null) 'item_variant': item_variant,
-      if (location_id != null) 'location_id': location_id,
+      if (itemBrand != null) 'item_brand': itemBrand,
+      if (itemCategory != null) 'item_category': itemCategory,
+      if (itemCategory2 != null) 'item_category2': itemCategory2,
+      if (itemCategory3 != null) 'item_category3': itemCategory3,
+      if (itemCategory4 != null) 'item_category4': itemCategory4,
+      if (itemCategory5 != null) 'item_category5': itemCategory5,
+      if (itemId != null) 'item_id': itemId,
+      if (itemListId != null) 'item_list_id': itemListId,
+      if (itemListName != null) 'item_list_name': itemListName,
+      if (itemName != null) 'item_name': itemName,
+      if (itemVariant != null) 'item_variant': itemVariant,
+      if (locationId != null) 'location_id': locationId,
       if (price != null) 'price': price,
-      if (promotion_id != null) 'promotion_id': promotion_id,
-      if (promotion_name != null) 'promotion_name': promotion_name,
+      if (promotionId != null) 'promotion_id': promotionId,
+      if (promotionName != null) 'promotion_name': promotionName,
       if (quantity != null) 'quantity': quantity,
     };
   }

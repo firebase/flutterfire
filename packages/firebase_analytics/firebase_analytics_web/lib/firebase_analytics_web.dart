@@ -3,10 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_analytics_web/utils/exception.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'interop/analytics.dart' as analytics_interop;
 
 /// Web implementation of [FirebaseAnalyticsPlatform]
@@ -40,11 +42,13 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? parameters,
     CallOptions? callOptions,
   }) async {
-    _delegate.logEvent(
-      name: name,
-      parameters: parameters ?? {},
-      callOptions: callOptions,
-    );
+    return guard(() {
+      return _delegate.logEvent(
+        name: name,
+        parameters: parameters ?? {},
+        callOptions: callOptions,
+      );
+    });
   }
 
   @override
@@ -55,7 +59,9 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    _delegate.setAnalyticsCollectionEnabled(enabled: enabled);
+    return guard(() {
+      return _delegate.setAnalyticsCollectionEnabled(enabled: enabled);
+    });
   }
 
   @override
@@ -63,10 +69,12 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? id,
     CallOptions? callOptions,
   }) async {
-    _delegate.setUserId(
-      id: id,
-      callOptions: callOptions,
-    );
+    return guard(() {
+      return _delegate.setUserId(
+        id: id,
+        callOptions: callOptions,
+      );
+    });
   }
 
   @override
@@ -75,10 +83,12 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? screenClassOverride,
     CallOptions? callOptions,
   }) async {
-    _delegate.setCurrentScreen(
-      screenName: screenName,
-      callOptions: callOptions,
-    );
+    return guard(() {
+      return _delegate.setCurrentScreen(
+        screenName: screenName,
+        callOptions: callOptions,
+      );
+    });
   }
 
   @override
@@ -92,11 +102,13 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     required Object value,
     CallOptions? callOptions,
   }) async {
-    _delegate.setUserProperty(
-      name: name,
-      value: value,
-      callOptions: callOptions,
-    );
+    return guard(() {
+      return _delegate.setUserProperty(
+        name: name,
+        value: value,
+        callOptions: callOptions,
+      );
+    });
   }
 
   @override
