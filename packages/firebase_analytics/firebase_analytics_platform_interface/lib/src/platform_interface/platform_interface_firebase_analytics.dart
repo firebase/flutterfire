@@ -126,8 +126,8 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Sets the applicable end user consent state.
   Future<void> setConsent({
-    ConsentStatus? adStorage,
-    ConsentStatus? analyticsStorage,
+    bool? adStorageConsentGranted,
+    bool? analyticsStorageConsentGranted,
   }) {
     throw UnimplementedError('setConsent() is not implemented');
   }

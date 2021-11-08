@@ -103,14 +103,14 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
+  /// Sets the applicable end user consent state. 'default' value for 'adStorageConsentGranted' & 'analyticsStorageConsentGranted' is 'true'
   Future<void> setConsent({
-    ConsentStatus? adStorage,
-    ConsentStatus? analyticsStorage,
+    bool? adStorageConsentGranted,
+    bool? analyticsStorageConsentGranted,
   }) async {
     await _delegate.setConsent(
-      adStorage: adStorage,
-      analyticsStorage: analyticsStorage,
+      adStorageConsentGranted: adStorageConsentGranted,
+      analyticsStorageConsentGranted: analyticsStorageConsentGranted,
     );
   }
 

@@ -8,14 +8,13 @@
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-NSString *const kFLTFirebaseAnalyticsConsentDenied = @"denied";
 NSString *const kFLTFirebaseAnalyticsName = @"name";
 NSString *const kFLTFirebaseAnalyticsValue = @"value";
 NSString *const kFLTFirebaseAnalyticsEnabled = @"enabled";
 NSString *const kFLTFirebaseAnalyticsEventName = @"eventName";
 NSString *const kFLTFirebaseAnalyticsParameters = @"parameters";
-NSString *const kFLTFirebaseAnalyticsAdStorage = @"adStorage";
-NSString *const kFLTFirebaseAnalyticsStorage = @"analyticsStorage";
+NSString *const kFLTFirebaseAnalyticsAdStorageConsentGranted = @"adStorageConsentGranted";
+NSString *const kFLTFirebaseAnalyticsStorageConsentGranted = @"analyticsStorageConsentGranted";
 NSString *const kFLTFirebaseAnalyticsUserId = @"userId";
 
 NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_analytics";
@@ -39,7 +38,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
   FLTFirebaseAnalyticsPlugin *instance = [FLTFirebaseAnalyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
 #if !TARGET_OS_OSX
-  [registrar publish:instance];  // iOS only supported
+  [registrar publish:instance];
 #endif
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
@@ -118,23 +117,18 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *adStorage = arguments[kFLTFirebaseAnalyticsAdStorage];
-  NSString *analyticsStorage = arguments[kFLTFirebaseAnalyticsStorage];
+  NSNumber *adStorageGranted = arguments[kFLTFirebaseAnalyticsAdStorageConsentGranted];
+  NSNumber *analyticsStorageGranted = arguments[kFLTFirebaseAnalyticsStorageConsentGranted];
   NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
       [[NSMutableDictionary alloc] init];
-  if (adStorage != NULL) {
-    FIRConsentStatus adStorageConsent =
-        [adStorage isEqualToString:kFLTFirebaseAnalyticsConsentDenied] ? FIRConsentStatusDenied
-                                                                       : FIRConsentStatusGranted;
-    parameters[FIRConsentTypeAdStorage] = adStorageConsent;
-  }
 
-  if (analyticsStorage != NULL) {
-    FIRConsentStatus analyticsStorageConsent =
-        [analyticsStorage isEqualToString:kFLTFirebaseAnalyticsConsentDenied]
-            ? FIRConsentStatusDenied
-            : FIRConsentStatusGranted;
-    parameters[FIRConsentTypeAnalyticsStorage] = analyticsStorageConsent;
+  if (adStorageGranted != nil) {
+    parameters[FIRConsentTypeAdStorage] =
+        [adStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+  }
+  if (analyticsStorageGranted != nil) {
+    parameters[FIRConsentTypeAnalyticsStorage] =
+        [analyticsStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
   }
 
   [FIRAnalytics setConsent:parameters];

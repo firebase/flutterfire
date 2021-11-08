@@ -56,15 +56,17 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setConsent({
-    ConsentStatus? adStorage,
-    ConsentStatus? analyticsStorage,
+    bool? adStorageConsentGranted,
+    bool? analyticsStorageConsentGranted,
   }) async {
     try {
       return channel.invokeMethod<void>(
         'Analytics#setConsent',
         <String, Object?>{
-          'adStorage': adStorage,
-          'analyticsStorage': analyticsStorage,
+          if (adStorageConsentGranted != null)
+            'adStorageConsentGranted': adStorageConsentGranted,
+          if (analyticsStorageConsentGranted != null)
+            'analyticsStorageConsentGranted': analyticsStorageConsentGranted,
         },
       );
     } catch (e, s) {

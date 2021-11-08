@@ -218,27 +218,27 @@ public class FlutterFirebaseAnalyticsPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final String adStorage = (String) arguments.get(Constants.AD_STORAGE);
-          final String analyticsStorage = (String) arguments.get(Constants.ANALYTICS_STORAGE);
+          final Boolean adStorageGranted =
+              (Boolean) arguments.get(Constants.AD_STORAGE_CONSENT_GRANTED);
+          final Boolean analyticsStorageGranted =
+              (Boolean) arguments.get(Constants.ANALYTICS_STORAGE_CONSENT_GRANTED);
           HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
               new HashMap<>();
 
-          if (adStorage != null) {
-            FirebaseAnalytics.ConsentStatus adStorageStatus =
-                adStorage.equals(Constants.DENIED)
-                    ? FirebaseAnalytics.ConsentStatus.DENIED
-                    : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-            parameters.put(FirebaseAnalytics.ConsentType.AD_STORAGE, adStorageStatus);
+          if (adStorageGranted != null) {
+            parameters.put(
+                FirebaseAnalytics.ConsentType.AD_STORAGE,
+                adStorageGranted
+                    ? FirebaseAnalytics.ConsentStatus.GRANTED
+                    : FirebaseAnalytics.ConsentStatus.DENIED);
           }
 
-          if (analyticsStorage != null) {
-            FirebaseAnalytics.ConsentStatus analyticsStorageStatus =
-                analyticsStorage.equals(Constants.DENIED)
-                    ? FirebaseAnalytics.ConsentStatus.DENIED
-                    : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-            parameters.put(FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE, analyticsStorageStatus);
+          if (analyticsStorageGranted != null) {
+            parameters.put(
+                FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE,
+                analyticsStorageGranted
+                    ? FirebaseAnalytics.ConsentStatus.GRANTED
+                    : FirebaseAnalytics.ConsentStatus.DENIED);
           }
 
           analytics.setConsent(parameters);
