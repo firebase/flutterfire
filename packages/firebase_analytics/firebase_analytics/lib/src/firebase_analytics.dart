@@ -189,7 +189,7 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   /// Setting a null [value] removes the user property.
   Future<void> setUserProperty({
     required String name,
-    required Object value,
+    required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
     if (name.isEmpty ||

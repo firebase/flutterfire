@@ -68,7 +68,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
 
   void setUserProperty({
     required String name,
-    required Object value,
+    required String? value,
     AnalyticsCallOptions? callOptions,
   }) {
     return jsObject.setUserProperties(

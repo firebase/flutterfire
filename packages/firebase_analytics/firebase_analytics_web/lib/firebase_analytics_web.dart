@@ -56,7 +56,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     bool? adStorageConsentGranted,
     bool? analyticsStorageConsentGranted,
   }) async {
-    // no setConsent() API for web
+    throw UnimplementedError('setConsent() is not supported on Web.');
   }
 
   @override
@@ -95,13 +95,13 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> resetAnalyticsData() async {
-    // no resetAnalyticsData() API for web
+    throw UnimplementedError('resetAnalyticsData() is not supported on Web.');
   }
 
   @override
   Future<void> setUserProperty({
     required String name,
-    required Object value,
+    required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
     return guard(() {
@@ -115,6 +115,8 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
-    // no setSessionTimeoutDuration() API for web
+    throw UnimplementedError(
+      'setSessionTimeoutDuration() is not supported on Web.',
+    );
   }
 }

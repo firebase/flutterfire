@@ -5,6 +5,7 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void testsMain() {
@@ -28,7 +29,7 @@ void testsMain() {
     test('logEvent', () async {
       await expectLater(analytics.logEvent(name: 'testing'), completes);
 
-      AnalyticsEventItem ITEM = AnalyticsEventItem(
+      AnalyticsEventItem analyticsEventItem = AnalyticsEventItem(
         affiliation: 'affil',
         coupon: 'coup',
         creativeName: 'creativeName',
@@ -60,7 +61,7 @@ void testsMain() {
           parameters: {
             'foo': 'bar',
             'baz': 500,
-            'items': [ITEM],
+            'items': [analyticsEventItem],
           },
         ),
         completes,
@@ -83,7 +84,7 @@ void testsMain() {
           currency: 'foo',
           coupon: 'bar',
           value: 200,
-          items: [ITEM],
+          items: [analyticsEventItem],
           tax: 10,
           shipping: 23,
           transactionId: 'bar',
@@ -93,12 +94,17 @@ void testsMain() {
       );
     });
 
-    test('setSessionTimeoutDuration', () async {
-      await expectLater(
-        analytics.setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-        completes,
-      );
-    });
+    test(
+      'setSessionTimeoutDuration',
+      () async {
+        await expectLater(
+          analytics
+              .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
 
     test('setAnalyticsCollectionEnabled', () async {
       await expectLater(
@@ -125,9 +131,27 @@ void testsMain() {
       );
     });
 
-    test('resetAnalyticsData', () async {
-      await expectLater(analytics.resetAnalyticsData(), completes);
-    });
+    test(
+      'resetAnalyticsData',
+      () async {
+        await expectLater(analytics.resetAnalyticsData(), completes);
+      },
+      skip: kIsWeb,
+    );
+
+    test(
+      'setConsent',
+      () async {
+        await expectLater(
+          analytics.setConsent(
+            analyticsStorageConsentGranted: true,
+            adStorageConsentGranted: false,
+          ),
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
   });
 }
 

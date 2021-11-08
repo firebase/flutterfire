@@ -35,7 +35,7 @@ abstract class AnalyticsJsImpl {
   );
 
   external void setUserProperties(
-    Map<String, Object> property,
+    Map<String, Object?> property,
     AnalyticsCallOptions? callOptions,
   );
 }

@@ -107,7 +107,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   /// [callOptions] are for web platform only.
   Future<void> setUserProperty({
     required String name,
-    required Object value,
+    required String? value,
     AnalyticsCallOptions? callOptions,
   }) {
     throw UnimplementedError('setUserProperty() is not implemented');

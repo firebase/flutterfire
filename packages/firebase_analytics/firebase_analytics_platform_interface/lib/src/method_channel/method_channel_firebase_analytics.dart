@@ -139,7 +139,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   @override
   Future<void> setUserProperty({
     required String name,
-    required Object value,
+    required String? value,
     AnalyticsCallOptions? callOptions,
   }) {
     try {
