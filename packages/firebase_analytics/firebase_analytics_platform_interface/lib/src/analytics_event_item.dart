@@ -135,6 +135,7 @@ class AnalyticsEventItem {
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       if (affiliation != null) 'affiliation': affiliation,
+      if (currency != null) 'currency': currency,
       if (coupon != null) 'coupon': coupon,
       if (creativeName != null) 'creative_name': creativeName,
       if (creativeSlot != null) 'creative_slot': creativeSlot,
