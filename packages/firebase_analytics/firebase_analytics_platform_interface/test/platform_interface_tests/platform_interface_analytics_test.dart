@@ -42,9 +42,13 @@ void main() {
 
     test('get.instance', () {
       expect(
-          FirebaseAnalyticsPlatform.instance, isA<FirebaseAnalyticsPlatform>());
-      expect(FirebaseAnalyticsPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+        FirebaseAnalyticsPlatform.instance,
+        isA<FirebaseAnalyticsPlatform>(),
+      );
+      expect(
+        FirebaseAnalyticsPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     test('set.instance', () {
@@ -52,7 +56,9 @@ void main() {
           TestFirebaseAnalyticsPlatform(secondaryApp!);
 
       expect(
-          FirebaseAnalyticsPlatform.instance, isA<FirebaseAnalyticsPlatform>());
+        FirebaseAnalyticsPlatform.instance,
+        isA<FirebaseAnalyticsPlatform>(),
+      );
       expect(FirebaseAnalyticsPlatform.instance.app.name, equals('testApp2'));
     });
 
@@ -61,7 +67,10 @@ void main() {
         () => firebaseAnalyticsPlatform.delegateFor(app: app!),
         throwsA(
           isA<UnimplementedError>().having(
-              (e) => e.message, 'message', 'delegateFor() is not implemented'),
+            (e) => e.message,
+            'message',
+            'delegateFor() is not implemented',
+          ),
         ),
       );
     });
@@ -71,7 +80,10 @@ void main() {
         () => firebaseAnalyticsPlatform.logEvent(name: 'test name'),
         throwsA(
           isA<UnimplementedError>().having(
-              (e) => e.message, 'message', 'logEvent() is not implemented'),
+            (e) => e.message,
+            'message',
+            'logEvent() is not implemented',
+          ),
         ),
       );
     });
@@ -81,8 +93,11 @@ void main() {
       await expectLater(
         () => firebaseAnalyticsPlatform.setAnalyticsCollectionEnabled(true),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'setAnalyticsCollectionEnabled() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setAnalyticsCollectionEnabled() is not implemented',
+          ),
         ),
       );
     });
@@ -92,7 +107,10 @@ void main() {
         () => firebaseAnalyticsPlatform.setUserId(id: 'test user id'),
         throwsA(
           isA<UnimplementedError>().having(
-              (e) => e.message, 'message', 'setUserId() is not implemented'),
+            (e) => e.message,
+            'message',
+            'setUserId() is not implemented',
+          ),
         ),
       );
     });
@@ -100,10 +118,14 @@ void main() {
     test('throws if .setCurrentScreen() not implemented', () async {
       await expectLater(
         () => firebaseAnalyticsPlatform.setCurrentScreen(
-            screenName: 'test screen'),
+          screenName: 'test screen',
+        ),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'setCurrentScreen() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setCurrentScreen() is not implemented',
+          ),
         ),
       );
     });
@@ -111,10 +133,15 @@ void main() {
     test('throws if .setUserProperty() not implemented', () async {
       await expectLater(
         () => firebaseAnalyticsPlatform.setUserProperty(
-            value: 'test value', name: 'test name'),
+          value: 'test value',
+          name: 'test name',
+        ),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'setUserProperty() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setUserProperty() is not implemented',
+          ),
         ),
       );
     });
@@ -123,8 +150,11 @@ void main() {
       await expectLater(
         () => firebaseAnalyticsPlatform.resetAnalyticsData(),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'resetAnalyticsData() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'resetAnalyticsData() is not implemented',
+          ),
         ),
       );
     });
@@ -134,8 +164,11 @@ void main() {
         () => firebaseAnalyticsPlatform
             .setSessionTimeoutDuration(const Duration(milliseconds: 1000)),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'setSessionTimeoutDuration() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setSessionTimeoutDuration() is not implemented',
+          ),
         ),
       );
     });
@@ -145,7 +178,10 @@ void main() {
         () => firebaseAnalyticsPlatform.setConsent(),
         throwsA(
           isA<UnimplementedError>().having(
-              (e) => e.message, 'message', 'setConsent() is not implemented'),
+            (e) => e.message,
+            'message',
+            'setConsent() is not implemented',
+          ),
         ),
       );
     });
@@ -154,8 +190,11 @@ void main() {
       await expectLater(
         () => firebaseAnalyticsPlatform.setDefaultEventParameters({}),
         throwsA(
-          isA<UnimplementedError>().having((e) => e.message, 'message',
-              'setDefaultEventParameters() is not implemented'),
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'setDefaultEventParameters() is not implemented',
+          ),
         ),
       );
     });

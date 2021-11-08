@@ -57,10 +57,13 @@ void main() {
         methodCallLogger,
         <Matcher>[
           isMethodCall(
-            'Analytics#setCurrentScreen',
+            'Analytics#logEvent',
             arguments: {
-              'screenName': 'test-screen-name',
-              'screenClassOverride': 'test-class-override',
+              'eventName': 'screen_view',
+              'parameters': {
+                'screen_name': 'test-screen-name',
+                'screen_class': 'test-class-override',
+              },
             },
           ),
         ],

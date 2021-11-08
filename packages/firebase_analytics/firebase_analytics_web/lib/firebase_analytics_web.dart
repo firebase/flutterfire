@@ -52,8 +52,10 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
-  Future<void> setConsent(
-      {ConsentStatus? adStorage, ConsentStatus? analyticsStorage}) async {
+  Future<void> setConsent({
+    ConsentStatus? adStorage,
+    ConsentStatus? analyticsStorage,
+  }) async {
     // no setConsent() API for web
   }
 

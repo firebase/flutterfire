@@ -94,14 +94,16 @@ void testsMain() {
 
     test('setSessionTimeoutDuration', () async {
       await expectLater(
-          analytics
-              .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-          completes);
+        analytics.setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+        completes,
+      );
     });
 
     test('setAnalyticsCollectionEnabled', () async {
       await expectLater(
-          analytics.setAnalyticsCollectionEnabled(true), completes);
+        analytics.setAnalyticsCollectionEnabled(true),
+        completes,
+      );
     });
 
     test('setUserId', () async {
@@ -110,16 +112,16 @@ void testsMain() {
 
     test('setCurrentScreen', () async {
       await expectLater(
-          analytics.setCurrentScreen(screenName: 'screen-name'), completes);
+        analytics.setCurrentScreen(screenName: 'screen-name'),
+        completes,
+      );
     });
 
     test('setUserProperty', () async {
       await expectLater(
-          analytics.setUserProperty(name: 'foo', value: 'bar'), completes);
-    });
-
-    test('resetAnalyticsData', () async {
-      await expectLater(analytics.resetAnalyticsData(), completes);
+        analytics.setUserProperty(name: 'foo', value: 'bar'),
+        completes,
+      );
     });
 
     test('resetAnalyticsData', () async {

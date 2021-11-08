@@ -64,17 +64,19 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
   }
 
   /// Logs the given event [name] with the given [parameters].
-  Future<void> logEvent(
-      {required String name,
-      Map<String, Object?>? parameters,
-      CallOptions? callOptions}) {
+  Future<void> logEvent({
+    required String name,
+    Map<String, Object?>? parameters,
+    CallOptions? callOptions,
+  }) {
     throw UnimplementedError('logEvent() is not implemented');
   }
 
   /// Sets whether analytics collection is enabled for this app.
   Future<void> setAnalyticsCollectionEnabled(bool enabled) {
     throw UnimplementedError(
-        'setAnalyticsCollectionEnabled() is not implemented');
+      'setAnalyticsCollectionEnabled() is not implemented',
+    );
   }
 
   /// Sets the user id.

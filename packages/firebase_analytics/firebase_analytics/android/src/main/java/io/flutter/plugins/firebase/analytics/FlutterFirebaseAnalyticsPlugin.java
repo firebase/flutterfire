@@ -61,10 +61,11 @@ public class FlutterFirebaseAnalyticsPlugin
       } else if (value == null) {
         bundle.putString(key, null);
       } else if (value instanceof Iterable<?>) {
-        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+        ArrayList<Parcelable> list = new ArrayList<>();
 
         for (Object item : (Iterable<?>) value) {
           if (item instanceof Map) {
+            //noinspection unchecked
             list.add(createBundleFromMap((Map<String, Object>) item));
           } else {
             throw new IllegalArgumentException(
@@ -77,6 +78,7 @@ public class FlutterFirebaseAnalyticsPlugin
 
         bundle.putParcelableArrayList(key, list);
       } else if (value instanceof Map<?, ?>) {
+        //noinspection unchecked
         bundle.putParcelable(key, createBundleFromMap((Map<String, Object>) value));
       } else {
         throw new IllegalArgumentException(
@@ -152,6 +154,7 @@ public class FlutterFirebaseAnalyticsPlugin
         () -> {
           final String eventName =
               (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
+          @SuppressWarnings("unchecked")
           final Map<String, Object> map = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
           final Bundle parameterBundle = createBundleFromMap(map);
           analytics.logEvent(eventName, parameterBundle);

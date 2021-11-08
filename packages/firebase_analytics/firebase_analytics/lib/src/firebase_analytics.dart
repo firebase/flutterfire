@@ -21,7 +21,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   ///     analytics.android?.setSessionTimeoutDuration(true);
   @Deprecated(
-      'Android namespace will be removed in future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()')
+    'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
+  )
   final FirebaseAnalyticsAndroid? android =
       defaultTargetPlatform == TargetPlatform.android && !kIsWeb
           ? FirebaseAnalyticsAndroid()
@@ -72,14 +73,20 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   }) async {
     if (_reservedEventNames.contains(name)) {
       throw ArgumentError.value(
-          name, 'name', 'Event name is reserved and cannot be used');
+        name,
+        'name',
+        'Event name is reserved and cannot be used',
+      );
     }
 
     const String kReservedPrefix = 'firebase_';
 
     if (name.startsWith(kReservedPrefix)) {
-      throw ArgumentError.value(name, 'name',
-          'Prefix "$kReservedPrefix" is reserved and cannot be used.');
+      throw ArgumentError.value(
+        name,
+        'name',
+        'Prefix "$kReservedPrefix" is reserved and cannot be used.',
+      );
     }
 
     if (parameters?['items'] is List<Item>) {
@@ -90,7 +97,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     }
 
     await _delegate.logEvent(
-        name: name, parameters: parameters, callOptions: callOptions);
+      name: name,
+      parameters: parameters,
+      callOptions: callOptions,
+    );
   }
 
   /// Sets the applicable end user consent state. 'default' value for 'adStorage' & 'analyticsStorage' is 'granted'
@@ -106,7 +116,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-      Map<String, Object> defaultParameters) async {
+    Map<String, Object> defaultParameters,
+  ) async {
     await _delegate.setDefaultEventParameters(defaultParameters);
   }
 
@@ -183,7 +194,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
         name.indexOf(_alpha) != 0 ||
         name.contains(_nonAlphaNumeric)) {
       throw ArgumentError.value(
-          name, 'name', 'must contain 1 to 24 alphanumeric characters.');
+        name,
+        'name',
+        'must contain 1 to 24 alphanumeric characters.',
+      );
     }
 
     if (name.startsWith('firebase_')) {
@@ -191,7 +205,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     }
 
     await _delegate.setUserProperty(
-        name: name, value: value, callOptions: callOptions);
+      name: name,
+      value: value,
+      callOptions: callOptions,
+    );
   }
 
   /// Clears all analytics data for this app from the device and resets the app instance id.
@@ -316,7 +333,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ECOMMERCE_PURCHASE
   @Deprecated(
-      'logEcommercePurchase() has been deprecated. Please use logPurchase()')
+    'logEcommercePurchase() has been deprecated. Please use logPurchase()',
+  )
   Future<void> logEcommercePurchase({
     String? currency,
     double? value,
@@ -491,7 +509,8 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
   ///
   /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#PRESENT_OFFER
   @Deprecated(
-      'logPresentOffer() has been deprecated. Please use logViewPromotion()')
+    'logPresentOffer() has been deprecated. Please use logViewPromotion()',
+  )
   Future<void> logPresentOffer({
     required String itemId,
     required String itemName,
@@ -1155,7 +1174,8 @@ class FirebaseAnalyticsAndroid {
   ///
   /// The default value is 1800000 (30 minutes).
   @Deprecated(
-      'Android namespace will be removed in future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()')
+    'Android namespace will be removed in a future release. Please use FirebaseAnalytics.instance.setSessionTimeoutDuration()',
+  )
   Future<void> setSessionTimeoutDuration(int milliseconds) async {
     final timeout = Duration(milliseconds: milliseconds);
 

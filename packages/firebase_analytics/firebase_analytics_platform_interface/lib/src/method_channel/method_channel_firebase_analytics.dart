@@ -74,7 +74,8 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setDefaultEventParameters(
-      Map<String, Object> defaultParameters) async {
+    Map<String, Object> defaultParameters,
+  ) async {
     try {
       return channel.invokeMethod<void>(
         'Analytics#setDefaultEventParameters',
@@ -106,7 +107,9 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }) {
     try {
       return channel.invokeMethod<void>(
-          'Analytics#setUserId', <String, String?>{'userId': id});
+        'Analytics#setUserId',
+        <String, String?>{'userId': id},
+      );
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }

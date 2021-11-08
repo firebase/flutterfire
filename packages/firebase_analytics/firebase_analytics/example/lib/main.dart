@@ -13,12 +13,13 @@ import 'tabs_page.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+    ),
+  );
   runApp(const MyApp());
 }
 
@@ -201,10 +202,11 @@ class _MyHomePageState extends State<MyHomePage> {
       itemId: 'test item id',
     );
     await widget.analytics.logSelectPromotion(
-        creativeName: 'promotion name',
-        creativeSlot: 'promotion slot',
-        items: [itemCreator()],
-        locationId: 'United States');
+      creativeName: 'promotion name',
+      creativeSlot: 'promotion slot',
+      items: [itemCreator()],
+      locationId: 'United States',
+    );
     await widget.analytics.logSelectItem(
       items: [itemCreator(), itemCreator()],
       itemListName: 't-shirt',
@@ -253,9 +255,10 @@ class _MyHomePageState extends State<MyHomePage> {
       items: [itemCreator()],
     );
     await widget.analytics.logViewItemList(
-        itemListId: 't-shirt-4321',
-        itemListName: 'green t-shirt',
-        items: [itemCreator()]);
+      itemListId: 't-shirt-4321',
+      itemListName: 'green t-shirt',
+      items: [itemCreator()],
+    );
     await widget.analytics.logViewSearchResults(
       searchTerm: 'test search term',
     );
@@ -298,17 +301,22 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: _testSetUserProperty,
             child: const Text('Test setUserProperty'),
           ),
-          Text(_message,
-              style: const TextStyle(color: Color.fromARGB(255, 0, 155, 0))),
+          Text(
+            _message,
+            style: const TextStyle(color: Color.fromARGB(255, 0, 155, 0)),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute<TabsPage>(
+          Navigator.of(context).push(
+            MaterialPageRoute<TabsPage>(
               settings: const RouteSettings(name: TabsPage.routeName),
               builder: (BuildContext context) {
                 return const TabsPage();
-              }));
+              },
+            ),
+          );
         },
         child: const Icon(Icons.tab),
       ),

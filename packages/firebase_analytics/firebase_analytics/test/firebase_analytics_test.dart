@@ -116,7 +116,9 @@ void main() {
     group('logEvent', () {
       test('reject events with reserved names', () async {
         expect(
-            analytics!.logEvent(name: 'app_clear_data'), throwsArgumentError);
+          analytics!.logEvent(name: 'app_clear_data'),
+          throwsArgumentError,
+        );
       });
 
       test('reject events with reserved prefix', () async {
@@ -503,7 +505,10 @@ void main() {
 
       test('logPostScore', () async {
         await analytics!.logPostScore(
-            score: SCORE_INT, level: LEVEL_INT, character: CHARACTER);
+          score: SCORE_INT,
+          level: LEVEL_INT,
+          character: CHARACTER,
+        );
 
         expect(
           methodCallLog,
@@ -749,7 +754,10 @@ void main() {
 
       test('logShare', () async {
         await analytics!.logShare(
-            contentType: CONTENT_TYPE, itemId: ITEM_ID, method: METHOD);
+          contentType: CONTENT_TYPE,
+          itemId: ITEM_ID,
+          method: METHOD,
+        );
 
         expect(
           methodCallLog,
@@ -790,9 +798,10 @@ void main() {
 
       test('logSpendVirtualCurrency', () async {
         await analytics!.logSpendVirtualCurrency(
-            itemName: ITEM_NAME,
-            virtualCurrencyName: VIRTUAL_CURRENCY_NAME,
-            value: VALUE_DOUBLE);
+          itemName: ITEM_NAME,
+          virtualCurrencyName: VIRTUAL_CURRENCY_NAME,
+          value: VALUE_DOUBLE,
+        );
 
         expect(
           methodCallLog,
@@ -1006,8 +1015,11 @@ void main() {
           expect(
             testFn,
             throwsA(
-              isA<ArgumentError>().having((e) => e.message, 'message',
-                  valueAndCurrencyMustBeTogetherError),
+              isA<ArgumentError>().having(
+                (e) => e.message,
+                'message',
+                valueAndCurrencyMustBeTogetherError,
+              ),
             ),
           );
         });
@@ -1088,10 +1100,13 @@ void main() {
           methodCallLog,
           <Matcher>[
             isMethodCall(
-              'Analytics#setCurrentScreen',
-              arguments: <String, String>{
-                'screenName': 'test-screen-name',
-                'screenClassOverride': 'test-class-override',
+              'Analytics#logEvent',
+              arguments: <String, Object>{
+                'eventName': 'screen_view',
+                'parameters': {
+                  'screen_name': 'test-screen-name',
+                  'screen_class': 'test-class-override',
+                },
               },
             )
           ],
@@ -1118,19 +1133,25 @@ void main() {
       test('setUserProperty rejects invalid names', () async {
         // invalid character
         expect(
-            analytics!.setUserProperty(name: 'test-name', value: 'test-value'),
-            throwsArgumentError);
+          analytics!.setUserProperty(name: 'test-name', value: 'test-value'),
+          throwsArgumentError,
+        );
         // non-alpha first character
-        expect(analytics!.setUserProperty(name: '0test', value: 'test-value'),
-            throwsArgumentError);
+        expect(
+          analytics!.setUserProperty(name: '0test', value: 'test-value'),
+          throwsArgumentError,
+        );
         // blank
-        expect(analytics!.setUserProperty(name: '', value: 'test-value'),
-            throwsArgumentError);
+        expect(
+          analytics!.setUserProperty(name: '', value: 'test-value'),
+          throwsArgumentError,
+        );
         // reserved prefix
         expect(
-            analytics!
-                .setUserProperty(name: 'firebase_test', value: 'test-value'),
-            throwsArgumentError);
+          analytics!
+              .setUserProperty(name: 'firebase_test', value: 'test-value'),
+          throwsArgumentError,
+        );
       });
 
       test('setAnalyticsCollectionEnabled', () async {
@@ -1146,19 +1167,23 @@ void main() {
         );
       });
 
-      test('setSessionTimeoutDuration', () async {
-        await analytics!
-            .setSessionTimeoutDuration(const Duration(milliseconds: 234));
-        expect(
-          methodCallLog,
-          <Matcher>[
-            isMethodCall(
-              'Analytics#setSessionTimeoutDuration',
-              arguments: 234,
-            )
-          ],
-        );
-      }, testOn: 'android');
+      test(
+        'setSessionTimeoutDuration',
+        () async {
+          await analytics!
+              .setSessionTimeoutDuration(const Duration(milliseconds: 234));
+          expect(
+            methodCallLog,
+            <Matcher>[
+              isMethodCall(
+                'Analytics#setSessionTimeoutDuration',
+                arguments: 234,
+              )
+            ],
+          );
+        },
+        testOn: 'android',
+      );
 
       test('resetAnalyticsData', () async {
         await analytics!.resetAnalyticsData();
