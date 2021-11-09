@@ -13,7 +13,7 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging();
+  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
 
   @override
   Widget build(BuildContext context) {

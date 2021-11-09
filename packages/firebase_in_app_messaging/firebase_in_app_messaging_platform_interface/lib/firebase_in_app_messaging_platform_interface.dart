@@ -9,3 +9,4 @@
 
 library firebase_in_app_messaging_platform_interface;
 
+export 'src/platform_interface/platform_interface_firebase_in_app_messaging.dart';

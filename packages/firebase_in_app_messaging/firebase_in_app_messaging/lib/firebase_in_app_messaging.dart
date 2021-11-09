@@ -3,38 +3,66 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebasePluginPlatform;
+import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
 
-import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
+class FirebaseInAppMessaging extends FirebasePluginPlatform {
+  FirebaseInAppMessaging._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_in_app_messaging');
 
-// TODO document
-// ignore: public_member_api_docs
-class FirebaseInAppMessaging {
-  @visibleForTesting
-  // ignore: public_member_api_docs
-  static const MethodChannel channel =
-      MethodChannel('plugins.flutter.io/firebase_in_app_messaging');
+  /// The [FirebaseApp] for this current [FirebaseAnalytics] instance.
+  final FirebaseApp app;
 
-  static FirebaseInAppMessaging _instance = FirebaseInAppMessaging();
+  // Cached and lazily loaded instance of [FirebaseInAppMessagingPlatform] to avoid
+  // creating a [MethodChannelFirebaseInAppMessaging] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  FirebaseInAppMessagingPlatform? _delegatePackingProperty;
 
-  /// Gets the instance of In-App Messaging for the default Firebase app.
-  static FirebaseInAppMessaging get instance => _instance;
-
-  /// Triggers an analytics event.
-  Future<void> triggerEvent(String eventName) async {
-    await channel.invokeMethod<void>(
-        'triggerEvent', <String, String>{'eventName': eventName});
+  FirebaseInAppMessagingPlatform get _delegate {
+    return _delegatePackingProperty ??=
+        FirebaseInAppMessagingPlatform.instanceFor(app: app);
   }
 
-  /// Enables or disables suppression of message displays.
-  Future<void> setMessagesSuppressed(bool suppress) async {
-    await channel.invokeMethod<void>('setMessagesSuppressed', suppress);
+  static final Map<String, FirebaseInAppMessaging> _cachedInstances = {};
+
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebaseInAppMessaging get instance {
+    return FirebaseInAppMessaging.instanceFor(
+      app: Firebase.app(),
+    );
   }
 
-  /// Disable data collection for the app.
-  Future<void> setAutomaticDataCollectionEnabled(bool enabled) async {
-    await channel.invokeMethod<void>(
-        'setAutomaticDataCollectionEnabled', enabled);
+  /// Returns an instance using a specified [FirebaseApp].
+  // TODO(ehesp): Does native support multi-apps? Comment out if not.
+  static FirebaseInAppMessaging instanceFor({required FirebaseApp app}) {
+    if (_cachedInstances.containsKey(app.name)) {
+      return _cachedInstances[app.name]!;
+    }
+
+    FirebaseInAppMessaging newInstance = FirebaseInAppMessaging._(app: app);
+    _cachedInstances[app.name] = newInstance;
+
+    return newInstance;
+  }
+
+  /// Programmatically trigger a contextual trigger.
+  Future<void> triggerEvent(String eventName) {
+    return _delegate.triggerEvent(eventName);
+  }
+
+  /// Enable or disable suppression of Firebase In App Messaging messages.
+  ///
+  /// When enabled, no in app messages will be rendered until either you either
+  /// disable suppression, or the app restarts, as this state is not preserved
+  /// over app restarts.
+  Future<void> setMessagesSuppressed(bool suppress) {
+    return _delegate.setMessagesSuppressed(suppress);
+  }
+
+  /// Determine whether automatic data collection is enabled or not.
+  Future<void> setAutomaticDataCollectionEnabled(bool enabled) {
+    return _delegate.setAutomaticDataCollectionEnabled(enabled);
   }
 }
