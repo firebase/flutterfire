@@ -144,8 +144,8 @@ void testsMain() {
       () async {
         await expectLater(
           analytics.setConsent(
-            analyticsStorageConsentGranted: true,
-            adStorageConsentGranted: false,
+            analyticsStorageConsentGranted: false,
+            adStorageConsentGranted: true,
           ),
           completes,
         );
