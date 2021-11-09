@@ -16,7 +16,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp? app, required String region})
       : _webFunctions = functions_interop.getFunctionsInstance(
-      core_interop.app(app?.name), region),
+            core_interop.app(app?.name), region),
         super(app, region);
 
   /// Stub initializer to allow the [registerWith] to create an instance without
