@@ -20,7 +20,7 @@ module.exports = [
     support: {
       web: true,
       mobile: true,
-      macos: false,
+      macos: true,
     },
   },
   {

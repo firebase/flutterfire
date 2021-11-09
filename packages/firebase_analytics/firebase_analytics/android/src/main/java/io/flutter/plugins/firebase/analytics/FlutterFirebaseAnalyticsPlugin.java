@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebaseanalytics;
+package io.flutter.plugins.firebase.analytics;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /** Flutter plugin for Firebase Analytics. */
-public class FirebaseAnalyticsPlugin
+public class FlutterFirebaseAnalyticsPlugin
     implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private FirebaseAnalytics analytics;
   private MethodChannel channel;
@@ -61,10 +61,11 @@ public class FirebaseAnalyticsPlugin
       } else if (value == null) {
         bundle.putString(key, null);
       } else if (value instanceof Iterable<?>) {
-        ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+        ArrayList<Parcelable> list = new ArrayList<>();
 
         for (Object item : (Iterable<?>) value) {
           if (item instanceof Map) {
+            //noinspection unchecked
             list.add(createBundleFromMap((Map<String, Object>) item));
           } else {
             throw new IllegalArgumentException(
@@ -77,6 +78,7 @@ public class FirebaseAnalyticsPlugin
 
         bundle.putParcelableArrayList(key, list);
       } else if (value instanceof Map<?, ?>) {
+        //noinspection unchecked
         bundle.putParcelable(key, createBundleFromMap((Map<String, Object>) value));
       } else {
         throw new IllegalArgumentException(
@@ -109,9 +111,6 @@ public class FirebaseAnalyticsPlugin
         break;
       case "Analytics#setUserId":
         methodCallTask = handleSetUserId(call.arguments());
-        break;
-      case "Analytics#setCurrentScreen":
-        methodCallTask = handleSetCurrentScreen(call.arguments());
         break;
       case "Analytics#setAnalyticsCollectionEnabled":
         methodCallTask = handleSetAnalyticsCollectionEnabled(call.arguments());
@@ -155,6 +154,7 @@ public class FirebaseAnalyticsPlugin
         () -> {
           final String eventName =
               (String) Objects.requireNonNull(arguments.get(Constants.EVENT_NAME));
+          @SuppressWarnings("unchecked")
           final Map<String, Object> map = (Map<String, Object>) arguments.get(Constants.PARAMETERS);
           final Bundle parameterBundle = createBundleFromMap(map);
           analytics.logEvent(eventName, parameterBundle);
@@ -168,22 +168,6 @@ public class FirebaseAnalyticsPlugin
         () -> {
           final String id = (String) Objects.requireNonNull(arguments.get(Constants.USER_ID));
           analytics.setUserId(id);
-          return null;
-        });
-  }
-
-  private Task<Void> handleSetCurrentScreen(final Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final String screenName =
-              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_NAME));
-          final String screenClassOverride =
-              (String) Objects.requireNonNull(arguments.get(Constants.SCREEN_CLASS_OVERRIDE));
-          Bundle parameterBundle = new Bundle();
-          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
-          parameterBundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClassOverride);
-          analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, parameterBundle);
           return null;
         });
   }
@@ -234,27 +218,27 @@ public class FirebaseAnalyticsPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final String adStorage = (String) arguments.get(Constants.AD_STORAGE);
-          final String analyticsStorage = (String) arguments.get(Constants.ANALYTICS_STORAGE);
+          final Boolean adStorageGranted =
+              (Boolean) arguments.get(Constants.AD_STORAGE_CONSENT_GRANTED);
+          final Boolean analyticsStorageGranted =
+              (Boolean) arguments.get(Constants.ANALYTICS_STORAGE_CONSENT_GRANTED);
           HashMap<FirebaseAnalytics.ConsentType, FirebaseAnalytics.ConsentStatus> parameters =
               new HashMap<>();
 
-          if (adStorage != null) {
-            FirebaseAnalytics.ConsentStatus adStorageStatus =
-                adStorage.equals(Constants.DENIED)
-                    ? FirebaseAnalytics.ConsentStatus.DENIED
-                    : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-            parameters.put(FirebaseAnalytics.ConsentType.AD_STORAGE, adStorageStatus);
+          if (adStorageGranted != null) {
+            parameters.put(
+                FirebaseAnalytics.ConsentType.AD_STORAGE,
+                adStorageGranted
+                    ? FirebaseAnalytics.ConsentStatus.GRANTED
+                    : FirebaseAnalytics.ConsentStatus.DENIED);
           }
 
-          if (analyticsStorage != null) {
-            FirebaseAnalytics.ConsentStatus analyticsStorageStatus =
-                analyticsStorage.equals(Constants.DENIED)
-                    ? FirebaseAnalytics.ConsentStatus.DENIED
-                    : FirebaseAnalytics.ConsentStatus.GRANTED;
-
-            parameters.put(FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE, analyticsStorageStatus);
+          if (analyticsStorageGranted != null) {
+            parameters.put(
+                FirebaseAnalytics.ConsentType.ANALYTICS_STORAGE,
+                analyticsStorageGranted
+                    ? FirebaseAnalytics.ConsentStatus.GRANTED
+                    : FirebaseAnalytics.ConsentStatus.DENIED);
           }
 
           analytics.setConsent(parameters);
