@@ -80,6 +80,32 @@ export default {
     <blockquote className={styles.blockquote} {...props} />
   ),
 
+  DartPad: ({ path, ref }: { path: string; ref?: string }): JSX.Element => {
+    return (
+      <div
+        style={{
+          marginBottom: '2rem',
+          position: 'relative',
+          paddingTop: '56.25%',
+        }}
+      >
+        <iframe
+          src={`https://dartpad.dev/embed-flutter.html?theme=dark&run=true&split=70&null_safety=true&gh_owner=FirebaseExtended&gh_repo=flutterfire&gh_ref=${
+            ref || 'master'
+          }&gh_path=${path}`}
+          style={{
+            border: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
+    );
+  },
+
   //Enables global usage of <YouTube id="xxxx" /> within MDX files
   YouTube: ({ id }: { id: string }): JSX.Element => {
     return (
