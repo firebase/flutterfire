@@ -115,7 +115,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
     switch (ctrl.action) {
       case AuthAction.signIn:
-        return 'Sing in';
+        return 'Sign in';
       case AuthAction.signUp:
         return 'Sign up';
       case AuthAction.link:

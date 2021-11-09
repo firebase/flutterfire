@@ -136,7 +136,7 @@ class _ProfileState extends State<Profile> {
                     label: const Text('Delete account'),
                   ),
                   OutlinedButton.icon(
-                    icon: const Icon(Icons.logout_outlined),
+                    icon: const Icon(Icons.logout),
                     onPressed: () {
                       FirebaseAuth.instance.signOut();
                     },
