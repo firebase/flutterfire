@@ -1,3 +1,7 @@
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
 ## 3.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

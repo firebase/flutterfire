@@ -1,3 +1,7 @@
+## 4.1.1
+
+ - **FIX**: correctly pass `region` to JS functions interop instance (#7328).
+
 ## 4.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

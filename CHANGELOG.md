@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-11-09
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`cloud_functions_web` - `v4.1.1`](#cloud_functions_web---v411)
+- [`firebase_analytics` - `v9.0.0-dev.3`](#firebase_analytics---v900-dev3)
+- [`firebase_analytics_platform_interface` - `v3.0.0-dev.3`](#firebase_analytics_platform_interface---v300-dev3)
+- [`firebase_analytics_web` - `v0.4.0-dev.3`](#firebase_analytics_web---v040-dev3)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `cloud_functions` - `v3.1.1`
+
+---
+
+#### `cloud_functions_web` - `v4.1.1`
+
+ - **FIX**: correctly pass `region` to JS functions interop instance (#7328).
+
+#### `firebase_analytics` - `v9.0.0-dev.3`
+
+ - **FEAT**: add macOS support (#7313).
+
+#### `firebase_analytics_platform_interface` - `v3.0.0-dev.3`
+
+ - **FEAT**: add macOS support (#7313).
+
+#### `firebase_analytics_web` - `v0.4.0-dev.3`
+
+ - **FEAT**: add macOS support (#7313).
+
+
 ## 2021-11-06
 
 ### Changes
