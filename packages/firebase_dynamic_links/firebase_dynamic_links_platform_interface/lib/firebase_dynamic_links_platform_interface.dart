@@ -6,7 +6,6 @@
 library firebase_dynamic_links_platform_interface;
 
 export 'src/platform_interface/platform_interface_firebase_dynamic_links.dart';
-export 'src/platform_interface/platform_interface_dynamic_link_builder.dart';
 export 'src/pending_dynamic_link_data.dart';
 export 'src/pending_dynamic_link_data_android.dart';
 export 'src/pending_dynamic_link_data_ios.dart';

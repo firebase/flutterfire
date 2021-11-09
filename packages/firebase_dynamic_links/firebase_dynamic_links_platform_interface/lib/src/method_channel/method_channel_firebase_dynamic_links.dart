@@ -7,7 +7,6 @@ import 'dart:async';
 
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links_platform_interface/src/method_channel/method_channel_dynamic_link_builder.dart';
 import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
@@ -141,7 +140,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Future<Uri> buildUrl(BuildDynamicLinkParameters parameters) async {
+  Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     final String? url = await MethodChannelFirebaseDynamicLinks.channel
         .invokeMethod<String>('DynamicLinkParameters#buildUrl',
         _withChannelDefaults(parameters.asMap()));
@@ -150,7 +149,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
   @override
   Future<ShortDynamicLink> buildShortLink(
-      BuildDynamicLinkParameters parameters) async {
+      DynamicLinkParameters parameters) async {
     final Map<String, dynamic>? response =
     await MethodChannelFirebaseDynamicLinks.channel
         .invokeMapMethod<String, dynamic>(

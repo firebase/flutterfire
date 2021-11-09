@@ -6,7 +6,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links_platform_interface/src/platform_interface/platform_interface_dynamic_link_builder.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -83,13 +82,13 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   }
 
   /// Generate a long Dynamic Link URL.
-  Future<Uri> buildUrl(BuildDynamicLinkParameters parameters) async {
+  Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     throw UnimplementedError('buildUrl() is not implemented');
   }
 
   /// Generate a short Dynamic Link URL.
   Future<ShortDynamicLink> buildShortLink(
-      BuildDynamicLinkParameters parameters) async {
+      DynamicLinkParameters parameters) async {
     throw UnimplementedError('buildShortLink() is not implemented');
   }
 
