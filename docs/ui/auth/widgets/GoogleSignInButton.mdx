@@ -1,0 +1,32 @@
+---
+title: GoogleSignInButton
+---
+
+The `GoogleSignInButton` Widget allows you to display a button that will automatically trigger the OAuth Sign In / Linking
+flow with Google.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed nibh egestas est rhoncus dignissim. Proin blandit magna magna, consectetur cursus sapien cursus quis. Curabitur tincidunt sagittis enim vitae euismod. Proin dui turpis, pharetra eget consequat in, efficitur sed augue.
+
+## Usage
+
+At a minimum, provide the `clientId` to the `GoogleSignInButton` Widget. You can optionally override other properties such as the
+redirect URL. See the API [reference](#) for more information.
+
+```dart
+class LoginScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return (
+      GoogleSignInButton(
+        clientId: '123456-xxxxxxxxxxxx.apps.googleusercontent.com',
+      )
+    );
+  }
+}
+```
+
+To obtain the `clientId` for your project, visit the [Google Developer Console](https://console.developers.google.com/apis/credentials).
+
+## Example
+
+TODO add example
