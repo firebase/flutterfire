@@ -28,8 +28,8 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// Lazily initialize [_webFunctions] on first method call
   functions_interop.Functions get _delegate {
-    return _webFunctions ??=
-        functions_interop.getFunctionsInstance(core_interop.app(app?.name));
+    return _webFunctions ??= functions_interop.getFunctionsInstance(
+        core_interop.app(app?.name), region);
   }
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
