@@ -15,9 +15,7 @@ import 'interop/functions.dart' as functions_interop;
 class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// The entry point for the [FirebaseFunctionsWeb] class.
   FirebaseFunctionsWeb({FirebaseApp? app, required String region})
-      : _webFunctions = functions_interop.getFunctionsInstance(
-            core_interop.app(app?.name), region),
-        super(app, region);
+      : super(app, region);
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
@@ -28,8 +26,10 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
   /// Instance of functions from the web plugin
   functions_interop.Functions? _webFunctions;
 
+  /// Lazily initialize [_webFunctions] on first method call
   functions_interop.Functions get _delegate {
-    return _webFunctions!;
+    return _webFunctions ??= functions_interop.getFunctionsInstance(
+        core_interop.app(app?.name), region);
   }
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
