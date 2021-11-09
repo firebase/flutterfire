@@ -34,6 +34,21 @@ class _Permissions extends State<Permissions> {
     });
   }
 
+  Future<void> checkPermissions() async {
+    setState(() {
+      _fetching = true;
+    });
+
+    NotificationSettings settings =
+        await FirebaseMessaging.instance.getNotificationSettings();
+
+    setState(() {
+      _requested = true;
+      _fetching = false;
+      _settings = settings;
+    });
+  }
+
   Widget row(String title, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -72,7 +87,7 @@ class _Permissions extends State<Permissions> {
         row('Sound', settingsMap[_settings.sound]!),
       ],
       ElevatedButton(
-          onPressed: () => {}, child: const Text('Reload Permissions')),
+          onPressed: checkPermissions, child: const Text('Reload Permissions')),
     ]);
   }
 }

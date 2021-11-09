@@ -1,3 +1,8 @@
+## 0.11.2+1
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 0.11.2
 
  - **REFACTOR**: replace deprecated `RaisedButton` widget with `ElevatedButton`.

@@ -63,13 +63,6 @@ void main() {
     });
 
     group('.initializeApp()', () {
-      test('should throw if trying to initialize default app', () async {
-        await expectLater(
-          () => channelPlatform.initializeApp(name: defaultFirebaseAppName),
-          throwsA(noDefaultAppInitialization()),
-        );
-      });
-
       test('should initialize core if not first initialized', () async {
         await channelPlatform.initializeApp();
 

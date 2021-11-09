@@ -1,72 +1,158 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
-// Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
+// Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-// @dart=2.9
-
-import 'package:e2e/e2e.dart';
+import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
+void testsMain() {
+  group('$FirebaseAnalytics', () {
+    late FirebaseAnalytics analytics;
 
-  setUpAll(() async {
-    await Firebase.initializeApp();
-  });
-
-  testWidgets('Android-only functionality', (WidgetTester tester) async {
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      await FirebaseAnalytics().android.setSessionTimeoutDuration(1000);
-    } else {
-      expect(FirebaseAnalytics().android, isNull);
-    }
-  }, skip: kIsWeb);
-
-  testWidgets('logging', (WidgetTester tester) async {
-    expect(FirebaseAnalytics().setAnalyticsCollectionEnabled(true), completes);
-    expect(
-        FirebaseAnalytics().setCurrentScreen(screenName: 'testing'), completes);
-    expect(FirebaseAnalytics().logEvent(name: 'testing'), completes);
-    expect(
-        FirebaseAnalytics().logEvent(
-          name: 'view_item_list',
-          parameters: {
-            'item_list_id': 'Test',
-            'items': [
-              {
-                'item_id': '1',
-                'item_name': 'Item 1',
-              },
-              {
-                'item_id': 2,
-                'item_name': 'Item 2',
-                'details': {
-                  'detail_1': 1,
-                  'detail_2': '2',
-                },
-              },
-            ],
-          },
+    setUpAll(() async {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+          appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+          storageBucket: 'react-native-firebase-testing.appspot.com',
+          databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+          messagingSenderId: '448618578101',
+          projectId: 'react-native-firebase-testing',
         ),
-        completes);
-
-    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-      expect(
-        FirebaseAnalytics().logEvent(
-          name: 'test_event',
-          parameters: {
-            'ids': [1, 2, 3, 4, 5],
-          },
-        ),
-        throwsA(isA<PlatformException>()),
       );
-    }
+      analytics = FirebaseAnalytics.instance;
+    });
+
+    test('logEvent', () async {
+      await expectLater(analytics.logEvent(name: 'testing'), completes);
+
+      AnalyticsEventItem analyticsEventItem = AnalyticsEventItem(
+        affiliation: 'affil',
+        coupon: 'coup',
+        creativeName: 'creativeName',
+        creativeSlot: 'creativeSlot',
+        discount: 2.22,
+        index: 3,
+        itemBrand: 'itemBrand',
+        itemCategory: 'itemCategory',
+        itemCategory2: 'itemCategory2',
+        itemCategory3: 'itemCategory3',
+        itemCategory4: 'itemCategory4',
+        itemCategory5: 'itemCategory5',
+        itemId: 'itemId',
+        itemListId: 'itemListId',
+        itemListName: 'itemListName',
+        itemName: 'itemName',
+        itemVariant: 'itemVariant',
+        locationId: 'locationId',
+        price: 9.99,
+        currency: 'USD',
+        promotionId: 'promotionId',
+        promotionName: 'promotionName',
+        quantity: 1,
+      );
+      // test custom event
+      await expectLater(
+        analytics.logEvent(
+          name: 'testing-parameters',
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+            'items': [analyticsEventItem],
+          },
+        ),
+        completes,
+      );
+      // test 2 reserved events
+      await expectLater(
+        analytics.logAdImpression(
+          adPlatform: 'foo',
+          adSource: 'bar',
+          adFormat: 'baz',
+          adUnitName: 'foo',
+          currency: 'bar',
+          value: 100,
+        ),
+        completes,
+      );
+
+      await expectLater(
+        analytics.logPurchase(
+          currency: 'foo',
+          coupon: 'bar',
+          value: 200,
+          items: [analyticsEventItem],
+          tax: 10,
+          shipping: 23,
+          transactionId: 'bar',
+          affiliation: 'baz',
+        ),
+        completes,
+      );
+    });
+
+    test(
+      'setSessionTimeoutDuration',
+      () async {
+        await expectLater(
+          analytics
+              .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
+
+    test('setAnalyticsCollectionEnabled', () async {
+      await expectLater(
+        analytics.setAnalyticsCollectionEnabled(true),
+        completes,
+      );
+    });
+
+    test('setUserId', () async {
+      await expectLater(analytics.setUserId(id: 'foo'), completes);
+    });
+
+    test('setCurrentScreen', () async {
+      await expectLater(
+        analytics.setCurrentScreen(screenName: 'screen-name'),
+        completes,
+      );
+    });
+
+    test('setUserProperty', () async {
+      await expectLater(
+        analytics.setUserProperty(name: 'foo', value: 'bar'),
+        completes,
+      );
+    });
+
+    test(
+      'resetAnalyticsData',
+      () async {
+        await expectLater(analytics.resetAnalyticsData(), completes);
+      },
+      skip: kIsWeb,
+    );
+
+    test(
+      'setConsent',
+      () async {
+        await expectLater(
+          analytics.setConsent(
+            analyticsStorageConsentGranted: false,
+            adStorageConsentGranted: true,
+          ),
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
   });
 }
+
+void main() => drive.main(testsMain);

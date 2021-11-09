@@ -1,3 +1,18 @@
+## 8.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 8.0.2
+
+ - Update a dependency to the latest release.
+
+## 8.0.1
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **FIX**: issue where using `List` values would error on transaction result (#7001).
+ - **DOCS**: update README with latest Firebase RTDB YouTube tutorial (#7149).
+ - **CHORE**: update Gradle versions used in Android example app (#7054).
+
 ## 8.0.0
 
 > Note: This release has breaking changes.
