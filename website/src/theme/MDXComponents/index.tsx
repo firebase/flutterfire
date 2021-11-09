@@ -80,7 +80,7 @@ export default {
     <blockquote className={styles.blockquote} {...props} />
   ),
 
-  DartPad: ({ path, ref }: { path: string; ref?: string }): JSX.Element => {
+  DartPad: ({ path, branch }: { path: string; branch?: string }): JSX.Element => {
     return (
       <div
         style={{
@@ -91,7 +91,7 @@ export default {
       >
         <iframe
           src={`https://dartpad.dev/embed-flutter.html?theme=dark&run=true&split=70&null_safety=true&gh_owner=FirebaseExtended&gh_repo=flutterfire&gh_ref=${
-            ref || 'master'
+            branch || 'master'
           }&gh_path=${path}`}
           style={{
             border: 0,

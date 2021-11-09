@@ -51,7 +51,7 @@ module.exports = {
       "firestore/usage",
       "firestore/2.0.0_migration",
       toReferenceAPI("cloud_firestore"),
-      toGithubExample("cloud_firestore"),
+      "firestore/example",
     ],
     "Cloud Functions": [
       "functions/overview",
