@@ -6,7 +6,7 @@ import '../auth_controller.dart';
 import '../auth_flow.dart';
 import '../auth_state.dart';
 
-class AwatingPhoneNumber extends AuthState {}
+class AwaitingPhoneNumber extends AuthState {}
 
 class SMSCodeRequested extends AuthState {}
 
@@ -28,19 +28,26 @@ class SMSCodeSent extends AuthState {
   SMSCodeSent(this.resendToken);
 }
 
-abstract class PhoneVerificationController extends AuthController {
+class AutoresolutionFailedException implements Exception {
+  final String message;
+
+  AutoresolutionFailedException([
+    this.message = 'SMS code autoresolution failed',
+  ]);
+}
+
+abstract class PhoneAuthController extends AuthController {
   void acceptPhoneNumber(String phoneNumber);
   void verifySMSCode(String code);
 }
 
-class PhoneVerificationAuthFlow extends AuthFlow
-    implements PhoneVerificationController {
+class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
   final _smsCodeCompleter = Completer<String>();
 
-  PhoneVerificationAuthFlow({
+  PhoneAuthFlow({
     FirebaseAuth? auth,
     AuthAction? action,
-  }) : super(auth: auth, initialState: AwatingPhoneNumber(), action: action);
+  }) : super(auth: auth, initialState: AwaitingPhoneNumber(), action: action);
 
   @override
   Future<void> acceptPhoneNumber(String phoneNumber) async {
@@ -68,8 +75,7 @@ class PhoneVerificationAuthFlow extends AuthFlow
           setCredential(credential);
         },
         codeAutoRetrievalTimeout: (verificationId) {
-          // TODO: handle this properly
-          throw Exception('code autoresolution failed');
+          value = AuthFailed(AutoresolutionFailedException());
         },
       );
     } on Exception catch (err) {

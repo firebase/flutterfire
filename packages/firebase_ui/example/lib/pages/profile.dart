@@ -9,9 +9,6 @@ import 'package:firebase_ui_example/config.dart';
 import 'package:firebase_ui_example/widgets/email_verification_button.dart';
 import 'package:firebase_ui_example/widgets/user_field_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-import 'phone_auth_flow.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -55,16 +52,10 @@ class _ProfileState extends State<Profile> {
                         ? IconButton(
                             icon: const Icon(Icons.warning),
                             onPressed: () async {
-                              await Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const PhoneAuthFlow(
-                                    authMethod: AuthAction.link,
-                                  ),
-                                ),
-                              );
-
+                              await startPhoneVerification(context: context);
                               setState(() {});
-                            })
+                            },
+                          )
                         : const VerifiedBadge(),
                   ),
                   UserFieldTile(
@@ -89,7 +80,7 @@ class _ProfileState extends State<Profile> {
                             if (newState is CredentialLinked) {
                               u.reload().then((_) {
                                 setState(() {});
-                                controller.reset();
+                                controller.dispose();
                               });
                             }
                           },
@@ -128,9 +119,11 @@ class _ProfileState extends State<Profile> {
                     },
                     style: ButtonStyle(
                       foregroundColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.red),
+                        (states) => Colors.red,
+                      ),
                       overlayColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.red.withAlpha(20)),
+                        (states) => Colors.red.withAlpha(20),
+                      ),
                     ),
                     icon: const Icon(Icons.delete),
                     label: const Text('Delete account'),

@@ -1,5 +1,6 @@
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/responsive.dart';
+import 'package:firebase_ui/src/i10n/i10n.dart';
 import 'package:flutter/material.dart';
 
 import '../auth_state.dart';
@@ -34,19 +35,21 @@ class _EmailSignInFormState extends State<EmailSignInForm>
       });
     });
 
-  late final tabs = TabBar(
-    labelColor: Theme.of(context).colorScheme.secondary,
-    controller: ctrl,
-    tabs: const [
-      Tab(text: 'Sign in'),
-      Tab(text: 'Sign up'),
-    ],
-  );
-
   Widget _defaultSurfaceBuilder(BuildContext context, Widget child) => child;
 
   @override
   Widget build(BuildContext context) {
+    final l = FirebaseUILocalizations.labelsOf(context);
+
+    final tabs = TabBar(
+      labelColor: Theme.of(context).colorScheme.secondary,
+      controller: ctrl,
+      tabs: [
+        Tab(text: l.signInActionText),
+        Tab(text: l.signUpActionText),
+      ],
+    );
+
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -112,20 +115,22 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   String chooseButtonLabel() {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final l = FirebaseUILocalizations.labelsOf(context);
 
     switch (ctrl.action) {
       case AuthAction.signIn:
-        return 'Sign in';
+        return l.signInActionText;
       case AuthAction.signUp:
-        return 'Sign up';
+        return l.signUpActionText;
       case AuthAction.link:
-        return 'Next';
+        return l.linkEmailButtonText;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final l = FirebaseUILocalizations.labelsOf(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -133,14 +138,14 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       children: [
         TextField(
           controller: emailCtrl,
-          decoration: const InputDecoration(labelText: 'Email'),
+          decoration: InputDecoration(labelText: l.emailInputLabel),
           keyboardType: TextInputType.emailAddress,
           autocorrect: false,
         ),
         const SizedBox(height: 16),
         TextField(
           controller: passwordCtrl,
-          decoration: const InputDecoration(labelText: 'Password'),
+          decoration: InputDecoration(labelText: l.passwordInputLabel),
           obscureText: true,
           enableSuggestions: false,
           autocorrect: false,

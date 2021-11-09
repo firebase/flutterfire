@@ -21,6 +21,7 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   final FirebaseAuth auth;
   final AuthState initialState;
   AuthAction? _action;
+  List<VoidCallback> _onDispose = [];
 
   @override
   AuthAction get action {
@@ -37,6 +38,16 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
 
   set action(AuthAction value) {
     _action = value;
+  }
+
+  VoidCallback get onDispose {
+    return () {
+      _onDispose.forEach((callback) => callback());
+    };
+  }
+
+  set onDispose(VoidCallback callback) {
+    _onDispose.add(callback);
   }
 
   AuthFlow({
@@ -104,7 +115,8 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   }
 
   @override
-  void reset() {
+  void dispose() {
     value = initialState;
+    onDispose();
   }
 }

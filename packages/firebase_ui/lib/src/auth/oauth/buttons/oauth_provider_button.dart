@@ -124,7 +124,7 @@ class ProviderButton<T extends OAuthProvider> extends StatelessWidget {
     final content = isLoading
         ? const SizedBox.shrink()
         : Text(
-            'Sign in with $T',
+            buttonLabelForProvider<T>(context),
             textAlign: TextAlign.center,
             style: TextStyle(
               height: 1.1,

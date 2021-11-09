@@ -10,7 +10,7 @@ ProviderConfiguration createDefaltProviderConfig<T extends AuthController>() {
       return EmailProviderConfiguration();
     case OAuthController:
       throw Exception("Can't create default OAuthProviderConfiguration");
-    case PhoneVerificationController:
+    case PhoneAuthController:
       return PhoneProviderConfiguration();
     default:
       throw Exception("Can't create ProviderConfiguration for $T");

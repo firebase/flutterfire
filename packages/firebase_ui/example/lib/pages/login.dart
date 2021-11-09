@@ -7,8 +7,6 @@ import 'package:firebase_ui/auth/facebook.dart';
 import 'package:firebase_ui/auth/twitter.dart';
 import 'package:firebase_ui_example/config.dart';
 
-import 'phone_auth_flow.dart';
-
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -26,13 +24,7 @@ class Login extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const PhoneAuthFlow(
-                      authMethod: AuthAction.signIn,
-                    ),
-                  ),
-                );
+                startPhoneVerification(context: context);
               },
               child: const Text('Sign in with phone'),
             ),

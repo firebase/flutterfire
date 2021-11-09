@@ -9,15 +9,17 @@ export 'src/auth/auth_state.dart'
         SignedIn,
         SigningIn,
         AuthFailed;
-export 'src/auth/phone/phone_verification_flow.dart'
+export 'src/auth/phone/phone_auth_flow.dart'
     show
-        AwatingPhoneNumber,
-        PhoneVerificationAuthFlow,
-        PhoneVerificationController,
+        AwaitingPhoneNumber,
+        PhoneAuthFlow,
+        PhoneAuthController,
         PhoneVerificationFailed,
         PhoneVerified,
         SMSCodeRequested,
         SMSCodeSent;
+
+export 'src/auth/phone/phone_verification.dart' show startPhoneVerification;
 
 export 'src/auth/phone/phone_input.dart' show PhoneInputState, PhoneInput;
 export 'src/auth/phone/phone_provider_configuration.dart'

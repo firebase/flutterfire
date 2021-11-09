@@ -22,6 +22,9 @@ typedef StateTransitionListener<T extends AuthController> = void Function(
 );
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
+  static final _flows = <Object, AuthFlow>{};
+
+  final Object? flowKey;
   final FirebaseAuth? auth;
   final AuthAction? action;
   final ProviderConfiguration? config;
@@ -33,6 +36,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
 
   const AuthFlowBuilder({
     Key? key,
+    this.flowKey,
     this.action,
     this.builder,
     this.onComplete,
@@ -72,6 +76,15 @@ class _AuthFlowBuilderState<T extends AuthController>
   void initState() {
     super.initState();
     flow = widget.flow ?? createFlow();
+
+    if (widget.flowKey != null) {
+      AuthFlowBuilder._flows[widget.flowKey!] = flow;
+
+      flow.onDispose = () {
+        AuthFlowBuilder._flows.remove(widget.flowKey!);
+      };
+    }
+
     action = widget.action ??
         (flow.auth.currentUser != null ? AuthAction.link : AuthAction.signIn);
 
@@ -81,6 +94,13 @@ class _AuthFlowBuilderState<T extends AuthController>
   }
 
   AuthFlow createFlow() {
+    if (widget.flowKey != null) {
+      final existingFlow = AuthFlowBuilder._flows[widget.flowKey!];
+      if (existingFlow != null) {
+        return existingFlow;
+      }
+    }
+
     final config = widget.config ?? createDefaltProviderConfig<T>();
     return config.createFlow(widget.auth, widget.action);
   }
@@ -121,6 +141,11 @@ class _AuthFlowBuilderState<T extends AuthController>
   @override
   void dispose() {
     flow.removeListener(onFlowStateChanged);
+
+    if (widget.flowKey == null && widget.flow == null) {
+      flow.dispose();
+    }
+
     super.dispose();
   }
 }
