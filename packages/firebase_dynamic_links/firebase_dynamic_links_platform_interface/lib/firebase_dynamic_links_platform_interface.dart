@@ -19,4 +19,4 @@ export 'src/itunes_connect_analytics_parameters.dart';
 export 'src/navigation_info_parameters.dart';
 export 'src/social_meta_tag_parameters.dart';
 export 'src/android_parameters.dart';
-export 'src/build_dynamic_link_parameters.dart';
+export 'src/dynamic_link_parameters.dart';

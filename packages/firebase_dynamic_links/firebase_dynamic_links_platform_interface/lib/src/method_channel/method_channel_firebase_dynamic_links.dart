@@ -44,6 +44,13 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     return MethodChannelFirebaseDynamicLinks(app: app);
   }
 
+  /// Attaches generic default values to method channel arguments.
+  Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
+    return {
+      'appName': appInstance?.name ?? defaultFirebaseAppName,
+    }..addAll(other);
+  }
+
   PendingDynamicLinkData? getPendingDynamicLinkDataFromMap(
       Map<dynamic, dynamic>? linkData) {
     if (linkData == null) return null;
@@ -120,7 +127,41 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  MethodChannelDynamicLinkBuilder createLink() {
-    return MethodChannelDynamicLinkBuilder(this);
+  Future<ShortDynamicLink> shortenUrl(Uri url,
+      [DynamicLinkParametersOptions? options]) async {
+    final Map<String, dynamic>? reply = await MethodChannelFirebaseDynamicLinks
+        .channel
+        .invokeMapMethod<String, dynamic>(
+        'DynamicLinkParameters#shortenUrl',
+        _withChannelDefaults(<String, dynamic>{
+          'url': url.toString(),
+          'dynamicLinkParametersOptions': options?.data,
+        }));
+    return _parseShortLink(reply!);
+  }
+
+  @override
+  Future<Uri> buildUrl(BuildDynamicLinkParameters parameters) async {
+    final String? url = await MethodChannelFirebaseDynamicLinks.channel
+        .invokeMethod<String>('DynamicLinkParameters#buildUrl',
+        _withChannelDefaults(parameters.asMap()));
+    return Uri.parse(url!);
+  }
+
+  @override
+  Future<ShortDynamicLink> buildShortLink(
+      BuildDynamicLinkParameters parameters) async {
+    final Map<String, dynamic>? response =
+    await MethodChannelFirebaseDynamicLinks.channel
+        .invokeMapMethod<String, dynamic>(
+        'DynamicLinkParameters#buildShortLink',
+        _withChannelDefaults(parameters.asMap()));
+    return _parseShortLink(response!);
+  }
+
+  ShortDynamicLink _parseShortLink(Map<String, dynamic> response) {
+    final List<dynamic>? warnings = response['warnings'];
+    return ShortDynamicLink(
+        Uri.parse(response['url']), warnings?.cast(), response['previewLink']);
   }
 }

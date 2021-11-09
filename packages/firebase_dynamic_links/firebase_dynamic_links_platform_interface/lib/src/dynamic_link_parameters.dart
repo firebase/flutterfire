@@ -8,10 +8,10 @@ import 'package:flutter/foundation.dart';
 import '../firebase_dynamic_links_platform_interface.dart';
 
 /// Interface that defines the all the parameters required to build a dynamic link
-class BuildDynamicLinkParameters {
+class DynamicLinkParameters {
   // ignore: public_member_api_docs
   @protected
-  BuildDynamicLinkParameters({
+  DynamicLinkParameters({
     this.androidParameters,
     required this.uriPrefix,
     this.dynamicLinkParametersOptions,
@@ -76,6 +76,6 @@ class BuildDynamicLinkParameters {
 
   @override
   String toString() {
-    return '$BuildDynamicLinkParameters($asMap)';
+    return '$DynamicLinkParameters($asMap)';
   }
 }

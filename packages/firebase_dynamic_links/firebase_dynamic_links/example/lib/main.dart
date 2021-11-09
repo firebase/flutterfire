@@ -29,6 +29,8 @@ class _MainScreen extends StatefulWidget {
 class _MainScreenState extends State<_MainScreen> {
   String? _linkMessage;
   bool _isCreatingLink = false;
+
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
   String _testString =
       'To test: long press link and then copy and click from a non-browser '
       "app. Make sure this isn't being tested on iOS simulator and iOS xcode "
@@ -42,9 +44,8 @@ class _MainScreenState extends State<_MainScreen> {
   }
 
   Future<void> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink().listen((dynamicLinkData) {
-
-      if(dynamicLinkData != null){
+    dynamicLinks.onLink().listen((dynamicLinkData) {
+      if (dynamicLinkData != null) {
         Navigator.pushNamed(context, dynamicLinkData.link.path);
       }
     }).onError((error) {
@@ -52,8 +53,7 @@ class _MainScreenState extends State<_MainScreen> {
       print(error.message);
     });
 
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+    final PendingDynamicLinkData? data = await dynamicLinks.getInitialLink();
     final Uri? deepLink = data?.link;
 
     if (deepLink != null) {
@@ -67,17 +67,17 @@ class _MainScreenState extends State<_MainScreen> {
       _isCreatingLink = true;
     });
 
-    final DynamicLinkBuilder parameters = DynamicLinkBuilder(
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://cx4k7.app.goo.gl',
       link: Uri.parse('https://dynamic.link.example/helloworld'),
-      androidParameters: AndroidParameters(
+      androidParameters: const AndroidParameters(
         packageName: 'io.flutter.plugins.firebasedynamiclinksexample',
         minimumVersion: 0,
       ),
-      dynamicLinkParametersOptions: DynamicLinkParametersOptions(
+      dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
-      iosParameters: IosParameters(
+      iosParameters: const IosParameters(
         bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
         minimumVersion: '0',
       ),
@@ -85,10 +85,11 @@ class _MainScreenState extends State<_MainScreen> {
 
     Uri url;
     if (short) {
-      final ShortDynamicLink shortLink = await parameters.buildShortLink();
+      final ShortDynamicLink shortLink =
+          await dynamicLinks.buildShortLink(parameters);
       url = shortLink.shortUrl;
     } else {
-      url = await parameters.buildUrl();
+      url = await dynamicLinks.buildUrl(parameters);
     }
 
     setState(() {

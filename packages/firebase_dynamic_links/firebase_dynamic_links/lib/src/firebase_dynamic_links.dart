@@ -70,7 +70,17 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
     return _delegate.onLink();
   }
 
-  DynamicLinkBuilder createLink() {
-    return DynamicLinkBuilder._(this, _delegate.createLink());
+  Future<ShortDynamicLink> shortenUrl(Uri url,
+      [DynamicLinkParametersOptions? options]) async {
+    return _delegate.shortenUrl(url, options);
+  }
+
+  Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
+    return _delegate.buildUrl(parameters);
+  }
+
+  Future<ShortDynamicLink> buildShortLink(
+      DynamicLinkParameters parameters) async {
+    return _delegate.buildShortLink(parameters);
   }
 }
