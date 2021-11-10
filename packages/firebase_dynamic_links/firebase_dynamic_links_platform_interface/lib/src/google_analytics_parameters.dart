@@ -8,13 +8,6 @@ class GoogleAnalyticsParameters {
     this.term,
   });
 
-  GoogleAnalyticsParameters.empty()
-      : campaign = null,
-        content = null,
-        medium = null,
-        source = null,
-        term = null;
-
   /// The utm_campaign analytics parameter.
   final String? campaign;
 
@@ -30,11 +23,16 @@ class GoogleAnalyticsParameters {
   /// The utm_term analytics parameter.
   final String? term;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'campaign': campaign,
         'content': content,
         'medium': medium,
         'source': source,
         'term': term,
       };
+
+  @override
+  String toString() {
+    return '$GoogleAnalyticsParameters($asMap)';
+  }
 }

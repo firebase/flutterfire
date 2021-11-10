@@ -46,7 +46,7 @@ class IosParameters {
   /// declares higher [minimumVersion] than currently installed.
   final String? minimumVersion;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'appStoreId': appStoreId,
         'bundleId': bundleId,
         'customScheme': customScheme,
@@ -55,4 +55,9 @@ class IosParameters {
         'ipadFallbackUrl': ipadFallbackUrl?.toString(),
         'minimumVersion': minimumVersion,
       };
+
+  @override
+  String toString() {
+    return '$IosParameters($asMap)';
+  }
 }

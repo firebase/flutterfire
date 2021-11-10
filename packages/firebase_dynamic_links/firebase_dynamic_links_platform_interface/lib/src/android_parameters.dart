@@ -19,9 +19,14 @@ class AndroidParameters {
   /// The Android app’s package name.
   final String packageName;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'fallbackUrl': fallbackUrl?.toString(),
         'minimumVersion': minimumVersion,
         'packageName': packageName,
       };
+
+  @override
+  String toString() {
+    return '$AndroidParameters($asMap())';
+  }
 }

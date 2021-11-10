@@ -13,7 +13,12 @@ class NavigationInfoParameters {
   /// click.
   final bool? forcedRedirectEnabled;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'forcedRedirectEnabled': forcedRedirectEnabled,
       };
+
+  @override
+  String toString() {
+    return '$NavigationInfoParameters($asMap)';
+  }
 }

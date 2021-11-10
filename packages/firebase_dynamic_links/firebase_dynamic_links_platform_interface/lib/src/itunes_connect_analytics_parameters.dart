@@ -12,9 +12,14 @@ class ItunesConnectAnalyticsParameters {
   /// The iTunes Connect provider token.
   final String? providerToken;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'affiliateToken': affiliateToken,
         'campaignToken': campaignToken,
         'providerToken': providerToken,
       };
+
+  @override
+  String toString() {
+    return '$ItunesConnectAnalyticsParameters($asMap)';
+  }
 }

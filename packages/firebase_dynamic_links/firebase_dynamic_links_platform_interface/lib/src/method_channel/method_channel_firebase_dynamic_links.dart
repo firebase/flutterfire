@@ -61,21 +61,22 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     if (linkData['android'] != null) {
       final Map<dynamic, dynamic> data = linkData['android'];
       androidData = PendingDynamicLinkDataAndroid(
-        data['clickTimestamp'],
-        data['minimumVersion'],
+        clickTimestamp: data['clickTimestamp'],
+        minimumVersion: data['minimumVersion'],
       );
     }
 
     PendingDynamicLinkDataIOS? iosData;
     if (linkData['ios'] != null) {
       final Map<dynamic, dynamic> data = linkData['ios'];
-      iosData = PendingDynamicLinkDataIOS(data['minimumVersion']);
+      iosData =
+          PendingDynamicLinkDataIOS(minimumVersion: data['minimumVersion']);
     }
 
     return PendingDynamicLinkData(
-      Uri.parse(link),
-      androidData,
-      iosData,
+      link: Uri.parse(link),
+      android: androidData,
+      ios: iosData,
     );
   }
 
@@ -134,7 +135,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
             'DynamicLinkParameters#shortenUrl',
             _withChannelDefaults(<String, dynamic>{
               'url': url.toString(),
-              'dynamicLinkParametersOptions': options?.data,
+              'dynamicLinkParametersOptions': options?.asMap(),
             }));
     return _parseShortLink(reply!);
   }
@@ -161,6 +162,8 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   ShortDynamicLink _parseShortLink(Map<String, dynamic> response) {
     final List<dynamic>? warnings = response['warnings'];
     return ShortDynamicLink(
-        Uri.parse(response['url']), warnings?.cast(), response['previewLink']);
+        shortUrl: Uri.parse(response['url']),
+        warnings: warnings?.cast(),
+        previewLink: response['previewLink']);
   }
 }

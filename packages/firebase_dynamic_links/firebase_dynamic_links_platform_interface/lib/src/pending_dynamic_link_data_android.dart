@@ -1,9 +1,9 @@
 /// Provides android specific data from received dynamic link.
 class PendingDynamicLinkDataAndroid {
-  const PendingDynamicLinkDataAndroid(
+  const PendingDynamicLinkDataAndroid({
     this.clickTimestamp,
     this.minimumVersion,
-  );
+  });
 
   /// The time the user clicked on the dynamic link.
   ///
@@ -18,4 +18,15 @@ class PendingDynamicLinkDataAndroid {
   /// If the installed app is an older version, the user is taken to the Play
   /// Store to upgrade the app.
   final int? minimumVersion;
+
+  /// Returns the current instance as a [Map].
+  Map<String, dynamic> asMap() => <String, dynamic>{
+        'clickTimestamp': clickTimestamp,
+        'minimumVersion': minimumVersion,
+      };
+
+  @override
+  String toString() {
+    return '$PendingDynamicLinkDataAndroid($asMap)';
+  }
 }

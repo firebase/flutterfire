@@ -1,6 +1,6 @@
 /// The Dynamic Link Social Meta Tag parameters.
 class SocialMetaTagParameters {
-  SocialMetaTagParameters({this.description, this.imageUrl, this.title});
+  const SocialMetaTagParameters({this.description, this.imageUrl, this.title});
 
   /// The description to use when the Dynamic Link is shared in a social post.
   final String? description;
@@ -11,9 +11,14 @@ class SocialMetaTagParameters {
   /// The title to use when the Dynamic Link is shared in a social post.
   final String? title;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'description': description,
         'imageUrl': imageUrl?.toString(),
         'title': title,
       };
+
+  @override
+  String toString() {
+    return '$SocialMetaTagParameters($asMap)';
+  }
 }

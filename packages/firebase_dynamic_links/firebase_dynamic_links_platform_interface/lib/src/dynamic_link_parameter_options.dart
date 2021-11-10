@@ -7,7 +7,12 @@ class DynamicLinkParametersOptions {
   /// Specifies the length of the path component of a short Dynamic Link.
   final ShortDynamicLinkPathLength? shortDynamicLinkPathLength;
 
-  Map<String, dynamic> get data => <String, dynamic>{
+  Map<String, dynamic> asMap() => <String, dynamic>{
         'shortDynamicLinkPathLength': shortDynamicLinkPathLength?.index,
       };
+
+  @override
+  String toString() {
+    return '$DynamicLinkParametersOptions($asMap())';
+  }
 }

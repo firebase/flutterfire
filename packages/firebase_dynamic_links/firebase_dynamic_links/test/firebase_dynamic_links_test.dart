@@ -1,5 +1,5 @@
 // ignore_for_file: require_trailing_commas
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -186,8 +186,11 @@ void main() {
                 shortDynamicLinkPathLength:
                     ShortDynamicLinkPathLength.unguessable);
 
-        when(dynamicLinks.shortenUrl(mockUri, options)).thenAnswer(
-            (_) async => ShortDynamicLink(mockUri, warnings, previewLink));
+        when(dynamicLinks.shortenUrl(mockUri, options)).thenAnswer((_) async =>
+            ShortDynamicLink(
+                shortUrl: mockUri,
+                warnings: warnings,
+                previewLink: previewLink));
 
         final shortDynamicLink =
             await dynamicLinks.shortenUrl(mockUri, options);
@@ -240,10 +243,14 @@ void main() {
         List<String> warnings = ['warning'];
         DynamicLinkParameters params =
             DynamicLinkParameters(uriPrefix: 'uriPrefix', link: mockUri);
-        final shortLink = ShortDynamicLink(mockUri, warnings, previewLink);
+        final shortLink = ShortDynamicLink(
+            shortUrl: mockUri, warnings: warnings, previewLink: previewLink);
 
-        when(dynamicLinks.buildShortLink(params)).thenAnswer(
-            (_) async => ShortDynamicLink(mockUri, warnings, previewLink));
+        when(dynamicLinks.buildShortLink(params)).thenAnswer((_) async =>
+            ShortDynamicLink(
+                shortUrl: mockUri,
+                warnings: warnings,
+                previewLink: previewLink));
 
         final shortDynamicLink = await dynamicLinks.buildShortLink(params);
 
@@ -260,10 +267,14 @@ void main() {
         final Uri previewLink = Uri.parse('previewLink');
         List<String> warnings = ['warning'];
         DynamicLinkParameters params = buildDynamicLinkParameters();
-        final shortLink = ShortDynamicLink(mockUri, warnings, previewLink);
+        final shortLink = ShortDynamicLink(
+            shortUrl: mockUri, warnings: warnings, previewLink: previewLink);
 
-        when(dynamicLinks.buildShortLink(params)).thenAnswer(
-            (_) async => ShortDynamicLink(mockUri, warnings, previewLink));
+        when(dynamicLinks.buildShortLink(params)).thenAnswer((_) async =>
+            ShortDynamicLink(
+                shortUrl: mockUri,
+                warnings: warnings,
+                previewLink: previewLink));
 
         final shortDynamicLink = await dynamicLinks.buildShortLink(params);
 
@@ -281,10 +292,12 @@ class TestPendingDynamicLinkData extends PendingDynamicLinkData {
   TestPendingDynamicLinkData(mockUri, mockClickTimestamp,
       mockMinimumVersionAndroid, mockMinimumVersionIOS)
       : super(
-            mockUri,
-            PendingDynamicLinkDataAndroid(
-                mockClickTimestamp, mockMinimumVersionAndroid),
-            PendingDynamicLinkDataIOS(mockMinimumVersionIOS));
+            link: mockUri,
+            android: PendingDynamicLinkDataAndroid(
+                clickTimestamp: mockClickTimestamp,
+                minimumVersion: mockMinimumVersionAndroid),
+            ios: PendingDynamicLinkDataIOS(
+                minimumVersion: mockMinimumVersionIOS));
 }
 
 final testData = TestPendingDynamicLinkData(Uri.parse('uri'), null, null, null);
@@ -339,10 +352,14 @@ class MockFirebaseDynamicLinks extends Mock
       [DynamicLinkParametersOptions? options]) {
     return super.noSuchMethod(
       Invocation.method(#shortenUrl, [uri, options]),
-      returnValue: Future.value(
-          ShortDynamicLink(uri, ['warning'], Uri.parse('preview'))),
-      returnValueForMissingStub: Future.value(
-          ShortDynamicLink(uri, ['warning'], Uri.parse('preview'))),
+      returnValue: Future.value(ShortDynamicLink(
+          shortUrl: uri,
+          warnings: ['warning'],
+          previewLink: Uri.parse('preview'))),
+      returnValueForMissingStub: Future.value(ShortDynamicLink(
+          shortUrl: uri,
+          warnings: ['warning'],
+          previewLink: Uri.parse('preview'))),
     );
   }
 
@@ -350,10 +367,14 @@ class MockFirebaseDynamicLinks extends Mock
   Future<ShortDynamicLink> buildShortLink(DynamicLinkParameters parameters) {
     return super.noSuchMethod(
       Invocation.method(#buildShortLink, [parameters]),
-      returnValue: Future.value(
-          ShortDynamicLink(uri, ['warning'], Uri.parse('preview'))),
-      returnValueForMissingStub: Future.value(
-          ShortDynamicLink(uri, ['warning'], Uri.parse('preview'))),
+      returnValue: Future.value(ShortDynamicLink(
+          shortUrl: uri,
+          warnings: ['warning'],
+          previewLink: Uri.parse('preview'))),
+      returnValueForMissingStub: Future.value(ShortDynamicLink(
+          shortUrl: uri,
+          warnings: ['warning'],
+          previewLink: Uri.parse('preview'))),
     );
   }
 
