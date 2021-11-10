@@ -1,5 +1,5 @@
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/responsive.dart';
+import 'package:firebase_ui/src/responsive.dart';
 import 'package:firebase_ui/src/i10n/i10n.dart';
 import 'package:flutter/material.dart';
 
