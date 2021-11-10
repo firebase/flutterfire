@@ -25,7 +25,7 @@ void main() {
 
           expect(result, isA<Map<String, dynamic>>());
           expect(result['shortDynamicLinkPathLength'],
-              ShortDynamicLinkPathLength.short);
+              ShortDynamicLinkPathLength.short.index);
         });
       });
 

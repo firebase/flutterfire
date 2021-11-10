@@ -14,8 +14,8 @@ void main() {
   group('$AndroidParameters', () {
     AndroidParameters androidParams = AndroidParameters(
       fallbackUrl: fallbackUrl,
-      minimumVersion: 1,
-      packageName: 'test-package',
+      minimumVersion: minimumVersion,
+      packageName: packageName,
     );
     group('Constructor', () {
       test('returns an instance of [AndroidParameters]', () {
@@ -31,7 +31,7 @@ void main() {
 
           expect(result, isA<Map<String, dynamic>>());
 
-          expect(result['fallbackUrl'], fallbackUrl);
+          expect(result['fallbackUrl'], fallbackUrl.toString());
           expect(result['minimumVersion'], minimumVersion);
           expect(result['packageName'], packageName);
         });

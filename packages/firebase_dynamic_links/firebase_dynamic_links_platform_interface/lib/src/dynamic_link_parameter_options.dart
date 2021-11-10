@@ -13,6 +13,6 @@ class DynamicLinkParametersOptions {
 
   @override
   String toString() {
-    return '$DynamicLinkParametersOptions($asMap())';
+    return '$DynamicLinkParametersOptions($asMap)';
   }
 }

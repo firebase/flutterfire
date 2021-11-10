@@ -67,7 +67,7 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
     throw UnimplementedError('getDynamicLink() is not implemented');
   }
 
-  /// Configures onLink listeners: it has two methods for success and failure.
+  /// Creates a stream for listening whenever a dynamic link becomes available
   Stream<PendingDynamicLinkData?> onLink() {
     throw UnimplementedError('onLink() is not implemented');
   }

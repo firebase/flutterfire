@@ -27,6 +27,6 @@ class AndroidParameters {
 
   @override
   String toString() {
-    return '$AndroidParameters($asMap())';
+    return '$AndroidParameters($asMap)';
   }
 }

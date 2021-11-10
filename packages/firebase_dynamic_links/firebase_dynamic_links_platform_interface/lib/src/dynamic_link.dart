@@ -11,6 +11,6 @@ class DynamicLink {
 
   @override
   String toString() {
-    return '$DynamicLink($asMap())';
+    return '$DynamicLink($asMap)';
   }
 }

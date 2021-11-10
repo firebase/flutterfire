@@ -91,8 +91,8 @@ void main() {
           expect(
               result['dynamicLinkParametersOptions']
                   ['shortDynamicLinkPathLength'],
-              dynamicLinkParams
-                  .dynamicLinkParametersOptions?.shortDynamicLinkPathLength);
+              dynamicLinkParams.dynamicLinkParametersOptions
+                  ?.shortDynamicLinkPathLength?.index);
           expect(result['googleAnalyticsParameters']['campaign'],
               dynamicLinkParams.googleAnalyticsParameters?.campaign);
           expect(result['googleAnalyticsParameters']['content'],

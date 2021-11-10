@@ -56,8 +56,8 @@ void main() {
       });
 
       test('toString', () {
-        expect(iosParams.toString(),
-            equals('$DynamicLinkParameters(${iosParams.asMap})'));
+        expect(
+            iosParams.toString(), equals('$IosParameters(${iosParams.asMap})'));
       });
     });
   });
