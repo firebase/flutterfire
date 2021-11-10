@@ -131,11 +131,11 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     final Map<String, dynamic>? reply = await MethodChannelFirebaseDynamicLinks
         .channel
         .invokeMapMethod<String, dynamic>(
-        'DynamicLinkParameters#shortenUrl',
-        _withChannelDefaults(<String, dynamic>{
-          'url': url.toString(),
-          'dynamicLinkParametersOptions': options?.data,
-        }));
+            'DynamicLinkParameters#shortenUrl',
+            _withChannelDefaults(<String, dynamic>{
+              'url': url.toString(),
+              'dynamicLinkParametersOptions': options?.data,
+            }));
     return _parseShortLink(reply!);
   }
 
@@ -143,7 +143,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     final String? url = await MethodChannelFirebaseDynamicLinks.channel
         .invokeMethod<String>('DynamicLinkParameters#buildUrl',
-        _withChannelDefaults(parameters.asMap()));
+            _withChannelDefaults(parameters.asMap()));
     return Uri.parse(url!);
   }
 
@@ -151,10 +151,10 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   Future<ShortDynamicLink> buildShortLink(
       DynamicLinkParameters parameters) async {
     final Map<String, dynamic>? response =
-    await MethodChannelFirebaseDynamicLinks.channel
-        .invokeMapMethod<String, dynamic>(
-        'DynamicLinkParameters#buildShortLink',
-        _withChannelDefaults(parameters.asMap()));
+        await MethodChannelFirebaseDynamicLinks.channel
+            .invokeMapMethod<String, dynamic>(
+                'DynamicLinkParameters#buildShortLink',
+                _withChannelDefaults(parameters.asMap()));
     return _parseShortLink(response!);
   }
 
