@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from '@docusaurus/Link';
+import useThemeContext from '@theme/hooks/useThemeContext';
 
 export const widgets = [
   {
@@ -26,6 +27,8 @@ export const widgets = [
 ];
 
 function Card({ id, description, plugin }) {
+  const { isDarkTheme } = useThemeContext();
+
   return (
     <Link
       to={`/docs/ui/widgets/${id}`}
@@ -35,7 +38,7 @@ function Card({ id, description, plugin }) {
         display: 'flex',
         height: '100%',
         flexDirection: 'column',
-        backgroundColor: '#fff',
+        backgroundColor: isDarkTheme ? '#0f0f10' : '#fff',
         borderRadius: '0.5rem',
         boxShadow:
           'rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px',
@@ -55,7 +58,7 @@ function Card({ id, description, plugin }) {
       <div
         style={{
           flexGrow: 1,
-          backgroundColor: '#F9FAFB',
+          backgroundColor: isDarkTheme ? '#0f0f10' : '#fff',
           padding: '1rem',
           borderTop: '1px solid rgba(0, 0, 0, 0.08)',
         }}
