@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebasecrashlyticsexample'
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -60,5 +60,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'

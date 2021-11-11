@@ -1,3 +1,18 @@
+## 1.10.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 1.9.0
+
+ - **FEAT**: bump Firebase Android SDK version to `29.0.0` (#7296).
+ - **FEAT**: bump Firebase iOS SDK to `8.9.0` (#7289).
+
+## 1.8.0
+
+ - **FEAT**: Firebase iOS SDK version bumped to `8.8.0` (#7213).
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
 ## 1.7.0
 
  - **FEAT**: bump Firebase iOS SDK to `8.7.0` & Android SDK to `28.4.1` (#7083).

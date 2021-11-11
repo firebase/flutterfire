@@ -1,4 +1,4 @@
-group 'io.flutter.plugins.firebaseanalytics'
+group 'io.flutter.plugins.firebase.analytics'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -38,7 +38,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -50,6 +50,10 @@ android {
         implementation 'com.google.firebase:firebase-analytics'
         implementation 'androidx.annotation:annotation:1.1.0'
     }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 

@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "io.flutter.plugins.firebaseanalyticsexample"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -58,5 +58,3 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
-
-apply plugin: 'com.google.gms.google-services'

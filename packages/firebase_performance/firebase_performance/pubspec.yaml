@@ -5,17 +5,17 @@ description:
   iOS.
 homepage: https://firebase.flutter.dev/docs/performance/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
-version: 0.7.1+1
+version: 0.7.1+4
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ^1.7.0
-  firebase_core_platform_interface: ^4.0.1
-  firebase_performance_platform_interface: ^0.0.1+4
-  firebase_performance_web: ^0.0.1+1
+  firebase_core: ^1.10.0
+  firebase_core_platform_interface: ^4.1.0
+  firebase_performance_platform_interface: ^0.0.1+7
+  firebase_performance_web: ^0.0.2
   flutter:
     sdk: flutter
 

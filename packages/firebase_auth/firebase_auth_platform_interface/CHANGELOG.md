@@ -1,3 +1,15 @@
+## 6.1.4
+
+ - Update a dependency to the latest release.
+
+## 6.1.3
+
+ - Update a dependency to the latest release.
+
+## 6.1.2
+
+ - Update a dependency to the latest release.
+
 ## 6.1.1
 
  - **TEST**: Fix pre-existing HintCode.UNNECESSARY_TYPE_CHECK_TRUE (#6931).

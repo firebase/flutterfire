@@ -4,16 +4,17 @@ description:
   re-releasing.
 homepage: https://firebase.flutter.dev/docs/remote-config/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config
-version: 0.11.0+1
+version: 1.0.0-dev.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  firebase_core: ^1.7.0
-  firebase_core_platform_interface: ^4.0.1
-  firebase_remote_config_platform_interface: ^0.3.0+6
+  firebase_core: ^1.10.0
+  firebase_core_platform_interface: ^4.1.0
+  firebase_remote_config_platform_interface: ^1.0.0-dev.2
+  firebase_remote_config_web: ^1.0.0-dev.2
   flutter:
     sdk: flutter
 

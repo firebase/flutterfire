@@ -1,3 +1,19 @@
+## 3.1.1
+
+ - Update a dependency to the latest release.
+
+## 3.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.0.6
+
+ - Update a dependency to the latest release.
+
+## 3.0.5
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 3.0.4
 
  - Update a dependency to the latest release.

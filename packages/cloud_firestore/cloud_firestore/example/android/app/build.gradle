@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId 'io.flutter.plugins.firebase.firestoreexample'
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -60,5 +60,3 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
-
-apply plugin: 'com.google.gms.google-services'

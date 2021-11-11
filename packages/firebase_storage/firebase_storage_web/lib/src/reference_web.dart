@@ -28,9 +28,9 @@ class ReferenceWeb extends ReferencePlatform {
       : _path = path,
         super(storage, path) {
     if (_path.startsWith(_storageUrlPrefix)) {
-      _ref = storage.webStorage!.refFromURL(_path);
+      _ref = storage.delegate.refFromURL(_path);
     } else {
-      _ref = storage.webStorage!.ref(_path);
+      _ref = storage.delegate.ref(_path);
     }
   }
 

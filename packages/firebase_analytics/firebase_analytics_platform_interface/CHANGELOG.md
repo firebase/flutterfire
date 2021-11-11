@@ -1,3 +1,23 @@
+## 3.0.0-dev.3
+
+ - **FEAT**: add macOS support (#7313).
+
+## 3.0.0-dev.2
+
+ - Update a dependency to the latest release.
+
+## 3.0.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **BREAKING** **REFACTOR**: update Firebase Analytics plugin to match latest Firebase APIs (#7032).
+   - See `firebase_analytics` package changelog for more information.
+
 ## 2.0.1
 
  - **DOCS**: Add missing homepage/repository links (#6054).

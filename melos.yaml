@@ -8,6 +8,7 @@ ignore:
   - firebase_ml_custom
   - firebase_ml_custom_example
   # TODO Deprecated - excluded pending removal.
+  - firebase_admob
   - firebase_ml_vision
   - firebase_ml_vision_example
 
@@ -132,7 +133,7 @@ scripts:
   test:mobile_e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all Android or iOS test driver e2e tests in a specific example app.
        - Requires an Android emulator or iOS simulator.
