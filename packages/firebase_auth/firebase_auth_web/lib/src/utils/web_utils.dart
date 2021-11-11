@@ -25,8 +25,7 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
 
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
-  firebaseError.message.replaceFirst('(${firebaseError.code})', '')
-  // v9 compat prefixes "Firebase:" to error messages
+  firebaseError.message.replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
 
   auth_interop.AuthCredential firebaseAuthCredential = firebaseError.credential;
