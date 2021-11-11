@@ -5,7 +5,7 @@
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+as core_interop;
 
 import '../interop/auth.dart' as auth_interop;
 
@@ -25,13 +25,15 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
 
   String code = firebaseError.code.replaceFirst('auth/', '');
   String message =
-      firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+  firebaseError.message.replaceFirst('(${firebaseError.code})', '')
+  // v9 compat prefixes "Firebase:" to error messages
+      .replaceFirst('Firebase: ', '');
 
   auth_interop.AuthCredential firebaseAuthCredential = firebaseError.credential;
   AuthCredential? credential =
-      firebaseAuthCredential is auth_interop.OAuthCredential
-          ? convertWebOAuthCredential(firebaseAuthCredential)
-          : convertWebAuthCredential(firebaseAuthCredential);
+  firebaseAuthCredential is auth_interop.OAuthCredential
+      ? convertWebOAuthCredential(firebaseAuthCredential)
+      : convertWebAuthCredential(firebaseAuthCredential);
 
   return FirebaseAuthException(
     code: code,
@@ -58,8 +60,7 @@ ActionCodeInfo? convertWebActionCodeInfo(
 
 /// Converts a [auth_interop.AdditionalUserInfo] into a [AdditionalUserInfo].
 AdditionalUserInfo? convertWebAdditionalUserInfo(
-  auth_interop.AdditionalUserInfo? webAdditionalUserInfo,
-) {
+    auth_interop.AdditionalUserInfo? webAdditionalUserInfo,) {
   if (webAdditionalUserInfo == null) {
     return null;
   }
@@ -74,12 +75,11 @@ AdditionalUserInfo? convertWebAdditionalUserInfo(
 
 /// Converts a [auth_interop.IdTokenResult] into a [IdTokenResult].
 IdTokenResult convertWebIdTokenResult(
-  auth_interop.IdTokenResult webIdTokenResult,
-) {
+    auth_interop.IdTokenResult webIdTokenResult,) {
   return IdTokenResult(<String, dynamic>{
     'claims': webIdTokenResult.claims,
     'expirationTimestamp':
-        webIdTokenResult.expirationTime.millisecondsSinceEpoch,
+    webIdTokenResult.expirationTime.millisecondsSinceEpoch,
     'issuedAtTimestamp': webIdTokenResult.issuedAtTime.millisecondsSinceEpoch,
     'authTimestamp': webIdTokenResult.authTime.millisecondsSinceEpoch,
     'signInProvider': webIdTokenResult.signInProvider,
@@ -98,9 +98,9 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
   Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
 
   auth_interop.ActionCodeSettings webActionCodeSettings =
-      auth_interop.ActionCodeSettings(
-          url: actionCodeSettings.url,
-          handleCodeInApp: actionCodeSettings.handleCodeInApp);
+  auth_interop.ActionCodeSettings(
+      url: actionCodeSettings.url,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp);
 
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(
@@ -132,15 +132,14 @@ String convertPlatformPersistence(Persistence persistence) {
 
 /// Converts a [AuthProvider] into a [auth_interop.AuthProvider].
 auth_interop.AuthProvider convertPlatformAuthProvider(
-  AuthProvider authProvider,
-) {
+    AuthProvider authProvider,) {
   if (authProvider is EmailAuthProvider) {
     return auth_interop.EmailAuthProvider();
   }
 
   if (authProvider is FacebookAuthProvider) {
     auth_interop.FacebookAuthProvider facebookAuthProvider =
-        auth_interop.FacebookAuthProvider();
+    auth_interop.FacebookAuthProvider();
 
     authProvider.scopes.forEach(facebookAuthProvider.addScope);
     facebookAuthProvider.setCustomParameters(authProvider.parameters);
@@ -149,7 +148,7 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
   if (authProvider is GithubAuthProvider) {
     auth_interop.GithubAuthProvider githubAuthProvider =
-        auth_interop.GithubAuthProvider();
+    auth_interop.GithubAuthProvider();
 
     authProvider.scopes.forEach(githubAuthProvider.addScope);
     githubAuthProvider.setCustomParameters(authProvider.parameters);
@@ -158,7 +157,7 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
   if (authProvider is GoogleAuthProvider) {
     auth_interop.GoogleAuthProvider googleAuthProvider =
-        auth_interop.GoogleAuthProvider();
+    auth_interop.GoogleAuthProvider();
 
     authProvider.scopes.forEach(googleAuthProvider.addScope);
     googleAuthProvider.setCustomParameters(authProvider.parameters);
@@ -167,7 +166,7 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
   if (authProvider is TwitterAuthProvider) {
     auth_interop.TwitterAuthProvider twitterAuthProvider =
-        auth_interop.TwitterAuthProvider();
+    auth_interop.TwitterAuthProvider();
 
     twitterAuthProvider.setCustomParameters(authProvider.parameters);
     return twitterAuthProvider;
@@ -179,7 +178,7 @@ auth_interop.AuthProvider convertPlatformAuthProvider(
 
   if (authProvider is OAuthProvider) {
     auth_interop.OAuthProvider oAuthProvider =
-        auth_interop.OAuthProvider(authProvider.providerId);
+    auth_interop.OAuthProvider(authProvider.providerId);
 
     authProvider.scopes.forEach(oAuthProvider.addScope);
     oAuthProvider.setCustomParameters(authProvider.parameters);
@@ -204,8 +203,7 @@ AuthCredential? convertWebAuthCredential(
 
 /// Converts a [auth_interop.OAuthCredential] into a [AuthCredential].
 AuthCredential? convertWebOAuthCredential(
-  auth_interop.OAuthCredential? oAuthCredential,
-) {
+    auth_interop.OAuthCredential? oAuthCredential,) {
   if (oAuthCredential == null) {
     return null;
   }
@@ -219,8 +217,7 @@ AuthCredential? convertWebOAuthCredential(
 
 /// Converts a [AuthCredential] into a [firebase.OAuthCredential].
 auth_interop.OAuthCredential? convertPlatformCredential(
-  AuthCredential credential,
-) {
+    AuthCredential credential,) {
   if (credential is EmailAuthCredential) {
     if (credential.emailLink != null) {
       return auth_interop.EmailAuthProvider.credentialWithLink(
