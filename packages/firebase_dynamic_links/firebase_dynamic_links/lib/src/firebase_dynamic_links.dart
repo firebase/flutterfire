@@ -26,6 +26,7 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name]!;
     }
+    //TODO notify user or even throw error that default only for web and iOS??
 
     FirebaseDynamicLinks newInstance = FirebaseDynamicLinks._(app: app);
     _cachedInstances[app.name] = newInstance;
