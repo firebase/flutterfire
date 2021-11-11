@@ -61,18 +61,26 @@ class DynamicLinkParameters {
   final SocialMetaTagParameters? socialMetaTagParameters;
 
   /// Returns the current instance as a [Map].
-  Map<String, dynamic> asMap() => <String, dynamic>{
+  Map<String, dynamic> asMap(){
+    return <String, dynamic>{
+      'uriPrefix': uriPrefix,
+      'link': link.toString(),
+      if (androidParameters != null)
         'androidParameters': androidParameters?.asMap(),
-        'uriPrefix': uriPrefix,
+      if (dynamicLinkParametersOptions != null)
         'dynamicLinkParametersOptions': dynamicLinkParametersOptions?.asMap(),
+      if (googleAnalyticsParameters != null)
         'googleAnalyticsParameters': googleAnalyticsParameters?.asMap(),
-        'iosParameters': iosParameters?.asMap(),
+      if (iosParameters != null) 'iosParameters': iosParameters?.asMap(),
+      if (itunesConnectAnalyticsParameters != null)
         'itunesConnectAnalyticsParameters':
-            itunesConnectAnalyticsParameters?.asMap(),
-        'link': link.toString(),
+        itunesConnectAnalyticsParameters?.asMap(),
+      if (navigationInfoParameters != null)
         'navigationInfoParameters': navigationInfoParameters?.asMap(),
+      if (socialMetaTagParameters != null)
         'socialMetaTagParameters': socialMetaTagParameters?.asMap(),
-      };
+    };
+  }
 
   @override
   String toString() {
