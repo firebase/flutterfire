@@ -25,7 +25,7 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
 
 dev_dependencies:
-  drive: 0.1.0
+  drive: 1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
   flutter_test:
