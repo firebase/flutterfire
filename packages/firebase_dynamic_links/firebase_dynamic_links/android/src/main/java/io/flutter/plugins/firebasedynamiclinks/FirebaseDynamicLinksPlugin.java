@@ -372,7 +372,7 @@ public class FirebaseDynamicLinksPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return null;
+    return Tasks.call(cachedThreadPool, () -> null);
   }
 
   @Override
