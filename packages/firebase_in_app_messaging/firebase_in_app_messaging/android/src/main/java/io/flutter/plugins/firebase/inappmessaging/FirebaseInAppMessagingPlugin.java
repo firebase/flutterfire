@@ -45,21 +45,21 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
   @Override
   public void onMethodCall(MethodCall call, Result result) {
     switch (call.method) {
-      case "triggerEvent":
+      case "FirebaseInAppMessaging#triggerEvent":
         {
           String eventName = call.argument("eventName");
           instance.triggerEvent(eventName);
           result.success(null);
           break;
         }
-      case "setMessagesSuppressed":
+      case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
           Boolean suppress = (Boolean) call.arguments;
           instance.setMessagesSuppressed(suppress);
           result.success(null);
           break;
         }
-      case "setAutomaticDataCollectionEnabled":
+      case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
         {
           Boolean enabled = (Boolean) call.arguments;
           instance.setAutomaticDataCollectionEnabled(enabled);

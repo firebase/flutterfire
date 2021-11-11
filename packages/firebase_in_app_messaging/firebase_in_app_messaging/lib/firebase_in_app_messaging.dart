@@ -35,8 +35,7 @@ class FirebaseInAppMessaging extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  // TODO(ehesp): Does native support multi-apps? Comment out if not.
-  static FirebaseInAppMessaging instanceFor({required FirebaseApp app}) {
+  static FirebaseInAppMessaging _instanceFor({required FirebaseApp app}) {
     if (_cachedInstances.containsKey(app.name)) {
       return _cachedInstances[app.name]!;
     }
