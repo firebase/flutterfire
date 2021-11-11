@@ -55,6 +55,33 @@ void handleMethodCall(MethodCallCallback methodCallCallback) =>
       return await methodCallCallback(call);
     });
 
+
+void handleEventChannel(
+    final String name, [
+      List<MethodCall>? log,
+    ]) {
+  MethodChannel(name).setMockMethodCallHandler((MethodCall methodCall) async {
+    log?.add(methodCall);
+    switch (methodCall.method) {
+      case 'listen':
+        break;
+      case 'cancel':
+      default:
+        return null;
+    }
+  });
+}
+
+
+Future<void> injectEventChannelResponse(
+    String channelName, Map<String, dynamic> event) async {
+  await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
+    channelName,
+    MethodChannelFirebaseDynamicLinks.channel.codec.encodeSuccessEnvelope(event),
+        (_) {},
+  );
+}
+
 // TODO update error handling and test
 // Future<void> testExceptionHandling(
 //     String type,

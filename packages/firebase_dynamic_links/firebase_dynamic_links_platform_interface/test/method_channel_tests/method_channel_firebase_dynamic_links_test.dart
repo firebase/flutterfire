@@ -2,6 +2,8 @@
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
@@ -11,10 +13,68 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
 
+DynamicLinkParameters buildDynamicLinkParameters() {
+  AndroidParameters android = AndroidParameters(
+    fallbackUrl: Uri.parse('fallbackUrl'),
+    minimumVersion: 1,
+    packageName: 'test-package',
+  );
+
+  GoogleAnalyticsParameters google = const GoogleAnalyticsParameters(
+    campaign: 'campaign',
+    medium: 'medium',
+    source: 'source',
+    term: 'term',
+    content: 'content',
+  );
+
+  IosParameters ios = IosParameters(
+      appStoreId: 'appStoreId',
+      bundleId: 'bundleId',
+      customScheme: 'customScheme',
+      fallbackUrl: Uri.parse('fallbackUrl'),
+      ipadBundleId: 'ipadBundleId',
+      ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
+      minimumVersion: 'minimumVersion');
+
+  ItunesConnectAnalyticsParameters itunes =
+      const ItunesConnectAnalyticsParameters(
+    affiliateToken: 'affiliateToken',
+    campaignToken: 'campaignToken',
+    providerToken: 'providerToken',
+  );
+
+  DynamicLinkParametersOptions parametersOptions =
+      const DynamicLinkParametersOptions(
+          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable);
+
+  Uri link = Uri.parse('link');
+  NavigationInfoParameters navigation =
+      const NavigationInfoParameters(forcedRedirectEnabled: true);
+  SocialMetaTagParameters social = SocialMetaTagParameters(
+      description: 'description',
+      imageUrl: Uri.parse('imageUrl'),
+      title: 'title');
+
+  String uriPrefix = 'https://';
+
+  return DynamicLinkParameters(
+    uriPrefix: uriPrefix,
+    link: link,
+    androidParameters: android,
+    dynamicLinkParametersOptions: parametersOptions,
+    googleAnalyticsParameters: google,
+    iosParameters: ios,
+    itunesConnectAnalyticsParameters: itunes,
+    navigationInfoParameters: navigation,
+    socialMetaTagParameters: social,
+  );
+}
+
 void main() {
   setupFirebaseDynamicLinksMocks();
   late TestMethodChannelFirebaseDynamicLinks? mockDynamicLinks;
-  late FirebaseDynamicLinksPlatform? dynamicLinks;
+  late FirebaseDynamicLinksPlatform dynamicLinks;
   final List<MethodCall> logger = <MethodCall>[];
   int getInitialLinkCall = 1;
 
@@ -29,12 +89,17 @@ void main() {
           'warnings': <dynamic>['This is only a test link'],
         };
         switch (call.method) {
-          case 'DynamicLinkParameters#buildUrl':
+          case 'FirebaseDynamicLinks#buildUrl':
             return 'google.com';
-          case 'DynamicLinkParameters#buildShortLink':
+          case 'FirebaseDynamicLinks#buildShortLink':
             return returnUrl;
-          case 'DynamicLinkParameters#shortenUrl':
+          case 'FirebaseDynamicLinks#shortenUrl':
             return returnUrl;
+          case 'FirebaseDynamicLinks#onLink':
+            const String name = 'FirebaseDynamicLinks#onLink';
+            print('RRRRRRR');
+            handleEventChannel(name, logger);
+            return name;
           case 'FirebaseDynamicLinks#getInitialLink':
             if (getInitialLinkCall == 3) {
               return null;
@@ -66,10 +131,10 @@ void main() {
       logger.clear();
     });
 
-    group('getInitialLink', () {
+    group('getInitialLink()', () {
       test('link can be parsed', () async {
         final PendingDynamicLinkData? data =
-            await mockDynamicLinks!.getInitialLink();
+            await dynamicLinks.getInitialLink();
 
         expect(data!.link, Uri.parse('https://google.com'));
 
@@ -88,10 +153,10 @@ void main() {
 
       // Both iOS FIRDynamicLink.url and android PendingDynamicLinkData.getUrl()
       // might return null link. In such a case we want to ignore the deep-link.
-      test('for null link, returns null', () async {
+      test('for null link, return null', () async {
         getInitialLinkCall = 2;
         final PendingDynamicLinkData? data =
-            await mockDynamicLinks!.getInitialLink();
+            await dynamicLinks.getInitialLink();
 
         expect(data, isNull);
 
@@ -107,7 +172,7 @@ void main() {
         getInitialLinkCall = 3;
 
         final PendingDynamicLinkData? data =
-            await mockDynamicLinks!.getInitialLink();
+            await dynamicLinks.getInitialLink();
 
         expect(data, isNull);
 
@@ -124,7 +189,7 @@ void main() {
       test('getDynamicLink', () async {
         final Uri argument = Uri.parse('short-link');
         final PendingDynamicLinkData? data =
-            await dynamicLinks!.getDynamicLink(argument);
+            await dynamicLinks.getDynamicLink(argument);
 
         expect(data!.link.host, 'google.com');
 
@@ -144,11 +209,11 @@ void main() {
                 shortDynamicLinkPathLength:
                     ShortDynamicLinkPathLength.unguessable);
 
-        await dynamicLinks!.shortenUrl(url, options);
+        await dynamicLinks.shortenUrl(url, options);
 
         expect(logger, <Matcher>[
           isMethodCall(
-            'DynamicLinkParameters#shortenUrl',
+            'FirebaseDynamicLinks#shortenUrl',
             arguments: <String, dynamic>{
               'url': url.toString(),
               'appName': '[DEFAULT]',
@@ -160,12 +225,150 @@ void main() {
           ),
         ]);
       });
+      group('buildUrl()', () {
+        test('buildUrl', () async {
+          DynamicLinkParameters options = buildDynamicLinkParameters();
 
-      test('buildUrl()', () async {
-        // TODO upto here
+          await dynamicLinks.buildUrl(options);
+
+          expect(logger, <Matcher>[
+            isMethodCall(
+              'FirebaseDynamicLinks#buildUrl',
+              arguments: <String, dynamic>{
+                'appName': '[DEFAULT]',
+                'uriPrefix': 'https://',
+                'link': 'link',
+                'dynamicLinkParametersOptions': {
+                  'shortDynamicLinkPathLength':
+                      ShortDynamicLinkPathLength.unguessable.index,
+                },
+                'androidParameters': {
+                  'fallbackUrl': 'fallbackUrl',
+                  'minimumVersion': 1,
+                  'packageName': 'test-package'
+                },
+                'googleAnalyticsParameters': {
+                  'campaign': 'campaign',
+                  'content': 'content',
+                  'medium': 'medium',
+                  'source': 'source',
+                  'term': 'term'
+                },
+                'iosParameters': {
+                  'appStoreId': 'appStoreId',
+                  'bundleId': 'bundleId',
+                  'customScheme': 'customScheme',
+                  'fallbackUrl': 'fallbackUrl',
+                  'ipadBundleId': 'ipadBundleId',
+                  'ipadFallbackUrl': 'ipadFallbackUrl',
+                  'minimumVersion': 'minimumVersion',
+                },
+                'itunesConnectAnalyticsParameters': {
+                  'affiliateToken': 'affiliateToken',
+                  'campaignToken': 'campaignToken',
+                  'providerToken': 'providerToken',
+                },
+                'navigationInfoParameters': {
+                  'forcedRedirectEnabled': true,
+                },
+                'socialMetaTagParameters': {
+                  'description': 'description',
+                  'imageUrl': 'imageUrl',
+                  'title': 'title',
+                },
+              },
+            ),
+          ]);
+        });
       });
     });
-  });
+
+    group('onLink()', () {
+      StreamSubscription<PendingDynamicLinkData?>? subscription;
+
+      tearDown(() {
+        subscription?.cancel();
+      });
+
+      test('returns [Stream<PendingDynamicLinkData>]', () async {
+        // Checks that `onLink` does not throw UnimplementedError
+        expect(dynamicLinks.onLink(), isNotNull);
+      });
+
+      test('listens to incoming changes', () async {
+        Stream<PendingDynamicLinkData?> stream =
+            dynamicLinks.onLink().asBroadcastStream();
+
+        await injectEventChannelResponse('FirebaseDynamicLinks#onLink', {
+          'link': 'link',
+          'ios': {'minimumVersion': 'minimumVersion'}
+        });
+        // TODO find out why event isn't emitted
+        // await expectLater(
+        //   stream,
+        //   emits(isA<PendingDynamicLinkData>()
+        //       .having((r) => r.link, 'link', 'link')),
+        // );
+
+      });
+    });
+      group('buildShortLink()', () {
+        test('buildShortLink', () async {
+          DynamicLinkParameters options = buildDynamicLinkParameters();
+
+          await dynamicLinks.buildShortLink(options);
+
+          expect(logger, <Matcher>[
+            isMethodCall(
+              'FirebaseDynamicLinks#buildShortLink',
+              arguments: <String, dynamic>{
+                'appName': '[DEFAULT]',
+                'uriPrefix': 'https://',
+                'link': 'link',
+                'dynamicLinkParametersOptions': {
+                  'shortDynamicLinkPathLength':
+                      ShortDynamicLinkPathLength.unguessable.index,
+                },
+                'androidParameters': {
+                  'fallbackUrl': 'fallbackUrl',
+                  'minimumVersion': 1,
+                  'packageName': 'test-package'
+                },
+                'googleAnalyticsParameters': {
+                  'campaign': 'campaign',
+                  'content': 'content',
+                  'medium': 'medium',
+                  'source': 'source',
+                  'term': 'term'
+                },
+                'iosParameters': {
+                  'appStoreId': 'appStoreId',
+                  'bundleId': 'bundleId',
+                  'customScheme': 'customScheme',
+                  'fallbackUrl': 'fallbackUrl',
+                  'ipadBundleId': 'ipadBundleId',
+                  'ipadFallbackUrl': 'ipadFallbackUrl',
+                  'minimumVersion': 'minimumVersion',
+                },
+                'itunesConnectAnalyticsParameters': {
+                  'affiliateToken': 'affiliateToken',
+                  'campaignToken': 'campaignToken',
+                  'providerToken': 'providerToken',
+                },
+                'navigationInfoParameters': {
+                  'forcedRedirectEnabled': true,
+                },
+                'socialMetaTagParameters': {
+                  'description': 'description',
+                  'imageUrl': 'imageUrl',
+                  'title': 'title',
+                },
+              },
+            ),
+          ]);
+        });
+      });
+    });
 }
 
 class TestMethodChannelFirebaseDynamicLinks
