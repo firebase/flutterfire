@@ -1,20 +1,33 @@
-## UNRELEASED
+## 9.0.0-dev.3
+
+ - **FEAT**: add macOS support (#7313).
+
+## 9.0.0-dev.2
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 9.0.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 9.0.0-dev.0
+
+> Note: This release has breaking changes.
 
 As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
 
 Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.
 
-- **`FirebaseAnalytics`**
-
-- **DEPRECATED**: `android` namespace has been deprecated in favour of calling `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
+- **DEPRECATED**: `FirebaseAnalytics.android` namespace has been deprecated in favour of calling `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
 - **DEPRECATED**: `logEcommercePurchase()` has been deprecated in favour of using `logPurchase()`.
 - **DEPRECATED**: `logPresentOffer()` has been deprecated in favour of using `logViewPromotion()`.
 - **DEPRECATED**: `logPurchaseRefund()` has been deprecated in favour of using `logRefund()`.
 - **DEPRECATED**: `logSetCheckoutOption()` has been deprecated.
 
+- **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
 - **BREAKING**: `FirebaseAnalyticsObserver()` class has been removed.
-- **BREAKING**: Constructing an instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
+- **BREAKING**: Constructing a `FirebaseAnalytics` instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
 - **BREAKING**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
 - **BREAKING**: `logAddToCart()` updated parameters to be logged in Analytics console.
 - **BREAKING**: `logAddToWishlist()` updated parameters to be logged in Analytics console.

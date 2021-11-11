@@ -9,11 +9,16 @@ import 'src/http_metric.dart';
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   /// Instance of Performance from the web plugin.
-  final firebase.Performance _performance;
+  firebase.Performance? _performance;
+
+  /// Lazily initialize [_webRemoteConfig] on first method call
+  firebase.Performance get _delegate {
+    return _performance ??= firebase.performance();
+  }
 
   /// A constructor that allows tests to override the firebase.Performance object.
   FirebasePerformanceWeb({firebase.Performance? performance})
-      : _performance = performance ?? firebase.performance(),
+      : _performance = performance,
         super();
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -41,7 +46,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   TracePlatform newTrace(String name) {
-    return TraceWeb(_performance.trace(name), name);
+    return TraceWeb(_delegate.trace(name), name);
   }
 
   @override
