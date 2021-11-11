@@ -1,3 +1,7 @@
+## 0.4.0-dev.3
+
+ - **FEAT**: add macOS support (#7313).
+
 ## 0.4.0-dev.2
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -58,10 +57,13 @@ void main() {
         methodCallLogger,
         <Matcher>[
           isMethodCall(
-            'Analytics#setCurrentScreen',
+            'Analytics#logEvent',
             arguments: {
-              'screenName': 'test-screen-name',
-              'screenClassOverride': 'test-class-override',
+              'eventName': 'screen_view',
+              'parameters': {
+                'screen_name': 'test-screen-name',
+                'screen_class': 'test-class-override',
+              },
             },
           ),
         ],
