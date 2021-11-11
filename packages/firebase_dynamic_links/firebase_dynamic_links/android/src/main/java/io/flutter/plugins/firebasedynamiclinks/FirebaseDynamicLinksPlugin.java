@@ -46,7 +46,7 @@ public class FirebaseDynamicLinksPlugin
   private MethodChannel channel;
   @Nullable private BinaryMessenger messenger;
 
-  private final Map<EventChannel, OnLinkStreamHandler> streamHandlers = new HashMap<>();
+  private final Map<EventChannel, io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler> streamHandlers = new HashMap<>();
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
 
@@ -107,7 +107,7 @@ public class FirebaseDynamicLinksPlugin
   @Override
   public boolean onNewIntent(Intent intent) {
     // Passes intent to every listener for different app instances the user may create
-    for (OnLinkStreamHandler instance : streamHandlers.values()) {
+    for (io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler instance : streamHandlers.values()) {
       instance.sinkEvent(intent);
     }
     return false;
@@ -120,14 +120,14 @@ public class FirebaseDynamicLinksPlugin
     FirebaseDynamicLinks dynamicLinks = getDynamicLinkInstance(call.arguments());
 
     switch (call.method) {
-      case "DynamicLinkBuilder#buildUrl":
+      case "FirebaseDynamicLinks#buildUrl":
         String url = buildUrl(call.arguments());
         result.success(url);
         return;
-      case "DynamicLinkBuilder#buildShortLink":
+      case "FirebaseDynamicLinks#buildShortLink":
         methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
         break;
-      case "DynamicLinkBuilder#shortenUrl":
+      case "FirebaseDynamicLinks#shortenUrl":
         urlBuilder.setLongLink(Uri.parse(call.argument("url")));
         methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
         break;
@@ -152,9 +152,9 @@ public class FirebaseDynamicLinksPlugin
           } else {
             Exception exception = task.getException();
             result.error(
-                Constants.DEFAULT_ERROR_CODE,
+                io.flutter.plugins.firebasedynamiclinks.Constants.DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
-                Utils.getExceptionDetails(exception));
+                io.flutter.plugins.firebasedynamiclinks.Utils.getExceptionDetails(exception));
           }
         });
   }
@@ -228,7 +228,7 @@ public class FirebaseDynamicLinksPlugin
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
           }
 
-          return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
+          return io.flutter.plugins.firebasedynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
         });
   }
 
@@ -355,7 +355,7 @@ public class FirebaseDynamicLinksPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final OnLinkStreamHandler handler = new OnLinkStreamHandler(dynamicLinks);
+          final io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler handler = new io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler(dynamicLinks);
           final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
           final EventChannel channel = new EventChannel(messenger, name);
           channel.setStreamHandler(handler);

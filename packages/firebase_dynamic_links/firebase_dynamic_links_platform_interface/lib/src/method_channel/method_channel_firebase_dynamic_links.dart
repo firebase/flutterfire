@@ -132,7 +132,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     final Map<String, dynamic>? reply = await MethodChannelFirebaseDynamicLinks
         .channel
         .invokeMapMethod<String, dynamic>(
-            'DynamicLinkParameters#shortenUrl',
+            'FirebaseDynamicLinks#shortenUrl',
             _withChannelDefaults(<String, dynamic>{
               'url': url.toString(),
               'dynamicLinkParametersOptions': options?.asMap(),
@@ -143,7 +143,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   @override
   Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     final String? url = await MethodChannelFirebaseDynamicLinks.channel
-        .invokeMethod<String>('DynamicLinkParameters#buildUrl',
+        .invokeMethod<String>('FirebaseDynamicLinks#buildUrl',
             _withChannelDefaults(parameters.asMap()));
     return Uri.parse(url!);
   }
@@ -154,7 +154,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     final Map<String, dynamic>? response =
         await MethodChannelFirebaseDynamicLinks.channel
             .invokeMapMethod<String, dynamic>(
-                'DynamicLinkParameters#buildShortLink',
+                'FirebaseDynamicLinks#buildShortLink',
                 _withChannelDefaults(parameters.asMap()));
     return _parseShortLink(response!);
   }

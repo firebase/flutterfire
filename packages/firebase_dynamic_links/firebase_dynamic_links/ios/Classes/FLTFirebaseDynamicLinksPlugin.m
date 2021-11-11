@@ -149,11 +149,11 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     NSLog(@"FLTFirebaseDynamicLinks: iOS plugin only supports the Firebase default app");
   }
 
-  if ([@"DynamicLinkBuilder#buildUrl" isEqualToString:call.method]) {
+  if ([@"FirebaseDynamicLinks#buildUrl" isEqualToString:call.method]) {
     [self buildUrl:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DynamicLinkBuilder#buildShortLink" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#buildShortLink" isEqualToString:call.method]) {
     [self buildShortLink:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DynamicLinkParameters#shortenUrl" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#shortenUrl" isEqualToString:call.method]) {
     [self shortenUrl:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#getInitialLink" isEqualToString:call.method]) {
     [self getInitialLink:methodCallResult];
