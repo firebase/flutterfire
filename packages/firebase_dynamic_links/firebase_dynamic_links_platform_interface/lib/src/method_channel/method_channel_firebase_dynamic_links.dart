@@ -19,7 +19,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   MethodChannelFirebaseDynamicLinks({FirebaseApp? app})
       : super(appInstance: app);
 
-  /// The [FirebaseApp] instance to which this [FirebaseDatabase] belongs.
+  /// The [FirebaseApp] instance to which this [FirebaseDynamicLinks] belongs.
   ///
   /// If null, the default [FirebaseApp] is used.
 
@@ -43,7 +43,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     return MethodChannelFirebaseDynamicLinks(app: app);
   }
 
-  /// Attaches generic default values to method channel arguments.
+  /// Attaches generic default values to method channel arguments to allow multi-app support for android.
   Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
     return {
       'appName': appInstance?.name ?? defaultFirebaseAppName,
@@ -110,9 +110,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
             'FirebaseDynamicLinks#onLink', <String, dynamic>{
           'appName': app.name,
         }) as String;
-
+        final events = onLinkChannel(name);
         snapshotStream =
-            onLinkChannel(name).receiveBroadcastStream().listen((event) {
+            events.receiveBroadcastStream().listen((event) {
           controller.add(getPendingDynamicLinkDataFromMap(event));
         }, onError: (error, stack) {
           controller.addError(convertPlatformException(error), stack);
