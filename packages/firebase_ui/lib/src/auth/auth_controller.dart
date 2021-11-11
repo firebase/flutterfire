@@ -29,7 +29,7 @@ abstract class AuthController {
 
   Future<User?> signIn(AuthCredential credential);
   Future<void> link(AuthCredential credential);
-  void dispose();
+  void reset();
 }
 
 class AuthControllerProvider extends InheritedWidget {

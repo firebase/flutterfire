@@ -45,6 +45,18 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String verifyingSMSCodeText;
   @override
   final String enterSMSCodeText;
+  @override
+  final String emailIsRequiredErrorText;
+  @override
+  final String isNotAValidEmailErrorText;
+  @override
+  final String userNotFoundErrorText;
+  @override
+  final String emailTakenErrorText;
+  @override
+  final String accessDisabledErrorText;
+  @override
+  final String wrongOrNoPasswordErrorText;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -70,5 +82,13 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.sendingSMSCodeText = 'Sending SMS code...',
     this.verifyingSMSCodeText = 'Verifying SMS code...',
     this.enterSMSCodeText = 'Enter SMS code',
+    this.emailIsRequiredErrorText = 'Email is required',
+    this.isNotAValidEmailErrorText = 'Provide a valid email',
+    this.userNotFoundErrorText = "Account doesn't exist",
+    this.emailTakenErrorText = 'Account with such email already exists',
+    this.accessDisabledErrorText =
+        'Access to this account has been temporarily disabled',
+    this.wrongOrNoPasswordErrorText =
+        'The password is invalid or the user does not have a password',
   });
 }

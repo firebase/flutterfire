@@ -27,6 +27,12 @@ abstract class FirebaseUILocalizationLabels {
   String get sendingSMSCodeText;
   String get verifyingSMSCodeText;
   String get enterSMSCodeText;
+  String get emailIsRequiredErrorText;
+  String get isNotAValidEmailErrorText;
+  String get userNotFoundErrorText;
+  String get emailTakenErrorText;
+  String get accessDisabledErrorText;
+  String get wrongOrNoPasswordErrorText;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{

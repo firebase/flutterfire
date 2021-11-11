@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
 import 'package:firebase_ui/i10n.dart';
 
 import 'phone/phone_auth_flow.dart';
 
+String? localizedErrorText(
+  String? errorCode,
+  FirebaseUILocalizationLabels labels,
+) {
+  switch (errorCode) {
+    case 'user-not-found':
+      return labels.userNotFoundErrorText;
+    case 'email-already-in-use':
+      return labels.emailTakenErrorText;
+    case 'too-many-requests':
+      return labels.accessDisabledErrorText;
+    case 'wrong-password':
+      return labels.wrongOrNoPasswordErrorText;
+
+    default:
+      return null;
+  }
+}
+
 class ErrorText extends StatelessWidget {
   final Exception exception;
-  const ErrorText({Key? key, required this.exception}) : super(key: key);
+  final TextAlign? textAlign;
+
+  const ErrorText({
+    Key? key,
+    required this.exception,
+    this.textAlign,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +44,20 @@ class ErrorText extends StatelessWidget {
       text = l.smsAutoresolutionFailedError;
     }
 
-    return Text(text, style: TextStyle(color: color));
+    if (exception is FirebaseAuthException) {
+      final e = exception as FirebaseAuthException;
+      final code = e.code;
+      final newText = localizedErrorText(code, l) ?? e.message;
+
+      if (newText != null) {
+        text = newText;
+      }
+    }
+
+    return Text(
+      text,
+      textAlign: textAlign,
+      style: TextStyle(color: color),
+    );
   }
 }

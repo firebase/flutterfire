@@ -78,7 +78,7 @@ class _ProfileState extends State<Profile> {
                           if (newState is CredentialLinked) {
                             u.reload().then((_) {
                               setState(() {});
-                              controller.dispose();
+                              controller.reset();
                             });
                           }
                         },

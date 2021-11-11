@@ -95,7 +95,10 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
         case AuthAction.signIn:
           value = const SigningIn();
           final user = await signIn(credential);
-          finalState = SignedIn(user!);
+
+          if (user != null) {
+            finalState = SignedIn(user);
+          }
           break;
         case AuthAction.link:
           value = CredentialReceived(credential);
@@ -115,7 +118,7 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   }
 
   @override
-  void dispose() {
+  void reset() {
     value = initialState;
     onDispose();
   }

@@ -143,7 +143,7 @@ class _AuthFlowBuilderState<T extends AuthController>
     flow.removeListener(onFlowStateChanged);
 
     if (widget.flowKey == null && widget.flow == null) {
-      flow.dispose();
+      flow.reset();
     }
 
     super.dispose();

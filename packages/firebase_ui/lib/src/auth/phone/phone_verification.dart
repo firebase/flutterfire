@@ -1,9 +1,9 @@
-import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_ui/i10n.dart';
 
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/src/responsive.dart';
 
+import '../../../src/responsive.dart';
 import '../error_text.dart';
 
 Future<void> startPhoneVerification({
