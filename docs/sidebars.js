@@ -108,6 +108,10 @@ module.exports = {
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],
+    "FlutterFire UI": [
+      "ui/overview",
+      "ui/widgets"
+    ],
     "Testing": ["testing/testing"],
   },
 };
