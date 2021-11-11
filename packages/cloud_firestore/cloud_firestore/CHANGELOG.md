@@ -1,3 +1,13 @@
+## 3.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
 ## 2.5.4
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7147).

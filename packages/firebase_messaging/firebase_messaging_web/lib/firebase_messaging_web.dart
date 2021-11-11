@@ -19,7 +19,25 @@ import 'src/utils.dart' as utils;
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// Instance of Messaging from the web plugin
-  late messaging_interop.Messaging _webMessaging;
+  messaging_interop.Messaging? _webMessaging;
+
+  messaging_interop.Messaging get _delegate {
+    _webMessaging ??=
+        messaging_interop.getMessagingInstance(core_interop.app(app.name));
+
+    if (!_initialized) {
+      _webMessaging!.onMessage
+          .listen((messaging_interop.MessagePayload webMessagePayload) {
+        RemoteMessage remoteMessage =
+            RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
+        FirebaseMessagingPlatform.onMessage.add(remoteMessage);
+      });
+
+      _initialized = true;
+    }
+
+    return _webMessaging!;
+  }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -37,19 +55,6 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
       return;
     }
-
-    _webMessaging =
-        messaging_interop.getMessagingInstance(core_interop.app(app?.name));
-    if (app != null && _initialized) return;
-
-    _webMessaging.onMessage
-        .listen((messaging_interop.MessagePayload webMessagePayload) {
-      RemoteMessage remoteMessage =
-          RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
-      FirebaseMessagingPlatform.onMessage.add(remoteMessage);
-    });
-
-    _initialized = true;
   }
 
   /// Updates user on browser support for Firebase.Messaging
@@ -86,12 +91,14 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken() async {
+    _delegate;
+
     if (!_initialized) {
       // no-op for unsupported browsers
       return;
     }
 
-    return guard(_webMessaging.deleteToken);
+    return guard(_delegate.deleteToken);
   }
 
   @override
@@ -101,13 +108,15 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<String?> getToken({String? vapidKey}) async {
+    _delegate;
+
     if (!_initialized) {
       // no-op for unsupported browsers
       return null;
     }
 
     return guard(
-      () => _webMessaging.getToken(vapidKey: vapidKey),
+      () => _delegate.getToken(vapidKey: vapidKey),
     );
   }
 

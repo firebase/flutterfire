@@ -13,7 +13,14 @@ import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp();
+  final FirebaseApp app = await Firebase.initializeApp(
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+  ));
   runApp(MaterialApp(
     title: 'Flutter Database Example',
     home: MyHomePage(app: app),

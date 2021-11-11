@@ -1,58 +1,69 @@
-// ignore_for_file: require_trailing_commas
-
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-// @dart=2.9
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void testsMain() {
   group('$FirebaseAnalytics', () {
-    /*late*/ FirebaseAnalytics analytics;
+    late FirebaseAnalytics analytics;
 
     setUpAll(() async {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+          appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+          storageBucket: 'react-native-firebase-testing.appspot.com',
+          databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+          messagingSenderId: '448618578101',
+          projectId: 'react-native-firebase-testing',
+        ),
+      );
       analytics = FirebaseAnalytics.instance;
     });
 
     test('logEvent', () async {
       await expectLater(analytics.logEvent(name: 'testing'), completes);
 
-      Item ITEM = Item(
-        affilitation: 'affil',
+      AnalyticsEventItem analyticsEventItem = AnalyticsEventItem(
+        affiliation: 'affil',
         coupon: 'coup',
-        creative_name: 'creativeName',
-        creative_slot: 'creativeSlot',
-        discount: 'disc',
+        creativeName: 'creativeName',
+        creativeSlot: 'creativeSlot',
+        discount: 2.22,
         index: 3,
-        item_brand: 'itemBrand',
-        item_category: 'itemCategory',
-        item_category2: 'itemCategory2',
-        item_category3: 'itemCategory3',
-        item_category4: 'itemCategory4',
-        item_category5: 'itemCategory5',
-        item_id: 'itemId',
-        item_list_id: 'itemListId',
-        item_list_name: 'itemListName',
-        item_name: 'itemName',
-        item_variant: 'itemVariant',
-        location_id: 'locationId',
-        price: 'pri',
-        promotion_id: 'promotionId',
-        promotion_name: 'promotionName',
-        quantity: 'quantity',
+        itemBrand: 'itemBrand',
+        itemCategory: 'itemCategory',
+        itemCategory2: 'itemCategory2',
+        itemCategory3: 'itemCategory3',
+        itemCategory4: 'itemCategory4',
+        itemCategory5: 'itemCategory5',
+        itemId: 'itemId',
+        itemListId: 'itemListId',
+        itemListName: 'itemListName',
+        itemName: 'itemName',
+        itemVariant: 'itemVariant',
+        locationId: 'locationId',
+        price: 9.99,
+        currency: 'USD',
+        promotionId: 'promotionId',
+        promotionName: 'promotionName',
+        quantity: 1,
       );
       // test custom event
       await expectLater(
-        analytics.logEvent(name: 'testing-parameters', parameters: {
-          'foo': 'bar',
-          'baz': 500,
-          'items': [ITEM],
-        }),
+        analytics.logEvent(
+          name: 'testing-parameters',
+          parameters: {
+            'foo': 'bar',
+            'baz': 500,
+            'items': [analyticsEventItem],
+          },
+        ),
         completes,
       );
       // test 2 reserved events
@@ -73,7 +84,7 @@ void testsMain() {
           currency: 'foo',
           coupon: 'bar',
           value: 200,
-          items: [ITEM],
+          items: [analyticsEventItem],
           tax: 10,
           shipping: 23,
           transactionId: 'bar',
@@ -83,16 +94,23 @@ void testsMain() {
       );
     });
 
-    test('setSessionTimeoutDuration', () async {
-      await expectLater(
+    test(
+      'setSessionTimeoutDuration',
+      () async {
+        await expectLater(
           analytics
               .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-          completes);
-    });
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
 
     test('setAnalyticsCollectionEnabled', () async {
       await expectLater(
-          analytics.setAnalyticsCollectionEnabled(true), completes);
+        analytics.setAnalyticsCollectionEnabled(true),
+        completes,
+      );
     });
 
     test('setUserId', () async {
@@ -101,21 +119,39 @@ void testsMain() {
 
     test('setCurrentScreen', () async {
       await expectLater(
-          analytics.setCurrentScreen(screenName: 'screen-name'), completes);
+        analytics.setCurrentScreen(screenName: 'screen-name'),
+        completes,
+      );
     });
 
     test('setUserProperty', () async {
       await expectLater(
-          analytics.setUserProperty(name: 'foo', value: 'bar'), completes);
+        analytics.setUserProperty(name: 'foo', value: 'bar'),
+        completes,
+      );
     });
 
-    test('resetAnalyticsData', () async {
-      await expectLater(analytics.resetAnalyticsData(), completes);
-    });
+    test(
+      'resetAnalyticsData',
+      () async {
+        await expectLater(analytics.resetAnalyticsData(), completes);
+      },
+      skip: kIsWeb,
+    );
 
-    test('resetAnalyticsData', () async {
-      await expectLater(analytics.resetAnalyticsData(), completes);
-    });
+    test(
+      'setConsent',
+      () async {
+        await expectLater(
+          analytics.setConsent(
+            analyticsStorageConsentGranted: false,
+            adStorageConsentGranted: true,
+          ),
+          completes,
+        );
+      },
+      skip: kIsWeb,
+    );
   });
 }
 
