@@ -60,11 +60,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     // This must be loaded first!
     await _injectSrcScript(
-        'https://www.gstatic.com/firebasejs/$version/firebase-app.js');
+      'https://www.gstatic.com/firebasejs/$version/firebase-app.js',
+    );
 
     await Future.wait(_services.values.map((service) {
       return _injectSrcScript(
-          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js');
+        'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+      );
     }));
   }
 
@@ -166,7 +168,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     assert(() {
       if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
         // ignore: avoid_print
-        print('''
+        print(
+          '''
             WARNING: FlutterFire for Web is explicitly tested against Firebase JS SDK version "$supportedFirebaseJsSdkVersion"
             but your currently specifying "${firebase.SDK_VERSION}" by either the imported Firebase JS SDKs in your web/index.html
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
@@ -181,7 +184,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
             If you import the Firebase scripts in index.html, instead allow FlutterFire to manage this for you by removing
             any Firebase scripts in your web/index.html file:
                 e.g. remove: <script src="https://www.gstatic.com/firebasejs/${firebase.SDK_VERSION}/firebase-app.js"></script>
-          ''');
+          ''',
+        );
       }
 
       return true;
