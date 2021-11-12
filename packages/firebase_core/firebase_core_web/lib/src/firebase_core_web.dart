@@ -63,11 +63,13 @@ class FirebaseCoreWeb extends FirebasePlatform {
       'https://www.gstatic.com/firebasejs/$version/firebase-app.js',
     );
 
-    await Future.wait(_services.values.map((service) {
-      return _injectSrcScript(
-        'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
-      );
-    }));
+    await Future.wait(
+      _services.values.map((service) {
+        return _injectSrcScript(
+          'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+        );
+      }),
+    );
   }
 
   /// In development (or manually added), requirejs is added to the window.
@@ -165,11 +167,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
       }
     }
 
-    assert(() {
-      if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
-        // ignore: avoid_print
-        print(
-          '''
+    assert(
+      () {
+        if (firebase.SDK_VERSION != supportedFirebaseJsSdkVersion) {
+          // ignore: avoid_print
+          print(
+            '''
             WARNING: FlutterFire for Web is explicitly tested against Firebase JS SDK version "$supportedFirebaseJsSdkVersion"
             but your currently specifying "${firebase.SDK_VERSION}" by either the imported Firebase JS SDKs in your web/index.html
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
@@ -185,18 +188,12 @@ class FirebaseCoreWeb extends FirebasePlatform {
             any Firebase scripts in your web/index.html file:
                 e.g. remove: <script src="https://www.gstatic.com/firebasejs/${firebase.SDK_VERSION}/firebase-app.js"></script>
           ''',
-        );
-      }
+          );
+        }
 
-      return true;
-    }());
-
-    // If there are no apps, and the user has not provided options,
-    // then we need to throw an error. The user must do this in the index.html
-    // file OR provide some options.
-    if (firebase.apps.isEmpty && options == null) {
-      throw coreNotInitialized();
-    }
+        return true;
+      }(),
+    );
 
     firebase.App? app;
 
