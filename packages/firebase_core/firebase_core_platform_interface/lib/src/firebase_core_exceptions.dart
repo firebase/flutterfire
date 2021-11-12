@@ -44,9 +44,6 @@ FirebaseException coreNotInitialized() {
     message = '''
 Firebase has not been correctly initialized.
 
-You must either initialize Firebase via the index.html file or provide FirebaseOptions
-to the `Firebase.initializeApp()` method.
-
 View the Web Installation documentation for more information: https://firebase.flutter.dev/docs/installation/web
     ''';
   } else if (defaultTargetPlatform == TargetPlatform.android) {
