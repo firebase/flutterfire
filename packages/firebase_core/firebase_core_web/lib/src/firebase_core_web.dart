@@ -11,7 +11,7 @@ class FirebaseWebService {
   String name;
 
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService(this.name);
+  FirebaseWebService._(this.name);
 }
 
 /// The entry point for accessing Firebase.
@@ -21,8 +21,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {};
 
   /// Internally registers a Firebase Service to be initialized.
-  static void registerService(FirebaseWebService service) {
-    _services.putIfAbsent(service.name, () => service);
+  static void registerService(String service) {
+    _services.putIfAbsent(service, () => FirebaseWebService._(service));
   }
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
