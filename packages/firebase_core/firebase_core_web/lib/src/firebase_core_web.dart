@@ -27,31 +27,61 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
+  /// Injects a script into the <head> of the current document.
   Future<void> _injectScript(String src) async {
     ScriptElement script = ScriptElement();
+    script.type = 'text/javascript';
     script.src = src;
-    assert(document.head != null);
-    document.head!.append(script);
+    script.async = true;
+    document.body!.append(script);
     await script.onLoad.first;
   }
 
   Future<void> _initializeCore() async {
+    print(context['firebase']);
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
     if (context['firebase'] != null) {
       return;
     }
 
+    ScriptElement script = ScriptElement();
+    script.type = 'text/javascript';
+    script.innerHtml = '''
+      require.config({
+        paths: {
+          '@firebase/app': 'https://www.gstatic.com/firebasejs/8.6.1/firebase-app',
+          '@firebase/firestore': 'https://www.gstatic.com/firebasejs/8.6.1/firebase-firestore',
+        }
+      });
+
+      require(['@firebase/app', '@firebase/firestore'], (app) => {
+        window.firebase = app;
+      });
+    ''';
+
+    document.head!.append(script);
+
+    Completer completer = Completer();
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (context['firebase'] != null) {
+        timer.cancel();
+        completer.complete();
+      }
+    });
+
+    await completer.future;
+
     String version = context['flutterfire_sdk_version'] ?? '8.6.1';
 
-    // This must come first
-    await _injectScript(
-        'https://www.gstatic.com/firebasejs/$version/firebase-app.js');
-
-    await Future.wait(_services.values.map((service) {
-      return _injectScript(
-          'https://www.gstatic.com/firebasejs/$version/firebase-${service.module}.js');
-    }));
+    // // This must come first
+    // await _injectScript(
+    //     'https://www.gstatic.com/firebasejs/$version/firebase-app.js');
+    //
+    // await Future.wait(_services.values.map((service) {
+    //   return _injectScript(
+    //       'https://www.gstatic.com/firebasejs/$version/firebase-${service.module}.js');
+    // }));
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
@@ -71,7 +101,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebaseOptions? options,
   }) async {
     await _initializeCore();
-
+    print('Core initied!');
     firebase.App? app;
 
     if (name == null || name == defaultFirebaseAppName) {
@@ -119,6 +149,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
           // Options are roughly the same; so we'll return the existing app.
         }
       } catch (e) {
+        print(e);
         // If the options check failed
         if (e is FirebaseException) {
           rethrow;
