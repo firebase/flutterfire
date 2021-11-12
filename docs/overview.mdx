@@ -284,6 +284,19 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 $FirebaseSDKVersion = '8.9.0'
 ```
 
+### Web
+
+In the `web/index.html` file, add a `script` tag which adds the version to the window object:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script>window.flutterfire_web_sdk_version = '8.10.0';</script>
+</head>
+...
+```
+
 ## Next Steps
 
 On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down
