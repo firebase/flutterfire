@@ -10,8 +10,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart' as http;
 
 import 'message.dart';
 import 'message_list.dart';
@@ -26,12 +26,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        projectId: 'react-native-firebase-testing',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+        messagingSenderId: '448618578101',
+        appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
+        measurementId: 'G-0N1G9FLDZE'),
+  );
   print('Handling a background message ${message.messageId}');
 }
 

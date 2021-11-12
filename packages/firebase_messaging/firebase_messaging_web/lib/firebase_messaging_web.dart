@@ -41,6 +41,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 
