@@ -15,18 +15,23 @@ import 'package:flutter/material.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        projectId: 'react-native-firebase-testing',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+        messagingSenderId: '448618578101',
+        appId: '1:448618578101:web:0b650370bb29e29cac3efc',
+        measurementId: 'G-F79DJ0VFGS'),
+  );
   FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   MyApp({Key key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
