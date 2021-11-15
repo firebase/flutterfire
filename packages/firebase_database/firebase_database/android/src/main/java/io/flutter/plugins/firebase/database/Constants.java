@@ -62,7 +62,6 @@ public class Constants {
 
   // Custom error codes
   public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";
-  public static final String TRANSACTION_TIMEOUT_CODE = "transaction-timeout";
   public static final String INDEX_NOT_DEFINED = "index-not-defined";
 
   public static final String ERROR_CODE = "code";

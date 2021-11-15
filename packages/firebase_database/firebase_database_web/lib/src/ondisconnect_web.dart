@@ -19,7 +19,7 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
     try {
       await _delegate.set(value);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -28,7 +28,7 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
     try {
       await _delegate.setWithPriority(value, priority);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -37,7 +37,7 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
     try {
       await _delegate.remove();
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -46,7 +46,7 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
     try {
       await _delegate.cancel();
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -55,7 +55,7 @@ class OnDisconnectWeb extends OnDisconnectPlatform {
     try {
       await _delegate.update(value);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 }

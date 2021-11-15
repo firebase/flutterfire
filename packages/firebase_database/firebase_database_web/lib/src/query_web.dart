@@ -23,7 +23,7 @@ class QueryWeb extends QueryPlatform {
     try {
       return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -130,7 +130,7 @@ class QueryWeb extends QueryPlatform {
       ),
     )
         .handleError((e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     });
   }
 }

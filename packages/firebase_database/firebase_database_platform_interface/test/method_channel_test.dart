@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas, avoid_relative_lib_imports
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,13 +6,13 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database_reference.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_on_disconnect.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_query.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../lib/src/method_channel/method_channel_database.dart';
-import '../lib/src/method_channel/method_channel_database_reference.dart';
-import '../lib/src/method_channel/method_channel_on_disconnect.dart';
-import '../lib/src/method_channel/method_channel_query.dart';
 import 'test_common.dart';
 
 void main() {

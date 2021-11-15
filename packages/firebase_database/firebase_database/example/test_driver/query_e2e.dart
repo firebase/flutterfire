@@ -61,9 +61,8 @@ void runQueryTests() {
       expect((snapshot.value as dynamic)['value'], 56);
     });
 
-    // TODO why is this needd? Wouldn't the error just bubble from the native error?
     test(
-      'throws "index-not-defined" if oredering applied to a ref with no index',
+      'throws "index-not-defined" if ordering applied to a ref with no index',
       () async {
         final ref = database.ref('messages');
         try {

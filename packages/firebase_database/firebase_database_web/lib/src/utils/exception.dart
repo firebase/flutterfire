@@ -4,10 +4,10 @@
 
 part of firebase_database_web;
 
-FirebaseException convertFirebaseFunctionsException(Object exception,
+FirebaseException convertFirebaseDatabaseException(Object exception,
     [StackTrace? stackTrace]) {
   String originalCode = util.getProperty(exception, 'code');
-  String code = originalCode.replaceFirst('functions/', '');
+  String code = originalCode.replaceFirst('database/', '');
   String message = util
       .getProperty(exception, 'message')
       .replaceFirst('($originalCode)', '');

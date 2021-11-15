@@ -11,7 +11,7 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:firebase_database_web/firebase_database_web.dart'
-    show convertFirebaseFunctionsException;
+    show convertFirebaseDatabaseException;
 import 'package:flutter/widgets.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -203,7 +203,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       if (error != null) {
         final dartified = dartify(error);
 
-        c.completeError(convertFirebaseFunctionsException(dartified));
+        c.completeError(convertFirebaseDatabaseException(dartified));
       } else {
         c.complete(Transaction(
           committed: committed,
@@ -367,10 +367,14 @@ class Query<T extends database_interop.QueryJsImpl>
       streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
     });
 
+    final cancelCallbackWrap = allowInterop((Object error) {
+      final dartified = dartify(error);
+      streamController.addError(convertFirebaseDatabaseException(dartified));
+      streamController.close();
+    });
+
     void startListen() {
-      // TODO(lesnitsky) – should probably implement cancel callback
-      // See https://firebase.google.com/docs/reference/js/firebase.database.Query#on
-      jsObject.on(eventType, callbackWrap);
+      jsObject.on(eventType, callbackWrap, cancelCallbackWrap);
     }
 
     void stopListen() {

@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -12,7 +11,10 @@ import 'utils/stream_subscriber_mixin.dart';
 
 typedef ChildCallback = void Function(int index, DataSnapshot snapshot);
 typedef ChildMovedCallback = void Function(
-    int fromIndex, int toIndex, DataSnapshot snapshot);
+  int fromIndex,
+  int toIndex,
+  DataSnapshot snapshot,
+);
 typedef ValueCallback = void Function(DataSnapshot snapshot);
 typedef ErrorCallback = void Function(FirebaseException error);
 

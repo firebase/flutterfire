@@ -285,8 +285,6 @@ public class FirebaseDatabasePlugin
 
           ref.runTransaction(handler, transactionApplyLocally);
 
-          Tasks.await(handler.getTask());
-
           return Tasks.await(handler.getTask());
         });
   }
@@ -502,24 +500,6 @@ public class FirebaseDatabasePlugin
               e =
                   FlutterFirebaseDatabaseException.fromDatabaseException(
                       (DatabaseException) exception);
-            } else if (exception instanceof TimeoutException) {
-              final int transactionKey = (int) arguments.get(Constants.TRANSACTION_KEY);
-              final int transactionTimeout = (int) arguments.get(Constants.TRANSACTION_TIMEOUT);
-
-              final Map<String, Object> details = new HashMap<>();
-
-              details.put(Constants.TRANSACTION_KEY, transactionKey);
-              details.put(Constants.TRANSACTION_TIMEOUT, transactionTimeout);
-
-              e =
-                  new FlutterFirebaseDatabaseException(
-                      Constants.TRANSACTION_TIMEOUT_CODE,
-                      "Transaction"
-                          + transactionKey
-                          + "took longer than "
-                          + transactionTimeout
-                          + "ms",
-                      details);
             } else {
               e = FlutterFirebaseDatabaseException.fromException(exception);
             }

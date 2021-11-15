@@ -50,7 +50,7 @@ class DatabaseReferenceWeb extends QueryWeb
     try {
       await _delegate.set(value);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -59,7 +59,7 @@ class DatabaseReferenceWeb extends QueryWeb
     try {
       await _delegate.setWithPriority(value, priority);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -68,7 +68,7 @@ class DatabaseReferenceWeb extends QueryWeb
     try {
       await _delegate.update(value);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -77,7 +77,7 @@ class DatabaseReferenceWeb extends QueryWeb
     try {
       await _delegate.setPriority(priority);
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -97,7 +97,7 @@ class DatabaseReferenceWeb extends QueryWeb
       return TransactionResultWeb._(
           this, await _delegate.transaction(transactionHandler, applyLocally));
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 

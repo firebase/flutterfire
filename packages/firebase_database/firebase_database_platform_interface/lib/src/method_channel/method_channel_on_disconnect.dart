@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -11,10 +10,10 @@ import 'utils/exception.dart';
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
-  MethodChannelOnDisconnect(
-      {required DatabasePlatform database,
-      required DatabaseReferencePlatform ref})
-      : super(database: database, ref: ref);
+  MethodChannelOnDisconnect({
+    required DatabasePlatform database,
+    required DatabaseReferencePlatform ref,
+  }) : super(database: database, ref: ref);
 
   @override
   Future<void> set(Object? value) {

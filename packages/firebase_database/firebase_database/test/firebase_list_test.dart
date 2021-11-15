@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2018 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -9,8 +8,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
 import 'package:firebase_database/ui/firebase_sorted_list.dart';
 import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
-import 'package:mockito/mockito.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -94,11 +93,13 @@ void main() {
     test('can add to empty list', () async {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
       expect(
-        await processChildAddedEvent(MockEvent(
-          DatabaseEventType.childAdded,
-          null,
-          snapshot,
-        )),
+        await processChildAddedEvent(
+          MockEvent(
+            DatabaseEventType.childAdded,
+            null,
+            snapshot,
+          ),
+        ),
         ListChange.at(0, snapshot),
       );
       expect(list, <DataSnapshot>[snapshot]);
@@ -107,17 +108,21 @@ void main() {
     test('can add before first element', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot2,
-      ));
-      expect(
-        await processChildAddedEvent(MockEvent(
+      await processChildAddedEvent(
+        MockEvent(
           DatabaseEventType.childAdded,
           null,
-          snapshot1,
-        )),
+          snapshot2,
+        ),
+      );
+      expect(
+        await processChildAddedEvent(
+          MockEvent(
+            DatabaseEventType.childAdded,
+            null,
+            snapshot1,
+          ),
+        ),
         ListChange.at(0, snapshot1),
       );
       expect(list, <DataSnapshot>[snapshot1, snapshot2]);
@@ -126,17 +131,21 @@ void main() {
     test('can add after last element', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot1,
-      ));
-      expect(
-        await processChildAddedEvent(MockEvent(
+      await processChildAddedEvent(
+        MockEvent(
           DatabaseEventType.childAdded,
-          'key10',
-          snapshot2,
-        )),
+          null,
+          snapshot1,
+        ),
+      );
+      expect(
+        await processChildAddedEvent(
+          MockEvent(
+            DatabaseEventType.childAdded,
+            'key10',
+            snapshot2,
+          ),
+        ),
         ListChange.at(1, snapshot2),
       );
       expect(list, <DataSnapshot>[snapshot1, snapshot2]);
@@ -144,17 +153,21 @@ void main() {
 
     test('can remove from singleton list', () async {
       final DataSnapshot snapshot = MockDataSnapshot('key10', 10);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot,
-      ));
-      expect(
-        await processChildRemovedEvent(MockEvent(
-          DatabaseEventType.childRemoved,
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
           null,
           snapshot,
-        )),
+        ),
+      );
+      expect(
+        await processChildRemovedEvent(
+          MockEvent(
+            DatabaseEventType.childRemoved,
+            null,
+            snapshot,
+          ),
+        ),
         ListChange.at(0, snapshot),
       );
       expect(list, isEmpty);
@@ -163,22 +176,28 @@ void main() {
     test('can remove former of two elements', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot2,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot1,
-      ));
-      expect(
-        await processChildRemovedEvent(MockEvent(
-          DatabaseEventType.childRemoved,
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot2,
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
           null,
           snapshot1,
-        )),
+        ),
+      );
+      expect(
+        await processChildRemovedEvent(
+          MockEvent(
+            DatabaseEventType.childRemoved,
+            null,
+            snapshot1,
+          ),
+        ),
         ListChange.at(0, snapshot1),
       );
       expect(list, <DataSnapshot>[snapshot2]);
@@ -187,22 +206,28 @@ void main() {
     test('can remove latter of two elements', () async {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot2,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot1,
-      ));
-      expect(
-        await processChildRemovedEvent(MockEvent(
-          DatabaseEventType.childRemoved,
-          'key10',
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
           snapshot2,
-        )),
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot1,
+        ),
+      );
+      expect(
+        await processChildRemovedEvent(
+          MockEvent(
+            DatabaseEventType.childRemoved,
+            'key10',
+            snapshot2,
+          ),
+        ),
         ListChange.at(1, snapshot2),
       );
       expect(list, <DataSnapshot>[snapshot1]);
@@ -213,21 +238,27 @@ void main() {
       final DataSnapshot snapshot2a = MockDataSnapshot('key20', 20);
       final DataSnapshot snapshot2b = MockDataSnapshot('key20', 25);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot3,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot2a,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot1,
-      ));
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot3,
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot2a,
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot1,
+        ),
+      );
       expect(
         await processChildChangedEvent(
           MockEvent(DatabaseEventType.childChanged, 'key10', snapshot2b),
@@ -240,21 +271,27 @@ void main() {
       final DataSnapshot snapshot1 = MockDataSnapshot('key10', 10);
       final DataSnapshot snapshot2 = MockDataSnapshot('key20', 20);
       final DataSnapshot snapshot3 = MockDataSnapshot('key30', 30);
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot3,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot2,
-      ));
-      await processChildAddedEvent(MockEvent(
-        DatabaseEventType.childAdded,
-        null,
-        snapshot1,
-      ));
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot3,
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot2,
+        ),
+      );
+      await processChildAddedEvent(
+        MockEvent(
+          DatabaseEventType.childAdded,
+          null,
+          snapshot1,
+        ),
+      );
       expect(
         await processChildMovedEvent(
           MockEvent(

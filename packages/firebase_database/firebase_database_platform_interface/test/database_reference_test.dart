@@ -1,6 +1,5 @@
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import '../lib/src/method_channel/method_channel_database.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

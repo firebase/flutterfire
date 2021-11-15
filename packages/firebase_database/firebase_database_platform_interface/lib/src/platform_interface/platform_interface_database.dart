@@ -25,8 +25,10 @@ abstract class DatabasePlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory DatabasePlatform.instanceFor(
-      {required FirebaseApp app, String? databaseURL}) {
+  factory DatabasePlatform.instanceFor({
+    required FirebaseApp app,
+    String? databaseURL,
+  }) {
     return DatabasePlatform.instance
         .delegateFor(app: app, databaseURL: databaseURL);
   }
@@ -53,8 +55,10 @@ abstract class DatabasePlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  DatabasePlatform delegateFor(
-      {required FirebaseApp app, String? databaseURL}) {
+  DatabasePlatform delegateFor({
+    required FirebaseApp app,
+    String? databaseURL,
+  }) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 

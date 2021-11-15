@@ -90,7 +90,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
     try {
       _firebaseDatabase.goOnline();
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
@@ -99,7 +99,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
     try {
       _firebaseDatabase.goOffline();
     } catch (e, s) {
-      throw convertFirebaseFunctionsException(e, s);
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 

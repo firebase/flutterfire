@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -35,9 +34,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   DatabaseReferencePlatform child(String path) {
     return MethodChannelDatabaseReference(
-        database: database,
-        pathComponents: List<String>.from(pathComponents)
-          ..addAll(path.split('/')));
+      database: database,
+      pathComponents: List<String>.from(pathComponents)
+        ..addAll(path.split('/')),
+    );
   }
 
   @override
@@ -169,7 +169,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       );
 
       return MethodChannelTransactionResult(
-          result!['committed'] as bool, this, result!['snapshot']);
+        result!['committed'] as bool,
+        this,
+        result!['snapshot'],
+      );
     } catch (e, s) {
       throw convertPlatformException(e, s);
     } finally {
