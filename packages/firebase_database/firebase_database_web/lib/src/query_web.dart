@@ -23,6 +23,7 @@ class QueryWeb extends QueryPlatform {
     try {
       return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
     } catch (e, s) {
+      print(e);
       throw convertFirebaseDatabaseException(e, s);
     }
   }
