@@ -12,7 +12,7 @@ class DatabaseEventWeb extends DatabaseEventPlatform {
     this._event,
   ) : super(<String, dynamic>{
           'previousChildKey': _event.prevChildKey,
-          'eventType': eventType,
+          'eventType': eventTypeToString(eventType),
         });
 
   final DatabaseReferencePlatform _ref;

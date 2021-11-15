@@ -47,11 +47,11 @@ public class Constants {
 
   public static final String EVENT_TYPE = "eventType";
 
-  public static final String EVENT_TYPE_CHILD_ADDED = "EventType.childAdded";
-  public static final String EVENT_TYPE_CHILD_REMOVED = "EventType.childRemoved";
-  public static final String EVENT_TYPE_CHILD_CHANGED = "EventType.childChanged";
-  public static final String EVENT_TYPE_CHILD_MOVED = "EventType.childMoved";
-  public static final String EVENT_TYPE_VALUE = "EventType.value";
+  public static final String EVENT_TYPE_CHILD_ADDED = "childAdded";
+  public static final String EVENT_TYPE_CHILD_REMOVED = "childRemoved";
+  public static final String EVENT_TYPE_CHILD_CHANGED = "childChanged";
+  public static final String EVENT_TYPE_CHILD_MOVED = "childMoved";
+  public static final String EVENT_TYPE_VALUE = "value";
 
   public static final String CHILD_KEYS = "childKeys";
   public static final String PREVIOUS_CHILD_NAME = "previousChildKey";

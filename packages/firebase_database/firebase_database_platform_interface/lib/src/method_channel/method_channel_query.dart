@@ -41,10 +41,12 @@ class MethodChannelQuery extends QueryPlatform {
       'databaseURL': database.databaseURL,
       'path': path,
       'parameters': parameters,
-      'eventType': eventType.toString(),
+      'eventType': eventTypeToString(eventType),
     };
 
-    final listenArgs = <String, String>{'eventType': eventType.toString()};
+    final listenArgs = <String, String>{
+      'eventType': eventTypeToString(eventType)
+    };
 
     final channelName = await channel.invokeMethod<String>(
       'Query#observe',

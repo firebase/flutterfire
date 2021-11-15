@@ -563,7 +563,7 @@ void main() {
 
         Map<String, dynamic> createValueEvent(dynamic value) {
           return {
-            'eventType': 'DatabaseEventType.value',
+            'eventType': 'value',
             'snapshot': {
               'value': value,
               'key': path.split('/').last,
@@ -603,7 +603,7 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
-                'eventType': 'DatabaseEventType.value',
+                'eventType': 'value',
               },
             )
           ],

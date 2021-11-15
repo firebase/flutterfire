@@ -23,20 +23,34 @@ enum DatabaseEventType {
   value,
 }
 
-const _eventTypesMap = {
-  'DatabaseEventType.childAdded': DatabaseEventType.childAdded,
-  'DatabaseEventType.childRemoved': DatabaseEventType.childRemoved,
-  'DatabaseEventType.childChanged': DatabaseEventType.childChanged,
-  'DatabaseEventType.childMoved': DatabaseEventType.childMoved,
-  'DatabaseEventType.value': DatabaseEventType.value,
+const _eventTypeFromStringMap = {
+  'childAdded': DatabaseEventType.childAdded,
+  'childRemoved': DatabaseEventType.childRemoved,
+  'childChanged': DatabaseEventType.childChanged,
+  'childMoved': DatabaseEventType.childMoved,
+  'value': DatabaseEventType.value,
+};
+
+const _eventTypeToStringMap = {
+  DatabaseEventType.childAdded: 'childAdded',
+  DatabaseEventType.childRemoved: 'childRemoved',
+  DatabaseEventType.childChanged: 'childChanged',
+  DatabaseEventType.childMoved: 'childMoved',
+  DatabaseEventType.value: 'value',
 };
 
 DatabaseEventType eventTypeFromString(String value) {
-  if (!_eventTypesMap.containsKey(value)) {
+  if (!_eventTypeFromStringMap.containsKey(value)) {
     throw Exception('Unknown event type: $value');
   }
+  return _eventTypeFromStringMap[value]!;
+}
 
-  return _eventTypesMap[value]!;
+String eventTypeToString(DatabaseEventType value) {
+  if (!_eventTypeToStringMap.containsKey(value)) {
+    throw Exception('Unknown event type: $value');
+  }
+  return _eventTypeToStringMap[value]!;
 }
 
 /// `Event` encapsulates a DataSnapshot and possibly also the key of its
