@@ -31,18 +31,15 @@ class Login extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16).copyWith(top: 0),
               child: Column(
-                children: const [
-                  GoogleSignInButton(
-                    clientId: GOOGLE_CLIENT_ID,
-                    redirectUri: GOOGLE_REDIRECT_URI,
-                  ),
+                children: [
+                  GoogleSignInButton(clientId: GOOGLE_CLIENT_ID),
                   AppleSignInButton(),
                   TwitterSignInButton(
                     apiKey: TWITTER_API_KEY,
                     apiSecretKey: TWITTER_API_SECRET_KEY,
                     redirectUri: TWITTER_REDIRECT_URI,
                   ),
-                  FacebookSignInButton(),
+                  FacebookSignInButton(clientId: FACEBOOK_CLIENT_ID),
                 ],
               ),
             ),

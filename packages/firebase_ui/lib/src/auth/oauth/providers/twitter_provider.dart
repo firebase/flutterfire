@@ -3,7 +3,7 @@ import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
+import 'package:firebase_ui/src/auth/configs/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 
 import 'package:twitter_login/twitter_login.dart';
@@ -66,18 +66,18 @@ class TwitterProviderImpl extends Twitter {
 class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   final String apiKey;
   final String apiSecretKey;
-  final String redirectURI;
+  final String redirectUri;
 
   late final _provider = TwitterProviderImpl(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
-    redirectUri: redirectURI,
+    redirectUri: redirectUri,
   );
 
   TwitterProviderConfiguration({
     required this.apiKey,
     required this.apiSecretKey,
-    required this.redirectURI,
+    required this.redirectUri,
   });
 
   @override

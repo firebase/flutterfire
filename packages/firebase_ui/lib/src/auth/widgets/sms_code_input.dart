@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../auth_state.dart';
-import '../error_text.dart';
+import 'error_text.dart';
 
-class NumberDecorationPainter extends BoxPainter {
+class _NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;
   final Color color;
 
-  NumberDecorationPainter({
+  _NumberDecorationPainter({
     VoidCallback? onChanged,
     required this.inputBorder,
     required this.color,
@@ -29,18 +29,18 @@ class NumberDecorationPainter extends BoxPainter {
   }
 }
 
-class NumberSlotDecoration extends Decoration {
+class _NumberSlotDecoration extends Decoration {
   final InputBorder inputBorder;
   final Color color;
 
-  NumberSlotDecoration({
+  _NumberSlotDecoration({
     required this.inputBorder,
     required this.color,
   });
 
   @override
   BoxPainter createBoxPainter([VoidCallback? onChanged]) {
-    return NumberDecorationPainter(
+    return _NumberDecorationPainter(
       onChanged: onChanged,
       inputBorder: inputBorder,
       color: color,
@@ -52,17 +52,17 @@ const NUMBER_SLOT_WIDTH = 44.0;
 const NUMBER_SLOT_HEIGHT = 55.0;
 const NUMBER_SLOT_MARGIN = 5.5;
 
-class NumberSlot extends StatefulWidget {
+class _NumberSlot extends StatefulWidget {
   final String number;
   final VoidCallback? onTap;
 
-  const NumberSlot({Key? key, this.number = '', this.onTap}) : super(key: key);
+  const _NumberSlot({Key? key, this.number = '', this.onTap}) : super(key: key);
 
   @override
   _NumberSlotState createState() => _NumberSlotState();
 }
 
-class _NumberSlotState extends State<NumberSlot>
+class _NumberSlotState extends State<_NumberSlot>
     with SingleTickerProviderStateMixin {
   bool hasError = false;
 
@@ -72,7 +72,7 @@ class _NumberSlotState extends State<NumberSlot>
   );
 
   @override
-  void didUpdateWidget(covariant NumberSlot oldWidget) {
+  void didUpdateWidget(covariant _NumberSlot oldWidget) {
     if (oldWidget.number.isEmpty && widget.number.isNotEmpty) {
       controller.animateTo(1);
     }
@@ -100,7 +100,7 @@ class _NumberSlotState extends State<NumberSlot>
       child: Container(
         width: NUMBER_SLOT_WIDTH,
         height: NUMBER_SLOT_HEIGHT,
-        decoration: NumberSlotDecoration(
+        decoration: _NumberSlotDecoration(
           inputBorder: inputBorder ?? const UnderlineInputBorder(),
           color: color,
         ),
@@ -230,7 +230,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     for (int i = 0; i < 6; i++)
-                      NumberSlot(
+                      _NumberSlot(
                         number: code.length > i ? code[i] : '',
                         onTap: focusNode.requestFocus,
                       ),

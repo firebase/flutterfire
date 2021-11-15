@@ -82,16 +82,16 @@ class AuthStateListener<T extends AuthController> extends StatelessWidget {
   Widget build(BuildContext context) {
     return NotificationListener(
       onNotification: (notification) {
-        if (notification is AuthStateTransition<T>) {
-          return listener(
-                notification.from,
-                notification.to,
-                notification.controller,
-              ) ??
-              false;
+        if (notification is! AuthStateTransition<T>) {
+          return false;
         }
 
-        return false;
+        return listener(
+              notification.from,
+              notification.to,
+              notification.controller,
+            ) ??
+            false;
       },
       child: child,
     );

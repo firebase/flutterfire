@@ -1,9 +1,3 @@
-import 'package:firebase_ui/i10n.dart';
-import 'package:firebase_ui/src/auth/oauth/buttons/apple_provider_button_style.dart';
-import 'package:firebase_ui/src/auth/oauth/buttons/facebook_provider_button_style.dart';
-import 'package:firebase_ui/src/auth/oauth/buttons/google_provider_button_style.dart';
-import 'package:firebase_ui/src/auth/oauth/buttons/oauth_provider_button_style.dart';
-import 'package:firebase_ui/src/auth/oauth/buttons/twitter_provider_button.dart';
 import 'package:flutter/widgets.dart';
 
 import 'oauth_providers.dart';
@@ -65,38 +59,6 @@ IconData providerIcon<T extends OAuthProvider>() {
       return SocialIcons.twitter;
     case Facebook:
       return SocialIcons.facebook;
-    default:
-      throw Exception('Unknown provider: $T');
-  }
-}
-
-ThemedOAuthProviderButtonStyle buttonStyle<T extends OAuthProvider>() {
-  switch (T) {
-    case Google:
-      return GoogleProviderButtonStyle();
-    case Apple:
-      return AppleProviderButtonStyle();
-    case Twitter:
-      return TwitterProviderButtonStyle();
-    case Facebook:
-      return FacebookProviderButtonStyle();
-    default:
-      throw Exception('Unknown provider: $T');
-  }
-}
-
-String buttonLabelForProvider<T extends OAuthProvider>(BuildContext context) {
-  final l = FirebaseUILocalizations.labelsOf(context);
-
-  switch (T) {
-    case Google:
-      return l.signInWithGoogleButtonText;
-    case Facebook:
-      return l.signInWithFacebookButtonText;
-    case Twitter:
-      return l.signInWithTwitterButtonText;
-    case Apple:
-      return l.signInWithAppleButtonText;
     default:
       throw Exception('Unknown provider: $T');
   }

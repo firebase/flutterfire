@@ -1,11 +1,11 @@
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/src/i10n/i10n.dart';
-import 'package:firebase_ui/src/validators.dart';
+import 'package:firebase_ui/src/auth/validators.dart';
 import 'package:flutter/material.dart';
 
-import '../../../src/responsive.dart';
+import '../../responsive.dart';
 import '../auth_state.dart';
-import '../error_text.dart';
+import 'error_text.dart';
 
 typedef SurfaceBuilder = Widget Function(BuildContext context, Widget child);
 

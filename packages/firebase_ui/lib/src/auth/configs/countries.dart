@@ -1,4 +1,4 @@
-part of 'phone_input.dart';
+part of '../widgets/phone_input.dart';
 
 final countries = [
   {'name': 'Afghanistan', 'phoneCode': '93', 'countryCode': 'AF'},

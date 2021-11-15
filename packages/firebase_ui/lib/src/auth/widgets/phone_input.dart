@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-part 'countries.dart';
+part '../configs/countries.dart';
 
 class CountryCodeItem {
   final String countryCode;

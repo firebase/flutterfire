@@ -2,15 +2,13 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:crypto/crypto.dart';
-import 'package:desktop_webview_auth/src/provider_args.dart';
+import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
-import 'package:firebase_ui/src/auth/oauth/oauth_provider_configuration.dart';
+import 'package:firebase_ui/src/auth/configs/oauth_provider_configuration.dart';
 import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
 import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
-import '../oauth_providers.dart' show Apple;
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.

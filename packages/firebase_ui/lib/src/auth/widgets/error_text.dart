@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
 import 'package:firebase_ui/i10n.dart';
 
-import 'phone/phone_auth_flow.dart';
+import '../flows/phone_auth_flow.dart';
 
 String? localizedErrorText(
   String? errorCode,

@@ -12,7 +12,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart'
 
 import 'package:firebase_ui/src/auth/auth_controller.dart';
 
-import 'email_provider_configuration.dart';
+import '../configs/email_provider_configuration.dart';
 import '../auth_flow.dart';
 import '../auth_state.dart';
 

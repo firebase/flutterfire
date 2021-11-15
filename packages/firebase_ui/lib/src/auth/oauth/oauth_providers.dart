@@ -25,19 +25,6 @@ abstract class OAuthProvider {
   }
 }
 
-class MissingDesktopArgException implements Exception {
-  final List<String> arguments;
-
-  MissingDesktopArgException(this.arguments);
-
-  late final message = "${arguments.join(',')} are required for desktop auth";
-
-  @override
-  String toString() {
-    return 'MissingDesktopArgException: $message';
-  }
-}
-
 abstract class Google extends OAuthProvider {}
 
 abstract class Apple extends OAuthProvider {}

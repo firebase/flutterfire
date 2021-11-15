@@ -1,12 +1,12 @@
-import 'package:firebase_ui/src/auth/default_provider_config_factory.dart';
+import 'package:firebase_ui/src/auth/configs/default_provider_config_factory.dart';
 import 'package:firebase_ui/src/auth/provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, FirebaseAuth;
 
-import 'auth_controller.dart';
-import 'auth_flow.dart';
-import 'auth_state.dart';
+import '../auth_controller.dart';
+import '../auth_flow.dart';
+import '../auth_state.dart';
 
 typedef AuthFlowBuilderCallback<T extends AuthController> = Widget Function(
   BuildContext context,
