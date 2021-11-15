@@ -18,7 +18,6 @@ Future<void> main() async {
       appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
       messagingSenderId: '448618578101',
       projectId: 'react-native-firebase-testing',
-      iosBundleId: 'io.flutter.plugins.firebase.storage.example',
       storageBucket: 'react-native-firebase-testing.appspot.com',
     ),
   );
@@ -69,7 +68,7 @@ class _TaskManager extends State<TaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   /// The user selects a file, and the task is added to the list.
-  Future<firebase_storage.UploadTask?> uploadFile(PickedFile? file) async {
+  Future<firebase_storage.UploadTask> uploadFile(XFile file) async {
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No file was selected'),
@@ -125,9 +124,8 @@ class _TaskManager extends State<TaskManager> {
         });
         break;
       case UploadType.file:
-        PickedFile? file =
-            await ImagePicker().getImage(source: ImageSource.gallery);
-        firebase_storage.UploadTask? task = await uploadFile(file);
+        final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+        firebase_storage.UploadTask task = await uploadFile(file);
         if (task != null) {
           setState(() {
             _uploadTasks = [..._uploadTasks, task];
@@ -182,7 +180,7 @@ class _TaskManager extends State<TaskManager> {
         content: Text(
           'Success!\n Downloaded ${ref.name} \n from bucket: ${ref.bucket}\n '
           'at path: ${ref.fullPath} \n'
-          'Wrote "${ref.fullPath}" to tmp-${ref.name}.txt',
+          'Wrote "${ref.fullPath}" to tmp-${ref.name}',
         ),
       ),
     );
