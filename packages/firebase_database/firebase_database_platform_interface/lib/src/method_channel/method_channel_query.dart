@@ -53,7 +53,8 @@ class MethodChannelQuery extends QueryPlatform {
 
     yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
-        .map((event) => MethodChannelDatabaseEvent(ref, event))
+        .map((event) =>
+            MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)))
         .handleError(
           (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,

@@ -34,8 +34,6 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /** FirebaseDatabasePlugin */
 @SuppressWarnings("unused")
@@ -233,14 +231,14 @@ public class FirebaseDatabasePlugin
 
   private Task<Void> setValueWithPriority(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
-        final Object value = arguments.get(Constants.VALUE);
-        final Object priority = arguments.get(Constants.PRIORITY);
-        Tasks.await(ref.setValue(value, priority));
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
+          final Object value = arguments.get(Constants.VALUE);
+          final Object priority = arguments.get(Constants.PRIORITY);
+          Tasks.await(ref.setValue(value, priority));
+          return null;
+        });
   }
 
   private Task<Void> update(Map<String, Object> arguments) {
@@ -277,7 +275,7 @@ public class FirebaseDatabasePlugin
           final int transactionKey =
               (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
           final boolean transactionApplyLocally =
-            (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
+              (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
 
           final Activity activity = getActivity();
           final TransactionHandler handler =

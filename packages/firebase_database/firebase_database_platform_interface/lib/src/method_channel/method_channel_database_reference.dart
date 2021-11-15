@@ -171,7 +171,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       return MethodChannelTransactionResult(
         result!['committed'] as bool,
         this,
-        result!['snapshot'],
+        Map.from(result!['snapshot']),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);

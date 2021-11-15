@@ -78,7 +78,7 @@ void runDatabaseReferenceTests() {
     });
   });
 
-  group('DatabaseReference.update(newvValue)', () {
+  group('DatabaseReference.update(newValue)', () {
     setUp(setupPrioritiesTestData);
 
     test('updates value at given location', () async {
@@ -107,7 +107,7 @@ void runDatabaseReferenceTests() {
     );
   });
 
-  group('DatabaseRefrence.setPriority(newPriority)', () {
+  group('DatabaseReference.setPriority(newPriority)', () {
     setUp(setupPrioritiesTestData);
 
     test('updates the priority of the node', () async {

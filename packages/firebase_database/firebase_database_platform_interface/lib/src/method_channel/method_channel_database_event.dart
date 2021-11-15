@@ -15,6 +15,6 @@ class MethodChannelDatabaseEvent extends DatabaseEventPlatform {
 
   @override
   DataSnapshotPlatform get snapshot {
-    return MethodChannelDataSnapshot(_ref, _data['snapshot']);
+    return MethodChannelDataSnapshot(_ref, Map.from(_data['snapshot']));
   }
 }

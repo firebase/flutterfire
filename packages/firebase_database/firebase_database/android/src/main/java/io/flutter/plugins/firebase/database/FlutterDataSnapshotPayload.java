@@ -1,7 +1,6 @@
 package io.flutter.plugins.firebase.database;
 
 import com.google.firebase.database.DataSnapshot;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
