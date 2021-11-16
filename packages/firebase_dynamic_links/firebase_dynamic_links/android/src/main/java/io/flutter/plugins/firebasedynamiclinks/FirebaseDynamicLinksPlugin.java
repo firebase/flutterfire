@@ -130,10 +130,9 @@ public class FirebaseDynamicLinksPlugin
         methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
         break;
       case "FirebaseDynamicLinks#shortenUrl":
-        DynamicLink.Builder urlBuilderShorten = setupParameters(call.arguments());
-        urlBuilderShorten.setLongLink(Uri.parse(call.argument("url")));
-        methodCallTask =
-            buildShortLink(urlBuilderShorten, call.argument("dynamicLinkParametersOptions"));
+        DynamicLink.Builder builder = FirebaseDynamicLinks.getInstance().createDynamicLink();
+        builder.setLongLink(Uri.parse(call.argument("url")));
+        methodCallTask = buildShortLink(builder, call.argument("dynamicLinkParametersOptions"));
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -175,7 +174,6 @@ public class FirebaseDynamicLinksPlugin
         cachedThreadPool,
         () -> {
           Integer suffix = null;
-
           if (dynamicLinkParametersOptions != null) {
             Integer shortDynamicLinkPathLength =
                 (Integer) dynamicLinkParametersOptions.get("shortDynamicLinkPathLength");
@@ -200,15 +198,16 @@ public class FirebaseDynamicLinksPlugin
           } else {
             shortLink = Tasks.await(urlBuilder.buildShortDynamicLink());
           }
+
           List<String> warnings = new ArrayList<>();
 
           for (ShortDynamicLink.Warning warning : shortLink.getWarnings()) {
             warnings.add(warning.getMessage());
           }
 
-          result.put("url", shortLink.getShortLink());
+          result.put("url", shortLink.getShortLink().toString());
           result.put("warnings", warnings);
-          result.put("previewLink", shortLink.getPreviewLink());
+          result.put("previewLink", shortLink.getPreviewLink().toString());
 
           return result;
         });

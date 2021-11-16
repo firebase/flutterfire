@@ -197,7 +197,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     return ShortDynamicLink(
       shortUrl: Uri.parse(response['url']),
       warnings: warnings?.cast(),
-      previewLink: response['previewLink'],
+      previewLink: Uri.parse(response['previewLink']),
     );
   }
 }

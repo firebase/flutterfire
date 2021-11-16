@@ -27,7 +27,7 @@ void runInstanceTests() {
       test('build normal dynamic links', () async {
         FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
         const String androidPackageName =
-            'io.flutter.plugins.firebasedynamiclinksexample';
+            'io.flutter.plugins.firebase.dynamiclinksexample';
         const String iosBundleId =
             'com.google.FirebaseCppDynamicLinksTestApp.dev';
         const String urlHost = 'reactnativefirebase.page.link';
@@ -88,7 +88,7 @@ void runInstanceTests() {
       test('build a short dynamic link', () async {
         FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
         const String androidPackageName =
-            'io.flutter.plugins.firebasedynamiclinksexample';
+            'io.flutter.plugins.firebase.dynamiclinksexample';
         const String iosBundleId =
             'io.flutter.plugins.firebase.dynamiclinksexample';
         const String urlHost = 'reactnativefirebase.page.link';
@@ -115,18 +115,18 @@ void runInstanceTests() {
 
         // androidParameters.minimumVersion
         expect(
-          uri.shortUrl.host,
+          uri.shortUrl.host.toString(),
           urlHost,
         );
 
         expect(
-          uri.shortUrl.path.length,
-          isNotNull,
+          uri.shortUrl.pathSegments.length,
+          equals(1),
         );
 
         expect(
           uri.shortUrl.path.length,
-          lessThanOrEqualTo(16),
+          lessThanOrEqualTo(18),
         );
       });
     });
@@ -186,13 +186,6 @@ void runInstanceTests() {
   });
 
   group('onLink', () {
-    test('grab first stream event', () async {
-      PendingDynamicLinkData? pendingLink =
-          await FirebaseDynamicLinks.instance.onLink().first;
-
-      expect(pendingLink, isNull);
-    });
-
     test('test multiple times', () async {
       StreamSubscription<PendingDynamicLinkData?> _onListenSubscription;
       StreamSubscription<PendingDynamicLinkData?> _onListenSubscriptionSecond;
