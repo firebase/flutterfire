@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="io.flutter.plugins.firebasedynamiclinks">
+  package="io.flutter.plugins.firebase.dynamiclinks">
 
   <uses-permission android:name="android.permission.INTERNET" />
   <application>
