@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -8,12 +7,9 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart';
 
-import '../../firebase_dynamic_links_platform_interface.dart';
 import '../method_channel/method_channel_firebase_dynamic_links.dart';
-
-// import '../persistence_settings.dart';
-// import '../method_channel/method_channel_firestore.dart';
 
 /// Defines an interface to work with Dynamic Links across platforms
 abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
