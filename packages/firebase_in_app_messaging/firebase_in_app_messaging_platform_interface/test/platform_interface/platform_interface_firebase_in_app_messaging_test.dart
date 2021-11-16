@@ -16,13 +16,6 @@ void main() {
     setUpAll(() async {
       FirebaseApp app = await Firebase.initializeApp();
       platform = TestFirebaseInAppMessagingPlatform(app);
-
-      handleMethodCall((call) async {
-        switch (call.method) {
-          default:
-            return null;
-        }
-      });
     });
 
     test('Constructor', () {
@@ -31,14 +24,14 @@ void main() {
 
     test('triggerEvent throws if not implemented', () async {
       await expectLater(
-        platform!.triggerEvent('foo'),
+        () => platform!.triggerEvent('foo'),
         throwsA(isA<UnimplementedError>()),
       );
     });
 
     test('setMessagesSuppressed throws if not implemented', () async {
       await expectLater(
-        platform!.setMessagesSuppressed(true),
+        () => platform!.setMessagesSuppressed(true),
         throwsA(isA<UnimplementedError>()),
       );
     });
@@ -46,7 +39,7 @@ void main() {
     test('setAutomaticDataCollectionEnabled throws if not implemented',
         () async {
       await expectLater(
-        platform!.setAutomaticDataCollectionEnabled(true),
+        () => platform!.setAutomaticDataCollectionEnabled(true),
         throwsA(isA<UnimplementedError>()),
       );
     });
