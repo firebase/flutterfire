@@ -1,78 +1,28 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'instance_e2e.dart';
 
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+      apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
+      appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+      authDomain: 'react-native-firebase-testing.firebaseapp.com',
+      iosClientId:
+          '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+    ));
   });
 
-  group('DynamicLinks', () {
-    test('buildUrl', () async {
-      FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-      const String androidPackageName =
-          'io.flutter.plugins.firebasedynamiclinksexample';
-      const String iosBundleId =
-          'com.google.FirebaseCppDynamicLinksTestApp.dev';
-      const String urlHost = 'cx4k7.app.goo.gl';
-      const String link = 'https://dynamic.link.example/helloworld';
-
-      final DynamicLinkParameters parameters = DynamicLinkParameters(
-        uriPrefix: 'https://$urlHost',
-        link: Uri.parse(link),
-        androidParameters: const AndroidParameters(
-          packageName: androidPackageName,
-          minimumVersion: 1,
-        ),
-        dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-        ),
-        iosParameters: const IosParameters(
-          bundleId: iosBundleId,
-          minimumVersion: '2',
-        ),
-      );
-
-      final Uri uri = await dynamicLinks.buildUrl(parameters);
-
-      // androidParameters.minimumVersion
-      expect(
-        uri.queryParameters['amv'],
-        '1',
-      );
-      // iosParameters.minimumVersion
-      expect(
-        uri.queryParameters['imv'],
-        '2',
-      );
-      // androidParameters.packageName
-      expect(
-        uri.queryParameters['apn'],
-        androidPackageName,
-      );
-      // iosParameters.bundleId
-      expect(
-        uri.queryParameters['ibi'],
-        iosBundleId,
-      );
-      // link
-      expect(
-        uri.queryParameters['link'],
-        Uri.encodeFull(link),
-      );
-      // uriPrefix
-      expect(
-        uri.host,
-        urlHost,
-      );
-    });
-  });
+  runInstanceTests();
 }
 
 void main() => drive.main(testsMain);
