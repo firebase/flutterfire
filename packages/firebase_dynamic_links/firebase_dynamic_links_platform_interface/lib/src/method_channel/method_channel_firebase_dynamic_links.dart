@@ -84,16 +84,17 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   Future<PendingDynamicLinkData?> getInitialLink() async {
     final Map<String, dynamic>? linkData =
         await channel.invokeMapMethod<String, dynamic>(
-            'FirebaseDynamicLinks#getInitialLink');
+            'FirebaseDynamicLinks#getInitialLink', _withChannelDefaults({}));
 
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
   @override
   Future<PendingDynamicLinkData?> getDynamicLink(Uri url) async {
-    final Map<String, dynamic>? linkData = await channel
-        .invokeMapMethod<String, dynamic>('FirebaseDynamicLinks#getDynamicLink',
-            <String, dynamic>{'url': url.toString()});
+    final Map<String, dynamic>? linkData =
+        await channel.invokeMapMethod<String, dynamic>(
+            'FirebaseDynamicLinks#getDynamicLink',
+            _withChannelDefaults({'url': url.toString()}));
     return getPendingDynamicLinkDataFromMap(linkData);
   }
 
@@ -107,12 +108,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       onListen: () async {
         // ignore: cast_nullable_to_non_nullable
         String name = await channel.invokeMethod<String>(
-            'FirebaseDynamicLinks#onLink', <String, dynamic>{
-          'appName': app.name,
-        }) as String;
+            'FirebaseDynamicLinks#onLink', _withChannelDefaults({})) as String;
         final events = onLinkChannel(name);
-        snapshotStream =
-            events.receiveBroadcastStream().listen((event) {
+        snapshotStream = events.receiveBroadcastStream().listen((event) {
           controller.add(getPendingDynamicLinkDataFromMap(event));
         }, onError: (error, stack) {
           controller.addError(convertPlatformException(error), stack);
