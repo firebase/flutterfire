@@ -78,17 +78,10 @@ void main() {
   late FirebaseDynamicLinks dynamicLinks;
 
   group('$FirebaseDynamicLinks', () {
-    setUp(() async {
+    setUpAll(() async {
       FirebaseDynamicLinksPlatform.instance = mockDynamicLinksPlatform;
 
-      await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: '',
-          appId: '',
-          messagingSenderId: '',
-          projectId: '',
-        ),
-      );
+      await Firebase.initializeApp();
 
       dynamicLinks = FirebaseDynamicLinks.instance;
     });
