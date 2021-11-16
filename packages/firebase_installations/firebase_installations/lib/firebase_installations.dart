@@ -7,6 +7,7 @@ library firebase_installations;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
+import 'package:firebase_installations_platform_interface/firebase_installations_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 
 part 'src/firebase_installations.dart';

@@ -32,20 +32,11 @@ class FirebaseInstallations extends FirebasePluginPlatform {
     );
   }
 
-  /// Returns an instance using a specified [FirebaseApp] & region.
-  static FirebaseInstallations instanceFor({FirebaseApp? app, String? region}) {
-    app ??= Firebase.app();
-    region ??= 'us-central1';
-    String cachedKey = '${app.name}_$region';
-
-    if (_cachedInstances.containsKey(cachedKey)) {
-      return _cachedInstances[cachedKey]!;
-    }
-
-    FirebaseInstallations newInstance = FirebaseInstallations._(app: app);
-    _cachedInstances[cachedKey] = newInstance;
-
-    return newInstance;
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseInstallations instanceFor({required FirebaseApp app}) {
+    return _cachedInstances.putIfAbsent(app.name, () {
+      return FirebaseInstallations._(app: app);
+    });
   }
 
   /// Deletes the Firebase Installation and all associated data.
@@ -65,7 +56,7 @@ class FirebaseInstallations extends FirebasePluginPlatform {
   }
 
   /// Sends a new event via a [Stream] whenever the Installation ID changes.
-  Stream<String> onIdChange() {
-    return _delegate.onIdChange();
+  Stream<String> get idTokenChanges {
+    return _delegate.idTokenChanges;
   }
 }
