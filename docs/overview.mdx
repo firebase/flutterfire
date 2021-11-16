@@ -297,6 +297,21 @@ In the `web/index.html` file, add a `script` tag which adds the version to the w
 ...
 ```
 
+If you wish to exclude scripts from automatically being injected, provide an array of services in
+the `web/index.html` file:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script>window.flutterfire_ignore_scripts = ['analytics'];</script>
+</head>
+...
+```
+
+If you ignore any services from being injected, you must ensure you manually inject them before any
+usage of the plugin.
+
 ## Next Steps
 
 On its own the [`firebase_core`](!firebase_core) plugin provides basic functionality for usage with Firebase. FlutterFire is broken down

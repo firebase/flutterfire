@@ -30,15 +30,51 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
+  /// Returns whether `requirejs` is within the global context (usually the
+  /// case in development).
   bool get _isRequireJsDefined {
     return context['require'] != null;
   }
 
+  /// Returns the Firebase JS SDK Version to use.
+  ///
+  /// You can override the supported version by attaching a version string to
+  /// the window (window.flutterfire_web_sdk_version = 'x.x.x'). Do so at your
+  /// own risk as the version might be unsupported or untested against.
   String get _firebaseSDKVersion {
     return context['flutterfire_web_sdk_version'] ??
         supportedFirebaseJsSdkVersion;
   }
 
+  /// Returns a list of services which won't be automatically injected on
+  /// initilization. This is useful incases where you wish to manually include
+  /// the scripts (e.g. in countries where you must request the users permission
+  /// to include Analytics).
+  ///
+  /// You can do this by attaching an array of services to the window, e.g:
+  ///
+  /// window.flutterfire_ignore_scripts = ['analytics'];
+  ///
+  /// You must ensure the Firebase script is injected before using the service.
+  List<String> get _ignoredServiceScripts {
+    try {
+      JsObject ignored =
+          JsObject.fromBrowserObject(context['flutterfire_ignore_scripts']);
+
+      if (ignored is Iterable) {
+        return (ignored as Iterable)
+            .map((e) => e.toString())
+            .toList(growable: false);
+      }
+    } catch (e) {
+      // Noop
+    }
+
+    return [];
+  }
+
+  /// Injects a `script` with a `src` dynamically into the head of the current
+  /// document.
   Future<void> _injectSrcScript(String src) async {
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
@@ -49,6 +85,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     await script.onLoad.first;
   }
 
+  /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
+  /// document when Firebase is initalized.
   Future<void> _initializeCore() async {
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
@@ -57,6 +95,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     }
 
     String version = _firebaseSDKVersion;
+    List<String> ignored = _ignoredServiceScripts;
 
     // This must be loaded first!
     await _injectSrcScript(
@@ -65,6 +104,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     await Future.wait(
       _services.values.map((service) {
+        if (ignored.contains(service.name)) {
+          return Future.value();
+        }
+
         return _injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
         );
@@ -85,6 +128,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
     }
 
     String version = _firebaseSDKVersion;
+    List<String> ignored = _ignoredServiceScripts;
+
+    print(ignored);
 
     // In dev, requirejs is loaded in
     JsObject require = JsObject.fromBrowserObject(context['require']);
@@ -121,7 +167,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
     List<String> services = ['@firebase/app'];
     _services.values.forEach((service) {
-      services.add('@firebase/${service.name}');
+      if (!ignored.contains(service.name)) {
+        services.add('@firebase/${service.name}');
+      }
     });
 
     context.callMethod('require', [
