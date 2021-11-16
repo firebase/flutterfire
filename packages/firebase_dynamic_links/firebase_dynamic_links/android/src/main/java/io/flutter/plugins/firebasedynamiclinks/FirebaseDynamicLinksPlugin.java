@@ -116,7 +116,6 @@ public class FirebaseDynamicLinksPlugin
   @Override
   public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
     Task<?> methodCallTask;
-    DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
     FirebaseDynamicLinks dynamicLinks = getDynamicLinkInstance(call.arguments());
 
     switch (call.method) {
@@ -125,11 +124,13 @@ public class FirebaseDynamicLinksPlugin
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
+        DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
         methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
         break;
       case "FirebaseDynamicLinks#shortenUrl":
-        urlBuilder.setLongLink(Uri.parse(call.argument("url")));
-        methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
+        DynamicLink.Builder urlBuilderShorten = setupParameters(call.arguments());
+        urlBuilderShorten.setLongLink(Uri.parse(call.argument("url")));
+        methodCallTask = buildShortLink(urlBuilderShorten, call.argument("dynamicLinkParametersOptions"));
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -226,6 +227,10 @@ public class FirebaseDynamicLinksPlugin
             }
             pendingDynamicLink =
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
+          }
+
+          if(pendingDynamicLink == null){
+            return null;
           }
 
           return io.flutter.plugins.firebasedynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
