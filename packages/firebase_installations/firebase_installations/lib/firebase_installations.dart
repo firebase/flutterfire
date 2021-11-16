@@ -1,13 +1,12 @@
+// Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
+library firebase_installations;
 
-import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
+    show FirebasePluginPlatform;
+import 'package:flutter/foundation.dart';
 
-class FirebaseInstallations {
-  static const MethodChannel _channel = MethodChannel('firebase_installations');
-
-  static Future<String?> get platformVersion async {
-    final String? version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-}
+part 'src/firebase_installations.dart';
