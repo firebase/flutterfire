@@ -1,4 +1,4 @@
-package android.src.main.java.io.flutter.plugins.firebase.dynamiclinks;
+package io.flutter.plugins.firebase.dynamiclinks;
 
 import android.content.Intent;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;

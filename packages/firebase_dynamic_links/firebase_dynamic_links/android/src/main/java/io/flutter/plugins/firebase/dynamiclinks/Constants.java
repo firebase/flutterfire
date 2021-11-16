@@ -1,4 +1,4 @@
-package android.src.main.java.io.flutter.plugins.firebase.dynamiclinks;
+package io.flutter.plugins.firebase.dynamiclinks;
 
 public class Constants {
   public static final String APP_NAME = "appName";

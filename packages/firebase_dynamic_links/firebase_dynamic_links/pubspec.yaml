@@ -29,7 +29,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.firebasedynamiclinks
-        pluginClass: FirebaseDynamicLinksPlugin
+        package: io.flutter.plugins.firebase.dynamiclinks
+        pluginClass: FlutterFirebaseDynamicLinksPlugin
       ios:
         pluginClass: FLTFirebaseDynamicLinksPlugin

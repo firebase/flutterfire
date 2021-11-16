@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package android.src.main.java.io.flutter.plugins.firebase.dynamiclinks;
+package io.flutter.plugins.firebase.dynamiclinks;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class FirebaseDynamicLinksPlugin
+public class FlutterFirebaseDynamicLinksPlugin
     implements FlutterFirebasePlugin,
         FlutterPlugin,
         ActivityAware,
@@ -157,7 +157,7 @@ public class FirebaseDynamicLinksPlugin
             result.error(
                 Constants.DEFAULT_ERROR_CODE,
                 exception != null ? exception.getMessage() : null,
-                Utils.getExceptionDetails(exception));
+                io.flutter.plugins.firebase.dynamiclinks.Utils.getExceptionDetails(exception));
           }
         });
   }
