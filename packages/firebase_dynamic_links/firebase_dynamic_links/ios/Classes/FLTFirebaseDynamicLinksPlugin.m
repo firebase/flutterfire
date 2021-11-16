@@ -9,7 +9,7 @@
 #import "Public/FLTFirebaseDynamicLinksPlugin.h"
 
 NSString *const kFLTFirebaseDynamicLinksChannelName = @"plugins.flutter.io/firebase_dynamic_links";
-NSString *const kAppName = @"appName";
+NSString *const kDLAppName = @"appName";
 NSString *const kUrl = @"url";
 NSString *const kCode = @"code";
 NSString *const kMessage = @"message";
@@ -143,7 +143,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:result andErrorBlock:errorBlock];
 
-  NSString *appName = call.arguments[kAppName];
+  NSString *appName = call.arguments[kDLAppName];
   if (appName != nil && ![appName isEqualToString:kDefaultAppName]) {
     // TODO - document iOS default app only
     NSLog(@"FLTFirebaseDynamicLinks: iOS plugin only supports the Firebase default app");
