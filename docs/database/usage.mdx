@@ -93,15 +93,17 @@ If you'd instead like to subscribe to realtime updates, the `onValue` method ret
 ```dart
 DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 
-// Get the data once
-Stream<Event> stream = ref.onValue();
+// Get the Stream
+Stream<DatabaseEvent> stream = ref.onValue;
+
+// Subscribe to the stream!
+stream.listen((DatabaseEvent event) {
+  print('Event Type: ${event.type}'); // DatabaseEventType.value;
+  print('Snapshot: ${event.snapshot}'); // DataSnapshot
+});
 ```
 
-The stream emits an `Event` instance, which contains the type of event and the `DataSnapshot`.
-
-```dart
-TODO example of usage within a Flutter app / StreamBuilder
-```
+Anytime data within the `users/123` node changes, the Stream will fire a new event.
 
 ### Querying
 
@@ -190,12 +192,65 @@ the location before your new value is successfully written, your update function
 current value, and the write is retried.
 
 ```dart
-TODO Transaction Example
+DatabaseReference ref = FirebaseDatabase.instance.ref("posts/123");
+
+TransactionResult result = await ref.runTransaction((Object? post) {
+  // Ensure a post at the ref exists.
+  if (post == null) {
+    return null;
+  }
+
+  Map<String, dynamic> _post = post as Map<String, dynamic>;
+  _post['likes'] = (_post['likes'] ?? 0) + 1;
+
+  // Return the new data.
+  return _post;
+});
+```
+
+By default, events are raised each time the transaction update function runs. So if it is run
+multiple times, you may see intermediate states. You can set `applyLocally` to false to suppress these
+intermediate states and instead wait until the transaction has completed before events are raised:
+
+```dart
+await ref.runTransaction((Object? post, applyLocally: false) {
+ // ...
+});
+```
+
+The result of a transaction is a `TransactionResult`, which contains information such as whether
+the transaction was committed, and the new snapshot:
+
+```dart
+DatabaseReference ref = FirebaseDatabase.instance.ref("posts/123");
+
+TransactionResult result = await ref.runTransaction((Object? post) {
+  // ...
+});
+
+print('Committed? ${result.committed}'); // true / false
+print('Snapshot? ${result.snapshot}'); // DataSnapshot
 ```
 
 #### Aborting a transaction
 
-TODO
+If you wish to safely abort a transaction from executing, you can throw a `AbortTransactionException`:
+
+```dart
+try {
+  TransactionResult result = await ref.runTransaction((Object? user) {
+    if (user !== null) {
+      throw AbortTransactionException('User already exists!');
+    }
+
+    // ...
+  });
+} on FirebaseException catch (e) {
+  print(e.code); // abort-transaction
+  print(e.message); // User already exists!
+}
+
+```
 
 ### Atomic server-side operations
 
@@ -214,4 +269,64 @@ await ref.update({
   // Add a server generated timestamp
   "createdAt": ServerValue.timestamp,
 });
+```
+
+## Offline Capabilities
+
+Firebase Database clients provide simple primitives that you can use to write to the database when
+a client disconnects from the Firebase Database servers. These updates occur whether the client
+disconnects cleanly or not, so you can rely on them to clean up data even if a connection is
+dropped or a client crashes. All write operations, including setting, updating, and removing, can
+be performed upon a disconnection.
+
+First, create a new `OnDisconnect` instance on a `DatabaseReference`:
+
+```dart
+DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
+OnDisconnect onDisconnect = ref.onDisconnect();
+```
+
+Next apply any operations which should trigger when the user disconnects. For example, we can easily
+create a presence system by storing a boolean value on a user if they are online, and remove it
+if they go offline:
+
+```dart
+DatabaseReference ref = FirebaseDatabase.instance.ref("users/123/status");
+
+// Somewhere in your application, trigger that the user is online:
+await ref.set(true);
+
+OnDisconnect onDisconnect = ref.onDisconnect();
+
+// If the user goes offline, set the user status to `false`:
+await onDisconnect.set(false);
+```
+
+The `OnDisconnect` instance supports `set`, `setWithPriority`, `remove` and `update operations`.
+
+You can remove any committed operations at anytime by calling the `cancel` method:
+
+```dart
+OnDisconnect onDisconnect = ref.onDisconnect();
+
+// Cancel any previously committed operations
+await onDisconnect.cancel();
+```
+
+## Emulator Usage
+
+If you are using the local []Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup),
+then it is possible to connect to this using the `useDatabaseEmulator` method. Ensure you pass the correct port on which the Firebase emulator is running on.
+
+Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
+
+```dart
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  // Ideal time to initialize
+  FirebaseDatabase.instance.useDatabaseEmulator('localhost', 9000);
+  //...
+}
 ```
