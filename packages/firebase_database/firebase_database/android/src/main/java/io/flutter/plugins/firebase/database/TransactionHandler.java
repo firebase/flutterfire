@@ -1,6 +1,5 @@
 package io.flutter.plugins.firebase.database;
 
-import android.app.Activity;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,12 +18,10 @@ public class TransactionHandler implements Handler {
   private final MethodChannel channel;
   private final TaskCompletionSource<Map<String, Object>> transactionCompletionSource;
   private final int transactionKey;
-  private final Activity activity;
 
-  public TransactionHandler(@NonNull MethodChannel channel, int transactionKey, Activity activity) {
+  public TransactionHandler(@NonNull MethodChannel channel, int transactionKey) {
     this.channel = channel;
     this.transactionKey = transactionKey;
-    this.activity = activity;
     this.transactionCompletionSource = new TaskCompletionSource<>();
   }
 
@@ -45,9 +42,8 @@ public class TransactionHandler implements Handler {
     transactionArgs.put(Constants.TRANSACTION_KEY, transactionKey);
 
     try {
-      final TransactionExecutor executor = new TransactionExecutor(channel, activity);
-      final Object updatedData = executor.exec(transactionArgs);
-
+      final TransactionExecutor executor = new TransactionExecutor(channel);
+      final Object updatedData = executor.execute(transactionArgs);
       currentData.setValue(updatedData);
       return Transaction.success(currentData);
     } catch (Exception e) {

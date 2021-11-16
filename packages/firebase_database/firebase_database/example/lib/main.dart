@@ -7,8 +7,20 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
+
+// Change to false to use live database instance.
+const useEmulator = true;
+// The port we've set the Firebase Database emulator to run on via the
+// `firebase.json` configuration file.
+const emulatorPort = 9299;
+// Android device emulators consider localhost of the host machine as 10.0.2.2
+// so let's use that if running on Android.
+final emulatorHost =
+    (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+        ? '10.0.2.2'
+        : 'localhost';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,14 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
     final database = FirebaseDatabase.instanceFor(app: widget.app);
     _messagesRef = database.ref('messages');
 
-    try {
-      database.setLoggingEnabled(false);
-      if (!kIsWeb) {
-        database.setPersistenceEnabled(true);
-        database.setPersistenceCacheSizeBytes(10000000);
-      }
-    } catch (err) {
-      print('Configuration failed: $err');
+    if (useEmulator) {
+      database.useDatabaseEmulator(emulatorHost, emulatorPort);
+    }
+    database.setLoggingEnabled(false);
+    if (!kIsWeb) {
+      database.setPersistenceEnabled(true);
+      database.setPersistenceCacheSizeBytes(10000000);
     }
 
     if (!kIsWeb) {

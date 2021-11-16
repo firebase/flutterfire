@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.database;
 
-import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -10,58 +11,58 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class TransactionExecutor {
-  private final TaskCompletionSource<Object> tcs;
+  private final TaskCompletionSource<Object> completion;
   private final MethodChannel channel;
-  private final Activity activity;
 
-  public TransactionExecutor(MethodChannel channel, Activity activity) {
-    this.activity = activity;
-    this.tcs = new TaskCompletionSource<>();
+  protected TransactionExecutor(MethodChannel channel) {
+    this.completion = new TaskCompletionSource<>();
     this.channel = channel;
   }
 
-  public Object exec(Map<String, Object> arguments)
+  protected Object execute(final Map<String, Object> arguments)
       throws ExecutionException, InterruptedException {
-    activity.runOnUiThread(
-        () ->
-            channel.invokeMethod(
-                Constants.METHOD_DO_TRANSACTION,
-                arguments,
-                new MethodChannel.Result() {
-                  @Override
-                  public void success(@Nullable Object result) {
-                    tcs.setResult(result);
-                  }
+    new Handler(Looper.getMainLooper())
+        .post(
+            () ->
+                channel.invokeMethod(
+                    Constants.METHOD_DO_TRANSACTION,
+                    arguments,
+                    new MethodChannel.Result() {
+                      @Override
+                      public void success(@Nullable Object result) {
+                        completion.setResult(result);
+                      }
 
-                  @Override
-                  @SuppressWarnings("unchecked")
-                  public void error(
-                      String errorCode,
-                      @Nullable String errorMessage,
-                      @Nullable Object errorDetails) {
-                    String message = errorMessage;
-                    Map<String, Object> additionalData = new HashMap<>();
+                      @Override
+                      @SuppressWarnings("unchecked")
+                      public void error(
+                          String errorCode,
+                          @Nullable String errorMessage,
+                          @Nullable Object errorDetails) {
+                        String message = errorMessage;
+                        Map<String, Object> additionalData = new HashMap<>();
 
-                    if (message == null) {
-                      message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE;
-                    }
+                        if (message == null) {
+                          message = FlutterFirebaseDatabaseException.UNKNOWN_ERROR_MESSAGE;
+                        }
 
-                    if (errorDetails instanceof Map) {
-                      additionalData = (Map<String, Object>) errorDetails;
-                    }
+                        if (errorDetails instanceof Map) {
+                          additionalData = (Map<String, Object>) errorDetails;
+                        }
 
-                    final FlutterFirebaseDatabaseException e =
-                        new FlutterFirebaseDatabaseException(errorCode, message, additionalData);
+                        final FlutterFirebaseDatabaseException e =
+                            new FlutterFirebaseDatabaseException(
+                                errorCode, message, additionalData);
 
-                    tcs.setException(e);
-                  }
+                        completion.setException(e);
+                      }
 
-                  @Override
-                  public void notImplemented() {
-                    // never called
-                  }
-                }));
+                      @Override
+                      public void notImplemented() {
+                        // never called
+                      }
+                    }));
 
-    return Tasks.await(tcs.getTask());
+    return Tasks.await(completion.getTask());
   }
 }
