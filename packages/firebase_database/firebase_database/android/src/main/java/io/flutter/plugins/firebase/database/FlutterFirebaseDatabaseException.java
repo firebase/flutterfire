@@ -108,6 +108,8 @@ public class FlutterFirebaseDatabaseException extends Exception {
       message = UNKNOWN_ERROR_MESSAGE;
     }
 
+    // No known error code for this in DatabaseError, so we manually have to
+    // detect it.
     if (message.contains("Index not defined, add \".indexOn\"")) {
       code = Constants.INDEX_NOT_DEFINED;
       message = message.replaceFirst("java.lang.Exception: ", "");
