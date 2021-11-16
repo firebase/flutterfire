@@ -57,11 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
     _messagesRef = database.ref('messages');
 
     try {
-      await database.setLoggingEnabled(false);
-
+      database.setLoggingEnabled(false);
       if (!kIsWeb) {
-        await database.setPersistenceEnabled(true);
-        await database.setPersistenceCacheSizeBytes(10000000);
+        database.setPersistenceEnabled(true);
+        database.setPersistenceCacheSizeBytes(10000000);
       }
     } catch (err) {
       print('Configuration failed: $err');

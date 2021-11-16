@@ -44,9 +44,9 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   static bool _initialized = false;
 
-  bool _persistenceEnabled = false;
+  bool? _persistenceEnabled;
   int? _cacheSizeBytes;
-  bool _loggingEnabled = false;
+  bool? _loggingEnabled;
   String? _emulatorHost;
   int? _emulatorPort;
 
@@ -55,11 +55,12 @@ class MethodChannelDatabase extends DatabasePlatform {
     return {
       'appName': app!.name,
       'databaseURL': databaseURL,
-      'persistenceEnabled': _persistenceEnabled,
-      'cacheSizeBytes': _cacheSizeBytes,
-      'loggingEnabled': _loggingEnabled,
-      'emulatorHost': _emulatorHost,
-      'emulatorPort': _emulatorPort,
+      if (_persistenceEnabled != null)
+        'persistenceEnabled': _persistenceEnabled,
+      if (_cacheSizeBytes != null) 'cacheSizeBytes': _cacheSizeBytes,
+      if (_loggingEnabled != null) 'loggingEnabled': _loggingEnabled,
+      if (_emulatorHost != null) 'emulatorHost': _emulatorHost,
+      if (_emulatorPort != null) 'emulatorPort': _emulatorPort,
     }..addAll(other ?? {});
   }
 
