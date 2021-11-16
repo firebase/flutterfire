@@ -61,7 +61,7 @@ class DynamicLinkParameters {
   final SocialMetaTagParameters? socialMetaTagParameters;
 
   /// Returns the current instance as a [Map].
-  Map<String, dynamic> asMap(){
+  Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'uriPrefix': uriPrefix,
       'link': link.toString(),
@@ -74,7 +74,7 @@ class DynamicLinkParameters {
       if (iosParameters != null) 'iosParameters': iosParameters?.asMap(),
       if (itunesConnectAnalyticsParameters != null)
         'itunesConnectAnalyticsParameters':
-        itunesConnectAnalyticsParameters?.asMap(),
+            itunesConnectAnalyticsParameters?.asMap(),
       if (navigationInfoParameters != null)
         'navigationInfoParameters': navigationInfoParameters?.asMap(),
       if (socialMetaTagParameters != null)

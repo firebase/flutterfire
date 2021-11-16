@@ -309,66 +309,65 @@ void main() {
         //   emits(isA<PendingDynamicLinkData>()
         //       .having((r) => r.link, 'link', 'link')),
         // );
-
       });
     });
-      group('buildShortLink()', () {
-        test('buildShortLink', () async {
-          DynamicLinkParameters options = buildDynamicLinkParameters();
+    group('buildShortLink()', () {
+      test('buildShortLink', () async {
+        DynamicLinkParameters options = buildDynamicLinkParameters();
 
-          await dynamicLinks.buildShortLink(options);
+        await dynamicLinks.buildShortLink(options);
 
-          expect(logger, <Matcher>[
-            isMethodCall(
-              'FirebaseDynamicLinks#buildShortLink',
-              arguments: <String, dynamic>{
-                'appName': '[DEFAULT]',
-                'uriPrefix': 'https://',
-                'link': 'link',
-                'dynamicLinkParametersOptions': {
-                  'shortDynamicLinkPathLength':
-                      ShortDynamicLinkPathLength.unguessable.index,
-                },
-                'androidParameters': {
-                  'fallbackUrl': 'fallbackUrl',
-                  'minimumVersion': 1,
-                  'packageName': 'test-package'
-                },
-                'googleAnalyticsParameters': {
-                  'campaign': 'campaign',
-                  'content': 'content',
-                  'medium': 'medium',
-                  'source': 'source',
-                  'term': 'term'
-                },
-                'iosParameters': {
-                  'appStoreId': 'appStoreId',
-                  'bundleId': 'bundleId',
-                  'customScheme': 'customScheme',
-                  'fallbackUrl': 'fallbackUrl',
-                  'ipadBundleId': 'ipadBundleId',
-                  'ipadFallbackUrl': 'ipadFallbackUrl',
-                  'minimumVersion': 'minimumVersion',
-                },
-                'itunesConnectAnalyticsParameters': {
-                  'affiliateToken': 'affiliateToken',
-                  'campaignToken': 'campaignToken',
-                  'providerToken': 'providerToken',
-                },
-                'navigationInfoParameters': {
-                  'forcedRedirectEnabled': true,
-                },
-                'socialMetaTagParameters': {
-                  'description': 'description',
-                  'imageUrl': 'imageUrl',
-                  'title': 'title',
-                },
+        expect(logger, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#buildShortLink',
+            arguments: <String, dynamic>{
+              'appName': '[DEFAULT]',
+              'uriPrefix': 'https://',
+              'link': 'link',
+              'dynamicLinkParametersOptions': {
+                'shortDynamicLinkPathLength':
+                    ShortDynamicLinkPathLength.unguessable.index,
               },
-            ),
-          ]);
-        });
+              'androidParameters': {
+                'fallbackUrl': 'fallbackUrl',
+                'minimumVersion': 1,
+                'packageName': 'test-package'
+              },
+              'googleAnalyticsParameters': {
+                'campaign': 'campaign',
+                'content': 'content',
+                'medium': 'medium',
+                'source': 'source',
+                'term': 'term'
+              },
+              'iosParameters': {
+                'appStoreId': 'appStoreId',
+                'bundleId': 'bundleId',
+                'customScheme': 'customScheme',
+                'fallbackUrl': 'fallbackUrl',
+                'ipadBundleId': 'ipadBundleId',
+                'ipadFallbackUrl': 'ipadFallbackUrl',
+                'minimumVersion': 'minimumVersion',
+              },
+              'itunesConnectAnalyticsParameters': {
+                'affiliateToken': 'affiliateToken',
+                'campaignToken': 'campaignToken',
+                'providerToken': 'providerToken',
+              },
+              'navigationInfoParameters': {
+                'forcedRedirectEnabled': true,
+              },
+              'socialMetaTagParameters': {
+                'description': 'description',
+                'imageUrl': 'imageUrl',
+                'title': 'title',
+              },
+            },
+          ),
+        ]);
       });
     });
+  });
 }
 
 class TestMethodChannelFirebaseDynamicLinks

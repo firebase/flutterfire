@@ -46,7 +46,8 @@ public class FirebaseDynamicLinksPlugin
   private MethodChannel channel;
   @Nullable private BinaryMessenger messenger;
 
-  private final Map<EventChannel, io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler> streamHandlers = new HashMap<>();
+  private final Map<EventChannel, io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler>
+      streamHandlers = new HashMap<>();
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
 
@@ -107,7 +108,8 @@ public class FirebaseDynamicLinksPlugin
   @Override
   public boolean onNewIntent(Intent intent) {
     // Passes intent to every listener for different app instances the user may create
-    for (io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler instance : streamHandlers.values()) {
+    for (io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler instance :
+        streamHandlers.values()) {
       instance.sinkEvent(intent);
     }
     return false;
@@ -130,7 +132,8 @@ public class FirebaseDynamicLinksPlugin
       case "FirebaseDynamicLinks#shortenUrl":
         DynamicLink.Builder urlBuilderShorten = setupParameters(call.arguments());
         urlBuilderShorten.setLongLink(Uri.parse(call.argument("url")));
-        methodCallTask = buildShortLink(urlBuilderShorten, call.argument("dynamicLinkParametersOptions"));
+        methodCallTask =
+            buildShortLink(urlBuilderShorten, call.argument("dynamicLinkParametersOptions"));
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -229,11 +232,12 @@ public class FirebaseDynamicLinksPlugin
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
           }
 
-          if(pendingDynamicLink == null){
+          if (pendingDynamicLink == null) {
             return null;
           }
 
-          return io.flutter.plugins.firebasedynamiclinks.Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
+          return io.flutter.plugins.firebasedynamiclinks.Utils.getMapFromPendingDynamicLinkData(
+              pendingDynamicLink);
         });
   }
 
@@ -360,7 +364,8 @@ public class FirebaseDynamicLinksPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler handler = new io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler(dynamicLinks);
+          final io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler handler =
+              new io.flutter.plugins.firebasedynamiclinks.OnLinkStreamHandler(dynamicLinks);
           final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
           final EventChannel channel = new EventChannel(messenger, name);
           channel.setStreamHandler(handler);
