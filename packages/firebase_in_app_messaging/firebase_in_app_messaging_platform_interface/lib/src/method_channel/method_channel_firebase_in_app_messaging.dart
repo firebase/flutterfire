@@ -30,6 +30,11 @@ class MethodChannelFirebaseInAppMessaging
   }
 
   @override
+  FirebaseInAppMessagingPlatform delegateFor({FirebaseApp? app}) {
+    return MethodChannelFirebaseInAppMessaging(app: app);
+  }
+
+  @override
   Future<void> triggerEvent(String eventName) async {
     try {
       await channel
