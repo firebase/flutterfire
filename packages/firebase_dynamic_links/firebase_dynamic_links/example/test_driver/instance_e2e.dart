@@ -178,7 +178,8 @@ void runInstanceTests() {
   group('getDynamicLink', () {
     test('dynamic link using uri', () async {
       Uri uri = Uri.parse('');
-      PendingDynamicLinkData? pendingLink = await FirebaseDynamicLinks.instance.getDynamicLink(uri);
+      PendingDynamicLinkData? pendingLink =
+          await FirebaseDynamicLinks.instance.getDynamicLink(uri);
 
       expect(pendingLink, isNull);
     });
