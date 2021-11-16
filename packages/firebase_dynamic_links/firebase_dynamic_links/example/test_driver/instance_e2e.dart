@@ -2,80 +2,215 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runInstanceTests() {
-  group('$FirebaseDynamicLinks.instance', () {
+  group('$FirebaseDynamicLinks', () {
     late FirebaseDynamicLinks dynamicLinks;
 
     setUpAll(() async {
       dynamicLinks = FirebaseDynamicLinks.instance;
     });
 
-    test('instance', () {
-      expect(dynamicLinks, isA<FirebaseDynamicLinks>());
-      expect(dynamicLinks.app, isA<FirebaseApp>());
+    group('instance', () {
+      test('instance', () {
+        expect(dynamicLinks, isA<FirebaseDynamicLinks>());
+        expect(dynamicLinks.app, isA<FirebaseApp>());
+      });
     });
 
-    test('buildUrl', () async {
-      FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-      const String androidPackageName =
-          'io.flutter.plugins.firebasedynamiclinksexample';
-      const String iosBundleId =
-          'com.google.FirebaseCppDynamicLinksTestApp.dev';
-      const String urlHost = 'cx4k7.app.goo.gl';
-      const String link = 'https://dynamic.link.example/helloworld';
+    group('buildUrl', () {
+      test('build normal dynamic links', () async {
+        FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+        const String androidPackageName =
+            'io.flutter.plugins.firebasedynamiclinksexample';
+        const String iosBundleId =
+            'com.google.FirebaseCppDynamicLinksTestApp.dev';
+        const String urlHost = 'reactnativefirebase.page.link';
+        const String link = 'https://dynamic.link.example/helloworld';
 
-      final DynamicLinkParameters parameters = DynamicLinkParameters(
-        uriPrefix: 'https://$urlHost',
-        link: Uri.parse(link),
-        androidParameters: const AndroidParameters(
-          packageName: androidPackageName,
-          minimumVersion: 1,
-        ),
-        dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-        ),
-        iosParameters: const IosParameters(
-          bundleId: iosBundleId,
-          minimumVersion: '2',
-        ),
-      );
+        final DynamicLinkParameters parameters = DynamicLinkParameters(
+          uriPrefix: 'https://$urlHost',
+          link: Uri.parse(link),
+          androidParameters: const AndroidParameters(
+            packageName: androidPackageName,
+            minimumVersion: 1,
+          ),
+          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
+            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+          ),
+          iosParameters: const IosParameters(
+            bundleId: iosBundleId,
+            minimumVersion: '2',
+          ),
+        );
 
-      final Uri uri = await dynamicLinks.buildUrl(parameters);
+        final Uri uri = await dynamicLinks.buildUrl(parameters);
 
-      // androidParameters.minimumVersion
-      expect(
-        uri.queryParameters['amv'],
-        '1',
-      );
-      // iosParameters.minimumVersion
-      expect(
-        uri.queryParameters['imv'],
-        '2',
-      );
-      // androidParameters.packageName
-      expect(
-        uri.queryParameters['apn'],
-        androidPackageName,
-      );
-      // iosParameters.bundleId
-      expect(
-        uri.queryParameters['ibi'],
-        iosBundleId,
-      );
-      // link
-      expect(
-        uri.queryParameters['link'],
-        Uri.encodeFull(link),
-      );
-      // uriPrefix
-      expect(
-        uri.host,
-        urlHost,
-      );
+        // androidParameters.minimumVersion
+        expect(
+          uri.queryParameters['amv'],
+          '1',
+        );
+        // iosParameters.minimumVersion
+        expect(
+          uri.queryParameters['imv'],
+          '2',
+        );
+        // androidParameters.packageName
+        expect(
+          uri.queryParameters['apn'],
+          androidPackageName,
+        );
+        // iosParameters.bundleId
+        expect(
+          uri.queryParameters['ibi'],
+          iosBundleId,
+        );
+        // link
+        expect(
+          uri.queryParameters['link'],
+          Uri.encodeFull(link),
+        );
+        // uriPrefix
+        expect(
+          uri.host,
+          urlHost,
+        );
+      });
+    });
+
+    group('buildShortLink', () {
+      test('build a short dynamic link', () async {
+        FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+        const String androidPackageName =
+            'io.flutter.plugins.firebasedynamiclinksexample';
+        const String iosBundleId =
+            'io.flutter.plugins.firebase.dynamiclinksexample';
+        const String urlHost = 'reactnativefirebase.page.link';
+        const String link = 'https://dynamic.link.example/helloworld';
+
+        final DynamicLinkParameters parameters = DynamicLinkParameters(
+          uriPrefix: 'https://$urlHost',
+          link: Uri.parse(link),
+          androidParameters: const AndroidParameters(
+            packageName: androidPackageName,
+            minimumVersion: 1,
+          ),
+          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
+            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+          ),
+          iosParameters: const IosParameters(
+            bundleId: iosBundleId,
+            minimumVersion: '2',
+          ),
+        );
+
+        final ShortDynamicLink uri =
+            await dynamicLinks.buildShortLink(parameters);
+
+        // androidParameters.minimumVersion
+        expect(
+          uri.shortUrl.host,
+          urlHost,
+        );
+
+        expect(
+          uri.shortUrl.path.length,
+          isNotNull,
+        );
+
+        expect(
+          uri.shortUrl.path.length,
+          lessThanOrEqualTo(16),
+        );
+      });
+    });
+
+    group('shortenUrl', () {
+      test('build url and shorten', () async {
+        FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+        const String androidPackageName =
+            'io.flutter.plugins.firebasedynamiclinksexample';
+        const String iosBundleId =
+            'io.flutter.plugins.firebase.dynamiclinksexample';
+        const String urlHost = 'reactnativefirebase.page.link';
+        const String link = 'https://dynamic.link.example/helloworld';
+
+        final DynamicLinkParameters parameters = DynamicLinkParameters(
+          uriPrefix: 'https://$urlHost',
+          link: Uri.parse(link),
+          androidParameters: const AndroidParameters(
+            packageName: androidPackageName,
+            minimumVersion: 1,
+          ),
+          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
+            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
+          ),
+          iosParameters: const IosParameters(
+            bundleId: iosBundleId,
+            minimumVersion: '2',
+          ),
+        );
+
+        final Uri uri = await dynamicLinks.buildUrl(parameters);
+        final ShortDynamicLink shortLink = await dynamicLinks.shortenUrl(uri);
+
+        expect(shortLink, isA<ShortDynamicLink>());
+        expect(shortLink.shortUrl, isA<Uri>());
+      });
+    });
+
+    group('getInitialLink', () {
+      test('initial link', () async {
+        PendingDynamicLinkData? pendingLink =
+            await FirebaseDynamicLinks.instance.getInitialLink();
+
+        expect(pendingLink, isNull);
+      });
+    });
+  });
+
+  group('getDynamicLink', () {
+    test('dynamic link using uri', () async {
+      Uri uri = Uri.parse('');
+      PendingDynamicLinkData? pendingLink = await FirebaseDynamicLinks.instance.getDynamicLink(uri);
+
+      expect(pendingLink, isNull);
+    });
+  });
+
+  group('onLink', () {
+    test('grab first stream event', () async {
+      PendingDynamicLinkData? pendingLink =
+          await FirebaseDynamicLinks.instance.onLink().first;
+
+      expect(pendingLink, isNull);
+    });
+
+    test('test multiple times', () async {
+      StreamSubscription<PendingDynamicLinkData?> _onListenSubscription;
+      StreamSubscription<PendingDynamicLinkData?> _onListenSubscriptionSecond;
+
+      _onListenSubscription =
+          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+      _onListenSubscriptionSecond =
+          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+
+      await _onListenSubscription.cancel();
+      await _onListenSubscriptionSecond.cancel();
+
+      _onListenSubscription =
+          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+      _onListenSubscriptionSecond =
+          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+
+      await _onListenSubscription.cancel();
+      await _onListenSubscriptionSecond.cancel();
     });
   });
 }
