@@ -73,7 +73,9 @@ DynamicLinkParameters buildDynamicLinkParameters() {
 
 void main() {
   setupFirebaseDynamicLinksMocks();
-  late TestMethodChannelFirebaseDynamicLinks? mockDynamicLinks;
+
+  bool mockPlatformExceptionThrown = false;
+
   late FirebaseDynamicLinksPlatform dynamicLinks;
   final List<MethodCall> logger = <MethodCall>[];
   int getInitialLinkCall = 1;
@@ -84,6 +86,11 @@ void main() {
 
       handleMethodCall((call) async {
         logger.add(call);
+
+        if (mockPlatformExceptionThrown) {
+          throw PlatformException(code: 'UNKNOWN');
+        }
+
         final Map<dynamic, dynamic> returnUrl = <dynamic, dynamic>{
           'url': 'google.com',
           'warnings': <dynamic>['This is only a test link'],
@@ -124,11 +131,14 @@ void main() {
       });
 
       dynamicLinks = MethodChannelFirebaseDynamicLinks(app: app);
-      mockDynamicLinks = TestMethodChannelFirebaseDynamicLinks(app);
     });
 
     setUp(() async {
       logger.clear();
+    });
+
+    tearDown(() async {
+      mockPlatformExceptionThrown = false;
     });
 
     group('getInitialLink()', () {
@@ -146,7 +156,9 @@ void main() {
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseDynamicLinks#getInitialLink',
-            arguments: null,
+            arguments: {
+              'appName': '[DEFAULT]',
+            },
           )
         ]);
       });
@@ -163,7 +175,9 @@ void main() {
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseDynamicLinks#getInitialLink',
-            arguments: null,
+            arguments: {
+              'appName': '[DEFAULT]',
+            },
           )
         ]);
       });
@@ -179,9 +193,19 @@ void main() {
         expect(logger, <Matcher>[
           isMethodCall(
             'FirebaseDynamicLinks#getInitialLink',
-            arguments: null,
+            arguments: {
+              'appName': '[DEFAULT]',
+            },
           )
         ]);
+      });
+
+      test(
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+
+        await testExceptionHandling(dynamicLinks.getInitialLink);
       });
     });
 
@@ -197,8 +221,18 @@ void main() {
           isMethodCall('FirebaseDynamicLinks#getDynamicLink',
               arguments: <String, dynamic>{
                 'url': argument.toString(),
+                'appName': '[DEFAULT]',
               })
         ]);
+      });
+
+      test(
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+        final Uri argument = Uri.parse('short-link');
+        await testExceptionHandling(
+            () => dynamicLinks.getDynamicLink(argument));
       });
     });
     group('shortenUrl()', () {
@@ -225,61 +259,84 @@ void main() {
           ),
         ]);
       });
-      group('buildUrl()', () {
-        test('buildUrl', () async {
-          DynamicLinkParameters options = buildDynamicLinkParameters();
 
-          await dynamicLinks.buildUrl(options);
+      test(
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+        final Uri url = Uri.parse('google.com');
+        const DynamicLinkParametersOptions options =
+            DynamicLinkParametersOptions(
+                shortDynamicLinkPathLength:
+                    ShortDynamicLinkPathLength.unguessable);
 
-          expect(logger, <Matcher>[
-            isMethodCall(
-              'FirebaseDynamicLinks#buildUrl',
-              arguments: <String, dynamic>{
-                'appName': '[DEFAULT]',
-                'uriPrefix': 'https://',
-                'link': 'link',
-                'dynamicLinkParametersOptions': {
-                  'shortDynamicLinkPathLength':
-                      ShortDynamicLinkPathLength.unguessable.index,
-                },
-                'androidParameters': {
-                  'fallbackUrl': 'fallbackUrl',
-                  'minimumVersion': 1,
-                  'packageName': 'test-package'
-                },
-                'googleAnalyticsParameters': {
-                  'campaign': 'campaign',
-                  'content': 'content',
-                  'medium': 'medium',
-                  'source': 'source',
-                  'term': 'term'
-                },
-                'iosParameters': {
-                  'appStoreId': 'appStoreId',
-                  'bundleId': 'bundleId',
-                  'customScheme': 'customScheme',
-                  'fallbackUrl': 'fallbackUrl',
-                  'ipadBundleId': 'ipadBundleId',
-                  'ipadFallbackUrl': 'ipadFallbackUrl',
-                  'minimumVersion': 'minimumVersion',
-                },
-                'itunesConnectAnalyticsParameters': {
-                  'affiliateToken': 'affiliateToken',
-                  'campaignToken': 'campaignToken',
-                  'providerToken': 'providerToken',
-                },
-                'navigationInfoParameters': {
-                  'forcedRedirectEnabled': true,
-                },
-                'socialMetaTagParameters': {
-                  'description': 'description',
-                  'imageUrl': 'imageUrl',
-                  'title': 'title',
-                },
+        await testExceptionHandling(
+            () => dynamicLinks.shortenUrl(url, options));
+      });
+    });
+    group('buildUrl()', () {
+      test('buildUrl', () async {
+        DynamicLinkParameters options = buildDynamicLinkParameters();
+
+        await dynamicLinks.buildUrl(options);
+
+        expect(logger, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#buildUrl',
+            arguments: <String, dynamic>{
+              'appName': '[DEFAULT]',
+              'uriPrefix': 'https://',
+              'link': 'link',
+              'dynamicLinkParametersOptions': {
+                'shortDynamicLinkPathLength':
+                    ShortDynamicLinkPathLength.unguessable.index,
               },
-            ),
-          ]);
-        });
+              'androidParameters': {
+                'fallbackUrl': 'fallbackUrl',
+                'minimumVersion': 1,
+                'packageName': 'test-package'
+              },
+              'googleAnalyticsParameters': {
+                'campaign': 'campaign',
+                'content': 'content',
+                'medium': 'medium',
+                'source': 'source',
+                'term': 'term'
+              },
+              'iosParameters': {
+                'appStoreId': 'appStoreId',
+                'bundleId': 'bundleId',
+                'customScheme': 'customScheme',
+                'fallbackUrl': 'fallbackUrl',
+                'ipadBundleId': 'ipadBundleId',
+                'ipadFallbackUrl': 'ipadFallbackUrl',
+                'minimumVersion': 'minimumVersion',
+              },
+              'itunesConnectAnalyticsParameters': {
+                'affiliateToken': 'affiliateToken',
+                'campaignToken': 'campaignToken',
+                'providerToken': 'providerToken',
+              },
+              'navigationInfoParameters': {
+                'forcedRedirectEnabled': true,
+              },
+              'socialMetaTagParameters': {
+                'description': 'description',
+                'imageUrl': 'imageUrl',
+                'title': 'title',
+              },
+            },
+          ),
+        ]);
+      });
+
+      test(
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+        DynamicLinkParameters options = buildDynamicLinkParameters();
+
+        await testExceptionHandling(() => dynamicLinks.buildUrl(options));
       });
     });
 
@@ -303,7 +360,7 @@ void main() {
           'link': 'link',
           'ios': {'minimumVersion': 'minimumVersion'}
         });
-        // TODO find out why event isn't emitted
+        // TODO find out why event isn't emitted. also catch error.
         // await expectLater(
         //   stream,
         //   emits(isA<PendingDynamicLinkData>()
@@ -365,6 +422,15 @@ void main() {
             },
           ),
         ]);
+      });
+
+      test(
+          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          () async {
+        mockPlatformExceptionThrown = true;
+        DynamicLinkParameters options = buildDynamicLinkParameters();
+
+        await testExceptionHandling(() => dynamicLinks.buildShortLink(options));
       });
     });
   });

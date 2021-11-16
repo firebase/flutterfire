@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -12,6 +11,7 @@ typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 typedef Callback = void Function(MethodCall call);
 
 int mockHandleId = 0;
+
 int get nextMockHandleId => mockHandleId++;
 
 void setupFirebaseDynamicLinksMocks([Callback? customHandlers]) {
@@ -81,17 +81,11 @@ Future<void> injectEventChannelResponse(
   );
 }
 
-// TODO update error handling and test
-// Future<void> testExceptionHandling(
-//     String type,
-//     void Function() testMethod,
-//     ) async {
-//   await expectLater(
-//         () async => testMethod(),
-//     anyOf([
-//       completes,
-//       if (type == 'PLATFORM' || type == 'EXCEPTION')
-//         throwsA(isA<FirebaseAuthException>())
-//     ]),
-//   );
-// }
+Future<void> testExceptionHandling(
+  void Function() testMethod,
+) async {
+  await expectLater(
+    () async => testMethod(),
+    anyOf([completes, throwsA(isA<FirebaseException>())]),
+  );
+}
