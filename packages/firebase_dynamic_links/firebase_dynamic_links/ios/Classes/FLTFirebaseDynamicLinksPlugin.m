@@ -37,10 +37,10 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   NSString *message = @"An unknown error has occurred.";
   if (error == nil) {
     return @{
-          kCode : code,
-          kMessage : message,
-          @"additionalData" : @{},
-        };
+      kCode : code,
+      kMessage : message,
+      @"additionalData" : @{},
+    };
   }
 
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
@@ -48,7 +48,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   dictionary[kMessage] = [error localizedDescription];
   id additionalData = [NSMutableDictionary dictionary];
 
-  if([error userInfo] != nil){
+  if ([error userInfo] != nil) {
     additionalData = [error userInfo];
   }
 
@@ -320,18 +320,18 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 // Used to action events from firebase-ios-sdk custom & universal dynamic link event listeners
 - (void)onDeepLinkResult:(FIRDynamicLink *_Nullable)dynamicLink error:(NSError *_Nullable)error {
   if (error) {
-
     if (_initialLink == nil) {
       // store initial error to pass back to user if getInitialLink is called
       _initialError = error;
     }
 
-    NSDictionary * errorDetails = getDictionaryFromNSError(error);
+    NSDictionary *errorDetails = getDictionaryFromNSError(error);
 
-    FlutterError * flutterError = [FLTFirebasePlugin createFlutterErrorFromCode:errorDetails[kCode]
-                                                 message:errorDetails[kMessage]
-                                         optionalDetails:errorDetails
-                               andOptionalNSError:error];
+    FlutterError *flutterError =
+        [FLTFirebasePlugin createFlutterErrorFromCode:errorDetails[kCode]
+                                              message:errorDetails[kMessage]
+                                      optionalDetails:errorDetails
+                                   andOptionalNSError:error];
 
     NSLog(@"FLTFirebaseDynamicLinks: Unknown error occurred when attempting to handle a dynamic "
           @"link: %@",

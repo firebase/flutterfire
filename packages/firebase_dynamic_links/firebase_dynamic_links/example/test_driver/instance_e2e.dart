@@ -115,7 +115,7 @@ void runInstanceTests() {
 
         // androidParameters.minimumVersion
         expect(
-          uri.shortUrl.host.toString(),
+          uri.shortUrl.host,
           urlHost,
         );
 

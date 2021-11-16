@@ -46,8 +46,7 @@ public class FlutterFirebaseDynamicLinksPlugin
   private MethodChannel channel;
   @Nullable private BinaryMessenger messenger;
 
-  private final Map<EventChannel, OnLinkStreamHandler>
-      streamHandlers = new HashMap<>();
+  private final Map<EventChannel, OnLinkStreamHandler> streamHandlers = new HashMap<>();
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_dynamic_links";
 
@@ -108,8 +107,7 @@ public class FlutterFirebaseDynamicLinksPlugin
   @Override
   public boolean onNewIntent(Intent intent) {
     // Passes intent to every listener for different app instances the user may create
-    for (OnLinkStreamHandler instance :
-        streamHandlers.values()) {
+    for (OnLinkStreamHandler instance : streamHandlers.values()) {
       instance.sinkEvent(intent);
     }
     return false;
@@ -235,8 +233,7 @@ public class FlutterFirebaseDynamicLinksPlugin
             return null;
           }
 
-          return Utils.getMapFromPendingDynamicLinkData(
-              pendingDynamicLink);
+          return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
         });
   }
 
@@ -363,8 +360,7 @@ public class FlutterFirebaseDynamicLinksPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final OnLinkStreamHandler handler =
-              new OnLinkStreamHandler(dynamicLinks);
+          final OnLinkStreamHandler handler = new OnLinkStreamHandler(dynamicLinks);
           final String name = METHOD_CHANNEL_NAME + "/get-link/" + appName;
           final EventChannel channel = new EventChannel(messenger, name);
           channel.setStreamHandler(handler);
