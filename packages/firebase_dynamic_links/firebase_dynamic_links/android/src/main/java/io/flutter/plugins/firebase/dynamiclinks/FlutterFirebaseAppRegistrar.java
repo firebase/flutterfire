@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebasedynamiclinks;
+package android.src.main.java.io.flutter.plugins.firebase.dynamiclinks;
 
 import androidx.annotation.Keep;
 import com.google.firebase.components.Component;
