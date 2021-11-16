@@ -50,7 +50,8 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   PendingDynamicLinkData? getPendingDynamicLinkDataFromMap(
-      Map<dynamic, dynamic>? linkData) {
+    Map<dynamic, dynamic>? linkData,
+  ) {
     if (linkData == null) return null;
 
     final link = linkData['link'];
@@ -84,7 +85,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     try {
       final Map<String, dynamic>? linkData =
           await channel.invokeMapMethod<String, dynamic>(
-              'FirebaseDynamicLinks#getInitialLink', _withChannelDefaults({}));
+        'FirebaseDynamicLinks#getInitialLink',
+        _withChannelDefaults({}),
+      );
 
       return getPendingDynamicLinkDataFromMap(linkData);
     } on PlatformException catch (e, s) {
@@ -97,8 +100,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     try {
       final Map<String, dynamic>? linkData =
           await channel.invokeMapMethod<String, dynamic>(
-              'FirebaseDynamicLinks#getDynamicLink',
-              _withChannelDefaults({'url': url.toString()}));
+        'FirebaseDynamicLinks#getDynamicLink',
+        _withChannelDefaults({'url': url.toString()}),
+      );
       return getPendingDynamicLinkDataFromMap(linkData);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
@@ -115,13 +119,18 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       onListen: () async {
         // ignore: cast_nullable_to_non_nullable
         String name = await channel.invokeMethod<String>(
-            'FirebaseDynamicLinks#onLink', _withChannelDefaults({})) as String;
+          'FirebaseDynamicLinks#onLink',
+          _withChannelDefaults({}),
+        ) as String;
         final events = onLinkChannel(name);
-        snapshotStream = events.receiveBroadcastStream().listen((event) {
-          controller.add(getPendingDynamicLinkDataFromMap(event));
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+        snapshotStream = events.receiveBroadcastStream().listen(
+          (event) {
+            controller.add(getPendingDynamicLinkDataFromMap(event));
+          },
+          onError: (error, stack) {
+            controller.addError(convertPlatformException(error), stack);
+          },
+        );
       },
       onCancel: () {
         snapshotStream?.cancel();
@@ -132,17 +141,20 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Future<ShortDynamicLink> shortenUrl(Uri url,
-      [DynamicLinkParametersOptions? options]) async {
+  Future<ShortDynamicLink> shortenUrl(
+    Uri url, [
+    DynamicLinkParametersOptions? options,
+  ]) async {
     try {
       final Map<String, dynamic>? reply =
           await MethodChannelFirebaseDynamicLinks.channel
               .invokeMapMethod<String, dynamic>(
-                  'FirebaseDynamicLinks#shortenUrl',
-                  _withChannelDefaults(<String, dynamic>{
-                    'url': url.toString(),
-                    'dynamicLinkParametersOptions': options?.asMap(),
-                  }));
+        'FirebaseDynamicLinks#shortenUrl',
+        _withChannelDefaults(<String, dynamic>{
+          'url': url.toString(),
+          'dynamicLinkParametersOptions': options?.asMap(),
+        }),
+      );
       return _parseShortLink(reply!);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
@@ -152,9 +164,11 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   @override
   Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     try {
-      final String? url = await MethodChannelFirebaseDynamicLinks.channel
-          .invokeMethod<String>('FirebaseDynamicLinks#buildUrl',
-              _withChannelDefaults(parameters.asMap()));
+      final String? url =
+          await MethodChannelFirebaseDynamicLinks.channel.invokeMethod<String>(
+        'FirebaseDynamicLinks#buildUrl',
+        _withChannelDefaults(parameters.asMap()),
+      );
       return Uri.parse(url!);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
@@ -163,14 +177,15 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
   @override
   Future<ShortDynamicLink> buildShortLink(
-      DynamicLinkParameters parameters) async {
+    DynamicLinkParameters parameters,
+  ) async {
     try {
       final Map<String, dynamic>? response =
-          await MethodChannelFirebaseDynamicLinks
-              .channel
+          await MethodChannelFirebaseDynamicLinks.channel
               .invokeMapMethod<String, dynamic>(
-                  'FirebaseDynamicLinks#buildShortLink',
-                  _withChannelDefaults(parameters.asMap()));
+        'FirebaseDynamicLinks#buildShortLink',
+        _withChannelDefaults(parameters.asMap()),
+      );
       return _parseShortLink(response!);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
@@ -180,8 +195,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   ShortDynamicLink _parseShortLink(Map<String, dynamic> response) {
     final List<dynamic>? warnings = response['warnings'];
     return ShortDynamicLink(
-        shortUrl: Uri.parse(response['url']),
-        warnings: warnings?.cast(),
-        previewLink: response['previewLink']);
+      shortUrl: Uri.parse(response['url']),
+      warnings: warnings?.cast(),
+      previewLink: response['previewLink'],
+    );
   }
 }

@@ -73,8 +73,10 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
   }
 
   /// Returns the shortened Dynamic Link, link flow chart, and warnings from the requested Dynamic Link.
-  Future<ShortDynamicLink> shortenUrl(Uri url,
-      [DynamicLinkParametersOptions? options]) async {
+  Future<ShortDynamicLink> shortenUrl(
+    Uri url, [
+    DynamicLinkParametersOptions? options,
+  ]) async {
     return _delegate.shortenUrl(url, options);
   }
 
@@ -85,7 +87,8 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
 
   /// Creates a shortened Dynamic Link from the parameters.
   Future<ShortDynamicLink> buildShortLink(
-      DynamicLinkParameters parameters) async {
+    DynamicLinkParameters parameters,
+  ) async {
     return _delegate.buildShortLink(parameters);
   }
 }

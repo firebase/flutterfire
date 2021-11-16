@@ -12,7 +12,10 @@ void main() {
 
   group('$ShortDynamicLink', () {
     ShortDynamicLink shortLink = ShortDynamicLink(
-        shortUrl: link, previewLink: previewLink, warnings: warnings);
+      shortUrl: link,
+      previewLink: previewLink,
+      warnings: warnings,
+    );
 
     group('Constructor', () {
       test('returns an instance of [ShortDynamicLink]', () {
@@ -34,8 +37,12 @@ void main() {
       });
 
       test('toString', () {
-        expect(shortLink.toString(),
-            equals('$ShortDynamicLink(${shortLink.asMap})'));
+        expect(
+          shortLink.toString(),
+          equals(
+            '$ShortDynamicLink(${shortLink.asMap})',
+          ),
+        );
       });
     });
   });

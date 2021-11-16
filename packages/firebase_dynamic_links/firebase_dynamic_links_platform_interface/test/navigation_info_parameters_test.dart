@@ -24,13 +24,17 @@ void main() {
 
           expect(result, isA<Map<String, dynamic>>());
           expect(
-              result['forcedRedirectEnabled'], navParams.forcedRedirectEnabled);
+            result['forcedRedirectEnabled'],
+            navParams.forcedRedirectEnabled,
+          );
         });
       });
 
       test('toString', () {
-        expect(navParams.toString(),
-            equals('$NavigationInfoParameters(${navParams.asMap})'));
+        expect(
+          navParams.toString(),
+          equals('$NavigationInfoParameters(${navParams.asMap})'),
+        );
       });
     });
   });

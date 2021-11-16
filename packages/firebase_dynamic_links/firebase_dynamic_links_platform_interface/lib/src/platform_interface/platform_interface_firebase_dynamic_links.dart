@@ -72,8 +72,10 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   ///
   /// This method may be used for shortening a custom URL that was not generated
   /// using [DynamicLinkBuilder].
-  Future<ShortDynamicLink> shortenUrl(Uri url,
-      [DynamicLinkParametersOptions? options]) async {
+  Future<ShortDynamicLink> shortenUrl(
+    Uri url, [
+    DynamicLinkParametersOptions? options,
+  ]) async {
     throw UnimplementedError('shortenUrl() is not implemented');
   }
 
@@ -84,7 +86,8 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
 
   /// Generate a short Dynamic Link URL.
   Future<ShortDynamicLink> buildShortLink(
-      DynamicLinkParameters parameters) async {
+    DynamicLinkParameters parameters,
+  ) async {
     throw UnimplementedError('buildShortLink() is not implemented');
   }
 

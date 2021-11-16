@@ -38,8 +38,10 @@ void main() {
       });
 
       test('toString', () {
-        expect(itunesParams.toString(),
-            equals('$ItunesConnectAnalyticsParameters(${itunesParams.asMap})'));
+        expect(
+          itunesParams.toString(),
+          equals('$ItunesConnectAnalyticsParameters(${itunesParams.asMap})'),
+        );
       });
     });
   });

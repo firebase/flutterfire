@@ -26,8 +26,10 @@ void main() {
       });
 
       test('toString', () {
-        expect(dynamicLink.toString(),
-            equals('$DynamicLink(${dynamicLink.asMap})'));
+        expect(
+          dynamicLink.toString(),
+          equals('$DynamicLink(${dynamicLink.asMap})'),
+        );
       });
     });
   });

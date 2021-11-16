@@ -11,7 +11,9 @@ void main() {
   String minimumVersionIos = 'minimum version';
   int clickTimestamp = 12345345;
   PendingDynamicLinkDataAndroid androidData = PendingDynamicLinkDataAndroid(
-      minimumVersion: minimumVersion, clickTimestamp: clickTimestamp);
+    minimumVersion: minimumVersion,
+    clickTimestamp: clickTimestamp,
+  );
   PendingDynamicLinkDataIOS iosData =
       PendingDynamicLinkDataIOS(minimumVersion: minimumVersionIos);
 
@@ -23,12 +25,18 @@ void main() {
       test('returns an instance of [PendingDynamicLinkData]', () {
         expect(pendingDynamicLinkData, isA<PendingDynamicLinkData>());
         expect(pendingDynamicLinkData.link, link);
-        expect(pendingDynamicLinkData.android?.clickTimestamp,
-            androidData.clickTimestamp);
-        expect(pendingDynamicLinkData.android?.minimumVersion,
-            androidData.minimumVersion);
         expect(
-            pendingDynamicLinkData.ios?.minimumVersion, iosData.minimumVersion);
+          pendingDynamicLinkData.android?.clickTimestamp,
+          androidData.clickTimestamp,
+        );
+        expect(
+          pendingDynamicLinkData.android?.minimumVersion,
+          androidData.minimumVersion,
+        );
+        expect(
+          pendingDynamicLinkData.ios?.minimumVersion,
+          iosData.minimumVersion,
+        );
       });
 
       group('asMap', () {
@@ -36,19 +44,27 @@ void main() {
           final result = pendingDynamicLinkData.asMap();
 
           expect(result, isA<Map<String, dynamic>>());
-          expect(result['android']['clickTimestamp'],
-              pendingDynamicLinkData.android?.clickTimestamp);
-          expect(result['android']['minimumVersion'],
-              pendingDynamicLinkData.android?.minimumVersion);
-          expect(result['ios']['minimumVersion'],
-              pendingDynamicLinkData.ios?.minimumVersion);
+          expect(
+            result['android']['clickTimestamp'],
+            pendingDynamicLinkData.android?.clickTimestamp,
+          );
+          expect(
+            result['android']['minimumVersion'],
+            pendingDynamicLinkData.android?.minimumVersion,
+          );
+          expect(
+            result['ios']['minimumVersion'],
+            pendingDynamicLinkData.ios?.minimumVersion,
+          );
           expect(result['link'], pendingDynamicLinkData.link.toString());
         });
       });
 
       test('toString', () {
-        expect(pendingDynamicLinkData.toString(),
-            equals('$PendingDynamicLinkData(${pendingDynamicLinkData.asMap})'));
+        expect(
+          pendingDynamicLinkData.toString(),
+          equals('$PendingDynamicLinkData(${pendingDynamicLinkData.asMap})'),
+        );
       });
     });
   });

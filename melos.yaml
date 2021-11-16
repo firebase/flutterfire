@@ -1,7 +1,7 @@
 name: FlutterFire
 
 packages:
-  - packages/**
+  - packages/firebase_dynamic_links/**
 
 ignore:
   # TODO Excluded - pending rewrite to use latest SDKs.

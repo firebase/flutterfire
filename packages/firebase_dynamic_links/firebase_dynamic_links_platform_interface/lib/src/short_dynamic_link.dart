@@ -1,7 +1,10 @@
 /// Response from creating a short dynamic link with [DynamicLinkBuilder].
 class ShortDynamicLink {
-  const ShortDynamicLink(
-      {required this.shortUrl, this.warnings, this.previewLink});
+  const ShortDynamicLink({
+    required this.shortUrl,
+    this.warnings,
+    this.previewLink,
+  });
 
   /// Short url value.
   final Uri shortUrl;

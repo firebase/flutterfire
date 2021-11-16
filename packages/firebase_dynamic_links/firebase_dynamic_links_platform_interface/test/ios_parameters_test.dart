@@ -48,7 +48,9 @@ void main() {
           expect(result['customScheme'], iosParams.customScheme);
           expect(result['fallbackUrl'], iosParams.fallbackUrl.toString());
           expect(
-              result['ipadFallbackUrl'], iosParams.ipadFallbackUrl.toString());
+            result['ipadFallbackUrl'],
+            iosParams.ipadFallbackUrl.toString(),
+          );
           expect(result['ipadBundleId'], iosParams.ipadBundleId);
           expect(result['minimumVersion'], iosParams.minimumVersion);
         });
@@ -56,7 +58,9 @@ void main() {
 
       test('toString', () {
         expect(
-            iosParams.toString(), equals('$IosParameters(${iosParams.asMap})'));
+          iosParams.toString(),
+          equals('$IosParameters(${iosParams.asMap})'),
+        );
       });
     });
   });

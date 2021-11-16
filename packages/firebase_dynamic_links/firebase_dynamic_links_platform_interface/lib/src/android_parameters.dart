@@ -1,7 +1,10 @@
 /// The Dynamic Link Android parameters.
 class AndroidParameters {
-  const AndroidParameters(
-      {this.fallbackUrl, this.minimumVersion, required this.packageName});
+  const AndroidParameters({
+    this.fallbackUrl,
+    this.minimumVersion,
+    required this.packageName,
+  });
 
   /// The link to open when the app isn’t installed.
   ///

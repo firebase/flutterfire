@@ -11,11 +11,9 @@ import 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
 export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links_platform_interface.dart'
     show
         AndroidParameters,
-        DynamicLink,
         DynamicLinkParameters,
         DynamicLinkParametersOptions,
         FirebaseDynamicLinksPlatform,
-        FirebasePluginPlatform,
         GoogleAnalyticsParameters,
         IosParameters,
         ItunesConnectAnalyticsParameters,

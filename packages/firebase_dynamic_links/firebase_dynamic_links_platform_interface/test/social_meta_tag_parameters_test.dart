@@ -12,7 +12,10 @@ void main() {
 
   group('$SocialMetaTagParameters', () {
     SocialMetaTagParameters socialMetaTagParameters = SocialMetaTagParameters(
-        description: description, title: title, imageUrl: imageUrl);
+      description: description,
+      title: title,
+      imageUrl: imageUrl,
+    );
 
     group('Constructor', () {
       test('returns an instance of [SocialMetaTagParameters]', () {
@@ -30,15 +33,19 @@ void main() {
           expect(result['description'], socialMetaTagParameters.description);
           expect(result['title'], socialMetaTagParameters.title);
           expect(
-              result['imageUrl'], socialMetaTagParameters.imageUrl.toString());
+            result['imageUrl'],
+            socialMetaTagParameters.imageUrl.toString(),
+          );
         });
       });
 
       test('toString', () {
         expect(
-            socialMetaTagParameters.toString(),
-            equals(
-                '$SocialMetaTagParameters(${socialMetaTagParameters.asMap})'));
+          socialMetaTagParameters.toString(),
+          equals(
+            '$SocialMetaTagParameters(${socialMetaTagParameters.asMap})',
+          ),
+        );
       });
     });
   });

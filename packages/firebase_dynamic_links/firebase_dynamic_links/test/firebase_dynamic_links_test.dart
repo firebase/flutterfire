@@ -309,8 +309,11 @@ Future<PendingDynamicLinkData?> testFutureData() {
 Uri uri = Uri.parse('mock');
 
 class MockFirebaseDynamicLinks extends Mock
-    with MockPlatformInterfaceMixin
-    implements TestFirebaseDynamicLinksPlatform {
+    with
+        MockPlatformInterfaceMixin
+    implements
+// ignore: avoid_implementing_value_types
+        TestFirebaseDynamicLinksPlatform {
   @override
   Future<PendingDynamicLinkData?> getInitialLink() {
     return super.noSuchMethod(

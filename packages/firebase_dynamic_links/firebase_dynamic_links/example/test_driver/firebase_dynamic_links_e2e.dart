@@ -11,15 +11,16 @@ import 'instance_e2e.dart';
 void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
-      apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
-      appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-      authDomain: 'react-native-firebase-testing.firebaseapp.com',
-      iosClientId:
-          '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-    ));
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
+        appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        iosClientId:
+            '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+      ),
+    );
   });
 
   runInstanceTests();

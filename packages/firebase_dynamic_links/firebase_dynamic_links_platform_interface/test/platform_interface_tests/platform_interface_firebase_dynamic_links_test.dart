@@ -38,16 +38,22 @@ void main() {
     });
 
     test('Constructor', () {
-      expect(firebaseDynamicLinksPlatformPlatform,
-          isA<FirebaseDynamicLinksPlatform>());
+      expect(
+        firebaseDynamicLinksPlatformPlatform,
+        isA<FirebaseDynamicLinksPlatform>(),
+      );
       expect(firebaseDynamicLinksPlatformPlatform, isA<PlatformInterface>());
     });
 
     test('get.instance', () {
-      expect(FirebaseDynamicLinksPlatform.instance,
-          isA<FirebaseDynamicLinksPlatform>());
-      expect(FirebaseDynamicLinksPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+      expect(
+        FirebaseDynamicLinksPlatform.instance,
+        isA<FirebaseDynamicLinksPlatform>(),
+      );
+      expect(
+        FirebaseDynamicLinksPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
@@ -55,58 +61,92 @@ void main() {
         FirebaseDynamicLinksPlatform.instance =
             TestFirebaseDynamicLinksPlatform(secondaryApp!);
 
-        expect(FirebaseDynamicLinksPlatform.instance,
-            isA<FirebaseDynamicLinksPlatform>());
         expect(
-            FirebaseDynamicLinksPlatform.instance.app.name, equals('testApp2'));
+          FirebaseDynamicLinksPlatform.instance,
+          isA<FirebaseDynamicLinksPlatform>(),
+        );
+        expect(
+          FirebaseDynamicLinksPlatform.instance.app.name,
+          equals('testApp2'),
+        );
       });
     });
 
     test('throws if .getInitialLink', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.getInitialLink(),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
-            'getInitialLink() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getInitialLink() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if .getDynamicLink', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.getDynamicLink(link),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
-            'getDynamicLink() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getDynamicLink() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if .onLink', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.onLink(),
-        throwsA(isA<UnimplementedError>().having(
-            (e) => e.message, 'message', 'onLink() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'onLink() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if .shortenUrl', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.shortenUrl(link),
-        throwsA(isA<UnimplementedError>().having(
-            (e) => e.message, 'message', 'shortenUrl() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'shortenUrl() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if .buildUrl', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.buildUrl(parameters),
-        throwsA(isA<UnimplementedError>().having(
-            (e) => e.message, 'message', 'buildUrl() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'buildUrl() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if .buildShortLink', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.buildShortLink(parameters),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
-            'buildShortLink() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'buildShortLink() is not implemented',
+          ),
+        ),
       );
     });
   });

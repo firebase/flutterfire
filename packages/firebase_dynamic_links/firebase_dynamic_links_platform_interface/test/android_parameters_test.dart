@@ -37,8 +37,10 @@ void main() {
       });
 
       test('toString', () {
-        expect(androidParams.toString(),
-            equals('$AndroidParameters(${androidParams.asMap})'));
+        expect(
+          androidParams.toString(),
+          equals('$AndroidParameters(${androidParams.asMap})'),
+        );
       });
     });
   });

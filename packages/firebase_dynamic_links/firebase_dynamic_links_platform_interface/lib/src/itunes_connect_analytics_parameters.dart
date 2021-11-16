@@ -1,7 +1,10 @@
 /// The Dynamic Link iTunes Connect parameters.
 class ItunesConnectAnalyticsParameters {
-  const ItunesConnectAnalyticsParameters(
-      {this.affiliateToken, this.campaignToken, this.providerToken});
+  const ItunesConnectAnalyticsParameters({
+    this.affiliateToken,
+    this.campaignToken,
+    this.providerToken,
+  });
 
   /// The iTunes Connect affiliate token.
   final String? affiliateToken;

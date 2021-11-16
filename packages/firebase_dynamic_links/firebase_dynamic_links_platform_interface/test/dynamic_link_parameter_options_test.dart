@@ -14,8 +14,10 @@ void main() {
     group('Constructor', () {
       test('returns an instance of [DynamicLinkParametersOptions]', () {
         expect(dynamicLinkOptions, isA<DynamicLinkParametersOptions>());
-        expect(dynamicLinkOptions.shortDynamicLinkPathLength,
-            ShortDynamicLinkPathLength.short);
+        expect(
+          dynamicLinkOptions.shortDynamicLinkPathLength,
+          ShortDynamicLinkPathLength.short,
+        );
       });
 
       group('asMap', () {
@@ -23,16 +25,20 @@ void main() {
           final result = dynamicLinkOptions.asMap();
 
           expect(result, isA<Map<String, dynamic>>());
-          expect(result['shortDynamicLinkPathLength'],
-              ShortDynamicLinkPathLength.short.index);
+          expect(
+            result['shortDynamicLinkPathLength'],
+            ShortDynamicLinkPathLength.short.index,
+          );
         });
       });
 
       test('toString', () {
         expect(
-            dynamicLinkOptions.toString(),
-            equals(
-                '$DynamicLinkParametersOptions(${dynamicLinkOptions.asMap})'));
+          dynamicLinkOptions.toString(),
+          equals(
+            '$DynamicLinkParametersOptions(${dynamicLinkOptions.asMap})',
+          ),
+        );
       });
     });
   });
