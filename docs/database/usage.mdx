@@ -148,7 +148,7 @@ await ref.set({
 });
 ```
 
-To update data, provide a `Map` where the keys point to specifc nodes of the parent `DatabaseReference`:
+To update data, provide a `Map` where the keys point to specific nodes of the parent `DatabaseReference`:
 
 ```dart
 DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
@@ -291,31 +291,30 @@ create a presence system by storing a boolean value on a user if they are online
 if they go offline:
 
 ```dart
-DatabaseReference ref = FirebaseDatabase.instance.ref("users/123/status");
-
 // Somewhere in your application, trigger that the user is online:
+DatabaseReference ref = FirebaseDatabase.instance.ref("users/123/status");
 await ref.set(true);
-
+// And after;
+// Create an OnDisconnect instance for your ref and set to false,
+// the Firebase backend will then only set the value on your ref to false
+// when your client goes offline.
 OnDisconnect onDisconnect = ref.onDisconnect();
-
-// If the user goes offline, set the user status to `false`:
 await onDisconnect.set(false);
 ```
 
-The `OnDisconnect` instance supports `set`, `setWithPriority`, `remove` and `update operations`.
+The `OnDisconnect` instance supports `set`, `setWithPriority`, `remove` and `update` operations.
 
 You can remove any committed operations at anytime by calling the `cancel` method:
 
 ```dart
-OnDisconnect onDisconnect = ref.onDisconnect();
-
 // Cancel any previously committed operations
+OnDisconnect onDisconnect = ref.onDisconnect();
 await onDisconnect.cancel();
 ```
 
 ## Emulator Usage
 
-If you are using the local []Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup),
+If you are using the local [Firestore emulators](https://firebase.google.com/docs/rules/emulator-setup),
 then it is possible to connect to this using the `useDatabaseEmulator` method. Ensure you pass the correct port on which the Firebase emulator is running on.
 
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
