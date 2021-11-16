@@ -19,6 +19,7 @@ Future<void> main() async {
       messagingSenderId: '448618578101',
       projectId: 'react-native-firebase-testing',
       storageBucket: 'react-native-firebase-testing.appspot.com',
+      databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
     ),
   );
   runApp(StorageExampleApp());
