@@ -21,16 +21,18 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
+  /// Note; multi-app support is only supported on android.
   static FirebaseDynamicLinks instanceFor({required FirebaseApp app}) {
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+    if (Platform.isAndroid || app.name == defaultFirebaseAppName) {
+      return _cachedInstances.putIfAbsent(app.name, () {
+        return FirebaseDynamicLinks._(app: app);
+      });
     }
-    //TODO notify user or even throw error that default only for web and iOS??
 
-    FirebaseDynamicLinks newInstance = FirebaseDynamicLinks._(app: app);
-    _cachedInstances[app.name] = newInstance;
-
-    return newInstance;
+    throw PlatformException(
+      code: 'default-app',
+      message: 'Firebase Dynamic Links has multi-app support for android only.',
+    );
   }
 
   // Cached and lazily loaded instance of [FirebaseDynamicLinksPlatform] to avoid
@@ -65,20 +67,23 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
     return _delegate.getDynamicLink(url);
   }
 
-  /// Listen to a stream for the latest dynamic link events
+  /// Listen to a stream for the latest dynamic link events.
   Stream<PendingDynamicLinkData?> onLink() {
     return _delegate.onLink();
   }
 
+  /// Returns the shortened Dynamic Link, link flow chart, and warnings from the requested Dynamic Link.
   Future<ShortDynamicLink> shortenUrl(Uri url,
       [DynamicLinkParametersOptions? options]) async {
     return _delegate.shortenUrl(url, options);
   }
 
+  /// Creates a Dynamic Link from the parameters.
   Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
     return _delegate.buildUrl(parameters);
   }
 
+  /// Creates a shortened Dynamic Link from the parameters.
   Future<ShortDynamicLink> buildShortLink(
       DynamicLinkParameters parameters) async {
     return _delegate.buildShortLink(parameters);
