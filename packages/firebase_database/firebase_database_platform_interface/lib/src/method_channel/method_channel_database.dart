@@ -9,6 +9,12 @@ import 'package:flutter/services.dart';
 import 'method_channel_database_reference.dart';
 import 'utils/exception.dart';
 
+class MethodChannelArguments {
+  MethodChannelArguments(this.app);
+
+  FirebaseApp app;
+}
+
 /// The entry point for accessing a FirebaseDatabase.
 ///
 /// You can get an instance by calling [FirebaseDatabase.instance].
@@ -38,6 +44,25 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   static bool _initialized = false;
 
+  bool _persistenceEnabled = false;
+  int? _cacheSizeBytes;
+  bool _loggingEnabled = false;
+  String? _emulatorHost;
+  int? _emulatorPort;
+
+  @override
+  Map<String, Object?> getChannelArguments([Map<String, Object?>? other]) {
+    return {
+      'appName': app!.name,
+      'databaseURL': databaseURL,
+      'persistenceEnabled': _persistenceEnabled,
+      'cacheSizeBytes': _cacheSizeBytes,
+      'loggingEnabled': _loggingEnabled,
+      'emulatorHost': _emulatorHost,
+      'emulatorPort': _emulatorPort,
+    }..addAll(other ?? {});
+  }
+
   /// Gets a [DatabasePlatform] with specific arguments such as a different
   /// [FirebaseApp].
   @override
@@ -52,9 +77,12 @@ class MethodChannelDatabase extends DatabasePlatform {
   static const MethodChannel channel =
       MethodChannel('plugins.flutter.io/firebase_database');
 
-  /// Returns a [DatabaseReference] representing the location in the Database
-  /// corresponding to the provided path.
-  /// If no path is provided, the Reference will point to the root of the Database.
+  @override
+  void useDatabaseEmulator(String host, int port) {
+    _emulatorHost = host;
+    _emulatorPort = port;
+  }
+
   @override
   DatabaseReferencePlatform ref([String? path]) {
     return MethodChannelDatabaseReference(
@@ -63,103 +91,27 @@ class MethodChannelDatabase extends DatabasePlatform {
     );
   }
 
-  /// Attempts to sets the database persistence to [enabled].
-  ///
-  /// This property must be set before calling methods on database references
-  /// and only needs to be called once per application. The returned [Future]
-  /// will complete with `true` if the operation was successful or `false` if
-  /// the persistence could not be set (because database references have
-  /// already been created).
-  ///
-  /// The Firebase Database client will cache synchronized data and keep track
-  /// of all writes you’ve initiated while your application is running. It
-  /// seamlessly handles intermittent network connections and re-sends write
-  /// operations when the network connection is restored.
-  ///
-  /// However by default your write operations and cached data are only stored
-  /// in-memory and will be lost when your app restarts. By setting [enabled]
-  /// to `true`, the data will be persisted to on-device (disk) storage and will
-  /// thus be available again when the app is restarted (even when there is no
-  /// network connectivity at that time).
   @override
-  Future<void> setPersistenceEnabled(bool enabled) async {
-    try {
-      await channel.invokeMethod<void>(
-        'FirebaseDatabase#setPersistenceEnabled',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-          'enabled': enabled,
-        },
-      );
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void setPersistenceEnabled(bool enabled) {
+    _persistenceEnabled = enabled;
   }
 
-  /// Attempts to set the size of the persistence cache.
-  ///
-  /// By default the Firebase Database client will use up to 10MB of disk space
-  /// to cache data. If the cache grows beyond this size, the client will start
-  /// removing data that hasn’t been recently used. If you find that your
-  /// application caches too little or too much data, call this method to change
-  /// the cache size.
-  ///
-  /// This property must be set before calling methods on database references
-  /// and only needs to be called once per application. The returned [Future]
-  /// will complete with `true` if the operation was successful or `false` if
-  /// the value could not be set (because database references have already been
-  /// created).
-  ///
-  /// Note that the specified cache size is only an approximation and the size
-  /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
-  /// or greater than 100 MB are not supported.
   @override
-  Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
-    try {
-      return channel.invokeMethod<void>(
-        'FirebaseDatabase#setPersistenceCacheSizeBytes',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-          'cacheSize': cacheSize,
-        },
-      );
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void setPersistenceCacheSizeBytes(int cacheSize) {
+    _cacheSizeBytes = cacheSize;
   }
 
-  /// Enables verbose diagnostic logging for debugging your application.
-  /// This must be called before any other usage of FirebaseDatabase instance.
-  /// By default, diagnostic logging is disabled.
   @override
-  Future<void> setLoggingEnabled(bool enabled) async {
-    try {
-      await channel.invokeMethod<void>(
-        'FirebaseDatabase#setLoggingEnabled',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-          'enabled': enabled
-        },
-      );
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void setLoggingEnabled(bool enabled) {
+    _loggingEnabled = enabled;
   }
 
-  /// Resumes our connection to the Firebase Database backend after a previous
-  /// [goOffline] call.
   @override
   Future<void> goOnline() {
     try {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#goOnline',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-        },
+        getChannelArguments(),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -173,10 +125,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     try {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#goOffline',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-        },
+        getChannelArguments(),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -198,10 +147,7 @@ class MethodChannelDatabase extends DatabasePlatform {
     try {
       return channel.invokeMethod<void>(
         'FirebaseDatabase#purgeOutstandingWrites',
-        <String, dynamic>{
-          'appName': app!.name,
-          'databaseURL': databaseURL,
-        },
+        getChannelArguments(),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);

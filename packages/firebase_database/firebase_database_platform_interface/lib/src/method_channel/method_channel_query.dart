@@ -36,27 +36,25 @@ class MethodChannelQuery extends QueryPlatform {
   Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) async* {
     const channel = MethodChannelDatabase.channel;
 
-    final createArgs = <String, dynamic>{
-      'appName': database.app?.name,
-      'databaseURL': database.databaseURL,
-      'path': path,
-      'parameters': parameters,
-      'eventType': eventTypeToString(eventType),
-    };
-
     final listenArgs = <String, String>{
       'eventType': eventTypeToString(eventType)
     };
 
     final channelName = await channel.invokeMethod<String>(
       'Query#observe',
-      createArgs,
+      database.getChannelArguments({
+        'path': path,
+        'parameters': parameters,
+        'eventType': eventTypeToString(eventType),
+      }),
     );
 
     yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
-        .map((event) =>
-            MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)))
+        .map(
+          (event) =>
+              MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
+        )
         .handleError(
           (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,
@@ -69,12 +67,10 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       final result = await channel.invokeMethod<Map<String, dynamic>>(
         'Query#get',
-        <String, dynamic>{
-          'appName': database.app?.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'parameters': parameters,
-        },
+        }),
       );
 
       return MethodChannelDataSnapshot(ref, result!);
@@ -220,13 +216,9 @@ class MethodChannelQuery extends QueryPlatform {
     try {
       return channel.invokeMethod<void>(
         'Query#keepSynced',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
-          'path': path,
-          'parameters': parameters,
-          'value': value
-        },
+        database.getChannelArguments(
+          {'path': path, 'parameters': parameters, 'value': value},
+        ),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);

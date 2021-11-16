@@ -77,12 +77,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#set',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'value': value,
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -94,13 +92,11 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#setWithPriority',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'value': value,
           'priority': priority,
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -112,12 +108,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#update',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'value': value,
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -129,12 +123,10 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#setPriority',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'priority': priority,
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -159,13 +151,11 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
     try {
       final result = await channel.invokeMethod(
         'DatabaseReference#runTransaction',
-        <String, dynamic>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'transactionApplyLocally': applyLocally,
           'transactionKey': key,
-        },
+        }),
       );
 
       return MethodChannelTransactionResult(

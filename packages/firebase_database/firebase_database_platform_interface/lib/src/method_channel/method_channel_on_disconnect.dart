@@ -20,12 +20,10 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#set',
-        <String, Object?>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': ref.path,
           'value': value,
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -37,13 +35,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#setWithPriority',
-        <String, Object?>{
-          'appName': database.app!.name,
-          'databaseURL': database.databaseURL,
-          'path': ref.path,
-          'value': value,
-          'priority': priority
-        },
+        database.getChannelArguments(
+          {'path': ref.path, 'value': value, 'priority': priority},
+        ),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -58,11 +52,11 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#cancel',
-        <String, Object?>{
+        database.getChannelArguments({
           'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': ref.path
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -74,12 +68,12 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#update',
-        <String, Object?>{
+        database.getChannelArguments({
           'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': ref.path,
           'value': value
-        },
+        }),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);

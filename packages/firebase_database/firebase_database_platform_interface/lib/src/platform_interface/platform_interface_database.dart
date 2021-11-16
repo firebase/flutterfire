@@ -67,6 +67,11 @@ abstract class DatabasePlatform extends PlatformInterface {
   /// If null, the URL of the specified [FirebaseApp] is used
   final String? databaseURL;
 
+  /// Returns any arguments to be provided to a [MethodChannel].
+  Map<String, Object?> getChannelArguments([Map<String, Object?>? other]) {
+    throw UnimplementedError('getChannelArguments() is not implemented');
+  }
+
   /// Changes this instance to point to a FirebaseDatabase emulator running locally.
   ///
   /// Set the [host] of the local emulator, such as "localhost"
@@ -101,7 +106,7 @@ abstract class DatabasePlatform extends PlatformInterface {
   /// to `true`, the data will be persisted to on-device (disk) storage and will
   /// thus be available again when the app is restarted (even when there is no
   /// network connectivity at that time).
-  Future<void> setPersistenceEnabled(bool enabled) async {
+  void setPersistenceEnabled(bool enabled) {
     throw UnimplementedError('setPersistenceEnabled() not implemented');
   }
 
@@ -117,19 +122,20 @@ abstract class DatabasePlatform extends PlatformInterface {
   /// and only needs to be called once per application. The returned [Future]
   /// will complete with `true` if the operation was successful or `false` if
   /// the value could not be set (because database references have already been
+  /// the value could not be set (because database references have already been
   /// created).
   ///
   /// Note that the specified cache size is only an approximation and the size
   /// on disk may temporarily exceed it at times. Cache sizes smaller than 1 MB
   /// or greater than 100 MB are not supported.
-  Future<void> setPersistenceCacheSizeBytes(int cacheSize) async {
+  void setPersistenceCacheSizeBytes(int cacheSize) {
     throw UnimplementedError('setPersistenceCacheSizeBytes() not implemented');
   }
 
   /// Enables verbose diagnostic logging for debugging your application.
   /// This must be called before any other usage of FirebaseDatabase instance.
   /// By default, diagnostic logging is disabled.
-  Future<void> setLoggingEnabled(bool enabled) {
+  void setLoggingEnabled(bool enabled) {
     throw UnimplementedError('setLoggingEnabled() not implemented');
   }
 

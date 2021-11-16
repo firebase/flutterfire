@@ -50,10 +50,6 @@ void main() {
         switch (methodCall.method) {
           case 'Query#observe':
             return 'mock/path';
-          case 'FirebaseDatabase#setPersistenceEnabled':
-            return true;
-          case 'FirebaseDatabase#setPersistenceCacheSizeBytes':
-            return true;
           case 'DatabaseReference#runTransaction':
             late Map<String, dynamic> updatedValue;
 
@@ -102,49 +98,6 @@ void main() {
       log.clear();
     });
 
-    test('setPersistenceEnabled', () async {
-      await database.setPersistenceEnabled(false);
-      await database.setPersistenceEnabled(true);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#setPersistenceEnabled',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'enabled': false,
-            },
-          ),
-          isMethodCall(
-            'FirebaseDatabase#setPersistenceEnabled',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'enabled': true,
-            },
-          ),
-        ],
-      );
-    });
-
-    test('setPersistentCacheSizeBytes', () async {
-      await database.setPersistenceCacheSizeBytes(42);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#setPersistenceCacheSizeBytes',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'cacheSize': 42,
-            },
-          ),
-        ],
-      );
-    });
-
     test('goOnline', () async {
       await database.goOnline();
       expect(
@@ -155,6 +108,11 @@ void main() {
             arguments: <String, dynamic>{
               'appName': app.name,
               'databaseURL': databaseURL,
+              'persistenceEnabled': false,
+              'cacheSizeBytes': null,
+              'loggingEnabled': false,
+              'emulatorHost': null,
+              'emulatorPort': null,
             },
           ),
         ],
@@ -171,6 +129,11 @@ void main() {
             arguments: <String, dynamic>{
               'appName': app.name,
               'databaseURL': databaseURL,
+              'persistenceEnabled': false,
+              'cacheSizeBytes': null,
+              'loggingEnabled': false,
+              'emulatorHost': null,
+              'emulatorPort': null,
             },
           ),
         ],
@@ -187,6 +150,11 @@ void main() {
             arguments: <String, dynamic>{
               'appName': app.name,
               'databaseURL': databaseURL,
+              'persistenceEnabled': false,
+              'cacheSizeBytes': null,
+              'loggingEnabled': false,
+              'emulatorHost': null,
+              'emulatorPort': null,
             },
           ),
         ],
@@ -212,6 +180,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'value': value,
               },
@@ -221,6 +194,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'bar',
                 'value': value,
                 'priority': priority,
@@ -231,6 +209,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'bar',
                 'value': value,
                 'priority': null,
@@ -241,6 +224,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'baz',
                 'value': {
                   'qux': {
@@ -263,6 +251,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'value': value,
               },
@@ -282,6 +275,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'priority': priority,
               },
@@ -308,6 +306,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'transactionApplyLocally': true,
                 'transactionKey': 0,
@@ -346,6 +349,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'value': value,
               },
@@ -355,6 +363,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'bar',
                 'value': value,
                 'priority': priority,
@@ -365,6 +378,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'psi',
                 'value': value,
                 'priority': 'priority',
@@ -375,6 +393,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'por',
                 'value': value,
                 'priority': value,
@@ -385,6 +408,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'por',
                 'value': value,
                 'priority': null,
@@ -404,6 +432,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'value': value,
               },
@@ -421,6 +454,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
               },
             ),
@@ -438,6 +476,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': 'foo',
                 'value': null,
               },
@@ -460,6 +503,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': path,
                 'parameters': <String, dynamic>{},
                 'value': true,
@@ -496,6 +544,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': path,
                 'parameters': expectedParameters,
                 'value': false
@@ -601,6 +654,11 @@ void main() {
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
+                'persistenceEnabled': false,
+                'cacheSizeBytes': null,
+                'loggingEnabled': false,
+                'emulatorHost': null,
+                'emulatorPort': null,
                 'path': path,
                 'parameters': <String, dynamic>{},
                 'eventType': 'value',
