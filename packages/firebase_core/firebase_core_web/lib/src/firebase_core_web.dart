@@ -130,8 +130,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String version = _firebaseSDKVersion;
     List<String> ignored = _ignoredServiceScripts;
 
-    print(ignored);
-
     // In dev, requirejs is loaded in
     JsObject require = JsObject.fromBrowserObject(context['require']);
     require.callMethod('config', [
