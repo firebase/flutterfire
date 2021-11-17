@@ -27,7 +27,7 @@
 			<string>Bundle ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.google.FirebaseCppDynamicLinksTestApp.dev</string>
+				<string>io.invertase.testing</string>
 			</array>
 		</dict>
 	</array>

@@ -16,7 +16,24 @@ import 'utils/exception.dart';
 class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   /// Create an instance of [MethodChannelFirebaseDynamicLinks] with optional [FirebaseApp]
   MethodChannelFirebaseDynamicLinks({FirebaseApp? app})
-      : super(appInstance: app);
+      : super(appInstance: app) {
+    channel.setMethodCallHandler((MethodCall call) async {
+      switch (call.method) {
+        case 'FirebaseDynamicLink#onLinkSuccess':
+          Map<String, dynamic> event =
+              Map<String, dynamic>.from(call.arguments);
+          _onLinkController.add(getPendingDynamicLinkDataFromMap(event));
+          break;
+        case 'FirebaseDynamicLink#onLinkError':
+          Map<String, dynamic> error =
+              Map<String, dynamic>.from(call.arguments);
+          _onLinkController.addError(convertPlatformException(error));
+          break;
+        default:
+          throw UnimplementedError('${call.method} has not been implemented');
+      }
+    });
+  }
 
   /// The [FirebaseApp] instance to which this [FirebaseDynamicLinks] belongs.
   ///
@@ -27,13 +44,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     'plugins.flutter.io/firebase_dynamic_links',
   );
 
-  /// The [EventChannel] used for onLink
-  static EventChannel onLinkChannel(String name) {
-    return EventChannel(
-      name,
-      channel.codec,
-    );
-  }
+  /// The [StreamController] used to update on the latest dynamic link received.
+  final StreamController<PendingDynamicLinkData?> _onLinkController =
+      StreamController<PendingDynamicLinkData?>.broadcast();
 
   /// Gets a [FirebaseDynamicLinksPlatform] with specific arguments such as a different
   /// [FirebaseApp].
@@ -111,33 +124,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
   @override
   Stream<PendingDynamicLinkData?> onLink() {
-    StreamSubscription<dynamic>? snapshotStream;
-    late StreamController<PendingDynamicLinkData?>
-        controller; // ignore: close_sinks
-
-    controller = StreamController<PendingDynamicLinkData?>.broadcast(
-      onListen: () async {
-        // ignore: cast_nullable_to_non_nullable
-        String name = await channel.invokeMethod<String>(
-          'FirebaseDynamicLinks#onLink',
-          _withChannelDefaults({}),
-        ) as String;
-        final events = onLinkChannel(name);
-        snapshotStream = events.receiveBroadcastStream().listen(
-          (event) {
-            controller.add(getPendingDynamicLinkDataFromMap(event));
-          },
-          onError: (error, stack) {
-            controller.addError(convertPlatformException(error), stack);
-          },
-        );
-      },
-      onCancel: () {
-        snapshotStream?.cancel();
-      },
-    );
-
-    return controller.stream;
+    return _onLinkController.stream;
   }
 
   @override

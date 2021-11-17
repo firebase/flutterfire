@@ -5,7 +5,6 @@
 #import <TargetConditionals.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Private/FLTOnLinkStreamHandler.h"
 #import "Public/FLTFirebaseDynamicLinksPlugin.h"
 
 NSString *const kFLTFirebaseDynamicLinksChannelName = @"plugins.flutter.io/firebase_dynamic_links";
@@ -61,19 +60,16 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
 @implementation FLTFirebaseDynamicLinksPlugin {
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
-  NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
-  NSMutableDictionary<NSString *, FLTOnLinkStreamHandler *> *_streamHandlers;
 }
 
 #pragma mark - FlutterPlugin
 
-- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
+- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger withChannel:(FlutterMethodChannel *)channel {
   self = [super init];
   if (self) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
-    _eventChannels = [NSMutableDictionary dictionary];
-    _streamHandlers = [NSMutableDictionary dictionary];
+    _channel = channel;
   }
   return self;
 }
@@ -82,7 +78,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseDynamicLinksChannelName
                                   binaryMessenger:[registrar messenger]];
   FLTFirebaseDynamicLinksPlugin *instance =
-      [[FLTFirebaseDynamicLinksPlugin alloc] init:registrar.messenger];
+      [[FLTFirebaseDynamicLinksPlugin alloc] init:registrar.messenger withChannel:channel];
 
   [registrar addMethodCallDelegate:instance channel:channel];
 
@@ -96,15 +92,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
-  for (FlutterEventChannel *channel in self->_eventChannels.allValues) {
-    [channel setStreamHandler:nil];
-  }
-  [self->_eventChannels removeAllObjects];
-  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers.allValues) {
-    [handler onCancelWithArguments:nil];
-  }
-  [self->_streamHandlers removeAllObjects];
-
   if (completion != nil) completion();
 }
 
@@ -159,8 +146,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [self getInitialLink:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#getDynamicLink" isEqualToString:call.method]) {
     [self getDynamicLink:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FirebaseDynamicLinks#onLink" isEqualToString:call.method]) {
-    [self registerOnLinkListener:call.arguments withMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
   }
@@ -261,13 +246,17 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
   void (^__block __weak weakCompletionBlock)(FIRDynamicLink *_Nullable dynamicLink,
                                              NSError *_Nullable error);
-
   weakCompletionBlock = completionBlock =
       ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
         if (!error && dynamicLink && dynamicLink.url) {
           [self onDeepLinkResult:dynamicLink error:nil];
         }
 
+        if(!error && dynamicLink && !dynamicLink.url){
+          NSLog(@"FLTFirebaseDynamicLinks: The url has not been supplied with the dynamic link."
+                @"Please try opening your app with the long dynamic link to see if that works"
+                );
+        }
         // Per Apple Tech Support, a network failure could occur when returning from background on
         // iOS 12. https://github.com/AFNetworking/AFNetworking/issues/4279#issuecomment-447108981
         // So we'll retry the request once
@@ -279,7 +268,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
         }
 
         if (error && retried) {
-          // Need to update any stream listener the universal link failed
+          // Need to update any event channel the universal link failed
           [self onDeepLinkResult:nil error:error];
         }
       };
@@ -298,23 +287,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   if (dynamicLink) {
     [self onDeepLinkResult:dynamicLink error:nil];
   }
-}
-
-- (void)registerOnLinkListener:(id)arguments
-          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *name = [NSString
-      stringWithFormat:@"%@/get-link/%@", kFLTFirebaseDynamicLinksChannelName, kDefaultAppName];
-
-  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
-                                                           binaryMessenger:_binaryMessenger];
-
-  FLTOnLinkStreamHandler *handler = [[FLTOnLinkStreamHandler alloc] init];
-  [channel setStreamHandler:handler];
-
-  [_eventChannels setObject:channel forKey:name];
-  [_streamHandlers setObject:handler forKey:name];
-
-  result.success(name);
 }
 
 // Used to action events from firebase-ios-sdk custom & universal dynamic link event listeners
@@ -337,18 +309,10 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
           @"link: %@",
           flutterError);
 
-    for (id key in _streamHandlers) {
-      FLTOnLinkStreamHandler *eventHandler = [_streamHandlers objectForKey:key];
-      [eventHandler sinkEvent:flutterError];
-    }
-
+    [_channel invokeMethod:@"FirebaseDynamicLink#onLinkError" arguments:flutterError];
   } else {
     NSMutableDictionary *dictionary = getDictionaryFromDynamicLink(dynamicLink);
-
-    for (id key in _streamHandlers) {
-      FLTOnLinkStreamHandler *eventHandler = [_streamHandlers objectForKey:key];
-      [eventHandler sinkEvent:dictionary];
-    }
+    [_channel invokeMethod:@"FirebaseDynamicLink#onLinkSuccess" arguments:dictionary];
   }
 
   if (_initialLink == nil && dynamicLink.url != nil) {
