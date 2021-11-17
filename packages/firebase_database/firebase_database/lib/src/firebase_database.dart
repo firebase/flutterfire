@@ -47,7 +47,8 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   DatabasePlatform? _delegatePackingProperty;
 
   DatabasePlatform get _delegate {
-    return _delegatePackingProperty ??= DatabasePlatform.instance;
+    return _delegatePackingProperty ??=
+        DatabasePlatform.instanceFor(app: app, databaseURL: databaseURL);
   }
 
   /// Changes this instance to point to a FirebaseDatabase emulator running locally.
