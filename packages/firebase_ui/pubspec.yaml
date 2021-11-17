@@ -23,6 +23,7 @@ dev_dependencies:
       path: deep_links
       ref: d4f2b98
   firebase_auth: ^3.0.1
+  cloud_firestore: ^2.5.4
   firebase_dynamic_links: ^2.0.7
   flutter_facebook_auth: '^3.5.0'
   flutter_test:
