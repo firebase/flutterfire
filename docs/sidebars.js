@@ -94,7 +94,12 @@ module.exports = {
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
-    // "In-App Messaging": ["in-app-messaging/usage", toReferenceAPI("firebase_in_app_messaging")],
+    "In-App Messaging": [
+      "in-app-messaging/overview",
+      "in-app-messaging/usage",
+      toReferenceAPI("firebase_in_app_messaging"),
+      toGithubExample("firebase_in_app_messaging"),
+    ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     "Remote Config": [
