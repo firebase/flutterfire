@@ -21,7 +21,7 @@ Future<void> main() async {
       projectId: 'react-native-firebase-testing',
       authDomain: 'react-native-firebase-testing.firebaseapp.com',
       iosClientId:
-      '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+          '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
     ),
   );
   runApp(MaterialApp(

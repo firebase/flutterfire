@@ -64,7 +64,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
 #pragma mark - FlutterPlugin
 
-- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger withChannel:(FlutterMethodChannel *)channel {
+- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger
+         withChannel:(FlutterMethodChannel *)channel {
   self = [super init];
   if (self) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
@@ -252,10 +253,9 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
           [self onDeepLinkResult:dynamicLink error:nil];
         }
 
-        if(!error && dynamicLink && !dynamicLink.url){
+        if (!error && dynamicLink && !dynamicLink.url) {
           NSLog(@"FLTFirebaseDynamicLinks: The url has not been supplied with the dynamic link."
-                @"Please try opening your app with the long dynamic link to see if that works"
-                );
+                @"Please try opening your app with the long dynamic link to see if that works");
         }
         // Per Apple Tech Support, a network failure could occur when returning from background on
         // iOS 12. https://github.com/AFNetworking/AFNetworking/issues/4279#issuecomment-447108981
