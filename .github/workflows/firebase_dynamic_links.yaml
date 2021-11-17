@@ -42,8 +42,8 @@ jobs:
         with:
           api-level: 29
           arch: x86_64
-          # Firebase Dynamic Links requires Google Play Services, so we use the `googleapis`
-          target: googleapis
+          # Firebase Dynamic Links requires Google Play Services, so we use the `google_apis`
+          target: google_apis
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 
