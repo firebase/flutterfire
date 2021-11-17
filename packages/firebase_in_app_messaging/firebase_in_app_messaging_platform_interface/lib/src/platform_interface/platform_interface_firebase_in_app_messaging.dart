@@ -20,8 +20,9 @@ abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
   final FirebaseApp? app;
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseInAppMessagingPlatform.instanceFor(
-      {required FirebaseApp app}) {
+  factory FirebaseInAppMessagingPlatform.instanceFor({
+    required FirebaseApp app,
+  }) {
     return FirebaseInAppMessagingPlatform.instance.delegateFor(app: app);
   }
 
@@ -63,6 +64,7 @@ abstract class FirebaseInAppMessagingPlatform extends PlatformInterface {
   /// Determine whether automatic data collection is enabled or not.
   Future<void> setAutomaticDataCollectionEnabled(bool enabled) {
     throw UnimplementedError(
-        'setAutomaticDataCollectionEnabled() is not implemented');
+      'setAutomaticDataCollectionEnabled() is not implemented',
+    );
   }
 }

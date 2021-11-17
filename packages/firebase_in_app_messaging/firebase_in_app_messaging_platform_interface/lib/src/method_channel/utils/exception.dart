@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// ignore_for_file: require_trailing_commas
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -24,8 +22,9 @@ Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
 /// the `details` of the exception exist. Firebase returns specific codes and
 /// messages which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
-    PlatformException platformException,
-    [StackTrace? stackTrace]) {
+  PlatformException platformException, [
+  StackTrace? stackTrace,
+]) {
   Map<String, dynamic>? details = platformException.details != null
       ? Map<String, dynamic>.from(platformException.details)
       : null;
@@ -39,8 +38,9 @@ FirebaseException platformExceptionToFirebaseException(
   }
 
   return FirebaseException(
-      plugin: 'firebase_in_app_messaging',
-      code: code,
-      message: message,
-      stackTrace: stackTrace);
+    plugin: 'firebase_in_app_messaging',
+    code: code,
+    message: message,
+    stackTrace: stackTrace,
+  );
 }
