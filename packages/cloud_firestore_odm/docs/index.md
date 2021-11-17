@@ -1,12 +1,6 @@
-<h1 align="center">Flutter Firestore ODM</h1>
-<p align="center">
-  <span>Build fully type-safe applications using Cloud Firestore</span>
-</p>
-<p align="center">
-  <span><a href="/docs/index.md">Documentation</a> &bull;
-  <a href="https://firebase.flutter.dev/">FlutterFire</a></span>
-</p>
-<br />
+> Note; this documentation is in a temporary location.
+
+# Cloud Firestore ODM
 
 The Cloud Firestore ODM package enables developers to build fully type-safe applications for Flutter
 using the [FlutterFire Cloud Firestore plugin](https://firebase.flutter.dev/docs/firestore/overview).
@@ -22,4 +16,10 @@ Firestore database. By defining schemas the ODM provides the following benefits:
 - 🎯 Data selectors to help avoid unnecessary Widget rebuilds.
 - 💻 Full API code completion.
 
-To learn more, view the [documentation](/docs/index.md).
+## Table of contents
+
+1. [Installation](/installation.md)
+1. [Defining Models](/defining-models.md)
+1. [Code Generation](/code-generation.md)
+1. [Using References](/using-references.md)
+1. [Working with Subcollections](/subcollections.md)
