@@ -52,6 +52,11 @@ class MethodChannelDatabase extends DatabasePlatform {
 
   @override
   Map<String, Object?> getChannelArguments([Map<String, Object?>? other]) {
+    print('app:');
+    print(app);
+    print(app);
+    print(app);
+    print(app);
     return {
       'appName': app!.name,
       'databaseURL': databaseURL,
