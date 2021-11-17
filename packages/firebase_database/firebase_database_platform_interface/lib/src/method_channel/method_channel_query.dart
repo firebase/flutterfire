@@ -65,7 +65,7 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get() async {
     try {
-      final result = await channel.invokeMethod<Map<String, dynamic>>(
+      final result = await channel.invokeMethod<Map<String, Object?>?>(
         'Query#get',
         database.getChannelArguments({
           'path': path,
@@ -75,7 +75,7 @@ class MethodChannelQuery extends QueryPlatform {
 
       return MethodChannelDataSnapshot(ref, result!);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      throw convertPlconvertPlatformExceptionatformException(e, s);
     }
   }
 
