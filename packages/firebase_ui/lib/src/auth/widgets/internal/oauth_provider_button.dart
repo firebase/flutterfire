@@ -12,6 +12,11 @@ import 'oauth_provider_button_style.dart';
 
 typedef ErrorCallback = void Function(Exception e);
 
+enum ButtonVariant {
+  icon_and_text,
+  icon,
+}
+
 class LoadingIndicator extends StatelessWidget {
   final double size;
   final double borderWidth;
@@ -103,19 +108,22 @@ class OAuthProviderButtonTapHandler extends StatelessWidget {
 mixin SignInWithOAuthProviderMixin {
   void signIn(BuildContext context) {
     final ctrl = AuthController.ofType<OAuthController>(context);
-    ctrl.signInWithProvider();
+    final targetPlatform = Theme.of(context).platform;
+    ctrl.signInWithProvider(targetPlatform);
   }
 }
 
-abstract class OAuthProviderButton extends StatelessWidget
+class OAuthProviderButton extends StatelessWidget
     with SignInWithOAuthProviderMixin {
   final double size;
   final AuthAction? action;
   final FirebaseAuth? auth;
   final double _padding;
+  final OAuthProviderConfiguration providerConfig;
 
   const OAuthProviderButton({
     Key? key,
+    required this.providerConfig,
     this.action,
     this.auth,
     this.size = 19,
@@ -124,14 +132,10 @@ abstract class OAuthProviderButton extends StatelessWidget
 
   double get _height => size + _padding * 2;
 
-  ThemedOAuthProviderButtonStyle get buttonStyle;
-  OAuthProviderConfiguration get providerConfig;
-
-  String getLabel(FirebaseUILocalizationLabels localizations);
-
   @override
   Widget build(BuildContext context) {
-    final style = buttonStyle.withBrightness(Theme.of(context).brightness);
+    final brightness = Theme.of(context).brightness;
+    final style = providerConfig.style.withBrightness(brightness);
     final l = FirebaseUILocalizations.labelsOf(context);
 
     final margin = (size + _padding * 2) / 10;
@@ -174,7 +178,7 @@ abstract class OAuthProviderButton extends StatelessWidget
                         ),
                         Expanded(
                           child: OAuthProviderButtonContent(
-                            label: getLabel(l),
+                            label: providerConfig.getLabel(l),
                             style: style,
                             size: size,
                           ),
@@ -215,29 +219,50 @@ abstract class OAuthProviderButton extends StatelessWidget
   }
 }
 
-abstract class OAuthProviderIconButton extends StatelessWidget
+abstract class OAuthProviderButtonWidget extends StatelessWidget {
+  const OAuthProviderButtonWidget({Key? key}) : super(key: key);
+
+  OAuthProviderConfiguration get providerConfig;
+  AuthAction? get action;
+  FirebaseAuth? get auth;
+  double? get size;
+
+  @override
+  Widget build(BuildContext context) {
+    return OAuthProviderButton(
+      providerConfig: providerConfig,
+      action: action,
+      auth: auth,
+      size: size ?? 19,
+    );
+  }
+}
+
+class OAuthProviderIconButton extends StatelessWidget
     with SignInWithOAuthProviderMixin {
   final double size;
   final FirebaseAuth? auth;
   final AuthAction? action;
+  final OAuthProviderConfiguration providerConfig;
 
   const OAuthProviderIconButton({
     Key? key,
+    required this.providerConfig,
     this.size = 44,
     this.auth,
     this.action,
   }) : super(key: key);
 
-  ThemedOAuthProviderButtonStyle get buttonStyle;
-
   @override
   Widget build(BuildContext context) {
-    final style = buttonStyle.withBrightness(Theme.of(context).brightness);
+    final brightness = Theme.of(context).brightness;
+    final style = providerConfig.style.withBrightness(brightness);
     final borderRadius = BorderRadius.circular(size / 6);
 
     return AuthFlowBuilder(
       auth: auth,
       action: action,
+      config: providerConfig,
       child: Container(
         width: size,
         height: size,
@@ -283,6 +308,25 @@ abstract class OAuthProviderIconButton extends StatelessWidget
           ],
         ),
       ),
+    );
+  }
+}
+
+abstract class OAuthProviderIconButtonWidget extends StatelessWidget {
+  const OAuthProviderIconButtonWidget({Key? key}) : super(key: key);
+
+  OAuthProviderConfiguration get providerConfig;
+  FirebaseAuth? get auth;
+  AuthAction? get action;
+  double? get size;
+
+  @override
+  Widget build(BuildContext context) {
+    return OAuthProviderIconButton(
+      auth: auth,
+      action: action,
+      size: size ?? 44,
+      providerConfig: providerConfig,
     );
   }
 }

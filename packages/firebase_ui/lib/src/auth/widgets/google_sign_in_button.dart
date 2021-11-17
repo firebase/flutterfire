@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/auth/google.dart';
-import 'package:firebase_ui/i10n.dart';
 
+import '../configs/oauth_provider_configuration.dart';
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
 
@@ -38,50 +38,60 @@ class GoogleProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   double get iconPadding => 1;
 }
 
-mixin GoogleSignInButtonOptionsMixin {
-  String get clientId;
-  String? get redirectUri;
-
-  final buttonStyle = GoogleProviderButtonStyle();
-
-  late final providerConfig = GoogleProviderConfiguration(
-    clientId: clientId,
-    redirectUri: redirectUri,
-  );
-
-  String getLabel(FirebaseUILocalizationLabels localizations) {
-    return localizations.signInWithGoogleButtonText;
-  }
-}
-
-class GoogleSignInButton extends OAuthProviderButton
-    with GoogleSignInButtonOptionsMixin {
+class GoogleSignInButton extends OAuthProviderButtonWidget {
   @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
   final String clientId;
-  @override
-  String? redirectUri;
-
-  GoogleSignInButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
-    required this.clientId,
-    this.redirectUri,
-  }) : super(action: action, auth: auth, size: size);
-}
-
-class GoogleSignInIconButton extends OAuthProviderIconButton
-    with GoogleSignInButtonOptionsMixin {
-  @override
-  final String clientId;
-  @override
   final String? redirectUri;
 
-  GoogleSignInIconButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
-    this.redirectUri,
+  @override
+  OAuthProviderConfiguration get providerConfig => GoogleProviderConfiguration(
+        clientId: clientId,
+        redirectUri: redirectUri,
+      );
+
+  @override
+  final double? size;
+
+  const GoogleSignInButton({
+    Key? key,
     required this.clientId,
-  }) : super(action: action, auth: auth, size: size);
+    this.redirectUri,
+    this.action,
+    this.auth,
+    this.size,
+  }) : super(key: key);
+}
+
+class GoogleSignInIconButton extends OAuthProviderIconButtonWidget {
+  @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
+  final String clientId;
+  final String? redirectUri;
+
+  @override
+  OAuthProviderConfiguration get providerConfig => GoogleProviderConfiguration(
+        clientId: clientId,
+        redirectUri: redirectUri,
+      );
+
+  @override
+  final double? size;
+
+  const GoogleSignInIconButton({
+    Key? key,
+    required this.clientId,
+    this.action,
+    this.redirectUri,
+    this.auth,
+    this.size,
+  }) : super(key: key);
 }

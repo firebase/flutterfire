@@ -57,6 +57,14 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String accessDisabledErrorText;
   @override
   final String wrongOrNoPasswordErrorText;
+  @override
+  final String signInText;
+  @override
+  final String registerText;
+  @override
+  final String registerHintText;
+  @override
+  final String signInHintText;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -90,5 +98,9 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
         'Access to this account has been temporarily disabled',
     this.wrongOrNoPasswordErrorText =
         'The password is invalid or the user does not have a password',
+    this.signInText = 'Sign in',
+    this.registerText = 'Register',
+    this.registerHintText = "Don't have an account?",
+    this.signInHintText = 'Already have an account?',
   });
 }

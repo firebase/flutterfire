@@ -1,3 +1,4 @@
+import 'package:firebase_ui/src/auth/configs/oauth_provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart'
@@ -5,7 +6,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart'
 
 import 'package:firebase_ui/auth.dart' show AuthAction;
 import 'package:firebase_ui/auth/apple.dart';
-import 'package:firebase_ui/i10n.dart';
 
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
@@ -34,40 +34,54 @@ class AppleProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc => _iconSrc;
 }
 
-mixin AppleSignInButtonOptionsMixin {
-  WebAuthenticationOptions? get options;
-
-  final buttonStyle = const AppleProviderButtonStyle();
-
-  late final providerConfig = AppleProviderConfiguration(options: options);
-
-  String getLabel(FirebaseUILocalizationLabels localizations) {
-    return localizations.signInWithAppleButtonText;
-  }
-}
-
-class AppleSignInButton extends OAuthProviderButton
-    with AppleSignInButtonOptionsMixin {
+class AppleSignInButton extends OAuthProviderButtonWidget {
   @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
   final WebAuthenticationOptions? options;
 
-  AppleSignInButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
+  @override
+  OAuthProviderConfiguration get providerConfig => AppleProviderConfiguration(
+        options: options,
+      );
+
+  @override
+  final double? size;
+
+  const AppleSignInButton({
+    Key? key,
     this.options,
-  }) : super(action: action, auth: auth, size: size);
+    this.action,
+    this.auth,
+    this.size,
+  }) : super(key: key);
 }
 
-class AppleSignInIconButton extends OAuthProviderIconButton
-    with AppleSignInButtonOptionsMixin {
+class AppleSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
   final WebAuthenticationOptions? options;
 
-  AppleSignInIconButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
+  @override
+  OAuthProviderConfiguration get providerConfig => AppleProviderConfiguration(
+        options: options,
+      );
+
+  @override
+  final double? size;
+
+  const AppleSignInIconButton({
+    Key? key,
     this.options,
-  }) : super(action: action, auth: auth, size: size);
+    this.action,
+    this.auth,
+    this.size,
+  }) : super(key: key);
 }

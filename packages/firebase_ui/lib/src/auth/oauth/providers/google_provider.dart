@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:firebase_ui/i10n.dart';
+// import 'package:firebase_ui/auth/google.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/google.dart';
@@ -6,9 +8,11 @@ import 'package:desktop_webview_auth/google.dart';
 import 'package:firebase_ui/auth.dart';
 
 import '../../auth_flow.dart';
+import '../../configs/oauth_provider_configuration.dart';
+import '../../widgets/internal/oauth_provider_button_style.dart';
+import '../../widgets/google_sign_in_button.dart';
 import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
-import '../../configs/oauth_provider_configuration.dart';
 
 class GoogleProviderImpl extends Google {
   String? clientId;
@@ -52,15 +56,15 @@ class GoogleProviderImpl extends Google {
 }
 
 class GoogleProviderConfiguration extends OAuthProviderConfiguration {
-  String? clientId;
-  String? redirectUri;
+  final String? clientId;
+  final String? redirectUri;
 
-  late final _provider = GoogleProviderImpl(
-    clientId: clientId,
-    redirectUri: redirectUri ?? defaultRedirectUri,
-  );
+  GoogleProviderImpl get _provider => GoogleProviderImpl(
+        clientId: clientId,
+        redirectUri: redirectUri ?? defaultRedirectUri,
+      );
 
-  GoogleProviderConfiguration({
+  const GoogleProviderConfiguration({
     this.clientId,
     this.redirectUri,
   });
@@ -72,4 +76,12 @@ class GoogleProviderConfiguration extends OAuthProviderConfiguration {
   OAuthProvider createProvider() {
     return _provider;
   }
+
+  @override
+  String getLabel(FirebaseUILocalizationLabels labels) {
+    return labels.signInWithGoogleButtonText;
+  }
+
+  @override
+  ThemedOAuthProviderButtonStyle get style => GoogleProviderButtonStyle();
 }

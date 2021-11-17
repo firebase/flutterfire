@@ -5,10 +5,14 @@ import 'package:crypto/crypto.dart';
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
-import 'package:firebase_ui/src/auth/configs/oauth_provider_configuration.dart';
-import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
-import 'package:firebase_ui/src/auth/oauth/provider_resolvers.dart';
+import 'package:firebase_ui/i10n.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+import '../../widgets/apple_sign_in_button.dart' show AppleProviderButtonStyle;
+import '../../configs/oauth_provider_configuration.dart';
+import '../../oauth/oauth_providers.dart';
+import '../../oauth/provider_resolvers.dart';
+import '../../widgets/internal/oauth_provider_button_style.dart';
 
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
@@ -72,7 +76,7 @@ class AppleProviderImpl extends Apple {
 class AppleProviderConfiguration extends OAuthProviderConfiguration {
   final WebAuthenticationOptions? options;
 
-  AppleProviderConfiguration({this.options});
+  const AppleProviderConfiguration({this.options});
 
   @override
   OAuthProvider createProvider() {
@@ -81,4 +85,12 @@ class AppleProviderConfiguration extends OAuthProviderConfiguration {
 
   @override
   String get providerId => APPLE_PROVIDER_ID;
+
+  @override
+  ThemedOAuthProviderButtonStyle get style => const AppleProviderButtonStyle();
+
+  @override
+  String getLabel(FirebaseUILocalizationLabels labels) {
+    return labels.signInWithAppleButtonText;
+  }
 }

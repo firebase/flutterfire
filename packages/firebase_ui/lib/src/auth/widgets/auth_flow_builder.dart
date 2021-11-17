@@ -1,5 +1,5 @@
 import 'package:firebase_ui/src/auth/configs/default_provider_config_factory.dart';
-import 'package:firebase_ui/src/auth/provider_configuration.dart';
+import 'package:firebase_ui/src/auth/configs/provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, FirebaseAuth;

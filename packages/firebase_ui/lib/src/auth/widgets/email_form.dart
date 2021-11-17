@@ -1,94 +1,31 @@
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/src/i10n/i10n.dart';
-import 'package:firebase_ui/src/auth/validators.dart';
+import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
 
-import '../../responsive.dart';
+import '../configs/email_provider_configuration.dart';
 import '../auth_state.dart';
+import '../validators.dart';
 import 'error_text.dart';
 
-typedef SurfaceBuilder = Widget Function(BuildContext context, Widget child);
+class EmailForm extends StatelessWidget {
+  final FirebaseAuth? auth;
+  final AuthAction action;
+  final EmailProviderConfiguration? config;
 
-class EmailSignInForm extends StatefulWidget {
-  final SurfaceBuilder? surfaceBuilder;
-  final List<Widget> children;
-
-  const EmailSignInForm({
+  const EmailForm({
     Key? key,
-    this.surfaceBuilder,
-    this.children = const <Widget>[],
+    required this.action,
+    this.auth,
+    this.config,
   }) : super(key: key);
 
   @override
-  State<EmailSignInForm> createState() => _EmailSignInFormState();
-}
-
-class _EmailSignInFormState extends State<EmailSignInForm>
-    with SingleTickerProviderStateMixin {
-  AuthAction action = AuthAction.signIn;
-
-  late SurfaceBuilder surfaceBuilder =
-      widget.surfaceBuilder ?? _defaultSurfaceBuilder;
-
-  late final TabController ctrl = TabController(length: 2, vsync: this)
-    ..addListener(() {
-      setState(() {
-        action = AuthAction.values.elementAt(ctrl.index);
-      });
-    });
-
-  Widget _defaultSurfaceBuilder(BuildContext context, Widget child) => child;
-
-  @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
-
-    final tabs = TabBar(
-      labelColor: Theme.of(context).colorScheme.secondary,
-      controller: ctrl,
-      tabs: [
-        Tab(text: l.signInActionText),
-        Tab(text: l.signUpActionText),
-      ],
-    );
-
-    final content = Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        tabs,
-        Expanded(
-          child: Column(
-            children: [
-              AuthFlowBuilder<EmailFlowController>(
-                action: action,
-                child: const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: _SignInFormContent(),
-                ),
-              ),
-              ...widget.children,
-            ],
-          ),
-        ),
-      ],
-    );
-
-    return Center(
-      child: ResponsiveContainer(
-        colWidth: ColWidth(
-          phone: 4,
-          phablet: 6,
-          tablet: 8,
-          laptop: 6,
-          desktop: 6,
-        ),
-        child: surfaceBuilder(
-          context,
-          IntrinsicHeight(
-            child: content,
-          ),
-        ),
-      ),
+    return AuthFlowBuilder<EmailFlowController>(
+      action: action,
+      config: config,
+      child: const _SignInFormContent(),
     );
   }
 }
@@ -105,7 +42,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   final passwordCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
-  late final emailFocusNode = FocusNode()..addListener(onEmailFieldBlur);
+  final emailFocusNode = FocusNode();
   final passwordFocusNode = FocusNode();
 
   String chooseButtonLabel() {
@@ -119,14 +56,6 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         return l.signUpActionText;
       case AuthAction.link:
         return l.linkEmailButtonText;
-    }
-  }
-
-  void onEmailFieldBlur() {
-    if (!emailFocusNode.hasFocus) {
-      if (!formKey.currentState!.validate()) {
-        emailFocusNode.requestFocus();
-      }
     }
   }
 

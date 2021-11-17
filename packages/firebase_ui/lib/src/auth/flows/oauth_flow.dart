@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/src/auth/oauth/oauth_providers.dart';
+import 'package:flutter/foundation.dart' show TargetPlatform;
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
@@ -13,7 +12,7 @@ class Uninitialized extends AuthState {
 }
 
 abstract class OAuthController extends AuthController {
-  Future<void> signInWithProvider();
+  Future<void> signInWithProvider(TargetPlatform platform);
 }
 
 class OAuthFlow extends AuthFlow implements OAuthController {
@@ -26,7 +25,7 @@ class OAuthFlow extends AuthFlow implements OAuthController {
   final OAuthProviderConfiguration config;
 
   @override
-  Future<void> signInWithProvider() async {
+  Future<void> signInWithProvider(TargetPlatform platform) async {
     final provider = config.createProvider();
 
     try {
@@ -34,7 +33,7 @@ class OAuthFlow extends AuthFlow implements OAuthController {
 
       late OAuthCredential credential;
 
-      if (Platform.isMacOS) {
+      if (platform == TargetPlatform.macOS) {
         credential = await provider.desktopSignIn();
       } else {
         credential = await provider.signIn();

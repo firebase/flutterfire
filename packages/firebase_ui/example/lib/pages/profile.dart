@@ -86,19 +86,19 @@ class _ProfileState extends State<Profile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             if (!u.isProviderLinked<Google>())
-                              GoogleSignInIconButton(
+                              const GoogleSignInIconButton(
                                 clientId: GOOGLE_CLIENT_ID,
                               ),
                             if (!u.isProviderLinked<Apple>())
-                              AppleSignInIconButton(),
+                              const AppleSignInIconButton(),
                             if (!u.isProviderLinked<Twitter>())
-                              TwitterSignInIconButton(
+                              const TwitterSignInIconButton(
                                 apiKey: TWITTER_API_KEY,
                                 apiSecretKey: TWITTER_API_SECRET_KEY,
                                 redirectUri: TWITTER_REDIRECT_URI,
                               ),
                             if (!u.isProviderLinked<Facebook>())
-                              FacebookSignInIconButton(
+                              const FacebookSignInIconButton(
                                 clientId: FACEBOOK_CLIENT_ID,
                               ),
                           ],

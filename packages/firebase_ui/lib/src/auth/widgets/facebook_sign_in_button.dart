@@ -5,6 +5,7 @@ import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/auth/facebook.dart';
 import 'package:firebase_ui/i10n.dart';
 
+import '../configs/oauth_provider_configuration.dart';
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
 
@@ -30,50 +31,62 @@ class FacebookProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc => _iconSrc;
 }
 
-mixin FacebookSignInButtonOptionsMixin {
-  String get clientId;
-  String? get redirectUri;
-
-  final buttonStyle = FacebookProviderButtonStyle();
-
-  late final providerConfig = FacebookProviderConfiguration(
-    clientId: clientId,
-    redirectUri: redirectUri,
-  );
-
-  String getLabel(FirebaseUILocalizationLabels localizations) {
-    return localizations.signInWithFacebookButtonText;
-  }
-}
-
-class FacebookSignInButton extends OAuthProviderButton
-    with FacebookSignInButtonOptionsMixin {
+class FacebookSignInButton extends OAuthProviderButtonWidget {
   @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
   final String clientId;
-  @override
   final String? redirectUri;
 
-  FacebookSignInButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
+  @override
+  OAuthProviderConfiguration get providerConfig =>
+      FacebookProviderConfiguration(
+        clientId: clientId,
+        redirectUri: redirectUri,
+      );
+
+  @override
+  final double? size;
+
+  const FacebookSignInButton({
+    Key? key,
     required this.clientId,
     this.redirectUri,
-  }) : super(action: action, auth: auth, size: size);
+    this.action,
+    this.auth,
+    this.size,
+  }) : super(key: key);
 }
 
-class FacebookSignInIconButton extends OAuthProviderIconButton
-    with FacebookSignInButtonOptionsMixin {
+class FacebookSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
+  final AuthAction? action;
+
+  @override
+  final FirebaseAuth? auth;
+
   final String clientId;
-  @override
   final String? redirectUri;
 
-  FacebookSignInIconButton({
-    AuthAction? action,
-    FirebaseAuth? auth,
-    double size = 19,
+  @override
+  OAuthProviderConfiguration get providerConfig =>
+      FacebookProviderConfiguration(
+        clientId: clientId,
+        redirectUri: redirectUri,
+      );
+
+  @override
+  final double? size;
+
+  const FacebookSignInIconButton({
+    Key? key,
     required this.clientId,
     this.redirectUri,
-  }) : super(action: action, auth: auth, size: size);
+    this.action,
+    this.auth,
+    this.size,
+  }) : super(key: key);
 }
