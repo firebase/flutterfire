@@ -231,10 +231,6 @@ public class FlutterFirebaseDynamicLinksPlugin
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
           }
 
-          if (pendingDynamicLink == null) {
-            return null;
-          }
-
           return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
         });
   }

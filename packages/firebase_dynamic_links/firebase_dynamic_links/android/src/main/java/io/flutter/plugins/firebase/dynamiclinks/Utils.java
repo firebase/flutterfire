@@ -22,6 +22,10 @@ public class Utils {
 
   static Map<String, Object> getMapFromPendingDynamicLinkData(
       PendingDynamicLinkData pendingDynamicLinkData) {
+    if(pendingDynamicLinkData == null){
+      return null;
+    }
+
     Map<String, Object> dynamicLink = new HashMap<>();
 
     Uri link = pendingDynamicLinkData.getLink();
