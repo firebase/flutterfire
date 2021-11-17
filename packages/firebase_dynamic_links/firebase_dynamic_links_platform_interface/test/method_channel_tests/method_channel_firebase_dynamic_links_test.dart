@@ -101,8 +101,8 @@ void main() {
             return returnUrl;
           case 'FirebaseDynamicLinks#shortenUrl':
             return returnUrl;
-          case 'FirebaseDynamicLinks#onLink':
-            const String name = 'FirebaseDynamicLinks#onLink';
+          case 'FirebaseDynamicLink#onLinkSuccess':
+            const String name = 'FirebaseDynamicLink#onLinkSuccess';
             handleEventChannel(name, logger);
             return name;
           case 'FirebaseDynamicLinks#getInitialLink':
@@ -354,7 +354,7 @@ void main() {
         // Stream<PendingDynamicLinkData?> stream =
         //     dynamicLinks.onLink().asBroadcastStream();
         //
-        // await injectEventChannelResponse('FirebaseDynamicLinks#onLink', {
+        // await injectEventChannelResponse('FirebaseDynamicLink#onLinkSuccess', {
         //   'link': 'link',
         //   'ios': {'minimumVersion': 'minimumVersion'}
         // });
