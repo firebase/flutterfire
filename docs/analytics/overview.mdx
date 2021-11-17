@@ -3,10 +3,6 @@ title: Google Analytics for Firebase
 sidebar_label: Overview
 ---
 
-:::caution
-This is a beta FlutterFire plugin and therefore is not yet production quality.
-:::
-
 ##  What does it do?
 
 Google Analytics is a free app measurement solution that provides insight on app usage and user engagement.
@@ -107,6 +103,14 @@ Once complete, rebuild your Flutter application:
 
 ```bash
 $ flutter run
+```
+
+### 5. (optional) Apple [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency)
+
+If you wish to use Firebase Analytics without IDFA collection capability, open your `/{ios|macos}/Podfile` and add the following global variable to the top of the file:
+
+```ruby
+$FirebaseAnalyticsWithoutAdIdSupport = true
 ```
 
 ## Next Steps

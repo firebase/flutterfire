@@ -1,7 +1,7 @@
 name: firebase_performance_web
 description: A new Flutter package project.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance/firebase_performance_web
-version: 0.0.1+1
+version: 0.0.2
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   firebase: ^9.0.1
-  firebase_performance_platform_interface: ^0.0.1+4
+  firebase_performance_platform_interface: ^0.0.1+7
   flutter:
     sdk: flutter
   flutter_web_plugins:

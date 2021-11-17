@@ -1,3 +1,17 @@
+## 3.0.1
+
+ - Update a dependency to the latest release.
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
+## 2.0.11
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+
 ## 2.0.10
 
  - **DOCS**: changed "ibn" to "ibi" iOS param name in long dynamic link example (#7081).

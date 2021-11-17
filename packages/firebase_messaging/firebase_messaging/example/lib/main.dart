@@ -25,7 +25,13 @@ import 'token_monitor.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+  ));
   print('Handling a background message ${message.messageId}');
 }
 
@@ -37,7 +43,13 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+  ));
 
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

@@ -239,14 +239,14 @@ Once initialized, you're ready to get started using FlutterFire!
 
 Currently the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in XCode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
 
-`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.6.0'`
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.9.0'`
 
 Add this line inside your target 'Runner' do block in your Podfile, e.g.:
 
 ```
 # ...
 target 'Runner' do
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.6.0'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.9.0'
 # ...
 end
 ```
@@ -270,7 +270,7 @@ In the `/android/app/build.gradle` file, you can provide your own versions using
 ```groovy
 rootProject.ext {
   set('FlutterFire', [
-    FirebaseSDKVersion: '28.4.1'
+    FirebaseSDKVersion: '29.0.0'
   ])
 }
 ```
@@ -281,7 +281,7 @@ Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals bel
 
 ```ruby
 # Override Firebase SDK Version
-$FirebaseSDKVersion = '8.7.0'
+$FirebaseSDKVersion = '8.9.0'
 ```
 
 ## Next Steps

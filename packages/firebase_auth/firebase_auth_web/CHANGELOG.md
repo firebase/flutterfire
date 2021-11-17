@@ -1,3 +1,15 @@
+## 3.2.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
+## 3.1.3
+
+ - Update a dependency to the latest release.
+
 ## 3.1.2
 
  - **FIX**: null-safety migration issue for web types (#7137).

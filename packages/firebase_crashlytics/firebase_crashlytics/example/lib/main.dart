@@ -20,10 +20,17 @@ const _kShouldTestAsyncErrorOnInit = false;
 // Toggle this for testing Crashlytics in your app locally.
 const _kTestingCrashlytics = true;
 
-void main() {
-  runZonedGuarded(() async {
+Future<void> main() async {
+  await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+      messagingSenderId: '448618578101',
+      authDomain: 'react-native-firebase-testing.firebaseapp.com',
+      projectId: 'react-native-firebase-testing',
+    ));
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(MyApp());
   }, (error, stackTrace) {

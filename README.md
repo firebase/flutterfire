@@ -65,7 +65,7 @@ application. [[Learn More][analytics_product]]
 
 | Android | iOS | MacOS | Web |
 |:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |  ✔️  |
+|    ✔️    |  ✔️  |  ✔️  |  ✔️  |
 
 ----
 
