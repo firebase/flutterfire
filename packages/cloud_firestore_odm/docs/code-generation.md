@@ -5,7 +5,7 @@
 The power of the ODM comes from code generation. The models created need to be run through
 code generation to allow for the full type safety which the ODM offers.
 
-When [defining models](/defining-models) we include a `part` declaration -
+When [defining models](defining-models.md) we include a `part` declaration -
 this declaration references a file which have not yet generated.
 
 Within the root of your project, run the following command to run code
@@ -31,4 +31,4 @@ file name of your model. For example:
 
 ## Next steps
 
-With our code generated, we can now start to [use the references](/using-references.md).
+With our code generated, we can now start to [use the references](using-references.md).

@@ -18,8 +18,8 @@ Firestore database. By defining schemas the ODM provides the following benefits:
 
 ## Table of contents
 
-1. [Installation](/installation.md)
-1. [Defining Models](/defining-models.md)
-1. [Code Generation](/code-generation.md)
-1. [Using References](/using-references.md)
-1. [Working with Subcollections](/subcollections.md)
+1. [Installation](installation.md)
+1. [Defining Models](defining-models.md)
+1. [Code Generation](code-generation.md)
+1. [Using References](using-references.md)
+1. [Working with Subcollections](subcollections.md)

@@ -33,7 +33,7 @@ Next, define the path to the subcollection in a new `Collection` annotation:
 final usersRef = UserCollectionReference();
 ```
 
-After [code generation](/code-generation.md), we can now access the sub-collection via the `usersRef`
+After [code generation](code-generation.md), we can now access the sub-collection via the `usersRef`
 reference:
 
 ```dart
@@ -41,4 +41,4 @@ AddressCollectionReference addressesRef = usersRef.addresses;
 ```
 
 The subcollection reference has full access to the same functionality as root collections. To learn
-more about usage of references, see the [using references](/using-references.md) documentation.
+more about usage of references, see the [using references](using-references.md) documentation.

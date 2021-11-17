@@ -2,7 +2,7 @@
 
 # Using References
 
-A [reference](/defining-models#creating-references) provides full type-safe access to a Firestore
+A [reference](defining-models#creating-references) provides full type-safe access to a Firestore
 Collection and Documents.
 
 The ODM provides a useful `FirestoreBuilder` widget which allows you to access your Firestore data

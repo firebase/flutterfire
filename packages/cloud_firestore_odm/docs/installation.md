@@ -45,4 +45,4 @@ flutter pub get
 
 ## Next steps
 
-Once installed, read the documentation on [defining schemas](/defining-schemas.md).
+Once installed, read the documentation on [defining models](defining-models.md).

@@ -3,7 +3,7 @@
   <span>Build fully type-safe applications using Cloud Firestore</span>
 </p>
 <p align="center">
-  <span><a href="/docs/index.md">Documentation</a> &bull;
+  <span><a href="docs/index.md">Documentation</a> &bull;
   <a href="https://firebase.flutter.dev/">FlutterFire</a></span>
 </p>
 <br />
@@ -22,4 +22,4 @@ Firestore database. By defining schemas the ODM provides the following benefits:
 - 🎯 Data selectors to help avoid unnecessary Widget rebuilds.
 - 💻 Full API code completion.
 
-To learn more, view the [documentation](/docs/index.md).
+To learn more, view the [documentation](docs/index.md).
