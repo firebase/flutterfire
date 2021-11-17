@@ -14,15 +14,16 @@ import 'package:url_launcher/url_launcher.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
-    appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    authDomain: 'react-native-firebase-testing.firebaseapp.com',
-    iosClientId:
-        '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-  ));
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
+      appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+      authDomain: 'react-native-firebase-testing.firebaseapp.com',
+      iosClientId:
+      '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+    ),
+  );
   runApp(MaterialApp(
     title: 'Dynamic Links Example',
     routes: <String, WidgetBuilder>{
@@ -79,17 +80,17 @@ class _MainScreenState extends State<_MainScreen> {
     });
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://cx4k7.app.goo.gl',
-      link: Uri.parse('https://dynamic.link.example/helloworld'),
+      uriPrefix: 'https://reactnativefirebase.page.link',
+      link: Uri.parse('https://invertase.io/helloworld'),
       androidParameters: const AndroidParameters(
-        packageName: 'io.flutter.plugins.firebasedynamiclinksexample',
+        packageName: 'io.flutter.plugins.firebase.dynamiclinksexample',
         minimumVersion: 0,
       ),
       dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
       iosParameters: const IosParameters(
-        bundleId: 'com.google.FirebaseCppDynamicLinksTestApp.dev',
+        bundleId: 'io.invertase.testing',
         minimumVersion: '0',
       ),
     );
