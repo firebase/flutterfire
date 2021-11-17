@@ -31,7 +31,7 @@ void runInstanceTests() {
         const String iosBundleId =
             'com.google.FirebaseCppDynamicLinksTestApp.dev';
         const String urlHost = 'reactnativefirebase.page.link';
-        const String link = 'https://dynamic.link.example/helloworld';
+        const String link = 'https://invertase.io';
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
@@ -92,7 +92,7 @@ void runInstanceTests() {
         const String iosBundleId =
             'io.flutter.plugins.firebase.dynamiclinksexample';
         const String urlHost = 'reactnativefirebase.page.link';
-        const String link = 'https://dynamic.link.example/helloworld';
+        const String link = 'https://invertase.io';
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
@@ -139,7 +139,7 @@ void runInstanceTests() {
         const String iosBundleId =
             'io.flutter.plugins.firebase.dynamiclinksexample';
         const String urlHost = 'reactnativefirebase.page.link';
-        const String link = 'https://dynamic.link.example/helloworld';
+        const String link = 'https://invertase.io';
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
