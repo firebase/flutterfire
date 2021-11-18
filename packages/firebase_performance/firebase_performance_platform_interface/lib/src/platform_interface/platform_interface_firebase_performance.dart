@@ -1,13 +1,17 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_performance.dart';
-import 'platform_interface_http_metric.dart';
-import 'platform_interface_trace.dart';
+
 
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
@@ -48,30 +52,33 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app => appInstance ?? Firebase.app();
 
-  /// Only works for native apps. Always returns true for web apps.
+  /// Determines whether performance monitoring is enabled or disabled Only works for native apps.
+  /// Always returns true for web apps.
   Future<bool> isPerformanceCollectionEnabled() async {
     throw UnimplementedError(
       'isPerformanceCollectionEnabled() is not implemented',
     );
   }
 
+  /// Enables or disables performance monitoring.
   /// Only works for native apps. Does nothing for web apps.
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     throw UnimplementedError(
       'setPerformanceCollectionEnabled() is not implemented',
     );
   }
-
+  /// Creates a Trace object with given name.
   TracePlatform newTrace(String name) {
     throw UnimplementedError('newTrace() is not implemented');
   }
 
-  /// Only works for native apps. Does nothing for web apps.
+  /// Creates a HttpMetric object for collecting network performance data for one
+  /// request/response. Only works for native apps. Does nothing for web apps.
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     throw UnimplementedError('newHttpMetric() is not implemented');
   }
 
-  /// Creates a Trace object with given name and start the trace.
+  /// Creates a Trace object with the given name and starts it.
   static Future<TracePlatform> startTrace(String name) async {
     final trace = FirebasePerformancePlatform.instance.newTrace(name);
     await trace.start();
