@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -13,17 +14,24 @@ import 'package:url_launcher/url_launcher.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
-      appId: '1:448618578101:ios:4cd06f56e36384acac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-      authDomain: 'react-native-firebase-testing.firebaseapp.com',
-      iosClientId:
-          '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-    ),
-  );
+  if (Platform.isAndroid) {
+    // Android will work via Dart initialisation
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+        appId: '1:448618578101:ios:3e76955ab6d49ecaac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        iosClientId:
+            '448618578101-4km55qmv55tguvnivgjdiegb3r0jquv5.apps.googleusercontent.com',
+      ),
+    );
+  } else {
+    // iOS requires that there is a GoogleService-Inof.plist otherwise getInitialLink & getDynamicLink will not work correctly.
+    // iOS also requires you run in release mode to test dynamic links ("flutter run --release").
+    await Firebase.initializeApp();
+  }
   runApp(MaterialApp(
     title: 'Dynamic Links Example',
     routes: <String, WidgetBuilder>{
@@ -43,11 +51,13 @@ class _MainScreenState extends State<_MainScreen> {
   bool _isCreatingLink = false;
 
   FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-  String _testString =
+  final String _testString =
       'To test: long press link and then copy and click from a non-browser '
       "app. Make sure this isn't being tested on iOS simulator and iOS xcode "
       'is properly setup. Look at firebase_dynamic_links/README.md for more '
       'details.';
+
+  final String DynamicLink = 'https://test-app/helloworld';
 
   @override
   void initState() {
@@ -57,21 +67,13 @@ class _MainScreenState extends State<_MainScreen> {
 
   Future<void> initDynamicLinks() async {
     dynamicLinks.onLink().listen((dynamicLinkData) {
-      if (dynamicLinkData != null) {
+      if (dynamicLinkData != null && dynamicLinkData.link != null) {
         Navigator.pushNamed(context, dynamicLinkData.link.path);
       }
     }).onError((error) {
       print('onLink error');
       print(error.message);
     });
-
-    final PendingDynamicLinkData? data = await dynamicLinks.getInitialLink();
-    final Uri? deepLink = data?.link;
-
-    if (deepLink != null) {
-      // ignore: unawaited_futures
-      Navigator.pushNamed(context, deepLink.path);
-    }
   }
 
   Future<void> _createDynamicLink(bool short) async {
@@ -81,7 +83,7 @@ class _MainScreenState extends State<_MainScreen> {
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://reactnativefirebase.page.link',
-      link: Uri.parse('https://invertase.io/helloworld'),
+      link: Uri.parse(DynamicLink),
       androidParameters: const AndroidParameters(
         packageName: 'io.flutter.plugins.firebase.dynamiclinksexample',
         minimumVersion: 0,
@@ -125,6 +127,35 @@ class _MainScreenState extends State<_MainScreen> {
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    ElevatedButton(
+                        onPressed: () async {
+                          // comment out the above onLink() event listener to test `getInitialLink()` when your app is first opened pressing
+                          // the dynamic link.
+                          final PendingDynamicLinkData? data =
+                              await dynamicLinks.getInitialLink();
+                          final Uri? deepLink = data?.link;
+
+                          if (deepLink != null) {
+                            // ignore: unawaited_futures
+                            Navigator.pushNamed(context, deepLink.path);
+                          }
+                        },
+                        child: const Text('getInitialLink')),
+                    ElevatedButton(
+                        onPressed: () async {
+                          // comment out the above onLink() event listener to test `getDynamicLink(url)` when your app is first opened pressing
+                          // the dynamic link.
+                          final PendingDynamicLinkData? data =
+                              await dynamicLinks
+                                  .getDynamicLink(Uri.parse(DynamicLink));
+                          final Uri? deepLink = data?.link;
+
+                          if (deepLink != null) {
+                            // ignore: unawaited_futures
+                            Navigator.pushNamed(context, deepLink.path);
+                          }
+                        },
+                        child: const Text('getInitialLink')),
                     ElevatedButton(
                       onPressed: !_isCreatingLink
                           ? () => _createDynamicLink(false)
