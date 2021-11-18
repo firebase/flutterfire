@@ -22,7 +22,7 @@ public class Utils {
 
   static Map<String, Object> getMapFromPendingDynamicLinkData(
       PendingDynamicLinkData pendingDynamicLinkData) {
-    if(pendingDynamicLinkData == null){
+    if (pendingDynamicLinkData == null) {
       return null;
     }
 
