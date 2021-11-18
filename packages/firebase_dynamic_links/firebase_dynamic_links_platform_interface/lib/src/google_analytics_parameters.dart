@@ -5,10 +5,10 @@
 /// The Dynamic Link analytics parameters.
 class GoogleAnalyticsParameters {
   const GoogleAnalyticsParameters({
-    required String this.campaign,
+    this.campaign,
     this.content,
-    required String this.medium,
-    required String this.source,
+    this.medium,
+    this.source,
     this.term,
   });
 
