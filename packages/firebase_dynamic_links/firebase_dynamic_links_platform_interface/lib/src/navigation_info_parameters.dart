@@ -1,3 +1,7 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 /// Options class for defining navigation behavior of the Dynamic Link.
 class NavigationInfoParameters {
   const NavigationInfoParameters({this.forcedRedirectEnabled});
