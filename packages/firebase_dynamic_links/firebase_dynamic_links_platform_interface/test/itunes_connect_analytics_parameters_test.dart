@@ -10,9 +10,9 @@ void main() {
   String campaignToken = 'campaignToken';
   String providerToken = 'providerToken';
 
-  group('$ItunesConnectAnalyticsParameters', () {
-    ItunesConnectAnalyticsParameters itunesParams =
-        ItunesConnectAnalyticsParameters(
+  group('$ITunesConnectAnalyticsParameters', () {
+    ITunesConnectAnalyticsParameters itunesParams =
+        ITunesConnectAnalyticsParameters(
       affiliateToken: affiliateToken,
       campaignToken: campaignToken,
       providerToken: providerToken,
@@ -20,7 +20,7 @@ void main() {
 
     group('Constructor', () {
       test('returns an instance of [ItunesConnectAnalyticsParameters]', () {
-        expect(itunesParams, isA<ItunesConnectAnalyticsParameters>());
+        expect(itunesParams, isA<ITunesConnectAnalyticsParameters>());
         expect(itunesParams.affiliateToken, affiliateToken);
         expect(itunesParams.campaignToken, campaignToken);
         expect(itunesParams.providerToken, providerToken);
@@ -40,7 +40,7 @@ void main() {
       test('toString', () {
         expect(
           itunesParams.toString(),
-          equals('$ItunesConnectAnalyticsParameters(${itunesParams.asMap})'),
+          equals('$ITunesConnectAnalyticsParameters(${itunesParams.asMap})'),
         );
       });
     });

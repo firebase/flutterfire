@@ -38,8 +38,8 @@ DynamicLinkParameters buildDynamicLinkParameters() {
       ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
       minimumVersion: 'minimumVersion');
 
-  ItunesConnectAnalyticsParameters itunes =
-      const ItunesConnectAnalyticsParameters(
+  ITunesConnectAnalyticsParameters itunes =
+      const ITunesConnectAnalyticsParameters(
     affiliateToken: 'affiliateToken',
     campaignToken: 'campaignToken',
     providerToken: 'providerToken',

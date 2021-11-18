@@ -28,8 +28,8 @@ void main() {
       ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
       minimumVersion: 'minimumVersion');
 
-  ItunesConnectAnalyticsParameters itunesParams =
-      const ItunesConnectAnalyticsParameters(
+  ITunesConnectAnalyticsParameters itunesParams =
+      const ITunesConnectAnalyticsParameters(
     affiliateToken: 'affiliateToken',
     campaignToken: 'campaignToken',
     providerToken: 'providerToken',

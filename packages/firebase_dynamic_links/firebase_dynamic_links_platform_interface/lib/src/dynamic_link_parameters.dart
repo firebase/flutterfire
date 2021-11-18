@@ -42,7 +42,7 @@ class DynamicLinkParameters {
   final IosParameters? iosParameters;
 
   /// iTunes Connect parameters for a generated Dynamic Link URL.
-  final ItunesConnectAnalyticsParameters? itunesConnectAnalyticsParameters;
+  final ITunesConnectAnalyticsParameters? itunesConnectAnalyticsParameters;
 
   /// The link the target app will open.
   ///

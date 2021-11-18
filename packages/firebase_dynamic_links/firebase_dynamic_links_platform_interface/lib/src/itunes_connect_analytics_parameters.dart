@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 /// The Dynamic Link iTunes Connect parameters.
-class ItunesConnectAnalyticsParameters {
-  const ItunesConnectAnalyticsParameters({
+class ITunesConnectAnalyticsParameters {
+  const ITunesConnectAnalyticsParameters({
     this.affiliateToken,
     this.campaignToken,
     this.providerToken,
@@ -27,6 +27,6 @@ class ItunesConnectAnalyticsParameters {
 
   @override
   String toString() {
-    return '$ItunesConnectAnalyticsParameters($asMap)';
+    return '$ITunesConnectAnalyticsParameters($asMap)';
   }
 }
