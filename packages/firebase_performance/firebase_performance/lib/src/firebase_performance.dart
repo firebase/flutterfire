@@ -9,14 +9,30 @@ part of firebase_performance;
 ///
 /// You can get an instance by calling [FirebasePerformance.instance].
 class FirebasePerformance extends FirebasePluginPlatform {
-  FirebasePerformance._()
-      : super(Firebase.app().name, 'plugins.flutter.io/firebase_performance');
+  FirebasePerformance._({required this.app})
+      : super(app.name, 'plugins.flutter.io/firebase_performance');
 
-  late final _delegate = FirebasePerformancePlatform.instance;
+  // Cached and lazily loaded instance of [FirebasePerformancePlatform] to avoid
+  // creating a [MethodChannelFirebasePerformance] when not needed or creating an
+  // instance with the default app before a user specifies an app.
+  FirebasePerformancePlatform? _delegatePackingProperty;
 
-  /// Singleton of [FirebasePerformance].
-  static final FirebasePerformance instance = FirebasePerformance._();
+  /// Returns an instance using the default [FirebaseApp].
+  static FirebasePerformance get instance {
+    FirebaseApp defaultAppInstance = Firebase.app();
+    return FirebasePerformance._(app: defaultAppInstance);
+  }
 
+  /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
+  FirebaseApp app;
+
+  FirebasePerformancePlatform get _delegate {
+    return _delegatePackingProperty ??= FirebasePerformancePlatform.instanceFor(
+      app: app,
+    );
+  }
+
+  // late final _delegate = FirebasePerformancePlatform.instance;
   /// Determines whether performance monitoring is enabled or disabled.
   ///
   /// True if performance monitoring is enabled and false if performance

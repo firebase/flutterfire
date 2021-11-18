@@ -28,6 +28,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   FirebasePerformancePlatform({this.appInstance}) : super(token: _token);
 
   static FirebasePerformancePlatform? _instance;
+
   static final Object _token = Object();
 
   /// The current default [FirebasePerformancePlatform] instance.
@@ -44,12 +45,26 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Create an instance with a [FirebaseApp] using an existing instance.
+  factory FirebasePerformancePlatform.instanceFor({
+    required FirebaseApp app,
+  }) {
+    return FirebasePerformancePlatform.instance.delegateFor(app: app);
+  }
+
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp? appInstance;
 
   /// Returns the [FirebaseApp] for the current instance.
   FirebaseApp get app => appInstance ?? Firebase.app();
+
+  /// Enables delegates to create new instances of themselves if a none default
+  /// [FirebaseApp] instance is required by the user. Currently only default Firebase app only.
+  @protected
+  FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
+    throw UnimplementedError('delegateFor() is not implemented');
+  }
 
   /// Determines whether performance monitoring is enabled or disabled Only works for native apps.
   /// Always returns true for web apps.
