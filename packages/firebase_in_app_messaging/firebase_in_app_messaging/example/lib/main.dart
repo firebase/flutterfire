@@ -19,7 +19,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -64,11 +63,13 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             const Text('Manually trigger events programmatically '),
             const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () {
-                MyApp.fiam.triggerEvent('chicken_event');
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Triggering event: chicken_event'),
-                ));
+              onPressed: () async {
+                await MyApp.fiam.triggerEvent('awesome_event');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Triggering event: awesome_event'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(primary: Colors.blue),
               child: Text(
@@ -88,7 +89,7 @@ class AnalyticsEventExample extends StatelessWidget {
     await MyApp.analytics.logEvent(
       name: 'awesome_event',
       parameters: <String, dynamic>{
-        'int': 42, // not required?
+        //'id': 1, // not required?
       },
     );
   }

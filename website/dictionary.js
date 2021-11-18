@@ -90,4 +90,6 @@ module.exports = [
   'web.firebase_cdn',
   'xml',
   'yaml',
+  'fiam',
+  'ecommerce'
 ];
