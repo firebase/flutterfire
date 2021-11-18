@@ -1,12 +1,19 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'platform_interface_firebase_performance.dart';
+import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 
 abstract class HttpMetricPlatform extends PlatformInterface {
-  HttpMetricPlatform(this.url, this.httpMethod) : super(token: Object());
+  HttpMetricPlatform(this.url, this.httpMethod) : super(token: _token);
 
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [HttpMetricPlatform].
   static void verifyExtends(HttpMetricPlatform instance) {
-    PlatformInterface.verifyToken(instance, Object);
+    PlatformInterface.verifyToken(instance, _token);
   }
 
   /// Maximum allowed length of a key passed to [putAttribute].
@@ -23,38 +30,38 @@ abstract class HttpMetricPlatform extends PlatformInterface {
 
   /// HttpResponse code of the request.
   int? get httpResponseCode {
-    throw UnimplementedError('getHttpResponseCode() is not implemented');
+    throw UnimplementedError('get httpResponseCode is not implemented');
   }
 
   /// Size of the request payload.
   int? get requestPayloadSize {
-    throw UnimplementedError('getRequestPayloadSize() is not implemented');
+    throw UnimplementedError('get requestPayloadSize is not implemented');
   }
 
   /// Content type of the response such as text/html, application/json, etc...
   String? get responseContentType {
-    throw UnimplementedError('getResponseContentType() is not implemented');
+    throw UnimplementedError('get responseContentType is not implemented');
   }
 
   /// Size of the response payload.
   int? get responsePayloadSize {
-    throw UnimplementedError('getResponsePayloadSize() is not implemented');
+    throw UnimplementedError('get responsePayloadSize is not implemented');
   }
 
   set httpResponseCode(int? httpResponseCode) {
-    throw UnimplementedError('setHttpResponseCode() is not implemented');
+    throw UnimplementedError('set httpResponseCode is not implemented');
   }
 
   set requestPayloadSize(int? requestPayloadSize) {
-    throw UnimplementedError('setRequestPayloadSize() is not implemented');
+    throw UnimplementedError('set requestPayloadSize is not implemented');
   }
 
   set responsePayloadSize(int? responsePayloadSize) {
-    throw UnimplementedError('setResponsePayload() is not implemented');
+    throw UnimplementedError('set responsePayload is not implemented');
   }
 
   set responseContentType(String? responseContentType) {
-    throw UnimplementedError('setResponseContentType() is not implemented');
+    throw UnimplementedError('set responseContentType is not implemented');
   }
 
   Future<void> start() {
