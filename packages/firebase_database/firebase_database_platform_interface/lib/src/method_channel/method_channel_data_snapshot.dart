@@ -70,7 +70,7 @@ class MethodChannelDataSnapshot extends DataSnapshotPlatform {
 
   @override
   Iterable<DataSnapshotPlatform> get children {
-    List<String> _childKeys = _data['childKeys'];
+    List<String> _childKeys = List<String>.from(_data['childKeys']);
 
     return Iterable<DataSnapshotPlatform>.generate(_childKeys.length,
         (int index) {
