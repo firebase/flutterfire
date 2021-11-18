@@ -38,7 +38,7 @@ class DatabaseReferenceWeb extends QueryWeb
   }
 
   @override
-  String get key => _delegate.key;
+  String? get key => _delegate.key;
 
   @override
   DatabaseReferencePlatform push() {
