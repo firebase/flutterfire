@@ -45,7 +45,7 @@ void runDatabaseTests() {
       final refWithNestedPath = database.refFromURL(
         'https://react-native-firebase-testing.firebaseio.com/foo/bar',
       );
-      expect(refWithNestedPath.parent, 'foo');
+      expect(refWithNestedPath.parent?.key, 'foo');
       expect(refWithNestedPath.key, 'bar');
     });
 

@@ -64,6 +64,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// Gets the most up-to-date result for this query.
   @override
   Future<DataSnapshotPlatform> get() async {
+    // TODO add try catch back after fixing cast exception
     // try {
     final result = await channel.invokeMethod<Map<String, Object?>>(
       'Query#get',

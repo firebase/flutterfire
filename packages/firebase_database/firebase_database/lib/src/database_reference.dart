@@ -86,6 +86,7 @@ class DatabaseReference extends Query {
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
   Future<void> setWithPriority(Object? value, Object? priority) {
+    // TODO check priority is a double, null or string
     return _delegate.setWithPriority(value, priority);
   }
 
@@ -143,6 +144,7 @@ class DatabaseReference extends Query {
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
   Future<void> setPriority(Object? priority) async {
+    // TODO check priority is a double, null or string
     return _delegate.setPriority(priority);
   }
 
