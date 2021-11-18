@@ -19,7 +19,7 @@ class PendingDynamicLinkData {
   ///
   /// Can be null if [link] equals null or dynamic link was not received on an
   /// iOS device.
-  final PendingDynamicLinkDataiOS? ios;
+  final PendingDynamicLinkDataIOS? ios;
 
   /// Deep link parameter of the dynamic link.
   final Uri link;
