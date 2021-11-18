@@ -59,8 +59,7 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// Note: Must be called immediately, prior to accessing FirebaseFirestore methods.
   /// Do not use with production credentials as emulator traffic is not encrypted.
   void useDatabaseEmulator(String host, int port) {
-    // TODO emulator support... Check Firestore, it handles android ports.
-    // _delegate.useEmulator(host, port);
+    _delegate.useDatabaseEmulator(host, port);
   }
 
   /// Returns a [DatabaseReference] representing the location in the Database
@@ -73,8 +72,26 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided Firebase URL.
   DatabaseReference refFromURL(String url) {
-    // TODO Ref from URL support
-    return DatabaseReference._(_delegate.ref('/'));
+    if (!url.startsWith('https://')) {
+      throw ArgumentError.value(url, 'must be a valid URL', 'url');
+    }
+
+    Uri uri = Uri.parse(url);
+    String? currentDatabaseUrl = databaseURL ?? app.options.databaseURL;
+    if (currentDatabaseUrl != null) {
+      if (uri.origin == currentDatabaseUrl) {
+        throw ArgumentError.value(
+          url,
+          'must equal the current FirebaseDatabase instance databaseURL',
+          'url',
+        );
+      }
+    }
+
+    if (uri.pathSegments.isNotEmpty) {
+      return DatabaseReference._(_delegate.ref(uri.path));
+    }
+    return DatabaseReference._(_delegate.ref());
   }
 
   /// Attempts to sets the database persistence to [enabled].
@@ -103,7 +120,7 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   ///
   /// By default the Firebase Database client will use up to 10MB of disk space
   /// to cache data. If the cache grows beyond this size, the client will start
-  /// removing data that hasn’t been recently used. If you find that your
+  /// removing data that hasn't been recently used. If you find that your
   /// application caches too little or too much data, call this method to change
   /// the cache size.
   ///

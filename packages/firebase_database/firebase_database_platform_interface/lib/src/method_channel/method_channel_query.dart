@@ -75,7 +75,6 @@ class MethodChannelQuery extends QueryPlatform {
 
       return MethodChannelDataSnapshot(ref, Map<String, dynamic>.from(result!));
     } catch (e, s) {
-      print(e);
       throw convertPlatformException(e, s);
     }
   }
