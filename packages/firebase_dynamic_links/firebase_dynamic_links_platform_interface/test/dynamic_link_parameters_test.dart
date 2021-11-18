@@ -13,20 +13,22 @@ void main() {
   );
 
   GoogleAnalyticsParameters googleParams = const GoogleAnalyticsParameters(
-      campaign: 'campaign',
-      medium: 'medium',
-      source: 'source',
-      term: 'term',
-      content: 'content');
+    campaign: 'campaign',
+    medium: 'medium',
+    source: 'source',
+    term: 'term',
+    content: 'content',
+  );
 
   IosParameters iosParams = IosParameters(
-      appStoreId: 'appStoreId',
-      bundleId: 'bundleId',
-      customScheme: 'customScheme',
-      fallbackUrl: Uri.parse('fallbackUrl'),
-      ipadBundleId: 'ipadBundleId',
-      ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
-      minimumVersion: 'minimumVersion');
+    appStoreId: 'appStoreId',
+    bundleId: 'bundleId',
+    customScheme: 'customScheme',
+    fallbackUrl: Uri.parse('fallbackUrl'),
+    ipadBundleId: 'ipadBundleId',
+    ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
+    minimumVersion: 'minimumVersion',
+  );
 
   ITunesConnectAnalyticsParameters itunesParams =
       const ITunesConnectAnalyticsParameters(
@@ -37,15 +39,17 @@ void main() {
 
   DynamicLinkParametersOptions parametersOptions =
       const DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable);
+    shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable,
+  );
 
   Uri link = Uri.parse('link');
   NavigationInfoParameters navigation =
       const NavigationInfoParameters(forcedRedirectEnabled: true);
   SocialMetaTagParameters social = SocialMetaTagParameters(
-      description: 'description',
-      imageUrl: Uri.parse('imageUrl'),
-      title: 'title');
+    description: 'description',
+    imageUrl: Uri.parse('imageUrl'),
+    title: 'title',
+  );
 
   String uriPrefix = 'https://';
 
@@ -70,7 +74,9 @@ void main() {
         expect(dynamicLinkParams.googleAnalyticsParameters, googleParams);
         expect(dynamicLinkParams.iosParameters, iosParams);
         expect(
-            dynamicLinkParams.itunesConnectAnalyticsParameters, itunesParams);
+          dynamicLinkParams.itunesConnectAnalyticsParameters,
+          itunesParams,
+        );
         expect(dynamicLinkParams.navigationInfoParameters, navigation);
         expect(dynamicLinkParams.socialMetaTagParameters, social);
       });
@@ -80,71 +86,110 @@ void main() {
           final result = dynamicLinkParams.asMap();
 
           expect(result, isA<Map<String, dynamic>>());
-          expect(result['androidParameters']['fallbackUrl'],
-              dynamicLinkParams.androidParameters?.fallbackUrl.toString());
-          expect(result['androidParameters']['minimumVersion'],
-              dynamicLinkParams.androidParameters?.minimumVersion);
-          expect(result['androidParameters']['packageName'],
-              dynamicLinkParams.androidParameters?.packageName);
+          expect(
+            result['androidParameters']['fallbackUrl'],
+            dynamicLinkParams.androidParameters?.fallbackUrl.toString(),
+          );
+          expect(
+            result['androidParameters']['minimumVersion'],
+            dynamicLinkParams.androidParameters?.minimumVersion,
+          );
+          expect(
+            result['androidParameters']['packageName'],
+            dynamicLinkParams.androidParameters?.packageName,
+          );
           expect(result['uriPrefix'], dynamicLinkParams.uriPrefix);
           expect(
-              result['dynamicLinkParametersOptions']
-                  ['shortDynamicLinkPathLength'],
-              dynamicLinkParams.dynamicLinkParametersOptions
-                  ?.shortDynamicLinkPathLength?.index);
-          expect(result['googleAnalyticsParameters']['campaign'],
-              dynamicLinkParams.googleAnalyticsParameters?.campaign);
-          expect(result['googleAnalyticsParameters']['content'],
-              dynamicLinkParams.googleAnalyticsParameters?.content);
-          expect(result['googleAnalyticsParameters']['medium'],
-              dynamicLinkParams.googleAnalyticsParameters?.medium);
-          expect(result['googleAnalyticsParameters']['source'],
-              dynamicLinkParams.googleAnalyticsParameters?.source);
-          expect(result['googleAnalyticsParameters']['term'],
-              dynamicLinkParams.googleAnalyticsParameters?.term);
-          expect(result['iosParameters']['appStoreId'],
-              dynamicLinkParams.iosParameters?.appStoreId);
-          expect(result['iosParameters']['bundleId'],
-              dynamicLinkParams.iosParameters?.bundleId);
-          expect(result['iosParameters']['customScheme'],
-              dynamicLinkParams.iosParameters?.customScheme);
-          expect(result['iosParameters']['fallbackUrl'],
-              dynamicLinkParams.iosParameters?.fallbackUrl.toString());
-          expect(result['iosParameters']['ipadBundleId'],
-              dynamicLinkParams.iosParameters?.ipadBundleId);
-          expect(result['iosParameters']['ipadFallbackUrl'],
-              dynamicLinkParams.iosParameters?.ipadFallbackUrl.toString());
-          expect(result['iosParameters']['minimumVersion'],
-              dynamicLinkParams.iosParameters?.minimumVersion);
+            result['dynamicLinkParametersOptions']
+                ['shortDynamicLinkPathLength'],
+            dynamicLinkParams.dynamicLinkParametersOptions
+                ?.shortDynamicLinkPathLength?.index,
+          );
           expect(
-              result['itunesConnectAnalyticsParameters']['affiliateToken'],
-              dynamicLinkParams
-                  .itunesConnectAnalyticsParameters?.affiliateToken);
+            result['googleAnalyticsParameters']['campaign'],
+            dynamicLinkParams.googleAnalyticsParameters?.campaign,
+          );
           expect(
-              result['itunesConnectAnalyticsParameters']['providerToken'],
-              dynamicLinkParams
-                  .itunesConnectAnalyticsParameters?.providerToken);
+            result['googleAnalyticsParameters']['content'],
+            dynamicLinkParams.googleAnalyticsParameters?.content,
+          );
           expect(
-              result['itunesConnectAnalyticsParameters']['campaignToken'],
-              dynamicLinkParams
-                  .itunesConnectAnalyticsParameters?.campaignToken);
+            result['googleAnalyticsParameters']['medium'],
+            dynamicLinkParams.googleAnalyticsParameters?.medium,
+          );
+          expect(
+            result['googleAnalyticsParameters']['source'],
+            dynamicLinkParams.googleAnalyticsParameters?.source,
+          );
+          expect(
+            result['googleAnalyticsParameters']['term'],
+            dynamicLinkParams.googleAnalyticsParameters?.term,
+          );
+          expect(
+            result['iosParameters']['appStoreId'],
+            dynamicLinkParams.iosParameters?.appStoreId,
+          );
+          expect(
+            result['iosParameters']['bundleId'],
+            dynamicLinkParams.iosParameters?.bundleId,
+          );
+          expect(
+            result['iosParameters']['customScheme'],
+            dynamicLinkParams.iosParameters?.customScheme,
+          );
+          expect(
+            result['iosParameters']['fallbackUrl'],
+            dynamicLinkParams.iosParameters?.fallbackUrl.toString(),
+          );
+          expect(
+            result['iosParameters']['ipadBundleId'],
+            dynamicLinkParams.iosParameters?.ipadBundleId,
+          );
+          expect(
+            result['iosParameters']['ipadFallbackUrl'],
+            dynamicLinkParams.iosParameters?.ipadFallbackUrl.toString(),
+          );
+          expect(
+            result['iosParameters']['minimumVersion'],
+            dynamicLinkParams.iosParameters?.minimumVersion,
+          );
+          expect(
+            result['itunesConnectAnalyticsParameters']['affiliateToken'],
+            dynamicLinkParams.itunesConnectAnalyticsParameters?.affiliateToken,
+          );
+          expect(
+            result['itunesConnectAnalyticsParameters']['providerToken'],
+            dynamicLinkParams.itunesConnectAnalyticsParameters?.providerToken,
+          );
+          expect(
+            result['itunesConnectAnalyticsParameters']['campaignToken'],
+            dynamicLinkParams.itunesConnectAnalyticsParameters?.campaignToken,
+          );
           expect(result['link'], dynamicLinkParams.link.toString());
           expect(
-              result['navigationInfoParameters']['forcedRedirectEnabled'],
-              dynamicLinkParams
-                  .navigationInfoParameters?.forcedRedirectEnabled);
-          expect(result['socialMetaTagParameters']['description'],
-              dynamicLinkParams.socialMetaTagParameters?.description);
-          expect(result['socialMetaTagParameters']['imageUrl'],
-              dynamicLinkParams.socialMetaTagParameters?.imageUrl.toString());
-          expect(result['socialMetaTagParameters']['title'],
-              dynamicLinkParams.socialMetaTagParameters?.title);
+            result['navigationInfoParameters']['forcedRedirectEnabled'],
+            dynamicLinkParams.navigationInfoParameters?.forcedRedirectEnabled,
+          );
+          expect(
+            result['socialMetaTagParameters']['description'],
+            dynamicLinkParams.socialMetaTagParameters?.description,
+          );
+          expect(
+            result['socialMetaTagParameters']['imageUrl'],
+            dynamicLinkParams.socialMetaTagParameters?.imageUrl.toString(),
+          );
+          expect(
+            result['socialMetaTagParameters']['title'],
+            dynamicLinkParams.socialMetaTagParameters?.title,
+          );
         });
       });
 
       test('toString', () {
-        expect(dynamicLinkParams.toString(),
-            equals('$DynamicLinkParameters(${dynamicLinkParams.asMap})'));
+        expect(
+          dynamicLinkParams.toString(),
+          equals('$DynamicLinkParameters(${dynamicLinkParams.asMap})'),
+        );
       });
     });
   });

@@ -27,17 +27,19 @@ Future<void> main() async {
       ),
     );
   } else {
-    // iOS requires that there is a GoogleService-Inof.plist otherwise getInitialLink & getDynamicLink will not work correctly.
+    // iOS requires that there is a GoogleService-Info.plist otherwise getInitialLink & getDynamicLink will not work correctly.
     // iOS also requires you run in release mode to test dynamic links ("flutter run --release").
     await Firebase.initializeApp();
   }
-  runApp(MaterialApp(
-    title: 'Dynamic Links Example',
-    routes: <String, WidgetBuilder>{
-      '/': (BuildContext context) => _MainScreen(),
-      '/helloworld': (BuildContext context) => _DynamicLinkScreen(),
-    },
-  ));
+  runApp(
+    MaterialApp(
+      title: 'Dynamic Links Example',
+      routes: <String, WidgetBuilder>{
+        '/': (BuildContext context) => _MainScreen(),
+        '/helloworld': (BuildContext context) => _DynamicLinkScreen(),
+      },
+    ),
+  );
 }
 
 class _MainScreen extends StatefulWidget {
@@ -118,15 +120,16 @@ class _MainScreenState extends State<_MainScreen> {
         appBar: AppBar(
           title: const Text('Dynamic Links Example'),
         ),
-        body: Builder(builder: (BuildContext context) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ButtonBar(
-                  alignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
+        body: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ButtonBar(
+                    alignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
                         onPressed: () async {
                           // comment out the above onLink() event listener to test `getInitialLink()` when your app is first opened pressing
                           // the dynamic link.
@@ -139,8 +142,9 @@ class _MainScreenState extends State<_MainScreen> {
                             Navigator.pushNamed(context, deepLink.path);
                           }
                         },
-                        child: const Text('getInitialLink')),
-                    ElevatedButton(
+                        child: const Text('getInitialLink'),
+                      ),
+                      ElevatedButton(
                         onPressed: () async {
                           // comment out the above onLink() event listener to test `getDynamicLink(url)` when your app is first opened pressing
                           // the dynamic link.
@@ -154,43 +158,45 @@ class _MainScreenState extends State<_MainScreen> {
                             Navigator.pushNamed(context, deepLink.path);
                           }
                         },
-                        child: const Text('getDynamicLink')),
-                    ElevatedButton(
-                      onPressed: !_isCreatingLink
-                          ? () => _createDynamicLink(false)
-                          : null,
-                      child: const Text('Get Long Link'),
-                    ),
-                    ElevatedButton(
-                      onPressed: !_isCreatingLink
-                          ? () => _createDynamicLink(true)
-                          : null,
-                      child: const Text('Get Short Link'),
-                    ),
-                  ],
-                ),
-                InkWell(
-                  onTap: () async {
-                    if (_linkMessage != null) {
-                      await launch(_linkMessage!);
-                    }
-                  },
-                  onLongPress: () {
-                    Clipboard.setData(ClipboardData(text: _linkMessage));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copied Link!')),
-                    );
-                  },
-                  child: Text(
-                    _linkMessage ?? '',
-                    style: const TextStyle(color: Colors.blue),
+                        child: const Text('getDynamicLink'),
+                      ),
+                      ElevatedButton(
+                        onPressed: !_isCreatingLink
+                            ? () => _createDynamicLink(false)
+                            : null,
+                        child: const Text('Get Long Link'),
+                      ),
+                      ElevatedButton(
+                        onPressed: !_isCreatingLink
+                            ? () => _createDynamicLink(true)
+                            : null,
+                        child: const Text('Get Short Link'),
+                      ),
+                    ],
                   ),
-                ),
-                Text(_linkMessage == null ? '' : _testString)
-              ],
-            ),
-          );
-        }),
+                  InkWell(
+                    onTap: () async {
+                      if (_linkMessage != null) {
+                        await launch(_linkMessage!);
+                      }
+                    },
+                    onLongPress: () {
+                      Clipboard.setData(ClipboardData(text: _linkMessage));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Copied Link!')),
+                      );
+                    },
+                    child: Text(
+                      _linkMessage ?? '',
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                  ),
+                  Text(_linkMessage == null ? '' : _testString)
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

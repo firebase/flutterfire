@@ -23,20 +23,22 @@ DynamicLinkParameters buildDynamicLinkParameters() {
   );
 
   GoogleAnalyticsParameters google = const GoogleAnalyticsParameters(
-      campaign: 'campaign',
-      medium: 'medium',
-      source: 'source',
-      term: 'term',
-      content: 'content');
+    campaign: 'campaign',
+    medium: 'medium',
+    source: 'source',
+    term: 'term',
+    content: 'content',
+  );
 
   IosParameters ios = IosParameters(
-      appStoreId: 'appStoreId',
-      bundleId: 'bundleId',
-      customScheme: 'customScheme',
-      fallbackUrl: Uri.parse('fallbackUrl'),
-      ipadBundleId: 'ipadBundleId',
-      ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
-      minimumVersion: 'minimumVersion');
+    appStoreId: 'appStoreId',
+    bundleId: 'bundleId',
+    customScheme: 'customScheme',
+    fallbackUrl: Uri.parse('fallbackUrl'),
+    ipadBundleId: 'ipadBundleId',
+    ipadFallbackUrl: Uri.parse('ipadFallbackUrl'),
+    minimumVersion: 'minimumVersion',
+  );
 
   ITunesConnectAnalyticsParameters itunes =
       const ITunesConnectAnalyticsParameters(
@@ -47,28 +49,31 @@ DynamicLinkParameters buildDynamicLinkParameters() {
 
   DynamicLinkParametersOptions parametersOptions =
       const DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable);
+    shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable,
+  );
 
   Uri link = Uri.parse('link');
   NavigationInfoParameters navigation =
       const NavigationInfoParameters(forcedRedirectEnabled: true);
   SocialMetaTagParameters social = SocialMetaTagParameters(
-      description: 'description',
-      imageUrl: Uri.parse('imageUrl'),
-      title: 'title');
+    description: 'description',
+    imageUrl: Uri.parse('imageUrl'),
+    title: 'title',
+  );
 
   String uriPrefix = 'https://';
 
   return DynamicLinkParameters(
-      uriPrefix: uriPrefix,
-      link: link,
-      androidParameters: android,
-      dynamicLinkParametersOptions: parametersOptions,
-      googleAnalyticsParameters: google,
-      iosParameters: ios,
-      itunesConnectAnalyticsParameters: itunes,
-      navigationInfoParameters: navigation,
-      socialMetaTagParameters: social);
+    uriPrefix: uriPrefix,
+    link: link,
+    androidParameters: android,
+    dynamicLinkParametersOptions: parametersOptions,
+    googleAnalyticsParameters: google,
+    iosParameters: ios,
+    itunesConnectAnalyticsParameters: itunes,
+    navigationInfoParameters: navigation,
+    socialMetaTagParameters: social,
+  );
 }
 
 void main() {
@@ -92,9 +97,14 @@ void main() {
         const mockMinimumVersionIOS = 'ios minimum version';
         Uri mockUri = Uri.parse('mock-scheme');
 
-        when(dynamicLinks.getInitialLink()).thenAnswer((_) async =>
-            TestPendingDynamicLinkData(mockUri, mockClickTimestamp,
-                mockMinimumVersionAndroid, mockMinimumVersionIOS));
+        when(dynamicLinks.getInitialLink()).thenAnswer(
+          (_) async => TestPendingDynamicLinkData(
+            mockUri,
+            mockClickTimestamp,
+            mockMinimumVersionAndroid,
+            mockMinimumVersionIOS,
+          ),
+        );
 
         final PendingDynamicLinkData? data =
             await dynamicLinks.getInitialLink();
@@ -128,9 +138,14 @@ void main() {
         const mockMinimumVersionAndroid = 21;
         const mockMinimumVersionIOS = 'min version';
 
-        when(dynamicLinks.getDynamicLink(mockUri)).thenAnswer((_) async =>
-            TestPendingDynamicLinkData(mockUri, mockClickTimestamp,
-                mockMinimumVersionAndroid, mockMinimumVersionIOS));
+        when(dynamicLinks.getDynamicLink(mockUri)).thenAnswer(
+          (_) async => TestPendingDynamicLinkData(
+            mockUri,
+            mockClickTimestamp,
+            mockMinimumVersionAndroid,
+            mockMinimumVersionIOS,
+          ),
+        );
 
         final PendingDynamicLinkData? data =
             await dynamicLinks.getDynamicLink(mockUri);
@@ -152,9 +167,16 @@ void main() {
         const mockClickTimestamp = 239058435;
         const mockMinimumVersionAndroid = 33;
         const mockMinimumVersionIOS = 'on-link version';
-        when(dynamicLinks.onLink()).thenAnswer((_) => Stream.value(
-            TestPendingDynamicLinkData(mockUri, mockClickTimestamp,
-                mockMinimumVersionAndroid, mockMinimumVersionIOS)));
+        when(dynamicLinks.onLink()).thenAnswer(
+          (_) => Stream.value(
+            TestPendingDynamicLinkData(
+              mockUri,
+              mockClickTimestamp,
+              mockMinimumVersionAndroid,
+              mockMinimumVersionIOS,
+            ),
+          ),
+        );
 
         final PendingDynamicLinkData? data = await dynamicLinks.onLink().first;
         expect(data!.link.scheme, mockUri.scheme);
@@ -175,14 +197,16 @@ void main() {
         List<String> warnings = ['warning'];
         const DynamicLinkParametersOptions options =
             DynamicLinkParametersOptions(
-                shortDynamicLinkPathLength:
-                    ShortDynamicLinkPathLength.unguessable);
+          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable,
+        );
 
-        when(dynamicLinks.shortenUrl(mockUri, options)).thenAnswer((_) async =>
-            ShortDynamicLink(
-                shortUrl: mockUri,
-                warnings: warnings,
-                previewLink: previewLink));
+        when(dynamicLinks.shortenUrl(mockUri, options)).thenAnswer(
+          (_) async => ShortDynamicLink(
+            shortUrl: mockUri,
+            warnings: warnings,
+            previewLink: previewLink,
+          ),
+        );
 
         final shortDynamicLink =
             await dynamicLinks.shortenUrl(mockUri, options);
@@ -236,13 +260,18 @@ void main() {
         DynamicLinkParameters params =
             DynamicLinkParameters(uriPrefix: 'uriPrefix', link: mockUri);
         final shortLink = ShortDynamicLink(
-            shortUrl: mockUri, warnings: warnings, previewLink: previewLink);
+          shortUrl: mockUri,
+          warnings: warnings,
+          previewLink: previewLink,
+        );
 
-        when(dynamicLinks.buildShortLink(params)).thenAnswer((_) async =>
-            ShortDynamicLink(
-                shortUrl: mockUri,
-                warnings: warnings,
-                previewLink: previewLink));
+        when(dynamicLinks.buildShortLink(params)).thenAnswer(
+          (_) async => ShortDynamicLink(
+            shortUrl: mockUri,
+            warnings: warnings,
+            previewLink: previewLink,
+          ),
+        );
 
         final shortDynamicLink = await dynamicLinks.buildShortLink(params);
 
@@ -260,13 +289,18 @@ void main() {
         List<String> warnings = ['warning'];
         DynamicLinkParameters params = buildDynamicLinkParameters();
         final shortLink = ShortDynamicLink(
-            shortUrl: mockUri, warnings: warnings, previewLink: previewLink);
+          shortUrl: mockUri,
+          warnings: warnings,
+          previewLink: previewLink,
+        );
 
-        when(dynamicLinks.buildShortLink(params)).thenAnswer((_) async =>
-            ShortDynamicLink(
-                shortUrl: mockUri,
-                warnings: warnings,
-                previewLink: previewLink));
+        when(dynamicLinks.buildShortLink(params)).thenAnswer(
+          (_) async => ShortDynamicLink(
+            shortUrl: mockUri,
+            warnings: warnings,
+            previewLink: previewLink,
+          ),
+        );
 
         final shortDynamicLink = await dynamicLinks.buildShortLink(params);
 
@@ -281,15 +315,21 @@ void main() {
 }
 
 class TestPendingDynamicLinkData extends PendingDynamicLinkData {
-  TestPendingDynamicLinkData(mockUri, mockClickTimestamp,
-      mockMinimumVersionAndroid, mockMinimumVersionIOS)
-      : super(
-            link: mockUri,
-            android: PendingDynamicLinkDataAndroid(
-                clickTimestamp: mockClickTimestamp,
-                minimumVersion: mockMinimumVersionAndroid),
-            ios: PendingDynamicLinkDataIOS(
-                minimumVersion: mockMinimumVersionIOS));
+  TestPendingDynamicLinkData(
+    mockUri,
+    mockClickTimestamp,
+    mockMinimumVersionAndroid,
+    mockMinimumVersionIOS,
+  ) : super(
+          link: mockUri,
+          android: PendingDynamicLinkDataAndroid(
+            clickTimestamp: mockClickTimestamp,
+            minimumVersion: mockMinimumVersionAndroid,
+          ),
+          ios: PendingDynamicLinkDataIOS(
+            minimumVersion: mockMinimumVersionIOS,
+          ),
+        );
 }
 
 final testData = TestPendingDynamicLinkData(Uri.parse('uri'), null, null, null);
@@ -343,18 +383,26 @@ class MockFirebaseDynamicLinks extends Mock
   }
 
   @override
-  Future<ShortDynamicLink> shortenUrl(Uri uri,
-      [DynamicLinkParametersOptions? options]) {
+  Future<ShortDynamicLink> shortenUrl(
+    Uri uri, [
+    DynamicLinkParametersOptions? options,
+  ]) {
     return super.noSuchMethod(
       Invocation.method(#shortenUrl, [uri, options]),
-      returnValue: Future.value(ShortDynamicLink(
+      returnValue: Future.value(
+        ShortDynamicLink(
           shortUrl: uri,
           warnings: ['warning'],
-          previewLink: Uri.parse('preview'))),
-      returnValueForMissingStub: Future.value(ShortDynamicLink(
+          previewLink: Uri.parse('preview'),
+        ),
+      ),
+      returnValueForMissingStub: Future.value(
+        ShortDynamicLink(
           shortUrl: uri,
           warnings: ['warning'],
-          previewLink: Uri.parse('preview'))),
+          previewLink: Uri.parse('preview'),
+        ),
+      ),
     );
   }
 
@@ -362,14 +410,20 @@ class MockFirebaseDynamicLinks extends Mock
   Future<ShortDynamicLink> buildShortLink(DynamicLinkParameters parameters) {
     return super.noSuchMethod(
       Invocation.method(#buildShortLink, [parameters]),
-      returnValue: Future.value(ShortDynamicLink(
+      returnValue: Future.value(
+        ShortDynamicLink(
           shortUrl: uri,
           warnings: ['warning'],
-          previewLink: Uri.parse('preview'))),
-      returnValueForMissingStub: Future.value(ShortDynamicLink(
+          previewLink: Uri.parse('preview'),
+        ),
+      ),
+      returnValueForMissingStub: Future.value(
+        ShortDynamicLink(
           shortUrl: uri,
           warnings: ['warning'],
-          previewLink: Uri.parse('preview'))),
+          previewLink: Uri.parse('preview'),
+        ),
+      ),
     );
   }
 
