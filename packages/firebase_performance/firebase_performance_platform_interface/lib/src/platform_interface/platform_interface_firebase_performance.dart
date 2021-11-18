@@ -12,7 +12,6 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../method_channel/method_channel_firebase_performance.dart';
 
-
 enum HttpMethod { Connect, Delete, Get, Head, Options, Patch, Post, Put, Trace }
 
 /// The interface that implementations of `firebase_performance` must
@@ -67,6 +66,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
       'setPerformanceCollectionEnabled() is not implemented',
     );
   }
+
   /// Creates a Trace object with given name.
   TracePlatform newTrace(String name) {
     throw UnimplementedError('newTrace() is not implemented');

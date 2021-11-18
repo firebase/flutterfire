@@ -145,7 +145,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> removeAttribute(String name)async {
+  Future<void> removeAttribute(String name) async {
     if (_hasStopped) return;
 
     _attributes.remove(name);
