@@ -1,5 +1,10 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_firebase_performance.dart';
+import 'utils/exception.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(this._handle, String url, HttpMethod httpMethod)
@@ -29,64 +34,78 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   int? get responsePayloadSize => _responsePayloadSize;
 
   @override
-  set httpResponseCode(int? httpResponseCode) {
+  Future<void> setHttpResponseCode(int? httpResponseCode) async {
     if (_hasStopped) return;
 
-    _httpResponseCode = httpResponseCode;
-    MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#httpResponseCode',
-      <String, Object?>{
-        'handle': _handle,
-        'httpResponseCode': httpResponseCode,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#httpResponseCode',
+        <String, Object?>{
+          'handle': _handle,
+          'httpResponseCode': httpResponseCode,
+        },
+      );
+      _httpResponseCode = httpResponseCode;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  set requestPayloadSize(int? requestPayloadSize) {
+  Future<void> setRequestPayloadSize(int? requestPayloadSize) async {
     if (_hasStopped) return;
 
-    _requestPayloadSize = requestPayloadSize;
-    MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#requestPayloadSize',
-      <String, Object?>{
-        'handle': _handle,
-        'requestPayloadSize': requestPayloadSize,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#requestPayloadSize',
+        <String, Object?>{
+          'handle': _handle,
+          'requestPayloadSize': requestPayloadSize,
+        },
+      );
+      _requestPayloadSize = requestPayloadSize;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  set responseContentType(String? responseContentType) {
+  Future<void> setResponseContentType(String? responseContentType) async {
     if (_hasStopped) return;
-
-    _responseContentType = responseContentType;
-    MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#responseContentType',
-      <String, Object?>{
-        'handle': _handle,
-        'responseContentType': responseContentType,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#responseContentType',
+        <String, Object?>{
+          'handle': _handle,
+          'responseContentType': responseContentType,
+        },
+      );
+      _responseContentType = responseContentType;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  set responsePayloadSize(int? responsePayloadSize) {
+  Future<void> setResponsePayloadSize(int? responsePayloadSize) async {
     if (_hasStopped) return;
-
-    _responsePayloadSize = responsePayloadSize;
-    MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#responsePayloadSize',
-      <String, Object?>{
-        'handle': _handle,
-        'responsePayloadSize': responsePayloadSize,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#responsePayloadSize',
+        <String, Object?>{
+          'handle': _handle,
+          'responsePayloadSize': responsePayloadSize,
+        },
+      );
+      _responsePayloadSize = responsePayloadSize;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  Future<void> start() {
-    if (_hasStopped) return Future<void>.value();
+  Future<void> start() async {
+    if (_hasStopped) return;
 
     return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
       'HttpMetric#start',
@@ -95,8 +114,8 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> stop() {
-    if (_hasStopped) return Future<void>.value();
+  Future<void> stop() async {
+    if (_hasStopped) return;
 
     _hasStopped = true;
     return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
@@ -106,12 +125,12 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> putAttribute(String name, String value) {
+  Future<void> putAttribute(String name, String value) async {
     if (_hasStopped ||
         name.length > HttpMetricPlatform.maxAttributeKeyLength ||
         value.length > HttpMetricPlatform.maxAttributeValueLength ||
         _attributes.length == HttpMetricPlatform.maxCustomAttributes) {
-      return Future<void>.value();
+      return;
     }
 
     _attributes[name] = value;
@@ -126,8 +145,8 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> removeAttribute(String name) {
-    if (_hasStopped) return Future<void>.value();
+  Future<void> removeAttribute(String name)async {
+    if (_hasStopped) return;
 
     _attributes.remove(name);
     return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
@@ -140,18 +159,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   String? getAttribute(String name) => _attributes[name];
 
   @override
-  Future<Map<String, String>> getAttributes() async {
-    if (_hasStopped) {
-      return Future<Map<String, String>>.value(
-        Map<String, String>.unmodifiable(_attributes),
-      );
-    }
-
-    final attributes = await MethodChannelFirebasePerformance.channel
-        .invokeMapMethod<String, String>(
-      'HttpMetric#getAttributes',
-      <String, Object?>{'handle': _handle},
-    );
-    return attributes ?? {};
+  Map<String, String> getAttributes() {
+    return {..._attributes};
   }
 }
