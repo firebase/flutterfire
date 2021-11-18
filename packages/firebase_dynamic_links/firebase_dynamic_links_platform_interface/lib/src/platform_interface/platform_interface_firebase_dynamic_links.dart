@@ -37,7 +37,7 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   /// It will always default to [MethodChannelFirebaseDynamicLinks]
   /// if no other implementation was provided.
   static FirebaseDynamicLinksPlatform get instance {
-    return _instance ??= MethodChannelFirebaseDynamicLinks(app: Firebase.app());
+    return _instance ??= MethodChannelFirebaseDynamicLinks();
   }
 
   static FirebaseDynamicLinksPlatform? _instance;
