@@ -49,19 +49,19 @@ abstract class HttpMetricPlatform extends PlatformInterface {
   }
 
   Future<void> setHttpResponseCode(int? httpResponseCode) {
-    throw UnimplementedError('set httpResponseCode is not implemented');
+    throw UnimplementedError('setHttpResponseCode is not implemented');
   }
 
   Future<void> setRequestPayloadSize(int? requestPayloadSize) {
-    throw UnimplementedError('set requestPayloadSize is not implemented');
+    throw UnimplementedError('setRequestPayloadSize is not implemented');
   }
 
   Future<void> setResponsePayloadSize(int? responsePayloadSize) {
-    throw UnimplementedError('set responsePayload is not implemented');
+    throw UnimplementedError('setResponsePayload is not implemented');
   }
 
   Future<void> setResponseContentType(String? responseContentType) {
-    throw UnimplementedError('set responseContentType is not implemented');
+    throw UnimplementedError('setResponseContentType is not implemented');
   }
 
   Future<void> start() {
