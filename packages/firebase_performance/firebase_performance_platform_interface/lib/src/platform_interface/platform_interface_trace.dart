@@ -1,13 +1,19 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class TracePlatform extends PlatformInterface {
-  TracePlatform(this.name) : super(token: Object());
+  TracePlatform(this.name) : super(token: _token);
 
   static void verifyExtends(TracePlatform instance) {
-    PlatformInterface.verifyToken(instance, Object());
+    PlatformInterface.verifyToken(instance, _token);
   }
+
+  static final Object _token = Object();
 
   /// Maximum allowed length of a key passed to [putAttribute].
   static const int maxAttributeKeyLength = 40;
@@ -49,11 +55,11 @@ abstract class TracePlatform extends PlatformInterface {
     throw UnimplementedError('getAttribute() is not implemented');
   }
 
-  Future<Map<String, String>> getAttributes() {
+  Map<String, String> getAttributes() {
     throw UnimplementedError('getAttributes() is not implemented');
   }
 
-  Future<int> getMetric(String name) {
+  int getMetric(String name) {
     throw UnimplementedError('getMetric() is not implemented');
   }
 }

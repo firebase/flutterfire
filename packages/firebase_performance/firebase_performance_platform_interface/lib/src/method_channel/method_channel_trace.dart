@@ -1,5 +1,10 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import '../../firebase_performance_platform_interface.dart';
 import 'method_channel_firebase_performance.dart';
+import 'utils/exception.dart';
 
 class MethodChannelTrace extends TracePlatform {
   MethodChannelTrace(this._handle, String name) : super(name);
@@ -15,110 +20,114 @@ class MethodChannelTrace extends TracePlatform {
   static const int maxTraceNameLength = 100;
 
   @override
-  Future<void> start() {
-    if (_hasStopped) return Future<void>.value();
+  Future<void> start() async {
+    if (_hasStopped) return;
 
-    _hasStarted = true;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#start',
-      <String, Object?>{'handle': _handle},
-    );
-  }
-
-  @override
-  Future<void> stop() {
-    if (_hasStopped) return Future<void>.value();
-
-    _hasStopped = true;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#stop',
-      <String, Object?>{'handle': _handle},
-    );
-  }
-
-  @override
-  Future<void> incrementMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) {
-      return Future<void>.value();
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#start',
+        <String, Object?>{'handle': _handle},
+      );
+      _hasStarted = true;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
-
-    _metrics[name] = (_metrics[name] ?? 0) + value;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#incrementMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
   }
 
   @override
-  Future<void> setMetric(String name, int value) {
-    if (!_hasStarted || _hasStopped) return Future<void>.value();
+  Future<void> stop() async {
+    if (_hasStopped) return;
 
-    _metrics[name] = value;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#setMetric',
-      <String, Object?>{'handle': _handle, 'name': name, 'value': value},
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#stop',
+        <String, Object?>{'handle': _handle},
+      );
+      _hasStopped = true;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  Future<int> getMetric(String name) async {
-    if (_hasStopped) return Future<int>.value(_metrics[name] ?? 0);
+  Future<void> incrementMetric(String name, int value) async {
+    if (!_hasStarted || _hasStopped) return;
 
-    final metric =
-        await MethodChannelFirebasePerformance.channel.invokeMethod<int>(
-      'Trace#getMetric',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
-    return metric ?? 0;
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#incrementMetric',
+        <String, Object?>{'handle': _handle, 'name': name, 'value': value},
+      );
+      _metrics[name] = (_metrics[name] ?? 0) + value;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  Future<void> putAttribute(String name, String value) {
+  Future<void> setMetric(String name, int value) async {
+    if (!_hasStarted || _hasStopped) return;
+
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#setMetric',
+        <String, Object?>{'handle': _handle, 'name': name, 'value': value},
+      );
+      _metrics[name] = value;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  int getMetric(String name) {
+    return _metrics[name] ?? 0;
+  }
+
+  @override
+  Future<void> putAttribute(String name, String value) async {
     if (_hasStopped ||
         name.length > TracePlatform.maxAttributeKeyLength ||
         value.length > TracePlatform.maxAttributeValueLength ||
         _attributes.length == TracePlatform.maxCustomAttributes) {
-      return Future<void>.value();
+      return;
     }
 
-    _attributes[name] = value;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#putAttribute',
-      <String, Object?>{
-        'handle': _handle,
-        'name': name,
-        'value': value,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#putAttribute',
+        <String, Object?>{
+          'handle': _handle,
+          'name': name,
+          'value': value,
+        },
+      );
+      _attributes[name] = value;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  Future<void> removeAttribute(String name) {
+  Future<void> removeAttribute(String name) async {
     if (_hasStopped) return Future<void>.value();
 
-    _attributes.remove(name);
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'Trace#removeAttribute',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'Trace#removeAttribute',
+        <String, Object?>{'handle': _handle, 'name': name},
+      );
+      _attributes.remove(name);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   String? getAttribute(String name) => _attributes[name];
 
   @override
-  Future<Map<String, String>> getAttributes() async {
-    if (_hasStopped) {
-      return Future<Map<String, String>>.value(
-        Map<String, String>.unmodifiable(_attributes),
-      );
-    }
-
-    final attributes = await MethodChannelFirebasePerformance.channel
-        .invokeMapMethod<String, String>(
-      'Trace#getAttributes',
-      <String, Object?>{'handle': _handle},
-    );
-    return attributes ?? {};
+  Map<String, String> getAttributes() {
+    return {..._attributes};
   }
 }
