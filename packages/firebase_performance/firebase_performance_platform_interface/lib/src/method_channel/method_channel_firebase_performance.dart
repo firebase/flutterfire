@@ -23,7 +23,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   /// When the user code calls an auth method, the real instance is
   /// then initialized via the [delegateFor] method.
   MethodChannelFirebasePerformance._()
-      : _handle = _nextHandle++,
+      : _handle = 0,
         super();
 
   static int _nextHandle = 0;
