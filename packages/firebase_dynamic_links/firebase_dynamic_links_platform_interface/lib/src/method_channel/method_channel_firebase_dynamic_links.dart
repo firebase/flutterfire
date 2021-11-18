@@ -84,11 +84,11 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       );
     }
 
-    PendingDynamicLinkDataIOS? iosData;
+    PendingDynamicLinkDataiOS? iosData;
     if (linkData['ios'] != null) {
       final Map<dynamic, dynamic> data = linkData['ios'];
       iosData =
-          PendingDynamicLinkDataIOS(minimumVersion: data['minimumVersion']);
+          PendingDynamicLinkDataiOS(minimumVersion: data['minimumVersion']);
     }
 
     return PendingDynamicLinkData(

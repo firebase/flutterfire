@@ -20,7 +20,7 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
         NavigationInfoParameters,
         PendingDynamicLinkData,
         PendingDynamicLinkDataAndroid,
-        PendingDynamicLinkDataIOS,
+        PendingDynamicLinkDataiOS,
         ShortDynamicLink,
         ShortDynamicLinkPathLength,
         SocialMetaTagParameters;

@@ -288,7 +288,7 @@ class TestPendingDynamicLinkData extends PendingDynamicLinkData {
             android: PendingDynamicLinkDataAndroid(
                 clickTimestamp: mockClickTimestamp,
                 minimumVersion: mockMinimumVersionAndroid),
-            ios: PendingDynamicLinkDataIOS(
+            ios: PendingDynamicLinkDataiOS(
                 minimumVersion: mockMinimumVersionIOS));
 }
 

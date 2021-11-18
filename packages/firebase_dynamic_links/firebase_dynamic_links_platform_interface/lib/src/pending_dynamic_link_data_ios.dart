@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 /// Provides iOS specific data from received dynamic link.
-class PendingDynamicLinkDataIOS {
-  const PendingDynamicLinkDataIOS({this.minimumVersion});
+class PendingDynamicLinkDataiOS {
+  const PendingDynamicLinkDataiOS({this.minimumVersion});
 
   /// The minimum version of your app that can open the link.
   ///
@@ -19,6 +19,6 @@ class PendingDynamicLinkDataIOS {
 
   @override
   String toString() {
-    return '$PendingDynamicLinkDataIOS($asMap)';
+    return '$PendingDynamicLinkDataiOS($asMap)';
   }
 }
