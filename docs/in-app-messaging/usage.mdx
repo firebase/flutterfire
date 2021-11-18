@@ -34,8 +34,13 @@ As stated in the [Firebase official docs](https://firebase.google.com/docs/in-ap
 1. One message per device
 2. No more than one message in a minimum period of 1 day
 
-So if you want to test your implementation, you can use the testing option in Firebase Console,
-using the **Firebase Installation ID** which will show in console when you run your app in debug mode.
+So if you want to test your implementation, you can use the testing option in Firebase Console.
+First, you need to get the **Firebase Installation ID** of your app, by setting up `firebase_installation` plugin.
+Then, copy it and use it to send a test message.
+
+:::note
+You will not see the test message until you close the app, and reopen again on the testing device.
+:::
 
 ## Trigger In-App Messages with Analytics Events
 
