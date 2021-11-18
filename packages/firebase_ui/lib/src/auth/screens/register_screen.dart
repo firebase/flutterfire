@@ -28,7 +28,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LoginScreen(
-      action: AuthAction.signIn,
+      action: AuthAction.signUp,
       providerConfigs: providerConfigs,
       auth: auth,
       headerMaxExtent: headerMaxExtent,

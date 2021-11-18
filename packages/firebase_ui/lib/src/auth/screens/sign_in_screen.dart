@@ -28,7 +28,6 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Colors.red;
     return LoginScreen(
       action: AuthAction.signIn,
       providerConfigs: providerConfigs,
