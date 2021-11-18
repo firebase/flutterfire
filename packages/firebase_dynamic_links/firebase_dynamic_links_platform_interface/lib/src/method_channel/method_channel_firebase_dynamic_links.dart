@@ -17,6 +17,8 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   /// Create an instance of [MethodChannelFirebaseDynamicLinks] with optional [FirebaseApp]
   MethodChannelFirebaseDynamicLinks({FirebaseApp? app})
       : super(appInstance: app) {
+    if (_initialized) return;
+
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
         case 'FirebaseDynamicLink#onLinkSuccess':
@@ -33,7 +35,10 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
           throw UnimplementedError('${call.method} has not been implemented');
       }
     });
+    _initialized = true;
   }
+
+  static bool _initialized = false;
 
   /// The [FirebaseApp] instance to which this [FirebaseDynamicLinks] belongs.
   ///
