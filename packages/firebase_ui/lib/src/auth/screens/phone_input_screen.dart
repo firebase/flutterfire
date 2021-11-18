@@ -3,7 +3,6 @@ import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
 
-import '../../responsive.dart';
 import 'sms_code_input_screen.dart';
 
 class PhoneInputScreen extends StatelessWidget {
@@ -34,55 +33,48 @@ class PhoneInputScreen extends StatelessWidget {
     final flowKey = Object();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l.phoneVerificationViewTitleText),
-      ),
-      body: Body(
-        child: ResponsiveContainer(
-          colWidth: ColWidth(
-            phone: 4,
-            phablet: 6,
-            tablet: 8,
-            laptop: 6,
-            desktop: 6,
-          ),
-          child: Center(
-            child: AuthFlowBuilder<PhoneAuthController>(
-              flowKey: flowKey,
-              action: action,
-              listener: (oldState, newState, controller) {
-                if (newState is SMSCodeRequested) {
-                  next(context, action, flowKey);
-                }
-              },
-              builder: (context, state, ctrl, child) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (state is AwaitingPhoneNumber) ...[
-                      PhoneInput(
-                        onSubmitted: ctrl.acceptPhoneNumber,
-                        key: phoneInputKey,
-                      ),
-                      const SizedBox(height: 8),
-                      OutlinedButton(
-                        onPressed: () {
-                          final number =
-                              PhoneInput.getPhoneNumber(phoneInputKey);
-                          ctrl.acceptPhoneNumber(number);
-                        },
-                        child: Text(l.verifyPhoneNumberButtonText),
-                      ),
-                    ],
-                    if (state is AuthFailed) ...[
-                      const SizedBox(height: 8),
-                      ErrorText(exception: state.exception)
-                    ],
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 400),
+          child: AuthFlowBuilder<PhoneAuthController>(
+            flowKey: flowKey,
+            action: action,
+            listener: (oldState, newState, controller) {
+              if (newState is SMSCodeRequested) {
+                next(context, action, flowKey);
+              }
+            },
+            builder: (context, state, ctrl, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l.phoneVerificationViewTitleText,
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  const SizedBox(height: 16),
+                  if (state is AwaitingPhoneNumber) ...[
+                    PhoneInput(
+                      onSubmitted: ctrl.acceptPhoneNumber,
+                      key: phoneInputKey,
+                    ),
+                    const SizedBox(height: 16),
+                    OutlinedButton(
+                      onPressed: () {
+                        final number = PhoneInput.getPhoneNumber(phoneInputKey);
+                        ctrl.acceptPhoneNumber(number);
+                      },
+                      child: Text(l.verifyPhoneNumberButtonText),
+                    ),
                   ],
-                );
-              },
-            ),
+                  if (state is AuthFailed) ...[
+                    const SizedBox(height: 8),
+                    ErrorText(exception: state.exception)
+                  ],
+                ],
+              );
+            },
           ),
         ),
       ),

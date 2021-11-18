@@ -34,6 +34,8 @@ class EmailVerificationFailed extends AuthState {
 
 class EmailVerified extends AuthState {}
 
+class SigningUp extends AuthState {}
+
 abstract class EmailFlowController extends AuthController {
   void setEmailAndPassword(String email, String password);
   Future<void> verifyEmail();
@@ -89,6 +91,8 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
   Future<void> onCredentialReceived(AuthCredential credential) async {
     try {
       if (action == AuthAction.signUp) {
+        value = SigningUp();
+
         final userCredential = await auth.createUserWithEmailAndPassword(
           email: (credential as EmailAuthCredential).email,
           password: credential.password!,

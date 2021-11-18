@@ -3,6 +3,8 @@ import 'package:desktop_webview_auth/src/provider_args.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:firebase_ui/i10n.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/src/foundation/platform.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 import 'package:firebase_ui/auth.dart';
@@ -99,4 +101,12 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   @override
   ThemedOAuthProviderButtonStyle get style =>
       const TwitterProviderButtonStyle();
+
+  @override
+  bool isSupportedPlatform(TargetPlatform platform) {
+    return !kIsWeb &&
+        (platform == TargetPlatform.android ||
+            platform == TargetPlatform.iOS ||
+            platform == TargetPlatform.macOS);
+  }
 }

@@ -122,8 +122,12 @@ class _SignInFormContentState extends State<_SignInFormContent> {
               late Widget child;
               final state = AuthState.of(context);
 
-              if (state is SigningIn) {
-                child = const CircularProgressIndicator();
+              if (state is SigningIn || state is SigningUp) {
+                child = const SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: CircularProgressIndicator(strokeWidth: 1),
+                );
               } else {
                 child = Text(chooseButtonLabel());
               }

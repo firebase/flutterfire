@@ -1,7 +1,8 @@
-import 'package:firebase_ui/auth.dart';
-import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart' show PhoneAuthCredential;
+import 'package:firebase_ui/auth.dart';
+import 'package:firebase_ui/i10n.dart';
 
 import '../auth_state.dart';
 import 'error_text.dart';
@@ -158,7 +159,10 @@ class SMSCodeInputState extends State<SMSCodeInput> {
     final authState = AuthState.of(context);
 
     if (authState is PhoneVerified) {
-      controller.text = authState.credential.smsCode!;
+      if (authState.credential is PhoneAuthCredential) {
+        controller.text =
+            (authState.credential as PhoneAuthCredential).smsCode!;
+      }
     }
 
     super.didChangeDependencies();

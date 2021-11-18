@@ -6,6 +6,8 @@ import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:firebase_ui/i10n.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/src/foundation/platform.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../widgets/apple_sign_in_button.dart' show AppleProviderButtonStyle;
@@ -92,5 +94,11 @@ class AppleProviderConfiguration extends OAuthProviderConfiguration {
   @override
   String getLabel(FirebaseUILocalizationLabels labels) {
     return labels.signInWithAppleButtonText;
+  }
+
+  @override
+  bool isSupportedPlatform(TargetPlatform platform) {
+    return !kIsWeb &&
+        (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
   }
 }

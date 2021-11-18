@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/i10n.dart';
+import 'package:flutter/foundation.dart';
 // import 'package:firebase_ui/auth/google.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
@@ -84,4 +85,11 @@ class GoogleProviderConfiguration extends OAuthProviderConfiguration {
 
   @override
   ThemedOAuthProviderButtonStyle get style => GoogleProviderButtonStyle();
+
+  @override
+  bool isSupportedPlatform(TargetPlatform platform) {
+    return platform == TargetPlatform.android ||
+        platform == TargetPlatform.iOS ||
+        platform == TargetPlatform.macOS;
+  }
 }

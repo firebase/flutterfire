@@ -39,9 +39,10 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late AuthAction action = widget.action;
 
-  Widget? _buildOAuthButtons() {
-    final oauthProviderConfigs =
-        widget.providerConfigs.whereType<OAuthProviderConfiguration>();
+  Widget? _buildOAuthButtons(TargetPlatform platform) {
+    final oauthProviderConfigs = widget.providerConfigs
+        .whereType<OAuthProviderConfiguration>()
+        .where((element) => element.isSupportedPlatform(platform));
 
     if (oauthProviderConfigs.isEmpty) {
       return null;
@@ -92,7 +93,9 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final oauthButtons = _buildOAuthButtons();
+    final platform = Theme.of(context).platform;
+    final oauthButtons = _buildOAuthButtons(platform);
+
     late String title;
     late String hint;
     late String actionText;
@@ -137,22 +140,23 @@ class _LoginViewState extends State<LoginView> {
           ),
           const SizedBox(height: 16),
           for (var config in widget.providerConfigs)
-            if (config is EmailProviderConfiguration)
-              EmailForm(
-                key: ValueKey(action),
-                auth: widget.auth,
-                action: action,
-                config: config,
-              )
-            else if (config is PhoneProviderConfiguration)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: PhoneVerificationButton(
-                  label: l.signInWithPhoneButtonText,
-                  action: action,
+            if (config.isSupportedPlatform(platform))
+              if (config is EmailProviderConfiguration)
+                EmailForm(
+                  key: ValueKey(action),
                   auth: widget.auth,
+                  action: action,
+                  config: config,
+                )
+              else if (config is PhoneProviderConfiguration)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: PhoneVerificationButton(
+                    label: l.signInWithPhoneButtonText,
+                    action: action,
+                    auth: widget.auth,
+                  ),
                 ),
-              ),
           if (oauthButtons != null) oauthButtons
         ],
       ),

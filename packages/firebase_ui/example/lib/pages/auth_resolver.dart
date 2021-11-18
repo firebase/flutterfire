@@ -32,6 +32,18 @@ class AuthResolver extends StatelessWidget {
               ),
             );
           },
+          sideBuilder: (context, constraints) {
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.all(constraints.maxWidth / 8),
+                child: SvgPicture.asset(
+                  'assets/images/firebase_logo.svg',
+                  width: constraints.maxWidth / 2,
+                  height: constraints.maxWidth / 2,
+                ),
+              ),
+            );
+          },
           providerConfigs: const [
             EmailProviderConfiguration(),
             PhoneProviderConfiguration(),

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/src/foundation/platform.dart';
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
@@ -18,5 +19,10 @@ class EmailProviderConfiguration extends ProviderConfiguration {
   @override
   AuthFlow createFlow(FirebaseAuth? auth, AuthAction? action) {
     return EmailFlow(auth: auth, action: action, config: this);
+  }
+
+  @override
+  bool isSupportedPlatform(TargetPlatform platform) {
+    return true;
   }
 }

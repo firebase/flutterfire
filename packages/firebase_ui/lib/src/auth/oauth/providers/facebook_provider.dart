@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_ui/i10n.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/src/foundation/platform.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
@@ -83,4 +85,12 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
 
   @override
   ThemedOAuthProviderButtonStyle get style => FacebookProviderButtonStyle();
+
+  @override
+  bool isSupportedPlatform(TargetPlatform platform) {
+    return !kIsWeb &&
+        (platform == TargetPlatform.android ||
+            platform == TargetPlatform.iOS ||
+            platform == TargetPlatform.macOS);
+  }
 }

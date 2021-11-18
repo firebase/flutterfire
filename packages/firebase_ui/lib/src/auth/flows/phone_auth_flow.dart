@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
@@ -11,7 +12,7 @@ class AwaitingPhoneNumber extends AuthState {}
 class SMSCodeRequested extends AuthState {}
 
 class PhoneVerified extends AuthState {
-  final PhoneAuthCredential credential;
+  final AuthCredential credential;
 
   PhoneVerified(this.credential);
 }
@@ -25,7 +26,7 @@ class PhoneVerificationFailed extends AuthState {
 class SMSCodeSent extends AuthState {
   final int? resendToken;
 
-  SMSCodeSent(this.resendToken);
+  SMSCodeSent([this.resendToken]);
 }
 
 class AutoresolutionFailedException implements Exception {
@@ -54,6 +55,10 @@ class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
     value = SMSCodeRequested();
 
     try {
+      if (kIsWeb) {
+        return await _webSignIn(phoneNumber);
+      }
+
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (credential) async {
@@ -86,5 +91,21 @@ class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
   @override
   void verifySMSCode(String code) {
     _smsCodeCompleter.complete(code);
+  }
+
+  Future<void> _webSignIn(String phoneNumber) async {
+    final result = await auth.signInWithPhoneNumber(phoneNumber);
+    value = SMSCodeSent();
+
+    final smsCode = await _smsCodeCompleter.future;
+    final userCredential = await result.confirm(smsCode);
+    final credential = userCredential.credential;
+
+    if (credential != null) {
+      value = PhoneVerified(credential);
+      setCredential(credential);
+    } else {
+      value = AuthFailed(Exception('An unknown error occured'));
+    }
   }
 }

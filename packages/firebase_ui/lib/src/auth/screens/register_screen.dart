@@ -10,7 +10,9 @@ class RegisterScreen extends StatelessWidget {
   final List<ProviderConfiguration> providerConfigs;
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
+  final SideBuilder? sideBuilder;
   final ButtonVariant? oauthButtonVariant;
+  final TextDirection? desktopLayoutDirection;
 
   const RegisterScreen({
     Key? key,
@@ -18,17 +20,21 @@ class RegisterScreen extends StatelessWidget {
     this.auth,
     this.headerMaxExtent,
     this.headerBuilder,
-    this.oauthButtonVariant,
+    this.sideBuilder,
+    this.oauthButtonVariant = ButtonVariant.icon_and_text,
+    this.desktopLayoutDirection,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return LoginScreen(
-      action: AuthAction.signUp,
+      action: AuthAction.signIn,
       providerConfigs: providerConfigs,
       auth: auth,
       headerMaxExtent: headerMaxExtent,
       headerBuilder: headerBuilder,
+      sideBuilder: sideBuilder,
+      desktopLayoutDirection: desktopLayoutDirection,
       oauthButtonVariant: oauthButtonVariant,
     );
   }
