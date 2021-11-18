@@ -155,7 +155,7 @@ class _MainScreenState extends State<_MainScreen> {
                             Navigator.pushNamed(context, deepLink.path);
                           }
                         },
-                        child: const Text('getInitialLink')),
+                        child: const Text('getDynamicLink')),
                     ElevatedButton(
                       onPressed: !_isCreatingLink
                           ? () => _createDynamicLink(false)
