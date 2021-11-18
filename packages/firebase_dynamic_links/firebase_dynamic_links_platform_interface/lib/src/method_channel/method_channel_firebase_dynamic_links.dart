@@ -108,7 +108,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       );
 
       return _getPendingDynamicLinkDataFromMap(linkData);
-    } on PlatformException catch (e, s) {
+    } catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
   }
@@ -122,7 +122,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         _withChannelDefaults({'url': url.toString()}),
       );
       return _getPendingDynamicLinkDataFromMap(linkData);
-    } on PlatformException catch (e, s) {
+    } catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
   }
@@ -148,7 +148,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         }),
       );
       return _parseShortLink(reply!);
-    } on PlatformException catch (e, s) {
+    } catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
   }
@@ -162,7 +162,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         _withChannelDefaults(parameters.asMap()),
       );
       return Uri.parse(url!);
-    } on PlatformException catch (e, s) {
+    } catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
   }
@@ -179,7 +179,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         _withChannelDefaults(parameters.asMap()),
       );
       return _parseShortLink(response!);
-    } on PlatformException catch (e, s) {
+    } catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
   }
