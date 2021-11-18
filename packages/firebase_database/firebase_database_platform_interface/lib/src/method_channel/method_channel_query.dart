@@ -66,7 +66,7 @@ class MethodChannelQuery extends QueryPlatform {
   Future<DataSnapshotPlatform> get() async {
     // TODO add try catch back after fixing cast exception
     // try {
-    final result = await channel.invokeMethod<Map<String, Object?>>(
+    final result = await channel.invokeMapMethod(
       'Query#get',
       database.getChannelArguments({
         'path': path,
