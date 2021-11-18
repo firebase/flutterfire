@@ -11,7 +11,8 @@ void runDatabaseTests() {
     test('returns a correct reference', () async {
       final ref = database.ref('flutterfire');
       expect(ref.key, 'flutterfire');
-      expect(ref.parent, isNull);
+      expect(ref.parent, isNotNull);
+      expect(ref.parent!.key, isNull);
 
       final snapshot = await ref.get();
       expect(snapshot.key, 'flutterfire');

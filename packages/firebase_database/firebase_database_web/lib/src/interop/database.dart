@@ -95,11 +95,14 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
   /// The last part of the current path.
   /// It is `null` in case of root DatabaseReference.
-  String get key => jsObject.key;
+  String? get key => jsObject.key;
 
   /// The parent location of a DatabaseReference.
-  DatabaseReference? get parent =>
-      DatabaseReference.getInstance(jsObject.parent);
+  DatabaseReference? get parent {
+    final jsParent = jsObject.parent;
+    if (jsParent == null) return null;
+    DatabaseReference.getInstance(jsParent);
+  }
 
   /// The root location of a DatabaseReference.
   DatabaseReference get root => DatabaseReference.getInstance(jsObject.root);
