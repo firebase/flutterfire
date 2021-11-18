@@ -55,10 +55,21 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
+  /// Attempts to retrieve the dynamic link which launched the app.
+  ///
+  /// This method always returns a Future. That Future completes to null if
+  /// there is no pending dynamic link or any call to this method after the
+  /// the first attempt.
   Future<PendingDynamicLinkData?> getInitialLink() {
     throw UnimplementedError('getInitialLink() is not implemented');
   }
 
+  /// Determine if the app has a pending dynamic link and provide access to
+  /// the dynamic link parameters. A pending dynamic link may have been
+  /// previously captured when a user clicked on a dynamic link, or
+  /// may be present in the dynamicLinkUri parameter. If both are present,
+  /// the previously captured dynamic link will take precedence. The captured
+  /// data will be removed after first access.
   Future<PendingDynamicLinkData?> getDynamicLink(Uri url) async {
     throw UnimplementedError('getDynamicLink() is not implemented');
   }
