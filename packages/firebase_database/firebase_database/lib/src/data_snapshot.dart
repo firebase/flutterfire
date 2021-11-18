@@ -9,7 +9,8 @@ class DataSnapshot {
     DataSnapshotPlatform.verifyExtends(_delegate);
   }
 
-  /// The key of the location that generated this DataSnapshot.
+  /// The key of the location that generated this DataSnapshot or null if at
+  /// database root.
   String? get key => _delegate.key;
 
   /// The Reference for the location that generated this DataSnapshot.
@@ -18,7 +19,8 @@ class DataSnapshot {
   /// Returns the contents of this data snapshot as native types.
   Object? get value => _delegate.value;
 
-  /// Gets the priority value of the data in this [DataSnapshot].
+  /// Gets the priority value of the data in this [DataSnapshot] or null if no
+  /// priority set.
   Object? get priority => _delegate.priority;
 
   /// Ascertains whether the value exists at the Firebase Database location.

@@ -9,7 +9,11 @@ void runDatabaseTests() {
     });
 
     test('returns a correct reference', () async {
-      final snapshot = await database.ref('flutterfire').get();
+      final ref = database.ref('flutterfire');
+      expect(ref.key, 'flutterfire');
+      expect(ref.parent, isNull);
+
+      final snapshot = await ref.get();
       expect(snapshot.key, 'flutterfire');
       expect(snapshot.value, 0);
     });
@@ -17,8 +21,12 @@ void runDatabaseTests() {
     test(
       'returns a reference to the root of the database if no path specified',
       () async {
-        final ref = database.ref().child('flutterfire');
-        final snapshot = await ref.get();
+        final rootRef = database.ref();
+        expect(rootRef.key, isNull);
+        expect(rootRef.parent, isNull);
+
+        final childRef = rootRef.child('flutterfire');
+        final snapshot = await childRef.get();
         expect(snapshot.key, 'flutterfire');
         expect(snapshot.value, 0);
       },
@@ -29,11 +37,11 @@ void runDatabaseTests() {
     test('correctly returns a ref for database root', () async {
       final ref = database
           .refFromURL('https://react-native-firebase-testing.firebaseio.com');
-      expect(ref.key, null);
+      expect(ref.key, isNull);
 
       final refWithTrailingSlash = database
           .refFromURL('https://react-native-firebase-testing.firebaseio.com/');
-      expect(refWithTrailingSlash.key, null);
+      expect(refWithTrailingSlash.key, isNull);
     });
 
     test('correctly returns a ref for any database path', () async {
