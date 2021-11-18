@@ -482,7 +482,6 @@ class MockDataSnapshot implements DataSnapshot {
 
   @override
   bool hasChild(String path) {
-    // TODO: implement hasChild
     throw UnimplementedError();
   }
 
@@ -492,14 +491,11 @@ class MockDataSnapshot implements DataSnapshot {
   }
 
   @override
-  // TODO: implement priority
   Object? get priority => throw UnimplementedError();
 
   @override
-  // TODO: implement ref
   DatabaseReference get ref => throw UnimplementedError();
 
   @override
-  // TODO: implement children
   Iterable<DataSnapshot> get children => throw UnimplementedError();
 }

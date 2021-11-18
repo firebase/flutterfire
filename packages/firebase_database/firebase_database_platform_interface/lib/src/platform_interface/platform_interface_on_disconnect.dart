@@ -31,9 +31,11 @@ abstract class OnDisconnectPlatform extends PlatformInterface {
     throw UnimplementedError('set() not implemented');
   }
 
-  /// TODO
+  /// Ensures the data at this location is set with a priority to the specified
+  /// value when the client is disconnected (due to closing the browser,
+  /// navigating to a new page, or network issues).
   Future<void> setWithPriority(Object? value, Object? priority) {
-    throw UnimplementedError('set() not implemented');
+    throw UnimplementedError('setWithPriority() not implemented');
   }
 
   /// Ensures the data at this location is deleted when the client is disconnected

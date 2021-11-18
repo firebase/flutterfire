@@ -38,6 +38,6 @@ public abstract class EventsProxy {
     final Map<String, Object> additionalParams =
         buildAdditionalParams(eventType, previousChildName);
 
-    eventSink.success(payload.withChildKeys().withAdditionalParams(additionalParams).toMap());
+    eventSink.success(payload.withAdditionalParams(additionalParams).toMap());
   }
 }

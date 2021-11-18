@@ -107,4 +107,9 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   Future<void> purgeOutstandingWrites() async {
     throw UnsupportedError("purgeOutstandingWrites() is not supported for web");
   }
+
+  @override
+  void useDatabaseEmulator(String host, int port) {
+    _firebaseDatabase.useDatabaseEmulator(host, port);
+  }
 }

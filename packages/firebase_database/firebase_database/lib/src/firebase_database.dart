@@ -79,7 +79,7 @@ class FirebaseDatabase extends FirebasePluginPlatform {
     Uri uri = Uri.parse(url);
     String? currentDatabaseUrl = databaseURL ?? app.options.databaseURL;
     if (currentDatabaseUrl != null) {
-      if (uri.origin == currentDatabaseUrl) {
+      if (uri.origin != currentDatabaseUrl) {
         throw ArgumentError.value(
           url,
           'must equal the current FirebaseDatabase instance databaseURL',

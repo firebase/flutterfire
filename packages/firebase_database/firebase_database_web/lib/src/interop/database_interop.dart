@@ -14,7 +14,9 @@ import 'package:firebase_database_web/src/interop/app_interop.dart';
 import 'package:js/js.dart';
 
 part 'data_snapshot_interop.dart';
+
 part 'query_interop.dart';
+
 part 'reference_interop.dart';
 
 external void enableLogging([logger, bool persistent]);
@@ -39,6 +41,8 @@ abstract class DatabaseJsImpl {
   external void goOffline();
 
   external void goOnline();
+
+  external void useEmulator(String host, int port);
 
   external ReferenceJsImpl ref([String? path]);
 

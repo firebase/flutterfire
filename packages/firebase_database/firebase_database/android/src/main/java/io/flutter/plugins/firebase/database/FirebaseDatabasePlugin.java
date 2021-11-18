@@ -8,7 +8,6 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -176,16 +175,8 @@ public class FirebaseDatabasePlugin
         cachedThreadPool,
         () -> {
           final DatabaseReference ref = getReference(arguments);
-
           final Object value = arguments.get(Constants.VALUE);
-          final Object priority = arguments.get(Constants.PRIORITY);
-
-          if (priority != null) {
-            Tasks.await(ref.setValue(value, priority));
-          } else {
-            Tasks.await(ref.setValue(value));
-          }
-
+          Tasks.await(ref.setValue(value));
           return null;
         });
   }
@@ -254,7 +245,7 @@ public class FirebaseDatabasePlugin
           final DataSnapshot snapshot = Tasks.await(query.get());
           final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
 
-          return payload.withChildKeys().toMap();
+          return payload.toMap();
         });
   }
 
@@ -318,35 +309,34 @@ public class FirebaseDatabasePlugin
         });
   }
 
-  @SuppressWarnings("unchecked")
   private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           final Object value = arguments.get(Constants.VALUE);
-          final Object priority = arguments.get(Constants.PRIORITY);
+          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+          Tasks.await(onDisconnect.setValue(value));
+          return null;
+        });
+  }
 
-          Task<Void> onDisconnectTask;
+  private Task<Void> setWithPriorityOnDisconnect(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final Object value = arguments.get(Constants.VALUE);
+          final Object priority = arguments.get(Constants.PRIORITY);
           final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
 
+          Task<Void> onDisconnectTask;
           if (priority instanceof Double) {
             onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
           } else if (priority instanceof String) {
             onDisconnectTask = onDisconnect.setValue(value, (String) priority);
+          } else if (priority == null) {
+            onDisconnectTask = onDisconnect.setValue(value, (String) null);
           } else {
-            final TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            onDisconnectTask = tcs.getTask();
-
-            onDisconnect.setValue(
-                value,
-                (Map<String, Object>) priority,
-                (error, ref) -> {
-                  if (error != null) {
-                    tcs.setException(error.toException());
-                  } else {
-                    tcs.setResult(null);
-                  }
-                });
+            throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
           }
 
           Tasks.await(onDisconnectTask);
@@ -411,6 +401,9 @@ public class FirebaseDatabasePlugin
         break;
       case "OnDisconnect#set":
         methodCallTask = setOnDisconnect(arguments);
+        break;
+      case "OnDisconnect#setWithPriority":
+        methodCallTask = setWithPriorityOnDisconnect(arguments);
         break;
       case "OnDisconnect#update":
         methodCallTask = updateOnDisconnect(arguments);

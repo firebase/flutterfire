@@ -72,6 +72,9 @@ class Database
   /// state with the server state.
   void goOnline() => jsObject.goOnline();
 
+  void useDatabaseEmulator(String host, int port) =>
+      jsObject.useEmulator(host, port);
+
   /// Returns a [DatabaseReference] to the root or provided [path].
   DatabaseReference ref([String? path = '/']) =>
       DatabaseReference.getInstance(jsObject.ref(path ?? '/'));

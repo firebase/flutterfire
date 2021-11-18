@@ -7,22 +7,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FlutterDataSnapshotPayload {
-  private final DataSnapshot dataSnapshot;
   private Map<String, Object> payloadMap = new HashMap<>();
 
   public FlutterDataSnapshotPayload(DataSnapshot snapshot) {
-    dataSnapshot = snapshot;
-
     Map<String, Object> snapshotMap = new HashMap<>();
+
+    snapshotMap.put(Constants.KEY, snapshot.getKey());
+    snapshotMap.put(Constants.VALUE, snapshot.getValue());
+    snapshotMap.put(Constants.PRIORITY, snapshot.getPriority());
+
+    final int childrenCount = (int) snapshot.getChildrenCount();
+    if (childrenCount == 0) {
+      snapshotMap.put(Constants.CHILD_KEYS, new ArrayList<>());
+    } else {
+      final String[] childKeys = new String[childrenCount];
+      int i = 0;
+      final Iterable<DataSnapshot> children = snapshot.getChildren();
+      for (DataSnapshot child : children) {
+        childKeys[i] = child.getKey();
+        i++;
+      }
+      snapshotMap.put(Constants.CHILD_KEYS, Arrays.asList(childKeys));
+    }
+
     payloadMap.put(Constants.SNAPSHOT, snapshotMap);
-
-    final String key = snapshot.getKey();
-    final Object value = snapshot.getValue();
-    final Object priority = snapshot.getPriority();
-
-    snapshotMap.put(Constants.KEY, key);
-    snapshotMap.put(Constants.VALUE, value);
-    snapshotMap.put(Constants.PRIORITY, priority);
   }
 
   FlutterDataSnapshotPayload withAdditionalParams(Map<String, Object> params) {
@@ -30,29 +38,6 @@ public class FlutterDataSnapshotPayload {
     payloadMap = new HashMap<>();
     payloadMap.putAll(prevPayloadMap);
     payloadMap.putAll(params);
-
-    return this;
-  }
-
-  FlutterDataSnapshotPayload withChildKeys() {
-    final int childrenCount = (int) dataSnapshot.getChildrenCount();
-    if (childrenCount == 0) {
-      payloadMap.put(Constants.CHILD_KEYS, new ArrayList<>());
-      return this;
-    }
-
-    final String[] childKeys = new String[childrenCount];
-
-    int i = 0;
-    final Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-    for (DataSnapshot child : children) {
-      childKeys[i] = child.getKey();
-      i++;
-    }
-
-    payloadMap.put(Constants.CHILD_KEYS, Arrays.asList(childKeys));
-
     return this;
   }
 

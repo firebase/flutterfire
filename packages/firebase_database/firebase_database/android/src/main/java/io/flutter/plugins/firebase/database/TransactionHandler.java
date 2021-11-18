@@ -64,8 +64,7 @@ public class TransactionHandler implements Handler {
       final Map<String, Object> additionalParams = new HashMap<>();
       additionalParams.put(Constants.COMMITTED, committed);
 
-      transactionCompletionSource.setResult(
-          payload.withChildKeys().withAdditionalParams(additionalParams).toMap());
+      transactionCompletionSource.setResult(payload.withAdditionalParams(additionalParams).toMap());
     }
   }
 }
