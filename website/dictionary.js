@@ -91,5 +91,6 @@ module.exports = [
   'xml',
   'yaml',
   'fiam',
-  'ecommerce'
+  'ecommerce',
+  'programmatically',
 ];
