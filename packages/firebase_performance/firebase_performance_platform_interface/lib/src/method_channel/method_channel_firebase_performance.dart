@@ -25,7 +25,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   MethodChannelFirebasePerformance._()
       : _handle = 0,
         super();
-
+//todo why does the method channel need a handle?
   static int _nextHandle = 0;
   final int _handle;
 
@@ -44,6 +44,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   Future<bool> isPerformanceCollectionEnabled() async {
     final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
       'FirebasePerformance#isPerformanceCollectionEnabled',
+      //todo is handle needed here?
       <String, Object?>{'handle': _handle},
     );
     return isPerformanceCollectionEnabled!;
@@ -53,6 +54,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   Future<void> setPerformanceCollectionEnabled(bool enabled) {
     return channel.invokeMethod<void>(
       'FirebasePerformance#setPerformanceCollectionEnabled',
+      //todo is handle needed here?
       <String, Object?>{'handle': _handle, 'enable': enabled},
     );
   }
