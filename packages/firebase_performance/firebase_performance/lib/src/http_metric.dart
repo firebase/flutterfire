@@ -1,5 +1,4 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -20,9 +19,9 @@ part of firebase_performance;
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [HttpMetric] to avoid leaking on the platform side.
 class HttpMetric {
-  HttpMetricPlatform _delegate;
-
   HttpMetric._(this._delegate);
+
+  HttpMetricPlatform _delegate;
 
   /// HttpResponse code of the request.
   int? get httpResponseCode => _delegate.httpResponseCode;
@@ -40,32 +39,32 @@ class HttpMetric {
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set httpResponseCode(int? httpResponseCode) {
-    _delegate.httpResponseCode = httpResponseCode;
+  Future<void> setHttpResponseCode(int? httpResponseCode) {
+    return _delegate.setHttpResponseCode(httpResponseCode);
   }
 
   /// Size of the request payload.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set requestPayloadSize(int? requestPayloadSize) {
-    _delegate.requestPayloadSize = requestPayloadSize;
+  Future<void> setRequestPayloadSize(int? requestPayloadSize) {
+    return _delegate.setRequestPayloadSize(requestPayloadSize);
   }
 
   /// Content type of the response such as text/html, application/json, etc...
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set responseContentType(String? responseContentType) {
-    _delegate.responseContentType = responseContentType;
+  Future<void> setResponseContentType(String? responseContentType) {
+    return _delegate.setResponseContentType(responseContentType);
   }
 
   /// Size of the response payload.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  set responsePayloadSize(int? responsePayloadSize) {
-    _delegate.responsePayloadSize = responsePayloadSize;
+  Future<void> setResponsePayloadSize(int? responsePayloadSize) {
+    return _delegate.setResponsePayloadSize(responsePayloadSize);
   }
 
   /// Starts this [HttpMetric].
@@ -124,7 +123,7 @@ class HttpMetric {
   String? getAttribute(String name) => _delegate.getAttribute(name);
 
   /// All attributes added.
-  Future<Map<String, String>> getAttributes() async {
+  Map<String, String> getAttributes() {
     return _delegate.getAttributes();
   }
 }
