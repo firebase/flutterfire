@@ -24,7 +24,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         case 'FirebaseDynamicLink#onLinkSuccess':
           Map<String, dynamic> event =
               Map<String, dynamic>.from(call.arguments);
-          _onLinkController.add(getPendingDynamicLinkDataFromMap(event));
+          _onLinkController.add(_getPendingDynamicLinkDataFromMap(event));
           break;
         case 'FirebaseDynamicLink#onLinkError':
           Map<String, dynamic> error =
@@ -67,7 +67,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
     }..addAll(other);
   }
 
-  PendingDynamicLinkData? getPendingDynamicLinkDataFromMap(
+  PendingDynamicLinkData? _getPendingDynamicLinkDataFromMap(
     Map<dynamic, dynamic>? linkData,
   ) {
     if (linkData == null) return null;
@@ -107,7 +107,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         _withChannelDefaults({}),
       );
 
-      return getPendingDynamicLinkDataFromMap(linkData);
+      return _getPendingDynamicLinkDataFromMap(linkData);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
@@ -121,7 +121,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         'FirebaseDynamicLinks#getDynamicLink',
         _withChannelDefaults({'url': url.toString()}),
       );
-      return getPendingDynamicLinkDataFromMap(linkData);
+      return _getPendingDynamicLinkDataFromMap(linkData);
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
