@@ -26,7 +26,6 @@ class Trace {
 
   final TracePlatform _delegate;
 
-
   /// Starts this [Trace].
   ///
   /// Can only be called once.

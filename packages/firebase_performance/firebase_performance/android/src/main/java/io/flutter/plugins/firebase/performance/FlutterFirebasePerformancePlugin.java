@@ -7,27 +7,25 @@ package io.flutter.plugins.firebase.performance;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 import android.util.SparseArray;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Flutter plugin accessing Firebase Performance API.
  *
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
-public class FlutterFirebasePerformancePlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+public class FlutterFirebasePerformancePlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_performance";
 
   private final SparseArray<MethodCallHandler> handlers = new SparseArray<>();
@@ -83,9 +81,7 @@ public class FlutterFirebasePerformancePlugin implements FlutterFirebasePlugin, 
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(
-      () ->
-        new HashMap<String, Object>() {});
+    return Tasks.call(() -> new HashMap<String, Object>() {});
   }
 
   @Override

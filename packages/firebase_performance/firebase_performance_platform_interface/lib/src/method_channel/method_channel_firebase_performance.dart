@@ -11,7 +11,6 @@ import '../platform_interface/platform_interface_firebase_performance.dart';
 import 'method_channel_http_metric.dart';
 import 'utils/exception.dart';
 
-
 /// The method channel implementation of [FirebasePerformancePlatform].
 class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   MethodChannelFirebasePerformance({required FirebaseApp app})
@@ -45,12 +44,12 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
     try {
-    final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
-      'FirebasePerformance#isPerformanceCollectionEnabled',
-      //todo is handle needed here?
-      <String, Object?>{'handle': _handle},
-    );
-    return isPerformanceCollectionEnabled!;
+      final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
+        'FirebasePerformance#isPerformanceCollectionEnabled',
+        //todo is handle needed here?
+        <String, Object?>{'handle': _handle},
+      );
+      return isPerformanceCollectionEnabled!;
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
@@ -59,11 +58,11 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) {
     try {
-    return channel.invokeMethod<void>(
-      'FirebasePerformance#setPerformanceCollectionEnabled',
-      //todo is handle needed here?
-      <String, Object?>{'handle': _handle, 'enable': enabled},
-    );
+      return channel.invokeMethod<void>(
+        'FirebasePerformance#setPerformanceCollectionEnabled',
+        //todo is handle needed here?
+        <String, Object?>{'handle': _handle, 'enable': enabled},
+      );
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
