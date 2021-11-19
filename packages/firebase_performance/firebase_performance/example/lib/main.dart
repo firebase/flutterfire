@@ -16,10 +16,6 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
-void myLog(String msg) {
-  print('My Log: $msg');
-}
-
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -43,7 +39,7 @@ class _MetricHttpClient extends BaseClient {
     StreamedResponse response;
     try {
       response = await _inner.send(request);
-      myLog(
+      print(
         'Called ${request.url} with custom monitoring, response code: ${response.statusCode}',
       );
 
@@ -60,10 +56,10 @@ class _MetricHttpClient extends BaseClient {
 
     final attributes = metric.getAttributes();
 
-    myLog('Http metric attributes: $attributes.');
+    print('Http metric attributes: $attributes.');
 
     String? score = metric.getAttribute('score');
-    myLog('Http metric score attribute value: $score');
+    print('Http metric score attribute value: $score');
 
     return response;
   }
@@ -117,13 +113,13 @@ class _MyAppState extends State<MyApp> {
     await trace.stop();
 
     final sum = trace.getMetric('sum');
-    myLog('test_trace_1 sum value: $sum');
+    print('test_trace_1 sum value: $sum');
 
     final attributes = trace.getAttributes();
-    myLog('test_trace_1 attributes: $attributes');
+    print('test_trace_1 attributes: $attributes');
 
     final favoriteColor = trace.getAttribute('favorite_color');
-    myLog('test_trace_1 favorite_color: $favoriteColor');
+    print('test_trace_1 favorite_color: $favoriteColor');
 
     setState(() {
       _trace1HasRan = true;
@@ -146,7 +142,7 @@ class _MyAppState extends State<MyApp> {
     await trace.stop();
 
     final sum2 = trace.getMetric('sum');
-    myLog('test_trace_2 sum value: $sum2');
+    print('test_trace_2 sum value: $sum2');
 
     setState(() {
       _trace2HasRan = true;
@@ -174,7 +170,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _testAutomaticHttpMetric() async {
     Response response = await get(Uri.parse('https://www.facebook.com'));
-    myLog('Called facebook, response code: ${response.statusCode}');
+    print('Called facebook, response code: ${response.statusCode}');
   }
 
   @override
