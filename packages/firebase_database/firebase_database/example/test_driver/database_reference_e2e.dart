@@ -23,17 +23,18 @@ void runDatabaseReferenceTests() {
       await ref.set(0);
     });
 
+    // TODO aborts a transaction
+
     test('executes transaction', () async {
       final snapshot = await ref.get();
-
       final value = (snapshot.value ?? 0) as int;
-
       final result = await ref.runTransaction((value) {
         return (value as int? ?? 0) + 1;
       });
 
       expect(result.committed, true);
       expect((result.snapshot.value ?? 0) as int > value, true);
+      expect(result.snapshot.key, ref.key);
     });
 
     test('get primitive list values', () async {
@@ -53,16 +54,29 @@ void runDatabaseReferenceTests() {
     });
   });
 
-  group('DatabaseReference.set(value, [priority])', () {
+  group('DatabaseReference.set()', () {
     test('sets value', () async {
       final v = Random.secure().nextInt(1024);
       await ref.set(v);
       final actual = await ref.get();
-
-      expect(v, actual.value);
+      expect(actual.value, v);
     });
 
-    test('sets value with priority', () async {
+    test('removes a value if set to null', () async {
+      final v = Random.secure().nextInt(1024);
+      await ref.set(v);
+      final before = await ref.get();
+      expect(before.value, v);
+
+      await ref.set(null);
+      final after = await ref.get();
+      expect(after.value, isNull);
+      expect(after.exists, isFalse);
+    });
+  });
+
+  group('DatabaseReference.setWithPriority()', () {
+    test('sets a non-null value with a non-null priority', () async {
       final ref = database.ref('priority_test');
 
       await Future.wait([
@@ -71,9 +85,8 @@ void runDatabaseReferenceTests() {
         ref.child('third').setWithPriority(3, 5),
       ]);
 
-      final snapshot = await ref.get();
-      final keys = List<String>.from((snapshot.value as dynamic).keys);
-
+      final snapshot = await ref.orderByPriority().get();
+      final keys = snapshot.children.map((child) => child.key).toList();
       expect(keys, ['second', 'third', 'first']);
     });
   });
@@ -110,20 +123,30 @@ void runDatabaseReferenceTests() {
   group('DatabaseReference.setPriority(newPriority)', () {
     setUp(setupPrioritiesTestData);
 
-    test('updates the priority of the node', () async {
+    test('updates the priority of a node', () async {
       final ref = database.ref('priority_test');
-      final snapshot = await ref.get();
-      final currentOrder = List<String>.from((snapshot.value as dynamic).keys);
+      // Confirm initial priority is null.
+      await ref.setPriority(null);
+      final snapshotNullPriority = await ref.get();
+      expect(snapshotNullPriority.priority, isNull);
+      // Confirm priority is set.
+      await ref.setPriority(123);
+      final snapshotWithPriority = await ref.get();
+      expect(snapshotWithPriority.priority, isNotNull);
+      expect(snapshotWithPriority.priority, 123);
+    });
 
-      for (int i = 0; i < currentOrder.length; i++) {
-        final key = currentOrder[currentOrder.length - 1 - i];
-        await ref.child(key).setPriority(i);
-      }
-
-      final newSnapshot = await ref.get();
-      final newOrder = List<String>.from((newSnapshot.value as dynamic).keys);
-
-      expect(newOrder, currentOrder.reversed.toList());
+    test('clears the priority of the node if set to null', () async {
+      final ref = database.ref('priority_test');
+      // Confirm priority is initially set.
+      await ref.setPriority(123);
+      final snapshotWithPriority = await ref.get();
+      expect(snapshotWithPriority.priority, isNotNull);
+      expect(snapshotWithPriority.priority, 123);
+      // Confirm priority is updated to null.
+      await ref.setPriority(null);
+      final snapshotNullPriority = await ref.get();
+      expect(snapshotNullPriority.priority, isNull);
     });
   });
 }

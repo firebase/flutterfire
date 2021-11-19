@@ -79,8 +79,10 @@ void runQueryTests() {
     );
 
     test('orderByChild()', () async {
-      final s = await database.ref('ordered').orderByChild('value').once();
-      expect(s.keys, ['three', 'one', 'four', 'two']);
+      final snapshot =
+          await database.ref('ordered').orderByChild('value').once();
+      final keys = snapshot.children.map((child) => child.key).toList();
+      expect(keys, ['three', 'one', 'four', 'two']);
     });
 
     test('orderByPriority()', () async {
@@ -177,9 +179,7 @@ void runQueryTests() {
     test('startAfter()', () async {
       final ref = database.ref('priority_test');
       final snapshot = await ref.orderByKey().startAfter('first').get();
-
-      final keys = List<String>.from((snapshot.value as dynamic).keys);
-
+      final keys = snapshot.children.map((child) => child.key).toList();
       expect(keys, ['second', 'third']);
     });
 
