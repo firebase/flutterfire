@@ -126,12 +126,19 @@ class _NumberSlotState extends State<_NumberSlot>
   }
 }
 
+typedef SMSCodeSubmitCallback = void Function(String smsCode);
+
 class SMSCodeInput extends StatefulWidget {
   final bool autofocus;
   final Widget? text;
+  final SMSCodeSubmitCallback? onSubmit;
 
-  const SMSCodeInput({Key? key, this.autofocus = true, this.text})
-      : super(key: key);
+  const SMSCodeInput({
+    Key? key,
+    this.autofocus = true,
+    this.text,
+    this.onSubmit,
+  }) : super(key: key);
 
   @override
   SMSCodeInputState createState() => SMSCodeInputState();
@@ -156,7 +163,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
 
   @override
   void didChangeDependencies() {
-    final authState = AuthState.of(context);
+    final authState = AuthState.maybeOf(context);
 
     if (authState is PhoneVerified) {
       if (authState.credential is PhoneAuthCredential) {
@@ -173,7 +180,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final l = FirebaseUILocalizations.labelsOf(context);
 
-    final state = AuthState.of(context);
+    final state = AuthState.maybeOf(context);
 
     Widget? text;
     if (state is CredentialReceived ||
@@ -201,6 +208,10 @@ class SMSCodeInputState extends State<SMSCodeInput> {
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              onSubmitted: (v) {
+                if (v.length < 6) return;
+                widget.onSubmit?.call(v);
+              },
             ),
           ),
           Column(

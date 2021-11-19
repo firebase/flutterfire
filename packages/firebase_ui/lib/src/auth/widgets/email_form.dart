@@ -8,16 +8,20 @@ import '../auth_state.dart';
 import '../validators.dart';
 import 'error_text.dart';
 
+typedef EmailSubmitCallback = void Function(String email, String password);
+
 class EmailForm extends StatelessWidget {
   final FirebaseAuth? auth;
-  final AuthAction action;
+  final AuthAction? action;
   final EmailProviderConfiguration? config;
+  final EmailSubmitCallback? onSubmit;
 
   const EmailForm({
     Key? key,
-    required this.action,
+    this.action,
     this.auth,
     this.config,
+    this.onSubmit,
   }) : super(key: key);
 
   @override
@@ -25,13 +29,14 @@ class EmailForm extends StatelessWidget {
     return AuthFlowBuilder<EmailFlowController>(
       action: action,
       config: config,
-      child: const _SignInFormContent(),
+      child: _SignInFormContent(onSubmit: onSubmit),
     );
   }
 }
 
 class _SignInFormContent extends StatefulWidget {
-  const _SignInFormContent({Key? key}) : super(key: key);
+  final EmailSubmitCallback? onSubmit;
+  const _SignInFormContent({Key? key, this.onSubmit}) : super(key: key);
 
   @override
   _SignInFormContentState createState() => _SignInFormContentState();
@@ -77,10 +82,14 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
 
     if (formKey.currentState!.validate()) {
-      ctrl.setEmailAndPassword(
-        emailCtrl.text,
-        passwordCtrl.text,
-      );
+      if (widget.onSubmit != null) {
+        widget.onSubmit!(emailCtrl.text, passwordCtrl.text);
+      } else {
+        ctrl.setEmailAndPassword(
+          emailCtrl.text,
+          passwordCtrl.text,
+        );
+      }
     }
   }
 

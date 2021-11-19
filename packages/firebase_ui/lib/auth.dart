@@ -35,6 +35,7 @@ export 'src/auth/oauth/provider_resolvers.dart'
 export 'src/auth/oauth/oauth_providers.dart'
     show Google, Apple, Twitter, Facebook, OAuthHelpers;
 
+export 'src/auth/widgets/auth_flow_builder.dart';
 export 'src/auth/widgets/email_form.dart' show EmailForm;
 export 'src/auth/widgets/error_text.dart' show ErrorText;
 export 'src/auth/widgets/phone_verification_button.dart'
@@ -43,7 +44,11 @@ export 'src/auth/widgets/phone_verification_button.dart'
 export 'src/auth/widgets/internal/oauth_provider_button.dart'
     show OAuthProviderButton, OAuthProviderIconButton, ButtonVariant;
 
+export 'src/auth/widgets/sign_out_button.dart';
+
 export 'src/auth/views/login_view.dart';
+export 'src/auth/views/phone_input_view.dart';
+export 'src/auth/views/sms_code_input_view.dart';
 
 export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
@@ -54,3 +59,4 @@ export 'src/auth/navigation/phone_verification.dart';
 
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';
+export 'src/auth/configs/oauth_provider_configuration.dart';

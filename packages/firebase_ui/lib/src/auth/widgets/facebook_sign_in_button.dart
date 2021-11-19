@@ -42,6 +42,9 @@ class FacebookSignInButton extends OAuthProviderButtonWidget {
   final String? redirectUri;
 
   @override
+  final VoidCallback? onTap;
+
+  @override
   OAuthProviderConfiguration get providerConfig =>
       FacebookProviderConfiguration(
         clientId: clientId,
@@ -58,6 +61,7 @@ class FacebookSignInButton extends OAuthProviderButtonWidget {
     this.action,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }
 
@@ -70,6 +74,9 @@ class FacebookSignInIconButton extends OAuthProviderIconButtonWidget {
 
   final String clientId;
   final String? redirectUri;
+
+  @override
+  final VoidCallback? onTap;
 
   @override
   OAuthProviderConfiguration get providerConfig =>
@@ -88,5 +95,6 @@ class FacebookSignInIconButton extends OAuthProviderIconButtonWidget {
     this.action,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }

@@ -120,6 +120,7 @@ class OAuthProviderButton extends StatelessWidget
   final FirebaseAuth? auth;
   final double _padding;
   final OAuthProviderConfiguration providerConfig;
+  final VoidCallback? onTap;
 
   const OAuthProviderButton({
     Key? key,
@@ -127,6 +128,7 @@ class OAuthProviderButton extends StatelessWidget
     this.action,
     this.auth,
     this.size = 19,
+    this.onTap,
   })  : _padding = size * 1.33 / 2,
         super(key: key);
 
@@ -192,7 +194,7 @@ class OAuthProviderButton extends StatelessWidget
             Positioned.fill(
               child: OAuthProviderButtonTapHandler(
                 borderRadius: borderRadius,
-                onTap: signIn,
+                onTap: onTap != null ? (context) => onTap!() : signIn,
               ),
             ),
             Builder(
@@ -227,6 +229,8 @@ abstract class OAuthProviderButtonWidget extends StatelessWidget {
   FirebaseAuth? get auth;
   double? get size;
 
+  VoidCallback? get onTap;
+
   @override
   Widget build(BuildContext context) {
     return OAuthProviderButton(
@@ -244,6 +248,7 @@ class OAuthProviderIconButton extends StatelessWidget
   final FirebaseAuth? auth;
   final AuthAction? action;
   final OAuthProviderConfiguration providerConfig;
+  final VoidCallback? onTap;
 
   const OAuthProviderIconButton({
     Key? key,
@@ -251,6 +256,7 @@ class OAuthProviderIconButton extends StatelessWidget
     this.size = 44,
     this.auth,
     this.action,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -300,7 +306,11 @@ class OAuthProviderIconButton extends StatelessWidget
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    signIn(context);
+                    if (onTap != null) {
+                      onTap!();
+                    } else {
+                      signIn(context);
+                    }
                   },
                 ),
               ),
@@ -319,6 +329,7 @@ abstract class OAuthProviderIconButtonWidget extends StatelessWidget {
   FirebaseAuth? get auth;
   AuthAction? get action;
   double? get size;
+  VoidCallback? get onTap;
 
   @override
   Widget build(BuildContext context) {

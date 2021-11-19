@@ -54,6 +54,9 @@ class TwitterSignInButton extends OAuthProviderButtonWidget {
   @override
   final double? size;
 
+  @override
+  final VoidCallback? onTap;
+
   const TwitterSignInButton({
     Key? key,
     required this.apiKey,
@@ -62,6 +65,7 @@ class TwitterSignInButton extends OAuthProviderButtonWidget {
     this.action,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }
 
@@ -75,6 +79,9 @@ class TwitterSignInIconButton extends OAuthProviderIconButtonWidget {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
+
+  @override
+  final VoidCallback? onTap;
 
   @override
   OAuthProviderConfiguration get providerConfig => TwitterProviderConfiguration(
@@ -94,5 +101,6 @@ class TwitterSignInIconButton extends OAuthProviderIconButtonWidget {
     this.action,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -71,16 +72,19 @@ class _CountryPickerState extends State<CountryPicker> {
 }
 
 class PhoneInput extends StatefulWidget {
-  final SubmitCallback? onSubmitted;
+  final SubmitCallback? onSubmit;
 
-  static String getPhoneNumber(GlobalKey<PhoneInputState> key) {
+  static String? getPhoneNumber(GlobalKey<PhoneInputState> key) {
     final state = key.currentState!;
-    return state.phoneNumber;
+
+    if (state.formKey.currentState!.validate()) {
+      return state.phoneNumber;
+    }
   }
 
   const PhoneInput({
     Key? key,
-    this.onSubmitted,
+    this.onSubmit,
   }) : super(key: key);
 
   @override
@@ -90,9 +94,25 @@ class PhoneInput extends StatefulWidget {
 class PhoneInputState extends State<PhoneInput> {
   final controller = TextEditingController();
   final countryPickerKey = GlobalKey<_CountryPickerState>();
+  final formKey = GlobalKey<FormState>();
 
   String get phoneNumber =>
       '+${countryPickerKey.currentState!.phoneCode}${controller.text}';
+
+  FirebaseUILocalizationLabels get labels =>
+      FirebaseUILocalizations.labelsOf(context);
+
+  String? validator(String? value) {
+    if (value == null || value.isEmpty) {
+      return labels.phoneNumberIsRequiredErrorText;
+    }
+
+    if (phoneNumber.length < 11) {
+      return labels.phoneNumberInvalidErrorText;
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +120,25 @@ class PhoneInputState extends State<PhoneInput> {
       children: [
         CountryPicker(key: countryPickerKey),
         Expanded(
-          child: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              labelText: 'Phone number',
+          child: Form(
+            key: formKey,
+            child: TextFormField(
+              controller: controller,
+              decoration: InputDecoration(
+                labelText: labels.phoneInputLabel,
+              ),
+              validator: validator,
+              onFieldSubmitted: (v) {
+                if (formKey.currentState!.validate()) {
+                  widget.onSubmit?.call(phoneNumber);
+                }
+              },
+              autofocus: true,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              keyboardType: TextInputType.phone,
             ),
-            onSubmitted: widget.onSubmitted,
-            autofocus: true,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-            ],
-            keyboardType: TextInputType.phone,
           ),
         ),
       ],

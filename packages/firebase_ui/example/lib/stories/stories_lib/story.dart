@@ -58,39 +58,6 @@ class _StoriesState extends State<Stories> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = _categories
-        .asMap()
-        .map((index, e) {
-          return MapEntry(
-            index,
-            ExpansionPanelRadio(
-              value: e.hashCode,
-              // isExpanded: _activeCategoryIndex == index,
-              backgroundColor: Colors.white,
-              headerBuilder: (context, isExpanded) =>
-                  ListTile(title: Text(e.title)),
-              body: Column(
-                children: [
-                  for (int i = 0; i < e.stories.length; i++)
-                    ListTile(
-                      selected: _activeCategoryIndex == index &&
-                          _activeStoryIndex == i,
-                      title: Text(e.stories[i].title),
-                      onTap: () {
-                        setState(() {
-                          _activeCategoryIndex = index;
-                          _activeStoryIndex = i;
-                        });
-                      },
-                    ),
-                ],
-              ),
-            ),
-          );
-        })
-        .values
-        .toList();
-
     final mq = MediaQuery.of(context);
 
     return Scaffold(
@@ -100,8 +67,44 @@ class _StoriesState extends State<Stories> {
             width: 300,
             height: mq.size.height,
             child: Card(
-              child: SingleChildScrollView(
-                child: ExpansionPanelList.radio(children: categories),
+              child: ListView.builder(
+                itemCount: _categories.length,
+                itemBuilder: (context, index) {
+                  final category = _categories[index];
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8).copyWith(left: 16),
+                        child: Text(
+                          category.title,
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          for (int i = 0; i < category.stories.length; i++)
+                            ListTile(
+                              title: Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(category.stories[i].title),
+                              ),
+                              dense: true,
+                              selected: i == _activeStoryIndex &&
+                                  index == _activeCategoryIndex,
+                              onTap: () {
+                                setState(() {
+                                  _activeCategoryIndex = index;
+                                  _activeStoryIndex = i;
+                                });
+                              },
+                            ),
+                        ],
+                      )
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -129,7 +132,10 @@ class _StoriesState extends State<Stories> {
                       },
                       pages: [
                         MaterialPage(
-                          child: activeStory?.widget ?? const SizedBox.shrink(),
+                          child: Center(
+                            child:
+                                activeStory?.widget ?? const SizedBox.shrink(),
+                          ),
                         ),
                       ],
                     ),
@@ -170,14 +176,57 @@ class _KnobsPanelState extends State<KnobsPanel> {
       children: [
         for (final knob in widget.knobs)
           if (knob is Knob<bool>)
-            CheckboxListTile(
-              title: Text(knob.title),
-              value: knob.value,
-              onChanged: (v) {
-                knob.value = v!;
-              },
-            ),
+            BoolKnobControl(knob: knob)
+          else if (knob is EnumKnob)
+            EnumKnobControl(knob: knob)
       ],
+    );
+  }
+}
+
+class BoolKnobControl extends StatelessWidget {
+  final Knob<bool> knob;
+  const BoolKnobControl({Key? key, required this.knob}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      title: Text(knob.title),
+      value: knob.value,
+      onChanged: (v) {
+        knob.value = v!;
+      },
+    );
+  }
+}
+
+class EnumKnobControl extends StatelessWidget {
+  final EnumKnob knob;
+  const EnumKnobControl({Key? key, required this.knob}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(knob.title),
+          DropdownButton(
+            items: [
+              for (final e in knob.values)
+                DropdownMenuItem(
+                  value: e,
+                  child: Text(e.toString().split('.').removeLast()),
+                ),
+            ],
+            value: knob.value,
+            onChanged: (v) {
+              knob.value = v;
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -193,6 +242,14 @@ abstract class Story {
   List<Knob> get knobs;
 
   T knob<T>({required String title, required T value});
+
+  T enumKnob<T>({
+    required String title,
+    required T value,
+    required List<T> values,
+  });
+
+  void notify(String message);
 }
 
 abstract class StoryWidget extends StatelessWidget {
@@ -212,7 +269,6 @@ abstract class StoryWidget extends StatelessWidget {
 class Knob<T> extends ValueNotifier<T> {
   Knob(this.title, T value) : super(value);
 
-  Type get type => T;
   final String title;
 
   void subscribe(StoryElement element) {
@@ -220,6 +276,15 @@ class Knob<T> extends ValueNotifier<T> {
       element.markNeedsBuild();
     });
   }
+}
+
+class MultiValueKnob<T> extends Knob<T> {
+  final List<T> values;
+  MultiValueKnob(String title, T value, this.values) : super(title, value);
+}
+
+class EnumKnob<T> extends MultiValueKnob<T> {
+  EnumKnob(String title, value, List<T> values) : super(title, value, values);
 }
 
 final _widgetKnobs = <int, List<Knob>>{};
@@ -238,10 +303,22 @@ class StoryElement extends StatelessElement implements Story {
 
   @override
   T knob<T>({required String title, required T value}) {
+    return _knob(title: title, knob: Knob<T>(title, value));
+  }
+
+  @override
+  T enumKnob<T>({
+    required String title,
+    required T value,
+    required List<T> values,
+  }) {
+    return _knob(title: title, knob: EnumKnob<T>(title, value, values));
+  }
+
+  T _knob<T>({required String title, required Knob knob}) {
     if (knobsMap.containsKey(title)) {
       return knobsMap[title]!.value;
     } else {
-      final knob = Knob<T>(title, value);
       knobsMap[title] = knob;
       knobs.add(knob);
       knob.subscribe(this);
@@ -263,6 +340,13 @@ class StoryElement extends StatelessElement implements Story {
     }
 
     super.mount(parent, newSlot);
+  }
+
+  @override
+  void notify(String message) {
+    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
+      content: Text(message),
+    ));
   }
 
   @override

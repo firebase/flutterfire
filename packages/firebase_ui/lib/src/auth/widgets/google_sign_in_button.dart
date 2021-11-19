@@ -49,6 +49,9 @@ class GoogleSignInButton extends OAuthProviderButtonWidget {
   final String? redirectUri;
 
   @override
+  final VoidCallback? onTap;
+
+  @override
   OAuthProviderConfiguration get providerConfig => GoogleProviderConfiguration(
         clientId: clientId,
         redirectUri: redirectUri,
@@ -64,6 +67,7 @@ class GoogleSignInButton extends OAuthProviderButtonWidget {
     this.action,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }
 
@@ -76,6 +80,9 @@ class GoogleSignInIconButton extends OAuthProviderIconButtonWidget {
 
   final String clientId;
   final String? redirectUri;
+
+  @override
+  final VoidCallback? onTap;
 
   @override
   OAuthProviderConfiguration get providerConfig => GoogleProviderConfiguration(
@@ -93,5 +100,6 @@ class GoogleSignInIconButton extends OAuthProviderIconButtonWidget {
     this.redirectUri,
     this.auth,
     this.size,
+    this.onTap,
   }) : super(key: key);
 }

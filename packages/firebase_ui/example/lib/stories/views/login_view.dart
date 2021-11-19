@@ -1,28 +1,30 @@
+import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/auth/apple.dart';
 import 'package:firebase_ui/auth/facebook.dart';
 import 'package:firebase_ui/auth/google.dart';
 import 'package:firebase_ui/auth/twitter.dart';
 import 'package:firebase_ui_example/config.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_ui/auth.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_ui_example/stories/stories_lib/story.dart';
+import 'package:flutter/widgets.dart';
 
-import '../stories_lib/story.dart';
-
-class RegisterScreenStory extends StoryWidget {
-  const RegisterScreenStory({Key? key}) : super(key: key);
+class LoginViewStory extends StoryWidget {
+  const LoginViewStory({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final story = storyOf(context);
 
-    story.category = 'Screens';
-    story.title = 'Register screen';
+    story.category = 'Views';
+    story.title = 'Login view';
 
-    final renderImage = story.knob<bool>(title: 'With image', value: true);
+    final action = story.enumKnob(
+      title: 'Auth action',
+      value: AuthAction.signIn,
+      values: AuthAction.values,
+    );
 
     final emailEnabled = story.knob<bool>(title: 'Email provider', value: true);
-    final phoneEnabled = story.knob<bool>(title: 'Phone provider', value: true);
+    final phoneEnabled = story.knob<bool>(title: 'Email provider', value: true);
     final googleEnabled = story.knob<bool>(title: 'Google OAuth', value: true);
     final appleEnabled = story.knob<bool>(title: 'Apple OAuth', value: true);
     final facebookEnabled = story.knob<bool>(
@@ -34,32 +36,8 @@ class RegisterScreenStory extends StoryWidget {
       value: true,
     );
 
-    return RegisterScreen(
-      headerBuilder: renderImage
-          ? (context, constraints, _) {
-              return Padding(
-                padding: const EdgeInsets.all(20),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: SvgPicture.asset('assets/images/firebase_logo.svg'),
-                ),
-              );
-            }
-          : null,
-      sideBuilder: renderImage
-          ? (context, constraints) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(constraints.maxWidth / 8),
-                  child: SvgPicture.asset(
-                    'assets/images/firebase_logo.svg',
-                    width: constraints.maxWidth / 2,
-                    height: constraints.maxWidth / 2,
-                  ),
-                ),
-              );
-            }
-          : null,
+    return LoginView(
+      action: action,
       providerConfigs: [
         if (emailEnabled) const EmailProviderConfiguration(),
         if (phoneEnabled) const PhoneProviderConfiguration(),

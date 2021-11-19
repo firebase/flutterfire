@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/auth.dart';
 
-import '../story.dart';
+import '../stories_lib/story.dart';
 
 class EmailFormWidgetStory extends StoryWidget {
   const EmailFormWidgetStory({Key? key}) : super(key: key);
@@ -13,13 +13,11 @@ class EmailFormWidgetStory extends StoryWidget {
     story.category = 'Widgets';
     story.title = 'Email form';
 
-    final action =
-        story.knob<AuthAction>(title: 'Auth action', value: AuthAction.signIn);
-
     return Center(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 500),
-        child: EmailForm(action: action),
+      child: EmailForm(
+        onSubmit: (email, password) {
+          story.notify('Submitted $email $password');
+        },
       ),
     );
   }
