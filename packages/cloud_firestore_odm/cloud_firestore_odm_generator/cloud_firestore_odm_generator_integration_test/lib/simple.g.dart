@@ -3521,8 +3521,33 @@ class ExplicitSubPathQueryDocumentSnapshot
 }
 
 // **************************************************************************
+// ValidatorGenerator
+// **************************************************************************
+
+_$assertMinValidation(MinValidation instance) {
+  const Min(0).validate(instance.intNbr);
+  const Max(42).validate(instance.intNbr);
+  const Min(10).validate(instance.doubleNbr);
+  const Min(-10).validate(instance.numNbr);
+}
+
+// **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+MinValidation _$MinValidationFromJson(Map<String, dynamic> json) =>
+    MinValidation(
+      json['intNbr'] as int,
+      (json['doubleNbr'] as num).toDouble(),
+      json['numNbr'] as num,
+    );
+
+Map<String, dynamic> _$MinValidationToJson(MinValidation instance) =>
+    <String, dynamic>{
+      'intNbr': instance.intNbr,
+      'doubleNbr': instance.doubleNbr,
+      'numNbr': instance.numNbr,
+    };
 
 Root _$RootFromJson(Map<String, dynamic> json) => Root(
       json['nonNullable'] as String,

@@ -14,21 +14,19 @@ class Movie {
     required this.runtime,
     required this.title,
     required this.year,
-  });
-
-  factory Movie.fromJson(Map<String, Object?> json) {
-    return _$MovieFromJson(json);
+  }) {
+    _$assertMovie(this);
   }
 
   final String poster;
+  @Min(0)
   final int likes;
   final String title;
+  @Min(0)
   final int year;
   final String runtime;
   final String rated;
   final List<String>? genre;
-
-  Map<String, Object?> toJson() => _$MovieToJson(this);
 }
 
 @Collection<Movie>('firestore-example-app')
@@ -42,12 +40,6 @@ class Comment {
     required this.message,
   });
 
-  factory Comment.fromJson(Map<String, Object?> json) {
-    return _$CommentFromJson(json);
-  }
-
   final String authorName;
   final String message;
-
-  Map<String, Object?> toJson() => _$CommentToJson(this);
 }

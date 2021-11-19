@@ -173,7 +173,10 @@ void main() {
               .collection('firestore-example-app')
               .doc('123')
               .set(
-                createMovie(title: 'title').toJson(),
+                MovieCollectionReference.toFirestore(
+                  createMovie(title: 'title'),
+                  null,
+                ),
               );
 
           final doc = collection.doc('123');
@@ -187,6 +190,13 @@ void main() {
                 .having((e) => e.data?.title, 'data.title', 'title'),
           );
         });
+      });
+
+      test('Comments.parent is equal to the parent collection', () {
+        expect(
+          moviesRef.doc('123').comments.parent,
+          moviesRef.doc('123'),
+        );
       });
 
       test('path', () {

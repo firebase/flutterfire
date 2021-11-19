@@ -14,6 +14,19 @@ abstract class ${data.collectionReferenceInterfaceName}
         FirestoreCollectionReference<${data.querySnapshotName}> {
   ${data.parent != null ? _subCollectionConstructors(data, asbtract: true) : _rootCollectionConstructors(data, abstract: true)}
 
+  static ${data.type} fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return ${data.fromJson('snapshot.data()!')};
+  }
+ 
+  static Map<String, Object?> toFirestore(
+    ${data.type} value,
+    SetOptions? options,
+  ) {
+    return ${data.toJson('value')};
+  }
 
 ${_parentProperty(data, abstract: true)}
 
@@ -30,19 +43,6 @@ class ${data.collectionReferenceImplName}
       implements ${data.collectionReferenceInterfaceName} {
   ${data.parent != null ? _subCollectionConstructors(data) : _rootCollectionConstructors(data)}
 
-  static ${data.type} _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return ${data.fromJson('snapshot.data()!')};
-  }
- 
-  static Map<String, Object?> _toFirestore(
-    ${data.type} value,
-    SetOptions? options,
-  ) {
-    return ${data.toJson('value')};
-  }
 
 ${_parentProperty(data)}
 
@@ -136,8 +136,8 @@ ${_parentProperty(data)}
       parent
         .collection('${pathSplit.last}')
         .withConverter(
-          fromFirestore: _fromFirestore,
-          toFirestore: _toFirestore,
+          fromFirestore: ${data.collectionReferenceInterfaceName}.fromFirestore,
+          toFirestore: ${data.collectionReferenceInterfaceName}.toFirestore,
         ),
     );
   }
@@ -168,8 +168,8 @@ factory ${data.collectionReferenceInterfaceName}([
       firestore
         .collection('${data.path}')
         .withConverter(
-          fromFirestore: _fromFirestore,
-          toFirestore: _toFirestore,
+          fromFirestore: ${data.collectionReferenceInterfaceName}.fromFirestore,
+          toFirestore: ${data.collectionReferenceInterfaceName}.toFirestore,
         ),
     );
   }

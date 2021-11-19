@@ -126,8 +126,8 @@ Future<void> update({${parameters.join()}}) async {
   ${data.collectionReferenceInterfaceName} get parent {
     return ${data.collectionReferenceImplName}(
       reference.parent.parent!.withConverter<${parent.type}>(
-        fromFirestore: (snapshot, _) => ${parent.type}.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: ${parent.collectionReferenceInterfaceName}.fromFirestore,
+        toFirestore: ${parent.collectionReferenceInterfaceName}.toFirestore,
       ),
     );
   }

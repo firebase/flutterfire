@@ -5,6 +5,22 @@ import 'package:json_annotation/json_annotation.dart';
 part 'simple.g.dart';
 
 @JsonSerializable()
+class MinValidation {
+  MinValidation(this.intNbr, this.doubleNbr, this.numNbr) {
+    _$assertMinValidation(this);
+  }
+
+  @Min(0)
+  @Max(42)
+  final int intNbr;
+
+  @Min(10)
+  final double doubleNbr;
+  @Min(-10)
+  final num numNbr;
+}
+
+@JsonSerializable()
 class Root {
   Root(this.nonNullable, this.nullable);
 

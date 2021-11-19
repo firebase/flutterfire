@@ -24,6 +24,20 @@ abstract class MovieCollectionReference
     FirebaseFirestore? firestore,
   ]) = _$MovieCollectionReference;
 
+  static Movie fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$MovieFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Movie value,
+    SetOptions? options,
+  ) {
+    return _$MovieToJson(value);
+  }
+
   @override
   MovieDocumentReference doc([String? id]);
 
@@ -39,8 +53,8 @@ class _$MovieCollectionReference extends _$MovieQuery
 
     return _$MovieCollectionReference._(
       firestore.collection('firestore-example-app').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: MovieCollectionReference.fromFirestore,
+            toFirestore: MovieCollectionReference.toFirestore,
           ),
     );
   }
@@ -48,20 +62,6 @@ class _$MovieCollectionReference extends _$MovieQuery
   _$MovieCollectionReference._(
     CollectionReference<Movie> reference,
   ) : super(reference, reference);
-
-  static Movie _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return Movie.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    Movie value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   String get path => reference.path;
 
@@ -1003,6 +1003,20 @@ abstract class CommentCollectionReference
     DocumentReference<Movie> parent,
   ) = _$CommentCollectionReference;
 
+  static Comment fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$CommentFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Comment value,
+    SetOptions? options,
+  ) {
+    return _$CommentToJson(value);
+  }
+
   /// A reference to the containing [MovieDocumentReference] if this is a subcollection.
   MovieDocumentReference get parent;
 
@@ -1022,8 +1036,8 @@ class _$CommentCollectionReference extends _$CommentQuery
     return _$CommentCollectionReference._(
       MovieDocumentReference(parent),
       parent.collection('comments').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: CommentCollectionReference.fromFirestore,
+            toFirestore: CommentCollectionReference.toFirestore,
           ),
     );
   }
@@ -1032,20 +1046,6 @@ class _$CommentCollectionReference extends _$CommentQuery
     this.parent,
     CollectionReference<Comment> reference,
   ) : super(reference, reference);
-
-  static Comment _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return Comment.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    Comment value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   @override
   final MovieDocumentReference parent;
@@ -1090,8 +1090,8 @@ abstract class CommentDocumentReference
   CommentCollectionReference get parent {
     return _$CommentCollectionReference(
       reference.parent.parent!.withConverter<Movie>(
-        fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: MovieCollectionReference.fromFirestore,
+        toFirestore: MovieCollectionReference.toFirestore,
       ),
     );
   }
@@ -1125,8 +1125,8 @@ class _$CommentDocumentReference
   CommentCollectionReference get parent {
     return _$CommentCollectionReference(
       reference.parent.parent!.withConverter<Movie>(
-        fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: MovieCollectionReference.fromFirestore,
+        toFirestore: MovieCollectionReference.toFirestore,
       ),
     );
   }
@@ -1502,6 +1502,15 @@ class CommentQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 
   @override
   final Comment data;
+}
+
+// **************************************************************************
+// ValidatorGenerator
+// **************************************************************************
+
+_$assertMovie(Movie instance) {
+  const Min(0).validate(instance.likes);
+  const Min(0).validate(instance.year);
 }
 
 // **************************************************************************

@@ -1,4 +1,4 @@
-export 'annotation.dart' show Collection;
+export 'annotation.dart';
 export 'src/firestore_builder.dart' show FirestoreBuilder;
 export 'src/firestore_reference.dart'
     show

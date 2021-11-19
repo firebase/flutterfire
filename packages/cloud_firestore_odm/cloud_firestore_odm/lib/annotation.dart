@@ -1,3 +1,5 @@
+export 'src/validator.dart' show Min, Validator, Max;
+
 /// Defines a collection reference.
 ///
 /// To define a collection reference, first it is necessary to define a class
