@@ -10,7 +10,7 @@ class SignOutButtonStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Widgets';
-    story.title = 'Sign out button';
+    story.title = 'SignOutButton';
     return const SignOutButton();
   }
 }

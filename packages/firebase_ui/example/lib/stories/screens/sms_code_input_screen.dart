@@ -10,7 +10,7 @@ class SMSCodeInputScreenStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Screens';
-    story.title = 'SMS code input screen';
+    story.title = 'SMSCodeInputScreen';
 
     return const SMSCodeInputScreen(
       flowKey: Object(),

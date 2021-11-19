@@ -12,7 +12,7 @@ class PhoneInputViewStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Views';
-    story.title = 'Phone input view';
+    story.title = 'PhoneInputView';
 
     return PhoneInputView(
       flowKey: _flowKey,

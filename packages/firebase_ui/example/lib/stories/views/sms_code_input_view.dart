@@ -12,7 +12,7 @@ class SMSCodeInputViewStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Views';
-    story.title = 'SMS code input view';
+    story.title = 'SMSCodeInputView';
 
     return SMSCodeInputView(
       flowKey: _flowKey,

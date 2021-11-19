@@ -11,7 +11,7 @@ class EmailFormWidgetStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Widgets';
-    story.title = 'Email form';
+    story.title = 'EmailForm';
 
     return Center(
       child: EmailForm(

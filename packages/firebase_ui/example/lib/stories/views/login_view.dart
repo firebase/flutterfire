@@ -15,7 +15,7 @@ class LoginViewStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Views';
-    story.title = 'Login view';
+    story.title = 'LoginView';
 
     final action = story.enumKnob(
       title: 'Auth action',

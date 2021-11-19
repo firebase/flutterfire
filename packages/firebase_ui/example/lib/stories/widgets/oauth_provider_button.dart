@@ -22,7 +22,7 @@ class OAuthProviderButtonStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Widgets';
-    story.title = 'OAuth Button';
+    story.title = 'OAuthProviderButton';
 
     final provider = story.enumKnob<OAuthProviders>(
       title: 'OAuth provider',

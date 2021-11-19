@@ -10,7 +10,7 @@ class PhoneInputScreenStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Screens';
-    story.title = 'Phone input screen';
+    story.title = 'PhoneInputScreen';
 
     return const PhoneInputScreen();
   }

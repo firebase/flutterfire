@@ -17,7 +17,7 @@ class RegisterScreenStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Screens';
-    story.title = 'Register screen';
+    story.title = 'RegisterScreen';
 
     final renderImage = story.knob<bool>(title: 'With image', value: true);
 

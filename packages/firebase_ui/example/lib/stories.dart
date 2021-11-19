@@ -1,7 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui_example/stories/screens/sms_code_input_screen.dart';
+import 'package:firebase_ui_example/stories/widgets/apple_sign_in_button.dart';
+import 'package:firebase_ui_example/stories/widgets/facebook_sign_in_button.dart';
+import 'package:firebase_ui_example/stories/widgets/google_sign_in_button.dart';
 import 'package:firebase_ui_example/stories/widgets/sms_code_input.dart';
+import 'package:firebase_ui_example/stories/widgets/twitter_sign_in_button.dart';
 import 'package:flutter/material.dart';
 
 import 'stories/stories_lib/story.dart';
@@ -43,6 +47,10 @@ class StoriesApp extends StatelessWidget {
           SMSCodeInputViewStory(),
           EmailFormWidgetStory(),
           OAuthProviderButtonStory(),
+          GoogleSignInButtonStory(),
+          AppleSignInButtonStory(),
+          FacebookSignInButtonStory(),
+          TwitterSignInButtonStory(),
           PhoneInputStory(),
           SMSCodeInputStory(),
           SignOutButtonStory(),

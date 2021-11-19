@@ -10,7 +10,7 @@ class PhoneInputStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Widgets';
-    story.title = 'Phone input';
+    story.title = 'PhoneInput';
 
     return PhoneInput(
       onSubmit: (String phoneNumber) {

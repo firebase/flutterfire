@@ -10,7 +10,7 @@ class SMSCodeInputStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Widgets';
-    story.title = 'SMS code input';
+    story.title = 'SMSCodeInput';
 
     return SMSCodeInput(
       onSubmit: (String phoneNumber) {

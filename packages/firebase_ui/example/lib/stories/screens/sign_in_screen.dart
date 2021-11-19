@@ -17,7 +17,7 @@ class SignInScreenStory extends StoryWidget {
     final story = storyOf(context);
 
     story.category = 'Screens';
-    story.title = 'SignIn screen';
+    story.title = 'SignInScreen';
 
     final renderImage = story.knob<bool>(title: 'With image', value: true);
 
