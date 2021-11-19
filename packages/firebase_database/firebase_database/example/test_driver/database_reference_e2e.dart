@@ -23,7 +23,22 @@ void runDatabaseReferenceTests() {
       await ref.set(0);
     });
 
-    // TODO aborts a transaction
+    test('aborts a transaction', () async {
+      await ref.set(5);
+      final snapshot = await ref.get();
+      expect(snapshot.value, 5);
+
+      final result = await ref.runTransaction((value) {
+        final nextValue = (value as int? ?? 0) + 1;
+        if (nextValue > 5) {
+          throw AbortTransactionException();
+        }
+        return nextValue;
+      });
+
+      expect(result.committed, false);
+      expect(result.snapshot.value, 5);
+    });
 
     test('executes transaction', () async {
       final snapshot = await ref.get();

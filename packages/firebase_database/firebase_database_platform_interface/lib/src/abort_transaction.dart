@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 
 class AbortTransactionException extends FirebaseException {
-  AbortTransactionException([String? message])
+  AbortTransactionException()
       : super(
           plugin: 'firebase_database',
           code: 'abort-transaction',
-          message: message ?? 'Transaction was aborted by user.',
+          message: 'Transaction was aborted by user.',
         );
 }

@@ -25,12 +25,37 @@ class MethodChannelDatabase extends DatabasePlatform {
 
     channel.setMethodCallHandler((MethodCall call) async {
       switch (call.method) {
-        case 'DoTransaction':
+        case 'FirebaseDatabase#callTransactionHandler':
+          Object? value;
+          bool aborted = false;
+          bool exception = false;
           final key = call.arguments['transactionKey'];
-          final handler = transactions[key]!;
 
-          final newVal = handler(call.arguments['snapshot']['value']);
-          return newVal;
+          try {
+            final handler = transactions[key];
+            if (handler == null) {
+              // This shouldn't happen but on the off chance that it does, e.g.
+              // as a side effect of Hot Reloading/Restarting, then we should
+              // just abort the transaction.
+              aborted = true;
+            } else {
+              value = handler(call.arguments['snapshot']['value']);
+            }
+          } on AbortTransactionException {
+            aborted = true;
+          } catch (e) {
+            exception = true;
+            // We store thrown errors so we  can rethrow when the runTransaction
+            // Future completes from native code - to avoid serializing the error
+            // and sending it to native only to have to send it back again.
+            transactionErrors[key] = e;
+          }
+
+          return {
+            'value': value,
+            'aborted': aborted,
+            'exception': exception,
+          };
         default:
           throw MissingPluginException(
             '${call.method} method not implemented on the Dart side.',
@@ -41,6 +66,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   }
 
   static final transactions = <int, TransactionHandler>{};
+  static final transactionErrors = <int, Object?>{};
 
   static bool _initialized = false;
 
