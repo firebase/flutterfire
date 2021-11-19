@@ -1,9 +1,6 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-// @dart=2.9
 
 import 'dart:async';
 
@@ -24,8 +21,6 @@ void myLog(String msg) {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -42,19 +37,19 @@ class _MetricHttpClient extends BaseClient {
     final HttpMetric metric = FirebasePerformance.instance
         .newHttpMetric(request.url.toString(), HttpMethod.Get);
 
+    await metric.setRequestPayloadSize(request.contentLength);
     await metric.start();
 
     StreamedResponse response;
     try {
       response = await _inner.send(request);
       myLog(
-          'Called ${request.url} with custom monitoring, response code: ${response.statusCode}');
+        'Called ${request.url} with custom monitoring, response code: ${response.statusCode}',
+      );
 
-      metric
-        ..responsePayloadSize = response.contentLength
-        ..responseContentType = response.headers['Content-Type']
-        ..requestPayloadSize = request.contentLength
-        ..httpResponseCode = response.statusCode;
+      await metric.setResponseContentType(response.headers['Content-Type']);
+      await metric.setHttpResponseCode(response.statusCode);
+      await metric.setResponsePayloadSize(response.contentLength);
 
       await metric.putAttribute('score', '15');
       await metric.putAttribute('to_be_removed', 'should_not_be_logged');
@@ -63,11 +58,11 @@ class _MetricHttpClient extends BaseClient {
       await metric.stop();
     }
 
-    unawaited(metric
-        .getAttributes()
-        .then((attributes) => myLog('Http metric attributes: $attributes')));
+    final attributes = metric.getAttributes();
 
-    String score = metric.getAttribute('score');
+    myLog('Http metric attributes: $attributes.');
+
+    String? score = metric.getAttribute('score');
     myLog('Http metric score attribute value: $score');
 
     return response;
@@ -121,14 +116,13 @@ class _MyAppState extends State<MyApp> {
     await trace.removeAttribute('to_be_removed');
     await trace.stop();
 
-    unawaited(trace
-        .getMetric('sum')
-        .then((sumValue) => myLog('test_trace_1 sum value: $sumValue')));
-    unawaited(trace
-        .getAttributes()
-        .then((attributes) => myLog('test_trace_1 attributes: $attributes')));
+    final sum = trace.getMetric('sum');
+    myLog('test_trace_1 sum value: $sum');
 
-    String favoriteColor = trace.getAttribute('favorite_color');
+    final attributes = trace.getAttributes();
+    myLog('test_trace_1 attributes: $attributes');
+
+    final favoriteColor = trace.getAttribute('favorite_color');
     myLog('test_trace_1 favorite_color: $favoriteColor');
 
     setState(() {
@@ -151,9 +145,8 @@ class _MyAppState extends State<MyApp> {
     await trace.setMetric('sum', sum);
     await trace.stop();
 
-    unawaited(trace
-        .getMetric('sum')
-        .then((sumValue) => myLog('test_trace_2 sum value: $sumValue')));
+    final sum2 = trace.getMetric('sum');
+    myLog('test_trace_2 sum value: $sum2');
 
     setState(() {
       _trace2HasRan = true;
