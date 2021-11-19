@@ -1,5 +1,4 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -30,6 +29,14 @@ void main() {
       await Firebase.initializeApp();
       performance = FirebasePerformance.instance;
     });
+//todo below is a unit test for instance
+    // test('test instance is singleton', () async {
+    //   FirebasePerformance performance1 = FirebasePerformance.instance;
+    //   FirebasePerformance performance2 = FirebasePerformance.instance;
+    //
+    //   expect(performance1, isA<FirebasePerformance>());
+    //   expect(identical(performance1, performance2), isTrue);
+    // });
 
     group('performanceCollectionEnabled', () {
       when(mockPerformancePlatform.isPerformanceCollectionEnabled())
