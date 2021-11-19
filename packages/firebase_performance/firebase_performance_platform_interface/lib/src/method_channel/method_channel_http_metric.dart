@@ -106,22 +106,28 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   @override
   Future<void> start() async {
     if (_hasStopped) return;
-
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#start',
-      <String, Object?>{'handle': _handle},
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#start',
+        <String, Object?>{'handle': _handle},
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   Future<void> stop() async {
     if (_hasStopped) return;
-
-    _hasStopped = true;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#stop',
-      <String, Object?>{'handle': _handle},
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#stop',
+        <String, Object?>{'handle': _handle},
+      );
+      _hasStopped = true;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
@@ -132,27 +138,33 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
         _attributes.length == HttpMetricPlatform.maxCustomAttributes) {
       return;
     }
-
-    _attributes[name] = value;
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#putAttribute',
-      <String, Object?>{
-        'handle': _handle,
-        'name': name,
-        'value': value,
-      },
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#putAttribute',
+        <String, Object?>{
+          'handle': _handle,
+          'name': name,
+          'value': value,
+        },
+      );
+      _attributes[name] = value;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   Future<void> removeAttribute(String name) async {
     if (_hasStopped) return;
-
-    _attributes.remove(name);
-    return MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-      'HttpMetric#removeAttribute',
-      <String, Object?>{'handle': _handle, 'name': name},
-    );
+    try {
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'HttpMetric#removeAttribute',
+        <String, Object?>{'handle': _handle, 'name': name},
+      );
+      _attributes.remove(name);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override

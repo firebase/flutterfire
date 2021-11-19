@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import '../../firebase_performance_platform_interface.dart';
 import '../platform_interface/platform_interface_firebase_performance.dart';
 import 'method_channel_http_metric.dart';
+import 'utils/exception.dart';
+
 
 /// The method channel implementation of [FirebasePerformancePlatform].
 class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
@@ -42,27 +44,35 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
 
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
+    try {
     final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
       'FirebasePerformance#isPerformanceCollectionEnabled',
       //todo is handle needed here?
       <String, Object?>{'handle': _handle},
     );
     return isPerformanceCollectionEnabled!;
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) {
+    try {
     return channel.invokeMethod<void>(
       'FirebasePerformance#setPerformanceCollectionEnabled',
       //todo is handle needed here?
       <String, Object?>{'handle': _handle, 'enable': enabled},
     );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   TracePlatform newTrace(String name) {
     final int handle = _nextHandle++;
-
+    //todo update this so that the handle is passed on first use. No need to create yet.
     channel.invokeMethod<void>(
       'FirebasePerformance#newTrace',
       <String, Object?>{'handle': _handle, 'traceHandle': handle, 'name': name},
@@ -75,6 +85,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     final int handle = _nextHandle++;
 
+    //todo update this so that the handle is passed on first use. No need to create yet.
     channel.invokeMethod<void>(
       'FirebasePerformance#newHttpMetric',
       <String, Object?>{
