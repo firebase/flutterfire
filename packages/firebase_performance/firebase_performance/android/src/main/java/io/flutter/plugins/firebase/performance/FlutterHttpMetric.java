@@ -2,17 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package io.flutter.plugins.firebaseperformance;
+package io.flutter.plugins.firebase.performance;
 
 import com.google.firebase.perf.metrics.HttpMetric;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
 class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
-  private final FirebasePerformancePlugin plugin;
+  private final FlutterFirebasePerformancePlugin plugin;
   private final HttpMetric httpMetric;
 
-  FlutterHttpMetric(FirebasePerformancePlugin plugin, final HttpMetric metric) {
+  FlutterHttpMetric(FlutterFirebasePerformancePlugin plugin, final HttpMetric metric) {
     this.plugin = plugin;
     this.httpMetric = metric;
   }
