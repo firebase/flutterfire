@@ -66,16 +66,21 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
-  /// Determines whether performance monitoring is enabled or disabled Only works for native apps.
-  /// Always returns true for web apps.
+  /// Determines whether custom performance monitoring is enabled or disabled.
+  ///
+  /// True if custom performance monitoring is enabled and false if performance
+  /// monitoring is disabled. This is for dynamic enable/disable state. This
+  /// does not reflect whether instrumentation is enabled/disabled.
   Future<bool> isPerformanceCollectionEnabled() async {
     throw UnimplementedError(
       'isPerformanceCollectionEnabled() is not implemented',
     );
   }
 
-  /// Enables or disables performance monitoring.
-  /// Only works for native apps. Does nothing for web apps.
+  /// Enables or disables custom performance monitoring setup.
+  ///
+  /// This setting is persisted and applied on future invocations of your
+  /// application. By default, custom performance monitoring is enabled.
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     throw UnimplementedError(
       'setPerformanceCollectionEnabled() is not implemented',

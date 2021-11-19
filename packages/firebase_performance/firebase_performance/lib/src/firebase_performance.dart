@@ -31,19 +31,19 @@ class FirebasePerformance extends FirebasePluginPlatform {
     );
   }
 
-  /// Determines whether performance monitoring is enabled or disabled.
+  /// Determines whether custom performance monitoring is enabled or disabled.
   ///
-  /// True if performance monitoring is enabled and false if performance
+  /// True if custom performance monitoring is enabled and false if performance
   /// monitoring is disabled. This is for dynamic enable/disable state. This
   /// does not reflect whether instrumentation is enabled/disabled.
   Future<bool> isPerformanceCollectionEnabled() {
     return _delegate.isPerformanceCollectionEnabled();
   }
 
-  /// Enables or disables performance monitoring.
+  /// Enables or disables custom performance monitoring setup.
   ///
   /// This setting is persisted and applied on future invocations of your
-  /// application. By default, performance monitoring is enabled.
+  /// application. By default, custom performance monitoring is enabled.
   Future<void> setPerformanceCollectionEnabled(bool enabled) {
     return _delegate.setPerformanceCollectionEnabled(enabled);
   }
