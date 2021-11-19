@@ -74,7 +74,10 @@ class MethodChannelQuery extends QueryPlatform {
       }),
     );
 
-    return MethodChannelDataSnapshot(ref, Map<String, dynamic>.from(result!));
+    return MethodChannelDataSnapshot(
+      ref,
+      Map<String, dynamic>.from(result!['snapshot']),
+    );
     // } catch (e, s) {
     //   throw convertPlatformException(e, s);
     // }

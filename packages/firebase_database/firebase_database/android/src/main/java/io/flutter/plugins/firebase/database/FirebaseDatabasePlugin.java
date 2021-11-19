@@ -96,7 +96,7 @@ public class FirebaseDatabasePlugin
         database.setLogLevel(loggingEnabled ? Logger.Level.DEBUG : Logger.Level.NONE);
       }
 
-      if (emulatorHost != null && cacheSizeBytes != null) {
+      if (emulatorHost != null && emulatorPort != null) {
         database.useEmulator(emulatorHost, emulatorPort);
       }
 

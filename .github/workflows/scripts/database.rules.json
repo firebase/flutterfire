@@ -1,9 +1,13 @@
 {
   "rules": {
-    ".read": false,
-    ".write": false,
-    "tests": {
+    ".read": true,
+    ".write": true,
+    "denied_write": {
       ".read": true,
+      ".write": false
+    },
+    "denied_read": {
+      ".read": false,
       ".write": true
     },
     "ordered": {
