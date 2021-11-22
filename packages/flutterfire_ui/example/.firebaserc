@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "flutterfire-docs"
+  },
+  "targets": {
+    "flutterfire-docs": {
+      "hosting": {
+        "ffui": [
+          "flutterfire-ui"
+        ]
+      }
+    }
+  }
+}
