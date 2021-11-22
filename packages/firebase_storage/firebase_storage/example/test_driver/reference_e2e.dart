@@ -311,17 +311,17 @@ void runReferenceTests() {
       });
 
       // TODO(ehesp): Emulator rules issue - comment back in once fixed
-      test('errors if permission denied', () async {
-        final Reference ref = storage.ref('writeOnly.txt');
+      // test('errors if permission denied', () async {
+      //   final Reference ref = storage.ref('writeOnly.txt');
 
-        await expectLater(
-          () => ref.updateMetadata(SettableMetadata(contentType: 'jpeg')),
-          throwsA(isA<FirebaseException>()
-              .having((e) => e.code, 'code', 'unauthorized')
-              .having((e) => e.message, 'message',
-                  'User is not authorized to perform the desired action.')),
-        );
-      });
+      //   await expectLater(
+      //     () => ref.updateMetadata(SettableMetadata(contentType: 'jpeg')),
+      //     throwsA(isA<FirebaseException>()
+      //         .having((e) => e.code, 'code', 'unauthorized')
+      //         .having((e) => e.message, 'message',
+      //             'User is not authorized to perform the desired action.')),
+      //   );
+      // });
     });
 
     group('writeToFile', () {
