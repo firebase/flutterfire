@@ -1,6 +1,3 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
 import 'dart:io';
 import 'dart:math';
 
@@ -8,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 
 final String kTestString =
-    ([]..length = pow(2, 12)).join(_getRandomString(8)) * 100;
+    ([]..length = int.parse('${pow(2, 12)}')).join(_getRandomString(8)) * 100;
 const String kTestStorageBucket = 'react-native-firebase-testing.appspot.com';
 
 const _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
@@ -33,6 +30,14 @@ Future<File> createFile(String name) async {
   await file.writeAsString(kTestString);
   return file;
 }
+
+FirebaseOptions testDefaultOptions = const FirebaseOptions(
+  apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+  appId: '1:448618578101:ios:6640d5c29008c2a8ac3efc',
+  messagingSenderId: '448618578101',
+  authDomain: 'react-native-firebase-testing.firebaseapp.com',
+  projectId: 'react-native-firebase-testing',
+);
 
 // Initializes a secondary app with or without a
 // default storageBucket value in FirebaseOptions for testing
