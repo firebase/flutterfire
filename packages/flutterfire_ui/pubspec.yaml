@@ -9,24 +9,24 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  desktop_webview_auth: ^0.0.1
-  flutter:
-    sdk: flutter
-  flutter_localizations:
-    sdk: flutter
-  flutter_svg: ^0.22.0
-
-dev_dependencies:
   crypto: ^3.0.1
+  desktop_webview_auth: ^0.0.1
   firebase_auth: ^3.0.1
   firebase_core: ^1.10.0
   firebase_dynamic_links: ^2.0.7
-  flutter_facebook_auth: ^3.5.0
-  flutter_test:
+  flutter:
     sdk: flutter
+  flutter_facebook_auth: ^3.5.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_svg: ^0.22.0
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.1.0
   twitter_login: ^4.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
