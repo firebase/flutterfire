@@ -1,6 +1,3 @@
-// ignore_for_file: require_trailing_commas
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io' as io;
 
@@ -44,7 +41,7 @@ enum UploadType {
 ///
 /// Returns a [MaterialApp].
 class StorageExampleApp extends StatelessWidget {
-  StorageExampleApp({Key key}) : super(key: key);
+  StorageExampleApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +57,7 @@ class StorageExampleApp extends StatelessWidget {
 /// A StatefulWidget which keeps track of the current uploaded files.
 class TaskManager extends StatefulWidget {
   // ignore: public_member_api_docs
-  TaskManager({Key key}) : super(key: key);
+  TaskManager({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -72,7 +69,7 @@ class _TaskManager extends State<TaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   /// The user selects a file, and the task is added to the list.
-  Future<firebase_storage.UploadTask> uploadFile(PickedFile file) async {
+  Future<firebase_storage.UploadTask?> uploadFile(PickedFile? file) async {
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No file was selected'),
@@ -128,9 +125,9 @@ class _TaskManager extends State<TaskManager> {
         });
         break;
       case UploadType.file:
-        PickedFile file =
+        PickedFile? file =
             await ImagePicker().getImage(source: ImageSource.gallery);
-        firebase_storage.UploadTask task = await uploadFile(file);
+        firebase_storage.UploadTask? task = await uploadFile(file);
         if (task != null) {
           setState(() {
             _uploadTasks = [..._uploadTasks, task];
@@ -225,10 +222,10 @@ class _TaskManager extends State<TaskManager> {
               itemBuilder: (context, index) => UploadTaskListTile(
                 task: _uploadTasks[index],
                 onDismissed: () => _removeTaskAtIndex(index),
-                onDownloadLink: () {
+                onDownloadLink: () async {
                   return _downloadLink(_uploadTasks[index].snapshot.ref);
                 },
-                onDownload: () {
+                onDownload: () async {
                   if (kIsWeb) {
                     return _downloadBytes(_uploadTasks[index].snapshot.ref);
                   } else {
@@ -245,11 +242,11 @@ class _TaskManager extends State<TaskManager> {
 class UploadTaskListTile extends StatelessWidget {
   // ignore: public_member_api_docs
   const UploadTaskListTile({
-    Key key,
-    this.task,
-    this.onDismissed,
-    this.onDownload,
-    this.onDownloadLink,
+    Key? key,
+    required this.task,
+    required this.onDismissed,
+    required this.onDownload,
+    required this.onDownloadLink,
   }) : super(key: key);
 
   /// The [UploadTask].
@@ -278,11 +275,12 @@ class UploadTaskListTile extends StatelessWidget {
         AsyncSnapshot<firebase_storage.TaskSnapshot> asyncSnapshot,
       ) {
         Widget subtitle = const Text('---');
-        firebase_storage.TaskSnapshot snapshot = asyncSnapshot.data;
-        firebase_storage.TaskState state = snapshot?.state;
+        firebase_storage.TaskSnapshot? snapshot = asyncSnapshot.data;
+        firebase_storage.TaskState? state = snapshot?.state;
 
         if (asyncSnapshot.hasError) {
           if (asyncSnapshot.error is FirebaseException &&
+              // ignore: cast_nullable_to_non_nullable
               (asyncSnapshot.error as FirebaseException).code == 'canceled') {
             subtitle = const Text('Upload canceled.');
           } else {
