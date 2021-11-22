@@ -108,7 +108,7 @@ module.exports = {
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],
-    "FlutterFire UI": [
+    "UI": [
       "ui/overview",
       "ui/widgets",
       "ui/auth",
