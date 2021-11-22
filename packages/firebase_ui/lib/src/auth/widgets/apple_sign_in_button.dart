@@ -34,6 +34,12 @@ class AppleProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc => _iconSrc;
 }
 
+/// Sign-in with Apple button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Apple button triggering the Apple OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class AppleSignInButton extends OAuthProviderButtonWidget {
   @override
   final AuthAction? action;
@@ -64,6 +70,12 @@ class AppleSignInButton extends OAuthProviderButtonWidget {
   }) : super(key: key);
 }
 
+/// Sign-in with Apple icon button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Apple icon button triggering the Apple OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class AppleSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
   final AuthAction? action;

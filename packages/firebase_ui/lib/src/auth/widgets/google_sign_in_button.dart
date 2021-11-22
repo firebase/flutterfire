@@ -38,6 +38,12 @@ class GoogleProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   double get iconPadding => 1;
 }
 
+/// Sign-in with Google button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Google button triggering the Google OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class GoogleSignInButton extends OAuthProviderButtonWidget {
   @override
   final AuthAction? action;
@@ -70,6 +76,13 @@ class GoogleSignInButton extends OAuthProviderButtonWidget {
     this.onTap,
   }) : super(key: key);
 }
+
+/// Sign-in with Google icon button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Google icon button triggering the Google OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 
 class GoogleSignInIconButton extends OAuthProviderIconButtonWidget {
   @override

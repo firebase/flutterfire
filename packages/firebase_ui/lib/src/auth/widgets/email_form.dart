@@ -10,6 +10,13 @@ import 'error_text.dart';
 
 typedef EmailSubmitCallback = void Function(String email, String password);
 
+
+/// A barebones email form widget.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A widget rendering a barebones email form with an action button.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class EmailForm extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction? action;

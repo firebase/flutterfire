@@ -24,6 +24,12 @@ String? localizedErrorText(
   }
 }
 
+/// A widget which displays error text for a given Firebase error code.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A widget which displays error text for a given Firebase error code.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class ErrorText extends StatelessWidget {
   final Exception exception;
   final TextAlign? textAlign;

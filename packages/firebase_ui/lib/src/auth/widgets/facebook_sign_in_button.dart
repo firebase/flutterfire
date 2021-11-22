@@ -31,6 +31,12 @@ class FacebookProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc => _iconSrc;
 }
 
+/// Sign-in with Facebook button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Facebook button triggering the Facebook OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class FacebookSignInButton extends OAuthProviderButtonWidget {
   @override
   final AuthAction? action;
@@ -65,6 +71,12 @@ class FacebookSignInButton extends OAuthProviderButtonWidget {
   }) : super(key: key);
 }
 
+/// Sign-in with Facebook icon button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Facebook icon button triggering the Facebook OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class FacebookSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
   final AuthAction? action;

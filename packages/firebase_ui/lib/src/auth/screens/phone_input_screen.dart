@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'sms_code_input_screen.dart';
 
+/// A screen displaying a fully styled phone number entry screen, with a country-code
+/// picker.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:screen}
+/// {@subCategory description:A screen displaying a fully styled phone number entry input with a country-code picker.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class PhoneInputScreen extends StatelessWidget {
   final AuthAction? action;
   final FirebaseAuth? auth;

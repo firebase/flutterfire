@@ -5,6 +5,12 @@ import 'package:firebase_ui/auth.dart';
 import '../configs/provider_configuration.dart';
 import 'internal/login_screen.dart';
 
+/// A screen displaying a fully styled Registration flow for Authentication.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:screen}
+/// {@subCategory description:A screen displaying a fully styled Registration flow for Authentication.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class RegisterScreen extends StatelessWidget {
   final FirebaseAuth? auth;
   final List<ProviderConfiguration> providerConfigs;

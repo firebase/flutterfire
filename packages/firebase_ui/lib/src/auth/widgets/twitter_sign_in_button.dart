@@ -33,6 +33,12 @@ class TwitterProviderButtonStyle extends ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc => _iconSrc;
 }
 
+/// Sign-in with Twitter button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Twitter button triggering the Twitter OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class TwitterSignInButton extends OAuthProviderButtonWidget {
   @override
   final AuthAction? action;
@@ -69,6 +75,12 @@ class TwitterSignInButton extends OAuthProviderButtonWidget {
   }) : super(key: key);
 }
 
+/// Sign-in with Twitter icon button.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:widget}
+/// {@subCategory description:A sign-in with Twitter icon button triggering the Twitter OAuth Flow.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class TwitterSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
   final AuthAction? action;

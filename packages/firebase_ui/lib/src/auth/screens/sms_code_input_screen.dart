@@ -6,6 +6,13 @@ import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/i10n.dart';
 import '../auth_controller.dart';
 
+/// A screen displaying a UI which allows users to enter an SMS validation code
+/// sent from Firebase.
+///
+/// {@subCategory service:auth}
+/// {@subCategory type:screen}
+/// {@subCategory description:A screen displaying SMS verification UI.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class SMSCodeInputScreen extends StatelessWidget {
   final AuthAction? action;
   final FirebaseAuth? auth;
