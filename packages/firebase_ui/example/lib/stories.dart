@@ -20,6 +20,7 @@ import 'stories/widgets/email_form.dart';
 import 'stories/widgets/oauth_provider_button.dart';
 import 'stories/widgets/phone_input.dart';
 import 'stories/widgets/sign_out_button.dart';
+import 'stories/widgets/user_avatar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +54,7 @@ class StoriesApp extends StatelessWidget {
           TwitterSignInButtonStory(),
           PhoneInputStory(),
           SMSCodeInputStory(),
+          UserAvatarStory(),
           SignOutButtonStory(),
         ],
       ),

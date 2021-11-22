@@ -73,6 +73,10 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String phoneNumberIsRequiredErrorText;
   @override
   final String phoneNumberInvalidErrorText;
+  @override
+  final String profile;
+  @override
+  final String name;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -114,5 +118,7 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.phoneInputLabel = 'Phone number',
     this.phoneNumberInvalidErrorText = 'Phone number is invalid',
     this.phoneNumberIsRequiredErrorText = 'Phone number is required',
+    this.profile = 'Profile',
+    this.name = 'Name',
   });
 }
