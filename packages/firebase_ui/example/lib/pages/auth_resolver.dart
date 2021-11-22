@@ -19,7 +19,7 @@ class AuthResolver extends StatelessWidget {
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const Profile();
+          return const ProfileScreen();
         }
 
         return SignInScreen(

@@ -45,6 +45,8 @@ export 'src/auth/widgets/internal/oauth_provider_button.dart'
     show OAuthProviderButton, OAuthProviderIconButton, ButtonVariant;
 
 export 'src/auth/widgets/sign_out_button.dart';
+export 'src/auth/widgets/user_avatar.dart';
+export 'src/auth/widgets/editable_user_display_name.dart';
 
 export 'src/auth/views/login_view.dart';
 export 'src/auth/views/phone_input_view.dart';
@@ -54,6 +56,7 @@ export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
 export 'src/auth/screens/sign_in_screen.dart';
 export 'src/auth/screens/register_screen.dart';
+export 'src/auth/screens/profile_screen.dart';
 
 export 'src/auth/navigation/phone_verification.dart';
 
