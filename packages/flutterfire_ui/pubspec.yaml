@@ -1,8 +1,8 @@
 name: flutterfire_ui
 description: UI library built on top of firebase services
 version: 0.1.0-dev.1
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
+repository: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
