@@ -19,8 +19,10 @@ class FirebasePerformance extends FirebasePluginPlatform {
   /// Returns an instance using the default [FirebaseApp].
   static FirebasePerformance get instance {
     FirebaseApp defaultAppInstance = Firebase.app();
-    return FirebasePerformance._(app: defaultAppInstance);
+    return FirebasePerformance.instanceFor(app: defaultAppInstance);
   }
+
+  static Map<String, FirebasePerformance> _firebasePerformanceInstances = {};
 
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
@@ -29,6 +31,13 @@ class FirebasePerformance extends FirebasePluginPlatform {
     return _delegatePackingProperty ??= FirebasePerformancePlatform.instanceFor(
       app: app,
     );
+  }
+
+  /// Returns an instance using a specified [FirebaseApp].
+  factory FirebasePerformance.instanceFor({required FirebaseApp app}) {
+    return _firebasePerformanceInstances.putIfAbsent(app.name, () {
+      return FirebasePerformance._(app: app);
+    });
   }
 
   /// Determines whether custom performance monitoring is enabled or disabled.

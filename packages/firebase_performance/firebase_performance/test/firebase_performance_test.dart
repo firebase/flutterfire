@@ -23,32 +23,35 @@ void main() {
   late FirebasePerformance performance;
 
   group('$FirebasePerformance', () {
-    FirebasePerformancePlatform.instance = mockPerformancePlatform;
+    when(mockPerformancePlatform.delegateFor(app: anyNamed('app')))
+        .thenReturn(mockPerformancePlatform);
 
     setUpAll(() async {
       await Firebase.initializeApp();
+      FirebasePerformancePlatform.instance = mockPerformancePlatform;
       performance = FirebasePerformance.instance;
     });
-//todo below is a unit test for instance
-    // test('test instance is singleton', () async {
-    //   FirebasePerformance performance1 = FirebasePerformance.instance;
-    //   FirebasePerformance performance2 = FirebasePerformance.instance;
-    //
-    //   expect(performance1, isA<FirebasePerformance>());
-    //   expect(identical(performance1, performance2), isTrue);
-    // });
+
+    group('instance', () {
+      test('test instance is singleton', () async {
+        FirebasePerformance performance1 = FirebasePerformance.instance;
+        FirebasePerformance performance2 = FirebasePerformance.instance;
+
+        expect(performance1, isA<FirebasePerformance>());
+        expect(identical(performance1, performance2), isTrue);
+      });
+    });
 
     group('performanceCollectionEnabled', () {
-      when(mockPerformancePlatform.isPerformanceCollectionEnabled())
-          .thenAnswer((_) => Future.value(true));
-      when(mockPerformancePlatform.setPerformanceCollectionEnabled(true))
-          .thenAnswer((_) => Future.value());
-
       test('getter should call delegate method', () async {
+        when(mockPerformancePlatform.isPerformanceCollectionEnabled())
+            .thenAnswer((_) => Future.value(true));
         await performance.isPerformanceCollectionEnabled();
         verify(mockPerformancePlatform.isPerformanceCollectionEnabled());
       });
       test('setter should call delegate method', () async {
+        when(mockPerformancePlatform.setPerformanceCollectionEnabled(true))
+            .thenAnswer((_) => Future.value());
         await performance.setPerformanceCollectionEnabled(true);
         verify(mockPerformancePlatform.setPerformanceCollectionEnabled(true));
       });
@@ -57,8 +60,6 @@ void main() {
     group('trace', () {
       when(mockPerformancePlatform.newTrace('foo'))
           .thenReturn(mockTracePlatform);
-      when(FirebasePerformancePlatform.startTrace('foo')).thenAnswer(
-          (realInvocation) => Future.value(MockTracePlatform('foo')));
       when(mockTracePlatform.start())
           .thenAnswer((realInvocation) => Future.value());
       when(mockTracePlatform.incrementMetric('bar', 8))
@@ -67,12 +68,6 @@ void main() {
       test('newTrace should call delegate method', () async {
         performance.newTrace('foo');
         verify(mockPerformancePlatform.newTrace('foo'));
-      });
-
-      test('startTrace should call delegate methods', () async {
-        final trace = await FirebasePerformancePlatform.startTrace('foo');
-        verify(mockPerformancePlatform.newTrace('foo'));
-        verify(trace.start());
       });
 
       test('start and stop should call delegate methods', () async {
@@ -135,28 +130,39 @@ void main() {
         verify(mockHttpMetricPlatform.responsePayloadSize);
       });
 
-      test('httpResponseCode setter should call delegate setter', () async {
+      test('setHttpResponseCode setter should call delegate setter', () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.responsePayloadSize = 8080;
-        verify(mockHttpMetricPlatform.responsePayloadSize = 8080);
+        when(mockHttpMetricPlatform.setHttpResponseCode(8080))
+            .thenAnswer((_) => Future<void>.value());
+        await httpMetric.setHttpResponseCode(8080);
+        verify(mockHttpMetricPlatform.setHttpResponseCode(8080));
       });
 
-      test('requestPayloadSize setter should call delegate setter', () async {
+      test('setRequestPayloadSize setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.requestPayloadSize = 8;
-        verify(mockHttpMetricPlatform.requestPayloadSize = 8);
+        when(mockHttpMetricPlatform.setRequestPayloadSize(8))
+            .thenAnswer((_) => Future<void>.value());
+        await httpMetric.setRequestPayloadSize(8);
+        verify(mockHttpMetricPlatform.setRequestPayloadSize(8));
       });
 
-      test('responsePayloadSize setter should call delegate setter', () async {
+      test('setResponsePayloadSize setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.responsePayloadSize = 8;
-        verify(mockHttpMetricPlatform.responsePayloadSize = 8);
+        when(mockHttpMetricPlatform.setResponsePayloadSize(99))
+            .thenAnswer((_) => Future<void>.value());
+        await httpMetric.setResponsePayloadSize(99);
+        verify(mockHttpMetricPlatform.setResponsePayloadSize(99));
       });
 
-      test('responseContentType setter should call delegate setter', () async {
+      test('setResponseContentType setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.responseContentType = 'foo';
-        verify(mockHttpMetricPlatform.responseContentType = 'foo');
+        when(mockHttpMetricPlatform.setResponseContentType('foo'))
+            .thenAnswer((_) => Future<void>.value());
+        await httpMetric.setResponseContentType('foo');
+        verify(mockHttpMetricPlatform.setResponseContentType('foo'));
       });
 
       test('start should call delegate', () async {
@@ -176,9 +182,18 @@ void main() {
 
 class MockFirebasePerformance extends Mock
     with MockPlatformInterfaceMixin
-    implements TestFirebasePerformancePlatform {
+    implements FirebasePerformancePlatform {
   MockFirebasePerformance() {
     TestFirebasePerformancePlatform();
+  }
+
+  @override
+  FirebasePerformancePlatform delegateFor({FirebaseApp? app}) {
+    return super.noSuchMethod(
+      Invocation.method(#delegateFor, [], {#app: app}),
+      returnValue: TestFirebasePerformancePlatform(),
+      returnValueForMissingStub: TestFirebasePerformancePlatform(),
+    );
   }
 
   @override
@@ -270,11 +285,11 @@ class MockTracePlatform extends Mock
   }
 
   @override
-  Future<int> getMetric(String name) {
+  int getMetric(String name) {
     return super.noSuchMethod(
       Invocation.method(#getMetric, [name]),
-      returnValue: Future<int>.value(8),
-      returnValueForMissingStub: Future<int>.value(8),
+      returnValue: 8,
+      returnValueForMissingStub: 8,
     );
   }
 }
@@ -289,6 +304,42 @@ class MockHttpMetricPlatform extends Mock
     implements TestHttpMetricPlatform {
   MockHttpMetricPlatform(String url, HttpMethod httpMethod) {
     TestHttpMetricPlatform(url, httpMethod);
+  }
+
+  @override
+  Future<void> setHttpResponseCode(int? httpResponseCode) {
+    return super.noSuchMethod(
+      Invocation.method(#setHttpResponseCode, [httpResponseCode]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Future<void> setRequestPayloadSize(int? requestPayloadSize) {
+    return super.noSuchMethod(
+      Invocation.method(#setRequestPayloadSize, [requestPayloadSize]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Future<void> setResponsePayloadSize(int? responsePayloadSize) {
+    return super.noSuchMethod(
+      Invocation.method(#setResponsePayloadSize, [responsePayloadSize]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
+  }
+
+  @override
+  Future<void> setResponseContentType(String? responseContentType) {
+    return super.noSuchMethod(
+      Invocation.method(#setResponsePayloadSize, [responseContentType]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
