@@ -3,8 +3,8 @@
 import 'package:firebase/firebase.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_web/firebase_performance_web.dart';
-import 'package:firebase_performance_web/src/http_metric.dart';
-import 'package:firebase_performance_web/src/trace.dart';
+import 'package:firebase_performance_web/http_metric.dart';
+import 'package:firebase_performance_web/trace.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

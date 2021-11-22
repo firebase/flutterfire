@@ -73,7 +73,7 @@ class HttpMetricWeb extends HttpMetricPlatform {
   }
 
   @override
-  Future<Map<String, String>> getAttributes() async {
+  Map<String, String> getAttributes() {
     return {};
   }
 }

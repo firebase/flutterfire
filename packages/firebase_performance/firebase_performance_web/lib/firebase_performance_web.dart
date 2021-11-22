@@ -1,24 +1,25 @@
-import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/trace.dart';
 import 'src/http_metric.dart';
+import 'src/interop/performance.dart' as performance_interop;
 
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   /// Instance of Performance from the web plugin.
-  firebase.Performance? _performance;
+  performance_interop.Performance? _webPerformance;
 
   /// Lazily initialize [_webRemoteConfig] on first method call
-  firebase.Performance get _delegate {
-    return _performance ??= firebase.performance();
+  performance_interop.Performance get _delegate {
+    return _webPerformance ??= performance_interop.getPerformanceInstance();
   }
 
-  /// A constructor that allows tests to override the firebase.Performance object.
-  FirebasePerformanceWeb({firebase.Performance? performance})
-      : _performance = performance,
+  /// Builds an instance of [FirebasePerformanceWeb] with an optional [FirebaseApp] instance
+  /// Performance web currently only supports the default app instance
+  FirebasePerformanceWeb({performance_interop.Performance? performance})
+      : _webPerformance = performance,
         super();
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -41,9 +42,11 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
+    _delegate.setPerformanceCollection(enabled);
     return;
   }
 
+  // TODO set up setInstrumentation
   @override
   TracePlatform newTrace(String name) {
     return TraceWeb(_delegate.trace(name), name);
@@ -51,6 +54,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
+    //TODO this doens't exist on web. Throw exception?
     return HttpMetricWeb('', HttpMethod.Get);
   }
 }
