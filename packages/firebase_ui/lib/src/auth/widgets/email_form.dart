@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:firebase_ui/auth.dart';
 import 'package:firebase_ui/i10n.dart';
+import 'package:firebase_ui/src/auth/widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
 
 import '../configs/email_provider_configuration.dart';
@@ -135,22 +136,12 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           const SizedBox(height: 16),
           Builder(
             builder: (context) {
-              late Widget child;
               final state = AuthState.of(context);
 
-              if (state is SigningIn || state is SigningUp) {
-                child = const SizedBox(
-                  height: 16,
-                  width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 1),
-                );
-              } else {
-                child = Text(chooseButtonLabel());
-              }
-
-              return OutlinedButton(
-                onPressed: submit,
-                child: child,
+              return LoadingButton(
+                label: chooseButtonLabel(),
+                isLoading: state is SigningIn || state is SigningUp,
+                onTap: submit,
               );
             },
           ),

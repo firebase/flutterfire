@@ -23,7 +23,7 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
 
   late final ctrl = TextEditingController(text: displayName ?? '');
 
-  bool _editing = false;
+  late bool _editing = displayName == null;
   bool _isLoading = false;
 
   void _onEdit() {

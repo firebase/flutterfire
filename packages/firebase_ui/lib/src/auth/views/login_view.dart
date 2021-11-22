@@ -19,6 +19,7 @@ class LoginView extends StatefulWidget {
   final ButtonVariant? oauthButtonVariant;
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
+  final bool? showTitle;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -30,6 +31,7 @@ class LoginView extends StatefulWidget {
     this.auth,
     this.headerMaxExtent,
     this.headerBuilder,
+    this.showTitle = true,
   }) : super(key: key);
 
   @override
@@ -38,6 +40,7 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   late AuthAction action = widget.action;
+  bool get showTitle => widget.showTitle ?? true;
 
   Widget? _buildOAuthButtons(TargetPlatform platform) {
     final oauthProviderConfigs = widget.providerConfigs
@@ -90,11 +93,8 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<Widget> _buildHeader(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    final platform = Theme.of(context).platform;
-    final oauthButtons = _buildOAuthButtons(platform);
 
     late String title;
     late String hint;
@@ -110,35 +110,46 @@ class _LoginViewState extends State<LoginView> {
       actionText = l.signInText;
     }
 
+    return [
+      Text(
+        title,
+        style: Theme.of(context).textTheme.headline6,
+      ),
+      const SizedBox(height: 16),
+      RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: '$hint ',
+              style: Theme.of(context).textTheme.caption,
+            ),
+            TextSpan(
+              text: actionText,
+              style: Theme.of(context).textTheme.button?.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+              mouseCursor: SystemMouseCursors.click,
+              recognizer: TapGestureRecognizer()
+                ..onTap = () => _handleDifferentAuthAction(context),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 16),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = FirebaseUILocalizations.labelsOf(context);
+    final platform = Theme.of(context).platform;
+    final oauthButtons = _buildOAuthButtons(platform);
+
     return IntrinsicHeight(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          const SizedBox(height: 16),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: '$hint ',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                TextSpan(
-                  text: actionText,
-                  style: Theme.of(context).textTheme.button?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                  mouseCursor: SystemMouseCursors.click,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => _handleDifferentAuthAction(context),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
+          if (showTitle) ..._buildHeader(context),
           for (var config in widget.providerConfigs)
             if (config.isSupportedPlatform(platform))
               if (config is EmailProviderConfiguration)

@@ -3,7 +3,11 @@ import 'package:firebase_ui/i10n.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui/auth.dart';
 
+import '../configs/provider_configuration.dart';
+
 class ProfileScreen extends StatelessWidget {
+  final List<ProviderConfiguration> providerConfigs;
+  final List<Widget> children;
   final FirebaseAuth? auth;
   final Color? avatarPlaceholderColor;
   final ShapeBorder? avatarShape;
@@ -11,14 +15,42 @@ class ProfileScreen extends StatelessWidget {
 
   const ProfileScreen({
     Key? key,
+    required this.providerConfigs,
     this.auth,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
+    this.children = const [],
   }) : super(key: key);
 
   void _logout() {
     (auth ?? FirebaseAuth.instance).signOut();
+  }
+
+  void _reauthenticate(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Verify it's you", style: TextStyle(fontSize: 18)),
+              const SizedBox(height: 16),
+              ReauthenticateView(
+                auth: auth,
+                providerConfigs: providerConfigs,
+                onSignedIn: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -49,6 +81,14 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Align(child: EditableUserDisplayName(auth: auth)),
+            const SizedBox(height: 16),
+            ...children,
+            DeleteAccountButton(
+              auth: auth,
+              onSignInRequired: () async {
+                _reauthenticate(context);
+              },
+            ),
           ],
         ),
       ),

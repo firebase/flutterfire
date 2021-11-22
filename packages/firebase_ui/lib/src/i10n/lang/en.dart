@@ -77,6 +77,8 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String profile;
   @override
   final String name;
+  @override
+  final String deleteAccount;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -120,5 +122,6 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.phoneNumberIsRequiredErrorText = 'Phone number is required',
     this.profile = 'Profile',
     this.name = 'Name',
+    this.deleteAccount = 'Delete account',
   });
 }

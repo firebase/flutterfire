@@ -57,7 +57,7 @@ class _UserAvatarState extends State<UserAvatar> {
             : Center(
                 child: Icon(
                   Icons.account_circle,
-                  size: widget.size,
+                  size: size,
                   color: placeholderColor,
                 ),
               ),

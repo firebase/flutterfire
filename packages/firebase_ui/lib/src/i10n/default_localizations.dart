@@ -43,6 +43,7 @@ abstract class FirebaseUILocalizationLabels {
   String get phoneNumberInvalidErrorText;
   String get profile;
   String get name;
+  String get deleteAccount;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{

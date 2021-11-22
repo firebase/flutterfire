@@ -15,11 +15,24 @@ class AuthResolver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const providerConfigs = [
+      EmailProviderConfiguration(),
+      PhoneProviderConfiguration(),
+      GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+      AppleProviderConfiguration(),
+      FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+      TwitterProviderConfiguration(
+        apiKey: TWITTER_API_KEY,
+        apiSecretKey: TWITTER_API_SECRET_KEY,
+        redirectUri: TWITTER_REDIRECT_URI,
+      ),
+    ];
+
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const ProfileScreen();
+          return const ProfileScreen(providerConfigs: providerConfigs);
         }
 
         return SignInScreen(
@@ -44,18 +57,7 @@ class AuthResolver extends StatelessWidget {
               ),
             );
           },
-          providerConfigs: const [
-            EmailProviderConfiguration(),
-            PhoneProviderConfiguration(),
-            GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-            AppleProviderConfiguration(),
-            FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-            TwitterProviderConfiguration(
-              apiKey: TWITTER_API_KEY,
-              apiSecretKey: TWITTER_API_SECRET_KEY,
-              redirectUri: TWITTER_REDIRECT_URI,
-            ),
-          ],
+          providerConfigs: providerConfigs,
         );
       },
     );
