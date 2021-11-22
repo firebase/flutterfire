@@ -70,6 +70,10 @@ function Card({ href, name, service, img, description }) {
 }
 
 export function Widgets() {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
   const data = usePluginData('@flutterfire/source-ui-widgets');
   const params = new URLSearchParams(window.location.search);
   const [query, setQuery] = useState(params.get('query') || '');
