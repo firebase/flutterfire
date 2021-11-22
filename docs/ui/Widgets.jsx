@@ -1,37 +1,20 @@
 import React, { useState } from 'react';
 import Link from '@docusaurus/Link';
 import useThemeContext from '@theme/hooks/useThemeContext';
+import { usePluginData } from '@docusaurus/useGlobalData';
 
-export const widgets = [
-  {
-    id: 'SignInView',
-    description: 'Sign in form',
-    plugin: 'auth',
-  },
-  {
-    id: 'SignInScreen',
-    description: 'Sign in form',
-    plugin: 'auth',
-  },
-  {
-    id: 'FirestoreListView',
-    description:
-      'A ListView to render infinite data using a Firestore Collection.',
-    plugin: 'firestore',
-  },
-  {
-    id: 'GoogleSignInButton',
-    description: 'A standalone styled button to trigger Google Sign In.',
-    plugin: 'auth',
-  },
-];
+const serviceColor = {
+  auth: '#2196f3',
+  firestore: '#ff9800',
+  database: '#4caf50',
+};
 
-function Card({ id, description, plugin }) {
+function Card({ href, name, service, img, description }) {
   const { isDarkTheme } = useThemeContext();
 
   return (
     <Link
-      to={`/docs/ui/widgets/${id}`}
+      to={`https://pub.dev/documentation/firebase_ui/latest/${href}`}
       style={{
         textDecoration: 'inherit',
         color: 'inherit',
@@ -49,9 +32,7 @@ function Card({ id, description, plugin }) {
         style={{
           position: 'relative',
           height: 150,
-          background: `url(${
-            require(`../_assets/widgets/${id}.jpg`).default
-          }) no-repeat center center`,
+          background: `url(${img}) no-repeat center center`,
           backgroundSize: 'contain',
         }}
       />
@@ -65,21 +46,16 @@ function Card({ id, description, plugin }) {
       >
         <span
           style={{
-            backgroundColor:
-              plugin === 'auth'
-                ? '#2196f3'
-                : plugin === 'firestore'
-                ? '#ff9800'
-                : '#4caf50',
+            backgroundColor: serviceColor[service],
             fontSize: '.85rem',
             padding: '.2rem .6rem',
             borderRadius: '999px',
             color: '#fff',
           }}
         >
-          {plugin}
+          {service}
         </span>
-        <h4 style={{ marginTop: '.5rem' }}>{id}</h4>
+        <h4 style={{ marginTop: '.5rem' }}>{name}</h4>
         <p
           style={{
             margin: 0,
@@ -93,10 +69,44 @@ function Card({ id, description, plugin }) {
   );
 }
 
-export function Catalog() {
+export function Widgets() {
+  const data = usePluginData('@flutterfire/source-ui-widgets');
   const params = new URLSearchParams(window.location.search);
   const [query, setQuery] = useState(params.get('query') || '');
-  const [plugin, setPlugin] = useState(params.get('plugin') || 'all');
+  const [service, setService] = useState(params.get('service') || 'all');
+
+  const widgets = data
+    .map((item) => {
+      if (!item.subcategories) {
+        return null;
+      }
+
+      let service;
+      let type;
+      let img;
+      let description = '';
+
+      item.subcategories.forEach((value) => {
+        if (value.startsWith('service:'))
+          service = value.replace('service:', '');
+        if (value.startsWith('type:')) type = value.replace('type:', '');
+        if (value.startsWith('img:')) img = value.replace('img:', '');
+        if (value.startsWith('description:'))
+          description = value.replace('description:', '');
+      });
+
+      if (!service || !type || !img) return null;
+
+      return {
+        href: item.href,
+        name: item.name,
+        service,
+        type,
+        img,
+        description,
+      };
+    })
+    .filter(Boolean);
 
   function updateSearchParams() {
     const path =
@@ -114,14 +124,14 @@ export function Catalog() {
   if (query) {
     filtered = filtered.filter((widget) => {
       return (
-        widget.id.toLowerCase().includes(query.toLowerCase()) ||
+        widget.name.toLowerCase().includes(query.toLowerCase()) ||
         widget.description.toLowerCase().includes(query.toLowerCase())
       );
     });
   }
 
-  if (plugin !== 'all') {
-    filtered = filtered.filter((widget) => widget.plugin === plugin);
+  if (service !== 'all') {
+    filtered = filtered.filter((widget) => widget.service === service);
   }
 
   return (
@@ -150,25 +160,25 @@ export function Catalog() {
           }}
         />
         <select
-          name="plugin"
+          name="service"
           style={{ width: 150, padding: '.4rem .6rem' }}
-          value={plugin}
+          value={service}
           onChange={(e) => {
-            const plugin = e.target.value;
-            setPlugin(plugin);
-            params.set('plugin', plugin);
+            const service = e.target.value;
+            setService(service);
+            params.set('service', service);
             updateSearchParams();
           }}
         >
-          <option value="all">All Plugins</option>
+          <option value="all">All Services</option>
           <option value="auth">Auth</option>
           <option value="firestore">Firestore</option>
         </select>
       </div>
       <div className="grid grid-3">
-        {filtered.map(({ id, description, plugin }) => (
-          <div key={id}>
-            <Card id={id} description={description} plugin={plugin} />
+        {filtered.map((widget) => (
+          <div key={widget.name}>
+            <Card {...widget} />
           </div>
         ))}
       </div>

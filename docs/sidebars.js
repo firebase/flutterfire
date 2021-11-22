@@ -110,7 +110,10 @@ module.exports = {
     ],
     "FlutterFire UI": [
       "ui/overview",
-      "ui/widgets"
+      "ui/widgets",
+      "ui/auth",
+      "ui/firestore",
+      "ui/database",
     ],
     "Testing": ["testing/testing"],
   },
