@@ -1,9 +1,3 @@
-# flutter native folders
-web/
-ios/
-macos/
-
-
 # Miscellaneous
 *.class
 *.log
@@ -50,5 +44,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/android/.gradle
-/android/local.properties
