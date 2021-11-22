@@ -8,12 +8,12 @@ environment:
   flutter: ">=1.20.0"
 
 dependencies:
-  firebase: ^9.0.1
   firebase_performance_platform_interface: ^0.0.1+7
   flutter:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
+  js: ^0.6.3
 
 dev_dependencies:
   flutter_test:
