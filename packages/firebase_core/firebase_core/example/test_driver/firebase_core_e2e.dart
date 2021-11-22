@@ -1,23 +1,20 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
 // Copyright 2019, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:io';
-import 'package:e2e/e2e.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() {
-  E2EWidgetsFlutterBinding.ensureInitialized();
+import 'package:drive/drive.dart' as drive;
 
+void main() => drive.main(testsMain);
+
+void testsMain() {
   String testAppName = 'TestApp';
-  FirebaseOptions testAppOptions;
+  FirebaseOptions? testAppOptions;
+
   if (Platform.isIOS || Platform.isMacOS) {
     testAppOptions = const FirebaseOptions(
       appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
@@ -39,28 +36,28 @@ void main() {
     await Firebase.initializeApp(name: testAppName, options: testAppOptions);
   });
 
-  testWidgets('Firebase.apps', (WidgetTester tester) async {
+  test('Firebase.apps', () async {
     List<FirebaseApp> apps = Firebase.apps;
     expect(apps.length, 1);
     expect(apps[0].name, testAppName);
     expect(apps[0].options, testAppOptions);
   });
 
-  testWidgets('Firebase.app()', (WidgetTester tester) async {
+  test('Firebase.app()', () async {
     FirebaseApp app = Firebase.app(testAppName);
 
     expect(app.name, testAppName);
     expect(app.options, testAppOptions);
   });
 
-  testWidgets('Firebase.app() Exception', (WidgetTester tester) async {
+  test('Firebase.app() Exception', () async {
     expect(
       () => Firebase.app('NoApp'),
       throwsA(noAppExists('NoApp')),
     );
   });
 
-  testWidgets('FirebaseApp.delete()', (WidgetTester tester) async {
+  test('FirebaseApp.delete()', () async {
     await Firebase.initializeApp(name: 'SecondaryApp', options: testAppOptions);
 
     expect(Firebase.apps.length, 2);
@@ -72,8 +69,7 @@ void main() {
     expect(Firebase.apps.length, 1);
   });
 
-  testWidgets('FirebaseApp.setAutomaticDataCollectionEnabled()',
-      (WidgetTester tester) async {
+  test('FirebaseApp.setAutomaticDataCollectionEnabled()', () async {
     FirebaseApp app = Firebase.app(testAppName);
     bool enabled = app.isAutomaticDataCollectionEnabled;
 
@@ -82,8 +78,7 @@ void main() {
     expect(app.isAutomaticDataCollectionEnabled, !enabled);
   });
 
-  testWidgets('FirebaseApp.setAutomaticResourceManagementEnabled()',
-      (WidgetTester tester) async {
+  test('FirebaseApp.setAutomaticResourceManagementEnabled()', () async {
     FirebaseApp app = Firebase.app(testAppName);
 
     await app.setAutomaticResourceManagementEnabled(true);
