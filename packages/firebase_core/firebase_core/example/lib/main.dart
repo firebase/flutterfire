@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
     FirebaseApp app =
         await Firebase.initializeApp(name: name, options: firebaseOptions);
 
-    assert(app != null);
     print('Initialized $app');
   }
 
