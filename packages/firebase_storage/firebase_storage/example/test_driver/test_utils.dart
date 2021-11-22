@@ -31,14 +31,6 @@ Future<File> createFile(String name) async {
   return file;
 }
 
-FirebaseOptions testDefaultOptions = const FirebaseOptions(
-  apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-  appId: '1:448618578101:ios:6640d5c29008c2a8ac3efc',
-  messagingSenderId: '448618578101',
-  authDomain: 'react-native-firebase-testing.firebaseapp.com',
-  projectId: 'react-native-firebase-testing',
-);
-
 // Initializes a secondary app with or without a
 // default storageBucket value in FirebaseOptions for testing
 Future<FirebaseApp> testInitializeSecondaryApp(
