@@ -14,7 +14,7 @@ function Card({ href, name, service, img, description }) {
 
   return (
     <Link
-      to={`https://pub.dev/documentation/firebase_ui/latest/${href}`}
+      to={`https://pub.dev/documentation/flutterfire_ui/latest/${href}`}
       style={{
         textDecoration: 'inherit',
         color: 'inherit',
