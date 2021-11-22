@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 
@@ -39,13 +37,13 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<void> _initializeFlutterFireFuture;
+  late Future<void> _initializeFlutterFireFuture;
 
   Future<void> _testAsyncErrorOnInit() async {
     Future<void>.delayed(const Duration(seconds: 2), () {
@@ -225,7 +223,6 @@ class _MyAppState extends State<MyApp> {
                     ],
                   ),
                 );
-                break;
               default:
                 return const Center(child: Text('Loading'));
             }
