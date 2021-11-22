@@ -3,6 +3,8 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +17,7 @@ void testsMain() {
   String testAppName = 'TestApp';
   FirebaseOptions? testAppOptions;
 
-  if (Platform.isIOS || Platform.isMacOS) {
+  if (!kIsWeb && (Platform.isIOS || Platform.isMacOS)) {
     testAppOptions = const FirebaseOptions(
       appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
       apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
