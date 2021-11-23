@@ -168,13 +168,10 @@ class _LoginViewState extends State<LoginView> {
                   config: config,
                 )
               else if (config is PhoneProviderConfiguration)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: PhoneVerificationButton(
-                    label: l.signInWithPhoneButtonText,
-                    action: action,
-                    auth: widget.auth,
-                  ),
+                PhoneVerificationButton(
+                  label: l.signInWithPhoneButtonText,
+                  action: action,
+                  auth: widget.auth,
                 ),
           if (oauthButtons != null) oauthButtons
         ],

@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>448618578101-skueai3ovcu9qlmidnk7qkpktt0rc0mg.apps.googleusercontent.com</string>
+	<string>448618578101-mcfaooqa343utlqtd0rbsnhcpqc0r17h.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.448618578101-skueai3ovcu9qlmidnk7qkpktt0rc0mg</string>
+	<string>com.googleusercontent.apps.448618578101-mcfaooqa343utlqtd0rbsnhcpqc0r17h</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>448618578101-2baveavh8bvs2famsa5r8t77fe1nrcn6.apps.googleusercontent.com</string>
+	<string>448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.flutter.plugins.firebaseui.firebaseUiExample</string>
+	<string>io.flutter.plugins.flutterfireui.flutterfireUIExample</string>
 	<key>PROJECT_ID</key>
 	<string>react-native-firebase-testing</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:448618578101:ios:7aa6130ffe7e446bac3efc</string>
+	<string>1:448618578101:ios:9847ca0fdc2a4ee7ac3efc</string>
 	<key>DATABASE_URL</key>
 	<string>https://react-native-firebase-testing.firebaseio.com</string>
 </dict>

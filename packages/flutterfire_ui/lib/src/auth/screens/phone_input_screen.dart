@@ -40,9 +40,12 @@ class PhoneInputScreen extends StatelessWidget {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),
-          child: PhoneInputView(
-            flowKey: flowKey,
-            onSMSCodeRequested: next,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: PhoneInputView(
+              flowKey: flowKey,
+              onSMSCodeRequested: next,
+            ),
           ),
         ),
       ),

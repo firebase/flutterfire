@@ -6,7 +6,9 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   const ForgotPasswordScreen({Key? key, this.onEmailSent}) : super(key: key);
 
-  Future<void> _onEmailSent(BuildContext context) async {}
+  Future<void> _onEmailSent(BuildContext context) async {
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {

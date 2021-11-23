@@ -3,7 +3,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 Future<void> showForgotPasswordScreen(BuildContext context) async {
   final route = MaterialPageRoute(
-    builder: (context) => ForgotPasswordScreen(),
+    builder: (context) => const ForgotPasswordScreen(),
   );
 
   await Navigator.of(context).push(route);

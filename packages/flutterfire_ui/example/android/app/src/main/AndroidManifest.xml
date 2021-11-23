@@ -4,23 +4,21 @@
         android:label="flutterfire_ui_example"
         android:icon="@mipmap/ic_launcher">
 
-        <meta-data
-         android:name="com.facebook.sdk.ApplicationId"
-         android:value="128693022464535" />
-        <activity
-            android:name="com.facebook.FacebookActivity"
+        <meta-data android:name="com.facebook.sdk.ApplicationId" 
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="Firebase UI Example" />
+            android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="fb128693022464535" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
 

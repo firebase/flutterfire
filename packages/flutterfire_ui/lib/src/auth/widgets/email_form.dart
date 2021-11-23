@@ -164,8 +164,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
               ]),
               label: l.confirmPasswordInputLabel,
             ),
+            spacer,
           ],
-          spacer,
           Builder(
             builder: (context) {
               final state = AuthState.of(context);
