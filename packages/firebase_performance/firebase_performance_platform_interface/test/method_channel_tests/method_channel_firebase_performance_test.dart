@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_firebase_performance.dart';
@@ -89,78 +87,7 @@ void main() {
 
       expect(log, <Matcher>[
         isMethodCall('FirebasePerformance#isPerformanceCollectionEnabled',
-            arguments: {'handle': 0})
-      ]);
-    });
-
-    test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-      mockPlatformExceptionThrown = true;
-
-      await testExceptionHandling(
-          'PLATFORM', performance.isPerformanceCollectionEnabled);
-    });
-  });
-
-  group('setPerformanceCollectionEnabled', () {
-    test('should call delegate method successfully', () {
-      performance.setPerformanceCollectionEnabled(true);
-
-      expect(log, <Matcher>[
-        isMethodCall('FirebasePerformance#setPerformanceCollectionEnabled',
-            arguments: {'handle': 0, 'enable': true})
-      ]);
-    });
-
-    test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-      mockPlatformExceptionThrown = true;
-
-      await testExceptionHandling(
-          'PLATFORM', () => performance.setPerformanceCollectionEnabled(true));
-    });
-  });
-
-  group('newTrace', () {
-    test('should call delegate method successfully', () async {
-      final trace = await performance.newTrace('trace-name');
-
-      expect(trace, isA<MethodChannelTrace>());
-
-      expect(log, <Matcher>[
-        isMethodCall('FirebasePerformance#newTrace',
-            arguments: {'handle': 0, 'traceHandle': 1, 'name': 'trace-name'})
-      ]);
-    });
-
-    test(
-        'catch a [PlatformException] error and throws a [FirebaseException] error',
-        () async {
-      mockPlatformExceptionThrown = true;
-
-      await testExceptionHandling(
-          'PLATFORM', () => performance.newTrace('trace-name'));
-    });
-  });
-
-  group('newHttpMetric', () {
-    test('should call delegate method successfully', () async {
-      final httpMetric =
-          await performance.newHttpMetric('http-metric-url', HttpMethod.Get);
-
-      expect(httpMetric, isA<MethodChannelHttpMetric>());
-
-      expect(log, <Matcher>[
-        isMethodCall(
-          'FirebasePerformance#newHttpMetric',
-          arguments: {
-            'handle': 0,
-            'httpMetricHandle': 1,
-            'url': 'http-metric-url',
-            'httpMethod': HttpMethod.Get.toString(),
-          },
+            arguments: {'handle': 0},
         )
       ]);
     });
@@ -170,8 +97,48 @@ void main() {
         () async {
       mockPlatformExceptionThrown = true;
 
-      await testExceptionHandling('PLATFORM',
-          () => performance.newHttpMetric('http-metric-url', HttpMethod.Get));
+      await testExceptionHandling(
+          'PLATFORM', performance.isPerformanceCollectionEnabled,
+      );
+    });
+  });
+
+  group('setPerformanceCollectionEnabled', () {
+    test('should call delegate method successfully', () {
+      performance.setPerformanceCollectionEnabled(true);
+
+      expect(log, <Matcher>[
+        isMethodCall('FirebasePerformance#setPerformanceCollectionEnabled',
+            arguments: {'handle': 0, 'enable': true},
+        )
+      ]);
+    });
+
+    test(
+        'catch a [PlatformException] error and throws a [FirebaseException] error',
+        () async {
+      mockPlatformExceptionThrown = true;
+
+      await testExceptionHandling(
+          'PLATFORM', () => performance.setPerformanceCollectionEnabled(true),
+      );
+    });
+  });
+
+  group('newTrace', () {
+    test('should call delegate method successfully', () {
+      final trace = performance.newTrace('trace-name');
+
+      expect(trace, isA<MethodChannelTrace>());
+    });
+  });
+
+  group('newHttpMetric', () {
+    test('should call delegate method successfully', () {
+      final httpMetric =
+          performance.newHttpMetric('http-metric-url', HttpMethod.Get);
+
+      expect(httpMetric, isA<MethodChannelHttpMetric>());
     });
   });
 }

@@ -75,43 +75,13 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
   }
 
   @override
-  Future<TracePlatform> newTrace(String name) async {
-    final int handle = _nextHandle + 1;
-    try {
-      await channel.invokeMethod<void>(
-        'FirebasePerformance#newTrace',
-        <String, Object?>{
-          'handle': _handle,
-          'traceHandle': handle,
-          'name': name
-        },
-      );
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
-
-    return MethodChannelTrace(handle, name);
+  TracePlatform newTrace(String name) {
+    return MethodChannelTrace(_nextHandle, name);
   }
 
   @override
-  Future<HttpMetricPlatform> newHttpMetric(
-      String url, HttpMethod httpMethod) async {
-    final int handle = _nextHandle + 1;
-    //todo update this so that the handle is passed on first use. No need to create yet.
-    try {
-      await channel.invokeMethod<void>(
-        'FirebasePerformance#newHttpMetric',
-        <String, Object?>{
-          'handle': _handle,
-          'httpMetricHandle': handle,
-          'url': url,
-          'httpMethod': httpMethod.toString(),
-        },
-      );
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
 
-    return MethodChannelHttpMetric(handle, url, httpMethod);
+    return MethodChannelHttpMetric(_nextHandle, url, httpMethod);
   }
 }

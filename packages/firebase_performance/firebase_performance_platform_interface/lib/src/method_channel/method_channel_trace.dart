@@ -7,9 +7,12 @@ import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
 
 class MethodChannelTrace extends TracePlatform {
-  MethodChannelTrace(this._handle, String name) : super(name);
+  MethodChannelTrace(this._methodChannelHandle, String name)
+      : _traceHandle = _methodChannelHandle + 1,
+        super(name);
 
-  final int _handle;
+  final int _methodChannelHandle;
+  final int _traceHandle;
 
   bool _hasStarted = false;
   bool _hasStopped = false;
@@ -24,9 +27,18 @@ class MethodChannelTrace extends TracePlatform {
     if (_hasStopped) return;
 
     try {
+      //TODO: update so that the method call & handle is passed on one method channel call (start()) instead.
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'FirebasePerformance#newTrace',
+        <String, Object?>{
+          'handle': _methodChannelHandle,
+          'traceHandle': _traceHandle,
+          'name': name
+        },
+      );
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#start',
-        <String, Object?>{'handle': _handle},
+        <String, Object?>{'handle': _traceHandle},
       );
       _hasStarted = true;
     } catch (e, s) {
@@ -41,7 +53,7 @@ class MethodChannelTrace extends TracePlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#stop',
-        <String, Object?>{'handle': _handle},
+        <String, Object?>{'handle': _traceHandle},
       );
       _hasStopped = true;
     } catch (e, s) {
@@ -56,7 +68,7 @@ class MethodChannelTrace extends TracePlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#incrementMetric',
-        <String, Object?>{'handle': _handle, 'name': name, 'value': value},
+        <String, Object?>{'handle': _traceHandle, 'name': name, 'value': value},
       );
       _metrics[name] = (_metrics[name] ?? 0) + value;
     } catch (e, s) {
@@ -71,7 +83,7 @@ class MethodChannelTrace extends TracePlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#setMetric',
-        <String, Object?>{'handle': _handle, 'name': name, 'value': value},
+        <String, Object?>{'handle': _traceHandle, 'name': name, 'value': value},
       );
       _metrics[name] = value;
     } catch (e, s) {
@@ -97,7 +109,7 @@ class MethodChannelTrace extends TracePlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#putAttribute',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _traceHandle,
           'name': name,
           'value': value,
         },
@@ -115,7 +127,7 @@ class MethodChannelTrace extends TracePlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#removeAttribute',
-        <String, Object?>{'handle': _handle, 'name': name},
+        <String, Object?>{'handle': _traceHandle, 'name': name},
       );
       _attributes.remove(name);
     } catch (e, s) {

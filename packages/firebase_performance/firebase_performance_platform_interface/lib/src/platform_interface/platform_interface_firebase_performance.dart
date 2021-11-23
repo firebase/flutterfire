@@ -88,13 +88,13 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   }
 
   /// Creates a Trace object with given name.
-  Future<TracePlatform> newTrace(String name) {
+  TracePlatform newTrace(String name) {
     throw UnimplementedError('newTrace() is not implemented');
   }
 
   /// Creates a HttpMetric object for collecting network performance data for one
   /// request/response. Only works for native apps. Does nothing for web apps.
-  Future<HttpMetricPlatform> newHttpMetric(String url, HttpMethod httpMethod) {
+  HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     throw UnimplementedError('newHttpMetric() is not implemented');
   }
 }

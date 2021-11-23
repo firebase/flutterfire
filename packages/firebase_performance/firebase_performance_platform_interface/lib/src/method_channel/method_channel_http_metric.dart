@@ -7,10 +7,13 @@ import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
-  MethodChannelHttpMetric(this._handle, String url, HttpMethod httpMethod)
-      : super(url, httpMethod);
+  MethodChannelHttpMetric(
+      this._methodChannelHandle, String url, HttpMethod httpMethod,)
+      : _httpMetricHandle = _methodChannelHandle + 1,
+        super(url, httpMethod);
 
-  final int _handle;
+  final int _methodChannelHandle;
+  final int _httpMetricHandle;
 
   int? _httpResponseCode;
   int? _requestPayloadSize;
@@ -41,7 +44,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#httpResponseCode',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _httpMetricHandle,
           'httpResponseCode': httpResponseCode,
         },
       );
@@ -59,7 +62,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#requestPayloadSize',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _httpMetricHandle,
           'requestPayloadSize': requestPayloadSize,
         },
       );
@@ -76,7 +79,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#responseContentType',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _httpMetricHandle,
           'responseContentType': responseContentType,
         },
       );
@@ -93,7 +96,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#responsePayloadSize',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _httpMetricHandle,
           'responsePayloadSize': responsePayloadSize,
         },
       );
@@ -107,9 +110,19 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   Future<void> start() async {
     if (_hasStopped) return;
     try {
+      //TODO: update so that the method call & handle is passed on one method channel call (start()) instead.
+      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
+        'FirebasePerformance#newHttpMetric',
+        <String, Object?>{
+          'handle': _methodChannelHandle,
+          'httpMetricHandle': _httpMetricHandle,
+          'url': url,
+          'httpMethod': httpMethod.toString(),
+        },
+      );
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#start',
-        <String, Object?>{'handle': _handle},
+        <String, Object?>{'handle': _httpMetricHandle},
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
@@ -122,7 +135,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#stop',
-        <String, Object?>{'handle': _handle},
+        <String, Object?>{'handle': _httpMetricHandle},
       );
       _hasStopped = true;
     } catch (e, s) {
@@ -142,7 +155,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#putAttribute',
         <String, Object?>{
-          'handle': _handle,
+          'handle': _httpMetricHandle,
           'name': name,
           'value': value,
         },
@@ -159,7 +172,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#removeAttribute',
-        <String, Object?>{'handle': _handle, 'name': name},
+        <String, Object?>{'handle': _httpMetricHandle, 'name': name},
       );
       _attributes.remove(name);
     } catch (e, s) {

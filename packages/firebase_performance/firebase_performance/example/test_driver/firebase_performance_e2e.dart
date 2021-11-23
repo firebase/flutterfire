@@ -53,7 +53,7 @@ void testsMain() {
     });
 
     setUp(() async {
-      testTrace = await performance.newTrace('test-trace');
+      testTrace = performance.newTrace('test-trace');
     });
 
     tearDown(() async {
@@ -199,7 +199,7 @@ void testsMain() {
     FirebasePerformance performance = FirebasePerformance.instance;
 
     await Future.forEach(HttpMethod.values, (HttpMethod method) async {
-      final HttpMetric testMetric = await performance.newHttpMetric(
+      final HttpMetric testMetric = performance.newHttpMetric(
         'https://www.google.com/',
         method,
       );
@@ -218,7 +218,7 @@ void testsMain() {
     });
 
     setUp(() async {
-      testHttpMetric = await performance.newHttpMetric(
+      testHttpMetric = performance.newHttpMetric(
         'https://www.google.com/',
         HttpMethod.Delete,
       );
