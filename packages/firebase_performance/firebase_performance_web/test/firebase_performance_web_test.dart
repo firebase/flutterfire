@@ -1,10 +1,10 @@
 @TestOn('chrome') // Uses web-only Flutter SDK
 
-import 'package:firebase/firebase.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_web/firebase_performance_web.dart';
-import 'package:firebase_performance_web/http_metric.dart';
-import 'package:firebase_performance_web/trace.dart';
+import 'package:firebase_performance_web/src/http_metric.dart';
+import 'package:firebase_performance_web/src/interop/performance.dart';
+import 'package:firebase_performance_web/src/trace.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -23,17 +23,11 @@ void main() {
           FirebasePerformanceWeb(performance: mockPerformance);
     });
 
-    test('isPerformanceCollectionEnabled always returns true', () async {
-      expect(
-        await firebasePerformancePlatform.isPerformanceCollectionEnabled(),
-        true,
+    test('isPerformanceCollectionEnabled', () async {
+      await expectLater(
+        firebasePerformancePlatform.setPerformanceCollectionEnabled(true),
+        completes,
       );
-      verifyNoMoreInteractions(mockPerformance);
-    });
-
-    test('setPerformanceCollectionEnabled does nothing', () async {
-      await firebasePerformancePlatform.setPerformanceCollectionEnabled(true);
-      verifyNoMoreInteractions(mockPerformance);
     });
 
     test('newTrace returns correct trace web platform object', () async {
@@ -83,7 +77,7 @@ void main() {
       verifyNoMoreInteractions(mockTrace);
     });
   });
-
+  //
   group('TraceWeb', () {
     late TracePlatform tracePlatform;
     late MockTrace mockTrace;
@@ -112,13 +106,14 @@ void main() {
       verifyNoMoreInteractions(mockTrace);
     });
 
-    test('setMetric does nothing', () async {
-      await tracePlatform.setMetric('counter_name', 33);
+    test('setMetric', () async {
+      await tracePlatform.setMetric('set_name', 50);
+      verify(mockTrace.putMetric('set_name', 50)).called(1);
       verifyNoMoreInteractions(mockTrace);
     });
 
     test('getMetric', () async {
-      await tracePlatform.getMetric('counter_name');
+      tracePlatform.getMetric('counter_name');
       verify(mockTrace.getMetric('counter_name')).called(1);
       verifyNoMoreInteractions(mockTrace);
     });
@@ -143,7 +138,7 @@ void main() {
 
     test('getAttributes', () async {
       when(mockTrace.getAttributes()).thenReturn(<String, String>{});
-      await tracePlatform.getAttributes();
+      tracePlatform.getAttributes();
       verify(mockTrace.getAttributes()).called(1);
       verifyNoMoreInteractions(mockTrace);
     });
@@ -157,24 +152,24 @@ void main() {
     });
 
     test('httpResponseCode setter does nothing', () async {
-      httpMetricPlatform.httpResponseCode = 404;
+      await httpMetricPlatform.setHttpResponseCode(404);
       expect(httpMetricPlatform.httpResponseCode, null);
     });
 
     test('requestPayloadSize setter does nothing', () async {
-      httpMetricPlatform.requestPayloadSize = 100;
+      await httpMetricPlatform.setRequestPayloadSize(100);
       expect(httpMetricPlatform.requestPayloadSize, null);
     });
 
     test('responsePayloadSize setter does nothing', () async {
-      httpMetricPlatform.responsePayloadSize = 100;
+      await httpMetricPlatform.setResponsePayloadSize(100);
       expect(httpMetricPlatform.responsePayloadSize, null);
     });
 
     test('putAttribute does nothing', () async {
       await httpMetricPlatform.putAttribute('attribute', 'value');
       expect(httpMetricPlatform.getAttribute('attribute'), null);
-      expect(await httpMetricPlatform.getAttributes(), {});
+      expect(httpMetricPlatform.getAttributes(), {});
     });
   });
 }

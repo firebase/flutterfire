@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_core_web/firebase_core_web_interop.dart' hide jsify;
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'interop/performance.dart' as performance_interop;
 import 'internals.dart';
@@ -10,12 +9,6 @@ import 'internals.dart';
 /// Web implementation for TracePlatform.
 class TraceWeb extends TracePlatform {
   final performance_interop.Trace traceDelegate;
-
-  final Map<String, String> _attributes = <String, String>{};
-  final Map<String, int> _metrics = <String, int>{};
-
-  bool _hasStarted = false;
-  bool _hasStopped = false;
 
   TraceWeb(this.traceDelegate, String name) : super(name);
 
@@ -32,7 +25,6 @@ class TraceWeb extends TracePlatform {
   @override
   Future<void> incrementMetric(String name, int value) async {
     await guard(() => traceDelegate.incrementMetric(name, value));
-    _metrics[name] = value;
   }
 
   @override
@@ -47,12 +39,12 @@ class TraceWeb extends TracePlatform {
 
   @override
   Future<void> putAttribute(String name, String value) async {
-    traceDelegate.putAttribute(name, value);
+    await guard(() => traceDelegate.putAttribute(name, value));
   }
 
   @override
   Future<void> removeAttribute(String name) async {
-    traceDelegate.removeAttribute(name);
+    await guard(() => traceDelegate.removeAttribute(name));
   }
 
   @override

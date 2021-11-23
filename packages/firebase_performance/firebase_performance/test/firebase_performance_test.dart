@@ -92,7 +92,7 @@ void main() {
 
       test('getMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.getMetric('bar');
+        trace.getMetric('bar');
         verify(mockTracePlatform.getMetric('bar'));
       });
     });

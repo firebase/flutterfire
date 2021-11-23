@@ -37,16 +37,15 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
-    return true;
+    return _delegate.dataCollectionEnabled;
   }
 
+  // TODO set up setInstrumentation as well
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     _delegate.setPerformanceCollection(enabled);
-    return;
   }
 
-  // TODO set up setInstrumentation
   @override
   TracePlatform newTrace(String name) {
     return TraceWeb(_delegate.trace(name), name);
@@ -54,7 +53,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
-    //TODO this doens't exist on web. Throw exception?
+    //TODO this doesn't exist on web, it is just stub methods. Throw exception?
     return HttpMetricWeb('', HttpMethod.Get);
   }
 }

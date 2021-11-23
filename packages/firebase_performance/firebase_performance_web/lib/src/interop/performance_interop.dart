@@ -22,7 +22,7 @@ class TraceJsImpl {
   external String getAttribute(String attr);
   external Object getAttributes();
   external int getMetric(String metricName);
-  external void incrementMetric(String metricName, [int num]);
+  external void incrementMetric(String metricName, [int? num]);
   external void putMetric(String metricName, [int num]);
   external void putAttribute(String attr, String value);
   external void removeAttribute(String attr);

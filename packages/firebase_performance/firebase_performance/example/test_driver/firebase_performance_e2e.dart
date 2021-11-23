@@ -6,7 +6,6 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 void testsMain() {

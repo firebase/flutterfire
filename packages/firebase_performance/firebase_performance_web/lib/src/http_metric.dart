@@ -33,17 +33,22 @@ class HttpMetricWeb extends HttpMetricPlatform {
   }
 
   @override
-  set httpResponseCode(int? httpResponseCode) {
+  Future<void> setHttpResponseCode(int? httpResponseCode) async {
     return;
   }
 
   @override
-  set requestPayloadSize(int? requestPayloadSize) {
+  Future<void> setRequestPayloadSize(int? requestPayloadSize) async {
     return;
   }
 
   @override
-  set responsePayloadSize(int? responsePayloadSize) {
+  Future<void> setResponsePayloadSize(int? responsePayloadSize) async {
+    return;
+  }
+
+  @override
+  Future<void> setResponseContentType(String? responseContentType) async {
     return;
   }
 
