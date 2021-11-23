@@ -25,7 +25,7 @@ public class TransactionExecutor {
         .post(
             () ->
                 channel.invokeMethod(
-                    Constants.METHOD_DO_TRANSACTION,
+                    Constants.METHOD_CALL_TRANSACTION_HANDLER,
                     arguments,
                     new MethodChannel.Result() {
                       @Override

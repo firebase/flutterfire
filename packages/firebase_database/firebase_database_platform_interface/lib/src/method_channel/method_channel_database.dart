@@ -45,7 +45,7 @@ class MethodChannelDatabase extends DatabasePlatform {
             aborted = true;
           } catch (e) {
             exception = true;
-            // We store thrown errors so we  can rethrow when the runTransaction
+            // We store thrown errors so we can rethrow when the runTransaction
             // Future completes from native code - to avoid serializing the error
             // and sending it to native only to have to send it back again.
             transactionErrors[key] = e;

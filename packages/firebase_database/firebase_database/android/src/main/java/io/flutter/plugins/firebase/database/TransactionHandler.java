@@ -13,6 +13,7 @@ import com.google.firebase.database.Transaction.Handler;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class TransactionHandler implements Handler {
   private final MethodChannel channel;
@@ -44,10 +45,21 @@ public class TransactionHandler implements Handler {
     try {
       final TransactionExecutor executor = new TransactionExecutor(channel);
       final Object updatedData = executor.execute(transactionArgs);
-      currentData.setValue(updatedData);
-      return Transaction.success(currentData);
+      @SuppressWarnings("unchecked")
+      final Map<String, Object> transactionHandlerResult =
+          (Map<String, Object>) Objects.requireNonNull(updatedData);
+      final boolean aborted =
+          (boolean) Objects.requireNonNull(transactionHandlerResult.get("aborted"));
+      final boolean exception =
+          (boolean) Objects.requireNonNull(transactionHandlerResult.get("exception"));
+      if (aborted || exception) {
+        return Transaction.abort();
+      } else {
+        currentData.setValue(transactionHandlerResult.get("value"));
+        return Transaction.success(currentData);
+      }
     } catch (Exception e) {
-      Log.d("firebase_database", e.toString());
+      Log.e("firebase_database", "An unexpected exception occurred for a transaction.", e);
       return Transaction.abort();
     }
   }

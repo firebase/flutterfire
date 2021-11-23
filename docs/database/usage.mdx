@@ -109,7 +109,7 @@ Anytime data within the `users/123` node changes, the Stream will fire a new eve
 
 Without specifying any query constraints, reading data will return all data within the node. If you wish
 to query your node for a subset of data, the package provides utilities to do so. For example, we could
-choose to order our data by a "age" property, and limit the returns returned:
+choose to order our data by an "age" property, and limit the returns returned:
 
 ```dart
 DatabaseReference ref = FirebaseDatabase.instance.ref("users");

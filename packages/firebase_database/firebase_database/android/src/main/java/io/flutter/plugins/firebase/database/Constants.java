@@ -53,7 +53,8 @@ public class Constants {
   public static final String CHILD_KEYS = "childKeys";
   public static final String PREVIOUS_CHILD_NAME = "previousChildKey";
 
-  public static final String METHOD_DO_TRANSACTION = "DoTransaction";
+  public static final String METHOD_CALL_TRANSACTION_HANDLER =
+      "FirebaseDatabase#callTransactionHandler";
   public static final String TRANSACTION_KEY = "transactionKey";
   public static final String TRANSACTION_APPLY_LOCALLY = "transactionApplyLocally";
 

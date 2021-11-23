@@ -143,11 +143,12 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }) async {
     const channel = MethodChannelDatabase.channel;
     final handlers = MethodChannelDatabase.transactions;
+    final handlerErrors = MethodChannelDatabase.transactionErrors;
     final key = handlers.isEmpty ? 0 : handlers.keys.last + 1;
 
+    // Store the handler to be called at a later time by native method channels.
     MethodChannelDatabase.transactions[key] = transactionHandler;
 
-    // TODO Handle Abort transactions somehow?
     try {
       final result = await channel.invokeMethod(
         'DatabaseReference#runTransaction',
@@ -158,6 +159,14 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         }),
       );
 
+      // We store Dart only errors that occur inside users handlers - to avoid
+      // serializing the error and sending it to native only to have to send it
+      // back again. If we stored one, throw it now.
+      final possibleError = handlerErrors[key];
+      if (possibleError != null) {
+        throw possibleError;
+      }
+
       return MethodChannelTransactionResult(
         result!['committed'] as bool,
         this,
@@ -167,6 +176,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
       throw convertPlatformException(e, s);
     } finally {
       handlers.remove(key);
+      handlerErrors.remove(key);
     }
   }
 
