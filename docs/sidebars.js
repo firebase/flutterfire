@@ -116,8 +116,9 @@ module.exports = {
         label: 'Authentication',
         items: [
           'ui/auth',
-          'ui/auth/screens',
+          'ui/auth/widgets',
           'ui/auth/providers',
+          'ui/auth/controllers',
           {
             type: 'link',
             label: 'Story Book',

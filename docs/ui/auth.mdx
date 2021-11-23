@@ -1,38 +1,31 @@
 ---
 title: Authentication UI
-sidebar_label: Authentication
+sidebar_label: Getting Started
 ---
 
 FlutterFire UI for Auth provides a simple and easy way to implement authentication in your Flutter app.
 The library provides fully featured UI screens to drop into new or existing applications, along with
 lower level implementation details for developers looking tigher control.
 
-## Basic concepts
+## Installation
 
 To get started with Firebase UI for Auth, you first need to ensure the `firebase_auth` plugin is
 [installed on you project](https://firebase.flutter.dev/docs/auth/overview#installation).
 
-The UI package provides various widgets and utilities to help you implement authentication in your
-application. Widgets provide different layers of abstraction, such as fully styled sign-in screens
-to underlying controllers enabling you to build your own UI expierience. The terminology used for these
-abstractions is:
+If you haven't already done so, install the `flutterfire_ui` package by running the following command in your terminal:
 
-- **Screen**: A fully function, pre-styled and customizable widget which offers a complete authentication expereince (such as Sign In, Register, Profile Screen).
-- **View**: A fully controlled widget which offers authentication functionality (such as Sign In), however if minimally styled allowing you to build your own UI around the view.
-- **Widget**: A barebones widget which renders basic elements of a authentication flow, such as text inputs, buttons, etc.
-- **Controller**: The lowest level of abtraction which provides no UI, however provides authentication controls (such as signing in, triggering OAuth flows, etc).
+```bash
+flutter pub add flutterfire_ui
+```
 
-Internally the UI package builds upon these abstractions layers. For example a `SignInScreen` implements multiple `View`s, where a `View` implements and provides basic styling of multiple `Widget`s,
-with the `Widget`s implementing a `Controller`.
+## Getting started
 
-## Next steps
+To understand what Flutter UI for Auth offers, the following documentation pages walk you through the various topics on 
+how to use the package within your Flutter app.
 
-1. [Adding a screen](screens.mdx)
-1. [Configuring providers](providers.mdx)
-
-## Adding a Screen
-
-
+1. [Screens, Views & Widgets](widgets.mdx)
+1. [Providers](providers.mdx)
+1. [Controllers](controllers.mdx)
 
 ## Specifying a `FirebaseApp`
 
@@ -44,55 +37,3 @@ return SignInScreen(
   auth: Firebase.app('secondary-app'),
   //...
 ```
-
-## Lower level abstractions
-
-In some cases, the pre-build Screens provided by the package may not be sufficient. For example you may already
-have an agreed style guide which the screens do not satisfy.
-
-### Views & Widgets
-
-The UI package exposes widgets which control the authentication implementation logic, however can be dropped in to
-your own application flows.
-
-For example, you may wish to allow users to sign-in with an email and password - you've already built your application
-UI however still want to allow the UI package to handle the sign-in process. In this scenario, you can integrate the 
-`EmailForm` widget into an existing UI! The `EmailForm` widget renders a basic email sign in form (email & password 
-text inputs) along with a submit button.
-
-Go ahead a add the `EmailForm` widget to your application:
-
-```dart
-class MySignInScreen extends StatlessWidget {
-  const MySignInScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return EmailForm();
-  }
-}
-```
-
-As you can see, the `EmailForm` widget interally handles the authentication logic, however is largely unstyled - only 
-basic element padding is provided. By design it is not constrained allowing you to easily provide your own UI 
-around it:
-
-```dart
-@override
-Widget build(BuildContext context) {
-  // TODO example of a UI wrapping the EmailForm
-}
-```
-
-TODO screenshot
-
-### Controllers
-
-Futhermore, if the individual widgets are not sufficient, you may wish to provide your own implementation of the
-entire UI flow using controllers.
-
-TODO docs on building custom implementations
-
-## Providers
-
-TODO list / docs on providers

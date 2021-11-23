@@ -1,0 +1,165 @@
+---
+title: Widgets
+---
+
+The UI package provides various widgets to help you implement authentication in your
+application. Widgets provide different layers of abstraction, such as fully styled sign-in screens
+to underlying controllers enabling you to build your own UI expierience. The terminology used for these
+abstractions are:
+
+- **Screen**: A fully function, pre-styled and customizable widget which offers a complete authentication expereince (such as Sign In, Register, Profile Screen).
+- **View**: A fully controlled widget which offers authentication functionality (such as Sign In), however if minimally styled allowing you to build your own UI around the view.
+- **Widget**: A barebones widget which renders basic elements of a authentication flow, such as text inputs, buttons, etc.
+- **Controller**: The lowest level of abtraction which provides no UI, however provides authentication controls (such as signing in, triggering OAuth flows, etc).
+
+Internally the UI package builds upon these abstractions layers. For example a `SignInScreen` implements multiple `View`s, where a `View` implements and provides basic styling of multiple `Widget`s,
+with the `Widget`s implementing a `Controller`.
+
+## Adding a screen
+
+Flutter UI for Auth provides various Screen widgets for many different use cases, such as Sign In, Registration, Forgot Password,
+Provider flow Authentication, Phone Number Verification, Profiles and more. You can view all available Screens in the [Widget Catalog](../widgets.mdx).
+
+A "Screen" is a fully function, pre-styled and customizable widget which offers a complete authentication
+expereince. Screens are designed to be dropped into your application as a full "page" experience.
+
+By design, a Screen does not depend on any implementation detail such as routing. Instead, a Screen can be directly returned
+from a Widget, or from a page builder - it's up to you.
+
+For this example, we'll be using the `SignInScreen` widget, which is a fully styled sign-in screen. We can ensure application users
+are signed-in to our application by using the the `authStateChanges` stream from the `FirebaseAuth` service. If the user is not signed-in,
+we will directly render the `SignInScreen` widget:
+
+```dart
+class MyApplication extends StatlessWidget {
+  const MyApplication({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.userChanges(),
+      builder: (context, snapshot) {
+        // User is not signed in!
+        if (!snapshot.hasData) {
+          return SignInScreen(
+            providerConfigs: [
+              // ... TODO!
+            ],
+          );
+        }
+
+        // ...
+      },
+    );
+  }
+}
+```
+
+The `SignInScreen` widget requires at a minimum a list of `ProviderConfiguration` instances are provided,
+which detail the expected authentication providers a user can use to sign in with (for example, Email, Google, Facebook, etc).
+
+By adding a new provider to the list, the UI library will render the appropriate UI in the order specified:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    EmailProviderConfiguration(),
+    GoogleProviderConfiguration(...),
+  ],
+);
+```
+
+:::tip
+
+To learn how to setup and configure different providers, [view the documentation](providers.mdx).
+
+:::
+
+TODO screenshot
+
+Although usable, you may be looking for some more flare to your UI. The `SignInScreen` widget allows you to customize the screen
+to easily provide your own UI elements, such as a logo. The widget provides a `headerBuilder` property allowing you to provide
+such functionality.
+
+For example, to add a logo which appears at the top of the screen:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    // ...
+  ],
+  headerBuilder: (context, constraints, _) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: SvgPicture.asset('assets/images/logo.svg'),
+      ),
+    );
+  },
+);
+```
+
+TODO screenshot
+
+Futhermore, for Desktop / wider screens the widget enables you to provide a side-builder, which renders
+to the side of the main authentication functionality further enhancing the UI:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    // ...
+  ],
+  headerBuilder: (context, constraints, _) {
+    // ...
+  },
+  sideBuilder: (context, constraints) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(constraints.maxWidth / 8),
+        child: SvgPicture.asset(
+          'assets/images/sign_in_background.svg',
+          width: constraints.maxWidth / 2,
+          height: constraints.maxWidth / 2,
+        ),
+      ),
+    );
+  },
+);
+```
+
+## Views & Widgets
+
+The UI package exposes widgets which control the authentication implementation logic, however can be dropped in to
+your own application flows.
+
+For example, you may wish to allow users to sign-in with an email and password - you've already built your application
+UI however still want to allow the UI package to handle the sign-in process. In this scenario, you can integrate the 
+`EmailForm` widget into an existing UI! The `EmailForm` widget renders a basic email sign in form (email & password 
+text inputs) along with a submit button.
+
+Go ahead a add the `EmailForm` widget to your application:
+
+```dart
+class MySignInScreen extends StatlessWidget {
+  const MySignInScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return EmailForm();
+  }
+}
+```
+
+As you can see, the `EmailForm` widget interally handles the authentication logic, however is largely unstyled - only 
+basic element padding is provided. By design it is not constrained allowing you to easily provide your own UI 
+around it:
+
+```dart
+@override
+Widget build(BuildContext context) {
+  // TODO example of a UI wrapping the EmailForm
+}
+```
+
+TODO screenshot
