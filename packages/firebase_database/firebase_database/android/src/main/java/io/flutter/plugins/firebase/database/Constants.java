@@ -58,9 +58,6 @@ public class Constants {
   public static final String TRANSACTION_KEY = "transactionKey";
   public static final String TRANSACTION_APPLY_LOCALLY = "transactionApplyLocally";
 
-  // Custom error codes
-  public static final String INDEX_NOT_DEFINED = "index-not-defined";
-
   public static final String ERROR_CODE = "code";
   public static final String ERROR_MESSAGE = "message";
   public static final String ERROR_DETAILS = "details";

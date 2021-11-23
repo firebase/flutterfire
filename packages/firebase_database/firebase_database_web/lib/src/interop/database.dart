@@ -101,7 +101,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   DatabaseReference? get parent {
     final jsParent = jsObject.parent;
     if (jsParent == null) return null;
-    DatabaseReference.getInstance(jsParent);
+    return DatabaseReference.getInstance(jsParent);
   }
 
   /// The root location of a DatabaseReference.

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -7,7 +8,7 @@ import 'firebase_database_e2e.dart';
 
 Future<void> setupPrioritiesTestData() async {
   await database
-      .ref('priority_test')
+      .ref('tests/priority')
       .set({'first': 1, 'second': 2, 'third': 3});
 }
 
@@ -15,7 +16,7 @@ void runDatabaseReferenceTests() {
   late DatabaseReference ref;
 
   setUp(() async {
-    ref = database.ref('flutterfire');
+    ref = database.ref('tests/flutterfire');
   });
 
   group('DatabaseReference.runTransaction', () {
@@ -55,7 +56,7 @@ void runDatabaseReferenceTests() {
     test('get primitive list values', () async {
       List<String> data = ['first', 'second'];
       final FirebaseDatabase database = FirebaseDatabase.instance;
-      final DatabaseReference ref = database.ref('list-values');
+      final DatabaseReference ref = database.ref('tests/list-values');
 
       await ref.set({'list': data});
 
@@ -77,6 +78,31 @@ void runDatabaseReferenceTests() {
       expect(actual.value, v);
     });
 
+    test(
+      'throws "permission-denied" on a ref with no read permission',
+      () async {
+        await expectLater(
+          database.ref('denied_read').get(),
+          throwsA(
+            isA<FirebaseException>()
+                .having(
+                  (error) => error.code,
+                  'code',
+                  'permission-denied',
+                )
+                .having(
+                  (error) => error.message,
+                  'message',
+                  predicate(
+                    (String message) =>
+                        message.contains("doesn't have permission"),
+                  ),
+                ),
+          ),
+        );
+      },
+    );
+
     test('removes a value if set to null', () async {
       final v = Random.secure().nextInt(1024);
       await ref.set(v);
@@ -92,7 +118,7 @@ void runDatabaseReferenceTests() {
 
   group('DatabaseReference.setWithPriority()', () {
     test('sets a non-null value with a non-null priority', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
 
       await Future.wait([
         ref.child('first').setWithPriority(1, 10),
@@ -110,7 +136,7 @@ void runDatabaseReferenceTests() {
     setUp(setupPrioritiesTestData);
 
     test('updates value at given location', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
 
       final newValue = Random.secure().nextInt(255) + 1;
       await ref.update({'first': newValue});
@@ -122,7 +148,7 @@ void runDatabaseReferenceTests() {
     test(
       "doesn't remove values that weren't present in the update map",
       () async {
-        final ref = database.ref('priority_test');
+        final ref = database.ref('tests/priority');
 
         final newValue = Random.secure().nextInt(255);
         await ref.update({'first': newValue});
@@ -139,7 +165,7 @@ void runDatabaseReferenceTests() {
     setUp(setupPrioritiesTestData);
 
     test('updates the priority of a node', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
       // Confirm initial priority is null.
       await ref.setPriority(null);
       final snapshotNullPriority = await ref.get();
@@ -152,7 +178,7 @@ void runDatabaseReferenceTests() {
     });
 
     test('clears the priority of the node if set to null', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
       // Confirm priority is initially set.
       await ref.setPriority(123);
       final snapshotWithPriority = await ref.get();

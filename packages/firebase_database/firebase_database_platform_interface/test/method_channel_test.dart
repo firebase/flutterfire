@@ -62,7 +62,7 @@ void main() {
                 channel.name,
                 channel.codec.encodeMethodCall(
                   MethodCall(
-                    'DoTransaction',
+                    'FirebaseDatabase#callTransactionHandler',
                     <String, dynamic>{
                       'transactionKey': transactionKey,
                       'snapshot': <String, dynamic>{
@@ -74,7 +74,8 @@ void main() {
                 ),
                 (data) {
                   final decoded = channel.codec.decodeEnvelope(data!);
-                  updatedValue = decoded.cast<String, dynamic>();
+                  updatedValue =
+                      Map.from(decoded.cast<String, dynamic>()['value']);
                 },
               );
             }

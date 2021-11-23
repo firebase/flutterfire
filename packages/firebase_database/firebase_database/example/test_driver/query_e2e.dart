@@ -16,7 +16,7 @@ final List<Map<String, Object>> testDocuments = [
 ];
 
 Future<void> setupOrderedData() async {
-  final orderedRef = database.ref('ordered');
+  final orderedRef = database.ref('tests/ordered');
 
   await Future.wait(
     testDocuments.map((map) {
@@ -27,7 +27,7 @@ Future<void> setupOrderedData() async {
 }
 
 Future<void> setupPriorityData() async {
-  final priorityRef = database.ref('priority_test');
+  final priorityRef = database.ref('tests/priority');
 
   await Future.wait([
     priorityRef.child('first').setWithPriority(1, 10),
@@ -39,22 +39,47 @@ Future<void> setupPriorityData() async {
 void runQueryTests() {
   group('Query', () {
     setUp(() async {
-      await database.ref('flutterfire').set(0);
+      await database.ref('tests/flutterfire').set(0);
 
       await setupOrderedData();
       await setupPriorityData();
     });
 
     test('once()', () async {
-      final snapshot = await database.ref('ordered/one').once();
+      final snapshot = await database.ref('tests/ordered/one').once();
       expect(snapshot, isNot(null));
       expect(snapshot.key, 'one');
       expect((snapshot.value as dynamic)['ref'], 'one');
       expect((snapshot.value as dynamic)['value'], 23);
     });
 
+    test(
+      'once() throws "permission-denied" on a ref with no read permission',
+      () async {
+        await expectLater(
+          database.ref('denied_read').once(),
+          throwsA(
+            isA<FirebaseException>()
+                .having(
+                  (error) => error.code,
+                  'code',
+                  'permission-denied',
+                )
+                .having(
+                  (error) => error.message,
+                  'message',
+                  predicate(
+                    (String message) =>
+                        message.contains("doesn't have permission"),
+                  ),
+                ),
+          ),
+        );
+      },
+    );
+
     test('get()', () async {
-      final snapshot = await database.ref('ordered/two').get();
+      final snapshot = await database.ref('tests/ordered/two').get();
       expect(snapshot, isNot(null));
       expect(snapshot.key, 'two');
       expect((snapshot.value as dynamic)['ref'], 'two');
@@ -62,9 +87,9 @@ void runQueryTests() {
     });
 
     test(
-      'throws "index-not-defined" if ordering applied to a ref with no index',
+      'throws "index-not-defined" on a ref with no index',
       () async {
-        final ref = database.ref('messages');
+        final ref = database.ref('tests/messages');
         try {
           await ref.orderByValue().get();
           throw Exception('should have thrown FirebaseDatabaseException');
@@ -80,32 +105,33 @@ void runQueryTests() {
 
     test('orderByChild()', () async {
       final snapshot =
-          await database.ref('ordered').orderByChild('value').once();
+          await database.ref('tests/ordered').orderByChild('value').once();
       final keys = snapshot.children.map((child) => child.key).toList();
       expect(keys, ['three', 'one', 'four', 'two']);
     });
 
     test('orderByPriority()', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
 
       final s = await ref.orderByPriority().get();
       expect(s.keys, ['second', 'third', 'first']);
     });
 
     test('orderByValue()', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
 
       final s = await ref.orderByValue().once();
       expect(s.keys, ['first', 'second', 'third']);
     });
 
     test('limitToFirst()', () async {
-      final snapshot = await database.ref('ordered').limitToFirst(2).once();
+      final snapshot =
+          await database.ref('tests/ordered').limitToFirst(2).once();
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
       expect(data.length, 2);
 
       final snapshot1 = await database
-          .ref('ordered')
+          .ref('tests/ordered')
           .limitToFirst(testDocuments.length + 2)
           .once();
 
@@ -114,12 +140,13 @@ void runQueryTests() {
     });
 
     test('limitToLast()', () async {
-      final snapshot = await database.ref('ordered').limitToLast(3).once();
+      final snapshot =
+          await database.ref('tests/ordered').limitToLast(3).once();
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
       expect(data.length, 3);
 
       final snapshot1 = await database
-          .ref('ordered')
+          .ref('tests/ordered')
           .limitToLast(testDocuments.length + 2)
           .once();
       Map<dynamic, dynamic> data1 = snapshot1.value as dynamic;
@@ -129,7 +156,7 @@ void runQueryTests() {
     test('startAt() & endAt() once', () async {
       // query to get the data that has key starts with t only
       final snapshot = await database
-          .ref('ordered')
+          .ref('tests/ordered')
           .orderByKey()
           .startAt('t')
           .endAt('t\uf8ff')
@@ -146,7 +173,7 @@ void runQueryTests() {
       expect(data.length, 2);
 
       final snapshot1 = await database
-          .ref('ordered')
+          .ref('tests/ordered')
           .orderByKey()
           .startAt('t')
           .endAt('three')
@@ -159,7 +186,7 @@ void runQueryTests() {
     // https://github.com/FirebaseExtended/flutterfire/issues/7221
     test('startAt() & endAt() get', () async {
       final s = await database
-          .ref('ordered')
+          .ref('tests/ordered')
           .orderByChild('value')
           .startAt(9)
           .endAt(40)
@@ -170,22 +197,25 @@ void runQueryTests() {
     });
 
     test('endBefore()', () async {
-      final ref = database.ref('ordered');
+      final ref = database.ref('tests/ordered');
       final snapshot = await ref.orderByKey().endBefore('two').get();
 
       expect(snapshot.keys, ['four', 'one', 'three']);
     });
 
     test('startAfter()', () async {
-      final ref = database.ref('priority_test');
+      final ref = database.ref('tests/priority');
       final snapshot = await ref.orderByKey().startAfter('first').get();
       final keys = snapshot.children.map((child) => child.key).toList();
       expect(keys, ['second', 'third']);
     });
 
     test('equalTo()', () async {
-      final snapshot =
-          await database.ref('ordered').orderByKey().equalTo('one').once();
+      final snapshot = await database
+          .ref('tests/ordered')
+          .orderByKey()
+          .equalTo('one')
+          .once();
 
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
 
@@ -196,7 +226,7 @@ void runQueryTests() {
   });
 
   group('Query subscriptions', () {
-    late final ref = database.ref('priority_test');
+    late final ref = database.ref('tests/priority');
 
     void verifyEventType(List<DatabaseEvent> events, DatabaseEventType type) {
       expect(
@@ -305,8 +335,8 @@ void runQueryTests() {
     // https://github.com/FirebaseExtended/flutterfire/issues/7048
     test("sequential subscriptions don't override each other", () async {
       final result = await Future.wait([
-        database.ref('ordered').onChildAdded.take(4).toList(),
-        database.ref('ordered').onChildAdded.take(4).toList(),
+        database.ref('tests/ordered').onChildAdded.take(4).toList(),
+        database.ref('tests/ordered').onChildAdded.take(4).toList(),
       ]);
 
       final values0 =

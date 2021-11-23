@@ -5,14 +5,16 @@ import 'firebase_database_e2e.dart';
 void runDatabaseTests() {
   group('FirebaseDatabase.ref()', () {
     setUp(() async {
-      await database.ref('flutterfire').set(0);
+      await database.ref('tests/flutterfire').set(0);
     });
 
     test('returns a correct reference', () async {
-      final ref = database.ref('flutterfire');
+      final ref = database.ref('tests/flutterfire');
       expect(ref.key, 'flutterfire');
       expect(ref.parent, isNotNull);
-      expect(ref.parent!.key, isNull);
+      expect(ref.parent!.key, 'tests');
+      expect(ref.parent!.parent, isNotNull);
+      expect(ref.parent!.parent?.key, isNull);
 
       final snapshot = await ref.get();
       expect(snapshot.key, 'flutterfire');
@@ -26,7 +28,7 @@ void runDatabaseTests() {
         expect(rootRef.key, isNull);
         expect(rootRef.parent, isNull);
 
-        final childRef = rootRef.child('flutterfire');
+        final childRef = rootRef.child('tests/flutterfire');
         final snapshot = await childRef.get();
         expect(snapshot.key, 'flutterfire');
         expect(snapshot.value, 0);
