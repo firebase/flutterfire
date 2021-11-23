@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'package:firebase_core_example/firebase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -22,12 +23,7 @@ class MyApp extends StatelessWidget {
 
   Future<void> initializeDefault() async {
     FirebaseApp app = await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-        appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-        messagingSenderId: '448618578101',
-        projectId: 'react-native-firebase-testing',
-      ),
+      options: DefaultFirebaseConfig.platformOptions,
     );
     print('Initialized default app $app');
   }
