@@ -62,13 +62,13 @@ class FirebasePerformance extends FirebasePluginPlatform {
   /// The [name] requires no leading or trailing whitespace, no leading
   /// underscore _ character, and max length of [Trace.maxTraceNameLength]
   /// characters.
-  Trace newTrace(String name) {
-    return Trace._(_delegate.newTrace(name));
+  Future<Trace> newTrace(String name) async {
+    return Trace._(await _delegate.newTrace(name));
   }
 
   /// Creates [HttpMetric] for collecting performance for one request/response.
-  HttpMetric newHttpMetric(String url, HttpMethod httpMethod) {
-    return HttpMetric._(_delegate.newHttpMetric(url, httpMethod));
+  Future<HttpMetric> newHttpMetric(String url, HttpMethod httpMethod) async {
+    return HttpMetric._(await _delegate.newHttpMetric(url, httpMethod));
   }
 
   /// Creates a [Trace] object with given [name] and starts the trace.
@@ -77,7 +77,7 @@ class FirebasePerformance extends FirebasePluginPlatform {
   /// underscore _ character, max length of [Trace.maxTraceNameLength]
   /// characters.
   static Future<Trace> startTrace(String name) async {
-    final Trace trace = instance.newTrace(name);
+    final Trace trace = await instance.newTrace(name);
     await trace.start();
     return trace;
   }

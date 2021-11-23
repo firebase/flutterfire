@@ -35,7 +35,8 @@ void main() {
       final MockTrace mockTrace = MockTrace();
       when(mockPerformance.trace(testTraceName)).thenReturn(mockTrace);
 
-      TracePlatform trace = firebasePerformancePlatform.newTrace(testTraceName);
+      TracePlatform trace =
+          await firebasePerformancePlatform.newTrace(testTraceName);
 
       expect(trace.runtimeType, TraceWeb);
       trace = trace as TraceWeb;
@@ -47,7 +48,8 @@ void main() {
     });
 
     test('newHttpMetric returns a dummy object', () async {
-      HttpMetricPlatform httpMeric = firebasePerformancePlatform.newHttpMetric(
+      HttpMetricPlatform httpMeric =
+          await firebasePerformancePlatform.newHttpMetric(
         'http://test_url',
         HttpMethod.Get,
       );
@@ -56,28 +58,7 @@ void main() {
       expect(httpMeric.url, '');
       verifyNoMoreInteractions(mockPerformance);
     });
-
-    test('startTrace starts a trace and returns the trace web platform object',
-        () async {
-      const testTraceName = 'test_trace';
-      final MockTrace mockTrace = MockTrace();
-      when(mockPerformance.trace(testTraceName)).thenReturn(mockTrace);
-      FirebasePerformanceWeb.registerWithForTest(firebasePerformancePlatform);
-
-      TracePlatform trace =
-          await FirebasePerformancePlatform.startTrace(testTraceName);
-
-      expect(trace.runtimeType, TraceWeb);
-      trace = trace as TraceWeb;
-      expect(trace.traceDelegate, mockTrace);
-      expect(trace.name, testTraceName);
-      verify(mockPerformance.trace(testTraceName)).called(1);
-      verify(mockTrace.start()).called(1);
-      verifyNoMoreInteractions(mockPerformance);
-      verifyNoMoreInteractions(mockTrace);
-    });
   });
-  //
   group('TraceWeb', () {
     late TracePlatform tracePlatform;
     late MockTrace mockTrace;

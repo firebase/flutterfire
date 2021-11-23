@@ -71,7 +71,7 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   /// True if custom performance monitoring is enabled and false if performance
   /// monitoring is disabled. This is for dynamic enable/disable state. This
   /// does not reflect whether instrumentation is enabled/disabled.
-  Future<bool> isPerformanceCollectionEnabled() async {
+  Future<bool> isPerformanceCollectionEnabled() {
     throw UnimplementedError(
       'isPerformanceCollectionEnabled() is not implemented',
     );
@@ -81,27 +81,20 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
   ///
   /// This setting is persisted and applied on future invocations of your
   /// application. By default, custom performance monitoring is enabled.
-  Future<void> setPerformanceCollectionEnabled(bool enabled) async {
+  Future<void> setPerformanceCollectionEnabled(bool enabled) {
     throw UnimplementedError(
       'setPerformanceCollectionEnabled() is not implemented',
     );
   }
 
   /// Creates a Trace object with given name.
-  TracePlatform newTrace(String name) {
+  Future<TracePlatform> newTrace(String name) {
     throw UnimplementedError('newTrace() is not implemented');
   }
 
   /// Creates a HttpMetric object for collecting network performance data for one
   /// request/response. Only works for native apps. Does nothing for web apps.
-  HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
+  Future<HttpMetricPlatform> newHttpMetric(String url, HttpMethod httpMethod) {
     throw UnimplementedError('newHttpMetric() is not implemented');
-  }
-
-  /// Creates a Trace object with the given name and starts it.
-  static Future<TracePlatform> startTrace(String name) async {
-    final trace = FirebasePerformancePlatform.instance.newTrace(name);
-    await trace.start();
-    return trace;
   }
 }
