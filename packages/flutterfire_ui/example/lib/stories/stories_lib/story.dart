@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 
@@ -50,10 +51,17 @@ class _StoriesState extends State<Stories> {
     } else {
       _categoriesMap[story.category]!.addStory(story);
     }
+  }
 
-    SchedulerBinding.instance!.addPostFrameCallback((timeStamp) {
-      setState(() {});
+  @override
+  void initState() {
+    widget.stories.forEach((w) {
+      final el = w.createElement();
+      el.build();
+      (el as StoryElement)._register(this);
     });
+
+    super.initState();
   }
 
   @override
@@ -344,18 +352,20 @@ class StoryElement extends StatelessElement implements Story {
 
   @override
   void notify(String message) {
-    ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+    ScaffoldMessenger.of(this).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _register(_StoriesState state) {
+    _widgetKnobs[widget.hashCode] = knobs;
+    state.registerStory(this);
   }
 
   @override
   Widget build() {
-    final content = (widget as StoryWidget).build(this);
-    final storiesState = findAncestorStateOfType<_StoriesState>()!;
-    _widgetKnobs[widget.hashCode] = knobs;
-    storiesState.registerStory(this);
-
-    return content;
+    return (widget as StoryWidget).build(this);
   }
 }

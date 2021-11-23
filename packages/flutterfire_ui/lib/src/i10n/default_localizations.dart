@@ -44,6 +44,13 @@ abstract class FirebaseUILocalizationLabels {
   String get profile;
   String get name;
   String get deleteAccount;
+  String get passwordIsRequiredErrorText;
+  String get confirmPasswordIsRequiredErrorText;
+  String get confirmPasswordDoesNotMatchErrorText;
+  String get confirmPasswordInputLabel;
+  String get forgotPasswordButtonLabel;
+  String get forgotPasswordViewTitle;
+  String get resetPasswordButtonLabel;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{

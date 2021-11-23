@@ -79,6 +79,20 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String name;
   @override
   final String deleteAccount;
+  @override
+  final String passwordIsRequiredErrorText;
+  @override
+  final String confirmPasswordIsRequiredErrorText;
+  @override
+  final String confirmPasswordDoesNotMatchErrorText;
+  @override
+  final String confirmPasswordInputLabel;
+  @override
+  final String forgotPasswordButtonLabel;
+  @override
+  final String forgotPasswordViewTitle;
+  @override
+  final String resetPasswordButtonLabel;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -123,5 +137,12 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.profile = 'Profile',
     this.name = 'Name',
     this.deleteAccount = 'Delete account',
+    this.passwordIsRequiredErrorText = 'Password is required',
+    this.confirmPasswordIsRequiredErrorText = 'Confirm your password',
+    this.confirmPasswordDoesNotMatchErrorText = 'Passwords do not match',
+    this.confirmPasswordInputLabel = 'Confirm password',
+    this.forgotPasswordButtonLabel = 'Forgot password?',
+    this.forgotPasswordViewTitle = 'Forgot password',
+    this.resetPasswordButtonLabel = 'Reset password',
   });
 }
