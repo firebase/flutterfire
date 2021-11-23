@@ -26,6 +26,9 @@ class TestFirebaseConfig {
         databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
         iosClientId:
             '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+        androidClientId:
+            '448618578101-26jgjs0rtl4ts2i667vjb28kldvs2kp6.apps.googleusercontent.com',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
       );
     } else {
       // Android
