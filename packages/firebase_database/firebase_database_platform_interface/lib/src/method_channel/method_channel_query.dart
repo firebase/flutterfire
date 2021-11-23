@@ -64,23 +64,22 @@ class MethodChannelQuery extends QueryPlatform {
   /// Gets the most up-to-date result for this query.
   @override
   Future<DataSnapshotPlatform> get() async {
-    // TODO add try catch back after fixing cast exception
-    // try {
-    final result = await channel.invokeMapMethod(
-      'Query#get',
-      database.getChannelArguments({
-        'path': path,
-        'parameters': parameters,
-      }),
-    );
+    try {
+      final result = await channel.invokeMapMethod(
+        'Query#get',
+        database.getChannelArguments({
+          'path': path,
+          'parameters': parameters,
+        }),
+      );
 
-    return MethodChannelDataSnapshot(
-      ref,
-      Map<String, dynamic>.from(result!['snapshot']),
-    );
-    // } catch (e, s) {
-    //   throw convertPlatformException(e, s);
-    // }
+      return MethodChannelDataSnapshot(
+        ref,
+        Map<String, dynamic>.from(result!['snapshot']),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   /// Create a query constrained to only return child nodes with a value greater

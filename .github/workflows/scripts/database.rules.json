@@ -13,7 +13,9 @@
     "ordered": {
       ".read": true,
       ".write": true,
-      ".indexOn": "value"
+      ".indexOn": [
+        "value"
+      ]
     }
   }
 }

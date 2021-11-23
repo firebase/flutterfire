@@ -14,7 +14,7 @@ late FirebaseDatabase database;
 
 // The port we've set the Firebase Database emulator to run on via the
 // `firebase.json` configuration file.
-const emulatorPort = 9299;
+const emulatorPort = 9000;
 
 // Android device emulators consider localhost of the host machine as 10.0.2.2
 // so let's use that if running on Android.
