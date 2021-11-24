@@ -6,11 +6,8 @@ package io.flutter.plugins.firebase.database;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
-import android.app.Activity;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
@@ -21,8 +18,6 @@ import com.google.firebase.database.Logger;
 import com.google.firebase.database.OnDisconnect;
 import com.google.firebase.database.Query;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.embedding.engine.plugins.activity.ActivityAware;
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
@@ -34,48 +29,32 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
-/** FirebaseDatabasePlugin */
-@SuppressWarnings("unused")
 public class FirebaseDatabasePlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler, ActivityAware {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+  protected static final HashMap<String, FirebaseDatabase> databaseInstanceCache = new HashMap<>();
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
-
+  private final Map<String, Integer> queryListenersCount = new HashMap<>();
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
 
-  private final Map<String, Integer> queryListenersCount = new HashMap<>();
-  private Activity activity;
-
-  @Override
-  public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
-    activity = activityPluginBinding.getActivity();
+  private static FirebaseDatabase getCachedFirebaseDatabaseInstanceForKey(String key) {
+    synchronized (databaseInstanceCache) {
+      return databaseInstanceCache.get(key);
+    }
   }
 
-  @Override
-  public void onDetachedFromActivityForConfigChanges() {
-    activity = null;
+  private static void setCachedFirebaseDatabaseInstanceForKey(
+      FirebaseDatabase database, String key) {
+    synchronized (databaseInstanceCache) {
+      FirebaseDatabase existingInstance = databaseInstanceCache.get(key);
+      if (existingInstance == null) {
+        databaseInstanceCache.put(key, database);
+      }
+    }
   }
 
-  @Override
-  public void onReattachedToActivityForConfigChanges(ActivityPluginBinding activityPluginBinding) {
-    activity = activityPluginBinding.getActivity();
-  }
-
-  @Override
-  public void onDetachedFromActivity() {
-    activity = null;
-  }
-
-  // Only access activity with this method.
-  @Nullable
-  private Activity getActivity() {
-    return activity;
-  }
-
-  private void initInstance(BinaryMessenger messenger) {
+  private void initPluginInstance(BinaryMessenger messenger) {
     registerPlugin(METHOD_CHANNEL_NAME, this);
     this.messenger = messenger;
 
@@ -84,31 +63,63 @@ public class FirebaseDatabasePlugin
   }
 
   FirebaseDatabase getDatabase(Map<String, Object> arguments) {
-    return getDatabase(arguments, true);
-  }
+    String appName = (String) arguments.get(Constants.APP_NAME);
+    if (appName == null) appName = "[DEFAULT]";
 
-  FirebaseDatabase getDatabase(Map<String, Object> arguments, boolean applyConfig) {
-    final FirebaseDatabase database;
-    final String appName = (String) arguments.get(Constants.APP_NAME);
-    final String databaseURL = (String) arguments.get(Constants.DATABASE_URL);
-    FirebaseApp app;
+    String databaseURL = (String) arguments.get(Constants.DATABASE_URL);
+    if (databaseURL == null) databaseURL = "";
 
-    if (appName == null) {
-      app = FirebaseApp.getInstance();
-    } else {
-      app = FirebaseApp.getInstance(appName);
+    final String instanceKey = appName.concat(databaseURL);
+
+    // Check for an existing pre-configured instance and return it if it exists.
+    final FirebaseDatabase existingInstance = getCachedFirebaseDatabaseInstanceForKey(instanceKey);
+    if (existingInstance != null) {
+      return existingInstance;
     }
 
-    if (databaseURL != null) {
+    final FirebaseApp app = FirebaseApp.getInstance(appName);
+    final FirebaseDatabase database;
+    if (!databaseURL.isEmpty()) {
       database = FirebaseDatabase.getInstance(app, databaseURL);
     } else {
       database = FirebaseDatabase.getInstance(app);
     }
 
-    if (applyConfig) {
-      DatabaseConfiguration.applyConfig(database);
+    Boolean loggingEnabled = (Boolean) arguments.get(Constants.DATABASE_LOGGING_ENABLED);
+    Boolean persistenceEnabled = (Boolean) arguments.get(Constants.DATABASE_PERSISTENCE_ENABLED);
+    String emulatorHost = (String) arguments.get(Constants.DATABASE_EMULATOR_HOST);
+    Integer emulatorPort = (Integer) arguments.get(Constants.DATABASE_EMULATOR_PORT);
+    Object cacheSizeBytes = (Object) arguments.get(Constants.DATABASE_CACHE_SIZE_BYTES);
+
+    try {
+      if (loggingEnabled != null) {
+        database.setLogLevel(loggingEnabled ? Logger.Level.DEBUG : Logger.Level.NONE);
+      }
+
+      if (emulatorHost != null && emulatorPort != null) {
+        database.useEmulator(emulatorHost, emulatorPort);
+      }
+
+      if (persistenceEnabled != null) {
+        database.setPersistenceEnabled(persistenceEnabled);
+      }
+
+      if (cacheSizeBytes != null) {
+        if (cacheSizeBytes instanceof Long) {
+          database.setPersistenceCacheSizeBytes((Long) cacheSizeBytes);
+        } else if (cacheSizeBytes instanceof Integer) {
+          database.setPersistenceCacheSizeBytes(Long.valueOf((Integer) cacheSizeBytes));
+        }
+      }
+    } catch (DatabaseException e) {
+      final String message = e.getMessage();
+      if (message == null) throw e;
+      if (!message.contains("must be made before any other usage of FirebaseDatabase")) {
+        throw e;
+      }
     }
 
+    setCachedFirebaseDatabaseInstanceForKey(database, instanceKey);
     return database;
   }
 
@@ -159,74 +170,25 @@ public class FirebaseDatabasePlugin
         });
   }
 
-  private Task<Void> setPersistenceEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final FirebaseDatabase db = getDatabase(arguments, false);
-          final boolean isEnabled =
-              (boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-          DatabaseConfiguration.setPersistenceEnabled(db, isEnabled);
-          return null;
-        });
-  }
-
-  private Task<Void> setPersistenceCacheSizeBytes(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final FirebaseDatabase db = getDatabase(arguments, false);
-          final Object size = Objects.requireNonNull(arguments.get(Constants.CACHE_SIZE));
-          Long cacheSize = Constants.DEFAULT_CACHE_SIZE;
-
-          if (size instanceof Long) {
-            cacheSize = (Long) size;
-          } else if (size instanceof Integer) {
-            cacheSize = Long.valueOf((Integer) size);
-          }
-
-          DatabaseConfiguration.setPersistenceCacheSizeBytes(db, cacheSize);
-          return null;
-        });
-  }
-
-  private Task<Void> setLoggingEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final FirebaseDatabase db = getDatabase(arguments, false);
-          final boolean isEnabled =
-              (boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-
-          final Logger.Level logLevel;
-
-          if (isEnabled) {
-            logLevel = Constants.ENABLED_LOG_LEVEL;
-          } else {
-            logLevel = Constants.DISABLED_LOG_LEVEL;
-          }
-
-          DatabaseConfiguration.setLogLevel(db, logLevel);
-
-          return null;
-        });
-  }
-
   private Task<Void> setValue(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           final DatabaseReference ref = getReference(arguments);
+          final Object value = arguments.get(Constants.VALUE);
+          Tasks.await(ref.setValue(value));
+          return null;
+        });
+  }
 
+  private Task<Void> setValueWithPriority(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
           final Object value = arguments.get(Constants.VALUE);
           final Object priority = arguments.get(Constants.PRIORITY);
-
-          if (priority != null) {
-            Tasks.await(ref.setValue(value, priority));
-          } else {
-            Tasks.await(ref.setValue(value));
-          }
-
+          Tasks.await(ref.setValue(value, priority));
           return null;
         });
   }
@@ -250,10 +212,8 @@ public class FirebaseDatabasePlugin
         cachedThreadPool,
         () -> {
           final DatabaseReference ref = getReference(arguments);
-          final Object priority = Objects.requireNonNull(arguments.get(Constants.PRIORITY));
-
+          final Object priority = arguments.get(Constants.PRIORITY);
           Tasks.await(ref.setPriority(priority));
-
           return null;
         });
   }
@@ -266,16 +226,12 @@ public class FirebaseDatabasePlugin
 
           final int transactionKey =
               (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
-          final int transactionTimeout =
-              (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_TIMEOUT));
+          final boolean transactionApplyLocally =
+              (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
 
-          final Activity activity = getActivity();
-          final TransactionHandler handler =
-              new TransactionHandler(methodChannel, transactionKey, activity);
+          final TransactionHandler handler = new TransactionHandler(methodChannel, transactionKey);
 
-          ref.runTransaction(handler);
-
-          Tasks.await(handler.getTask(), transactionTimeout, TimeUnit.MILLISECONDS);
+          ref.runTransaction(handler, transactionApplyLocally);
 
           return Tasks.await(handler.getTask());
         });
@@ -289,7 +245,7 @@ public class FirebaseDatabasePlugin
           final DataSnapshot snapshot = Tasks.await(query.get());
           final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
 
-          return payload.withChildKeys().toMap();
+          return payload.toMap();
         });
   }
 
@@ -353,35 +309,34 @@ public class FirebaseDatabasePlugin
         });
   }
 
-  @SuppressWarnings("unchecked")
   private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           final Object value = arguments.get(Constants.VALUE);
-          final Object priority = arguments.get(Constants.PRIORITY);
+          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+          Tasks.await(onDisconnect.setValue(value));
+          return null;
+        });
+  }
 
-          Task<Void> onDisconnectTask;
+  private Task<Void> setWithPriorityOnDisconnect(Map<String, Object> arguments) {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final Object value = arguments.get(Constants.VALUE);
+          final Object priority = arguments.get(Constants.PRIORITY);
           final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
 
+          Task<Void> onDisconnectTask;
           if (priority instanceof Double) {
             onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
           } else if (priority instanceof String) {
             onDisconnectTask = onDisconnect.setValue(value, (String) priority);
+          } else if (priority == null) {
+            onDisconnectTask = onDisconnect.setValue(value, (String) null);
           } else {
-            final TaskCompletionSource<Void> tcs = new TaskCompletionSource<>();
-            onDisconnectTask = tcs.getTask();
-
-            onDisconnect.setValue(
-                value,
-                (Map<String, Object>) priority,
-                (error, ref) -> {
-                  if (error != null) {
-                    tcs.setException(error.toException());
-                  } else {
-                    tcs.setResult(null);
-                  }
-                });
+            throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
           }
 
           Tasks.await(onDisconnectTask);
@@ -429,17 +384,11 @@ public class FirebaseDatabasePlugin
       case "FirebaseDatabase#purgeOutstandingWrites":
         methodCallTask = purgeOutstandingWrites(arguments);
         break;
-      case "FirebaseDatabase#setPersistenceEnabled":
-        methodCallTask = setPersistenceEnabled(arguments);
-        break;
-      case "FirebaseDatabase#setPersistenceCacheSizeBytes":
-        methodCallTask = setPersistenceCacheSizeBytes(arguments);
-        break;
-      case "FirebaseDatabase#setLoggingEnabled":
-        methodCallTask = setLoggingEnabled(arguments);
-        break;
       case "DatabaseReference#set":
         methodCallTask = setValue(arguments);
+        break;
+      case "DatabaseReference#setWithPriority":
+        methodCallTask = setValueWithPriority(arguments);
         break;
       case "DatabaseReference#update":
         methodCallTask = update(arguments);
@@ -452,6 +401,9 @@ public class FirebaseDatabasePlugin
         break;
       case "OnDisconnect#set":
         methodCallTask = setOnDisconnect(arguments);
+        break;
+      case "OnDisconnect#setWithPriority":
+        methodCallTask = setWithPriorityOnDisconnect(arguments);
         break;
       case "OnDisconnect#update":
         methodCallTask = updateOnDisconnect(arguments);
@@ -489,24 +441,6 @@ public class FirebaseDatabasePlugin
               e =
                   FlutterFirebaseDatabaseException.fromDatabaseException(
                       (DatabaseException) exception);
-            } else if (exception instanceof TimeoutException) {
-              final int transactionKey = (int) arguments.get(Constants.TRANSACTION_KEY);
-              final int transactionTimeout = (int) arguments.get(Constants.TRANSACTION_TIMEOUT);
-
-              final Map<String, Object> details = new HashMap<>();
-
-              details.put(Constants.TRANSACTION_KEY, transactionKey);
-              details.put(Constants.TRANSACTION_TIMEOUT, transactionTimeout);
-
-              e =
-                  new FlutterFirebaseDatabaseException(
-                      Constants.TRANSACTION_TIMEOUT_CODE,
-                      "Transaction"
-                          + transactionKey
-                          + "took longer than "
-                          + transactionTimeout
-                          + "ms",
-                      details);
             } else {
               e = FlutterFirebaseDatabaseException.fromException(exception);
             }
@@ -518,7 +452,7 @@ public class FirebaseDatabasePlugin
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
-    initInstance(binding.getBinaryMessenger());
+    initPluginInstance(binding.getBinaryMessenger());
   }
 
   @Override
@@ -538,12 +472,12 @@ public class FirebaseDatabasePlugin
         cachedThreadPool,
         () -> {
           cleanup();
-          DatabaseConfiguration.reload();
           return null;
         });
   }
 
   private void cleanup() {
     queryListenersCount.clear();
+    databaseInstanceCache.clear();
   }
 }

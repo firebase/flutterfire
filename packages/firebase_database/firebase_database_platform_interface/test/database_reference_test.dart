@@ -1,4 +1,4 @@
-import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

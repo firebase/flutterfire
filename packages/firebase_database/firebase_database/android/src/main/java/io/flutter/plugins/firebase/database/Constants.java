@@ -1,18 +1,15 @@
 package io.flutter.plugins.firebase.database;
 
-import com.google.firebase.database.Logger;
-
 public class Constants {
   public static final String APP_NAME = "appName";
+
+  // FirebaseDatabase instance options.
   public static final String DATABASE_URL = "databaseURL";
-
-  public static final String ENABLED = "enabled";
-
-  public static final String CACHE_SIZE = "cacheSize";
-  public static final Long DEFAULT_CACHE_SIZE = 10485760L;
-
-  public static final Logger.Level DISABLED_LOG_LEVEL = Logger.Level.INFO;
-  public static final Logger.Level ENABLED_LOG_LEVEL = Logger.Level.DEBUG;
+  public static final String DATABASE_LOGGING_ENABLED = "loggingEnabled";
+  public static final String DATABASE_PERSISTENCE_ENABLED = "persistenceEnabled";
+  public static final String DATABASE_EMULATOR_HOST = "emulatorHost";
+  public static final String DATABASE_EMULATOR_PORT = "emulatorPort";
+  public static final String DATABASE_CACHE_SIZE_BYTES = "cacheSizeBytes";
 
   public static final String PATH = "path";
   public static final String KEY = "key";
@@ -47,23 +44,19 @@ public class Constants {
 
   public static final String EVENT_TYPE = "eventType";
 
-  public static final String EVENT_TYPE_CHILD_ADDED = "EventType.childAdded";
-  public static final String EVENT_TYPE_CHILD_REMOVED = "EventType.childRemoved";
-  public static final String EVENT_TYPE_CHILD_CHANGED = "EventType.childChanged";
-  public static final String EVENT_TYPE_CHILD_MOVED = "EventType.childMoved";
-  public static final String EVENT_TYPE_VALUE = "EventType.value";
+  public static final String EVENT_TYPE_CHILD_ADDED = "childAdded";
+  public static final String EVENT_TYPE_CHILD_REMOVED = "childRemoved";
+  public static final String EVENT_TYPE_CHILD_CHANGED = "childChanged";
+  public static final String EVENT_TYPE_CHILD_MOVED = "childMoved";
+  public static final String EVENT_TYPE_VALUE = "value";
 
   public static final String CHILD_KEYS = "childKeys";
-  public static final String PREVIOUS_CHILD_NAME = "previousSiblingKey";
+  public static final String PREVIOUS_CHILD_NAME = "previousChildKey";
 
-  public static final String METHOD_DO_TRANSACTION = "DoTransaction";
+  public static final String METHOD_CALL_TRANSACTION_HANDLER =
+      "FirebaseDatabase#callTransactionHandler";
   public static final String TRANSACTION_KEY = "transactionKey";
-  public static final String TRANSACTION_TIMEOUT = "transactionTimeout";
-
-  // Custom error codes
-  public static final String ILLEGAL_CONFIGURATION_POINT_CODE = "wrong-configuration-point";
-  public static final String TRANSACTION_TIMEOUT_CODE = "transaction-timeout";
-  public static final String INDEX_NOT_DEFINED = "index-not-defined";
+  public static final String TRANSACTION_APPLY_LOCALLY = "transactionApplyLocally";
 
   public static final String ERROR_CODE = "code";
   public static final String ERROR_MESSAGE = "message";

@@ -1,36 +1,46 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+
+import 'method_channel_database.dart';
+import 'utils/exception.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
-  MethodChannelOnDisconnect(
-      {required DatabasePlatform database,
-      required DatabaseReferencePlatform ref})
-      : path = ref.path,
-        super(database: database, ref: ref);
-
-  final String path;
+  MethodChannelOnDisconnect({
+    required DatabasePlatform database,
+    required DatabaseReferencePlatform ref,
+  }) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(dynamic value, {dynamic priority}) {
+  Future<void> set(Object? value) {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#set',
-        <String, dynamic>{
-          'appName': database.app?.name,
-          'databaseURL': database.databaseURL,
-          'path': path,
+        database.getChannelArguments({
+          'path': ref.path,
           'value': value,
-          'priority': priority
-        },
+        }),
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  Future<void> setWithPriority(Object? value, Object? priority) {
+    try {
+      return MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#setWithPriority',
+        database.getChannelArguments(
+          {'path': ref.path, 'value': value, 'priority': priority},
+        ),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -42,31 +52,31 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#cancel',
-        <String, dynamic>{
-          'appName': database.app?.name,
+        database.getChannelArguments({
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
-          'path': path
-        },
+          'path': ref.path
+        }),
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
+  Future<void> update(Map<String, Object?> value) {
     try {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#update',
-        <String, dynamic>{
-          'appName': database.app?.name,
+        database.getChannelArguments({
+          'appName': database.app!.name,
           'databaseURL': database.databaseURL,
-          'path': path,
+          'path': ref.path,
           'value': value
-        },
+        }),
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 }

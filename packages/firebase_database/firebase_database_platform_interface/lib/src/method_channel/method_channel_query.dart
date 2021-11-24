@@ -1,77 +1,84 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:flutter/services.dart';
+
+import 'method_channel_data_snapshot.dart';
+import 'method_channel_database.dart';
+import 'method_channel_database_event.dart';
+import 'method_channel_database_reference.dart';
+import 'utils/exception.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelQuery extends QueryPlatform {
   /// Create a [MethodChannelQuery] from [pathComponents]
   MethodChannelQuery({
     required DatabasePlatform database,
-    required List<String> pathComponents,
+    required this.pathComponents,
     Map<String, dynamic> parameters = const <String, dynamic>{},
   }) : super(
           database: database,
           parameters: parameters,
-          pathComponents: pathComponents,
         );
+
+  final List<String> pathComponents;
+
+  @override
+  String get path {
+    return pathComponents.join('/');
+  }
 
   MethodChannel get channel => MethodChannelDatabase.channel;
 
   @override
-  Stream<EventPlatform> observe(EventType eventType) async* {
+  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) async* {
     const channel = MethodChannelDatabase.channel;
 
-    final createArgs = <String, dynamic>{
-      'appName': database.app?.name,
-      'databaseURL': database.databaseURL,
-      'path': path,
-      'parameters': parameters,
-      'eventType': eventType.toString(),
+    final listenArgs = <String, String>{
+      'eventType': eventTypeToString(eventType)
     };
-
-    final listenArgs = <String, String>{'eventType': eventType.toString()};
 
     final channelName = await channel.invokeMethod<String>(
       'Query#observe',
-      createArgs,
+      database.getChannelArguments({
+        'path': path,
+        'parameters': parameters,
+        'eventType': eventTypeToString(eventType),
+      }),
     );
 
     yield* EventChannel(channelName!)
         .receiveBroadcastStream(listenArgs)
-        .map((event) => EventPlatform(event))
+        .map(
+          (event) =>
+              MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
+        )
         .handleError(
-          (e) => throw FirebaseDatabaseException.fromPlatformException(e),
+          (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,
         );
   }
-
-  /// Slash-delimited path representing the database location of this query.
-  @override
-  String get path => pathComponents.join('/');
 
   /// Gets the most up-to-date result for this query.
   @override
   Future<DataSnapshotPlatform> get() async {
     try {
-      final result = await channel.invokeMethod<Map<dynamic, dynamic>>(
+      final result = await channel.invokeMapMethod(
         'Query#get',
-        <String, dynamic>{
-          'appName': database.app?.name,
-          'databaseURL': database.databaseURL,
+        database.getChannelArguments({
           'path': path,
           'parameters': parameters,
-        },
+        }),
       );
 
-      return DataSnapshotPlatform.fromJson(
-        result!['snapshot'],
-        result['childKeys'],
+      return MethodChannelDataSnapshot(
+        ref,
+        Map<String, dynamic>.from(result!['snapshot']),
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 
@@ -80,7 +87,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
   @override
-  QueryPlatform startAt(dynamic value, {String? key}) {
+  QueryPlatform startAt(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'startAt');
   }
 
@@ -97,7 +104,7 @@ class MethodChannelQuery extends QueryPlatform {
   /// or equal to the specified value and a a key name greater than
   /// the specified key.
   @override
-  QueryPlatform startAfter(dynamic value, {String? key}) {
+  QueryPlatform startAfter(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'startAfter');
   }
 
@@ -106,12 +113,12 @@ class MethodChannelQuery extends QueryPlatform {
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
   @override
-  QueryPlatform endAt(dynamic value, {String? key}) {
+  QueryPlatform endAt(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'endAt');
   }
 
   @override
-  QueryPlatform endBefore(dynamic value, {String? key}) {
+  QueryPlatform endBefore(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'endBefore');
   }
 
@@ -120,7 +127,7 @@ class MethodChannelQuery extends QueryPlatform {
   ///
   /// If a key is provided, there is at most one such child as names are unique.
   @override
-  QueryPlatform equalTo(dynamic value, {String? key}) {
+  QueryPlatform equalTo(Object? value, {String? key}) {
     return _addPaginationParameter(value, key, 'equalTo');
   }
 
@@ -210,18 +217,14 @@ class MethodChannelQuery extends QueryPlatform {
   @override
   Future<void> keepSynced(bool value) {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      return channel.invokeMethod<void>(
         'Query#keepSynced',
-        <String, dynamic>{
-          'appName': database.app?.name,
-          'databaseURL': database.databaseURL,
-          'path': path,
-          'parameters': parameters,
-          'value': value
-        },
+        database.getChannelArguments(
+          {'path': path, 'parameters': parameters, 'value': value},
+        ),
       );
-    } on PlatformException catch (e) {
-      throw FirebaseDatabaseException.fromPlatformException(e);
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
     }
   }
 

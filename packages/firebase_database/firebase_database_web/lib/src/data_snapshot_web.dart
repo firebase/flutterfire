@@ -1,41 +1,34 @@
 part of firebase_database_web;
 
 /// Web implementation for firebase [DataSnapshotPlatform]
-class DataSnapshotWeb implements DataSnapshotPlatform {
-  final database_interop.DataSnapshot snapshot;
+class DataSnapshotWeb extends DataSnapshotPlatform {
+  final database_interop.DataSnapshot _delegate;
 
-  DataSnapshotWeb(this.snapshot);
+  DataSnapshotWeb(DatabaseReferencePlatform ref, this._delegate)
+      : super(ref, <String, dynamic>{
+          'key': _delegate.key,
+          'value': _delegate.val(),
+          'priority': _delegate.getPriority(),
+        });
 
   @override
-  bool get exists => snapshot.exists();
-
-  @override
-  void forEach(void Function(DataSnapshotPlatform element) iterator) {
-    snapshot.forEach((snapshot) => iterator(DataSnapshotWeb(snapshot)));
+  DataSnapshotPlatform child(String childPath) {
+    return DataSnapshotWeb(ref, _delegate.child(childPath));
   }
 
   @override
-  bool hasChild(String path) {
-    return snapshot.hasChild(path);
-  }
+  Iterable<DataSnapshotPlatform> get children {
+    List<database_interop.DataSnapshot> snapshots = [];
 
-  @override
-  bool get hasChildren {
-    return snapshot.hasChildren();
-  }
+    // This creates an in-order array
+    _delegate.forEach((snapshot) {
+      snapshots.add(snapshot);
+    });
 
-  @override
-  String? get key {
-    return snapshot.key;
-  }
-
-  @override
-  int get numChildren {
-    return snapshot.numChildren();
-  }
-
-  @override
-  get value {
-    return snapshot.val();
+    return Iterable<DataSnapshotPlatform>.generate(snapshots.length,
+        (int index) {
+      database_interop.DataSnapshot snapshot = snapshots[index];
+      return DataSnapshotWeb(ref.child(snapshot.key), snapshot);
+    });
   }
 }

@@ -7,8 +7,20 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
+
+// Change to false to use live database instance.
+const useEmulator = true;
+// The port we've set the Firebase Database emulator to run on via the
+// `firebase.json` configuration file.
+const emulatorPort = 9000;
+// Android device emulators consider localhost of the host machine as 10.0.2.2
+// so let's use that if running on Android.
+final emulatorHost =
+    (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+        ? '10.0.2.2'
+        : 'localhost';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,13 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   late DatabaseReference _counterRef;
   late DatabaseReference _messagesRef;
-  late StreamSubscription<Event> _counterSubscription;
-  late StreamSubscription<Event> _messagesSubscription;
+  late StreamSubscription<DatabaseEvent> _counterSubscription;
+  late StreamSubscription<DatabaseEvent> _messagesSubscription;
   bool _anchorToBottom = false;
 
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
-  FirebaseDatabaseException? _error;
+  FirebaseException? _error;
   bool initialized = false;
 
   @override
@@ -53,18 +65,16 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> init() async {
     _counterRef = FirebaseDatabase.instance.ref('counter');
 
-    final database = FirebaseDatabase(app: widget.app);
+    final database = FirebaseDatabase.instanceFor(app: widget.app);
     _messagesRef = database.ref('messages');
 
-    try {
-      await database.setLoggingEnabled(false);
-
-      if (!kIsWeb) {
-        await database.setPersistenceEnabled(true);
-        await database.setPersistenceCacheSizeBytes(10000000);
-      }
-    } catch (err) {
-      print('Configuration failed: $err');
+    if (useEmulator) {
+      database.useDatabaseEmulator(emulatorHost, emulatorPort);
+    }
+    database.setLoggingEnabled(false);
+    if (!kIsWeb) {
+      database.setPersistenceEnabled(true);
+      database.setPersistenceCacheSizeBytes(10000000);
     }
 
     if (!kIsWeb) {
@@ -87,14 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     _counterSubscription = _counterRef.onValue.listen(
-      (Event event) {
+      (DatabaseEvent event) {
         setState(() {
           _error = null;
-          _counter = event.snapshot.value ?? 0;
+          _counter = (event.snapshot.value ?? 0) as int;
         });
       },
       onError: (Object o) {
-        final error = o as FirebaseDatabaseException;
+        final error = o as FirebaseException;
         setState(() {
           _error = error;
         });
@@ -104,11 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
     final messagesQuery = _messagesRef.limitToLast(10);
 
     _messagesSubscription = messagesQuery.onChildAdded.listen(
-      (Event event) {
+      (DatabaseEvent event) {
         print('Child added: ${event.snapshot.value}');
       },
       onError: (Object o) {
-        final error = o as FirebaseDatabaseException;
+        final error = o as FirebaseException;
         print('Error: ${error.code} ${error.message}');
       },
     );
@@ -138,10 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (transactionResult.committed) {
         final newMessageRef = _messagesRef.push();
         await newMessageRef.set(<String, String>{
-          _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
+          _kTestKey: '$_kTestValue ${transactionResult.snapshot.value}'
         });
       }
-    } on DatabaseError catch (e) {
+    } on FirebaseException catch (e) {
       print(e.message);
     }
   }

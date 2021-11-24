@@ -1,12 +1,12 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 import 'dart:collection';
 
-import '../firebase_database.dart'
-    show DatabaseError, DataSnapshot, Event, Query;
+import 'package:firebase_core/firebase_core.dart';
+
+import '../firebase_database.dart' show DataSnapshot, DatabaseEvent, Query;
 import 'firebase_list.dart' show ChildCallback, ErrorCallback, ValueCallback;
 import 'utils/stream_subscriber_mixin.dart';
 
@@ -20,7 +20,7 @@ import 'utils/stream_subscriber_mixin.dart';
 class FirebaseSortedList extends ListBase<DataSnapshot>
     with
         // ignore: prefer_mixin
-        StreamSubscriberMixin<Event> {
+        StreamSubscriberMixin<DatabaseEvent> {
   FirebaseSortedList({
     required this.query,
     required this.comparator,
@@ -91,13 +91,13 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     // Do not call super.clear(), it will set the length, it's unsupported.
   }
 
-  void _onChildAdded(Event event) {
+  void _onChildAdded(DatabaseEvent event) {
     _snapshots.add(event.snapshot);
     _snapshots.sort(comparator);
     onChildAdded!(_snapshots.indexOf(event.snapshot), event.snapshot);
   }
 
-  void _onChildRemoved(Event event) {
+  void _onChildRemoved(DatabaseEvent event) {
     final DataSnapshot snapshot =
         _snapshots.firstWhere((DataSnapshot snapshot) {
       return snapshot.key == event.snapshot.key;
@@ -107,7 +107,7 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     onChildRemoved!(index, snapshot);
   }
 
-  void _onChildChanged(Event event) {
+  void _onChildChanged(DatabaseEvent event) {
     final DataSnapshot snapshot =
         _snapshots.firstWhere((DataSnapshot snapshot) {
       return snapshot.key == event.snapshot.key;
@@ -117,12 +117,11 @@ class FirebaseSortedList extends ListBase<DataSnapshot>
     onChildChanged!(index, event.snapshot);
   }
 
-  void _onValue(Event event) {
+  void _onValue(DatabaseEvent event) {
     onValue!(event.snapshot);
   }
 
   void _onError(Object o) {
-    final DatabaseError error = o as DatabaseError;
-    onError?.call(error);
+    onError?.call(o as FirebaseException);
   }
 }

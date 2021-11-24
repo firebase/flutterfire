@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -7,6 +6,8 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/method_channel_database_reference.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -31,7 +32,7 @@ void main() {
     messenger = ServicesBinding.instance!.defaultBinaryMessenger;
   });
 
-  group('$MethodChannelDatabase', () {
+  group('MethodChannelDatabase', () {
     const channel = MethodChannel('plugins.flutter.io/firebase_database');
     const eventChannel = MethodChannel('mock/path');
 
@@ -49,10 +50,6 @@ void main() {
         switch (methodCall.method) {
           case 'Query#observe':
             return 'mock/path';
-          case 'FirebaseDatabase#setPersistenceEnabled':
-            return true;
-          case 'FirebaseDatabase#setPersistenceCacheSizeBytes':
-            return true;
           case 'DatabaseReference#runTransaction':
             late Map<String, dynamic> updatedValue;
 
@@ -65,7 +62,7 @@ void main() {
                 channel.name,
                 channel.codec.encodeMethodCall(
                   MethodCall(
-                    'DoTransaction',
+                    'FirebaseDatabase#callTransactionHandler',
                     <String, dynamic>{
                       'transactionKey': transactionKey,
                       'snapshot': <String, dynamic>{
@@ -77,7 +74,8 @@ void main() {
                 ),
                 (data) {
                   final decoded = channel.codec.decodeEnvelope(data!);
-                  updatedValue = decoded.cast<String, dynamic>();
+                  updatedValue =
+                      Map.from(decoded.cast<String, dynamic>()['value']);
                 },
               );
             }
@@ -101,43 +99,26 @@ void main() {
       log.clear();
     });
 
-    test('setPersistenceEnabled', () async {
-      await database.setPersistenceEnabled(false);
-      await database.setPersistenceEnabled(true);
+    test('setting database instance options', () async {
+      database.setLoggingEnabled(true);
+      database.setPersistenceCacheSizeBytes(10000);
+      database.setPersistenceEnabled(true);
+      database.useDatabaseEmulator('localhost', 1234);
+      // Options are only sent on subsequent calls to method channel.
+      await database.goOnline();
       expect(
         log,
         <Matcher>[
           isMethodCall(
-            'FirebaseDatabase#setPersistenceEnabled',
+            'FirebaseDatabase#goOnline',
             arguments: <String, dynamic>{
               'appName': app.name,
               'databaseURL': databaseURL,
-              'enabled': false,
-            },
-          ),
-          isMethodCall(
-            'FirebaseDatabase#setPersistenceEnabled',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'enabled': true,
-            },
-          ),
-        ],
-      );
-    });
-
-    test('setPersistentCacheSizeBytes', () async {
-      await database.setPersistenceCacheSizeBytes(42);
-      expect(
-        log,
-        <Matcher>[
-          isMethodCall(
-            'FirebaseDatabase#setPersistenceCacheSizeBytes',
-            arguments: <String, dynamic>{
-              'appName': app.name,
-              'databaseURL': databaseURL,
-              'cacheSize': 42,
+              'persistenceEnabled': true,
+              'cacheSizeBytes': 10000,
+              'loggingEnabled': true,
+              'emulatorHost': 'localhost',
+              'emulatorPort': 1234
             },
           ),
         ],
@@ -193,14 +174,15 @@ void main() {
     });
 
     group('$MethodChannelDatabaseReference', () {
-      test('set', () async {
+      test('set & setWithPriority', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         final dynamic serverValue = <String, dynamic>{
           'qux': ServerValue.increment(8)
         };
         const int priority = 42;
         await database.ref('foo').set(value);
-        await database.ref('bar').set(value, priority: priority);
+        await database.ref('bar').setWithPriority(value, priority);
+        await database.ref('bar').setWithPriority(value, null);
         await database.ref('baz').set(serverValue);
         expect(
           log,
@@ -212,17 +194,26 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
-                'priority': null,
               },
             ),
             isMethodCall(
-              'DatabaseReference#set',
+              'DatabaseReference#setWithPriority',
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'bar',
                 'value': value,
                 'priority': priority,
+              },
+            ),
+            isMethodCall(
+              'DatabaseReference#setWithPriority',
+              arguments: <String, dynamic>{
+                'appName': app.name,
+                'databaseURL': databaseURL,
+                'path': 'bar',
+                'value': value,
+                'priority': null,
               },
             ),
             isMethodCall(
@@ -236,7 +227,6 @@ void main() {
                     '.sv': {'increment': 8}
                   }
                 },
-                'priority': null,
               },
             ),
           ],
@@ -299,8 +289,8 @@ void main() {
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
+                'transactionApplyLocally': true,
                 'transactionKey': 0,
-                'transactionTimeout': 5000,
               },
             ),
           ],
@@ -309,21 +299,25 @@ void main() {
         expect(result.committed, equals(true));
 
         expect(
-          result.dataSnapshot!.value,
+          result.snapshot.value,
           equals(<String, dynamic>{'fakeKey': 'updated fakeValue'}),
         );
       });
     });
 
-    group('$MethodChannelOnDisconnect', () {
+    group('MethodChannelOnDisconnect', () {
       test('set', () async {
         final dynamic value = <String, dynamic>{'hello': 'world'};
         const int priority = 42;
         final DatabaseReferencePlatform ref = database.ref();
         await ref.child('foo').onDisconnect().set(value);
-        await ref.child('bar').onDisconnect().set(value, priority: priority);
-        await ref.child('psi').onDisconnect().set(value, priority: 'priority');
-        await ref.child('por').onDisconnect().set(value, priority: value);
+        await ref.child('bar').onDisconnect().setWithPriority(value, priority);
+        await ref
+            .child('psi')
+            .onDisconnect()
+            .setWithPriority(value, 'priority');
+        await ref.child('por').onDisconnect().setWithPriority(value, value);
+        await ref.child('por').onDisconnect().setWithPriority(value, null);
         expect(
           log,
           <Matcher>[
@@ -334,11 +328,10 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': value,
-                'priority': null,
               },
             ),
             isMethodCall(
-              'OnDisconnect#set',
+              'OnDisconnect#setWithPriority',
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
@@ -348,7 +341,7 @@ void main() {
               },
             ),
             isMethodCall(
-              'OnDisconnect#set',
+              'OnDisconnect#setWithPriority',
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
@@ -358,13 +351,23 @@ void main() {
               },
             ),
             isMethodCall(
-              'OnDisconnect#set',
+              'OnDisconnect#setWithPriority',
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'por',
                 'value': value,
                 'priority': value,
+              },
+            ),
+            isMethodCall(
+              'OnDisconnect#setWithPriority',
+              arguments: <String, dynamic>{
+                'appName': app.name,
+                'databaseURL': databaseURL,
+                'path': 'por',
+                'value': value,
+                'priority': null,
               },
             ),
           ],
@@ -410,13 +413,13 @@ void main() {
           log,
           <Matcher>[
             isMethodCall(
+              // Internally calls set(null).
               'OnDisconnect#set',
               arguments: <String, dynamic>{
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
                 'value': null,
-                'priority': null,
               },
             ),
           ],
@@ -424,7 +427,7 @@ void main() {
       });
     });
 
-    group('$MethodChannelQuery', () {
+    group('MethodChannelQuery', () {
       test('keepSynced, simple query', () async {
         const String path = 'foo';
         final QueryPlatform query = database.ref(path);
@@ -492,12 +495,16 @@ void main() {
             eventChannel.codec.encodeErrorEnvelope(
               code: errorCode,
               message: errorMessage,
+              details: {
+                'code': errorCode,
+                'message': errorMessage,
+              },
             ),
             (_) {},
           );
         }
 
-        final errors = AsyncQueue<FirebaseDatabaseException>();
+        final errors = AsyncQueue<FirebaseException>();
 
         final subscription = query.onValue.listen((_) {}, onError: errors.add);
         await Future<void>.delayed(Duration.zero);
@@ -505,14 +512,14 @@ void main() {
         await simulateError('Bad foo');
         await simulateError('Bad bar');
 
-        final FirebaseDatabaseException error1 = await errors.remove();
-        final FirebaseDatabaseException error2 = await errors.remove();
+        final FirebaseException error1 = await errors.remove();
+        final FirebaseException error2 = await errors.remove();
 
         await subscription.cancel();
 
         expect(
           error1.toString(),
-          '[firebase_database/some-error] Bad foo',
+          startsWith('[firebase_database/some-error] Bad foo'),
         );
 
         expect(error1.code, errorCode);
@@ -526,7 +533,7 @@ void main() {
         const String path = 'foo';
         final QueryPlatform query = database.ref(path);
 
-        Future<void> simulateEvent(Map<Object?, Object?> event) async {
+        Future<void> simulateEvent(Map<String, dynamic> event) async {
           await eventChannel.binaryMessenger.handlePlatformMessage(
             eventChannel.name,
             eventChannel.codec.encodeSuccessEnvelope(event),
@@ -534,9 +541,9 @@ void main() {
           );
         }
 
-        Map<Object?, Object?> createValueEvent(dynamic value) {
+        Map<String, dynamic> createValueEvent(dynamic value) {
           return {
-            'eventType': 'EventType.value',
+            'eventType': 'value',
             'snapshot': {
               'value': value,
               'key': path.split('/').last,
@@ -544,7 +551,8 @@ void main() {
           };
         }
 
-        final AsyncQueue<EventPlatform> events = AsyncQueue<EventPlatform>();
+        final AsyncQueue<DatabaseEventPlatform> events =
+            AsyncQueue<DatabaseEventPlatform>();
 
         // Subscribe and allow subscription to complete.
         final subscription = query.onValue.listen(events.add);
@@ -553,8 +561,8 @@ void main() {
         await simulateEvent(createValueEvent(1));
         await simulateEvent(createValueEvent(2));
 
-        final EventPlatform event1 = await events.remove();
-        final EventPlatform event2 = await events.remove();
+        final DatabaseEventPlatform event1 = await events.remove();
+        final DatabaseEventPlatform event2 = await events.remove();
 
         expect(event1.snapshot.key, path);
         expect(event1.snapshot.value, 1);
@@ -575,7 +583,7 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': path,
                 'parameters': <String, dynamic>{},
-                'eventType': 'EventType.value',
+                'eventType': 'value',
               },
             )
           ],

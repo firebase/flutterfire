@@ -1,0 +1,21 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "denied_read": {
+      ".read": false,
+      ".write": false
+    },
+    "tests": {
+      ".read": true,
+      ".write": true,
+      "ordered": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": [
+          "value"
+        ]
+      }
+    }
+  }
+}

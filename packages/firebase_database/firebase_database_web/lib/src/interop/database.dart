@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_web/firebase_database_web.dart'
+    show convertFirebaseDatabaseException;
 import 'package:flutter/widgets.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -70,9 +72,12 @@ class Database
   /// state with the server state.
   void goOnline() => jsObject.goOnline();
 
+  void useDatabaseEmulator(String host, int port) =>
+      jsObject.useEmulator(host, port);
+
   /// Returns a [DatabaseReference] to the root or provided [path].
-  DatabaseReference ref([String? path = "/"]) =>
-      DatabaseReference.getInstance(jsObject.ref(path));
+  DatabaseReference ref([String? path = '/']) =>
+      DatabaseReference.getInstance(jsObject.ref(path ?? '/'));
 
   /// Returns a [DatabaseReference] from provided [url].
   /// Url must be in the same domain as the current database.
@@ -90,11 +95,14 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
   /// The last part of the current path.
   /// It is `null` in case of root DatabaseReference.
-  String get key => jsObject.key;
+  String? get key => jsObject.key;
 
   /// The parent location of a DatabaseReference.
-  DatabaseReference get parent =>
-      DatabaseReference.getInstance(jsObject.parent);
+  DatabaseReference? get parent {
+    final jsParent = jsObject.parent;
+    if (jsParent == null) return null;
+    return DatabaseReference.getInstance(jsParent);
+  }
 
   /// The root location of a DatabaseReference.
   DatabaseReference get root => DatabaseReference.getInstance(jsObject.root);
@@ -179,9 +187,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ///
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
-    TransactionHandler transactionUpdate, [
-    bool applyLocally = true,
-  ]) async {
+      TransactionHandler transactionUpdate, bool applyLocally) async {
     final c = Completer<Transaction>();
 
     final transactionUpdateWrap = allowInterop((update) {
@@ -192,7 +198,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       try {
         final dartResult = transactionUpdate(dartUpdate);
         result = jsify(dartResult);
-      } on AbortTransaction catch (_) {
+      } on AbortTransactionException catch (_) {
         result = undefined;
       }
 
@@ -203,7 +209,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       if (error != null) {
         final dartified = dartify(error);
 
-        c.completeError(DatabaseErrorPlatform(dartified));
+        c.completeError(convertFirebaseDatabaseException(dartified));
       } else {
         c.complete(Transaction(
           committed: committed,
@@ -367,10 +373,14 @@ class Query<T extends database_interop.QueryJsImpl>
       streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
     });
 
+    final cancelCallbackWrap = allowInterop((Object error) {
+      final dartified = dartify(error);
+      streamController.addError(convertFirebaseDatabaseException(dartified));
+      streamController.close();
+    });
+
     void startListen() {
-      // TODO(lesnitsky) – should probably implement cancel callback
-      // See https://firebase.google.com/docs/reference/js/firebase.database.Query#on
-      jsObject.on(eventType, callbackWrap);
+      jsObject.on(eventType, callbackWrap, cancelCallbackWrap);
     }
 
     void stopListen() {

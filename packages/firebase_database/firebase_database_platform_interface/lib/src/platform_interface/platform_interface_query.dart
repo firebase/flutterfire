@@ -1,17 +1,14 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// Represents a query over the data at a particular location.
 abstract class QueryPlatform extends PlatformInterface {
   /// The Database instance associated with this query
   final DatabasePlatform database;
-
-  /// The pathComponents associated with this query
-  final List<String> pathComponents;
 
   /// The parameters associated with this query
   final Map<String, dynamic> parameters;
@@ -21,20 +18,23 @@ abstract class QueryPlatform extends PlatformInterface {
   /// Create a [QueryPlatform] instance
   QueryPlatform({
     required this.database,
-    required this.pathComponents,
     this.parameters = const <String, dynamic>{},
   }) : super(token: _token);
 
-  /// Slash-delimited path representing the database location of this query.
-  String get path => throw UnimplementedError('path not implemented');
-
-  /// Assigns the proper event type to a stream for [EventPlatform]
-  Stream<EventPlatform> observe(EventType eventType) {
-    throw UnimplementedError('observe() not implemented');
+  /// Returns the path to this reference.
+  String get path {
+    throw UnimplementedError('get path not implemented');
   }
 
-  /// Listens for a single value event and then stops listening.
-  Future<DataSnapshotPlatform> once() async => (await onValue.first).snapshot;
+  /// Obtains a DatabaseReference corresponding to this query's location.
+  DatabaseReferencePlatform get ref {
+    throw UnimplementedError('get ref() not implemented');
+  }
+
+  /// Assigns the proper event type to a stream for [DatabaseEventPlatform]
+  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) {
+    throw UnimplementedError('observe() not implemented');
+  }
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshotPlatform> get() {
@@ -42,19 +42,23 @@ abstract class QueryPlatform extends PlatformInterface {
   }
 
   /// Fires when children are added.
-  Stream<EventPlatform> get onChildAdded => observe(EventType.childAdded);
+  Stream<DatabaseEventPlatform> get onChildAdded =>
+      observe(DatabaseEventType.childAdded);
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<EventPlatform> get onChildRemoved => observe(EventType.childRemoved);
+  Stream<DatabaseEventPlatform> get onChildRemoved =>
+      observe(DatabaseEventType.childRemoved);
 
   /// Fires when children are changed.
-  Stream<EventPlatform> get onChildChanged => observe(EventType.childChanged);
+  Stream<DatabaseEventPlatform> get onChildChanged =>
+      observe(DatabaseEventType.childChanged);
 
   /// Fires when children are moved.
-  Stream<EventPlatform> get onChildMoved => observe(EventType.childMoved);
+  Stream<DatabaseEventPlatform> get onChildMoved =>
+      observe(DatabaseEventType.childMoved);
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
-  Stream<EventPlatform> get onValue => observe(EventType.value);
+  Stream<DatabaseEventPlatform> get onValue => observe(DatabaseEventType.value);
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or
@@ -154,10 +158,5 @@ abstract class QueryPlatform extends PlatformInterface {
   /// it will not be evicted from the persistent disk cache.
   Future<void> keepSynced(bool value) {
     throw UnimplementedError('keepSynced() not implemented');
-  }
-
-  /// Obtains a DatabaseReference corresponding to this query's location.
-  DatabaseReferencePlatform get ref {
-    throw UnimplementedError('get ref() not implemented');
   }
 }

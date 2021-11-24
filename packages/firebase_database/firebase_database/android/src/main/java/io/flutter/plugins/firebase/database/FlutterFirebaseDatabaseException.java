@@ -8,13 +8,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FlutterFirebaseDatabaseException extends Exception {
+  public static final String UNKNOWN_ERROR_CODE = "unknown";
+  public static final String UNKNOWN_ERROR_MESSAGE = "An unknown error occurred";
+  private static final String MODULE = "firebase_database";
   private final String code;
   private final String message;
   private final Map<String, Object> additionalData;
 
-  private static final String MODULE = "firebase_database";
-  public static final String UNKNOWN_ERROR_CODE = "unknown";
-  public static final String UNKNOWN_ERROR_MESSAGE = "An unknown error occurred";
+  public FlutterFirebaseDatabaseException(
+      @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
+    this.code = code;
+    this.message = message;
+
+    if (additionalData != null) {
+      this.additionalData = additionalData;
+    } else {
+      this.additionalData = new HashMap<>();
+    }
+
+    this.additionalData.put(Constants.ERROR_CODE, code);
+    this.additionalData.put(Constants.ERROR_MESSAGE, message);
+  }
 
   static FlutterFirebaseDatabaseException fromDatabaseError(DatabaseError e) {
     final int errorCode = e.getCode();
@@ -69,19 +83,14 @@ public class FlutterFirebaseDatabaseException extends Exception {
         break;
     }
 
-    final FlutterFirebaseDatabaseException ffdbException;
-    final Map<String, Object> additionalData = new HashMap<>();
-    final String errorDetails = e.getDetails();
-
-    additionalData.put(Constants.ERROR_DETAILS, errorDetails);
-
     if (code.equals(UNKNOWN_ERROR_CODE)) {
-      message = e.getMessage();
+      return unknown(e.getMessage());
     }
 
-    ffdbException = new FlutterFirebaseDatabaseException(MODULE, message, additionalData);
-
-    return ffdbException;
+    final Map<String, Object> additionalData = new HashMap<>();
+    final String errorDetails = e.getDetails();
+    additionalData.put(Constants.ERROR_DETAILS, errorDetails);
+    return new FlutterFirebaseDatabaseException(code, message, additionalData);
   }
 
   static FlutterFirebaseDatabaseException fromDatabaseException(DatabaseException e) {
@@ -109,26 +118,18 @@ public class FlutterFirebaseDatabaseException extends Exception {
     }
 
     if (message.contains("Index not defined, add \".indexOn\"")) {
-      code = Constants.INDEX_NOT_DEFINED;
+      // No known error code for this in DatabaseError, so we manually have to
+      // detect it.
+      code = "index-not-defined";
       message = message.replaceFirst("java.lang.Exception: ", "");
+    } else if (message.contains("Permission denied")) {
+      // Permission denied when using Firebase emulator does not correctly come
+      // through as a DatabaseError.
+      code = "permission-denied";
+      message = "Client doesn't have permission to access the desired data.";
     }
 
     return new FlutterFirebaseDatabaseException(code, message, details);
-  }
-
-  public FlutterFirebaseDatabaseException(
-      @NonNull String code, @NonNull String message, @Nullable Map<String, Object> additionalData) {
-    this.code = code;
-    this.message = message;
-
-    if (additionalData != null) {
-      this.additionalData = additionalData;
-    } else {
-      this.additionalData = new HashMap<>();
-    }
-
-    this.additionalData.put(Constants.ERROR_CODE, code);
-    this.additionalData.put(Constants.ERROR_MESSAGE, message);
   }
 
   public String getCode() {

@@ -11,13 +11,13 @@ environment:
 
 dependencies:
   firebase_core: ^1.8.0
+  firebase_core_platform_interface: ^4.0.1
   firebase_database_platform_interface: ^0.1.0+1
   firebase_database_web: ^0.1.0+1
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.0.1
   flutter_test:
     sdk: flutter
   mockito: ^5.0.2

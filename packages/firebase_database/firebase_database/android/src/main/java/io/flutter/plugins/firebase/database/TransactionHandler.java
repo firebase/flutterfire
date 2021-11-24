@@ -1,6 +1,5 @@
 package io.flutter.plugins.firebase.database;
 
-import android.app.Activity;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,17 +13,16 @@ import com.google.firebase.database.Transaction.Handler;
 import io.flutter.plugin.common.MethodChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class TransactionHandler implements Handler {
   private final MethodChannel channel;
   private final TaskCompletionSource<Map<String, Object>> transactionCompletionSource;
   private final int transactionKey;
-  private final Activity activity;
 
-  public TransactionHandler(@NonNull MethodChannel channel, int transactionKey, Activity activity) {
+  public TransactionHandler(@NonNull MethodChannel channel, int transactionKey) {
     this.channel = channel;
     this.transactionKey = transactionKey;
-    this.activity = activity;
     this.transactionCompletionSource = new TaskCompletionSource<>();
   }
 
@@ -45,13 +43,23 @@ public class TransactionHandler implements Handler {
     transactionArgs.put(Constants.TRANSACTION_KEY, transactionKey);
 
     try {
-      final TransactionExecutor executor = new TransactionExecutor(channel, activity);
-      final Object updatedData = executor.exec(transactionArgs);
-
-      currentData.setValue(updatedData);
-      return Transaction.success(currentData);
+      final TransactionExecutor executor = new TransactionExecutor(channel);
+      final Object updatedData = executor.execute(transactionArgs);
+      @SuppressWarnings("unchecked")
+      final Map<String, Object> transactionHandlerResult =
+          (Map<String, Object>) Objects.requireNonNull(updatedData);
+      final boolean aborted =
+          (boolean) Objects.requireNonNull(transactionHandlerResult.get("aborted"));
+      final boolean exception =
+          (boolean) Objects.requireNonNull(transactionHandlerResult.get("exception"));
+      if (aborted || exception) {
+        return Transaction.abort();
+      } else {
+        currentData.setValue(transactionHandlerResult.get("value"));
+        return Transaction.success(currentData);
+      }
     } catch (Exception e) {
-      Log.d("firebase_database", e.toString());
+      Log.e("firebase_database", "An unexpected exception occurred for a transaction.", e);
       return Transaction.abort();
     }
   }
@@ -68,8 +76,7 @@ public class TransactionHandler implements Handler {
       final Map<String, Object> additionalParams = new HashMap<>();
       additionalParams.put(Constants.COMMITTED, committed);
 
-      transactionCompletionSource.setResult(
-          payload.withChildKeys().withAdditionalParams(additionalParams).toMap());
+      transactionCompletionSource.setResult(payload.withAdditionalParams(additionalParams).toMap());
     }
   }
 }
