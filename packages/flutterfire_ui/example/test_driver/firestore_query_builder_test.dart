@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:firebase_ui/firebase_ui.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:mockito/mockito.dart';
 import 'utils.dart';
 
@@ -141,7 +141,7 @@ void main() {
       );
       verifyNoMoreInteractions(builderSpy);
 
-      builderSpy.lastSnapshot!.fetchNextPage();
+      builderSpy.lastSnapshot!.fetchMore();
       await tester.pump();
 
       verify(
@@ -189,7 +189,7 @@ void main() {
         ),
       );
 
-      builderSpy.lastSnapshot!.fetchNextPage();
+      builderSpy.lastSnapshot!.fetchMore();
       await tester.pump();
 
       verify(
@@ -306,7 +306,7 @@ void main() {
       );
       verifyNoMoreInteractions(builderSpy);
 
-      builderSpy.lastSnapshot!.fetchNextPage();
+      builderSpy.lastSnapshot!.fetchMore();
       await tester.pump();
 
       verify(
@@ -444,7 +444,7 @@ void main() {
       );
       verifyNoMoreInteractions(builderSpy);
 
-      builderSpy.lastSnapshot!.fetchNextPage();
+      builderSpy.lastSnapshot!.fetchMore();
       await tester.pump();
 
       verify(
@@ -583,8 +583,8 @@ void main() {
       verifyNoMoreInteractions(builderSpy);
 
       builderSpy.lastSnapshot!
-        ..fetchNextPage()
-        ..fetchNextPage();
+        ..fetchMore()
+        ..fetchMore();
 
       await tester.pump();
 
@@ -727,6 +727,122 @@ void main() {
               ],
               error: isA<FirebaseException>(),
               stackTrace: isNotNull,
+              isFetchingNextPage: false,
+            ),
+          ),
+          null,
+        ),
+      );
+      verifyNoMoreInteractions(builderSpy);
+    });
+
+    testWidgets('data after error resets hasError/error/stackTrace',
+        (tester) async {
+      final builderSpy = QueryBuilderSpy();
+      final validCollection = await setupCollection(
+        FirebaseFirestore.instance
+            .collection('flutter-tests/query-builder/works'),
+      );
+      final unknownCollection =
+          FirebaseFirestore.instance.collection('unknown');
+
+      await fillCollection(validCollection, 25);
+
+      await tester.pumpWidget(
+        FirestoreQueryBuilder<Map>(
+          query: unknownCollection,
+          builder: builderSpy,
+        ),
+      );
+
+      verify(
+        builderSpy(
+          any,
+          captureThat(
+            isQueryBuilderSnapshot(
+              isFetching: true,
+              hasData: false,
+              hasNextPage: false,
+              hasError: false,
+              docs: [],
+              error: null,
+              stackTrace: null,
+              isFetchingNextPage: false,
+            ),
+          ),
+          null,
+        ),
+      );
+      verifyNoMoreInteractions(builderSpy);
+
+      await unknownCollection.snapshots().first.then((_) {}, onError: (_) {});
+      await tester.pump();
+
+      verify(
+        builderSpy(
+          any,
+          captureThat(
+            isQueryBuilderSnapshot(
+              isFetching: false,
+              isFetchingNextPage: false,
+              hasData: false,
+              hasNextPage: false,
+              docs: [],
+              hasError: true,
+              error: isA<FirebaseException>(),
+              stackTrace: isNotNull,
+            ),
+          ),
+          null,
+        ),
+      );
+      verifyNoMoreInteractions(builderSpy);
+
+      await tester.pumpWidget(
+        FirestoreQueryBuilder<Map>(
+          query: validCollection.orderBy('value'),
+          builder: builderSpy,
+        ),
+      );
+
+      verify(
+        builderSpy(
+          any,
+          captureThat(
+            isQueryBuilderSnapshot(
+              isFetching: true,
+              isFetchingNextPage: false,
+              hasData: false,
+              hasNextPage: false,
+              docs: [],
+              hasError: true,
+              error: isA<FirebaseException>(),
+              stackTrace: isNotNull,
+            ),
+          ),
+          null,
+        ),
+      );
+      verifyNoMoreInteractions(builderSpy);
+
+      await validCollection.get();
+      await tester.pump();
+
+      verify(
+        builderSpy(
+          any,
+          captureThat(
+            isQueryBuilderSnapshot(
+              isFetching: false,
+              hasData: true,
+              hasNextPage: true,
+              docs: [
+                for (var i = 0; i < 10; i++)
+                  isQueryDocumentSnapshot(data: {'value': i}),
+              ],
+              hasError: false,
+              error: null,
+              stackTrace: null,
               isFetchingNextPage: false,
             ),
           ),

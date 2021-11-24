@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// {@template firebase_ui.firestore_query_builder}
+/// {@endtemplate}
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
+  /// {@macro firebase_ui.firestore_query_builder}
   const FirestoreQueryBuilder({
     Key? key,
     required this.query,
@@ -13,8 +16,14 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
   })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
         super(key: key);
 
+  /// The query that will be paginated.
+  ///
+  /// When the query changes, the pagination will restart from first page.
   final Query<Document> query;
 
+  /// The number of items that will be fetched at a time.
+  ///
+  /// When it changes, the current progress will be preserved.
   final int pageSize;
 
   final Widget Function(
@@ -23,9 +32,14 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
     Widget? child,
   ) builder;
 
+  /// A widget that will be passed to [builder] for optimizations purpose.
+  ///
+  /// Since this widget is not created within [builder], it won't rebuild
+  /// when the query emits an update.
   final Widget? child;
 
   @override
+  // ignore: library_private_types_in_public_api
   _FirestoreQueryBuilderState<Document> createState() =>
       _FirestoreQueryBuilderState<Document>();
 }
@@ -43,13 +57,13 @@ class _FirestoreQueryBuilderState<Document>
     hasError: false,
     hasNextPage: false,
     isFetching: false,
-    isFetchingNextPage: false,
+    isFetchingMore: false,
     stackTrace: null,
-    fetchNextPage: _fetchNextPage,
+    fetchMore: _fetchNextPage,
   );
 
   void _fetchNextPage() {
-    if (_snapshot.isFetchingNextPage) return;
+    if (_snapshot.isFetchingMore) return;
 
     _pageCount++;
     _listenQuery(nextPage: true);
@@ -80,7 +94,7 @@ class _FirestoreQueryBuilderState<Document>
     _querySubscription?.cancel();
 
     if (nextPage) {
-      _snapshot = _snapshot.copyWith(isFetchingNextPage: true);
+      _snapshot = _snapshot.copyWith(isFetchingMore: true);
     } else {
       _snapshot = _snapshot.copyWith(isFetching: true);
     }
@@ -103,7 +117,7 @@ class _FirestoreQueryBuilderState<Document>
       (event) {
         setState(() {
           if (nextPage) {
-            _snapshot = _snapshot.copyWith(isFetchingNextPage: false);
+            _snapshot = _snapshot.copyWith(isFetchingMore: false);
           } else {
             _snapshot = _snapshot.copyWith(isFetching: false);
           }
@@ -123,7 +137,7 @@ class _FirestoreQueryBuilderState<Document>
       onError: (Object error, StackTrace stackTrace) {
         setState(() {
           if (nextPage) {
-            _snapshot = _snapshot.copyWith(isFetchingNextPage: false);
+            _snapshot = _snapshot.copyWith(isFetchingMore: false);
           } else {
             _snapshot = _snapshot.copyWith(isFetching: false);
           }
@@ -151,19 +165,52 @@ class _FirestoreQueryBuilderState<Document>
   }
 }
 
+/// The result of a paginated query.
 abstract class QueryBuilderSnapshot<Document> {
+  /// Whether the first page of the query is currently being fetched.
+  ///
+  /// [isFetching] will reset to `true` when the query changes, in which case
+  /// a widget can have both [isFetching] as `true` and [hasData]/[hasError] as
+  /// `true.
   bool get isFetching;
-  bool get isFetchingNextPage;
+
+  /// Whether a new page is being fetched.
+  ///
+  /// See also [fetchMore].
+  bool get isFetchingMore;
+
+  /// Whether a page was not obtained.
+  ///
+  /// On error, [docs] will still be available if a valid result was emitted
+  /// previously.
   bool get hasError;
+
+  /// Whether at least one page was obtained.
+  ///
+  /// It is possible for [hasData] to be `true` and [hasError]/[isFetching]
+  /// to also be true. That is because [docs] will still be available even
+  /// when the query changed or an error was emitted.
   bool get hasData;
+
+  /// Whether there is an extra page to fetch
+  ///
+  /// See also [fetchMore].
   bool get hasNextPage;
 
+  /// The error emitted, if any.
   Object? get error;
+
+  /// If an error was emitted, the stackTrace associated to this error.
   StackTrace? get stackTrace;
 
+  /// All the items obtained.
   List<QueryDocumentSnapshot<Document>> get docs;
 
-  void fetchNextPage();
+  /// Try to obtain more items from the collection.
+  ///
+  /// It is safe to call this method multiple times at once or to call it
+  /// within the `build` method of a widget.
+  void fetchMore();
 }
 
 class _QueryBuilderSnapshot<Document>
@@ -174,11 +221,11 @@ class _QueryBuilderSnapshot<Document>
     required this.hasData,
     required this.hasError,
     required this.isFetching,
-    required this.isFetchingNextPage,
+    required this.isFetchingMore,
     required this.stackTrace,
     required this.hasNextPage,
-    required VoidCallback fetchNextPage,
-  }) : _fetchNextPage = fetchNextPage;
+    required VoidCallback fetchMore,
+  }) : _fetchNextPage = fetchMore;
 
   @override
   final List<QueryDocumentSnapshot<Document>> docs;
@@ -199,7 +246,7 @@ class _QueryBuilderSnapshot<Document>
   final bool isFetching;
 
   @override
-  final bool isFetchingNextPage;
+  final bool isFetchingMore;
 
   @override
   final StackTrace? stackTrace;
@@ -207,7 +254,7 @@ class _QueryBuilderSnapshot<Document>
   final VoidCallback _fetchNextPage;
 
   @override
-  void fetchNextPage() => _fetchNextPage();
+  void fetchMore() => _fetchNextPage();
 
   _QueryBuilderSnapshot<Document> copyWith({
     Object? docs = const _Sentinel(),
@@ -216,9 +263,9 @@ class _QueryBuilderSnapshot<Document>
     Object? hasError = const _Sentinel(),
     Object? hasNextPage = const _Sentinel(),
     Object? isFetching = const _Sentinel(),
-    Object? isFetchingNextPage = const _Sentinel(),
+    Object? isFetchingMore = const _Sentinel(),
     Object? stackTrace = const _Sentinel(),
-    Object? fetchNextPage = const _Sentinel(),
+    Object? fetchMore = const _Sentinel(),
   }) {
     T valueAs<T>(Object? maybeNewValue, T previousValue) {
       if (maybeNewValue == const _Sentinel()) {
@@ -234,9 +281,9 @@ class _QueryBuilderSnapshot<Document>
       hasNextPage: valueAs(hasNextPage, this.hasNextPage),
       hasError: valueAs(hasError, this.hasError),
       isFetching: valueAs(isFetching, this.isFetching),
-      isFetchingNextPage: valueAs(isFetchingNextPage, this.isFetchingNextPage),
+      isFetchingMore: valueAs(isFetchingMore, this.isFetchingMore),
       stackTrace: valueAs(stackTrace, this.stackTrace),
-      fetchNextPage: valueAs(fetchNextPage, this.fetchNextPage),
+      fetchMore: valueAs(fetchMore, this.fetchMore),
     );
   }
 }

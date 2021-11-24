@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ui/firebase_ui.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> setupEmulator() async {
@@ -72,8 +72,8 @@ TypeMatcher<QueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
     hasNextPage,
   );
   matcher = matcher.applyHaving(
-    'isFetchingNextPage',
-    (value) => value.isFetchingNextPage,
+    'isFetchingMore',
+    (value) => value.isFetchingMore,
     isFetchingNextPage,
   );
   matcher = matcher.applyHaving('error', (value) => value.error, error);
