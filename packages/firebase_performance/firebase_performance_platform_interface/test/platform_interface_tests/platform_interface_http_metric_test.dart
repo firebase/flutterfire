@@ -28,15 +28,15 @@ void main() {
     expect(httpMetricPlatform, isA<PlatformInterface>());
   });
 
-  test('static maxAttributeKeyLength', (){
+  test('static maxAttributeKeyLength', () {
     expect(HttpMetricPlatform.maxAttributeKeyLength, 40);
   });
 
-  test('static maxCustomAttributes', (){
+  test('static maxCustomAttributes', () {
     expect(HttpMetricPlatform.maxCustomAttributes, 5);
   });
 
-  test('static maxAttributeValueLength', (){
+  test('static maxAttributeValueLength', () {
     expect(HttpMetricPlatform.maxAttributeValueLength, 100);
   });
 
@@ -45,31 +45,38 @@ void main() {
   });
 
   test('throws if get requestPayloadSize', () {
-    expect(() => httpMetricPlatform.requestPayloadSize, throwsUnimplementedError);
+    expect(
+        () => httpMetricPlatform.requestPayloadSize, throwsUnimplementedError);
   });
 
   test('throws if get responseContentType', () {
-    expect(() => httpMetricPlatform.responseContentType, throwsUnimplementedError);
+    expect(
+        () => httpMetricPlatform.responseContentType, throwsUnimplementedError);
   });
 
   test('throws if get responsePayloadSize', () {
-    expect(() => httpMetricPlatform.responsePayloadSize, throwsUnimplementedError);
+    expect(
+        () => httpMetricPlatform.responsePayloadSize, throwsUnimplementedError);
   });
 
   test('throws if set httpResponseCode', () {
-    expect(() => httpMetricPlatform.httpResponseCode = 4, throwsUnimplementedError);
+    expect(() => httpMetricPlatform.httpResponseCode = 4,
+        throwsUnimplementedError);
   });
 
   test('throws if set requestPayloadSize', () {
-    expect(() => httpMetricPlatform.requestPayloadSize = 4, throwsUnimplementedError);
+    expect(() => httpMetricPlatform.requestPayloadSize = 4,
+        throwsUnimplementedError);
   });
 
   test('throws if set responsePayloadSize', () {
-    expect(() => httpMetricPlatform.responsePayloadSize = 4, throwsUnimplementedError);
+    expect(() => httpMetricPlatform.responsePayloadSize = 4,
+        throwsUnimplementedError);
   });
 
   test('throws if set responseContentType', () {
-    expect(() => httpMetricPlatform.responseContentType = 'foo', throwsUnimplementedError);
+    expect(() => httpMetricPlatform.responseContentType = 'foo',
+        throwsUnimplementedError);
   });
 
   test('throws if start()', () {
@@ -81,15 +88,18 @@ void main() {
   });
 
   test('throws if putAttribute()', () {
-    expect(() => httpMetricPlatform.putAttribute('foo', 'baz'), throwsUnimplementedError);
+    expect(() => httpMetricPlatform.putAttribute('foo', 'baz'),
+        throwsUnimplementedError);
   });
 
   test('throws if removeAttribute()', () {
-    expect(() => httpMetricPlatform.removeAttribute('bar'), throwsUnimplementedError);
+    expect(() => httpMetricPlatform.removeAttribute('bar'),
+        throwsUnimplementedError);
   });
 
   test('throws if getAttribute()', () {
-    expect(() => httpMetricPlatform.getAttribute('bar'), throwsUnimplementedError);
+    expect(
+        () => httpMetricPlatform.getAttribute('bar'), throwsUnimplementedError);
   });
 
   test('throws if getAttributes()', () {
