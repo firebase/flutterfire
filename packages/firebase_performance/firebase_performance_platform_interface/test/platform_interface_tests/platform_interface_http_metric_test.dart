@@ -6,32 +6,97 @@ import 'package:firebase_performance_platform_interface/firebase_performance_pla
 import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_http_metric.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../mock.dart';
 
-//todo this needs updating to platform interface stuff
 void main() {
   setupFirebasePerformanceMocks();
 
-  late TestMethodChannelHttpMetric httpMetric;
-  const int kHandle = 23;
-  const String kUrl = 'https://test-url.com';
-  const HttpMethod kMethod = HttpMethod.Get;
+  late TestHttpMetricPlatform httpMetricPlatform;
 
   late FirebaseApp app;
-  group('$FirebasePerformancePlatform()', () {
+  group('$HttpMetricPlatform()', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();
 
-      httpMetric = TestMethodChannelHttpMetric(kHandle, kUrl, kMethod);
+      httpMetricPlatform = TestHttpMetricPlatform();
     });
+  });
+  test('Constructor', () {
+    expect(httpMetricPlatform, isA<HttpMetricPlatform>());
+    expect(httpMetricPlatform, isA<PlatformInterface>());
+  });
+
+  test('static maxAttributeKeyLength', (){
+    expect(HttpMetricPlatform.maxAttributeKeyLength, 40);
+  });
+
+  test('static maxCustomAttributes', (){
+    expect(HttpMetricPlatform.maxCustomAttributes, 5);
+  });
+
+  test('static maxAttributeValueLength', (){
+    expect(HttpMetricPlatform.maxAttributeValueLength, 100);
+  });
+
+  test('throws if get httpResponseCode', () {
+    expect(() => httpMetricPlatform.httpResponseCode, throwsUnimplementedError);
+  });
+
+  test('throws if get requestPayloadSize', () {
+    expect(() => httpMetricPlatform.requestPayloadSize, throwsUnimplementedError);
+  });
+
+  test('throws if get responseContentType', () {
+    expect(() => httpMetricPlatform.responseContentType, throwsUnimplementedError);
+  });
+
+  test('throws if get responsePayloadSize', () {
+    expect(() => httpMetricPlatform.responsePayloadSize, throwsUnimplementedError);
+  });
+
+  test('throws if set httpResponseCode', () {
+    expect(() => httpMetricPlatform.httpResponseCode = 4, throwsUnimplementedError);
+  });
+
+  test('throws if set requestPayloadSize', () {
+    expect(() => httpMetricPlatform.requestPayloadSize = 4, throwsUnimplementedError);
+  });
+
+  test('throws if set responsePayloadSize', () {
+    expect(() => httpMetricPlatform.responsePayloadSize = 4, throwsUnimplementedError);
+  });
+
+  test('throws if set responseContentType', () {
+    expect(() => httpMetricPlatform.responseContentType = 'foo', throwsUnimplementedError);
+  });
+
+  test('throws if start()', () {
+    expect(() => httpMetricPlatform.start(), throwsUnimplementedError);
+  });
+
+  test('throws if stop()', () {
+    expect(() => httpMetricPlatform.stop(), throwsUnimplementedError);
+  });
+
+  test('throws if putAttribute()', () {
+    expect(() => httpMetricPlatform.putAttribute('foo', 'baz'), throwsUnimplementedError);
+  });
+
+  test('throws if removeAttribute()', () {
+    expect(() => httpMetricPlatform.removeAttribute('bar'), throwsUnimplementedError);
+  });
+
+  test('throws if getAttribute()', () {
+    expect(() => httpMetricPlatform.getAttribute('bar'), throwsUnimplementedError);
+  });
+
+  test('throws if getAttributes()', () {
+    expect(() => httpMetricPlatform.getAttributes(), throwsUnimplementedError);
   });
 }
 
-class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
-  TestFirebasePerformancePlatform(FirebaseApp app) : super(appInstance: app);
-}
-
-class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
-  TestMethodChannelHttpMetric(handle, url, method) : super(handle, url, method);
+class TestHttpMetricPlatform extends HttpMetricPlatform {
+  TestHttpMetricPlatform() : super();
 }

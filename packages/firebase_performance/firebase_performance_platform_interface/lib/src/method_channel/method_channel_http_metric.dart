@@ -10,13 +10,14 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(
     this._methodChannelHandle,
     this._httpMetricHandle,
-    String url,
-    HttpMethod httpMethod,
-  ) : super(url, httpMethod);
+    this._url,
+    this._httpMethod,
+  ) : super();
 
   final int _methodChannelHandle;
   final int _httpMetricHandle;
-
+  final String _url;
+  final HttpMethod _httpMethod;
   int? _httpResponseCode;
   int? _requestPayloadSize;
   String? _responseContentType;
@@ -69,8 +70,8 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
         <String, Object?>{
           'handle': _methodChannelHandle,
           'httpMetricHandle': _httpMetricHandle,
-          'url': url,
-          'httpMethod': httpMethod.toString(),
+          'url': _url,
+          'httpMethod': _httpMethod.toString(),
         },
       );
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(

@@ -7,7 +7,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 
 abstract class HttpMetricPlatform extends PlatformInterface {
-  HttpMetricPlatform(this.url, this.httpMethod) : super(token: _token);
+  HttpMetricPlatform() : super(token: _token);
 
   static final Object _token = Object();
 
@@ -24,9 +24,6 @@ abstract class HttpMetricPlatform extends PlatformInterface {
 
   /// Maximum allowed number of attributes that can be added.
   static const int maxCustomAttributes = 5;
-
-  final String url;
-  final HttpMethod httpMethod;
 
   /// HttpResponse code of the request.
   int? get httpResponseCode {

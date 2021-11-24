@@ -14,7 +14,8 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelHttpMetric httpMetric;
-  const int kHandle = 23;
+  const int kMethodChannelHandle = 23;
+  const int kHttpMetricHandle = 24;
   const String kUrl = 'https://test-url.com';
   const HttpMethod kMethod = HttpMethod.Get;
   final List<MethodCall> log = <MethodCall>[];
@@ -50,7 +51,8 @@ void main() {
         }
       });
 
-      httpMetric = TestMethodChannelHttpMetric(kHandle, kUrl, kMethod);
+      httpMetric = TestMethodChannelHttpMetric(
+          kMethodChannelHandle, kHttpMetricHandle, kUrl, kMethod);
     });
 
     test('instance', () {
@@ -88,5 +90,7 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 }
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
-  TestMethodChannelHttpMetric(handle, url, method) : super(handle, url, method);
+  TestMethodChannelHttpMetric(
+      methodChannelHandle, httpMetricHandle, url, method)
+      : super(methodChannelHandle, httpMetricHandle, url, method);
 }
