@@ -9,7 +9,7 @@ const serviceColor = {
   database: '#4caf50',
 };
 
-function Card({ href, name, service, img, description }) {
+function Card({ href, name, service, description }) {
   const { isDarkTheme } = useThemeContext();
 
   return (
@@ -28,14 +28,14 @@ function Card({ href, name, service, img, description }) {
         overflow: 'hidden',
       }}
     >
-      <div
+      {/* <div
         style={{
           position: 'relative',
           height: 150,
           background: `url(${img}) no-repeat center center`,
           backgroundSize: 'contain',
         }}
-      />
+      /> */}
       <div
         style={{
           flexGrow: 1,
@@ -55,7 +55,7 @@ function Card({ href, name, service, img, description }) {
         >
           {service}
         </span>
-        <h4 style={{ marginTop: '.5rem' }}>{name}</h4>
+        <h3 style={{ marginTop: '.8rem' }}>{name}</h3>
         <p
           style={{
             margin: 0,
@@ -99,7 +99,7 @@ export function Widgets() {
           description = value.replace('description:', '');
       });
 
-      if (!service || !type || !img) return null;
+      if (!service || !type) return null;
 
       return {
         href: item.href,
