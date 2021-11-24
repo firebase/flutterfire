@@ -25,3 +25,6 @@ export 'src/dynamic_links/initializer.dart';
 
 export 'src/firebase_ui_init.dart';
 export 'src/firebase_app_initializer.dart';
+
+export 'src/query_builder.dart'
+    show FirestoreQueryBuilder, QueryBuilderSnapshot;

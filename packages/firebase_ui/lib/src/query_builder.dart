@@ -8,13 +8,14 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
     Key? key,
     required this.query,
     required this.builder,
-    this.limit = 10,
+    this.pageSize = 10,
     this.child,
-  }) : super(key: key);
+  })  : assert(pageSize > 1, 'Cannot have a pageSize lower than 1'),
+        super(key: key);
 
   final Query<Document> query;
 
-  final int limit;
+  final int pageSize;
 
   final Widget Function(
     BuildContext context,
@@ -30,39 +31,27 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
 }
 
 class _FirestoreQueryBuilderState<Document>
-    extends State<FirestoreQueryBuilder<Document>>
-    implements QueryBuilderSnapshot<Document> {
+    extends State<FirestoreQueryBuilder<Document>> {
   StreamSubscription? _querySubscription;
 
-  var pageCount = 0;
+  var _pageCount = 0;
 
-  @override
-  Document? data;
+  late var _snapshot = _QueryBuilderSnapshot<Document>._(
+    docs: [],
+    error: null,
+    hasData: false,
+    hasError: false,
+    hasNextPage: false,
+    isFetching: false,
+    isFetchingNextPage: false,
+    stackTrace: null,
+    fetchNextPage: _fetchNextPage,
+  );
 
-  @override
-  Object? error;
+  void _fetchNextPage() {
+    if (_snapshot.isFetchingNextPage) return;
 
-  @override
-  bool hasData = false;
-
-  @override
-  bool hasError = false;
-
-  @override
-  bool isFetching = false;
-
-  @override
-  bool isFetchingNextPage = false;
-
-  @override
-  StackTrace? stackTrace;
-
-  @override
-  void fetchNextPage() {
-    if (isFetchingNextPage) return;
-
-    pageCount++;
-
+    _pageCount++;
     _listenQuery(nextPage: true);
   }
 
@@ -76,9 +65,13 @@ class _FirestoreQueryBuilderState<Document>
   void didUpdateWidget(FirestoreQueryBuilder<Document> oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.query != widget.query) {
-      setState(() {
-        isFetching = true;
-      });
+      _pageCount = 0;
+      _listenQuery();
+    } else if (oldWidget.pageSize != widget.pageSize) {
+      // The page size changes, so we re-fetch items, making sure we're
+      // preserving the current progress.
+      final previousItemCount = (oldWidget.pageSize + 1) * _pageCount;
+      _pageCount = (previousItemCount / widget.pageSize).ceil();
       _listenQuery();
     }
   }
@@ -86,37 +79,61 @@ class _FirestoreQueryBuilderState<Document>
   void _listenQuery({bool nextPage = false}) {
     _querySubscription?.cancel();
 
-    setState(() {
-      if (nextPage)
-        isFetchingNextPage = true;
-      else
-        isFetching = true;
-    });
+    if (nextPage) {
+      _snapshot = _snapshot.copyWith(isFetchingNextPage: true);
+    } else {
+      _snapshot = _snapshot.copyWith(isFetching: true);
+    }
 
-    final query = widget.query.limit((pageCount + 1) * widget.limit);
+    // Delaying the setState so that fetchNextpage can be used within a child's
+    // "build" – most commonly ListView's itemBuilder
+    Future.microtask(() => setState(() {}));
 
-    _querySubscription = widget.query.snapshots().listen(
+    final expectedDocsCount = (_pageCount + 1) * widget.pageSize
+
+        /// The "+1" is used to voluntarily fetch one extra item,
+        /// used to determine whether there is a next page or not.
+        /// This extra item will not be rendered.
+        +
+        1;
+
+    final query = widget.query.limit(expectedDocsCount);
+
+    _querySubscription = query.snapshots().listen(
       (event) {
         setState(() {
-          if (nextPage)
-            isFetchingNextPage = false;
-          else
-            isFetching = false;
-          hasData = true;
-          error = null;
-          stackTrace = null;
-          hasError = false;
+          if (nextPage) {
+            _snapshot = _snapshot.copyWith(isFetchingNextPage: false);
+          } else {
+            _snapshot = _snapshot.copyWith(isFetching: false);
+          }
+
+          _snapshot = _snapshot.copyWith(
+            hasData: true,
+            docs: event.size < expectedDocsCount
+                ? event.docs
+                : event.docs.take(expectedDocsCount - 1).toList(),
+            error: null,
+            hasNextPage: event.size == expectedDocsCount,
+            stackTrace: null,
+            hasError: false,
+          );
         });
       },
       onError: (Object error, StackTrace stackTrace) {
         setState(() {
-          if (nextPage)
-            isFetchingNextPage = false;
-          else
-            isFetching = false;
-          this.error = error;
-          this.stackTrace = stackTrace;
-          hasError = true;
+          if (nextPage) {
+            _snapshot = _snapshot.copyWith(isFetchingNextPage: false);
+          } else {
+            _snapshot = _snapshot.copyWith(isFetching: false);
+          }
+
+          _snapshot = _snapshot.copyWith(
+            error: error,
+            stackTrace: stackTrace,
+            hasError: true,
+            hasNextPage: false,
+          );
         });
       },
     );
@@ -130,7 +147,7 @@ class _FirestoreQueryBuilderState<Document>
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, this, widget.child);
+    return widget.builder(context, _snapshot, widget.child);
   }
 }
 
@@ -139,11 +156,91 @@ abstract class QueryBuilderSnapshot<Document> {
   bool get isFetchingNextPage;
   bool get hasError;
   bool get hasData;
+  bool get hasNextPage;
 
   Object? get error;
   StackTrace? get stackTrace;
 
-  Document? get data;
+  List<QueryDocumentSnapshot<Document>> get docs;
 
   void fetchNextPage();
+}
+
+class _QueryBuilderSnapshot<Document>
+    implements QueryBuilderSnapshot<Document> {
+  _QueryBuilderSnapshot._({
+    required this.docs,
+    required this.error,
+    required this.hasData,
+    required this.hasError,
+    required this.isFetching,
+    required this.isFetchingNextPage,
+    required this.stackTrace,
+    required this.hasNextPage,
+    required VoidCallback fetchNextPage,
+  }) : _fetchNextPage = fetchNextPage;
+
+  @override
+  final List<QueryDocumentSnapshot<Document>> docs;
+
+  @override
+  final Object? error;
+
+  @override
+  final bool hasData;
+
+  @override
+  final bool hasError;
+
+  @override
+  final bool hasNextPage;
+
+  @override
+  final bool isFetching;
+
+  @override
+  final bool isFetchingNextPage;
+
+  @override
+  final StackTrace? stackTrace;
+
+  final VoidCallback _fetchNextPage;
+
+  @override
+  void fetchNextPage() => _fetchNextPage();
+
+  _QueryBuilderSnapshot<Document> copyWith({
+    Object? docs = const _Sentinel(),
+    Object? error = const _Sentinel(),
+    Object? hasData = const _Sentinel(),
+    Object? hasError = const _Sentinel(),
+    Object? hasNextPage = const _Sentinel(),
+    Object? isFetching = const _Sentinel(),
+    Object? isFetchingNextPage = const _Sentinel(),
+    Object? stackTrace = const _Sentinel(),
+    Object? fetchNextPage = const _Sentinel(),
+  }) {
+    T valueAs<T>(Object? maybeNewValue, T previousValue) {
+      if (maybeNewValue == const _Sentinel()) {
+        return previousValue;
+      }
+      return maybeNewValue as T;
+    }
+
+    return _QueryBuilderSnapshot._(
+      docs: valueAs(docs, this.docs),
+      error: valueAs(error, this.error),
+      hasData: valueAs(hasData, this.hasData),
+      hasNextPage: valueAs(hasNextPage, this.hasNextPage),
+      hasError: valueAs(hasError, this.hasError),
+      isFetching: valueAs(isFetching, this.isFetching),
+      isFetchingNextPage: valueAs(isFetchingNextPage, this.isFetchingNextPage),
+      stackTrace: valueAs(stackTrace, this.stackTrace),
+      fetchNextPage: valueAs(fetchNextPage, this.fetchNextPage),
+    );
+  }
+}
+
+class _Sentinel {
+  const _Sentinel();
 }
