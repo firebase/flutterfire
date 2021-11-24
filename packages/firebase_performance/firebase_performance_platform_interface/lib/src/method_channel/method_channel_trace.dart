@@ -7,11 +7,12 @@ import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
 
 class MethodChannelTrace extends TracePlatform {
-  MethodChannelTrace(this._methodChannelHandle, this._traceHandle, String name)
-      : super(name);
+  MethodChannelTrace(this._methodChannelHandle, this._traceHandle, this._name)
+      : super();
 
   final int _methodChannelHandle;
   final int _traceHandle;
+  final String _name;
 
   bool _hasStarted = false;
   bool _hasStopped = false;
@@ -32,7 +33,7 @@ class MethodChannelTrace extends TracePlatform {
         <String, Object?>{
           'handle': _methodChannelHandle,
           'traceHandle': _traceHandle,
-          'name': name
+          'name': _name
         },
       );
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(

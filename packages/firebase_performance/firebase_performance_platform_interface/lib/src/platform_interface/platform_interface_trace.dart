@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 abstract class TracePlatform extends PlatformInterface {
-  TracePlatform(this.name) : super(token: _token);
+  TracePlatform() : super(token: _token);
 
   static void verifyExtends(TracePlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
@@ -23,8 +23,6 @@ abstract class TracePlatform extends PlatformInterface {
 
   /// Maximum allowed number of attributes that can be added.
   static const int maxCustomAttributes = 5;
-
-  final String name;
 
   Future<void> start() {
     throw UnimplementedError('start() is not implemented');
@@ -43,6 +41,10 @@ abstract class TracePlatform extends PlatformInterface {
     throw UnimplementedError('setMetric() is not implemented');
   }
 
+  int getMetric(String name) {
+    throw UnimplementedError('getMetric() is not implemented');
+  }
+
   void putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
   }
@@ -57,9 +59,5 @@ abstract class TracePlatform extends PlatformInterface {
 
   Map<String, String> getAttributes() {
     throw UnimplementedError('getAttributes() is not implemented');
-  }
-
-  int getMetric(String name) {
-    throw UnimplementedError('getMetric() is not implemented');
   }
 }
