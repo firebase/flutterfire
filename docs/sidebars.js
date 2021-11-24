@@ -27,6 +27,7 @@ module.exports = {
     ],
     Analytics: [
       "analytics/overview",
+      "analytics/usage",
       toReferenceAPI("firebase_analytics"),
       toGithubExample("firebase_analytics"),
     ],

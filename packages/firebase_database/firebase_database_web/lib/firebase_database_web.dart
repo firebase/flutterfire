@@ -33,7 +33,16 @@ part './src/utils/snapshot_utils.dart';
 /// delegates calls to firebase web plugin
 class FirebaseDatabaseWeb extends DatabasePlatform {
   /// Instance of Database from web plugin
-  final database_interop.Database _firebaseDatabase;
+  database_interop.Database? _firebaseDatabase;
+
+  /// Lazily initialize [_firebaseDatabase] on first method call
+  database_interop.Database get _delegate {
+    return _firebaseDatabase ??=
+        _firebaseDatabase = database_interop.getDatabaseInstance(
+      database_interop.getApp(app?.name),
+      databaseURL,
+    );
+  }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -43,11 +52,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   /// Builds an instance of [DatabaseWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
   FirebaseDatabaseWeb({FirebaseApp? app, String? databaseURL})
-      : _firebaseDatabase = database_interop.getDatabaseInstance(
-          database_interop.getApp(app?.name),
-          databaseURL,
-        ),
-        super(app: app, databaseURL: databaseURL);
+      : super(app: app, databaseURL: databaseURL);
 
   @override
   DatabasePlatform delegateFor(
@@ -57,7 +62,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   DatabaseReferencePlatform ref([String? path]) {
-    return DatabaseReferenceWeb(this, _firebaseDatabase.ref(path));
+    return DatabaseReferenceWeb(this, _delegate.ref(path));
   }
 
   /// This is not supported on web. However,
@@ -88,7 +93,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   @override
   Future<void> goOnline() async {
     try {
-      _firebaseDatabase.goOnline();
+      _delegate.goOnline();
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
@@ -97,7 +102,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   @override
   Future<void> goOffline() async {
     try {
-      _firebaseDatabase.goOffline();
+      _delegate.goOffline();
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
@@ -110,6 +115,6 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   void useDatabaseEmulator(String host, int port) {
-    _firebaseDatabase.useDatabaseEmulator(host, port);
+    _delegate.useDatabaseEmulator(host, port);
   }
 }

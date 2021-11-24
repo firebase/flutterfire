@@ -20,7 +20,7 @@ module.exports = [
     support: {
       web: true,
       mobile: true,
-      macos: false,
+      macos: true,
     },
   },
   {
@@ -202,7 +202,7 @@ module.exports = [
     status: 'Beta',
     documentation: 'https://firebase.flutter.dev/docs/remote-config/overview',
     support: {
-      web: false,
+      web: true,
       mobile: true,
       macos: true,
     },

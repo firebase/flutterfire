@@ -6,67 +6,162 @@
 
 #import <Firebase/Firebase.h>
 
-@implementation FLTFirebaseAnalyticsPlugin {
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+
+NSString *const kFLTFirebaseAnalyticsName = @"name";
+NSString *const kFLTFirebaseAnalyticsValue = @"value";
+NSString *const kFLTFirebaseAnalyticsEnabled = @"enabled";
+NSString *const kFLTFirebaseAnalyticsEventName = @"eventName";
+NSString *const kFLTFirebaseAnalyticsParameters = @"parameters";
+NSString *const kFLTFirebaseAnalyticsAdStorageConsentGranted = @"adStorageConsentGranted";
+NSString *const kFLTFirebaseAnalyticsStorageConsentGranted = @"analyticsStorageConsentGranted";
+NSString *const kFLTFirebaseAnalyticsUserId = @"userId";
+
+NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_analytics";
+
+@implementation FLTFirebaseAnalyticsPlugin
+
++ (instancetype)sharedInstance {
+  static dispatch_once_t onceToken;
+  static FLTFirebaseAnalyticsPlugin *instance;
+  dispatch_once(&onceToken, ^{
+    instance = [[FLTFirebaseAnalyticsPlugin alloc] init];
+    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+  });
+  return instance;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_analytics"
+      [FlutterMethodChannel methodChannelWithName:FLTFirebaseAnalyticsChannelName
                                   binaryMessenger:[registrar messenger]];
-  FLTFirebaseAnalyticsPlugin *instance = [[FLTFirebaseAnalyticsPlugin alloc] init];
+  FLTFirebaseAnalyticsPlugin *instance = [FLTFirebaseAnalyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
-
+#if !TARGET_OS_OSX
+  [registrar publish:instance];
+#endif
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
     [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
   }
 }
 
-- (instancetype)init {
-  self = [super init];
-  return self;
-}
-
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if ([@"logEvent" isEqualToString:call.method]) {
-    NSString *eventName = call.arguments[@"name"];
-    id parameterMap = call.arguments[@"parameters"];
+  FLTFirebaseMethodCallErrorBlock errorBlock =
+      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+        NSError *_Nullable error) {
+        result(nil);
+      };
 
-    if (parameterMap != [NSNull null]) {
-      [FIRAnalytics logEventWithName:eventName parameters:parameterMap];
-    } else {
-      [FIRAnalytics logEventWithName:eventName parameters:nil];
-    }
+  FLTFirebaseMethodCallResult *methodCallResult =
+      [FLTFirebaseMethodCallResult createWithSuccess:result andErrorBlock:errorBlock];
 
-    result(nil);
-  } else if ([@"setUserId" isEqualToString:call.method]) {
-    NSString *userId = call.arguments;
-    [FIRAnalytics setUserID:userId];
-    result(nil);
-  } else if ([@"setCurrentScreen" isEqualToString:call.method]) {
-    NSString *screenName = call.arguments[@"screenName"];
-    NSString *screenClassOverride = call.arguments[@"screenClassOverride"];
-    [FIRAnalytics logEventWithName:@"screen_view"
-                        parameters:@{
-                          @"screen_name" : screenName,
-                          @"screen_class" : screenClassOverride,
-                        }];
-    result(nil);
-  } else if ([@"setUserProperty" isEqualToString:call.method]) {
-    NSString *name = call.arguments[@"name"];
-    NSString *value = call.arguments[@"value"];
-    [FIRAnalytics setUserPropertyString:value forName:name];
-    result(nil);
-  } else if ([@"setAnalyticsCollectionEnabled" isEqualToString:call.method]) {
-    NSNumber *enabled = call.arguments;
-    [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
-    result(nil);
-  } else if ([@"resetAnalyticsData" isEqualToString:call.method]) {
-    [FIRAnalytics resetAnalyticsData];
-    result(nil);
+  if ([@"Analytics#logEvent" isEqualToString:call.method]) {
+    [self logEvent:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#setUserId" isEqualToString:call.method]) {
+    [self setUserId:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#setUserProperty" isEqualToString:call.method]) {
+    [self setUserProperty:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#setAnalyticsCollectionEnabled" isEqualToString:call.method]) {
+    [self setAnalyticsCollectionEnabled:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#resetAnalyticsData" isEqualToString:call.method]) {
+    [self resetAnalyticsDataWithMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#setConsent" isEqualToString:call.method]) {
+    [self setConsent:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Analytics#setDefaultEventParameters" isEqualToString:call.method]) {
+    [self setDefaultEventParameters:call.arguments withMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+#pragma mark - Firebase Analytics API
+
+- (void)logEvent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *eventName = arguments[kFLTFirebaseAnalyticsEventName];
+  id parameterMap = arguments[kFLTFirebaseAnalyticsParameters];
+
+  if (parameterMap != [NSNull null]) {
+    [FIRAnalytics logEventWithName:eventName parameters:parameterMap];
+  } else {
+    [FIRAnalytics logEventWithName:eventName parameters:nil];
+  }
+
+  result.success(nil);
+}
+
+- (void)setUserId:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *userId = arguments[kFLTFirebaseAnalyticsUserId];
+  [FIRAnalytics setUserID:userId];
+
+  result.success(nil);
+}
+
+- (void)setUserProperty:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *name = arguments[kFLTFirebaseAnalyticsName];
+  NSString *value = arguments[kFLTFirebaseAnalyticsValue];
+  [FIRAnalytics setUserPropertyString:value forName:name];
+  result.success(nil);
+}
+
+- (void)setAnalyticsCollectionEnabled:(id)arguments
+                 withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *enabled = arguments[kFLTFirebaseAnalyticsEnabled];
+  [FIRAnalytics setAnalyticsCollectionEnabled:[enabled boolValue]];
+  result.success(nil);
+}
+
+- (void)resetAnalyticsDataWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  [FIRAnalytics resetAnalyticsData];
+  result.success(nil);
+}
+
+- (void)setConsent:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSNumber *adStorageGranted = arguments[kFLTFirebaseAnalyticsAdStorageConsentGranted];
+  NSNumber *analyticsStorageGranted = arguments[kFLTFirebaseAnalyticsStorageConsentGranted];
+  NSMutableDictionary<FIRConsentType, FIRConsentStatus> *parameters =
+      [[NSMutableDictionary alloc] init];
+
+  if (adStorageGranted != nil) {
+    parameters[FIRConsentTypeAdStorage] =
+        [adStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+  }
+  if (analyticsStorageGranted != nil) {
+    parameters[FIRConsentTypeAnalyticsStorage] =
+        [analyticsStorageGranted boolValue] ? FIRConsentStatusGranted : FIRConsentStatusDenied;
+  }
+
+  [FIRAnalytics setConsent:parameters];
+  result.success(nil);
+}
+
+- (void)setDefaultEventParameters:(id)arguments
+             withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  id parameters = arguments[kFLTFirebaseAnalyticsParameters];
+  [FIRAnalytics setDefaultEventParameters:parameters];
+  result.success(nil);
+}
+
+#pragma mark - FLTFirebasePlugin
+
+- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion {
+  completion();
+}
+
+- (NSString *_Nonnull)firebaseLibraryName {
+  return LIBRARY_NAME;
+}
+
+- (NSString *_Nonnull)firebaseLibraryVersion {
+  return LIBRARY_VERSION;
+}
+
+- (NSString *_Nonnull)flutterChannelName {
+  return FLTFirebaseAnalyticsChannelName;
+}
+
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp {
+  return @{};
 }
 
 @end

@@ -18,9 +18,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         super(appInstance: null);
 
   /// The entry point for the [FirebaseAuthWeb] class.
-  FirebaseAppCheckWeb({required FirebaseApp app})
-      : _webAppCheck = app_check_interop.getAppCheckInstance(),
-        super(appInstance: app);
+  FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -33,7 +31,12 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   /// instance of AppCheck from the web plugin
-  final app_check_interop.AppCheck? _webAppCheck;
+  app_check_interop.AppCheck? _webAppCheck;
+
+  /// Lazily initialize [_webAppCheck] on first method call
+  app_check_interop.AppCheck get _delegate {
+    return _webAppCheck ??= app_check_interop.getAppCheckInstance();
+  }
 
   @override
   FirebaseAppCheckWeb setInitialValues() {
@@ -43,6 +46,6 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   @override
   Future<void> activate({String? webRecaptchaSiteKey}) async {
     return guard<Future<void>>(
-        () async => _webAppCheck!.activate(webRecaptchaSiteKey));
+        () async => _delegate.activate(webRecaptchaSiteKey));
   }
 }

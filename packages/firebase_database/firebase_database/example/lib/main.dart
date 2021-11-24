@@ -1,3 +1,4 @@
+// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -24,14 +25,18 @@ final emulatorHost =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp();
-
-  runApp(
-    MaterialApp(
-      title: 'Flutter Database Example',
-      home: MyHomePage(app: app),
-    ),
-  );
+  final FirebaseApp app = await Firebase.initializeApp(
+      options: const FirebaseOptions(
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+  ));
+  runApp(MaterialApp(
+    title: 'Flutter Database Example',
+    home: MyHomePage(app: app),
+  ));
 }
 
 class MyHomePage extends StatefulWidget {

@@ -1,3 +1,11 @@
+## 3.0.9
+
+ - Update a dependency to the latest release.
+
+## 3.0.8
+
+ - **FIX**: Add Android implementation to get notification permissions (#7168).
+
 ## 3.0.7
 
  - Update a dependency to the latest release.
