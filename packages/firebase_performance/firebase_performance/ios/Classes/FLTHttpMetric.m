@@ -48,6 +48,29 @@
 }
 
 - (void)stop:(FlutterMethodCall *)call result:(FlutterResult)result {
+  NSDictionary *attributes = call.arguments[@"attributes"];
+  NSNumber *httpResponseCode = call.arguments[@"httpResponseCode"];
+  NSNumber *requestPayloadSize = call.arguments[@"requestPayloadSize"];
+  NSString *responseContentType = call.arguments[@"responseContentType"];
+  NSNumber *responsePayloadSize = call.arguments[@"responsePayloadSize"];
+  
+  [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
+    [_metric setValue:value forAttribute:attributeName];
+  }];
+  
+  if (httpResponseCode != nil) {
+    _metric.responseCode = [httpResponseCode intValue];
+  }
+  if (responseContentType != nil) {
+    _metric.responseContentType = responseContentType;
+  }
+  if (requestPayloadSize != nil) {
+    _metric.requestPayloadSize = [requestPayloadSize longValue];
+  }
+  if (responsePayloadSize != nil) {
+    _metric.responsePayloadSize = [responsePayloadSize longValue];
+  }
+
   [_metric stop];
 
   NSNumber *handle = call.arguments[@"handle"];

@@ -9,10 +9,10 @@ import 'utils/exception.dart';
 class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(
     this._methodChannelHandle,
+    this._httpMetricHandle,
     String url,
     HttpMethod httpMethod,
-  )   : _httpMetricHandle = _methodChannelHandle + 1,
-        super(url, httpMethod);
+  ) : super(url, httpMethod);
 
   final int _methodChannelHandle;
   final int _httpMetricHandle;
@@ -40,73 +40,23 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   int? get responsePayloadSize => _responsePayloadSize;
 
   @override
-  Future<void> setHttpResponseCode(int? httpResponseCode) async {
-    if (_hasStopped) return;
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#httpResponseCode',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'httpResponseCode': httpResponseCode,
-        },
-      );
-      _httpResponseCode = httpResponseCode;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  set httpResponseCode(int? httpResponseCode) {
+    _httpResponseCode = httpResponseCode;
   }
 
   @override
-  Future<void> setRequestPayloadSize(int? requestPayloadSize) async {
-    if (_hasStopped) return;
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#requestPayloadSize',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'requestPayloadSize': requestPayloadSize,
-        },
-      );
-      _requestPayloadSize = requestPayloadSize;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  set requestPayloadSize(int? requestPayloadSize) {
+    _requestPayloadSize = requestPayloadSize;
   }
 
   @override
-  Future<void> setResponseContentType(String? responseContentType) async {
-    if (_hasStopped) return;
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#responseContentType',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'responseContentType': responseContentType,
-        },
-      );
-      _responseContentType = responseContentType;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  set responseContentType(String? responseContentType) {
+    _responseContentType = responseContentType;
   }
 
   @override
-  Future<void> setResponsePayloadSize(int? responsePayloadSize) async {
-    if (_hasStopped) return;
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#responsePayloadSize',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'responsePayloadSize': responsePayloadSize,
-        },
-      );
-      _responsePayloadSize = responsePayloadSize;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  set responsePayloadSize(int? responsePayloadSize) {
+    _responsePayloadSize = responsePayloadSize;
   }
 
   @override
@@ -139,7 +89,14 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#stop',
-        <String, Object?>{'handle': _httpMetricHandle},
+        <String, Object?>{
+          'handle': _httpMetricHandle,
+          'attributes': _attributes,
+          'httpResponseCode': _httpResponseCode,
+          'requestPayloadSize': _requestPayloadSize,
+          'responseContentType': _responseContentType,
+          'responsePayloadSize': _responsePayloadSize,
+        },
       );
       _hasStopped = true;
     } catch (e, s) {
@@ -148,40 +105,18 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> putAttribute(String name, String value) async {
-    if (_hasStopped ||
-        name.length > HttpMetricPlatform.maxAttributeKeyLength ||
+  void putAttribute(String name, String value) {
+    if (name.length > HttpMetricPlatform.maxAttributeKeyLength ||
         value.length > HttpMetricPlatform.maxAttributeValueLength ||
         _attributes.length == HttpMetricPlatform.maxCustomAttributes) {
       return;
     }
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#putAttribute',
-        <String, Object?>{
-          'handle': _httpMetricHandle,
-          'name': name,
-          'value': value,
-        },
-      );
-      _attributes[name] = value;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+    _attributes[name] = value;
   }
 
   @override
-  Future<void> removeAttribute(String name) async {
-    if (_hasStopped) return;
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'HttpMetric#removeAttribute',
-        <String, Object?>{'handle': _httpMetricHandle, 'name': name},
-      );
-      _attributes.remove(name);
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void removeAttribute(String name) {
+    _attributes.remove(name);
   }
 
   @override

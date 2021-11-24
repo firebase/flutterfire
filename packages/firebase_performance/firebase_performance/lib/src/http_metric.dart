@@ -39,32 +39,32 @@ class HttpMetric {
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  Future<void> setHttpResponseCode(int? httpResponseCode) {
-    return _delegate.setHttpResponseCode(httpResponseCode);
+  set httpResponseCode(int? httpResponseCode) {
+    _delegate.httpResponseCode = httpResponseCode;
   }
 
   /// Size of the request payload.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  Future<void> setRequestPayloadSize(int? requestPayloadSize) {
-    return _delegate.setRequestPayloadSize(requestPayloadSize);
+  set requestPayloadSize(int? requestPayloadSize) {
+    _delegate.requestPayloadSize = requestPayloadSize;
   }
 
   /// Content type of the response such as text/html, application/json, etc...
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  Future<void> setResponseContentType(String? responseContentType) {
-    return _delegate.setResponseContentType(responseContentType);
+  set responseContentType(String? responseContentType) {
+    _delegate.responseContentType = responseContentType;
   }
 
   /// Size of the response payload.
   ///
   /// If the [HttpMetric] has already been stopped, returns immediately without
   /// taking action.
-  Future<void> setResponsePayloadSize(int? responsePayloadSize) {
-    return _delegate.setResponsePayloadSize(responsePayloadSize);
+  set responsePayloadSize(int? responsePayloadSize) {
+    _delegate.responsePayloadSize = responsePayloadSize;
   }
 
   /// Starts this [HttpMetric].
@@ -105,7 +105,7 @@ class HttpMetric {
   ///
   /// If this object has been stopped, this method returns without adding the
   /// attribute.
-  Future<void> putAttribute(String name, String value) {
+  void putAttribute(String name, String value) {
     return _delegate.putAttribute(name, value);
   }
 
@@ -113,7 +113,7 @@ class HttpMetric {
   ///
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
-  Future<void> removeAttribute(String name) {
+  void removeAttribute(String name) {
     return _delegate.removeAttribute(name);
   }
 

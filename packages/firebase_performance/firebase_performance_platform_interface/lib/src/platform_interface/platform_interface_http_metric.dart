@@ -48,20 +48,20 @@ abstract class HttpMetricPlatform extends PlatformInterface {
     throw UnimplementedError('get responsePayloadSize is not implemented');
   }
 
-  Future<void> setHttpResponseCode(int? httpResponseCode) {
-    throw UnimplementedError('setHttpResponseCode() is not implemented');
+  set httpResponseCode(int? httpResponseCode) {
+    throw UnimplementedError('set httpResponseCode() is not implemented');
   }
 
-  Future<void> setRequestPayloadSize(int? requestPayloadSize) {
-    throw UnimplementedError('setRequestPayloadSize() is not implemented');
+  set requestPayloadSize(int? requestPayloadSize) {
+    throw UnimplementedError('set requestPayloadSize() is not implemented');
   }
 
-  Future<void> setResponsePayloadSize(int? responsePayloadSize) {
-    throw UnimplementedError('setResponsePayload() is not implemented');
+  set responsePayloadSize(int? responsePayloadSize) {
+    throw UnimplementedError('set responsePayload() is not implemented');
   }
 
-  Future<void> setResponseContentType(String? responseContentType) {
-    throw UnimplementedError('setResponseContentType() is not implemented');
+  set responseContentType(String? responseContentType) {
+    throw UnimplementedError('set responseContentType() is not implemented');
   }
 
   Future<void> start() {
@@ -72,11 +72,11 @@ abstract class HttpMetricPlatform extends PlatformInterface {
     throw UnimplementedError('stop() is not implemented');
   }
 
-  Future<void> putAttribute(String name, String value) {
+  void putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
   }
 
-  Future<void> removeAttribute(String name) {
+  void removeAttribute(String name) {
     throw UnimplementedError('removeAttribute() is not implemented');
   }
 
