@@ -53,10 +53,10 @@ void main() {
       httpMetric = TestMethodChannelHttpMetric(kHandle, kUrl, kMethod);
     });
 
-      test('instance', () {
-        expect(httpMetric, isA<MethodChannelHttpMetric>());
-        expect(httpMetric, isA<HttpMetricPlatform>());
-      });
+    test('instance', () {
+      expect(httpMetric, isA<MethodChannelHttpMetric>());
+      expect(httpMetric, isA<HttpMetricPlatform>());
+    });
 
     group('httpResponseCode', () {
       // test('get httpResponseCode', () {

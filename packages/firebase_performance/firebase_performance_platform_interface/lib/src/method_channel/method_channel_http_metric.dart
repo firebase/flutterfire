@@ -8,8 +8,10 @@ import 'utils/exception.dart';
 
 class MethodChannelHttpMetric extends HttpMetricPlatform {
   MethodChannelHttpMetric(
-      this._methodChannelHandle, String url, HttpMethod httpMethod,)
-      : _httpMetricHandle = _methodChannelHandle + 1,
+    this._methodChannelHandle,
+    String url,
+    HttpMethod httpMethod,
+  )   : _httpMetricHandle = _methodChannelHandle + 1,
         super(url, httpMethod);
 
   final int _methodChannelHandle;
@@ -20,6 +22,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
   String? _responseContentType;
   int? _responsePayloadSize;
 
+  bool _hasStarted = false;
   bool _hasStopped = false;
 
   final Map<String, String> _attributes = <String, String>{};
@@ -124,6 +127,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
         'HttpMetric#start',
         <String, Object?>{'handle': _httpMetricHandle},
       );
+      _hasStarted = true;
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
@@ -131,7 +135,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
 
   @override
   Future<void> stop() async {
-    if (_hasStopped) return;
+    if (!_hasStarted || _hasStopped) return;
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'HttpMetric#stop',
