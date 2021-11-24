@@ -73,9 +73,9 @@ class _PhoneInputViewState extends State<PhoneInputView> {
           children: [
             Text(
               l.phoneVerificationViewTitleText,
-              style: Theme.of(context).textTheme.subtitle1,
+              style: Theme.of(context).textTheme.headline6,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
                 onSubmit: onSubmit(ctrl),

@@ -34,7 +34,7 @@ class AuthFailed extends AuthState {
 }
 
 class SignedIn extends AuthState {
-  final User user;
+  final User? user;
 
   SignedIn(this.user);
 }

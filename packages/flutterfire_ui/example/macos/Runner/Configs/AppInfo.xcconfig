@@ -8,7 +8,7 @@
 PRODUCT_NAME = flutterfire_ui_example
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebaseui.firebaseUiExample
+PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.flutterfireui.flutterfireUIExample
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2021 io.flutter.plugins.flutterfire_ui. All rights reserved.

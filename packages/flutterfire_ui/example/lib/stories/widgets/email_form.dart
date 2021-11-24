@@ -13,8 +13,15 @@ class EmailFormWidgetStory extends StoryWidget {
     story.category = 'Widgets';
     story.title = 'EmailForm';
 
+    final action = story.enumKnob(
+      title: 'Auth action',
+      value: AuthAction.signIn,
+      values: AuthAction.values,
+    );
+
     return Center(
       child: EmailForm(
+        action: action,
         onSubmit: (email, password) {
           story.notify('Submitted $email $password');
         },

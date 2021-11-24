@@ -55,14 +55,14 @@ class _LoginViewState extends State<LoginView> {
       if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
         return OAuthProviderButton(
           auth: widget.auth,
-          action: widget.action,
+          action: action,
           providerConfig: config,
         );
       } else {
         return OAuthProviderIconButton(
           providerConfig: config,
           auth: widget.auth,
-          action: widget.action,
+          action: action,
         );
       }
     }).toList();
@@ -140,6 +140,14 @@ class _LoginViewState extends State<LoginView> {
   }
 
   @override
+  void didUpdateWidget(covariant LoginView oldWidget) {
+    if (oldWidget.action != widget.action) {
+      action = widget.action;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
     final platform = Theme.of(context).platform;
@@ -160,13 +168,10 @@ class _LoginViewState extends State<LoginView> {
                   config: config,
                 )
               else if (config is PhoneProviderConfiguration)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: PhoneVerificationButton(
-                    label: l.signInWithPhoneButtonText,
-                    action: action,
-                    auth: widget.auth,
-                  ),
+                PhoneVerificationButton(
+                  label: l.signInWithPhoneButtonText,
+                  action: action,
+                  auth: widget.auth,
                 ),
           if (oauthButtons != null) oauthButtons
         ],

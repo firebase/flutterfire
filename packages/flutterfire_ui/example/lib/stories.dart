@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui_example/stories/screens/profile_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dart';
+import 'package:flutterfire_ui_example/stories/views/forgot_password_view.dart';
 import 'package:flutterfire_ui_example/stories/widgets/apple_sign_in_button.dart';
 import 'package:flutterfire_ui_example/stories/widgets/facebook_sign_in_button.dart';
 import 'package:flutterfire_ui_example/stories/widgets/google_sign_in_button.dart';
@@ -43,9 +45,11 @@ class StoriesApp extends StatelessWidget {
           RegisterScreenStory(),
           PhoneInputScreenStory(),
           SMSCodeInputScreenStory(),
+          ProfileScreenStory(),
           LoginViewStory(),
           PhoneInputViewStory(),
           SMSCodeInputViewStory(),
+          ForgotPasswordViewStory(),
           EmailFormWidgetStory(),
           OAuthProviderButtonStory(),
           GoogleSignInButtonStory(),

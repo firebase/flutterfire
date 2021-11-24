@@ -65,7 +65,8 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
   @override
   Future<User?> signIn(AuthCredential credential) async {
     try {
-      return (await auth.signInWithCredential(credential)).user;
+      final userCredential = await auth.signInWithCredential(credential);
+      return userCredential.user;
     } on Exception catch (err) {
       value = AuthFailed(err);
     }
