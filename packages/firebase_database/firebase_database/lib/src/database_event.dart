@@ -19,5 +19,7 @@ class DatabaseEvent {
   /// The [DataSnapshot] for this event.
   DataSnapshot get snapshot => DataSnapshot._(_delegate.snapshot);
 
+  /// A string containing the key of the previous sibling child by sort order,
+  /// or null if it is the first child.
   String? get previousChildKey => _delegate.previousChildKey;
 }

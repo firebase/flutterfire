@@ -19,9 +19,22 @@ class Query {
   }
 
   /// Listens for exactly one event of the specified event type, and then stops listening.
-  Future<DataSnapshot> once() async {
-    DatabaseEventPlatform event = await _queryDelegate.onValue.first;
-    return DataSnapshot._(event.snapshot);
+  /// Defaults to [DatabaseEventType.value] if no [eventType] provided.
+  Future<DatabaseEvent> once([
+    DatabaseEventType eventType = DatabaseEventType.value,
+  ]) async {
+    switch (eventType) {
+      case DatabaseEventType.childAdded:
+        return DatabaseEvent._(await _queryDelegate.onChildAdded.first);
+      case DatabaseEventType.childRemoved:
+        return DatabaseEvent._(await _queryDelegate.onChildRemoved.first);
+      case DatabaseEventType.childChanged:
+        return DatabaseEvent._(await _queryDelegate.onChildChanged.first);
+      case DatabaseEventType.childMoved:
+        return DatabaseEvent._(await _queryDelegate.onChildMoved.first);
+      case DatabaseEventType.value:
+        return DatabaseEvent._(await _queryDelegate.onValue.first);
+    }
   }
 
   /// Fires when children are added.

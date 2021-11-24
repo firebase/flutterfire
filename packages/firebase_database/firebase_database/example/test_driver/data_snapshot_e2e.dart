@@ -69,10 +69,9 @@ void runDataSnapshotTests() {
         ref.child('third').set(18),
       ]);
 
-      final snapshot = await ref.orderByValue().once();
+      final event = await ref.orderByValue().once();
       final keys = [];
-
-      snapshot.children.forEach((snapshot) {
+      event.snapshot.children.forEach((snapshot) {
         keys.add(snapshot.key);
       });
 

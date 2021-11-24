@@ -46,7 +46,8 @@ void runQueryTests() {
     });
 
     test('once()', () async {
-      final snapshot = await database.ref('tests/ordered/one').once();
+      final event = await database.ref('tests/ordered/one').once();
+      final snapshot = event.snapshot;
       expect(snapshot, isNot(null));
       expect(snapshot.key, 'one');
       expect((snapshot.value as dynamic)['ref'], 'one');
@@ -104,8 +105,9 @@ void runQueryTests() {
     );
 
     test('orderByChild()', () async {
-      final snapshot =
+      final event =
           await database.ref('tests/ordered').orderByChild('value').once();
+      final snapshot = event.snapshot;
       final keys = snapshot.children.map((child) => child.key).toList();
       expect(keys, ['three', 'one', 'four', 'two']);
     });
@@ -120,47 +122,50 @@ void runQueryTests() {
     test('orderByValue()', () async {
       final ref = database.ref('tests/priority');
 
-      final s = await ref.orderByValue().once();
-      expect(s.keys, ['first', 'second', 'third']);
+      final event = await ref.orderByValue().once();
+      final snapshot = event.snapshot;
+      expect(snapshot.keys, ['first', 'second', 'third']);
     });
 
     test('limitToFirst()', () async {
-      final snapshot =
-          await database.ref('tests/ordered').limitToFirst(2).once();
+      final event = await database.ref('tests/ordered').limitToFirst(2).once();
+      final snapshot = event.snapshot;
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
       expect(data.length, 2);
 
-      final snapshot1 = await database
+      final event2 = await database
           .ref('tests/ordered')
           .limitToFirst(testDocuments.length + 2)
           .once();
-
-      Map<dynamic, dynamic> data1 = snapshot1.value as dynamic;
+      final snapshot2 = event2.snapshot;
+      Map<dynamic, dynamic> data1 = snapshot2.value as dynamic;
       expect(data1.length, testDocuments.length);
     });
 
     test('limitToLast()', () async {
-      final snapshot =
-          await database.ref('tests/ordered').limitToLast(3).once();
+      final event = await database.ref('tests/ordered').limitToLast(3).once();
+      final snapshot = event.snapshot;
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
       expect(data.length, 3);
 
-      final snapshot1 = await database
+      final event2 = await database
           .ref('tests/ordered')
           .limitToLast(testDocuments.length + 2)
           .once();
-      Map<dynamic, dynamic> data1 = snapshot1.value as dynamic;
+      final snapshot2 = event2.snapshot;
+      Map<dynamic, dynamic> data1 = snapshot2.value as dynamic;
       expect(data1.length, testDocuments.length);
     });
 
     test('startAt() & endAt() once', () async {
       // query to get the data that has key starts with t only
-      final snapshot = await database
+      final event = await database
           .ref('tests/ordered')
           .orderByKey()
           .startAt('t')
           .endAt('t\uf8ff')
           .once();
+      final snapshot = event.snapshot;
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
       bool eachKeyStartsWithF = true;
       data.forEach((key, value) {
@@ -172,15 +177,16 @@ void runQueryTests() {
       // as there are two snaps that starts with t (two, three)
       expect(data.length, 2);
 
-      final snapshot1 = await database
+      final event2 = await database
           .ref('tests/ordered')
           .orderByKey()
           .startAt('t')
           .endAt('three')
           .once();
-      Map<dynamic, dynamic> data1 = snapshot1.value as dynamic;
+      final snapshot2 = event2.snapshot;
+      Map<dynamic, dynamic> data2 = snapshot2.value as dynamic;
       // as the endAt is equal to 'three' and this will skip the data with key 'two'.
-      expect(data1.length, 1);
+      expect(data2.length, 1);
     });
 
     // https://github.com/FirebaseExtended/flutterfire/issues/7221
@@ -211,12 +217,12 @@ void runQueryTests() {
     });
 
     test('equalTo()', () async {
-      final snapshot = await database
+      final event = await database
           .ref('tests/ordered')
           .orderByKey()
           .equalTo('one')
           .once();
-
+      final snapshot = event.snapshot;
       Map<dynamic, dynamic> data = snapshot.value as dynamic;
 
       expect(data.containsKey('one'), true);
