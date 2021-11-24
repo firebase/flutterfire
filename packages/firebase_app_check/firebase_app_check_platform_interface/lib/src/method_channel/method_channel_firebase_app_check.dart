@@ -11,40 +11,34 @@ import '../../firebase_app_check_platform_interface.dart';
 import 'utils/exception.dart';
 
 class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
-  static Map<String, StreamController<AppCheckTokenResult>>
-      _tokenChangesStreamControllers = {};
-
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
       : super(appInstance: app) {
-    // Add a new StreamController for the current app.
-    _tokenChangesStreamControllers[app.name] =
+    _tokenChangesListeners[app.name] =
         StreamController<AppCheckTokenResult>.broadcast();
 
-    // If a method channel handler has not been created - init one.
-    if (_initialized) return;
-    channel.setMethodCallHandler((MethodCall call) async {
-      switch (call.method) {
-        case 'FirebaseAppCheck#idTokenChanges':
-          Map<dynamic, dynamic> result =
-              call.arguments as Map<dynamic, dynamic>;
-          String appName = result['appName'];
-
-          _tokenChangesStreamControllers[appName]!
-              .add(AppCheckTokenResult(result['token']));
-          break;
-        default:
-          throw UnimplementedError('${call.method} has not been implemented');
-      }
+    channel.invokeMethod<String>('FirebaseAppCheck#registerTokenListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName!, channel.codec);
+      events.receiveBroadcastStream().listen(
+        (arguments) {
+          // ignore: close_sinks
+          StreamController<AppCheckTokenResult> controller =
+              _tokenChangesListeners[app.name]!;
+          Map<dynamic, dynamic> result = arguments;
+          controller.add(AppCheckTokenResult(result['result']));
+        },
+      );
     });
-    _initialized = true;
   }
+
+  static final Map<String, StreamController<AppCheckTokenResult>>
+      _tokenChangesListeners = {};
 
   static Map<String, MethodChannelFirebaseAppCheck>
       _methodChannelFirebaseAppCheckInstances =
       <String, MethodChannelFirebaseAppCheck>{};
-
-  static bool _initialized = false;
 
   /// The [MethodChannel] used to communicate with the native plugin
   static MethodChannel channel = const MethodChannel(
@@ -119,6 +113,6 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
 
   @override
   Stream<AppCheckTokenResult> tokenChanges() {
-    return _tokenChangesStreamControllers[app.name]!.stream;
+    return _tokenChangesListeners[app.name]!.stream;
   }
 }
