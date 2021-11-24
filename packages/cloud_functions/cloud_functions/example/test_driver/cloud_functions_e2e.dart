@@ -7,6 +7,7 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'firebase_config.dart';
 import 'sample.dart' as data;
 
 String kTestFunctionDefaultRegion = 'testFunctionDefaultRegion';
@@ -18,7 +19,7 @@ void testsMain() {
   late HttpsCallable callable;
 
   setUpAll(() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
     FirebaseFunctions.instance.useFunctionsEmulator('localhost', 5001);
     callable =
         FirebaseFunctions.instance.httpsCallable(kTestFunctionDefaultRegion);
