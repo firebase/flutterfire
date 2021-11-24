@@ -28,28 +28,11 @@ class ProfileScreen extends StatelessWidget {
   }
 
   void _reauthenticate(BuildContext context) {
-    showDialog(
+    showReauthenticateDialog(
       context: context,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Verify it's you", style: TextStyle(fontSize: 18)),
-              const SizedBox(height: 16),
-              ReauthenticateView(
-                auth: auth,
-                providerConfigs: providerConfigs,
-                onSignedIn: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      providerConfigs: providerConfigs,
+      auth: auth,
+      onSignedIn: () => Navigator.of(context).pop(),
     );
   }
 

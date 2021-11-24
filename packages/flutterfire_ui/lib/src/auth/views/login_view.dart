@@ -11,15 +11,14 @@ import 'package:flutterfire_ui/i10n.dart';
 import '../configs/provider_configuration.dart';
 import '../configs/oauth_provider_configuration.dart';
 import '../widgets/internal/oauth_provider_button.dart';
-import '../screens/internal/login_screen.dart' show HeaderBuilder;
 
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
   final ButtonVariant? oauthButtonVariant;
-  final double? headerMaxExtent;
-  final HeaderBuilder? headerBuilder;
   final bool? showTitle;
+  final String? email;
+  final bool? showAuthActionSwitch;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -29,9 +28,9 @@ class LoginView extends StatefulWidget {
     required this.providerConfigs,
     this.oauthButtonVariant = ButtonVariant.icon_and_text,
     this.auth,
-    this.headerMaxExtent,
-    this.headerBuilder,
     this.showTitle = true,
+    this.email,
+    this.showAuthActionSwitch = true,
   }) : super(key: key);
 
   @override
@@ -116,26 +115,28 @@ class _LoginViewState extends State<LoginView> {
         style: Theme.of(context).textTheme.headline6,
       ),
       const SizedBox(height: 16),
-      RichText(
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: '$hint ',
-              style: Theme.of(context).textTheme.caption,
-            ),
-            TextSpan(
-              text: actionText,
-              style: Theme.of(context).textTheme.button?.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-              mouseCursor: SystemMouseCursors.click,
-              recognizer: TapGestureRecognizer()
-                ..onTap = () => _handleDifferentAuthAction(context),
-            ),
-          ],
+      if (widget.showAuthActionSwitch!) ...[
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: '$hint ',
+                style: Theme.of(context).textTheme.caption,
+              ),
+              TextSpan(
+                text: actionText,
+                style: Theme.of(context).textTheme.button?.copyWith(
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                mouseCursor: SystemMouseCursors.click,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => _handleDifferentAuthAction(context),
+              ),
+            ],
+          ),
         ),
-      ),
-      const SizedBox(height: 16),
+        const SizedBox(height: 16),
+      ]
     ];
   }
 
@@ -166,6 +167,7 @@ class _LoginViewState extends State<LoginView> {
                   auth: widget.auth,
                   action: action,
                   config: config,
+                  email: widget.email,
                 )
               else if (config is PhoneProviderConfiguration)
                 PhoneVerificationButton(

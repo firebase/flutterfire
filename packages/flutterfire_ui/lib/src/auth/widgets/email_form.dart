@@ -23,6 +23,7 @@ class EmailForm extends StatelessWidget {
   final AuthAction? action;
   final EmailProviderConfiguration? config;
   final EmailSubmitCallback? onSubmit;
+  final String? email;
 
   const EmailForm({
     Key? key,
@@ -30,6 +31,7 @@ class EmailForm extends StatelessWidget {
     this.auth,
     this.config,
     this.onSubmit,
+    this.email,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class EmailForm extends StatelessWidget {
       child: _SignInFormContent(
         action: action,
         onSubmit: onSubmit,
+        email: email,
       ),
     );
   }
@@ -48,10 +51,13 @@ class EmailForm extends StatelessWidget {
 class _SignInFormContent extends StatefulWidget {
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
+  final String? email;
+
   const _SignInFormContent({
     Key? key,
     this.onSubmit,
     this.action,
+    this.email,
   }) : super(key: key);
 
   @override
@@ -82,29 +88,16 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     }
   }
 
-  String? _validateConfirmPassword(String? value) {
-    final l = FirebaseUILocalizations.labelsOf(context);
-
-    if (value == null || value.isEmpty) {
-      return l.confirmPasswordIsRequiredErrorText;
-    }
-
-    if (value != passwordCtrl.text) {
-      return l.confirmPasswordDoesNotMatchErrorText;
-    }
-
-    return null;
-  }
-
   void _submit([String? value]) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final email = value ?? widget.email ?? emailCtrl.text;
 
     if (formKey.currentState!.validate()) {
       if (widget.onSubmit != null) {
-        widget.onSubmit!(emailCtrl.text, passwordCtrl.text);
+        widget.onSubmit!(email, passwordCtrl.text);
       } else {
         ctrl.setEmailAndPassword(
-          emailCtrl.text,
+          email,
           passwordCtrl.text,
         );
       }
@@ -122,15 +115,17 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          EmailInput(
-            focusNode: emailFocusNode,
-            controller: emailCtrl,
-            onSubmitted: (v) {
-              formKey.currentState?.validate();
-              FocusScope.of(context).requestFocus(passwordFocusNode);
-            },
-          ),
-          spacer,
+          if (widget.email == null) ...[
+            EmailInput(
+              focusNode: emailFocusNode,
+              controller: emailCtrl,
+              onSubmitted: (v) {
+                formKey.currentState?.validate();
+                FocusScope.of(context).requestFocus(passwordFocusNode);
+              },
+            ),
+            spacer,
+          ],
           PasswordInput(
             focusNode: passwordFocusNode,
             controller: passwordCtrl,
