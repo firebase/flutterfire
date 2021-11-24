@@ -4,6 +4,47 @@ import 'package:flutter/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// {@template firebase_ui.firestore_query_builder}
+/// Listens to a query and paginates the result in a way that is compatible with
+/// infinie scroll views, such as [ListView] or [GridView].
+///
+/// [FirestoreQueryBuilder] will subscribe to the query and obtain the first
+/// [pageSize] items (10 by default). Then as the UI needs to render more items,
+/// it is possible to call [QueryBuilderSnapshot.fetchMore] to obtain more items.
+///
+/// [FirestoreQueryBuilder] is independent from how the query will be rendered
+/// and as such can be used with any existing widget for rendering list of items.
+///
+/// An example of how to combine [FirestoreQueryBuilder] with [ListView] would be:
+///
+/// ```dart
+/// FirestoreQueryBuilder<Movie>(
+///   query: moviesCollection.orderBy('title'),
+///   builder: (context, snapshot, _) {
+///     if (snapshot.isFetching) {
+///       return const CircularProgressIndicator();
+///     }
+///     if (snapshot.hasError) {
+///       return Text('error ${snapshot.error}');
+///     }
+///
+///     return ListView.builder(
+///       itemCount: snapshot.docs.length,
+///       itemBuilder: (context, index) {
+///         // if we reached the end of the currently obtained items, we try to
+///         // obtain more items
+///         if (snapshot.hasMore && index == snapshot.docs.length) {
+///           // Tell FirestoreQueryBuilder to try to obtain more items.
+///           // It is safe to call this function from within the build method.
+///           snapshot.fetchMore();
+///         }
+///
+///         final movie = snapshot.docs[index];
+///         return Text(movie.title);
+///       },
+///     );
+///   },
+/// )
+/// ```
 /// {@endtemplate}
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// {@macro firebase_ui.firestore_query_builder}
@@ -55,7 +96,7 @@ class _FirestoreQueryBuilderState<Document>
     error: null,
     hasData: false,
     hasError: false,
-    hasNextPage: false,
+    hasMore: false,
     isFetching: false,
     isFetchingMore: false,
     stackTrace: null,
@@ -128,7 +169,7 @@ class _FirestoreQueryBuilderState<Document>
                 ? event.docs
                 : event.docs.take(expectedDocsCount - 1).toList(),
             error: null,
-            hasNextPage: event.size == expectedDocsCount,
+            hasMore: event.size == expectedDocsCount,
             stackTrace: null,
             hasError: false,
           );
@@ -146,7 +187,7 @@ class _FirestoreQueryBuilderState<Document>
             error: error,
             stackTrace: stackTrace,
             hasError: true,
-            hasNextPage: false,
+            hasMore: false,
           );
         });
       },
@@ -195,7 +236,7 @@ abstract class QueryBuilderSnapshot<Document> {
   /// Whether there is an extra page to fetch
   ///
   /// See also [fetchMore].
-  bool get hasNextPage;
+  bool get hasMore;
 
   /// The error emitted, if any.
   Object? get error;
@@ -223,7 +264,7 @@ class _QueryBuilderSnapshot<Document>
     required this.isFetching,
     required this.isFetchingMore,
     required this.stackTrace,
-    required this.hasNextPage,
+    required this.hasMore,
     required VoidCallback fetchMore,
   }) : _fetchNextPage = fetchMore;
 
@@ -240,7 +281,7 @@ class _QueryBuilderSnapshot<Document>
   final bool hasError;
 
   @override
-  final bool hasNextPage;
+  final bool hasMore;
 
   @override
   final bool isFetching;
@@ -261,7 +302,7 @@ class _QueryBuilderSnapshot<Document>
     Object? error = const _Sentinel(),
     Object? hasData = const _Sentinel(),
     Object? hasError = const _Sentinel(),
-    Object? hasNextPage = const _Sentinel(),
+    Object? hasMore = const _Sentinel(),
     Object? isFetching = const _Sentinel(),
     Object? isFetchingMore = const _Sentinel(),
     Object? stackTrace = const _Sentinel(),
@@ -278,7 +319,7 @@ class _QueryBuilderSnapshot<Document>
       docs: valueAs(docs, this.docs),
       error: valueAs(error, this.error),
       hasData: valueAs(hasData, this.hasData),
-      hasNextPage: valueAs(hasNextPage, this.hasNextPage),
+      hasMore: valueAs(hasMore, this.hasMore),
       hasError: valueAs(hasError, this.hasError),
       isFetching: valueAs(isFetching, this.isFetching),
       isFetchingMore: valueAs(isFetchingMore, this.isFetchingMore),

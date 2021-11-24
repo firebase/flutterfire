@@ -54,7 +54,7 @@ TypeMatcher<QueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
   Object? docs = const _Sentinel(),
   Object? hasError = const _Sentinel(),
   Object? hasData = const _Sentinel(),
-  Object? hasNextPage = const _Sentinel(),
+  Object? hasMore = const _Sentinel(),
 }) {
   var matcher = isA<QueryBuilderSnapshot<T>>();
 
@@ -67,9 +67,9 @@ TypeMatcher<QueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
       matcher.applyHaving('hasError', (value) => value.hasError, hasError);
   matcher = matcher.applyHaving('hasData', (value) => value.hasData, hasData);
   matcher = matcher.applyHaving(
-    'hasNextPage',
-    (value) => value.hasNextPage,
-    hasNextPage,
+    'hasMore',
+    (value) => value.hasMore,
+    hasMore,
   );
   matcher = matcher.applyHaving(
     'isFetchingMore',

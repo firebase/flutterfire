@@ -35,7 +35,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: true,
               hasData: false,
-              hasNextPage: false,
+              hasMore: false,
               docs: [],
               error: null,
               stackTrace: null,
@@ -58,7 +58,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: false,
+              hasMore: false,
               docs: [
                 isQueryDocumentSnapshot(data: {'value': 21}),
               ],
@@ -81,7 +81,7 @@ void main() {
           argThat(
             isQueryBuilderSnapshot(
               isFetching: false,
-              hasNextPage: false,
+              hasMore: false,
               hasData: true,
               docs: [
                 isQueryDocumentSnapshot(data: {'value': 21}),
@@ -126,7 +126,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -152,7 +152,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -176,7 +176,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -200,7 +200,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -224,7 +224,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: false,
               hasData: true,
-              hasNextPage: false,
+              hasMore: false,
               docs: [
                 for (var i = 0; i < 25; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -248,7 +248,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: false,
               hasData: true,
-              hasNextPage: false,
+              hasMore: false,
               docs: [
                 for (var i = 0; i < 26; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -291,7 +291,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -330,7 +330,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -359,7 +359,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -384,7 +384,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': 24 - i}),
@@ -429,7 +429,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -468,7 +468,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -498,7 +498,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -523,7 +523,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 22; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -567,7 +567,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -596,7 +596,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -620,7 +620,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 20; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -664,7 +664,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
@@ -693,7 +693,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: true,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               hasError: false,
               docs: [
                 for (var i = 0; i < 10; i++)
@@ -719,7 +719,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: false,
+              hasMore: false,
               hasError: true,
               docs: [
                 for (var i = 0; i < 10; i++)
@@ -762,7 +762,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: true,
               hasData: false,
-              hasNextPage: false,
+              hasMore: false,
               hasError: false,
               docs: [],
               error: null,
@@ -786,7 +786,7 @@ void main() {
               isFetching: false,
               isFetchingNextPage: false,
               hasData: false,
-              hasNextPage: false,
+              hasMore: false,
               docs: [],
               hasError: true,
               error: isA<FirebaseException>(),
@@ -813,7 +813,7 @@ void main() {
               isFetching: true,
               isFetchingNextPage: false,
               hasData: false,
-              hasNextPage: false,
+              hasMore: false,
               docs: [],
               hasError: true,
               error: isA<FirebaseException>(),
@@ -835,7 +835,7 @@ void main() {
             isQueryBuilderSnapshot(
               isFetching: false,
               hasData: true,
-              hasNextPage: true,
+              hasMore: true,
               docs: [
                 for (var i = 0; i < 10; i++)
                   isQueryDocumentSnapshot(data: {'value': i}),
