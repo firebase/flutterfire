@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 /// The Dynamic Link iOS parameters.
-class IosParameters {
-  const IosParameters({
+class IOSParameters {
+  const IOSParameters({
     this.appStoreId,
     required this.bundleId,
     this.customScheme,
@@ -62,6 +62,6 @@ class IosParameters {
 
   @override
   String toString() {
-    return '$IosParameters($asMap)';
+    return '$IOSParameters($asMap)';
   }
 }

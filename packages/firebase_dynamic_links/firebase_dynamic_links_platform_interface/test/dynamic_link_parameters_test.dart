@@ -20,7 +20,7 @@ void main() {
     content: 'content',
   );
 
-  IosParameters iosParams = IosParameters(
+  IOSParameters iosParams = IOSParameters(
     appStoreId: 'appStoreId',
     bundleId: 'bundleId',
     customScheme: 'customScheme',

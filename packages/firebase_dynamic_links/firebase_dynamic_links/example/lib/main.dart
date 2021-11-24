@@ -92,7 +92,7 @@ class _MainScreenState extends State<_MainScreen> {
       dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
         shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
       ),
-      iosParameters: const IosParameters(
+      iosParameters: const IOSParameters(
         bundleId: 'io.invertase.testing',
         minimumVersion: '0',
       ),

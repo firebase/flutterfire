@@ -14,8 +14,8 @@ void main() {
   Uri fallbackUrl = Uri.parse('fallbackUrl');
   Uri ipadFallbackUrl = Uri.parse('ipadFallbackUrl');
 
-  group('$IosParameters', () {
-    IosParameters iosParams = IosParameters(
+  group('$IOSParameters', () {
+    IOSParameters iosParams = IOSParameters(
       appStoreId: appStoreId,
       bundleId: bundleId,
       customScheme: customScheme,
@@ -27,7 +27,7 @@ void main() {
 
     group('Constructor', () {
       test('returns an instance of [IosParameters]', () {
-        expect(iosParams, isA<IosParameters>());
+        expect(iosParams, isA<IOSParameters>());
         expect(iosParams.appStoreId, appStoreId);
         expect(iosParams.bundleId, bundleId);
         expect(iosParams.bundleId, bundleId);
@@ -59,7 +59,7 @@ void main() {
       test('toString', () {
         expect(
           iosParams.toString(),
-          equals('$IosParameters(${iosParams.asMap})'),
+          equals('$IOSParameters(${iosParams.asMap})'),
         );
       });
     });

@@ -15,7 +15,7 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
         DynamicLinkParametersOptions,
         FirebaseDynamicLinksPlatform,
         GoogleAnalyticsParameters,
-        IosParameters,
+        IOSParameters,
         ITunesConnectAnalyticsParameters,
         NavigationInfoParameters,
         PendingDynamicLinkData,

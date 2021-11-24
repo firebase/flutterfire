@@ -27,7 +27,7 @@ DynamicLinkParameters buildDynamicLinkParameters() {
     content: 'content',
   );
 
-  IosParameters ios = IosParameters(
+  IOSParameters ios = IOSParameters(
       appStoreId: 'appStoreId',
       bundleId: 'bundleId',
       customScheme: 'customScheme',

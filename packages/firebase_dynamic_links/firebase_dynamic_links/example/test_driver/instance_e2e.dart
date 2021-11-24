@@ -43,7 +43,7 @@ void runInstanceTests() {
           dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
             shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
           ),
-          iosParameters: const IosParameters(
+          iosParameters: const IOSParameters(
             bundleId: iosBundleId,
             minimumVersion: '2',
           ),
@@ -104,7 +104,7 @@ void runInstanceTests() {
           dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
             shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
           ),
-          iosParameters: const IosParameters(
+          iosParameters: const IOSParameters(
             bundleId: iosBundleId,
             minimumVersion: '2',
           ),
@@ -151,7 +151,7 @@ void runInstanceTests() {
           dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
             shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
           ),
-          iosParameters: const IosParameters(
+          iosParameters: const IOSParameters(
             bundleId: iosBundleId,
             minimumVersion: '2',
           ),

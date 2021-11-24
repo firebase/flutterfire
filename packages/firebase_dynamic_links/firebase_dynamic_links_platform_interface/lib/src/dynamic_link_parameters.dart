@@ -39,7 +39,7 @@ class DynamicLinkParameters {
   final GoogleAnalyticsParameters? googleAnalyticsParameters;
 
   /// iOS parameters for a generated Dynamic Link URL.
-  final IosParameters? iosParameters;
+  final IOSParameters? iosParameters;
 
   /// iTunes Connect parameters for a generated Dynamic Link URL.
   final ITunesConnectAnalyticsParameters? itunesConnectAnalyticsParameters;
