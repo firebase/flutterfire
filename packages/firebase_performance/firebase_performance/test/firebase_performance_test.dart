@@ -80,13 +80,13 @@ void main() {
 
       test('incrementMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.incrementMetric('bar', 8);
+        trace.incrementMetric('bar', 8);
         verify(mockTracePlatform.incrementMetric('bar', 8));
       });
 
       test('setMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.setMetric('bar', 8);
+        trace.setMetric('bar', 8);
         verify(mockTracePlatform.setMetric('bar', 8));
       });
 

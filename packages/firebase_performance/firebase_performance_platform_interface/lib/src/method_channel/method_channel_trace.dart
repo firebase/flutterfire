@@ -7,9 +7,8 @@ import 'method_channel_firebase_performance.dart';
 import 'utils/exception.dart';
 
 class MethodChannelTrace extends TracePlatform {
-  MethodChannelTrace(this._methodChannelHandle, String name)
-      : _traceHandle = _methodChannelHandle + 1,
-        super(name);
+  MethodChannelTrace(this._methodChannelHandle, this._traceHandle, String name)
+      : super(name);
 
   final int _methodChannelHandle;
   final int _traceHandle;
@@ -53,7 +52,11 @@ class MethodChannelTrace extends TracePlatform {
     try {
       await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
         'Trace#stop',
-        <String, Object?>{'handle': _traceHandle},
+        <String, Object?>{
+          'handle': _traceHandle,
+          'metrics': _metrics,
+          'attributes': _attributes
+        },
       );
       _hasStopped = true;
     } catch (e, s) {
@@ -62,33 +65,13 @@ class MethodChannelTrace extends TracePlatform {
   }
 
   @override
-  Future<void> incrementMetric(String name, int value) async {
-    if (!_hasStarted || _hasStopped) return;
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'Trace#incrementMetric',
-        <String, Object?>{'handle': _traceHandle, 'name': name, 'value': value},
-      );
-      _metrics[name] = (_metrics[name] ?? 0) + value;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void incrementMetric(String name, int value) {
+    _metrics[name] = (_metrics[name] ?? 0) + value;
   }
 
   @override
-  Future<void> setMetric(String name, int value) async {
-    if (!_hasStarted || _hasStopped) return;
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'Trace#setMetric',
-        <String, Object?>{'handle': _traceHandle, 'name': name, 'value': value},
-      );
-      _metrics[name] = value;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void setMetric(String name, int value) {
+    _metrics[name] = value;
   }
 
   @override
@@ -97,42 +80,18 @@ class MethodChannelTrace extends TracePlatform {
   }
 
   @override
-  Future<void> putAttribute(String name, String value) async {
-    if (_hasStopped ||
-        name.length > TracePlatform.maxAttributeKeyLength ||
+  void putAttribute(String name, String value) {
+    if (name.length > TracePlatform.maxAttributeKeyLength ||
         value.length > TracePlatform.maxAttributeValueLength ||
         _attributes.length == TracePlatform.maxCustomAttributes) {
       return;
     }
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'Trace#putAttribute',
-        <String, Object?>{
-          'handle': _traceHandle,
-          'name': name,
-          'value': value,
-        },
-      );
-      _attributes[name] = value;
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+    _attributes[name] = value;
   }
 
   @override
-  Future<void> removeAttribute(String name) async {
-    if (_hasStopped) return Future<void>.value();
-
-    try {
-      await MethodChannelFirebasePerformance.channel.invokeMethod<void>(
-        'Trace#removeAttribute',
-        <String, Object?>{'handle': _traceHandle, 'name': name},
-      );
-      _attributes.remove(name);
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
+  void removeAttribute(String name) {
+    _attributes.remove(name);
   }
 
   @override

@@ -53,7 +53,7 @@ class Trace {
   /// If the metric does not exist, a new one will be created. If the [Trace] has
   /// not been started or has already been stopped, returns immediately without
   /// taking action.
-  Future<void> incrementMetric(String name, int value) {
+  void incrementMetric(String name, int value) {
     return _delegate.incrementMetric(name, value);
   }
 
@@ -62,7 +62,7 @@ class Trace {
   /// If a metric with the given name doesn't exist, a new one will be created.
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
-  Future<void> setMetric(String name, int value) {
+  void setMetric(String name, int value) {
     return _delegate.setMetric(name, value);
   }
 
@@ -90,7 +90,7 @@ class Trace {
   ///
   /// If this object has been stopped, this method returns without adding the
   /// attribute.
-  Future<void> putAttribute(String name, String value) {
+  void putAttribute(String name, String value) {
     return _delegate.putAttribute(name, value);
   }
 
@@ -98,7 +98,7 @@ class Trace {
   ///
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
-  Future<void> removeAttribute(String name) {
+  void removeAttribute(String name) {
     return _delegate.removeAttribute(name);
   }
 

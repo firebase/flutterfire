@@ -76,7 +76,8 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
 
   @override
   TracePlatform newTrace(String name) {
-    return MethodChannelTrace(_nextHandle, name);
+    final int traceHandle = _nextHandle++;
+    return MethodChannelTrace(_handle, traceHandle, name);
   }
 
   @override

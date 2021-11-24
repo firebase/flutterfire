@@ -102,14 +102,14 @@ class _MyAppState extends State<MyApp> {
 
     final Trace trace = _performance.newTrace('test_trace_1');
     await trace.start();
-    await trace.putAttribute('favorite_color', 'blue');
-    await trace.putAttribute('to_be_removed', 'should_not_be_logged');
+    trace.putAttribute('favorite_color', 'blue');
+    trace.putAttribute('to_be_removed', 'should_not_be_logged');
 
     for (int i = 0; i < 10; i++) {
-      await trace.incrementMetric('sum', i);
+      trace.incrementMetric('sum', i);
     }
 
-    await trace.removeAttribute('to_be_removed');
+    trace.removeAttribute('to_be_removed');
     await trace.stop();
 
     final sum = trace.getMetric('sum');
@@ -138,7 +138,7 @@ class _MyAppState extends State<MyApp> {
       sum += i;
     }
     // Trace.setMetric is no-op for web
-    await trace.setMetric('sum', sum);
+    trace.setMetric('sum', sum);
     await trace.stop();
 
     final sum2 = trace.getMetric('sum');

@@ -7,6 +7,8 @@ package io.flutter.plugins.firebase.performance;
 import com.google.firebase.perf.metrics.Trace;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+import java.util.Map;
+import java.util.Objects;
 
 class FlutterTrace implements MethodChannel.MethodCallHandler {
   private final FlutterFirebasePerformancePlugin plugin;
@@ -56,6 +58,21 @@ class FlutterTrace implements MethodChannel.MethodCallHandler {
 
   @SuppressWarnings("ConstantConditions")
   private void stop(MethodCall call, MethodChannel.Result result) {
+    final Map<String, Object> attributes = Objects.requireNonNull((call.argument("attributes")));
+    final Map<String, Object> metrics = Objects.requireNonNull((call.argument("metrics")));
+
+    for (String key : attributes.keySet()) {
+      String attributeValue = (String) attributes.get(key);
+
+      trace.putAttribute(key, attributeValue);
+    }
+
+    for (String key : metrics.keySet()) {
+      Integer metricValue = (Integer) metrics.get(key);
+
+      trace.putMetric(key, metricValue);
+    }
+
     trace.stop();
 
     final Integer handle = call.argument("handle");

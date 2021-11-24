@@ -14,9 +14,9 @@ void main() {
   setupFirebasePerformanceMocks();
 
   late TestMethodChannelTrace trace;
-  const int kHandle = 21;
+  const int kMethodHandle = 21;
+  const int kTraceHandle = 22;
   const String kName = 'test-trace-name';
-  const HttpMethod kMethod = HttpMethod.Get;
   final List<MethodCall> log = <MethodCall>[];
   // mock props
   bool mockPlatformExceptionThrown = false;
@@ -49,7 +49,7 @@ void main() {
       });
     });
     setUp(() async {
-      trace = TestMethodChannelTrace(kHandle, kName);
+      trace = TestMethodChannelTrace(kMethodHandle, kTraceHandle, kName);
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       log.clear();
@@ -67,17 +67,16 @@ void main() {
 
     group('start', () {
       test('should call delegate method successfully', () async {
-        const int traceHandle = kHandle + 1;
         await trace.start();
 
         expect(log, <Matcher>[
           isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kHandle,
-            'traceHandle': traceHandle,
+            'handle': kMethodHandle,
+            'traceHandle': kTraceHandle,
             'name': kName
           }),
           isMethodCall('Trace#start', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
           })
         ]);
       });
@@ -93,22 +92,23 @@ void main() {
 
     group('stop', () {
       test('should call delegate method successfully', () async {
-        const int traceHandle = kHandle + 1;
         await trace.start();
 
         await trace.stop();
 
         expect(log, <Matcher>[
           isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kHandle,
-            'traceHandle': traceHandle,
+            'handle': kMethodHandle,
+            'traceHandle': kTraceHandle,
             'name': kName
           }),
           isMethodCall('Trace#start', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
           }),
           isMethodCall('Trace#stop', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
+            'metrics': {},
+            'attributes': {},
           })
         ]);
       });
@@ -131,136 +131,176 @@ void main() {
 
     group('incrementMetric', () {
       const String metricName = 'test-metric-name';
-      const int metricValue = 300;
+      const int metricValue = 453;
       test('should call delegate method successfully', () async {
-        const int traceHandle = kHandle + 1;
         await trace.start();
-        await trace.incrementMetric(metricName, metricValue);
+        trace.incrementMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
           isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kHandle,
-            'traceHandle': traceHandle,
+            'handle': kMethodHandle,
+            'traceHandle': kTraceHandle,
             'name': kName
           }),
           isMethodCall('Trace#start', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
           }),
-          isMethodCall('Trace#incrementMetric', arguments: {
-            'handle': traceHandle,
-            'name': metricName,
-            'value': metricValue,
-          })
         ]);
-      });
 
-      test("will immediately return if start() hasn't been called first",
-          () async {
-        await trace.stop();
-        expect(log, <Matcher>[]);
-      });
-
-      test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        await trace.start();
-        mockPlatformExceptionThrown = true;
-
-        await testExceptionHandling(
-            'PLATFORM', () => trace.incrementMetric(metricName, metricValue));
+        expect(trace.getMetric(metricName), metricValue);
       });
     });
 
     group('setMetric', () {
       const String metricName = 'test-metric-name';
-      const int metricValue = 300;
+      const int metricValue = 4;
       test('should call delegate method successfully', () async {
-        const int traceHandle = kHandle + 1;
         await trace.start();
-        await trace.setMetric(metricName, metricValue);
+        trace.setMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
           isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kHandle,
-            'traceHandle': traceHandle,
+            'handle': kMethodHandle,
+            'traceHandle': kTraceHandle,
             'name': kName
           }),
           isMethodCall('Trace#start', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
           }),
-          isMethodCall('Trace#setMetric', arguments: {
-            'handle': traceHandle,
-            'name': metricName,
-            'value': metricValue,
-          })
         ]);
-      });
 
-      test("will immediately return if start() hasn't been called first",
-          () async {
-        await trace.setMetric(metricName, metricValue);
-        expect(log, <Matcher>[]);
-      });
-
-      test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        await trace.start();
-        mockPlatformExceptionThrown = true;
-
-        await testExceptionHandling(
-            'PLATFORM', () => trace.setMetric(metricName, metricValue));
+        expect(trace.getMetric(metricName), metricValue);
       });
     });
 
     group('getMetric', () {
       const String metricName = 'test-metric-name';
-      const int metricValue = 300;
+      const int metricValue = 546;
       test('should call delegate method successfully', () async {
-        const int traceHandle = kHandle + 1;
         await trace.start();
-        await trace.setMetric(metricName, metricValue);
+        trace.setMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
           isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kHandle,
-            'traceHandle': traceHandle,
+            'handle': kMethodHandle,
+            'traceHandle': kTraceHandle,
             'name': kName
           }),
           isMethodCall('Trace#start', arguments: {
-            'handle': traceHandle,
+            'handle': kTraceHandle,
           }),
-          isMethodCall('Trace#setMetric', arguments: {
-            'handle': traceHandle,
-            'name': metricName,
-            'value': metricValue,
-          })
         ]);
-      });
 
-      test("will immediately return if start() hasn't been called first",
-          () async {
-        await trace.setMetric(metricName, metricValue);
+        expect(trace.getMetric(metricName), metricValue);
+      });
+    });
+
+    group('putAttribute', () {
+      test('should call delegate method successfully', () async {
+        const String attributeName = 'test-attribute-name';
+        const String attributeValue = 'foo';
+        trace.putAttribute(attributeName, attributeValue);
         expect(log, <Matcher>[]);
+        expect(trace.getAttribute(attributeName), attributeValue);
       });
 
       test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
+          "will immediately return if name length is longer than 'TracePlatform.maxAttributeKeyLength' ",
           () async {
-        await trace.start();
-        mockPlatformExceptionThrown = true;
+        String longName =
+            'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+        const String attributeValue = 'foo';
+        trace.putAttribute(longName, attributeValue);
+        expect(log, <Matcher>[]);
+        expect(trace.getAttribute(longName), isNull);
+      });
 
-        await testExceptionHandling(
-            'PLATFORM', () => trace.setMetric(metricName, metricValue));
+      test(
+          "will immediately return if value length is longer than 'TracePlatform.maxAttributeValueLength' ",
+          () async {
+        String attributeName = 'foo';
+        String longValue =
+            'thisisaverylongnamethatislongerthanthe40charactersallowedbyTracePlatformmaxAttributeKeyLengthwaywaylongertogetover100charlimit';
+        trace.putAttribute(attributeName, longValue);
+        expect(log, <Matcher>[]);
+        expect(trace.getAttribute(attributeName), isNull);
+      });
+
+      test(
+          "will immediately return if attribute map has more properties than 'TracePlatform.maxCustomAttributes' allows",
+          () async {
+        String attributeName1 = 'foo';
+        String attributeName2 = 'bar';
+        String attributeName3 = 'baz';
+        String attributeName4 = 'too';
+        String attributeName5 = 'yoo';
+        String attributeName6 = 'who';
+        String attributeValue = 'bar';
+        trace.putAttribute(attributeName1, attributeValue);
+        trace.putAttribute(attributeName2, attributeValue);
+        trace.putAttribute(attributeName3, attributeValue);
+        trace.putAttribute(attributeName4, attributeValue);
+        trace.putAttribute(attributeName5, attributeValue);
+        trace.putAttribute(attributeName6, attributeValue);
+
+        expect(log, <Matcher>[]);
+
+        expect(trace.getAttribute(attributeName5), attributeValue);
+        expect(trace.getAttribute(attributeName6), isNull);
+      });
+    });
+
+    group('removeAttribute', () {
+      test('should call delegate method successfully', () async {
+        const String attributeName = 'test-attribute-name';
+        const String attributeValue = 'barr';
+        trace.putAttribute(attributeName, attributeValue);
+        trace.removeAttribute(attributeName);
+        expect(log, <Matcher>[]);
+        expect(trace.getAttribute(attributeName), isNull);
+      });
+    });
+
+    group('getAttribute', () {
+      test('should call delegate method successfully', () async {
+        const String attributeName = 'test-attribute-name';
+        const String attributeValue = 'mario';
+        trace.putAttribute(attributeName, attributeValue);
+        trace.getAttribute(attributeName);
+        expect(log, <Matcher>[]);
+      });
+    });
+
+    group('getAttributes', () {
+      test('should call delegate method successfully', () async {
+        String attributeName1 = 'foo';
+        String attributeName2 = 'bar';
+        String attributeName3 = 'baz';
+        String attributeName4 = 'too';
+        String attributeName5 = 'yoo';
+        String attributeValue = 'bar';
+        trace.putAttribute(attributeName1, attributeValue);
+        trace.putAttribute(attributeName2, attributeValue);
+        trace.putAttribute(attributeName3, attributeValue);
+        trace.putAttribute(attributeName4, attributeValue);
+        trace.putAttribute(attributeName5, attributeValue);
+
+        Map<String, String> attributes = {
+          attributeName1: attributeValue,
+          attributeName2: attributeValue,
+          attributeName3: attributeValue,
+          attributeName4: attributeValue,
+          attributeName5: attributeValue,
+        };
+
+        expect(log, <Matcher>[]);
+        expect(trace.getAttributes(), attributes);
       });
     });
   });
 }
 
-class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
-  TestFirebasePerformancePlatform(FirebaseApp app) : super(appInstance: app);
-}
-
 class TestMethodChannelTrace extends MethodChannelTrace {
-  TestMethodChannelTrace(handle, name) : super(handle, name);
+  TestMethodChannelTrace(handle, traceHandle, name)
+      : super(handle, traceHandle, name);
 }
