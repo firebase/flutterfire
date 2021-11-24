@@ -130,39 +130,35 @@ void main() {
         verify(mockHttpMetricPlatform.responsePayloadSize);
       });
 
-      test('setHttpResponseCode setter should call delegate setter', () async {
+      test('set httpResponseCode setter should call delegate setter', () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.setHttpResponseCode(8080))
-            .thenAnswer((_) => Future<void>.value());
-        await httpMetric.setHttpResponseCode(8080);
-        verify(mockHttpMetricPlatform.setHttpResponseCode(8080));
+        when(mockHttpMetricPlatform.httpResponseCode = 8080).thenReturn(0);
+        httpMetric.httpResponseCode = 8080;
+        verify(mockHttpMetricPlatform.httpResponseCode = 8080);
       });
 
-      test('setRequestPayloadSize setter should call delegate setter',
+      test('set requestPayloadSize setter should call delegate setter',
           () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.setRequestPayloadSize(8))
-            .thenAnswer((_) => Future<void>.value());
-        await httpMetric.setRequestPayloadSize(8);
-        verify(mockHttpMetricPlatform.setRequestPayloadSize(8));
+        when(mockHttpMetricPlatform.requestPayloadSize = 8).thenReturn(0);
+        httpMetric.requestPayloadSize = 8;
+        verify(mockHttpMetricPlatform.requestPayloadSize = 8);
       });
 
       test('setResponsePayloadSize setter should call delegate setter',
           () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.setResponsePayloadSize(99))
-            .thenAnswer((_) => Future<void>.value());
-        await httpMetric.setResponsePayloadSize(99);
-        verify(mockHttpMetricPlatform.setResponsePayloadSize(99));
+        when(mockHttpMetricPlatform.responsePayloadSize = 99).thenReturn(0);
+        httpMetric.responsePayloadSize = 99;
+        verify(mockHttpMetricPlatform.responsePayloadSize = 99);
       });
 
-      test('setResponseContentType setter should call delegate setter',
+      test('set responseContentType setter should call delegate setter',
           () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        when(mockHttpMetricPlatform.setResponseContentType('foo'))
-            .thenAnswer((_) => Future<void>.value());
-        await httpMetric.setResponseContentType('foo');
-        verify(mockHttpMetricPlatform.setResponseContentType('foo'));
+        when(mockHttpMetricPlatform.responseContentType = 'foo').thenReturn('');
+        httpMetric.responseContentType = 'foo';
+        verify(mockHttpMetricPlatform.responseContentType = 'foo');
       });
 
       test('start should call delegate', () async {
@@ -307,38 +303,38 @@ class MockHttpMetricPlatform extends Mock
   }
 
   @override
-  Future<void> setHttpResponseCode(int? httpResponseCode) {
+  // ignore: avoid_setters_without_getters
+  set httpResponseCode(int? httpResponseCode) {
+    // ignore: void_checks
     return super.noSuchMethod(
-      Invocation.method(#setHttpResponseCode, [httpResponseCode]),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value(),
+      Invocation.setter(#httpResponseCode, [httpResponseCode]),
     );
   }
 
   @override
-  Future<void> setRequestPayloadSize(int? requestPayloadSize) {
+  // ignore: avoid_setters_without_getters
+  set requestPayloadSize(int? requestPayloadSize) {
+    // ignore: void_checks
     return super.noSuchMethod(
-      Invocation.method(#setRequestPayloadSize, [requestPayloadSize]),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value(),
+      Invocation.setter(#requestPayloadSize, [requestPayloadSize]),
     );
   }
 
   @override
-  Future<void> setResponsePayloadSize(int? responsePayloadSize) {
+  // ignore: avoid_setters_without_getters
+  set responsePayloadSize(int? responsePayloadSize) {
+    // ignore: void_checks
     return super.noSuchMethod(
-      Invocation.method(#setResponsePayloadSize, [responsePayloadSize]),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value(),
+      Invocation.setter(#responsePayloadSize, [responsePayloadSize]),
     );
   }
 
   @override
-  Future<void> setResponseContentType(String? responseContentType) {
+  // ignore: avoid_setters_without_getters
+  set responseContentType(String? responseContentType) {
+    // ignore: void_checks
     return super.noSuchMethod(
-      Invocation.method(#setResponsePayloadSize, [responseContentType]),
-      returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value(),
+      Invocation.setter(#responseContentType, [responseContentType]),
     );
   }
 
