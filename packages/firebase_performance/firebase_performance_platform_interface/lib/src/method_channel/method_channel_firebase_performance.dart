@@ -81,7 +81,6 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
-
     return MethodChannelHttpMetric(_nextHandle, url, httpMethod);
   }
 }

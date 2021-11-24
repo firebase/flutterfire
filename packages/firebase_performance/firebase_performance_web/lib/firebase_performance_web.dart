@@ -52,8 +52,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   }
 
   @override
-  HttpMetricPlatform newHttpMetric(
-      String url, HttpMethod httpMethod) {
+  HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     //TODO: this doesn't exist on web, it is just stub methods. Throw exception instead?
     return HttpMetricWeb('', HttpMethod.Get);
   }

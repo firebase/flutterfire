@@ -59,12 +59,12 @@ void main() {
     mockPlatformExceptionThrown = false;
     mockExceptionThrown = false;
     log.clear();
-    MethodChannelFirebasePerformance.clearState();
   });
 
   tearDown(() async {
     mockPlatformExceptionThrown = false;
     mockExceptionThrown = false;
+    MethodChannelFirebasePerformance.clearState();
   });
 
   test('instance', () {
@@ -86,8 +86,9 @@ void main() {
       performance.isPerformanceCollectionEnabled();
 
       expect(log, <Matcher>[
-        isMethodCall('FirebasePerformance#isPerformanceCollectionEnabled',
-            arguments: {'handle': 0},
+        isMethodCall(
+          'FirebasePerformance#isPerformanceCollectionEnabled',
+          arguments: {'handle': 0},
         )
       ]);
     });
@@ -98,7 +99,8 @@ void main() {
       mockPlatformExceptionThrown = true;
 
       await testExceptionHandling(
-          'PLATFORM', performance.isPerformanceCollectionEnabled,
+        'PLATFORM',
+        performance.isPerformanceCollectionEnabled,
       );
     });
   });
@@ -108,8 +110,9 @@ void main() {
       performance.setPerformanceCollectionEnabled(true);
 
       expect(log, <Matcher>[
-        isMethodCall('FirebasePerformance#setPerformanceCollectionEnabled',
-            arguments: {'handle': 0, 'enable': true},
+        isMethodCall(
+          'FirebasePerformance#setPerformanceCollectionEnabled',
+          arguments: {'handle': 0, 'enable': true},
         )
       ]);
     });
@@ -120,7 +123,8 @@ void main() {
       mockPlatformExceptionThrown = true;
 
       await testExceptionHandling(
-          'PLATFORM', () => performance.setPerformanceCollectionEnabled(true),
+        'PLATFORM',
+        () => performance.setPerformanceCollectionEnabled(true),
       );
     });
   });
