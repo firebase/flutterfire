@@ -1,3 +1,7 @@
+## 1.2.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 1.1.0
 
  - **FEAT**: detect the version of the Firebase JS SDK that is in use and warn if the version is incompatible with FlutterFire.
