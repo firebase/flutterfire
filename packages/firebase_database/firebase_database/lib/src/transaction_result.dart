@@ -4,6 +4,7 @@
 
 part of firebase_database;
 
+/// Instances of this class represent the outcome of a transaction.
 class TransactionResult {
   TransactionResultPlatform _delegate;
 
