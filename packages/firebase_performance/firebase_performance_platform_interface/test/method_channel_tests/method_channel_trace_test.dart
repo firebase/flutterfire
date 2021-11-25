@@ -40,8 +40,6 @@ void main() {
           case 'FirebasePerformance#newTrace':
           case 'Trace#start':
           case 'Trace#stop':
-          case 'Trace#incrementMetric':
-          case 'Trace#setMetric':
             return null;
           default:
             return true;
