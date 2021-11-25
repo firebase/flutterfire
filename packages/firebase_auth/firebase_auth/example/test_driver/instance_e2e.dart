@@ -660,7 +660,8 @@ void runInstanceTests() {
         Future<Exception> getError() async {
           Completer completer = Completer<FirebaseAuthException>();
 
-          unawaited(FirebaseAuth.instance.verifyPhoneNumber(
+          unawaited(
+            FirebaseAuth.instance.verifyPhoneNumber(
               phoneNumber: 'foo',
               verificationCompleted: (PhoneAuthCredential credential) {
                 return completer
@@ -676,13 +677,16 @@ void runInstanceTests() {
               codeAutoRetrievalTimeout: (String foo) {
                 return completer
                     .completeError(Exception('Should not have been called'));
-              }));
+              },
+            ),
+          );
 
           return completer.future as FutureOr<Exception>;
         }
 
         Exception e = await getError();
         expect(e, isA<FirebaseAuthException>());
+
         FirebaseAuthException exception = e as FirebaseAuthException;
         expect(exception.code, equals('invalid-phone-number'));
       });
