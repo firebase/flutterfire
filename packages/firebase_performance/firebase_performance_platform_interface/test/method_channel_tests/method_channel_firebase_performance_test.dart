@@ -51,7 +51,6 @@ void main() {
       });
 
       performance = MethodChannelFirebasePerformance(app: app);
-      mockPerformance = TestMethodChannelFirebasePerformance(app);
     });
   });
 

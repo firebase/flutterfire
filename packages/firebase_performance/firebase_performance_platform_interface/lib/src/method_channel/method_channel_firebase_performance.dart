@@ -33,7 +33,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
 
   @visibleForTesting
   static void clearState() {
-    //TODO refactor 'handle' system. Don't think MethodChannel needs its own. Keep track on native.
+    //TODO refactor 'handle' system. MethodChannel doesn't needs its own handle.
     _nextHandle = 0;
   }
 

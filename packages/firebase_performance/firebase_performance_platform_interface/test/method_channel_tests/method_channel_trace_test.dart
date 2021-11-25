@@ -93,6 +93,8 @@ void main() {
     group('stop', () {
       test('should call delegate method successfully', () async {
         await trace.start();
+        trace.putAttribute('bar', 'baz');
+        trace.setMetric('yoo', 33);
 
         await trace.stop();
 
@@ -107,8 +109,12 @@ void main() {
           }),
           isMethodCall('Trace#stop', arguments: {
             'handle': kTraceHandle,
-            'metrics': {},
-            'attributes': {},
+            'metrics': {
+              'yoo': 33,
+            },
+            'attributes': {
+              'bar': 'baz',
+            },
           })
         ]);
       });
