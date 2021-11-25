@@ -2,7 +2,6 @@
 
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_web/firebase_performance_web.dart';
-import 'package:firebase_performance_web/src/http_metric.dart';
 import 'package:firebase_performance_web/src/interop/performance.dart';
 import 'package:firebase_performance_web/src/trace.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -43,16 +42,6 @@ void main() {
       verify(mockPerformance.trace(testTraceName)).called(1);
       verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
-    });
-
-    test('newHttpMetric returns a dummy object', () async {
-      HttpMetricPlatform httpMeric = firebasePerformancePlatform.newHttpMetric(
-        'http://test_url',
-        HttpMethod.Get,
-      );
-
-      expect(httpMeric.runtimeType, HttpMetricWeb);
-      verifyNoMoreInteractions(mockPerformance);
     });
   });
   group('TraceWeb', () {
@@ -117,35 +106,6 @@ void main() {
       tracePlatform.getAttributes();
       verify(mockTrace.getAttributes()).called(1);
       verifyNoMoreInteractions(mockTrace);
-    });
-  });
-
-  group('HttpMetricWeb', () {
-    late HttpMetricPlatform httpMetricPlatform;
-
-    setUp(() {
-      httpMetricPlatform = HttpMetricWeb();
-    });
-
-    test('httpResponseCode setter does nothing', () {
-      httpMetricPlatform.httpResponseCode = 404;
-      expect(httpMetricPlatform.httpResponseCode, null);
-    });
-
-    test('requestPayloadSize setter does nothing', () {
-      httpMetricPlatform.requestPayloadSize = 100;
-      expect(httpMetricPlatform.requestPayloadSize, null);
-    });
-
-    test('responsePayloadSize setter does nothing', () {
-      httpMetricPlatform.responsePayloadSize = 100;
-      expect(httpMetricPlatform.responsePayloadSize, null);
-    });
-
-    test('putAttribute does nothing', () {
-      httpMetricPlatform.putAttribute('attribute', 'value');
-      expect(httpMetricPlatform.getAttribute('attribute'), null);
-      expect(httpMetricPlatform.getAttributes(), {});
     });
   });
 }

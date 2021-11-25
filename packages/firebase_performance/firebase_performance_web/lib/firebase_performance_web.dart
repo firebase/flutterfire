@@ -1,9 +1,10 @@
+import 'package:flutter/services.dart';
+
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/trace.dart';
-import 'src/http_metric.dart';
 import 'src/interop/performance.dart' as performance_interop;
 
 /// Web implementation for [FirebasePerformancePlatform]
@@ -52,7 +53,10 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
-    //TODO: this doesn't exist on web, it is just stub methods. Throw exception instead?
-    return HttpMetricWeb();
+    throw PlatformException(
+      code: 'non-existent',
+      message:
+          "Performance Web does not currently support 'HttpMetric' (custom network tracing).",
+    );
   }
 }
