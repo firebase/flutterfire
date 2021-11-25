@@ -4,8 +4,6 @@
 
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
-
 abstract class HttpMetricPlatform extends PlatformInterface {
   HttpMetricPlatform() : super(token: _token);
 

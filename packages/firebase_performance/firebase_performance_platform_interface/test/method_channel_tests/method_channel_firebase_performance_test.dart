@@ -14,7 +14,7 @@ import '../mock.dart';
 
 void main() {
   setupFirebasePerformanceMocks();
-  late TestMethodChannelFirebasePerformance mockPerformance;
+
   late FirebasePerformancePlatform performance;
   late FirebaseApp app;
   final List<MethodCall> log = <MethodCall>[];

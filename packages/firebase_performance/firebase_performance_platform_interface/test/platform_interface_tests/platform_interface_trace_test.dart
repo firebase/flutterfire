@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
-import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_http_metric.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -15,10 +14,9 @@ void main() {
 
   late TestHttpTracePlatform tracePlatform;
 
-  late FirebaseApp app;
   group('$HttpMetricPlatform()', () {
     setUpAll(() async {
-      app = await Firebase.initializeApp();
+      await Firebase.initializeApp();
 
       tracePlatform = TestHttpTracePlatform();
     });
@@ -50,7 +48,8 @@ void main() {
 
   test('throws if incrementMetric()', () {
     expect(() => tracePlatform.incrementMetric('foo', 99),
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if setMetric()', () {
@@ -63,12 +62,14 @@ void main() {
 
   test('throws if putAttribute()', () {
     expect(() => tracePlatform.putAttribute('foo', 'baz'),
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if removeAttribute()', () {
     expect(
-        () => tracePlatform.removeAttribute('bar'), throwsUnimplementedError);
+        () => tracePlatform.removeAttribute('bar'), throwsUnimplementedError,
+    );
   });
 
   test('throws if getAttribute()', () {

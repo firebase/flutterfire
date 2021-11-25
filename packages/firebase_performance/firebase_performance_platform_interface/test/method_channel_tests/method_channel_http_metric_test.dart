@@ -23,10 +23,9 @@ void main() {
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
 
-  late FirebaseApp app;
   group('$FirebasePerformancePlatform()', () {
     setUpAll(() async {
-      app = await Firebase.initializeApp();
+      await Firebase.initializeApp();
 
       handleMethodCall((call) async {
         log.add(call);
@@ -50,7 +49,8 @@ void main() {
 
     setUp(() async {
       httpMetric = TestMethodChannelHttpMetric(
-          kMethodChannelHandle, kHttpMetricHandle, kUrl, kMethod);
+          kMethodChannelHandle, kHttpMetricHandle, kUrl, kMethod,
+      );
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
       log.clear();
@@ -76,10 +76,12 @@ void main() {
             'httpMetricHandle': kHttpMetricHandle,
             'url': kUrl,
             'httpMethod': kMethod.toString(),
-          }),
+          },
+          ),
           isMethodCall('HttpMetric#start', arguments: {
             'handle': kHttpMetricHandle,
-          })
+          },
+          )
         ]);
       });
 
@@ -109,10 +111,12 @@ void main() {
             'httpMetricHandle': kHttpMetricHandle,
             'url': kUrl,
             'httpMethod': kMethod.toString()
-          }),
+          },
+          ),
           isMethodCall('HttpMetric#start', arguments: {
             'handle': kHttpMetricHandle,
-          }),
+          },
+          ),
           isMethodCall('HttpMetric#stop', arguments: {
             'handle': kHttpMetricHandle,
             'attributes': {
@@ -122,7 +126,8 @@ void main() {
             'requestPayloadSize': 28,
             'responseContentType': 'baz',
             'responsePayloadSize': 23,
-          })
+          },
+          )
         ]);
       });
 
@@ -281,6 +286,7 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
   TestMethodChannelHttpMetric(
-      methodChannelHandle, httpMetricHandle, url, method)
+      methodChannelHandle, httpMetricHandle, url, method,
+      )
       : super(methodChannelHandle, httpMetricHandle, url, method);
 }

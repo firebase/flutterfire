@@ -38,9 +38,11 @@ void main() {
 
     test('get.instance', () {
       expect(FirebasePerformancePlatform.instance,
-          isA<FirebasePerformancePlatform>());
+          isA<FirebasePerformancePlatform>(),
+      );
       expect(FirebasePerformancePlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+          equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
@@ -49,9 +51,11 @@ void main() {
             TestFirebasePerformancePlatform(app);
 
         expect(FirebasePerformancePlatform.instance,
-            isA<FirebasePerformancePlatform>());
+            isA<FirebasePerformancePlatform>(),
+        );
         expect(
-            FirebasePerformancePlatform.instance.app.name, equals('[DEFAULT]'));
+            FirebasePerformancePlatform.instance.app.name, equals('[DEFAULT]'),
+        );
       });
     });
 
@@ -65,6 +69,7 @@ void main() {
 
     test('throws if .delegateFor', () {
       expect(
+        // ignore: invalid_use_of_protected_member
         () => firebasePerformancePlatform.delegateFor(app: app),
         throwsUnimplementedError,
       );

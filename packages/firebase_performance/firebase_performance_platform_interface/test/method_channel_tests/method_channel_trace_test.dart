@@ -22,10 +22,10 @@ void main() {
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
 
-  late FirebaseApp app;
+
   group('$FirebasePerformancePlatform()', () {
     setUpAll(() async {
-      app = await Firebase.initializeApp();
+      await Firebase.initializeApp();
 
       handleMethodCall((call) async {
         log.add(call);
@@ -72,10 +72,12 @@ void main() {
             'handle': kMethodHandle,
             'traceHandle': kTraceHandle,
             'name': kName
-          }),
+          },
+          ),
           isMethodCall('Trace#start', arguments: {
             'handle': kTraceHandle,
-          })
+          },
+          )
         ]);
       });
 
@@ -101,10 +103,12 @@ void main() {
             'handle': kMethodHandle,
             'traceHandle': kTraceHandle,
             'name': kName
-          }),
+          },
+          ),
           isMethodCall('Trace#start', arguments: {
             'handle': kTraceHandle,
-          }),
+          },
+          ),
           isMethodCall('Trace#stop', arguments: {
             'handle': kTraceHandle,
             'metrics': {
@@ -113,7 +117,8 @@ void main() {
             'attributes': {
               'bar': 'baz',
             },
-          })
+          },
+          )
         ]);
       });
 
@@ -145,10 +150,12 @@ void main() {
             'handle': kMethodHandle,
             'traceHandle': kTraceHandle,
             'name': kName
-          }),
+          },
+          ),
           isMethodCall('Trace#start', arguments: {
             'handle': kTraceHandle,
-          }),
+          },
+          ),
         ]);
 
         expect(trace.getMetric(metricName), metricValue);
@@ -167,10 +174,12 @@ void main() {
             'handle': kMethodHandle,
             'traceHandle': kTraceHandle,
             'name': kName
-          }),
+          },
+          ),
           isMethodCall('Trace#start', arguments: {
             'handle': kTraceHandle,
-          }),
+          },
+          ),
         ]);
 
         expect(trace.getMetric(metricName), metricValue);
@@ -189,10 +198,12 @@ void main() {
             'handle': kMethodHandle,
             'traceHandle': kTraceHandle,
             'name': kName
-          }),
+          },
+          ),
           isMethodCall('Trace#start', arguments: {
             'handle': kTraceHandle,
-          }),
+          },
+          ),
         ]);
 
         expect(trace.getMetric(metricName), metricValue);

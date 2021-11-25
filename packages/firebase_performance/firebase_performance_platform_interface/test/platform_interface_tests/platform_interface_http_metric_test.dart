@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
-import 'package:firebase_performance_platform_interface/src/method_channel/method_channel_http_metric.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -15,10 +14,9 @@ void main() {
 
   late TestHttpMetricPlatform httpMetricPlatform;
 
-  late FirebaseApp app;
   group('$HttpMetricPlatform()', () {
     setUpAll(() async {
-      app = await Firebase.initializeApp();
+      await Firebase.initializeApp();
 
       httpMetricPlatform = TestHttpMetricPlatform();
     });
@@ -46,37 +44,44 @@ void main() {
 
   test('throws if get requestPayloadSize', () {
     expect(
-        () => httpMetricPlatform.requestPayloadSize, throwsUnimplementedError);
+        () => httpMetricPlatform.requestPayloadSize, throwsUnimplementedError,
+    );
   });
 
   test('throws if get responseContentType', () {
     expect(
-        () => httpMetricPlatform.responseContentType, throwsUnimplementedError);
+        () => httpMetricPlatform.responseContentType, throwsUnimplementedError,
+    );
   });
 
   test('throws if get responsePayloadSize', () {
     expect(
-        () => httpMetricPlatform.responsePayloadSize, throwsUnimplementedError);
+        () => httpMetricPlatform.responsePayloadSize, throwsUnimplementedError,
+    );
   });
 
   test('throws if set httpResponseCode', () {
     expect(() => httpMetricPlatform.httpResponseCode = 4,
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if set requestPayloadSize', () {
     expect(() => httpMetricPlatform.requestPayloadSize = 4,
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if set responsePayloadSize', () {
     expect(() => httpMetricPlatform.responsePayloadSize = 4,
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if set responseContentType', () {
     expect(() => httpMetricPlatform.responseContentType = 'foo',
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if start()', () {
@@ -89,17 +94,20 @@ void main() {
 
   test('throws if putAttribute()', () {
     expect(() => httpMetricPlatform.putAttribute('foo', 'baz'),
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if removeAttribute()', () {
     expect(() => httpMetricPlatform.removeAttribute('bar'),
-        throwsUnimplementedError);
+        throwsUnimplementedError,
+    );
   });
 
   test('throws if getAttribute()', () {
     expect(
-        () => httpMetricPlatform.getAttribute('bar'), throwsUnimplementedError);
+        () => httpMetricPlatform.getAttribute('bar'), throwsUnimplementedError,
+    );
   });
 
   test('throws if getAttributes()', () {

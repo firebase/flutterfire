@@ -35,8 +35,7 @@ void main() {
       final MockTrace mockTrace = MockTrace();
       when(mockPerformance.trace(testTraceName)).thenReturn(mockTrace);
 
-      TracePlatform trace =
-          await firebasePerformancePlatform.newTrace(testTraceName);
+      TracePlatform trace = firebasePerformancePlatform.newTrace(testTraceName);
 
       expect(trace.runtimeType, TraceWeb);
       trace = trace as TraceWeb;
@@ -47,8 +46,7 @@ void main() {
     });
 
     test('newHttpMetric returns a dummy object', () async {
-      HttpMetricPlatform httpMeric =
-          await firebasePerformancePlatform.newHttpMetric(
+      HttpMetricPlatform httpMeric = firebasePerformancePlatform.newHttpMetric(
         'http://test_url',
         HttpMethod.Get,
       );
@@ -60,7 +58,6 @@ void main() {
   group('TraceWeb', () {
     late TracePlatform tracePlatform;
     late MockTrace mockTrace;
-    late String testTraceName = 'test_trace';
 
     setUp(() {
       mockTrace = MockTrace();
