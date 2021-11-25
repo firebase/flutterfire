@@ -40,9 +40,10 @@
   NSString *responseContentType = call.arguments[@"responseContentType"];
   NSNumber *responsePayloadSize = call.arguments[@"responsePayloadSize"];
 
-  [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
-    [_metric setValue:value forAttribute:attributeName];
-  }];
+  [attributes
+      enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
+        [_metric setValue:value forAttribute:attributeName];
+      }];
 
   if (httpResponseCode != nil) {
     _metric.responseCode = [httpResponseCode integerValue];

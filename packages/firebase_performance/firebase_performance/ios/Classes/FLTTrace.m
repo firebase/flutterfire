@@ -36,15 +36,16 @@
 - (void)stop:(FlutterMethodCall *)call result:(FlutterResult)result {
   NSDictionary *metrics = call.arguments[@"metrics"];
   NSDictionary *attributes = call.arguments[@"attributes"];
-  
+
   [metrics enumerateKeysAndObjectsUsingBlock:^(NSString *metricName, NSNumber *value, BOOL *stop) {
     [_trace setIntValue:[value longLongValue] forMetric:metricName];
- }];
+  }];
 
- [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
-   [_trace setValue:value forAttribute:attributeName];
- }];
-  
+  [attributes
+      enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
+        [_trace setValue:value forAttribute:attributeName];
+      }];
+
   [_trace stop];
 
   NSNumber *handle = call.arguments[@"handle"];

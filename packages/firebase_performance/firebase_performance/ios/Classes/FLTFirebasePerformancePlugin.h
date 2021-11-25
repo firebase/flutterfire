@@ -3,8 +3,8 @@
 // found in the LICENSE file.
 
 #import <Firebase/Firebase.h>
-#import <TargetConditionals.h>
 #import <Flutter/Flutter.h>
+#import <TargetConditionals.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @interface FLTFirebasePerformancePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
