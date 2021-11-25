@@ -43,7 +43,7 @@ class _MetricHttpClient extends BaseClient {
         'Called ${request.url} with custom monitoring, response code: ${response.statusCode}',
       );
 
-      metric.responseContentType = response.headers['Content-Type'];
+      metric.responseContentType = 'text/html';
       metric.httpResponseCode = response.statusCode;
       metric.responsePayloadSize = response.contentLength;
 
@@ -105,9 +105,8 @@ class _MyAppState extends State<MyApp> {
     trace.putAttribute('favorite_color', 'blue');
     trace.putAttribute('to_be_removed', 'should_not_be_logged');
 
-    for (int i = 0; i < 10; i++) {
-      trace.incrementMetric('sum', i);
-    }
+    trace.incrementMetric('sum', 200);
+    trace.incrementMetric('total', 342);
 
     trace.removeAttribute('to_be_removed');
     await trace.stop();
@@ -133,12 +132,8 @@ class _MyAppState extends State<MyApp> {
 
     final Trace trace = await FirebasePerformance.startTrace('test_trace_2');
 
-    int sum = 0;
-    for (int i = 0; i < 10000000; i++) {
-      sum += i;
-    }
-    // Trace.setMetric is no-op for web
-    trace.setMetric('sum', sum);
+    trace.setMetric('sum', 333);
+    trace.setMetric('sum_2', 895);
     await trace.stop();
 
     final sum2 = trace.getMetric('sum');
