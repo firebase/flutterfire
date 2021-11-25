@@ -33,7 +33,7 @@ class _MetricHttpClient extends BaseClient {
     final HttpMetric metric = FirebasePerformance.instance
         .newHttpMetric(request.url.toString(), HttpMethod.Get);
 
-    await metric.setRequestPayloadSize(request.contentLength);
+    metric.requestPayloadSize = request.contentLength;
     await metric.start();
 
     StreamedResponse response;
@@ -43,14 +43,14 @@ class _MetricHttpClient extends BaseClient {
         'Called ${request.url} with custom monitoring, response code: ${response.statusCode}',
       );
 
-      await metric.setResponseContentType(response.headers['Content-Type']);
-      await metric.setHttpResponseCode(response.statusCode);
-      await metric.setResponsePayloadSize(response.contentLength);
+      metric.responseContentType = response.headers['Content-Type'];
+      metric.httpResponseCode = response.statusCode;
+      metric.responsePayloadSize = response.contentLength;
 
-      await metric.putAttribute('score', '15');
-      await metric.putAttribute('to_be_removed', 'should_not_be_logged');
+      metric.putAttribute('score', '15');
+      metric.putAttribute('to_be_removed', 'should_not_be_logged');
     } finally {
-      await metric.removeAttribute('to_be_removed');
+      metric.removeAttribute('to_be_removed');
       await metric.stop();
     }
 
