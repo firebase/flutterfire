@@ -23,13 +23,13 @@ class TraceWeb extends TracePlatform {
   }
 
   @override
-  Future<void> incrementMetric(String name, int value) async {
-    await guard(() => traceDelegate.incrementMetric(name, value));
+  void incrementMetric(String name, int value) {
+    traceDelegate.incrementMetric(name, value);
   }
 
   @override
-  Future<void> setMetric(String name, int value) async {
-    await guard(() => traceDelegate.putMetric(name, value));
+  void setMetric(String name, int value) {
+    traceDelegate.putMetric(name, value);
   }
 
   @override
@@ -38,13 +38,13 @@ class TraceWeb extends TracePlatform {
   }
 
   @override
-  Future<void> putAttribute(String name, String value) async {
-    await guard(() => traceDelegate.putAttribute(name, value));
+  void putAttribute(String name, String value) {
+    traceDelegate.putAttribute(name, value);
   }
 
   @override
-  Future<void> removeAttribute(String name) async {
-    await guard(() => traceDelegate.removeAttribute(name));
+  void removeAttribute(String name) {
+    traceDelegate.removeAttribute(name);
   }
 
   @override

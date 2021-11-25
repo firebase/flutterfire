@@ -6,7 +6,6 @@
 
 NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/firebase_performance";
 
-
 @implementation FLTFirebasePerformancePlugin
 static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 
@@ -61,7 +60,7 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  if(completion != nil){
+  if (completion != nil) {
     completion();
   }
 }

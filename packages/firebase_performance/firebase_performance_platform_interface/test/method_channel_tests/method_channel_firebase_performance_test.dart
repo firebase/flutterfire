@@ -81,8 +81,8 @@ void main() {
   });
 
   group('isPerformanceCollectionEnabled', () {
-    test('should call delegate method successfully', () {
-      performance.isPerformanceCollectionEnabled();
+    test('should call delegate method successfully', () async {
+      await performance.isPerformanceCollectionEnabled();
 
       expect(log, <Matcher>[
         isMethodCall(
@@ -105,8 +105,8 @@ void main() {
   });
 
   group('setPerformanceCollectionEnabled', () {
-    test('should call delegate method successfully', () {
-      performance.setPerformanceCollectionEnabled(true);
+    test('should call delegate method successfully', () async {
+      await performance.setPerformanceCollectionEnabled(true);
 
       expect(log, <Matcher>[
         isMethodCall(

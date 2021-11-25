@@ -177,7 +177,7 @@ void main() {
 
 class MockFirebasePerformance extends Mock
     with MockPlatformInterfaceMixin
-    implements FirebasePerformancePlatform {
+    implements TestFirebasePerformancePlatform {
   MockFirebasePerformance() {
     TestFirebasePerformancePlatform();
   }

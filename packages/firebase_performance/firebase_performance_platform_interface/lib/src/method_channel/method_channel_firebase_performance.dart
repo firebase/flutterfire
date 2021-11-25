@@ -53,7 +53,6 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
     try {
       final isPerformanceCollectionEnabled = await channel.invokeMethod<bool>(
         'FirebasePerformance#isPerformanceCollectionEnabled',
-        //todo is handle needed here?
         <String, Object?>{'handle': _handle},
       );
       return isPerformanceCollectionEnabled!;
