@@ -1,6 +1,3 @@
-// ignore_for_file: require_trailing_commas
-// @dart=2.9
-
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 import 'dart:typed_data';
@@ -11,14 +8,14 @@ Element _ensureInitialized(String id) {
   if (target == null) {
     final Element targetElement = Element.tag('flt-x-file')..id = id;
 
-    querySelector('body').children.add(targetElement);
+    querySelector('body')?.children.add(targetElement);
     target = targetElement;
   }
   return target;
 }
 
 AnchorElement _createAnchorElement(String href, String suggestedName) {
-  return AnchorElement(href: href)..download = suggestedName ?? 'download';
+  return AnchorElement(href: href)..download = suggestedName;
 }
 
 /// Add an element to a container and click it

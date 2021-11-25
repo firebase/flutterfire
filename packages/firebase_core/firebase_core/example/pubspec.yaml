@@ -2,7 +2,7 @@ name: firebase_core_example
 description: Demonstrates how to use the firebase_core plugin.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   firebase_core:
@@ -17,7 +17,7 @@ dependency_overrides:
     path: ../../firebase_core_web
 
 dev_dependencies:
-  e2e: ^0.6.1
+  drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
   flutter_test:
