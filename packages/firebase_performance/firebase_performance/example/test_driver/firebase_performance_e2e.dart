@@ -209,7 +209,7 @@ void testsMain() {
       testHttpMetric.responseContentType = 'content';
       expect(testHttpMetric.responseContentType, equals('content'));
     });
-  });
+  }, skip: kIsWeb);
 }
 
 void main() => drive.main(testsMain);
