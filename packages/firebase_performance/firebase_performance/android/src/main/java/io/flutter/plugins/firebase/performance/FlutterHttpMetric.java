@@ -42,7 +42,7 @@ class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
   private void stop(MethodCall call, MethodChannel.Result result) {
     final Map<String, Object> attributes = Objects.requireNonNull((call.argument("attributes")));
     final Integer httpResponseCode = call.argument("httpResponseCode");
-    final Long requestPayloadSize = call.argument("requestPayloadSize");
+    final Integer requestPayloadSize = call.argument("requestPayloadSize");
     final String responseContentType = call.argument("responseContentType");
     final Integer responsePayloadSize = call.argument("responsePayloadSize");
 
