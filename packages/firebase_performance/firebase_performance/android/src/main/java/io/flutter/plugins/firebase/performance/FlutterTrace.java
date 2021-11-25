@@ -28,24 +28,6 @@ class FlutterTrace implements MethodChannel.MethodCallHandler {
       case "Trace#stop":
         stop(call, result);
         break;
-      case "Trace#setMetric":
-        setMetric(call, result);
-        break;
-      case "Trace#incrementMetric":
-        incrementMetric(call, result);
-        break;
-      case "Trace#getMetric":
-        getMetric(call, result);
-        break;
-      case "Trace#putAttribute":
-        putAttribute(call, result);
-        break;
-      case "Trace#removeAttribute":
-        removeAttribute(call, result);
-        break;
-      case "Trace#getAttributes":
-        getAttributes(result);
-        break;
       default:
         result.notImplemented();
     }
@@ -79,52 +61,5 @@ class FlutterTrace implements MethodChannel.MethodCallHandler {
     plugin.removeHandler(handle);
 
     result.success(null);
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void setMetric(MethodCall call, MethodChannel.Result result) {
-    final String name = call.argument("name");
-    final Number value = call.argument("value");
-    trace.putMetric(name, value.longValue());
-
-    result.success(null);
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void incrementMetric(MethodCall call, MethodChannel.Result result) {
-    final String name = call.argument("name");
-    final Number value = call.argument("value");
-    trace.incrementMetric(name, value.longValue());
-
-    result.success(null);
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void getMetric(MethodCall call, MethodChannel.Result result) {
-    final String name = call.argument("name");
-
-    result.success(trace.getLongMetric(name));
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void putAttribute(MethodCall call, MethodChannel.Result result) {
-    final String name = call.argument("name");
-    final String value = call.argument("value");
-
-    trace.putAttribute(name, value);
-
-    result.success(null);
-  }
-
-  @SuppressWarnings("ConstantConditions")
-  private void removeAttribute(MethodCall call, MethodChannel.Result result) {
-    final String name = call.argument("name");
-    trace.removeAttribute(name);
-
-    result.success(null);
-  }
-
-  private void getAttributes(MethodChannel.Result result) {
-    result.success(trace.getAttributes());
   }
 }
