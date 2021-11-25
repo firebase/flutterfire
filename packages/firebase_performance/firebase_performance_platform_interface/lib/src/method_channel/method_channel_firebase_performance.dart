@@ -43,6 +43,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
     return MethodChannelFirebasePerformance._();
   }
 
+  /// Instances are cached and reused for incoming event handlers.
   @override
   FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
     return MethodChannelFirebasePerformance(app: app);

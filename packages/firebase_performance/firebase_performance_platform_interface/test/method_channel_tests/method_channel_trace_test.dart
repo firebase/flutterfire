@@ -22,7 +22,6 @@ void main() {
   bool mockPlatformExceptionThrown = false;
   bool mockExceptionThrown = false;
 
-
   group('$FirebasePerformancePlatform()', () {
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -68,15 +67,19 @@ void main() {
         await trace.start();
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kMethodHandle,
-            'traceHandle': kTraceHandle,
-            'name': kName
-          },
+          isMethodCall(
+            'FirebasePerformance#newTrace',
+            arguments: {
+              'handle': kMethodHandle,
+              'traceHandle': kTraceHandle,
+              'name': kName
+            },
           ),
-          isMethodCall('Trace#start', arguments: {
-            'handle': kTraceHandle,
-          },
+          isMethodCall(
+            'Trace#start',
+            arguments: {
+              'handle': kTraceHandle,
+            },
           )
         ]);
       });
@@ -99,25 +102,31 @@ void main() {
         await trace.stop();
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kMethodHandle,
-            'traceHandle': kTraceHandle,
-            'name': kName
-          },
-          ),
-          isMethodCall('Trace#start', arguments: {
-            'handle': kTraceHandle,
-          },
-          ),
-          isMethodCall('Trace#stop', arguments: {
-            'handle': kTraceHandle,
-            'metrics': {
-              'yoo': 33,
+          isMethodCall(
+            'FirebasePerformance#newTrace',
+            arguments: {
+              'handle': kMethodHandle,
+              'traceHandle': kTraceHandle,
+              'name': kName
             },
-            'attributes': {
-              'bar': 'baz',
+          ),
+          isMethodCall(
+            'Trace#start',
+            arguments: {
+              'handle': kTraceHandle,
             },
-          },
+          ),
+          isMethodCall(
+            'Trace#stop',
+            arguments: {
+              'handle': kTraceHandle,
+              'metrics': {
+                'yoo': 33,
+              },
+              'attributes': {
+                'bar': 'baz',
+              },
+            },
           )
         ]);
       });
@@ -146,15 +155,19 @@ void main() {
         trace.incrementMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kMethodHandle,
-            'traceHandle': kTraceHandle,
-            'name': kName
-          },
+          isMethodCall(
+            'FirebasePerformance#newTrace',
+            arguments: {
+              'handle': kMethodHandle,
+              'traceHandle': kTraceHandle,
+              'name': kName
+            },
           ),
-          isMethodCall('Trace#start', arguments: {
-            'handle': kTraceHandle,
-          },
+          isMethodCall(
+            'Trace#start',
+            arguments: {
+              'handle': kTraceHandle,
+            },
           ),
         ]);
 
@@ -170,15 +183,19 @@ void main() {
         trace.setMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kMethodHandle,
-            'traceHandle': kTraceHandle,
-            'name': kName
-          },
+          isMethodCall(
+            'FirebasePerformance#newTrace',
+            arguments: {
+              'handle': kMethodHandle,
+              'traceHandle': kTraceHandle,
+              'name': kName
+            },
           ),
-          isMethodCall('Trace#start', arguments: {
-            'handle': kTraceHandle,
-          },
+          isMethodCall(
+            'Trace#start',
+            arguments: {
+              'handle': kTraceHandle,
+            },
           ),
         ]);
 
@@ -194,15 +211,19 @@ void main() {
         trace.setMetric(metricName, metricValue);
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newTrace', arguments: {
-            'handle': kMethodHandle,
-            'traceHandle': kTraceHandle,
-            'name': kName
-          },
+          isMethodCall(
+            'FirebasePerformance#newTrace',
+            arguments: {
+              'handle': kMethodHandle,
+              'traceHandle': kTraceHandle,
+              'name': kName
+            },
           ),
-          isMethodCall('Trace#start', arguments: {
-            'handle': kTraceHandle,
-          },
+          isMethodCall(
+            'Trace#start',
+            arguments: {
+              'handle': kTraceHandle,
+            },
           ),
         ]);
 

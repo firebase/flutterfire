@@ -37,11 +37,13 @@ void main() {
     });
 
     test('get.instance', () {
-      expect(FirebasePerformancePlatform.instance,
-          isA<FirebasePerformancePlatform>(),
+      expect(
+        FirebasePerformancePlatform.instance,
+        isA<FirebasePerformancePlatform>(),
       );
-      expect(FirebasePerformancePlatform.instance.app.name,
-          equals(defaultFirebaseAppName),
+      expect(
+        FirebasePerformancePlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
       );
     });
 
@@ -50,11 +52,13 @@ void main() {
         FirebasePerformancePlatform.instance =
             TestFirebasePerformancePlatform(app);
 
-        expect(FirebasePerformancePlatform.instance,
-            isA<FirebasePerformancePlatform>(),
+        expect(
+          FirebasePerformancePlatform.instance,
+          isA<FirebasePerformancePlatform>(),
         );
         expect(
-            FirebasePerformancePlatform.instance.app.name, equals('[DEFAULT]'),
+          FirebasePerformancePlatform.instance.app.name,
+          equals('[DEFAULT]'),
         );
       });
     });

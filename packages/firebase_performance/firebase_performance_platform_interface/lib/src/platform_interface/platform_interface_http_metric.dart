@@ -43,42 +43,52 @@ abstract class HttpMetricPlatform extends PlatformInterface {
     throw UnimplementedError('get responsePayloadSize is not implemented');
   }
 
+  /// Sets the httpResponse code of the request
   set httpResponseCode(int? httpResponseCode) {
     throw UnimplementedError('set httpResponseCode() is not implemented');
   }
 
+  /// Sets the size of the request payload
   set requestPayloadSize(int? requestPayloadSize) {
     throw UnimplementedError('set requestPayloadSize() is not implemented');
   }
 
+  /// Sets the size of the response payload
   set responsePayloadSize(int? responsePayloadSize) {
     throw UnimplementedError('set responsePayload() is not implemented');
   }
 
+  /// Content type of the response such as text/html, application/json, etc..
   set responseContentType(String? responseContentType) {
     throw UnimplementedError('set responseContentType() is not implemented');
   }
 
+  /// Marks the start time of the request
   Future<void> start() {
     throw UnimplementedError('start() is not implemented');
   }
 
+  /// Marks the end time of the response and queues the network request metric on the device for transmission.
   Future<void> stop() {
     throw UnimplementedError('stop() is not implemented');
   }
 
+  /// Sets a value as a string for the specified attribute. Updates the value of the attribute if a value had already existed.
   void putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
   }
 
+  /// Removes an attribute from the list. Does nothing if the attribute does not exist.
   void removeAttribute(String name) {
     throw UnimplementedError('removeAttribute() is not implemented');
   }
 
+  /// Returns the value of an attribute.
   String? getAttribute(String name) {
     throw UnimplementedError('getAttribute() is not implemented');
   }
 
+  /// Returns the map of all the attributes added to this HttpMetric.
   Map<String, String> getAttributes() {
     throw UnimplementedError('getAttributes() is not implemented');
   }

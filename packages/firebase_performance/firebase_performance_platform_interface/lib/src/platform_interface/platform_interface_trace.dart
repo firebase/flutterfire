@@ -24,39 +24,47 @@ abstract class TracePlatform extends PlatformInterface {
   /// Maximum allowed number of attributes that can be added.
   static const int maxCustomAttributes = 5;
 
+  /// Starts this trace.
   Future<void> start() {
     throw UnimplementedError('start() is not implemented');
   }
 
+  /// Stops this trace.
   Future<void> stop() {
     throw UnimplementedError('stop() is not implemented');
   }
 
+  /// increments the metric with the given name in this trace by the value.
   void incrementMetric(String name, int value) {
     throw UnimplementedError('incrementMetric() is not implemented');
   }
 
-  /// Only works for native apps. Does nothing for web apps.
+  /// Sets the value of the metric with the given name in this trace to the value provided
   void setMetric(String name, int value) {
     throw UnimplementedError('setMetric() is not implemented');
   }
 
+  /// Gets the value of the metric with the given name in the current trace.
   int getMetric(String name) {
     throw UnimplementedError('getMetric() is not implemented');
   }
 
+  /// Sets a String value for the specified attribute.
   void putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
   }
 
+  /// Removes an already added attribute from the Traces.
   void removeAttribute(String name) {
     throw UnimplementedError('removeAttribute() is not implemented');
   }
 
+  /// Returns the value of an attribute.
   String? getAttribute(String name) {
     throw UnimplementedError('getAttribute() is not implemented');
   }
 
+  /// Returns the map of all the attributes added to this trace.
   Map<String, String> getAttributes() {
     throw UnimplementedError('getAttributes() is not implemented');
   }

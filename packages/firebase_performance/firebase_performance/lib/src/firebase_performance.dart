@@ -27,6 +27,10 @@ class FirebasePerformance extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current [FirebaseMessaging] instance.
   FirebaseApp app;
 
+  /// Returns the underlying delegate implementation.
+  ///
+  /// If called and no [_delegatePackingProperty] exists, it will first be
+  /// created and assigned before returning the delegate.
   FirebasePerformancePlatform get _delegate {
     return _delegatePackingProperty ??= FirebasePerformancePlatform.instanceFor(
       app: app,
@@ -58,7 +62,10 @@ class FirebasePerformance extends FirebasePluginPlatform {
     return _delegate.setPerformanceCollectionEnabled(enabled);
   }
 
-  /// Creates a [Trace] object with given [name].
+  /// Creates a [Trace] object with given [name]. Traces can be used to measure
+  /// the time taken for a sequence of steps. Traces also include “Counters”.
+  /// Counters are used to track information which is cumulative in nature
+  /// (e.g., Bytes downloaded).
   ///
   /// The [name] requires no leading or trailing whitespace, no leading
   /// underscore _ character, and max length of [Trace.maxTraceNameLength]
@@ -67,7 +74,9 @@ class FirebasePerformance extends FirebasePluginPlatform {
     return Trace._(_delegate.newTrace(name));
   }
 
-  /// Creates [HttpMetric] for collecting performance for one request/response.
+  /// Creates a HttpMetric object for collecting network performance data for one
+  /// request/response. Only works for native apps. A stub class is created for web
+  /// which does nothing
   HttpMetric newHttpMetric(String url, HttpMethod httpMethod) {
     return HttpMetric._(_delegate.newHttpMetric(url, httpMethod));
   }

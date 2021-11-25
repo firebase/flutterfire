@@ -47,8 +47,9 @@ void main() {
   });
 
   test('throws if incrementMetric()', () {
-    expect(() => tracePlatform.incrementMetric('foo', 99),
-        throwsUnimplementedError,
+    expect(
+      () => tracePlatform.incrementMetric('foo', 99),
+      throwsUnimplementedError,
     );
   });
 
@@ -61,14 +62,16 @@ void main() {
   });
 
   test('throws if putAttribute()', () {
-    expect(() => tracePlatform.putAttribute('foo', 'baz'),
-        throwsUnimplementedError,
+    expect(
+      () => tracePlatform.putAttribute('foo', 'baz'),
+      throwsUnimplementedError,
     );
   });
 
   test('throws if removeAttribute()', () {
     expect(
-        () => tracePlatform.removeAttribute('bar'), throwsUnimplementedError,
+      () => tracePlatform.removeAttribute('bar'),
+      throwsUnimplementedError,
     );
   });
 

@@ -49,7 +49,10 @@ void main() {
 
     setUp(() async {
       httpMetric = TestMethodChannelHttpMetric(
-          kMethodChannelHandle, kHttpMetricHandle, kUrl, kMethod,
+        kMethodChannelHandle,
+        kHttpMetricHandle,
+        kUrl,
+        kMethod,
       );
       mockPlatformExceptionThrown = false;
       mockExceptionThrown = false;
@@ -71,16 +74,20 @@ void main() {
         await httpMetric.start();
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newHttpMetric', arguments: {
-            'handle': kMethodChannelHandle,
-            'httpMetricHandle': kHttpMetricHandle,
-            'url': kUrl,
-            'httpMethod': kMethod.toString(),
-          },
+          isMethodCall(
+            'FirebasePerformance#newHttpMetric',
+            arguments: {
+              'handle': kMethodChannelHandle,
+              'httpMetricHandle': kHttpMetricHandle,
+              'url': kUrl,
+              'httpMethod': kMethod.toString(),
+            },
           ),
-          isMethodCall('HttpMetric#start', arguments: {
-            'handle': kHttpMetricHandle,
-          },
+          isMethodCall(
+            'HttpMetric#start',
+            arguments: {
+              'handle': kHttpMetricHandle,
+            },
           )
         ]);
       });
@@ -106,27 +113,33 @@ void main() {
         await httpMetric.stop();
 
         expect(log, <Matcher>[
-          isMethodCall('FirebasePerformance#newHttpMetric', arguments: {
-            'handle': kMethodChannelHandle,
-            'httpMetricHandle': kHttpMetricHandle,
-            'url': kUrl,
-            'httpMethod': kMethod.toString()
-          },
-          ),
-          isMethodCall('HttpMetric#start', arguments: {
-            'handle': kHttpMetricHandle,
-          },
-          ),
-          isMethodCall('HttpMetric#stop', arguments: {
-            'handle': kHttpMetricHandle,
-            'attributes': {
-              'foo': 'bar',
+          isMethodCall(
+            'FirebasePerformance#newHttpMetric',
+            arguments: {
+              'handle': kMethodChannelHandle,
+              'httpMetricHandle': kHttpMetricHandle,
+              'url': kUrl,
+              'httpMethod': kMethod.toString()
             },
-            'httpResponseCode': 2,
-            'requestPayloadSize': 28,
-            'responseContentType': 'baz',
-            'responsePayloadSize': 23,
-          },
+          ),
+          isMethodCall(
+            'HttpMetric#start',
+            arguments: {
+              'handle': kHttpMetricHandle,
+            },
+          ),
+          isMethodCall(
+            'HttpMetric#stop',
+            arguments: {
+              'handle': kHttpMetricHandle,
+              'attributes': {
+                'foo': 'bar',
+              },
+              'httpResponseCode': 2,
+              'requestPayloadSize': 28,
+              'responseContentType': 'baz',
+              'responsePayloadSize': 23,
+            },
           )
         ]);
       });
@@ -286,7 +299,9 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 
 class TestMethodChannelHttpMetric extends MethodChannelHttpMetric {
   TestMethodChannelHttpMetric(
-      methodChannelHandle, httpMetricHandle, url, method,
-      )
-      : super(methodChannelHandle, httpMetricHandle, url, method);
+    methodChannelHandle,
+    httpMetricHandle,
+    url,
+    method,
+  ) : super(methodChannelHandle, httpMetricHandle, url, method);
 }

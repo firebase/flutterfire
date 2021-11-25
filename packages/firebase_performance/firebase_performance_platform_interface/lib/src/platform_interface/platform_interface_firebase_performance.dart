@@ -87,13 +87,17 @@ abstract class FirebasePerformancePlatform extends PlatformInterface {
     );
   }
 
-  /// Creates a Trace object with given name.
+  /// Creates a Trace object with given name. Traces can be used to measure
+  /// the time taken for a sequence of steps. Traces also include “Counters”.
+  /// Counters are used to track information which is cumulative in nature
+  /// (e.g., Bytes downloaded).
   TracePlatform newTrace(String name) {
     throw UnimplementedError('newTrace() is not implemented');
   }
 
   /// Creates a HttpMetric object for collecting network performance data for one
-  /// request/response. Only works for native apps. Does nothing for web apps.
+  /// request/response. Only works for native apps. A stub class is created for web
+  /// which does nothing.
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     throw UnimplementedError('newHttpMetric() is not implemented');
   }
