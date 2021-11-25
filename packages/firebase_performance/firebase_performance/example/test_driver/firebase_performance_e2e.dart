@@ -124,92 +124,94 @@ void testsMain() {
     });
   });
 
-  group('$HttpMetric', () {
-    late FirebasePerformance performance;
-    late HttpMetric testHttpMetric;
+  group(
+    '$HttpMetric',
+    () {
+      late FirebasePerformance performance;
+      late HttpMetric testHttpMetric;
 
-    setUpAll(() async {
-      performance = FirebasePerformance.instance;
-      await performance.setPerformanceCollectionEnabled(true);
-    });
-
-    setUp(() async {
-      testHttpMetric = performance.newHttpMetric(
-        'https://www.google.com/',
-        HttpMethod.Delete,
-      );
-    });
-
-    tearDown(() {
-      testHttpMetric.stop();
-    });
-
-    test('test all Http method values', () async {
-      FirebasePerformance performance = FirebasePerformance.instance;
-
-      await Future.forEach(HttpMethod.values, (HttpMethod method) async {
-        final HttpMetric testMetric = performance.newHttpMetric(
-          'https://www.google.com/',
-          method,
-        );
-        await testMetric.start();
-        await testMetric.stop();
+      setUpAll(() async {
+        performance = FirebasePerformance.instance;
+        await performance.setPerformanceCollectionEnabled(true);
       });
-    });
 
-    test('putAttribute works correctly', () {
-      testHttpMetric.putAttribute('apple', 'sauce');
-      testHttpMetric.putAttribute('banana', 'pie');
+      setUp(() async {
+        testHttpMetric = performance.newHttpMetric(
+          'https://www.google.com/',
+          HttpMethod.Delete,
+        );
+      });
 
-      expect(
-        testHttpMetric.getAttributes(),
-        <String, String>{'apple': 'sauce', 'banana': 'pie'},
-      );
-    });
+      tearDown(() {
+        testHttpMetric.stop();
+      });
 
-    test('removeAttribute works correctly', () {
-      testHttpMetric.putAttribute('sponge', 'bob');
-      testHttpMetric.putAttribute('patrick', 'star');
-      testHttpMetric.removeAttribute('sponge');
+      test('test all Http method values', () async {
+        FirebasePerformance performance = FirebasePerformance.instance;
 
-      expect(
-        testHttpMetric.getAttributes(),
-        <String, String>{'patrick': 'star'},
-      );
+        await Future.forEach(HttpMethod.values, (HttpMethod method) async {
+          final HttpMetric testMetric = performance.newHttpMetric(
+            'https://www.google.com/',
+            method,
+          );
+          await testMetric.start();
+          await testMetric.stop();
+        });
+      });
 
-      testHttpMetric.removeAttribute('sponge');
-      expect(
-        testHttpMetric.getAttributes(),
-        <String, String>{'patrick': 'star'},
-      );
-    });
+      test('putAttribute works correctly', () {
+        testHttpMetric.putAttribute('apple', 'sauce');
+        testHttpMetric.putAttribute('banana', 'pie');
 
-    test('getAttribute works correctly', () {
-      testHttpMetric.putAttribute('yugi', 'oh');
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'apple': 'sauce', 'banana': 'pie'},
+        );
+      });
 
-      expect(testHttpMetric.getAttribute('yugi'), equals('oh'));
-    });
+      test('removeAttribute works correctly', () {
+        testHttpMetric.putAttribute('sponge', 'bob');
+        testHttpMetric.putAttribute('patrick', 'star');
+        testHttpMetric.removeAttribute('sponge');
 
-    test('set HTTP response code correctly', () {
-      testHttpMetric.httpResponseCode = 443;
-      expect(testHttpMetric.httpResponseCode, equals(443));
-    });
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
 
-    test('set request payload size correctly', () {
-      testHttpMetric.requestPayloadSize = 56734;
-      expect(testHttpMetric.requestPayloadSize, equals(56734));
-    });
+        testHttpMetric.removeAttribute('sponge');
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
+      });
 
-    test('set response payload size correctly', () {
-      testHttpMetric.responsePayloadSize = 4949;
-      expect(testHttpMetric.responsePayloadSize, equals(4949));
-    });
+      test('getAttribute works correctly', () {
+        testHttpMetric.putAttribute('yugi', 'oh');
 
-    test('set response content type correctly', () {
-      testHttpMetric.responseContentType = 'content';
-      expect(testHttpMetric.responseContentType, equals('content'));
-    });
-  },
+        expect(testHttpMetric.getAttribute('yugi'), equals('oh'));
+      });
+
+      test('set HTTP response code correctly', () {
+        testHttpMetric.httpResponseCode = 443;
+        expect(testHttpMetric.httpResponseCode, equals(443));
+      });
+
+      test('set request payload size correctly', () {
+        testHttpMetric.requestPayloadSize = 56734;
+        expect(testHttpMetric.requestPayloadSize, equals(56734));
+      });
+
+      test('set response payload size correctly', () {
+        testHttpMetric.responsePayloadSize = 4949;
+        expect(testHttpMetric.responsePayloadSize, equals(4949));
+      });
+
+      test('set response content type correctly', () {
+        testHttpMetric.responseContentType = 'content';
+        expect(testHttpMetric.responseContentType, equals('content'));
+      });
+    },
     skip: kIsWeb,
   );
 }
