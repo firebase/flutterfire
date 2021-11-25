@@ -14,8 +14,7 @@ import './mock.dart';
 MockFirebasePerformance mockPerformancePlatform = MockFirebasePerformance();
 MockTracePlatform mockTracePlatform = MockTracePlatform();
 String mockUrl = 'https://example.com';
-MockHttpMetricPlatform mockHttpMetricPlatform =
-    MockHttpMetricPlatform();
+MockHttpMetricPlatform mockHttpMetricPlatform = MockHttpMetricPlatform();
 
 void main() {
   setupFirebasePerformanceMocks();
@@ -291,8 +290,7 @@ class MockTracePlatform extends Mock
 }
 
 class TestHttpMetricPlatform extends HttpMetricPlatform {
-  TestHttpMetricPlatform()
-      : super();
+  TestHttpMetricPlatform() : super();
 }
 
 class MockHttpMetricPlatform extends Mock

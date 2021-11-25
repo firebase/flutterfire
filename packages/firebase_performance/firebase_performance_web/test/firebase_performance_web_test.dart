@@ -41,7 +41,6 @@ void main() {
       expect(trace.runtimeType, TraceWeb);
       trace = trace as TraceWeb;
       expect(trace.traceDelegate, mockTrace);
-      expect(trace.name, testTraceName);
       verify(mockPerformance.trace(testTraceName)).called(1);
       verifyNoMoreInteractions(mockPerformance);
       verifyNoMoreInteractions(mockTrace);
@@ -55,7 +54,6 @@ void main() {
       );
 
       expect(httpMeric.runtimeType, HttpMetricWeb);
-      expect(httpMeric.url, '');
       verifyNoMoreInteractions(mockPerformance);
     });
   });
@@ -66,7 +64,7 @@ void main() {
 
     setUp(() {
       mockTrace = MockTrace();
-      tracePlatform = TraceWeb(mockTrace, testTraceName);
+      tracePlatform = TraceWeb(mockTrace);
     });
 
     test('start', () async {
@@ -125,32 +123,32 @@ void main() {
     });
   });
 
-  // group('HttpMetricWeb', () {
-  //   late HttpMetricPlatform httpMetricPlatform;
-  //
-  //   setUp(() {
-  //     httpMetricPlatform = HttpMetricWeb('', HttpMethod.Get);
-  //   });
-  //
-  //   test('httpResponseCode setter does nothing', () async {
-  //     await httpMetricPlatform.setHttpResponseCode(404);
-  //     expect(httpMetricPlatform.httpResponseCode, null);
-  //   });
-  //
-  //   test('requestPayloadSize setter does nothing', () async {
-  //     await httpMetricPlatform.setRequestPayloadSize(100);
-  //     expect(httpMetricPlatform.requestPayloadSize, null);
-  //   });
-  //
-  //   test('responsePayloadSize setter does nothing', () async {
-  //     await httpMetricPlatform.setResponsePayloadSize(100);
-  //     expect(httpMetricPlatform.responsePayloadSize, null);
-  //   });
-  //
-  //   test('putAttribute does nothing', () async {
-  //     await httpMetricPlatform.putAttribute('attribute', 'value');
-  //     expect(httpMetricPlatform.getAttribute('attribute'), null);
-  //     expect(httpMetricPlatform.getAttributes(), {});
-  //   });
-  // });
+  group('HttpMetricWeb', () {
+    late HttpMetricPlatform httpMetricPlatform;
+
+    setUp(() {
+      httpMetricPlatform = HttpMetricWeb();
+    });
+
+    test('httpResponseCode setter does nothing', () {
+      httpMetricPlatform.httpResponseCode = 404;
+      expect(httpMetricPlatform.httpResponseCode, null);
+    });
+
+    test('requestPayloadSize setter does nothing', () {
+      httpMetricPlatform.requestPayloadSize = 100;
+      expect(httpMetricPlatform.requestPayloadSize, null);
+    });
+
+    test('responsePayloadSize setter does nothing', () {
+      httpMetricPlatform.responsePayloadSize = 100;
+      expect(httpMetricPlatform.responsePayloadSize, null);
+    });
+
+    test('putAttribute does nothing', () {
+      httpMetricPlatform.putAttribute('attribute', 'value');
+      expect(httpMetricPlatform.getAttribute('attribute'), null);
+      expect(httpMetricPlatform.getAttributes(), {});
+    });
+  });
 }

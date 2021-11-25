@@ -10,7 +10,7 @@ import 'internals.dart';
 class TraceWeb extends TracePlatform {
   final performance_interop.Trace traceDelegate;
 
-  TraceWeb(this.traceDelegate, String name) : super(name);
+  TraceWeb(this.traceDelegate) : super();
 
   @override
   Future<void> start() async {

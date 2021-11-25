@@ -3,7 +3,7 @@ import 'package:firebase_performance_platform_interface/firebase_performance_pla
 /// Web implementation for HttpMetricPlatform. Custom request metrics are not
 /// supported for Web apps, so this class is a dummy.
 class HttpMetricWeb extends HttpMetricPlatform {
-  HttpMetricWeb(String url, HttpMethod httpMethod) : super(url, httpMethod);
+  HttpMetricWeb() : super();
 
   /// HttpResponse code of the request.
   @override
@@ -33,22 +33,22 @@ class HttpMetricWeb extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> setHttpResponseCode(int? httpResponseCode) async {
+  set httpResponseCode(int? httpResponseCode) {
     return;
   }
 
   @override
-  Future<void> setRequestPayloadSize(int? requestPayloadSize) async {
+  set requestPayloadSize(int? requestPayloadSize) {
     return;
   }
 
   @override
-  Future<void> setResponsePayloadSize(int? responsePayloadSize) async {
+  set responsePayloadSize(int? responsePayloadSize) {
     return;
   }
 
   @override
-  Future<void> setResponseContentType(String? responseContentType) async {
+  set responseContentType(String? responseContentType) {
     return;
   }
 
@@ -63,12 +63,12 @@ class HttpMetricWeb extends HttpMetricPlatform {
   }
 
   @override
-  Future<void> putAttribute(String name, String value) async {
+  void putAttribute(String name, String value) {
     return;
   }
 
   @override
-  Future<void> removeAttribute(String name) async {
+  void removeAttribute(String name) {
     return;
   }
 

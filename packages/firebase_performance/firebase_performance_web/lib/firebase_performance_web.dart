@@ -47,12 +47,12 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   TracePlatform newTrace(String name) {
-    return TraceWeb(_delegate.trace(name), name);
+    return TraceWeb(_delegate.trace(name));
   }
 
   @override
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     //TODO: this doesn't exist on web, it is just stub methods. Throw exception instead?
-    return HttpMetricWeb('', HttpMethod.Get);
+    return HttpMetricWeb();
   }
 }
