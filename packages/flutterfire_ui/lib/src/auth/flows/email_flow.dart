@@ -100,7 +100,8 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
 
         value = UserCreated(userCredential);
 
-        await signIn(credential);
+        action = AuthAction.signIn;
+        await super.onCredentialReceived(credential);
       } else {
         await super.onCredentialReceived(credential);
       }

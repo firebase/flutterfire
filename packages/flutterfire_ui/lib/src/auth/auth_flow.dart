@@ -15,8 +15,7 @@ class AuthCancelledException implements Exception {
   final String message;
 }
 
-abstract class AuthFlow extends ValueNotifier<AuthState>
-    implements AuthController {
+class AuthFlow extends ValueNotifier<AuthState> implements AuthController {
   @override
   final FirebaseAuth auth;
   final AuthState initialState;
@@ -64,12 +63,8 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
 
   @override
   Future<User?> signIn(AuthCredential credential) async {
-    try {
-      final userCredential = await auth.signInWithCredential(credential);
-      return userCredential.user;
-    } on Exception catch (err) {
-      value = AuthFailed(err);
-    }
+    final userCredential = await auth.signInWithCredential(credential);
+    return userCredential.user;
   }
 
   @override
@@ -89,17 +84,38 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
     }
   }
 
+  @override
+  Future<List<String>> findProvidersForEmail(
+    String email, {
+    AuthCredential? credential,
+  }) async {
+    value = const FetchingProvidersForEmail();
+    try {
+      final methods = await auth.fetchSignInMethodsForEmail(email);
+      value = DifferentSignInMethodsFound(email, methods, credential);
+      return methods;
+    } on Exception catch (err) {
+      value = AuthFailed(err);
+      rethrow;
+    }
+  }
+
   Future<void> onCredentialReceived(AuthCredential credential) async {
     late AuthState finalState;
     try {
       switch (action) {
         case AuthAction.signIn:
           value = const SigningIn();
-          final user = await signIn(credential);
+          try {
+            final user = await signIn(credential);
 
-          if (user != null) {
-            finalState = SignedIn(user);
+            if (user != null) {
+              finalState = SignedIn(user);
+            }
+          } on Exception catch (err) {
+            return _handleError(err);
           }
+
           break;
         case AuthAction.link:
           value = CredentialReceived(credential);
@@ -116,6 +132,26 @@ abstract class AuthFlow extends ValueNotifier<AuthState>
     } on Exception catch (err) {
       value = AuthFailed(err);
     }
+  }
+
+  void _handleError(Exception exception) {
+    if (exception is! FirebaseAuthException) {
+      value = AuthFailed(exception);
+      return;
+    }
+
+    if (exception.code == 'account-exists-with-different-credential') {
+      final email = exception.email;
+      if (email == null) {
+        value = AuthFailed(exception);
+        return;
+      }
+
+      findProvidersForEmail(email, credential: exception.credential);
+      return;
+    }
+
+    value = AuthFailed(exception);
   }
 
   @override

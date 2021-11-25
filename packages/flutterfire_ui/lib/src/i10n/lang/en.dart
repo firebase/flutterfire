@@ -93,6 +93,14 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String forgotPasswordViewTitle;
   @override
   final String resetPasswordButtonLabel;
+  @override
+  final String verifyItsYouText;
+  @override
+  final String differentMethodsSignInTitlText;
+  @override
+  final String findProviderForEmailTitleText;
+  @override
+  final String continueText;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -144,5 +152,10 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.forgotPasswordButtonLabel = 'Forgot password?',
     this.forgotPasswordViewTitle = 'Forgot password',
     this.resetPasswordButtonLabel = 'Reset password',
+    this.verifyItsYouText = "Verify it's you",
+    this.differentMethodsSignInTitlText =
+        'Use one of the follwing methods to sign in',
+    this.findProviderForEmailTitleText = 'Enter your email to continue',
+    this.continueText = 'Continue',
   });
 }

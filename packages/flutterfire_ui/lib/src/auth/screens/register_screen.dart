@@ -19,6 +19,8 @@ class RegisterScreen extends StatelessWidget {
   final SideBuilder? sideBuilder;
   final ButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
+  final String? email;
+  final bool? showAuthActionSwitch;
 
   const RegisterScreen({
     Key? key,
@@ -29,6 +31,8 @@ class RegisterScreen extends StatelessWidget {
     this.sideBuilder,
     this.oauthButtonVariant = ButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
+    this.email,
+    this.showAuthActionSwitch,
   }) : super(key: key);
 
   @override
@@ -42,6 +46,8 @@ class RegisterScreen extends StatelessWidget {
       sideBuilder: sideBuilder,
       desktopLayoutDirection: desktopLayoutDirection,
       oauthButtonVariant: oauthButtonVariant,
+      email: email,
+      showAuthActionSwitch: showAuthActionSwitch,
     );
   }
 }

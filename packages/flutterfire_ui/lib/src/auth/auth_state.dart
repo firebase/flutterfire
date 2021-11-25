@@ -11,6 +11,10 @@ abstract class AuthState {
       context.dependOnInheritedWidgetOfExactType<AuthStateProvider>()?.state;
 }
 
+class Uninitialized extends AuthState {
+  const Uninitialized();
+}
+
 class SigningIn extends AuthState {
   const SigningIn();
 }
@@ -37,6 +41,18 @@ class SignedIn extends AuthState {
   final User? user;
 
   SignedIn(this.user);
+}
+
+class DifferentSignInMethodsFound extends AuthState {
+  final String email;
+  final AuthCredential? credential;
+  final List<String> methods;
+
+  DifferentSignInMethodsFound(this.email, this.methods, this.credential);
+}
+
+class FetchingProvidersForEmail extends AuthState {
+  const FetchingProvidersForEmail();
 }
 
 class AuthStateProvider extends InheritedWidget {

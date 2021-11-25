@@ -61,6 +61,8 @@ class LoginScreen extends StatefulWidget {
   final ButtonVariant? oauthButtonVariant;
   final SideBuilder? sideBuilder;
   final TextDirection? desktopLayoutDirection;
+  final String? email;
+  final bool? showAuthActionSwitch;
 
   const LoginScreen({
     Key? key,
@@ -72,6 +74,8 @@ class LoginScreen extends StatefulWidget {
     this.headerMaxExtent = defaultHeaderImageHeight,
     this.sideBuilder,
     this.desktopLayoutDirection = TextDirection.ltr,
+    this.email,
+    this.showAuthActionSwitch,
   }) : super(key: key);
 
   @override
@@ -85,6 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!ctrl.hasClients) {
       return;
     }
+
+    if (widget.headerBuilder == null) return;
 
     final max = widget.headerMaxExtent ?? defaultHeaderImageHeight;
     final ctrlPosition = position.clamp(0.0, max);
@@ -100,9 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
         child: LoginView(
           action: widget.action,
           providerConfigs: widget.providerConfigs,
-          headerBuilder: widget.headerBuilder,
-          headerMaxExtent: widget.headerMaxExtent,
           oauthButtonVariant: widget.oauthButtonVariant,
+          email: widget.email,
+          showAuthActionSwitch: widget.showAuthActionSwitch,
         ),
       ),
     );
