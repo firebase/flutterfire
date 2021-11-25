@@ -1,3 +1,98 @@
 ---
-title: Firestore
+title: FlutterFire UI for Firestore
+sidebar_label: Firestore
 ---
+
+FlutterFire UI for Firestore enables you to easily integrate your application UI with your Cloud
+Firestore database.
+
+## Installation
+
+To get started with Firebase UI for Firestore, you first need to ensure the `cloud_firestore` plugin is
+[installed on you project](https://firebase.flutter.dev/docs/firestore/overview#installation).
+
+If you haven't already done so, install the `flutterfire_ui` package by running the following command in your terminal:
+
+TODO: Change to `flutterfire_ui_firestore` when moved
+
+```bash
+flutter pub add flutterfire_ui
+```
+
+## Usage
+
+The package provides a number of widgets that can be used to build your Firestore UI.
+
+If you haven't already done so, you'll need to initialize Firebase before using FlutterFire UI.
+You can learn more about this in the [FlutterFire Overview](https://firebase.flutter.dev/docs/overview#initializing-flutterfire)
+documentation.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+```
+
+Next, import the FlutterFire UI for Firestore package:
+
+// TODO confirm import
+
+```dart
+import 'package:flutterfire_ui/firestore.dart';
+```
+
+### `FirestoreListView`
+
+### `FirestoreQueryBuilder`
+
+The `FirestoreQueryBuilder` widget enables you to build any UI within your application, whilst having
+the power of realtime Firestore data and infinite scrolling. The widget is a lower-level abstraction of
+`FirestoreListView`, which gives you full control on exactly how your data is displayed.
+
+```dart
+FirestoreQueryBuilder<Movie>(
+  query: moviesCollection.orderBy('title'),
+  builder: (context, snapshot, _) {
+    // Query is loading
+    if (snapshot.isFetching) {
+      return const CircularProgressIndicator();
+    }
+
+    // Something went wrong (e.g. permission denied)
+    if (snapshot.hasError) {
+      return Text('error ${snapshot.error}');
+    }
+
+    return GridView.builder(
+      itemCount: snapshot.docs.length,
+      itemBuilder: (context, index) {
+        // If we reached the end of the currently obtained items, we try to
+        // obtain more items
+        if (snapshot.hasMore && index == snapshot.docs.length) {
+          // Tell FirestoreQueryBuilder to try to obtain more items.
+          // It is safe to call this function from within the build method.
+          snapshot.fetchMore();
+        }
+
+        final movie = snapshot.docs[index];
+
+        return Container(
+          padding: const EdgeInsets.all(8),
+          child: const Text("${movive.title}"),
+          color: Colors.teal[100],
+        );
+      },
+    );
+  },
+)
+```
+
+The `FirestoreQueryBuilder` widget enables us to return any UI we want, whilst also providing the
+ability to fetch more data as the user scrolls.
+
