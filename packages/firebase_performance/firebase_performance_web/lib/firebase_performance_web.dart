@@ -40,7 +40,6 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     return _delegate.dataCollectionEnabled;
   }
 
-  // TODO: set up setInstrumentation as well
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
     _delegate.setPerformanceCollection(enabled);

@@ -46,6 +46,7 @@ class FirebasePerformance extends FirebasePluginPlatform {
   /// monitoring is disabled. This is for dynamic enable/disable state. This
   /// does not reflect whether instrumentation is enabled/disabled.
   Future<bool> isPerformanceCollectionEnabled() {
+    // TODO: update API to match web & iOS for 'dataCollectionEnabled' & 'instrumentationEnabled'
     return _delegate.isPerformanceCollectionEnabled();
   }
 
