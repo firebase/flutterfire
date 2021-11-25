@@ -116,9 +116,10 @@ module.exports = {
         label: 'Authentication',
         items: [
           'ui/auth',
-          'ui/auth/widgets',
-          'ui/auth/providers',
-          'ui/auth/controllers',
+          'ui/auth/integrating-your-first-screen',
+          'ui/auth/configuring-providers',
+          'ui/auth/building-a-custom-ui',
+          'ui/auth/localization',
           {
             type: 'link',
             label: 'Story Book',

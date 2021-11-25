@@ -1,0 +1,332 @@
+---
+title: Integrating your first screen
+---
+
+Firebase UI for Auth provides various Screens to handle different authentication flows throughout
+your application, such as Sign In, Registration, Forgot Password, Profile etc.
+
+To get started with, let's add an authentication flow to an application. In this scenario, users will
+have to be authenticated in order to access the main application.
+
+## Initalizing Firebase
+
+If you haven't already done so, you'll need to initialize Firebase before using FlutterFire UI.
+You can learn more about this in the [FlutterFire Overview](https://firebase.flutter.dev/docs/overview#initializing-flutterfire)
+documentation.
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize Firebase
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+```
+
+## Checking authentication state
+
+Before we can render a sign in screen, we first need to determine whether the user is currently
+authenticated. The most common way to check for this is to listening to authentication state changes
+using the [Firebase Auth plugin](https://firebase.flutter.dev/docs/auth/usage).
+
+The `authStateChanges` API returns a Stream with either the current user (if they are signed in), or
+`null` if they are not. To subscribe to this state in our application, we can make use of the
+[`StreamBuilder`](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html) widget and pass the stream to it:
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: StreamBuilder<FirebaseUser?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          // ...
+        },
+      ),
+    );
+  }
+}
+```
+
+Our application starts by subscribing to the users authentication state, which is provided as the
+`snapshot` to the Stream builder. To check whether the user is authenticated, the snapshot will contain
+a `FirebaseUser` instance, or `null` if they are not. Using the snapshots [`hasData`](https://api.flutter.dev/flutter/widgets/AsyncSnapshot/hasData.html)
+property we can conditionally render the sign in screen if no value exists:
+
+```dart
+return MaterialApp(
+  home: StreamBuilder<FirebaseUser?>(
+    stream: FirebaseAuth.instance.authStateChanges(),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        // ... not signed in!
+      }
+
+      // Render your application if authenticated
+      return YourApplication();
+    },
+  ),
+);
+```
+
+## Returning a Sign In Screen
+
+FlutterFire UI for Auth provides a different screens for different scenarios. For this example,
+we'll want to prompt the user to first sign-in before accessing the main application. To do this,
+we can return a [`SignInScreen`](https://pub.dev/documentation/flutterfire_ui/latest/auth/SignInScreen-class.html) widget.
+
+Screens are customizable fully styled widgets designed to be rendered as a single "screen" within your application. Firstly,
+import the FlutterFire UI for Auth libary:
+
+```dart
+import 'package:flutterfire_ui/auth.dart';
+```
+
+Next, go ahead and return a new `SignInScreen` from the builder:
+
+```dart
+return MaterialApp(
+  home: StreamBuilder<FirebaseUser?>(
+    stream: FirebaseAuth.instance.authStateChanges(),
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        // ... not signed in!
+        return SignInScreen(
+          providerConfigs: [],
+        );
+      }
+      // ...
+    },
+  ),
+);
+```
+
+Providers are means of authentication, such as Email/Password or Google OAuth. At the moment, our `SignInScreen` has no providers
+configured so the screen will look fairly empty:
+
+TODO Screenshot of no providers
+
+You'll also notice there is a "Register" handler, which when pressed will change the UI to a registration screen instead.
+This is fully customizable and can be removed if required (more on customizing screens later).
+
+Let's go ahead and add some providers!
+
+## Adding Email & Password sign in
+
+To allow the user to sign-in with an email and password, we first need to ensure that the Email/Password provider is enabled
+in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
+
+<Image
+  src="ui-email-provider.jpg"
+  alt="Enable Email/Password Provider"
+  caption={false}
+/>
+
+Next, add a new `EmailProviderConfiguration` instance to the `providerConfigs` list:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    EmailProviderConfiguration(),
+  ],
+);
+```
+
+Just like that, we've now got a sign in screen which handles email and password authentication!
+
+TODO Screenshot with email provider
+
+Behind the scenes, FlutterFire UI for auth will handle the entire sign-in process for us. Once signed in, the `StreamBuilder`
+will be updated with the signed-in user and render our application. If the user signs out, the `SignInScreen` will be rendered.
+Additionally, the UI handles various states too such as the error messages (e.g. if an invalid email address is provided).
+
+## Adding Google sign in
+
+Commonly applications also provide support for authenticating with 3rd party providers, such as Google, Twitter, Facebook, Apple etc.
+The widgets provided by the UI package allow us to configure these providers and render a themed button for each available provider.
+
+To integrate Google as a provider, we first need to install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in) plugin
+which will handle the native authentication flow for us. For native mobile integration, you'll need to follow the steps as described in the
+README of the plugin.
+
+Additionally, ensure that the Google provider is enabled in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
+
+<Image
+  src="ui-google-provider.jpg"
+  alt="Enable Google Provider"
+  caption={false}
+/>
+
+Next, add a new `GoogleProviderConfiguration` instance to the `providerConfigs` list:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    EmailProviderConfiguration(),
+    GoogleProviderConfiguration(
+      appId: '...',
+    ),
+  ],
+);
+```
+
+For cross-platform compatibility, some providers require a few additional properties to be added to the configuration. In this case,
+the `appId` can be copied from the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+With the Google provider configuration added, our sign in screen will now include a Google button!
+
+TODO Screenshot with google provider
+
+Just like Email/Password sign in, a successfully Google sign-in will trigger the authentication listener allowing the user access to the application.
+
+## Customizing the UI
+
+The screens provided by the UI package are customizable, allowing you to add images, alter text and more.
+
+### Provider order
+
+The order in which a provider is added to the `providerConfigs` list determines the order in which they'll appear within the screens.
+For example, let's show the Google sign in button first:
+
+```dart
+return SignInScreen(
+  providerConfigs: [
+    GoogleProviderConfiguration(
+      appId: '...',
+    ),
+    EmailProviderConfiguration(),
+  ],
+);
+```
+
+TODO screenshot of Google first
+
+### Header content
+
+Although functional, the sign in screen could do with a bit of styling. The `headerBuilder` property of screens
+allows us to render a custom widget as a header, which will appear above our sign in flow. For example, let's go ahead
+and add an image to be shown above our sign in flow:
+
+```dart
+return SignInScreen(
+  headerBuilder: (context, constraints, _) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Image.network('https://firebase.flutter.dev/img/flutterfire_300x.png'),
+      ),
+    );
+  },
+  providerConfigs: [
+    // ...
+  ]
+);
+```
+
+Great, our screen how has a nice header!
+
+TODO screenshot with header
+
+### Side content (desktop)
+
+Although a header looks great on mobile devices, on desktop we still have a lot of unused horizontal space. Fortunately, screens
+come with a `sideBuilder` property similar to `headerBuilder` which allows us to render a custom widget to the side of the screen.
+
+Let's go ahead and add a custom image to the side of the screen which will be visible on larger screens:
+
+```dart
+return SignInScreen(
+  sideBuilder: (context, constraints) {
+    TODO add me
+  },
+  headerBuilder: (context, constraints, _) {
+    // ...
+  },
+  providerConfigs: [
+    // ...
+  ]
+);
+```
+
+TODO desktop side content screenshot
+
+### Sub-header & footer content
+
+Another common practice is to add some personalised text to the screen, such as instructions, terms and conditions, 
+privacy policy etc. The `subHeaderBuilder` and `footerBuilder` properties allow us to render custom widgets to 
+the top and bottom of the screen:
+
+TODO(andrei): improve examples
+```dart
+return SignInScreen(
+  subHeaderBuilder: (context, constraints) {
+    return Text("Welcome, please sign in to continue.");
+  },
+  footerBuilder: (context, constraints) {
+    return Text("By signing in, you agree to our terms and conditions.");
+  },
+  sideBuilder: (context, constraints) {
+    // ...
+  },
+  headerBuilder: (context, constraints, _) {
+    // ...
+  },
+  providerConfigs: [
+    // ...
+  ]
+);
+```
+
+TODO sub-header + footer screenshot
+
+### Disabling internal navigation
+
+Currently our sign in screen allows the user to "navigate" to the register screen. In some cases you may want to disable this
+and handle navigation yourself. Set the `internalNavigation` property to `false` to disable this behaviour:
+
+TODO(andrei): confirm property name
+```dart
+return SignInScreen(
+  internalNavigation: false,
+  // ...
+);
+```
+
+## Additional screens
+
+FlutterFire UI for Auth offers more than just a sign in screen - most common user scenarios are also available as screens. You'll find
+that the API for screens is very similar to the API for sign in screens.
+
+### Register screen
+
+A screen which allows the user to create an account.
+
+```dart
+return RegisterScreen(
+  providerConfigs: [
+    EmailProviderConfiguration(),
+    GoogleProviderConfiguration(
+      appId: '...',
+    ),
+  ],
+);
+```
+
+TODO register screen screenshot
+
+### TODO other screens (phone, forgot pw, provider sign in, etc)
+
+## Next Steps
+
+With your first screen integrated, you can now start adding more providers and integrating more screens!
+
+- [Configuring Providers](configuring-providers.mdx)
+- [Building a custom UI](building-a-custom-ui.mdx)
+- [Localization](localization.mdx)
