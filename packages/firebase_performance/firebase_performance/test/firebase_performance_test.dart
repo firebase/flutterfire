@@ -12,10 +12,10 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import './mock.dart';
 
 MockFirebasePerformance mockPerformancePlatform = MockFirebasePerformance();
-MockTracePlatform mockTracePlatform = MockTracePlatform('foo');
+MockTracePlatform mockTracePlatform = MockTracePlatform();
 String mockUrl = 'https://example.com';
 MockHttpMetricPlatform mockHttpMetricPlatform =
-    MockHttpMetricPlatform(mockUrl, HttpMethod.Get);
+    MockHttpMetricPlatform();
 
 void main() {
   setupFirebasePerformanceMocks();
@@ -205,8 +205,8 @@ class MockFirebasePerformance extends Mock
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     return super.noSuchMethod(
       Invocation.method(#newHttpMetric, [url, httpMethod]),
-      returnValue: MockHttpMetricPlatform(url, httpMethod),
-      returnValueForMissingStub: MockHttpMetricPlatform(url, httpMethod),
+      returnValue: MockHttpMetricPlatform(),
+      returnValueForMissingStub: MockHttpMetricPlatform(),
     );
   }
 
@@ -214,8 +214,8 @@ class MockFirebasePerformance extends Mock
   TracePlatform newTrace(String name) {
     return super.noSuchMethod(
       Invocation.method(#newTrace, [name]),
-      returnValue: MockTracePlatform(name),
-      returnValueForMissingStub: MockTracePlatform(name),
+      returnValue: MockTracePlatform(),
+      returnValueForMissingStub: MockTracePlatform(),
     );
   }
 
@@ -234,14 +234,14 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 }
 
 class TestTracePlatform extends TracePlatform {
-  TestTracePlatform(String name) : super(name);
+  TestTracePlatform() : super();
 }
 
 class MockTracePlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestTracePlatform {
-  MockTracePlatform(String name) {
-    TestTracePlatform(name);
+  MockTracePlatform() {
+    TestTracePlatform();
   }
 
   @override
@@ -291,15 +291,15 @@ class MockTracePlatform extends Mock
 }
 
 class TestHttpMetricPlatform extends HttpMetricPlatform {
-  TestHttpMetricPlatform(String url, HttpMethod httpMethod)
-      : super(url, httpMethod);
+  TestHttpMetricPlatform()
+      : super();
 }
 
 class MockHttpMetricPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestHttpMetricPlatform {
-  MockHttpMetricPlatform(String url, HttpMethod httpMethod) {
-    TestHttpMetricPlatform(url, httpMethod);
+  MockHttpMetricPlatform() {
+    TestHttpMetricPlatform();
   }
 
   @override
