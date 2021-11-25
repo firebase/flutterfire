@@ -27,14 +27,13 @@ class MethodChannelFirebaseInstallations extends FirebaseInstallationsPlatform {
 
   /// Creates a new [MethodChannelFirebaseInstallations] instance with an [app].
   MethodChannelFirebaseInstallations({required FirebaseApp app}) : super(app) {
+    _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
+
     channel
         .invokeMethod<String>('FirebaseInstallations#registerIdTokenListener', {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-
-      _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
-
       events.receiveBroadcastStream().listen(
         (arguments) {
           _handleIdTokenChangesListener(app.name, arguments);

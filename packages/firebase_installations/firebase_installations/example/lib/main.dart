@@ -1,10 +1,14 @@
-import 'package:flutter/material.dart';
-import 'dart:async';
+import 'dart:developer';
 
-import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_installations/firebase_installations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -16,33 +20,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
-    initPlatformState();
+    logResults();
+
+    FirebaseInstallations.instance.idTokenChanges.listen((event) {
+      log(event);
+    }).onError((error) {
+      log("$error");
+    });
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await FirebaseInstallations.platformVersion ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
+  String id = '';
+  String oldToken = '';
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+  Future<void> logResults() async {
+    final id = await FirebaseInstallations.instance.getId();
 
     setState(() {
-      _platformVersion = platformVersion;
+      this.id = id;
     });
   }
 
@@ -53,9 +50,29 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            Center(
+              child: Text("Id: $id"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await FirebaseInstallations.instance.getToken(true);
+              },
+              child: const Text("Force update token"),
+            )
+          ],
         ),
+        floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.delete),
+            onPressed: () async {
+              await FirebaseInstallations.instance.delete();
+              final _newid = await FirebaseInstallations.instance.getId();
+
+              setState(() {
+                id = _newid;
+              });
+            }),
       ),
     );
   }

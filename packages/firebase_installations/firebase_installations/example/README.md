@@ -1,6 +1,6 @@
-# firebase_installations_example
+# example
 
-Demonstrates how to use the firebase_installations plugin.
+A new Flutter project.
 
 ## Getting Started
 
