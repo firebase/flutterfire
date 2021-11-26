@@ -1,6 +1,5 @@
 @TestOn('chrome') // Uses web-only Flutter SDK
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_web/firebase_performance_web.dart';
 import 'package:firebase_performance_web/src/interop/performance.dart';
