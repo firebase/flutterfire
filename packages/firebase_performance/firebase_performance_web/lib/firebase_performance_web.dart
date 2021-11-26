@@ -24,7 +24,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     return _webPerformance ??= performance_interop.getPerformanceInstance();
   }
 
-  /// Builds an instance of [FirebasePerformanceWeb] with an optional [FirebaseApp] instance
+  /// Builds an instance of [FirebasePerformanceWeb]
   /// Performance web currently only supports the default app instance
   FirebasePerformanceWeb() : super();
 
