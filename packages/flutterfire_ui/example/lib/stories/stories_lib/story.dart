@@ -55,6 +55,7 @@ class _StoriesState extends State<Stories> {
             height: double.infinity,
             child: Card(
               child: ListView.builder(
+                primary: false,
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
                   final category = _categories.values.elementAt(index);
