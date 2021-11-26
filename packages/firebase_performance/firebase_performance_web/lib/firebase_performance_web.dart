@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
@@ -9,6 +10,12 @@ import 'src/interop/performance.dart' as performance_interop;
 
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
+  /// Stub initializer to allow the [registerWith] to create an instance without
+  /// registering the web delegates or listeners.
+  FirebasePerformanceWeb._()
+      : _webPerformance = null,
+        super(appInstance: null);
+
   /// Instance of Performance from the web plugin.
   performance_interop.Performance? _webPerformance;
 
@@ -19,13 +26,21 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Builds an instance of [FirebasePerformanceWeb] with an optional [FirebaseApp] instance
   /// Performance web currently only supports the default app instance
-  FirebasePerformanceWeb({performance_interop.Performance? performance})
-      : _webPerformance = performance,
-        super();
+  FirebasePerformanceWeb({required FirebaseApp app}) : super(appInstance: app);
+
+  /// Initializes a stub instance to allow the class to be registered.
+  static FirebasePerformanceWeb get instance {
+    return FirebasePerformanceWeb._();
+  }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebasePerformancePlatform.instance = FirebasePerformanceWeb();
+    FirebasePerformancePlatform.instance = FirebasePerformanceWeb.instance;
+  }
+
+  @override
+  FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
+    return FirebasePerformanceWeb(app: app);
   }
 
   @visibleForTesting
