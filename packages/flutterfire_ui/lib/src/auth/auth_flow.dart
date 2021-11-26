@@ -113,7 +113,7 @@ class AuthFlow extends ValueNotifier<AuthState> implements AuthController {
               finalState = SignedIn(user);
             }
           } on Exception catch (err) {
-            return _handleError(err);
+            return handleError(err);
           }
 
           break;
@@ -134,7 +134,7 @@ class AuthFlow extends ValueNotifier<AuthState> implements AuthController {
     }
   }
 
-  void _handleError(Exception exception) {
+  void handleError(Exception exception) {
     if (exception is! FirebaseAuthException) {
       value = AuthFailed(exception);
       return;

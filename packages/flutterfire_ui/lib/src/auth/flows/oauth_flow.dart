@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
-import 'package:flutter/foundation.dart' show TargetPlatform;
+import 'package:flutter/foundation.dart' show TargetPlatform, kIsWeb;
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
@@ -33,7 +33,9 @@ class OAuthFlow extends AuthFlow implements OAuthController {
 
       late OAuthCredential credential;
 
-      if (platform == TargetPlatform.macOS) {
+      if (kIsWeb) {
+        return await _signInWeb(provider);
+      } else if (platform == TargetPlatform.macOS) {
         credential = await provider.desktopSignIn();
       } else {
         credential = await provider.signIn();
@@ -42,6 +44,18 @@ class OAuthFlow extends AuthFlow implements OAuthController {
       setCredential(credential);
     } on Exception catch (e) {
       value = AuthFailed(e);
+    }
+  }
+
+  Future<void> _signInWeb(OAuthProvider provider) async {
+    try {
+      final userCredential = await auth.signInWithPopup(
+        provider.firebaseAuthProvider,
+      );
+
+      value = SignedIn(userCredential.user);
+    } on FirebaseAuthException catch (err) {
+      handleError(err);
     }
   }
 }

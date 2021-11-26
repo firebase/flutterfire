@@ -7,6 +7,7 @@ abstract class OAuthProvider {
   Future<OAuthCredential> signIn();
 
   ProviderArgs get desktopSignInArgs;
+  dynamic get firebaseAuthProvider;
   OAuthCredential fromDesktopAuthResult(AuthResult result);
 
   Future<OAuthCredential> desktopSignIn() async {

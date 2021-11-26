@@ -4,7 +4,6 @@ import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/src/foundation/platform.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 import 'package:flutterfire_ui/auth.dart';
@@ -66,6 +65,9 @@ class TwitterProviderImpl extends Twitter {
       secret: result.tokenSecret!,
     );
   }
+
+  @override
+  TwitterAuthProvider get firebaseAuthProvider => TwitterAuthProvider();
 }
 
 class TwitterProviderConfiguration extends OAuthProviderConfiguration {
@@ -104,9 +106,8 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
 
   @override
   bool isSupportedPlatform(TargetPlatform platform) {
-    return !kIsWeb &&
-        (platform == TargetPlatform.android ||
-            platform == TargetPlatform.iOS ||
-            platform == TargetPlatform.macOS);
+    return platform == TargetPlatform.android ||
+        platform == TargetPlatform.iOS ||
+        platform == TargetPlatform.macOS;
   }
 }

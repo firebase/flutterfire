@@ -30,7 +30,7 @@ class LoginView extends StatefulWidget {
     this.auth,
     this.showTitle = true,
     this.email,
-    this.showAuthActionSwitch = true,
+    this.showAuthActionSwitch,
   }) : super(key: key);
 
   @override
@@ -40,6 +40,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   late AuthAction action = widget.action;
   bool get showTitle => widget.showTitle ?? true;
+  bool get showAuthActionSwitch => widget.showAuthActionSwitch ?? true;
 
   Widget? _buildOAuthButtons(TargetPlatform platform) {
     final oauthProviderConfigs = widget.providerConfigs
@@ -115,7 +116,7 @@ class _LoginViewState extends State<LoginView> {
         style: Theme.of(context).textTheme.headline6,
       ),
       const SizedBox(height: 16),
-      if (widget.showAuthActionSwitch!) ...[
+      if (showAuthActionSwitch) ...[
         RichText(
           text: TextSpan(
             children: [

@@ -54,6 +54,9 @@ class GoogleProviderImpl extends Google {
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return GoogleAuthProvider.credential(accessToken: result.accessToken);
   }
+
+  @override
+  GoogleAuthProvider get firebaseAuthProvider => GoogleAuthProvider();
 }
 
 class GoogleProviderConfiguration extends OAuthProviderConfiguration {

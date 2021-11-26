@@ -7,7 +7,6 @@ import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/src/foundation/platform.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../widgets/apple_sign_in_button.dart' show AppleProviderButtonStyle;
@@ -73,6 +72,9 @@ class AppleProviderImpl extends Apple {
   fba.OAuthCredential fromDesktopAuthResult(AuthResult result) {
     throw UnimplementedError();
   }
+
+  @override
+  get firebaseAuthProvider => null;
 }
 
 class AppleProviderConfiguration extends OAuthProviderConfiguration {

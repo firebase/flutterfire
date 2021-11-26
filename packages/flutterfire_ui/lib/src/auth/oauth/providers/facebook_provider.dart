@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/src/foundation/platform.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
@@ -54,6 +53,9 @@ class FacebookProviderImpl extends Facebook {
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return FacebookAuthProvider.credential(result.accessToken);
   }
+
+  @override
+  FacebookAuthProvider get firebaseAuthProvider => FacebookAuthProvider();
 }
 
 class FacebookProviderConfiguration extends OAuthProviderConfiguration {
@@ -88,9 +90,8 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
 
   @override
   bool isSupportedPlatform(TargetPlatform platform) {
-    return !kIsWeb &&
-        (platform == TargetPlatform.android ||
-            platform == TargetPlatform.iOS ||
-            platform == TargetPlatform.macOS);
+    return platform == TargetPlatform.android ||
+        platform == TargetPlatform.iOS ||
+        platform == TargetPlatform.macOS;
   }
 }

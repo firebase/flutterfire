@@ -88,9 +88,9 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     }
   }
 
-  void _submit([String? value]) {
+  void _submit([String? password]) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
-    final email = value ?? widget.email ?? emailCtrl.text;
+    final email = widget.email ?? emailCtrl.text;
 
     if (formKey.currentState!.validate()) {
       if (widget.onSubmit != null) {
@@ -98,7 +98,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       } else {
         ctrl.setEmailAndPassword(
           email,
-          passwordCtrl.text,
+          password ?? passwordCtrl.text,
         );
       }
     }
