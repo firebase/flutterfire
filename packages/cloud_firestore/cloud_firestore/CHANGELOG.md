@@ -1,7 +1,3 @@
-## 3.1.1
-
- - Suppress unchecked cast warnings (#7411)
-
 ## 3.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
