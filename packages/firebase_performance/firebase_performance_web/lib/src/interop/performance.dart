@@ -51,8 +51,9 @@ class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
 
   String getAttribute(String attr) => jsObject.getAttribute(attr);
 
-  Map<String, String> getAttributes() =>
-      dartify(jsObject.getAttributes()) as Map<String, String>;
+  Map<String, String> getAttributes() {
+    return dartify(jsObject.getAttributes()).cast<String, String>();
+  }
 
   int getMetric(String metricName) => jsObject.getMetric(metricName);
 
