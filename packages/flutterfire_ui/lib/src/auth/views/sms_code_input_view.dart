@@ -56,7 +56,6 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            key: key,
             children: [
               SMSCodeInput(
                 key: key,
