@@ -8,11 +8,11 @@ class Movie {
   Movie.fromJson(Map<String, Object?> json)
       : this(
           title: json['title']! as String,
-          genre: json['genre']! as String,
+          genre: (json['genre']! as List).cast<String>(),
         );
 
   final String title;
-  final String genre;
+  final List<String> genre;
 
   Map<String, Object?> toJson() {
     return {
