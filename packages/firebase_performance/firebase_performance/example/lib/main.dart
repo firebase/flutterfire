@@ -7,13 +7,14 @@ import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isIOS) {
+  if (kIsWeb || Platform.isIOS) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
         apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
