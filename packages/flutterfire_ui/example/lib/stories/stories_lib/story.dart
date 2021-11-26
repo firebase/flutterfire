@@ -9,73 +9,55 @@ class Stories extends StatefulWidget {
   State<Stories> createState() => _StoriesState();
 }
 
-class Category {
-  Category(this.title, this.stories);
+class _Category {
+  _Category(this.title);
 
   final String title;
-  final List<Story> stories;
-
-  final Set<String> _storyIds = {};
-
-  void addStory(Story story) {
-    if (_storyIds.contains(story.title)) return;
-    stories.add(story);
-    _storyIds.add(story.title);
-  }
+  final stories = <String, StoryWidget>{};
 }
 
 class _StoriesState extends State<Stories> {
-  final List<Category> _categories = [];
-  Map<String, Category> _categoriesMap = {};
+  final _categories = <String, _Category>{};
 
-  int _activeCategoryIndex = 0;
-  int _activeStoryIndex = 0;
+  String? _activeCategoryTitle;
+  String? _activeStoryTitle;
 
-  Story? get activeStory {
-    if (_categories.length < _activeCategoryIndex + 1) return null;
-    final category = _categories[_activeCategoryIndex];
-
-    if (category.stories.length < _activeStoryIndex + 1) return null;
-    return category.stories[_activeStoryIndex];
-  }
-
-  void registerStory(Story story) {
-    if (!_categoriesMap.containsKey(story.category)) {
-      final category = Category(story.category, []);
-      _categoriesMap[story.category] = category;
-      _categories.add(category);
-      category.addStory(story);
-    } else {
-      _categoriesMap[story.category]!.addStory(story);
-    }
+  StoryWidget? get activeStory {
+    return _categories[_activeCategoryTitle]?.stories[_activeStoryTitle];
   }
 
   @override
   void initState() {
-    widget.stories.forEach((w) {
-      final el = w.createElement();
-      el.build();
-      (el as StoryElement)._register(this);
-    });
-
+    _initializeCategories();
     super.initState();
+  }
+
+  void _initializeCategories() {
+    for (final story in widget.stories) {
+      final category = _categories.putIfAbsent(
+        story.category,
+        () => _Category(story.category),
+      );
+      category.stories[story.title] = story;
+    }
+
+    _activeCategoryTitle = _categories.keys.first;
+    _activeStoryTitle = _categories[_activeCategoryTitle]!.stories.keys.first;
   }
 
   @override
   Widget build(BuildContext context) {
-    final mq = MediaQuery.of(context);
-
     return Scaffold(
       body: Row(
         children: [
           SizedBox(
             width: 300,
-            height: mq.size.height,
+            height: double.infinity,
             child: Card(
               child: ListView.builder(
                 itemCount: _categories.length,
                 itemBuilder: (context, index) {
-                  final category = _categories[index];
+                  final category = _categories.values.elementAt(index);
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -89,19 +71,20 @@ class _StoriesState extends State<Stories> {
                       ),
                       Column(
                         children: [
-                          for (int i = 0; i < category.stories.length; i++)
+                          for (final story in category.stories.values)
                             ListTile(
                               title: Padding(
                                 padding: const EdgeInsets.only(left: 20),
-                                child: Text(category.stories[i].title),
+                                child: Text(story.title),
                               ),
                               dense: true,
-                              selected: i == _activeStoryIndex &&
-                                  index == _activeCategoryIndex,
+                              selected:
+                                  _activeCategoryTitle == category.title &&
+                                      story.title == _activeStoryTitle,
                               onTap: () {
                                 setState(() {
-                                  _activeCategoryIndex = index;
-                                  _activeStoryIndex = i;
+                                  _activeCategoryTitle = category.title;
+                                  _activeStoryTitle = story.title;
                                 });
                               },
                             ),
@@ -114,54 +97,50 @@ class _StoriesState extends State<Stories> {
             ),
           ),
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Stack(
-                  children: [
-                    Offstage(
-                      child: Row(
-                        children: [
-                          for (int i = 0; i < widget.stories.length; i++)
-                            SizedBox(
-                              width: constraints.biggest.width,
-                              height: constraints.biggest.height,
-                              child: widget.stories[i],
-                            )
-                        ],
-                      ),
-                    ),
-                    Navigator(
-                      key: ValueKey(activeStory.hashCode),
-                      onPopPage: (route, result) {
-                        return false;
-                      },
-                      pages: [
-                        MaterialPage(
-                          child: Center(
-                            child:
-                                activeStory?.widget ?? const SizedBox.shrink(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          SizedBox(
-            width: 300,
-            height: mq.size.height,
-            child: Card(
-              child: SingleChildScrollView(
-                child: activeStory != null && activeStory!.knobs.isNotEmpty
-                    ? KnobsPanel(knobs: activeStory!.knobs)
-                    : const SizedBox.shrink(),
-              ),
-            ),
+            child: activeStory ?? const SizedBox.shrink(),
           ),
         ],
       ),
+    );
+  }
+}
+
+class StoryScaffold extends StatelessWidget {
+  const StoryScaffold({
+    Key? key,
+    this.knobs = const [],
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+  final List<Knob<Object?>> knobs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Navigator(
+            onPopPage: (route, result) => false,
+            pages: [
+              MaterialPage(
+                child: Center(child: child),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 300,
+          height: double.infinity,
+          child: Card(
+            child: SingleChildScrollView(
+              child: knobs.isNotEmpty
+                  ? KnobsPanel(knobs: knobs)
+                  : const SizedBox.shrink(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -363,8 +342,17 @@ class StoryElement extends StatelessElement implements Story {
     );
   }
 
-  void _register(_StoriesState state) {
-    _widgetKnobs[widget.hashCode] = knobs;
-    state.registerStory(this);
+  @override
+  Widget build() {
+    // Make sure to call "build" before building StoryScaffold
+    // as the list of "knobs" is obtained by tracking the "build" call
+    final child = super.build();
+
+    if (knobs.isEmpty) return child;
+
+    return StoryScaffold(
+      knobs: knobs,
+      child: child,
+    );
   }
 }

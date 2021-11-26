@@ -4,6 +4,7 @@ import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dar
 import 'package:flutterfire_ui_example/stories/views/forgot_password_view.dart';
 import 'package:flutterfire_ui_example/stories/widgets/apple_sign_in_button.dart';
 import 'package:flutterfire_ui_example/stories/widgets/facebook_sign_in_button.dart';
+import 'package:flutterfire_ui_example/stories/widgets/firestore_list_view.dart';
 import 'package:flutterfire_ui_example/stories/widgets/google_sign_in_button.dart';
 import 'package:flutterfire_ui_example/stories/widgets/sms_code_input.dart';
 import 'package:flutterfire_ui_example/stories/widgets/twitter_sign_in_button.dart';
@@ -59,6 +60,7 @@ class StoriesApp extends StatelessWidget {
           SMSCodeInputStory(),
           UserAvatarStory(),
           SignOutButtonStory(),
+          FirestoreListViewStory(),
         ],
       ),
     );

@@ -7,7 +7,5 @@ class SignOutButtonStory extends StoryWidget {
       : super(key: key, category: 'Widgets', title: 'SignOutButton');
 
   @override
-  Widget build(BuildContext context) {
-    return const SignOutButton();
-  }
+  Widget build(BuildContext context) => const SignOutButton();
 }

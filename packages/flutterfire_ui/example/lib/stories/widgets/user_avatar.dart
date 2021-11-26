@@ -7,7 +7,5 @@ class UserAvatarStory extends StoryWidget {
       : super(key: key, category: 'Widgets', title: 'UserAvatar');
 
   @override
-  Widget build(BuildContext context) {
-    return const UserAvatar();
-  }
+  Widget build(BuildContext context) => const UserAvatar();
 }
