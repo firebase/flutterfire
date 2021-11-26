@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -12,7 +13,19 @@ import 'package:pedantic/pedantic.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+        appId: '1:448618578101:ios:bfee21690b400a65ac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+      ),
+    );
+  } else {
+    // Android SDK inits perf monitoring on application cold start before Firebase app is initialized
+    await Firebase.initializeApp();
+  }
   runApp(MyApp());
 }
 
@@ -100,7 +113,7 @@ class _MyAppState extends State<MyApp> {
       _trace1HasRan = false;
     });
 
-    final Trace trace = _performance.newTrace('test_trace_1');
+    final Trace trace = _performance.newTrace('test_trace_3');
     await trace.start();
     trace.putAttribute('favorite_color', 'blue');
     trace.putAttribute('to_be_removed', 'should_not_be_logged');
@@ -153,7 +166,7 @@ class _MyAppState extends State<MyApp> {
 
     final Request request = Request(
       'SEND',
-      Uri.parse('https://www.google.com'),
+      Uri.parse('https://www.bbc.co.uk'),
     );
 
     unawaited(metricHttpClient.send(request));
