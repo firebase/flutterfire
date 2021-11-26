@@ -26,7 +26,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Builds an instance of [FirebasePerformanceWeb] with an optional [FirebaseApp] instance
   /// Performance web currently only supports the default app instance
-  FirebasePerformanceWeb({required FirebaseApp app}) : super(appInstance: app);
+  FirebasePerformanceWeb() : super();
 
   /// Initializes a stub instance to allow the class to be registered.
   static FirebasePerformanceWeb get instance {
@@ -40,15 +40,13 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   FirebasePerformancePlatform delegateFor({required FirebaseApp app}) {
-    return FirebasePerformanceWeb(app: app);
+    return FirebasePerformanceWeb();
   }
 
   @visibleForTesting
-  // ignore: use_setters_to_change_properties
-  static void registerWithForTest(
-    FirebasePerformancePlatform firebasePerformancePlatform,
-  ) {
-    FirebasePerformancePlatform.instance = firebasePerformancePlatform;
+  // ignore: avoid_setters_without_getters
+  set mockDelegate(performance_interop.Performance performance) {
+    _webPerformance = performance;
   }
 
   @override

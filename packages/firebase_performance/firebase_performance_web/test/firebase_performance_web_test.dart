@@ -1,5 +1,6 @@
 @TestOn('chrome') // Uses web-only Flutter SDK
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:firebase_performance_web/firebase_performance_web.dart';
 import 'package:firebase_performance_web/src/interop/performance.dart';
@@ -13,13 +14,13 @@ class MockTrace extends Mock implements Trace {}
 
 void main() {
   group('FirebasePerformanceWeb', () {
-    late FirebasePerformancePlatform firebasePerformancePlatform;
+    late FirebasePerformanceWeb firebasePerformancePlatform;
     late MockPerformance mockPerformance;
 
     setUp(() {
       mockPerformance = MockPerformance();
-      firebasePerformancePlatform =
-          FirebasePerformanceWeb(performance: mockPerformance);
+      firebasePerformancePlatform = FirebasePerformanceWeb();
+      firebasePerformancePlatform.mockDelegate = mockPerformance;
     });
 
     test('isPerformanceCollectionEnabled', () async {
