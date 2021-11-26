@@ -7,6 +7,6 @@
 
 library firebase_ml_custom;
 
-export 'src/model_management/firebase_model_manager.dart';
 export 'src/model_management/firebase_model_download_conditions.dart';
+export 'src/model_management/firebase_model_manager.dart';
 export 'src/model_management/firebase_remote_model.dart';

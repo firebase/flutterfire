@@ -1,15 +1,22 @@
-# firebase_ml_model_downloader
+# Firebase ML Model Downloader for Flutter
+[![pub package](https://img.shields.io/pub/v/firebase_ml_model_downloader.svg)](https://pub.dev/packages/firebase_ml_model_downloader)
 
-A new flutter plugin project.
+A Flutter plugin to use the [Firebase ML Model Downloader API](https://firebase.google.com/docs/ml/).
 
 ## Getting Started
 
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+To get started with Firebase ML Model Downloader, please [see the documentation](https://firebase.flutter.dev/docs/ml/overview).
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Usage
 
+To use this plugin, please visit the [Firebase ML Model Downloader Usage documentation](https://firebase.flutter.dev/docs/ml/usage)
+
+## Issues and feedback
+
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
