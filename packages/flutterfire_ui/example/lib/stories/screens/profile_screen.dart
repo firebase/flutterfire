@@ -8,24 +8,23 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
 
 class ProfileScreenStory extends StoryWidget {
-  const ProfileScreenStory({Key? key}) : super(key: key);
+  const ProfileScreenStory({Key? key})
+      : super(key: key, category: 'Screens', title: 'ProfileScreen');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Screens';
-    story.title = 'ProfileScreen';
-
-    final emailEnabled = story.knob<bool>(title: 'Email provider', value: true);
-    final phoneEnabled = story.knob<bool>(title: 'Phone provider', value: true);
-    final googleEnabled = story.knob<bool>(title: 'Google OAuth', value: true);
-    final appleEnabled = story.knob<bool>(title: 'Apple OAuth', value: true);
-    final facebookEnabled = story.knob<bool>(
+  Widget build(StoryElement context) {
+    final emailEnabled =
+        context.knob<bool>(title: 'Email provider', value: true);
+    final phoneEnabled =
+        context.knob<bool>(title: 'Phone provider', value: true);
+    final googleEnabled =
+        context.knob<bool>(title: 'Google OAuth', value: true);
+    final appleEnabled = context.knob<bool>(title: 'Apple OAuth', value: true);
+    final facebookEnabled = context.knob<bool>(
       title: 'Facebook OAuth',
       value: true,
     );
-    final twitterEnabled = story.knob<bool>(
+    final twitterEnabled = context.knob<bool>(
       title: 'Twitter OAuth',
       value: true,
     );

@@ -3,15 +3,11 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
 
 class SMSCodeInputScreenStory extends StoryWidget {
-  const SMSCodeInputScreenStory({Key? key}) : super(key: key);
+  const SMSCodeInputScreenStory({Key? key})
+      : super(key: key, category: 'Screens', title: 'SMSCodeInputScreen');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Screens';
-    story.title = 'SMSCodeInputScreen';
-
+  Widget build(StoryElement context) {
     return const SMSCodeInputScreen(
       flowKey: Object(),
     );

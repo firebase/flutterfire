@@ -5,19 +5,15 @@ import 'package:flutter/widgets.dart';
 const _flowKey = Object();
 
 class PhoneInputViewStory extends StoryWidget {
-  const PhoneInputViewStory({Key? key}) : super(key: key);
+  const PhoneInputViewStory({Key? key})
+      : super(key: key, category: 'Views', title: 'PhoneInputView');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Views';
-    story.title = 'PhoneInputView';
-
+  Widget build(StoryElement context) {
     return PhoneInputView(
       flowKey: _flowKey,
       onSubmit: (number) {
-        story.notify('SMSCode submitted $number');
+        context.notify('SMSCode submitted $number');
       },
     );
   }

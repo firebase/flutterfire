@@ -238,10 +238,7 @@ class EnumKnobControl extends StatelessWidget {
 abstract class Story {
   Widget get widget;
   String get category;
-  set category(String category);
-
   String get title;
-  set title(String title);
 
   List<Knob> get knobs;
 
@@ -257,17 +254,20 @@ abstract class Story {
 }
 
 abstract class StoryWidget extends StatelessWidget {
-  const StoryWidget({Key? key}) : super(key: key);
+  const StoryWidget({
+    Key? key,
+    required this.category,
+    required this.title,
+  }) : super(key: key);
+
+  final String category;
+  final String title;
 
   @override
-  StatelessElement createElement() {
-    return StoryElement(this);
-  }
+  Widget build(covariant StoryElement context);
 
   @override
-  Widget build(BuildContext context);
-
-  Story storyOf(BuildContext context) => context as Story;
+  StatelessElement createElement() => StoryElement(this);
 }
 
 class Knob<T> extends ValueNotifier<T> {
@@ -294,12 +294,15 @@ class EnumKnob<T> extends MultiValueKnob<T> {
 final _widgetKnobs = <int, List<Knob>>{};
 
 class StoryElement extends StatelessElement implements Story {
-  StoryElement(StatelessWidget widget) : super(widget);
+  StoryElement(StoryWidget widget) : super(widget);
 
   @override
-  late String category;
+  StoryWidget get widget => super.widget as StoryWidget;
+
   @override
-  late String title;
+  String get category => widget.category;
+  @override
+  String get title => widget.title;
 
   @override
   final List<Knob> knobs = [];
@@ -358,10 +361,5 @@ class StoryElement extends StatelessElement implements Story {
   void _register(_StoriesState state) {
     _widgetKnobs[widget.hashCode] = knobs;
     state.registerStory(this);
-  }
-
-  @override
-  Widget build() {
-    return (widget as StoryWidget).build(this);
   }
 }

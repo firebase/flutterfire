@@ -3,18 +3,14 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/material.dart';
 
 class SMSCodeInputStory extends StoryWidget {
-  const SMSCodeInputStory({Key? key}) : super(key: key);
+  const SMSCodeInputStory({Key? key})
+      : super(key: key, category: 'Widgets', title: 'SMSCodeInput');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Widgets';
-    story.title = 'SMSCodeInput';
-
+  Widget build(StoryElement context) {
     return SMSCodeInput(
       onSubmit: (String phoneNumber) {
-        story.notify('Phone number submitted: $phoneNumber');
+        context.notify('Phone number submitted: $phoneNumber');
       },
     );
   }

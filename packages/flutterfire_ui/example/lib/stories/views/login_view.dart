@@ -8,30 +8,29 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginViewStory extends StoryWidget {
-  const LoginViewStory({Key? key}) : super(key: key);
+  const LoginViewStory({Key? key})
+      : super(key: key, category: 'Views', title: 'LoginView');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Views';
-    story.title = 'LoginView';
-
-    final action = story.enumKnob(
+  Widget build(StoryElement context) {
+    final action = context.enumKnob(
       title: 'Auth action',
       value: AuthAction.signIn,
       values: AuthAction.values,
     );
 
-    final emailEnabled = story.knob<bool>(title: 'Email provider', value: true);
-    final phoneEnabled = story.knob<bool>(title: 'Email provider', value: true);
-    final googleEnabled = story.knob<bool>(title: 'Google OAuth', value: true);
-    final appleEnabled = story.knob<bool>(title: 'Apple OAuth', value: true);
-    final facebookEnabled = story.knob<bool>(
+    final emailEnabled =
+        context.knob<bool>(title: 'Email provider', value: true);
+    final phoneEnabled =
+        context.knob<bool>(title: 'Email provider', value: true);
+    final googleEnabled =
+        context.knob<bool>(title: 'Google OAuth', value: true);
+    final appleEnabled = context.knob<bool>(title: 'Apple OAuth', value: true);
+    final facebookEnabled = context.knob<bool>(
       title: 'Facebook OAuth',
       value: true,
     );
-    final twitterEnabled = story.knob<bool>(
+    final twitterEnabled = context.knob<bool>(
       title: 'Twitter OAuth',
       value: true,
     );

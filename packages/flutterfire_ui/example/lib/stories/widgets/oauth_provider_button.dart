@@ -4,8 +4,8 @@ import 'package:flutterfire_ui/auth/facebook.dart';
 import 'package:flutterfire_ui/auth/google.dart';
 import 'package:flutterfire_ui/auth/twitter.dart';
 import 'package:flutterfire_ui_example/config.dart';
-import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 
 enum OAuthProviders {
   google,
@@ -15,16 +15,12 @@ enum OAuthProviders {
 }
 
 class OAuthProviderButtonStory extends StoryWidget {
-  const OAuthProviderButtonStory({Key? key}) : super(key: key);
+  const OAuthProviderButtonStory({Key? key})
+      : super(key: key, category: 'Widgets', title: 'OAuthProviderButton');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Widgets';
-    story.title = 'OAuthProviderButton';
-
-    final provider = story.enumKnob<OAuthProviders>(
+  Widget build(StoryElement context) {
+    final provider = context.enumKnob<OAuthProviders>(
       title: 'OAuth provider',
       value: OAuthProviders.google,
       values: OAuthProviders.values,
@@ -56,7 +52,7 @@ class OAuthProviderButtonStory extends StoryWidget {
     return OAuthProviderButton(
       providerConfig: config,
       onTap: () {
-        story.notify('Button pressed');
+        context.notify('Button pressed');
       },
     );
   }

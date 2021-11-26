@@ -5,19 +5,15 @@ import 'package:flutter/widgets.dart';
 const _flowKey = Object();
 
 class SMSCodeInputViewStory extends StoryWidget {
-  const SMSCodeInputViewStory({Key? key}) : super(key: key);
+  const SMSCodeInputViewStory({Key? key})
+      : super(key: key, category: 'Views', title: 'SMSCodeInputView');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Views';
-    story.title = 'SMSCodeInputView';
-
+  Widget build(StoryElement context) {
     return SMSCodeInputView(
       flowKey: _flowKey,
       onSubmit: (code) {
-        story.notify('sms code submitted $code');
+        context.notify('sms code submitted $code');
       },
     );
   }

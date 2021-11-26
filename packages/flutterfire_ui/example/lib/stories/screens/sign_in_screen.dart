@@ -10,26 +10,25 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../stories_lib/story.dart';
 
 class SignInScreenStory extends StoryWidget {
-  const SignInScreenStory({Key? key}) : super(key: key);
+  const SignInScreenStory({Key? key})
+      : super(key: key, category: 'Screens', title: 'SignInSceen');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
+  Widget build(StoryElement context) {
+    final renderImage = context.knob<bool>(title: 'With image', value: true);
 
-    story.category = 'Screens';
-    story.title = 'SignInScreen';
-
-    final renderImage = story.knob<bool>(title: 'With image', value: true);
-
-    final emailEnabled = story.knob<bool>(title: 'Email provider', value: true);
-    final phoneEnabled = story.knob<bool>(title: 'Phone provider', value: true);
-    final googleEnabled = story.knob<bool>(title: 'Google OAuth', value: true);
-    final appleEnabled = story.knob<bool>(title: 'Apple OAuth', value: true);
-    final facebookEnabled = story.knob<bool>(
+    final emailEnabled =
+        context.knob<bool>(title: 'Email provider', value: true);
+    final phoneEnabled =
+        context.knob<bool>(title: 'Phone provider', value: true);
+    final googleEnabled =
+        context.knob<bool>(title: 'Google OAuth', value: true);
+    final appleEnabled = context.knob<bool>(title: 'Apple OAuth', value: true);
+    final facebookEnabled = context.knob<bool>(
       title: 'Facebook OAuth',
       value: true,
     );
-    final twitterEnabled = story.knob<bool>(
+    final twitterEnabled = context.knob<bool>(
       title: 'Twitter OAuth',
       value: true,
     );

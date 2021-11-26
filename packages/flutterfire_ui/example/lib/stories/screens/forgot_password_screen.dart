@@ -3,18 +3,14 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
 
 class ForgotPasswordScreenStory extends StoryWidget {
-  const ForgotPasswordScreenStory({Key? key}) : super(key: key);
+  const ForgotPasswordScreenStory({Key? key})
+      : super(key: key, category: 'Widgets', title: 'ForgotPasswordScreen');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Screens';
-    story.title = 'ForgotPasswordScreen';
-
+  Widget build(StoryElement context) {
     return ForgotPasswordScreen(
-      onEmailSent: (context) {
-        story.notify('Password reset email sent');
+      onEmailSent: (_) {
+        context.notify('Password reset email sent');
       },
     );
   }

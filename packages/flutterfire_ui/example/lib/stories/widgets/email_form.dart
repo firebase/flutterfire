@@ -4,16 +4,12 @@ import 'package:flutterfire_ui/auth.dart';
 import '../stories_lib/story.dart';
 
 class EmailFormWidgetStory extends StoryWidget {
-  const EmailFormWidgetStory({Key? key}) : super(key: key);
+  const EmailFormWidgetStory({Key? key})
+      : super(key: key, title: 'EmailForm', category: 'Widgets');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Widgets';
-    story.title = 'EmailForm';
-
-    final action = story.enumKnob(
+  Widget build(StoryElement context) {
+    final action = context.enumKnob(
       title: 'Auth action',
       value: AuthAction.signIn,
       values: AuthAction.values,
@@ -23,7 +19,7 @@ class EmailFormWidgetStory extends StoryWidget {
       child: EmailForm(
         action: action,
         onSubmit: (email, password) {
-          story.notify('Submitted $email $password');
+          context.notify('Submitted $email $password');
         },
       ),
     );

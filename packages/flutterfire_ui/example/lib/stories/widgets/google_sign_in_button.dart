@@ -4,19 +4,15 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/material.dart';
 
 class GoogleSignInButtonStory extends StoryWidget {
-  const GoogleSignInButtonStory({Key? key}) : super(key: key);
+  const GoogleSignInButtonStory({Key? key})
+      : super(key: key, category: 'Widgets', title: 'GoogleSignInButton');
 
   @override
-  Widget build(BuildContext context) {
-    final story = storyOf(context);
-
-    story.category = 'Widgets';
-    story.title = 'GoogleSignInButton';
-
+  Widget build(StoryElement context) {
     return GoogleSignInButton(
       clientId: GOOGLE_CLIENT_ID,
       onTap: () {
-        story.notify('Button pressed');
+        context.notify('Button pressed');
       },
     );
   }
