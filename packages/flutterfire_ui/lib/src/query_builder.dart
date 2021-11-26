@@ -334,7 +334,51 @@ class _Sentinel {
   const _Sentinel();
 }
 
-/// A [ListView.builder] that
+/// A [ListView.builder] that obtains its items from a Firestore query.
+///
+/// As an example, consider the following collection:
+///
+/// ```dart
+/// class Movie {
+///   Movie({required this.title, required this.genre});
+///
+///   Movie.fromJson(Map<String, Object?> json)
+///     : this(
+///         title: json['title']! as String,
+///         genre: json['genre']! as String,
+///       );
+///
+///   final String title;
+///   final String genre;
+///
+///   Map<String, Object?> toJson() {
+///     return {
+///       'title': title,
+///       'genre': genre,
+///     };
+///   }
+/// }
+///
+/// final moviesCollection = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
+///      fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
+///      toFirestore: (movie, _) => movie.toJson(),
+///    );
+/// ```
+///
+///
+/// Using [FirestoreListView], we can now show the list of movies by writing:
+///
+/// ```dart
+/// FirestoreListView<Movie>(
+///   query: moviesCollection.orderBy('title'),
+///   itemBuilder: (context, snapshot) {
+///     Movie movie = snapshot.data();
+///     return Text(movie.title);
+///   },
+/// )
+/// ```
+///
+/// For advanced UI use-cases, consider switching to [FirestoreQueryBuilder].
 class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
   FirestoreListView({
     Key? key,

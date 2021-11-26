@@ -41,19 +41,62 @@ Future<void> main() async {
 
 Next, import the FlutterFire UI for Firestore package:
 
-// TODO confirm import
-
 ```dart
 import 'package:flutterfire_ui/firestore.dart';
 ```
 
 ### `FirestoreListView`
 
+A [ListView.builder] that obtains its items from a Firestore query.
+
+As an example, consider the following collection:
+
+```dart
+class Movie {
+  Movie({required this.title, required this.genre});
+
+  Movie.fromJson(Map<String, Object?> json)
+    : this(
+        title: json['title']! as String,
+        genre: json['genre']! as String,
+      );
+
+  final String title;
+  final String genre;
+
+  Map<String, Object?> toJson() {
+    return {
+      'title': title,
+      'genre': genre,
+    };
+  }
+}
+
+final moviesCollection = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
+     fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
+     toFirestore: (movie, _) => movie.toJson(),
+   );
+```
+
+Using [FirestoreListView], we can now show the list of movies by writing:
+
+```dart
+FirestoreListView<Movie>(
+  query: moviesCollection.orderBy('title'),
+  itemBuilder: (context, snapshot) {
+    Movie movie = snapshot.data();
+    return Text(movie.title);
+  },
+)
+```
+
+For advanced UI use-cases, consider switching to [FirestoreQueryBuilder].
+
 ### `FirestoreQueryBuilder`
 
-The `FirestoreQueryBuilder` widget enables you to build any UI within your application, whilst having
+The [FirestoreQueryBuilder] widget enables you to build any UI within your application, whilst having
 the power of realtime Firestore data and infinite scrolling. The widget is a lower-level abstraction of
-`FirestoreListView`, which gives you full control on exactly how your data is displayed.
+[FirestoreListView], which gives you full control on exactly how your data is displayed.
 
 ```dart
 FirestoreQueryBuilder<Movie>(
@@ -93,6 +136,8 @@ FirestoreQueryBuilder<Movie>(
 )
 ```
 
-The `FirestoreQueryBuilder` widget enables us to return any UI we want, whilst also providing the
+The [FirestoreQueryBuilder] widget enables us to return any UI we want, whilst also providing the
 ability to fetch more data as the user scrolls.
 
+[firestorelistview]: https://firebase.flutter.dev/docs/ui/firestore#firestorelistview
+[firestorequerybuilder]: https://firebase.flutter.dev/docs/ui/firestore#firestorequerybuilder
