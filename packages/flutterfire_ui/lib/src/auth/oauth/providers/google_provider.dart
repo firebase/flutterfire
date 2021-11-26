@@ -9,7 +9,6 @@ import 'package:desktop_webview_auth/google.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../../auth_flow.dart';
-import '../../configs/oauth_provider_configuration.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../../widgets/google_sign_in_button.dart';
 import '../oauth_providers.dart';

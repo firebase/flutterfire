@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import '../auth_controller.dart';
 
 /// A screen displaying a UI which allows users to enter an SMS validation code
 /// sent from Firebase.

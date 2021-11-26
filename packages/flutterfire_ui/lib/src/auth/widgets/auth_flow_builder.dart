@@ -81,7 +81,7 @@ class _AuthFlowBuilderState<T extends AuthController>
       AuthFlowBuilder._flows[widget.flowKey!] = flow;
 
       flow.onDispose = () {
-        AuthFlowBuilder._flows.remove(widget.flowKey!);
+        AuthFlowBuilder._flows.remove(widget.flowKey);
       };
     }
 

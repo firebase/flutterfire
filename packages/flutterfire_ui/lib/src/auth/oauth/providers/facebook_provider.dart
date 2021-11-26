@@ -9,7 +9,6 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../../widgets/facebook_sign_in_button.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
-import '../../configs/oauth_provider_configuration.dart';
 import '../../oauth/provider_resolvers.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';

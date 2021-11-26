@@ -123,7 +123,7 @@ class ResponsiveGridOverlay extends StatefulWidget {
 }
 
 class _ResponsiveGridOverlayState extends State<ResponsiveGridOverlay> {
-  late var overlayVisible = widget.enabled;
+  late bool overlayVisible = widget.enabled;
 
   @override
   void initState() {
@@ -150,7 +150,6 @@ class _ResponsiveGridOverlayState extends State<ResponsiveGridOverlay> {
         if (widget.child != null) widget.child!,
         if (overlayVisible)
           const IgnorePointer(
-            ignoring: true,
             child: Body(child: _ResponsiveGrid()),
           ),
       ],
@@ -261,7 +260,7 @@ class ColWidth extends ResponsiveValue<int> {
           desktop: desktop,
         );
 
-  static expand() {
+  static ColWidth expand() {
     return ColWidth(
       phone: _colsCount[DeviceType.phone]!,
       phablet: _colsCount[DeviceType.phablet]!,

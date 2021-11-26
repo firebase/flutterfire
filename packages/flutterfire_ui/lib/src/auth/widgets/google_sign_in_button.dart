@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/auth/google.dart';
 
-import '../configs/oauth_provider_configuration.dart';
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
 

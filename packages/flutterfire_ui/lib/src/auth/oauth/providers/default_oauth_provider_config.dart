@@ -12,7 +12,7 @@ OAuthProviderConfiguration
       throw Exception("Can't create default provider configuration for $T");
 
     case Apple:
-      return AppleProviderConfiguration();
+      return const AppleProviderConfiguration();
 
     default:
       throw Exception("Can't create default provider configuration for $T");

@@ -3,10 +3,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
 
-import '../auth_controller.dart';
-import '../widgets/auth_flow_builder.dart';
-import '../flows/phone_auth_flow.dart';
-
 typedef SMSCodeRequestedCallback = void Function(
   BuildContext context,
   AuthAction? action,

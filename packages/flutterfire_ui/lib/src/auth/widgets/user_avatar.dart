@@ -28,7 +28,11 @@ class _UserAvatarState extends State<UserAvatar> {
   late String? photoUrl = auth.currentUser?.photoURL;
 
   Widget _imageFrameBuilder(
-      BuildContext context, Widget? child, int? frame, bool? _) {
+    BuildContext context,
+    Widget? child,
+    int? frame,
+    bool? _,
+  ) {
     if (frame == null) {
       return Container(color: placeholderColor);
     }

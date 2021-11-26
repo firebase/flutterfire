@@ -11,6 +11,6 @@ class UserAvatarStory extends StoryWidget {
     story.category = 'Widgets';
     story.title = 'UserAvatar';
 
-    return UserAvatar();
+    return const UserAvatar();
   }
 }

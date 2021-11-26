@@ -27,12 +27,12 @@ dependencies:
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   firebase_dynamic_links: ^2.0.7
-  flutterfire_ui:
-    path: ../
   flutter:
     sdk: flutter
   flutter_facebook_auth: '^3.5.0'
   flutter_svg: ^0.22.0
+  flutterfire_ui:
+    path: ../
   google_sign_in: ^5.0.7
   sign_in_with_apple: ^3.1.0
   storybook_flutter: ^0.1.5
@@ -40,14 +40,14 @@ dependencies:
 
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
-  integration_test:
-    sdk: flutter
   flutter_driver:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  test: any
+  integration_test:
+    sdk: flutter
   mockito: ^5.0.0
+  test: any
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

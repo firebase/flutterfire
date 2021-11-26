@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/material.dart';
 
-import 'sms_code_input_screen.dart';
-
 /// A screen displaying a fully styled phone number entry screen, with a country-code
 /// picker.
 ///

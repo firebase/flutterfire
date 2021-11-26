@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
-import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/foundation.dart';
@@ -74,7 +73,7 @@ class AppleProviderImpl extends Apple {
   }
 
   @override
-  get firebaseAuthProvider => null;
+  dynamic get firebaseAuthProvider => null;
 }
 
 class AppleProviderConfiguration extends OAuthProviderConfiguration {

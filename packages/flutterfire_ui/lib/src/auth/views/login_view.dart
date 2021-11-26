@@ -1,7 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
@@ -9,8 +7,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import '../configs/provider_configuration.dart';
-import '../configs/oauth_provider_configuration.dart';
-import '../widgets/internal/oauth_provider_button.dart';
 
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;

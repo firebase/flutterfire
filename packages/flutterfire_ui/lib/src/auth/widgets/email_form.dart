@@ -3,12 +3,8 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/src/auth/widgets/password_input.dart';
 
-import '../configs/email_provider_configuration.dart';
-import '../auth_state.dart';
 import '../validators.dart';
-import 'error_text.dart';
 
 typedef EmailSubmitCallback = void Function(String email, String password);
 

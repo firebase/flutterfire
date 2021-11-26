@@ -7,9 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart'
         FirebaseAuth,
         UserCredential;
 
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart'
-    show FirebaseDynamicLinks;
-
 import 'package:flutterfire_ui/src/auth/auth_controller.dart';
 
 import '../configs/email_provider_configuration.dart';

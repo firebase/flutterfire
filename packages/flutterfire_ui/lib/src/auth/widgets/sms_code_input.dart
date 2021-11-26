@@ -4,9 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart' show PhoneAuthCredential;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import '../auth_state.dart';
-import 'error_text.dart';
-
 class _NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;
   final Color color;

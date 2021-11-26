@@ -3,7 +3,6 @@ import 'package:flutterfire_ui/src/auth/auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/src/auth/configs/provider_configuration.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/src/foundation/platform.dart';
 
 import '../flows/phone_auth_flow.dart';
 

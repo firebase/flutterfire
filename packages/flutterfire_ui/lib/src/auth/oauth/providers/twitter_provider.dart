@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:desktop_webview_auth/src/provider_args.dart';
 import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:flutterfire_ui/i10n.dart';
@@ -8,7 +7,6 @@ import 'package:twitter_login/twitter_login.dart';
 
 import 'package:flutterfire_ui/auth.dart';
 import '../../oauth/provider_resolvers.dart';
-import '../../configs/oauth_provider_configuration.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../../widgets/twitter_sign_in_button.dart';
 

@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_example/stories/screens/profile_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dart';
 import 'package:flutterfire_ui_example/stories/views/forgot_password_view.dart';

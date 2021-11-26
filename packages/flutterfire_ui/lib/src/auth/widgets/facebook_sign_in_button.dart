@@ -3,9 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/auth/facebook.dart';
-import 'package:flutterfire_ui/i10n.dart';
 
-import '../configs/oauth_provider_configuration.dart';
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
 
