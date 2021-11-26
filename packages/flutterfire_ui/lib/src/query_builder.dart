@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// {@template firebase_ui.firestore_query_builder}
@@ -32,7 +33,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 ///       itemBuilder: (context, index) {
 ///         // if we reached the end of the currently obtained items, we try to
 ///         // obtain more items
-///         if (snapshot.hasMore && index == snapshot.docs.length) {
+///         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
 ///           // Tell FirestoreQueryBuilder to try to obtain more items.
 ///           // It is safe to call this function from within the build method.
 ///           snapshot.fetchMore();
@@ -331,4 +332,91 @@ class _QueryBuilderSnapshot<Document>
 
 class _Sentinel {
   const _Sentinel();
+}
+
+/// A [ListView.builder] that
+class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
+  FirestoreListView({
+    Key? key,
+    required Query<Document> query,
+    required Widget Function(
+      BuildContext context,
+      QueryDocumentSnapshot<Document> doc,
+    )
+        itemBuilder,
+    int pageSize = 10,
+    Widget Function(BuildContext context)? loadingBuilder,
+    Widget Function(
+      BuildContext context,
+      Object error,
+      StackTrace stackTrace,
+    )?
+        errorBuilder,
+    Axis scrollDirection = Axis.vertical,
+    bool reverse = false,
+    ScrollController? controller,
+    bool? primary,
+    ScrollPhysics? physics,
+    bool shrinkWrap = false,
+    EdgeInsetsGeometry? padding,
+    double? itemExtent,
+    Widget? prototypeItem,
+    bool addAutomaticKeepAlives = true,
+    bool addRepaintBoundaries = true,
+    bool addSemanticIndexes = true,
+    double? cacheExtent,
+    int? semanticChildCount,
+    DragStartBehavior dragStartBehavior = DragStartBehavior.start,
+    ScrollViewKeyboardDismissBehavior keyboardDismissBehavior =
+        ScrollViewKeyboardDismissBehavior.manual,
+    String? restorationId,
+    Clip clipBehavior = Clip.hardEdge,
+  }) : super(
+          key: key,
+          query: query,
+          pageSize: pageSize,
+          builder: (context, snapshot, _) {
+            if (snapshot.isFetching) {
+              return loadingBuilder?.call(context) ??
+                  const Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError && errorBuilder != null) {
+              return errorBuilder(
+                context,
+                snapshot.error!,
+                snapshot.stackTrace!,
+              );
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.docs.length,
+              itemBuilder: (context, index) {
+                final isLastItem = index + 1 == snapshot.docs.length;
+                if (isLastItem && snapshot.hasMore) snapshot.fetchMore();
+
+                final doc = snapshot.docs[index];
+                return itemBuilder(context, doc);
+              },
+              scrollDirection: scrollDirection,
+              reverse: reverse,
+              controller: controller,
+              primary: primary,
+              physics: physics,
+              shrinkWrap: shrinkWrap,
+              padding: padding,
+              itemExtent: itemExtent,
+              prototypeItem: prototypeItem,
+              addAutomaticKeepAlives: addAutomaticKeepAlives,
+              addRepaintBoundaries: addRepaintBoundaries,
+              addSemanticIndexes: addSemanticIndexes,
+              cacheExtent: cacheExtent,
+              semanticChildCount: semanticChildCount,
+              dragStartBehavior: dragStartBehavior,
+              keyboardDismissBehavior: keyboardDismissBehavior,
+              restorationId: restorationId,
+              clipBehavior: clipBehavior,
+            );
+          },
+        );
 }

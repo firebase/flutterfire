@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'firestore_query_builder_test.dart' as firestore_query_builder;
+import 'firestore_list_view_test.dart' as firestore_list_view;
 
 import 'utils.dart';
 
@@ -14,4 +15,5 @@ void main() {
   setUpAll(setupEmulator);
 
   firestore_query_builder.main();
+  firestore_list_view.main();
 }
