@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 class Stories extends StatefulWidget {
-  final List<StoryWidget> stories;
   const Stories({Key? key, required this.stories}) : super(key: key);
+
+  final List<StoryWidget> stories;
 
   @override
   State<Stories> createState() => _StoriesState();
 }
 
 class Category {
+  Category(this.title, this.stories);
+
   final String title;
   final List<Story> stories;
 
   final Set<String> _storyIds = {};
-
-  Category(this.title, this.stories);
 
   void addStory(Story story) {
     if (_storyIds.contains(story.title)) return;
@@ -166,8 +167,9 @@ class _StoriesState extends State<Stories> {
 }
 
 class KnobsPanel extends StatefulWidget {
-  final List<Knob> knobs;
   const KnobsPanel({Key? key, required this.knobs}) : super(key: key);
+
+  final List<Knob> knobs;
 
   @override
   _KnobsPanelState createState() => _KnobsPanelState();
@@ -189,8 +191,9 @@ class _KnobsPanelState extends State<KnobsPanel> {
 }
 
 class BoolKnobControl extends StatelessWidget {
-  final Knob<bool> knob;
   const BoolKnobControl({Key? key, required this.knob}) : super(key: key);
+
+  final Knob<bool> knob;
 
   @override
   Widget build(BuildContext context) {
@@ -205,8 +208,9 @@ class BoolKnobControl extends StatelessWidget {
 }
 
 class EnumKnobControl extends StatelessWidget {
-  final EnumKnob knob;
   const EnumKnobControl({Key? key, required this.knob}) : super(key: key);
+
+  final EnumKnob knob;
 
   @override
   Widget build(BuildContext context) {
@@ -283,8 +287,9 @@ class Knob<T> extends ValueNotifier<T> {
 }
 
 class MultiValueKnob<T> extends Knob<T> {
-  final List<T> values;
   MultiValueKnob(String title, T value, this.values) : super(title, value);
+
+  final List<T> values;
 }
 
 class EnumKnob<T> extends MultiValueKnob<T> {
