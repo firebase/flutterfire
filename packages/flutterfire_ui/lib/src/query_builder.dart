@@ -47,6 +47,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// )
 /// ```
 /// {@endtemplate}
+/// {@subCategory service:firestore}
+/// {@subCategory type:widget}
+/// {@subCategory description:A widget that listens to a query.}
+/// {@subCategory img:https://place-hold.it/400x150}
 class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// {@macro firebase_ui.firestore_query_builder}
   const FirestoreQueryBuilder({
@@ -334,6 +338,7 @@ class _Sentinel {
   const _Sentinel();
 }
 
+/// {@template flutterfire_ui.firestorelistview}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
 /// As an example, consider the following collection:
@@ -379,7 +384,13 @@ class _Sentinel {
 /// ```
 ///
 /// For advanced UI use-cases, consider switching to [FirestoreQueryBuilder].
+/// {@endtemplate}
+/// {@subCategory service:firestore}
+/// {@subCategory type:widget}
+/// {@subCategory description:A widget that listens to a query and display the items using a ListView}
+/// {@subCategory img:https://place-hold.it/400x150}
 class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
+  /// {@macro flutterfire_ui.firestorelistview}
   FirestoreListView({
     Key? key,
     required Query<Document> query,
