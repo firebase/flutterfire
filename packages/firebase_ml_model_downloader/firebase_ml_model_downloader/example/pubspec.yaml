@@ -30,6 +30,18 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
+dependency_overrides:
+  firebase_core:
+    path: ../../../firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../../../firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../../../firebase_core/firebase_core_web
+  firebase_ml_model_downloader:
+    path: ../
+  firebase_ml_model_downloader_platform_interface:
+    path: ../../firebase_ml_model_downloader_platform_interface
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
