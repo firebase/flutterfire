@@ -1,4 +1,4 @@
 #import <Flutter/Flutter.h>
 
-@interface HelloPlugin : NSObject<FlutterPlugin>
+@interface FirebaseMlModelDownloaderPlugin : NSObject<FlutterPlugin>
 @end

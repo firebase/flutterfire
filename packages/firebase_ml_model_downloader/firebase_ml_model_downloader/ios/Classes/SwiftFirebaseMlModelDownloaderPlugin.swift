@@ -1,10 +1,10 @@
 import Flutter
 import UIKit
 
-public class SwiftHelloPlugin: NSObject, FlutterPlugin {
+public class SwiftFirebaseMlModelDownloaderPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "hello", binaryMessenger: registrar.messenger())
-    let instance = SwiftHelloPlugin()
+    let channel = FlutterMethodChannel(name: "firebase_ml_model_downloader", binaryMessenger: registrar.messenger())
+    let instance = SwiftFirebaseMlModelDownloaderPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
 
