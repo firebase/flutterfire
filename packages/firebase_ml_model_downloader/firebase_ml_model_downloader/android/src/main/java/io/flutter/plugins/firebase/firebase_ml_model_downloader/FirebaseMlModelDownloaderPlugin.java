@@ -1,10 +1,8 @@
 package io.flutter.plugins.firebase.firebase_ml_model_downloader;
 
 import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -14,7 +12,12 @@ import com.google.firebase.ml.modeldownloader.CustomModelDownloadConditions;
 import com.google.firebase.ml.modeldownloader.DownloadType;
 import com.google.firebase.ml.modeldownloader.FirebaseMlException;
 import com.google.firebase.ml.modeldownloader.FirebaseModelDownloader;
-
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,20 +25,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+public class FirebaseMlModelDownloaderPlugin
+    implements FlutterPlugin, MethodCallHandler, FlutterFirebasePlugin {
 
-public class FirebaseMlModelDownloaderPlugin implements FlutterPlugin, MethodCallHandler, FlutterFirebasePlugin {
-
-  private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_ml_model_downloader";
+  private static final String METHOD_CHANNEL_NAME =
+      "plugins.flutter.io/firebase_ml_model_downloader";
   private MethodChannel channel;
 
-  public FirebaseMlModelDownloaderPlugin() {
-  }
+  public FirebaseMlModelDownloaderPlugin() {}
 
   static Map<String, String> getExceptionDetails(Exception exception) {
     Map<String, String> details = new HashMap<>();
@@ -51,7 +48,6 @@ public class FirebaseMlModelDownloaderPlugin implements FlutterPlugin, MethodCal
       FirebaseMlException mlException = (FirebaseMlException) exception.getCause();
       code = exceptionCodeToString(mlException.getCode());
       message = mlException.getMessage();
-
     }
 
     details.put("code", code.replace("_", "-").toLowerCase());
@@ -153,56 +149,65 @@ public class FirebaseMlModelDownloaderPlugin implements FlutterPlugin, MethodCal
   Task<Map<String, Object>> getModel(Map<String, Object> arguments) {
     TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(() -> {
-      FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
-      String modelName = (String) Objects.requireNonNull(arguments.get("modelName"));
-      String downloadType = (String) Objects.requireNonNull(arguments.get("downloadType"));
-      @SuppressWarnings("unchecked") Map<String, Boolean> conditions = (Map<String, Boolean>) Objects.requireNonNull(arguments.get("conditions"));
+    cachedThreadPool.execute(
+        () -> {
+          FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
+          String modelName = (String) Objects.requireNonNull(arguments.get("modelName"));
+          String downloadType = (String) Objects.requireNonNull(arguments.get("downloadType"));
+          @SuppressWarnings("unchecked")
+          Map<String, Boolean> conditions =
+              (Map<String, Boolean>) Objects.requireNonNull(arguments.get("conditions"));
 
-      CustomModelDownloadConditions.Builder conditionsBuilder = new CustomModelDownloadConditions.Builder();
+          CustomModelDownloadConditions.Builder conditionsBuilder =
+              new CustomModelDownloadConditions.Builder();
 
-      if (conditions.get("androidChargingRequired")) {
-        conditionsBuilder.requireCharging();
-      }
+          if (conditions.get("androidChargingRequired")) {
+            conditionsBuilder.requireCharging();
+          }
 
-      if (conditions.get("androidWifiRequired")) {
-        conditionsBuilder.requireWifi();
-      }
+          if (conditions.get("androidWifiRequired")) {
+            conditionsBuilder.requireWifi();
+          }
 
-      if (conditions.get("androidDeviceIdleRequired")) {
-        conditionsBuilder.requireDeviceIdle();
-      }
+          if (conditions.get("androidDeviceIdleRequired")) {
+            conditionsBuilder.requireDeviceIdle();
+          }
 
-      try {
-        CustomModel model = Tasks.await(instance.getModel(modelName, getDownloadType(downloadType), conditionsBuilder.build()));
-        taskCompletionSource.setResult(customModelToMap(model));
-      } catch (Exception e) {
-        taskCompletionSource.setException(e);
-      }
-    });
+          try {
+            CustomModel model =
+                Tasks.await(
+                    instance.getModel(
+                        modelName, getDownloadType(downloadType), conditionsBuilder.build()));
+            taskCompletionSource.setResult(customModelToMap(model));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
 
   Task<List<Map<String, Object>>> listDownloadedModels(Map<String, Object> arguments) {
-    TaskCompletionSource<List<Map<String, Object>>> taskCompletionSource = new TaskCompletionSource<>();
+    TaskCompletionSource<List<Map<String, Object>>> taskCompletionSource =
+        new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(() -> {
-      FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
+    cachedThreadPool.execute(
+        () -> {
+          FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
 
-      try {
-        Set<CustomModel> result = Tasks.await(instance.listDownloadedModels());
-        List<Map<String, Object>> models = new ArrayList<>(result.size());
+          try {
+            Set<CustomModel> result = Tasks.await(instance.listDownloadedModels());
+            List<Map<String, Object>> models = new ArrayList<>(result.size());
 
-        for (CustomModel model : result) {
-          models.add(customModelToMap(model));
-        }
+            for (CustomModel model : result) {
+              models.add(customModelToMap(model));
+            }
 
-        taskCompletionSource.setResult(models);
-      } catch (Exception e) {
-        taskCompletionSource.setException(e);
-      }
-    });
+            taskCompletionSource.setResult(models);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -210,17 +215,18 @@ public class FirebaseMlModelDownloaderPlugin implements FlutterPlugin, MethodCal
   Task<Void> deleteDownloadedModel(Map<String, Object> arguments) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(() -> {
-      FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
-      String modelName = (String) Objects.requireNonNull(arguments.get("modelName"));
+    cachedThreadPool.execute(
+        () -> {
+          FirebaseModelDownloader instance = getFirebaseModelDownloader(arguments);
+          String modelName = (String) Objects.requireNonNull(arguments.get("modelName"));
 
-      try {
-        Tasks.await(instance.deleteDownloadedModel(modelName));
-        taskCompletionSource.setResult(null);
-      } catch (Exception e) {
-        taskCompletionSource.setException(e);
-      }
-    });
+          try {
+            Tasks.await(instance.deleteDownloadedModel(modelName));
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
 
     return taskCompletionSource.getTask();
   }
@@ -246,19 +252,19 @@ public class FirebaseMlModelDownloaderPlugin implements FlutterPlugin, MethodCal
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          Map<String, String> exceptionDetails = getExceptionDetails(exception);
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            Map<String, String> exceptionDetails = getExceptionDetails(exception);
 
-          result.error(
-            "firebase_ml_model_downloader",
-            exception != null ? exception.getMessage() : null,
-            exceptionDetails);
-        }
-      });
+            result.error(
+                "firebase_ml_model_downloader",
+                exception != null ? exception.getMessage() : null,
+                exceptionDetails);
+          }
+        });
   }
 
   // Returns a nullable task.
