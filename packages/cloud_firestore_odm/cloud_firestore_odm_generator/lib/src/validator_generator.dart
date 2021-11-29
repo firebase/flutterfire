@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
-import 'package:cloud_firestore_odm/annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ValidatorGenerator extends Generator {
@@ -15,14 +14,15 @@ class ValidatorGenerator extends Generator {
         final validators = field.metadata.where(isValidatorAnnotation);
 
         for (final validator in validators) {
-          yield '${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name});';
+          yield '${validator.toSource().replaceFirst('@', 'const ')}.validate(instance.${field.name}, "${field.name}");';
         }
       }).toList();
 
       if (validations.isNotEmpty) {
         buffer
           ..write(
-              '_\$assert${classElement.name}(${classElement.name} instance) {')
+            '_\$assert${classElement.name}(${classElement.name} instance) {',
+          )
           ..writeAll(validations)
           ..write('}');
       }

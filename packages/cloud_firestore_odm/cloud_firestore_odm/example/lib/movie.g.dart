@@ -1509,8 +1509,8 @@ class CommentQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 // **************************************************************************
 
 _$assertMovie(Movie instance) {
-  const Min(0).validate(instance.likes);
-  const Min(0).validate(instance.year);
+  const Min(0).validate(instance.likes, "likes");
+  const Min(0).validate(instance.year, "year");
 }
 
 // **************************************************************************
