@@ -179,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
       level: 5,
       character: 'witch doctor',
     );
-    await widget.analytics.logLogin(loginMethod: 'sign up');
+    await widget.analytics.logLogin(loginMethod: 'login');
     await widget.analytics.logPostScore(
       score: 1000000,
       level: 70,
