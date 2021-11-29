@@ -134,28 +134,6 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Future<ShortDynamicLink> shortenUrl(
-    Uri url, [
-    DynamicLinkParametersOptions? options,
-  ]) async {
-    try {
-      final Map<String, dynamic>? reply =
-          await MethodChannelFirebaseDynamicLinks.channel
-              .invokeMapMethod<String, dynamic>(
-        'FirebaseDynamicLinks#shortenUrl',
-        _withChannelDefaults(<String, dynamic>{
-          'url': url.toString(),
-          'dynamicLinkParametersOptions': options?.asMap(),
-        }),
-      );
-
-      return _parseShortLink(reply!);
-    } catch (e, s) {
-      throw convertPlatformException(e, s);
-    }
-  }
-
-  @override
   Future<Uri> buildLink(DynamicLinkParameters parameters) async {
     try {
       final String? url =

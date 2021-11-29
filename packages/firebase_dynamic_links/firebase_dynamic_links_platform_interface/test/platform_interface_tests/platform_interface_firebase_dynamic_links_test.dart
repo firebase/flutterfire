@@ -111,19 +111,6 @@ void main() {
       );
     });
 
-    test('throws if .shortenUrl', () {
-      expect(
-        () => firebaseDynamicLinksPlatformPlatform!.shortenUrl(link),
-        throwsA(
-          isA<UnimplementedError>().having(
-            (e) => e.message,
-            'message',
-            'shortenUrl() is not implemented',
-          ),
-        ),
-      );
-    });
-
     test('throws if .buildLink', () {
       expect(
         () => firebaseDynamicLinksPlatformPlatform!.buildLink(parameters),

@@ -141,8 +141,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [self buildUrl:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#buildShortLink" isEqualToString:call.method]) {
     [self buildShortLink:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FirebaseDynamicLinks#shortenUrl" isEqualToString:call.method]) {
-    [self shortenUrl:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#getInitialLink" isEqualToString:call.method]) {
     [self getInitialLink:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#getDynamicLink" isEqualToString:call.method]) {
@@ -165,30 +163,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   [components
       shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
                               NSError *_Nullable error) {
-        if (error != nil) {
-          result.error(nil, nil, nil, error);
-        } else {
-          if (warnings == nil) {
-            warnings = [NSMutableArray array];
-          }
-
-          result.success(@{
-            kUrl : [shortURL absoluteString],
-            @"warnings" : warnings,
-          });
-        }
-      }];
-}
-
-- (void)shortenUrl:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
-  NSURL *url = [NSURL URLWithString:arguments[kUrl]];
-
-  [FIRDynamicLinkComponents
-      shortenURL:url
-         options:options
-      completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                   NSError *_Nullable error) {
         if (error != nil) {
           result.error(nil, nil, nil, error);
         } else {

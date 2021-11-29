@@ -190,35 +190,6 @@ void main() {
       });
     });
 
-    group('shortenUrl', () {
-      test('shortenUrl', () async {
-        final Uri mockUri = Uri.parse('shortenUrl');
-        final Uri previewLink = Uri.parse('previewLink');
-        List<String> warnings = ['warning'];
-        const DynamicLinkParametersOptions options =
-            DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable,
-        );
-
-        when(dynamicLinks.shortenUrl(mockUri, options)).thenAnswer(
-          (_) async => ShortDynamicLink(
-            shortUrl: mockUri,
-            warnings: warnings,
-            previewLink: previewLink,
-          ),
-        );
-
-        final shortDynamicLink =
-            await dynamicLinks.shortenUrl(mockUri, options);
-
-        expect(shortDynamicLink.previewLink, previewLink);
-        expect(shortDynamicLink.warnings, warnings);
-        expect(shortDynamicLink.shortUrl, mockUri);
-
-        verify(dynamicLinks.shortenUrl(mockUri, options));
-      });
-    });
-
     group('buildLink', () {
       test('buildLink', () async {
         final Uri mockUri = Uri.parse('buildLink');

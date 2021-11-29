@@ -131,40 +131,6 @@ void runInstanceTests() {
       });
     });
 
-    group('shortenUrl', () {
-      test('build url and shorten', () async {
-        FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
-        const String androidPackageName =
-            'io.flutter.plugins.firebasedynamiclinksexample';
-        const String iosBundleId =
-            'io.flutter.plugins.firebase.dynamiclinksexample';
-        const String urlHost = 'reactnativefirebase.page.link';
-        const String link = 'https://invertase.io';
-
-        final DynamicLinkParameters parameters = DynamicLinkParameters(
-          uriPrefix: 'https://$urlHost',
-          link: Uri.parse(link),
-          androidParameters: const AndroidParameters(
-            packageName: androidPackageName,
-            minimumVersion: 1,
-          ),
-          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-          ),
-          iosParameters: const IOSParameters(
-            bundleId: iosBundleId,
-            minimumVersion: '2',
-          ),
-        );
-
-        final Uri uri = await dynamicLinks.buildLink(parameters);
-        final ShortDynamicLink shortLink = await dynamicLinks.shortenUrl(uri);
-
-        expect(shortLink, isA<ShortDynamicLink>());
-        expect(shortLink.shortUrl, isA<Uri>());
-      });
-    });
-
     group('getInitialLink', () {
       test('initial link', () async {
         PendingDynamicLinkData? pendingLink =

@@ -134,11 +134,6 @@ public class FlutterFirebaseDynamicLinksPlugin
         DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
         methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
         break;
-      case "FirebaseDynamicLinks#shortenUrl":
-        DynamicLink.Builder builder = FirebaseDynamicLinks.getInstance().createDynamicLink();
-        builder.setLongLink(Uri.parse(call.argument("url")));
-        methodCallTask = buildShortLink(builder, call.argument("dynamicLinkParametersOptions"));
-        break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
         methodCallTask = getDynamicLink(dynamicLinks, call.argument("url"));

@@ -233,45 +233,7 @@ void main() {
             () => dynamicLinks.getDynamicLink(argument));
       });
     });
-    group('shortenUrl()', () {
-      test('shortenUrl', () async {
-        final Uri url = Uri.parse('google.com');
-        const DynamicLinkParametersOptions options =
-            DynamicLinkParametersOptions(
-                shortDynamicLinkPathLength:
-                    ShortDynamicLinkPathLength.unguessable);
 
-        await dynamicLinks.shortenUrl(url, options);
-
-        expect(logger, <Matcher>[
-          isMethodCall(
-            'FirebaseDynamicLinks#shortenUrl',
-            arguments: <String, dynamic>{
-              'url': url.toString(),
-              'appName': '[DEFAULT]',
-              'dynamicLinkParametersOptions': <String, dynamic>{
-                'shortDynamicLinkPathLength':
-                    ShortDynamicLinkPathLength.unguessable.index,
-              },
-            },
-          ),
-        ]);
-      });
-
-      test(
-          'catch a [PlatformException] error and throws a [FirebaseException] error',
-          () async {
-        mockPlatformExceptionThrown = true;
-        final Uri url = Uri.parse('google.com');
-        const DynamicLinkParametersOptions options =
-            DynamicLinkParametersOptions(
-                shortDynamicLinkPathLength:
-                    ShortDynamicLinkPathLength.unguessable);
-
-        await testExceptionHandling(
-            () => dynamicLinks.shortenUrl(url, options));
-      });
-    });
     group('buildLink()', () {
       test('buildLink', () async {
         DynamicLinkParameters options = buildDynamicLinkParameters();
