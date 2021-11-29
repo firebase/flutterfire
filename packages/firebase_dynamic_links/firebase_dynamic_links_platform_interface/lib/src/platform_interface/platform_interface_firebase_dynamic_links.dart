@@ -55,6 +55,11 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
+  /// Creates a stream for listening whenever a dynamic link becomes available
+  Stream<PendingDynamicLinkData?> get onLink {
+    throw UnimplementedError('onLink is not implemented');
+  }
+
   /// Attempts to retrieve the dynamic link which launched the app.
   ///
   /// This method always returns a Future. That Future completes to null if
@@ -72,11 +77,6 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   /// data will be removed after first access.
   Future<PendingDynamicLinkData?> getDynamicLink(Uri url) async {
     throw UnimplementedError('getDynamicLink() is not implemented');
-  }
-
-  /// Creates a stream for listening whenever a dynamic link becomes available
-  Stream<PendingDynamicLinkData?> onLink() {
-    throw UnimplementedError('onLink() is not implemented');
   }
 
   /// Shortens a Dynamic Link URL.

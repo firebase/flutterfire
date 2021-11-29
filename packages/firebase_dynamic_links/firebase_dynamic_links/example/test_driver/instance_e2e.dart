@@ -191,17 +191,17 @@ void runInstanceTests() {
       StreamSubscription<PendingDynamicLinkData?> _onListenSubscriptionSecond;
 
       _onListenSubscription =
-          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+          FirebaseDynamicLinks.instance.onLink.listen((event) {});
       _onListenSubscriptionSecond =
-          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+          FirebaseDynamicLinks.instance.onLink.listen((event) {});
 
       await _onListenSubscription.cancel();
       await _onListenSubscriptionSecond.cancel();
 
       _onListenSubscription =
-          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+          FirebaseDynamicLinks.instance.onLink.listen((event) {});
       _onListenSubscriptionSecond =
-          FirebaseDynamicLinks.instance.onLink().listen((event) {});
+          FirebaseDynamicLinks.instance.onLink.listen((event) {});
 
       await _onListenSubscription.cancel();
       await _onListenSubscriptionSecond.cancel();

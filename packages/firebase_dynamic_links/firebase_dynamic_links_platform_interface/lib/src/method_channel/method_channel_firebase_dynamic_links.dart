@@ -129,7 +129,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Stream<PendingDynamicLinkData?> onLink() {
+  Stream<PendingDynamicLinkData?> get onLink {
     return _onLinkController.stream;
   }
 

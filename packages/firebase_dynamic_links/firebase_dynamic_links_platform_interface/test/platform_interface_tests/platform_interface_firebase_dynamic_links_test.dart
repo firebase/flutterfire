@@ -100,12 +100,12 @@ void main() {
 
     test('throws if .onLink', () {
       expect(
-        () => firebaseDynamicLinksPlatformPlatform!.onLink(),
+        () => firebaseDynamicLinksPlatformPlatform!.onLink,
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
             'message',
-            'onLink() is not implemented',
+            'onLink is not implemented',
           ),
         ),
       );

@@ -347,7 +347,7 @@ void main() {
 
       test('returns [Stream<PendingDynamicLinkData>]', () async {
         // Checks that `onLink` does not throw UnimplementedError
-        expect(dynamicLinks.onLink(), isNotNull);
+        expect(dynamicLinks.onLink, isNotNull);
       });
 
       test('listens to incoming changes', () async {

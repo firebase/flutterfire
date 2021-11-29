@@ -68,8 +68,8 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
   }
 
   /// Listen to a stream for the latest dynamic link events.
-  Stream<PendingDynamicLinkData?> onLink() {
-    return _delegate.onLink();
+  Stream<PendingDynamicLinkData?> get onLink {
+    return _delegate.onLink;
   }
 
   /// Returns the shortened Dynamic Link, link flow chart, and warnings from the requested Dynamic Link.

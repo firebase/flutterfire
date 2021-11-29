@@ -167,7 +167,7 @@ void main() {
         const mockClickTimestamp = 239058435;
         const mockMinimumVersionAndroid = 33;
         const mockMinimumVersionIOS = 'on-link version';
-        when(dynamicLinks.onLink()).thenAnswer(
+        when(dynamicLinks.onLink).thenAnswer(
           (_) => Stream.value(
             TestPendingDynamicLinkData(
               mockUri,
@@ -178,7 +178,7 @@ void main() {
           ),
         );
 
-        final PendingDynamicLinkData? data = await dynamicLinks.onLink().first;
+        final PendingDynamicLinkData? data = await dynamicLinks.onLink.first;
         expect(data!.link.scheme, mockUri.scheme);
 
         expect(data.android!.clickTimestamp, mockClickTimestamp);
@@ -186,7 +186,7 @@ void main() {
 
         expect(data.ios!.minimumVersion, mockMinimumVersionIOS);
 
-        verify(dynamicLinks.onLink());
+        verify(dynamicLinks.onLink);
       });
     });
 
@@ -428,9 +428,9 @@ class MockFirebaseDynamicLinks extends Mock
   }
 
   @override
-  Stream<PendingDynamicLinkData?> onLink() {
+  Stream<PendingDynamicLinkData?> get onLink {
     return super.noSuchMethod(
-      Invocation.method(#onLink, []),
+      Invocation.getter(#onLink),
       returnValue: Stream.value(testData),
       returnValueForMissingStub: Stream.value(testData),
     );

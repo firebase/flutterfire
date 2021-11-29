@@ -67,7 +67,7 @@ class _MainScreenState extends State<_MainScreen> {
   }
 
   Future<void> initDynamicLinks() async {
-    dynamicLinks.onLink().listen((dynamicLinkData) {
+    dynamicLinks.onLink.listen((dynamicLinkData) {
       if (dynamicLinkData != null) {
         Navigator.pushNamed(context, dynamicLinkData.link.path);
       }
