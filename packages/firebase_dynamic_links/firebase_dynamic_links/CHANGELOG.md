@@ -1,3 +1,18 @@
+## UNRELEASED
+
+As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Dynamic Links rework changes.
+
+Overall, Firebase Dynamic Links has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests.
+
+- **`FirebaseDynamicLinks`**
+
+- **BREAKING**: `onLink()` method no longer accepts callback arguments for events. It returns a `Stream`; events & errors are now streamed to the user.
+- **BREAKING**: `DynamicLinkParameters` class has been removed. `shortenUrl()` `buildUrl()` & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance.*`.
+
+- **NEW**: `DynamicLinkParameters` class is used to build parameters for `shortenUrl()` `buildUrl()` & `buildShortLink()`.
+- **NEW**: Multi-app support now available for `android` only; `FirebaseDynamicLinks.instanceFor(app: app)`.
+
 ## 3.0.1
 
  - Update a dependency to the latest release.
