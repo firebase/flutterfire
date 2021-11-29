@@ -8,9 +8,12 @@ documentation and updating unit and end-to-end tests.
 - **`FirebaseDynamicLinks`**
 
 - **BREAKING**: `onLink()` method has been removed. Instead use `onLink` getter, it returns a `Stream`; events & errors are now streamed to the user.
-- **BREAKING**: `DynamicLinkParameters` class has been removed. `shortenUrl()` `buildUrl()` & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance.*`.
+- **BREAKING**: `DynamicLinkParameters` class has been removed. `buildLink()` (replaces `buildUrl()`) & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance.*`.
 
-- **NEW**: `DynamicLinkParameters` class is used to build parameters for `shortenUrl()` `buildUrl()` & `buildShortLink()`.
+- **NEW**: `buildLink()` which replaces the previous `DynamicLinkParameters().buildUrl()`
+- **NEW**: `buildShortLink()` which replaces the previous `DynamicLinkParameters().buildShortLink()`
+- **NEW**: `DynamicLinkParameters` class is used to build parameters for `buildLink()` & `buildShortLink()`.
+
 - **NEW**: Multi-app support now available for `android` only; `FirebaseDynamicLinks.instanceFor(app: app)`.
 
 ## 3.0.1
