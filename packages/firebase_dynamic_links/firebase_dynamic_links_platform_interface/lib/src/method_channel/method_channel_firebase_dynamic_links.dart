@@ -156,11 +156,11 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
+  Future<Uri> buildLink(DynamicLinkParameters parameters) async {
     try {
       final String? url =
           await MethodChannelFirebaseDynamicLinks.channel.invokeMethod<String>(
-        'FirebaseDynamicLinks#buildUrl',
+        'FirebaseDynamicLinks#buildLink',
         _withChannelDefaults(parameters.asMap()),
       );
 

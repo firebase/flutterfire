@@ -49,7 +49,7 @@ void runInstanceTests() {
           ),
         );
 
-        final Uri uri = await dynamicLinks.buildUrl(parameters);
+        final Uri uri = await dynamicLinks.buildLink(parameters);
 
         // androidParameters.minimumVersion
         expect(
@@ -157,7 +157,7 @@ void runInstanceTests() {
           ),
         );
 
-        final Uri uri = await dynamicLinks.buildUrl(parameters);
+        final Uri uri = await dynamicLinks.buildLink(parameters);
         final ShortDynamicLink shortLink = await dynamicLinks.shortenUrl(uri);
 
         expect(shortLink, isA<ShortDynamicLink>());

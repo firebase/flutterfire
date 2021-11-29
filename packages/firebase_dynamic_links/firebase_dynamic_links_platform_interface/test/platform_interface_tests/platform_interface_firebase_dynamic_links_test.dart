@@ -124,14 +124,14 @@ void main() {
       );
     });
 
-    test('throws if .buildUrl', () {
+    test('throws if .buildLink', () {
       expect(
-        () => firebaseDynamicLinksPlatformPlatform!.buildUrl(parameters),
+        () => firebaseDynamicLinksPlatformPlatform!.buildLink(parameters),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
             'message',
-            'buildUrl() is not implemented',
+            'buildLink() is not implemented',
           ),
         ),
       );

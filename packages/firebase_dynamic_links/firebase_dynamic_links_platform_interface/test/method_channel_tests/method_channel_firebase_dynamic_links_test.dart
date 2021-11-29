@@ -272,11 +272,11 @@ void main() {
             () => dynamicLinks.shortenUrl(url, options));
       });
     });
-    group('buildUrl()', () {
-      test('buildUrl', () async {
+    group('buildLink()', () {
+      test('buildLink', () async {
         DynamicLinkParameters options = buildDynamicLinkParameters();
 
-        await dynamicLinks.buildUrl(options);
+        await dynamicLinks.buildLink(options);
 
         expect(logger, <Matcher>[
           isMethodCall(
@@ -334,7 +334,7 @@ void main() {
         mockPlatformExceptionThrown = true;
         DynamicLinkParameters options = buildDynamicLinkParameters();
 
-        await testExceptionHandling(() => dynamicLinks.buildUrl(options));
+        await testExceptionHandling(() => dynamicLinks.buildLink(options));
       });
     });
 

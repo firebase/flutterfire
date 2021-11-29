@@ -104,7 +104,7 @@ class _MainScreenState extends State<_MainScreen> {
           await dynamicLinks.buildShortLink(parameters);
       url = shortLink.shortUrl;
     } else {
-      url = await dynamicLinks.buildUrl(parameters);
+      url = await dynamicLinks.buildLink(parameters);
     }
 
     setState(() {

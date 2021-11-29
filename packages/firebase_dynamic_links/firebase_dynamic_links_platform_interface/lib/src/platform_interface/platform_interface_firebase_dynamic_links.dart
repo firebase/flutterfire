@@ -91,8 +91,8 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   }
 
   /// Generate a long Dynamic Link URL.
-  Future<Uri> buildUrl(DynamicLinkParameters parameters) async {
-    throw UnimplementedError('buildUrl() is not implemented');
+  Future<Uri> buildLink(DynamicLinkParameters parameters) async {
+    throw UnimplementedError('buildLink() is not implemented');
   }
 
   /// Generate a short Dynamic Link URL.

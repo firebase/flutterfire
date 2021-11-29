@@ -219,36 +219,36 @@ void main() {
       });
     });
 
-    group('buildUrl', () {
-      test('buildUrl', () async {
-        final Uri mockUri = Uri.parse('buildUrl');
+    group('buildLink', () {
+      test('buildLink', () async {
+        final Uri mockUri = Uri.parse('buildLink');
         DynamicLinkParameters params =
             DynamicLinkParameters(uriPrefix: 'uriPrefix', link: mockUri);
 
-        when(dynamicLinks.buildUrl(params)).thenAnswer((_) async => mockUri);
+        when(dynamicLinks.buildLink(params)).thenAnswer((_) async => mockUri);
 
-        final shortDynamicLink = await dynamicLinks.buildUrl(params);
+        final shortDynamicLink = await dynamicLinks.buildLink(params);
 
         expect(shortDynamicLink, mockUri);
         expect(shortDynamicLink.scheme, mockUri.scheme);
         expect(shortDynamicLink.path, mockUri.path);
 
-        verify(dynamicLinks.buildUrl(params));
+        verify(dynamicLinks.buildLink(params));
       });
 
-      test("buildUrl with full 'DynamicLinkParameters' options", () async {
-        final Uri mockUri = Uri.parse('buildUrl');
+      test("buildLink with full 'DynamicLinkParameters' options", () async {
+        final Uri mockUri = Uri.parse('buildLink');
         DynamicLinkParameters params = buildDynamicLinkParameters();
 
-        when(dynamicLinks.buildUrl(params)).thenAnswer((_) async => mockUri);
+        when(dynamicLinks.buildLink(params)).thenAnswer((_) async => mockUri);
 
-        final shortDynamicLink = await dynamicLinks.buildUrl(params);
+        final shortDynamicLink = await dynamicLinks.buildLink(params);
 
         expect(shortDynamicLink, mockUri);
         expect(shortDynamicLink.scheme, mockUri.scheme);
         expect(shortDynamicLink.path, mockUri.path);
 
-        verify(dynamicLinks.buildUrl(params));
+        verify(dynamicLinks.buildLink(params));
       });
     });
 
@@ -365,11 +365,11 @@ class MockFirebaseDynamicLinks extends Mock
   }
 
   @override
-  Future<Uri> buildUrl(DynamicLinkParameters parameters) {
+  Future<Uri> buildLink(DynamicLinkParameters parameters) {
     return super.noSuchMethod(
-      Invocation.method(#getDynamicLink, [parameters]),
-      returnValue: Future.value(Uri.parse('buildUrl')),
-      returnValueForMissingStub: Future.value(Uri.parse('buildUrl')),
+      Invocation.method(#buildLink, [parameters]),
+      returnValue: Future.value(Uri.parse('buildLink')),
+      returnValueForMissingStub: Future.value(Uri.parse('buildLink')),
     );
   }
 

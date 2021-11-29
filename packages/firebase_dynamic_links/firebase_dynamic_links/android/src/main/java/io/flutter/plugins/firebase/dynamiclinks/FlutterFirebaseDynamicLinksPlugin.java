@@ -126,7 +126,7 @@ public class FlutterFirebaseDynamicLinksPlugin
     FirebaseDynamicLinks dynamicLinks = getDynamicLinkInstance(call.arguments());
 
     switch (call.method) {
-      case "FirebaseDynamicLinks#buildUrl":
+      case "FirebaseDynamicLinks#buildLink":
         String url = buildUrl(call.arguments());
         result.success(url);
         return;
