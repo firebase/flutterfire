@@ -7,7 +7,7 @@ documentation and updating unit and end-to-end tests.
 
 - **`FirebaseDynamicLinks`**
 
-- **BREAKING**: `onLink()` method no longer accepts callback arguments for events. It returns a `Stream`; events & errors are now streamed to the user.
+- **BREAKING**: `onLink()` method has been removed. Instead use `onLink` getter, it returns a `Stream`; events & errors are now streamed to the user.
 - **BREAKING**: `DynamicLinkParameters` class has been removed. `shortenUrl()` `buildUrl()` & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance.*`.
 
 - **NEW**: `DynamicLinkParameters` class is used to build parameters for `shortenUrl()` `buildUrl()` & `buildShortLink()`.
