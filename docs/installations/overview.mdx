@@ -1,0 +1,70 @@
+---
+title: Firebase Installations
+sidebar_label: Overview
+---
+
+## What does it do?
+
+Firebase Installations is a service that allows you to manage the installation of your app on a user's device.
+The Firebase installations service (FIS) provides a Firebase installation ID (FID) for each installed instance of a Firebase app.
+
+Internally, the installation ID is used by the following Firebase Services:
+
+- Firebase Cloud Messaging (FCM)
+- Firebase In-App Messaging (FIAM)
+- Firebase Performance Monitoring
+- Firebase Predictions
+- Google Analytics for Firebase
+- Firebase Remote Config
+- Firebase ML
+
+Tpically, Firebase services use the Firebase installations service without requiring developers to interact directly with the FIS API. However, there are cases where app developers might want to directly call the FIS API, such as:
+
+- To delete a Firebase installation and data tied to the installation.
+- To retrieve identifiers (Firebase installation IDs) in order to target specific app installations.
+- To retrieve installation auth tokens to authenticate Firebase installations.
+
+## Installation
+
+Add the `firebase_installations` dependency to your projects `pubspec.yaml` file:
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: "^{{ plugins.firebase_core_ns }}"
+  firebase_installations: "^{{ plugins.firebase_installations_ns }}"
+```
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-installations` JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-installations.js"></script>
+  </body>
+</html>
+```
+
+### 4. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using Firebase Installations in your Flutter Project. View the
+[Usage documentation](./usage.mdx) to get started.

@@ -72,6 +72,18 @@ module.exports = [
     },
   },
   {
+    name: 'Installations',
+    pub: 'installations',
+    firebase: 'https://firebase.google.com/docs/projects/manage-installations',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/installations/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Cloud Messaging',
     pub: 'firebase_messaging',
     firebase: 'cloud-messaging',
