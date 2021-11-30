@@ -1,73 +1,169 @@
 import Flutter
 import UIKit
 import firebase_core
-
 import FirebaseInstallations
 
 public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin {
     
-    var channel:String?;
+    private var channelName:String;
+    private var eventSink: FlutterEventSink?
+    private var messenger:FlutterBinaryMessenger;
     
-    init(channelName:String) {
-        channel = channelName;
+    var result:FLTFirebaseMethodCallResult?;
+    var streamHandler = Dictionary<String, IdChangedStreamHandler?>();
+    
+    var args = NSDictionary.init();
+    
+    init(channelName:String, messenger:FlutterBinaryMessenger) {
+        self.channelName = channelName;
+        self.messenger = messenger;
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channelName = "plugins.flutter.io/firebase_installations";
         let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
-        let instance = SwiftFirebaseInstallationsPlugin(channelName: channelName)
+        let instance = SwiftFirebaseInstallationsPlugin(channelName: channelName, messenger: registrar.messenger())
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
-    /// Get Installations instance for a Firebase App.
-    /// - Parameter arguments: the arguments passed by the Dart calling method
+    @objc private func onIdChanged(notification: NSNotification) {
+        print("changed")
+    }
+    
+    /// Gets Installations instance for a Firebase App.
     /// - Returns: a Firebase Installations instance for the passed app from Dart
-    internal func getInstallations(arguments: NSDictionary) -> Installations {
-        let appName = FLTFirebasePlugin.firebaseAppName(fromDartName: (arguments["appName"] as! String))
+    internal func getInstallations() -> Installations {
+        let appName = FLTFirebasePlugin.firebaseAppName(fromDartName: (args["appName"] as! String))
         let app:FirebaseApp = FLTFirebasePlugin.firebaseAppNamed(appName)!
         return Installations.installations(app: app)
     }
     
-    /// Get Installations Id for an instance.
-    internal func getId(arguments: NSDictionary, result: FLTFirebaseMethodCallResult) {
-        let instance:Installations = getInstallations(arguments: arguments);
+    /// Gets Installations Id for an instance.
+    /// - Parameter arguments: the arguments passed by the Dart calling method
+    /// - Parameter result: the result instance used to send the result to Dart.
+    internal func getId() {
+        let instance:Installations = getInstallations();
         
         var installationsId:String = ""
         
         instance.installationID { (id:String?, error:Error?) in
             if error != nil {
-                result.error(nil, nil, nil, error)
+                self.result!.error(nil, nil, nil, error)
             }
             
             installationsId = id ?? ""
             NSLog("Firebase Installation ID: %@", installationsId)
             
-            result.success(id)
+            self.result!.success(id)
         }
+    }
+    
+    /// Deletes Installations Id for an instance.
+    internal func deleteId() {
+        let instance:Installations = getInstallations();
+        
+        instance.delete { (error:Error?) in
+            if error != nil {
+                self.result!.error(nil, nil, nil, error)
+            }
+            
+            NSLog("Firebase Installation ID deleted successfully.")
+        }
+        
+        self.result!.success(nil)
+    }
+    
+    /// Gets the token Id for an instance.
+    internal func getToken() {
+        let instance:Installations = getInstallations();
+        
+        var installationsAuthToken:String = ""
+        
+        let forceRefresh:Bool = (args["forceRefresh"] as? Bool) ?? false;
+        
+        instance.authTokenForcingRefresh  (forceRefresh, completion: {(tokenResult:InstallationsAuthTokenResult?, error:Error?) in
+            if error != nil {
+                let userInfo:NSDictionary = error!._userInfo as! NSDictionary
+                let underlyingError:NSError = userInfo.object(forKey: NSUnderlyingErrorKey) as! NSError
+                
+                let firebaseDictionary:NSDictionary? = underlyingError.userInfo as NSDictionary;
+                if(firebaseDictionary != nil && firebaseDictionary!["NSLocalizedDescription"] != nil) {
+                    self.result!.error(nil, firebaseDictionary!["NSLocalizedDescription"] as? String, nil, error)
+                }
+                self.result!.error(nil, nil, nil, underlyingError)
+            }
+            
+            installationsAuthToken = tokenResult?.authToken ?? ""
+            
+            NSLog("Firebase Installation Auth Token: %@", installationsAuthToken)
+            
+            self.result!.success(installationsAuthToken)
+        });
+    }
+    
+    /// Starts listening to Installation ID events for an instance.
+    internal func registerTokenListener() {
+        let instance:Installations = getInstallations();
+        
+        let appName = (args["appName"] as! String)
+        let eventChannelName:String = channelName + "/token/" + appName;
+        
+        let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: messenger)
+        
+        if (self.streamHandler[eventChannelName] == nil) {
+            self.streamHandler[eventChannelName] = IdChangedStreamHandler(instance: instance)
+        }
+        
+        eventChannel.setStreamHandler((self.streamHandler[eventChannelName]!))
+        
+        result?.success(eventChannelName)
+    }
+    
+    internal func getNSDictionaryFromNSError(error:NSError?) -> Dictionary<String, Any?> {
+        let code:NSString = "unknown";
+        let message:NSString = "An unknown error has occurred.";
+        
+        return [
+            "code": code, "message": message, "additionalData": {}
+        ];
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args = call.arguments as! NSDictionary
         
         let errorBlock:FLTFirebaseMethodCallErrorBlock = { (code, message, details, error) in
-            if(code == nil) {
-                
+            var errorDetails:Dictionary = Dictionary<String, Any?>();
+            
+            if(error == nil) {
+                errorDetails = self.getNSDictionaryFromNSError(error: error as NSError?);
+            } else {
+                errorDetails["code"] = code ?? "unknown"
+                errorDetails["message"] = message ?? "An unknown error has occurred."
+                errorDetails["additionalData"] = details
             }
+            
             if(code == "unknown") {
                 NSLog("FLTFirebaseInstallations: An error occured while calling method %@", call.method)
             }
             
-            result(FLTFirebasePlugin.createFlutterError(fromCode: code!,
-                                                        message: message!,
-                                                        optionalDetails: details,
+            result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
+                                                        message: errorDetails["message"] as! String,
+                                                        optionalDetails: (errorDetails["additionalData"] as? [AnyHashable : Any]),
                                                         andOptionalNSError: error))
         };
         
-        let methodCallResult:FLTFirebaseMethodCallResult = .create(success: result, andErrorBlock: errorBlock)
+        self.result = .create(success: result, andErrorBlock: errorBlock)
+        self.args = args
         
         switch (call.method) {
         case "FirebaseInstallations#getId":
-            getId(arguments: args, result: methodCallResult)
+            getId()
+        case "FirebaseInstallations#delete":
+            deleteId()
+        case "FirebaseInstallations#getToken":
+            getToken()
+        case "FirebaseInstallations#registerIdTokenListener":
+            registerTokenListener()
         default:
             result(FlutterMethodNotImplemented)
         }
