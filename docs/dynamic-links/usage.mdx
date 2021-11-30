@@ -1,12 +1,90 @@
 ---
-title: Using Dynamic Links
+title: Dynamic Links
 sidebar_label: Usage
 ---
 
-## Getting started
+To start using the Dynamic Links package within your project, import it at the top of your project files:
+
+```dart
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+```
+
+Before using Dynamic Links, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
+
+To create a new Dynamic Links instance, call the [`instance`](!firebase_dynamic_links.FirebaseDynamicLinks.instance) getter on [`FirebaseDynamicLinks`](!firebase_dynamic_links.FirebaseDynamicLinks):
+
+```dart
+FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+```
+
+By default, this allows you to interact with Dynamic Links using the default Firebase App used whilst installing FlutterFire on your
+platform.
+
+
+On `Android`, if you'd like to use Dynamic Links with a secondary Firebase App, use the [`instanceFor`](!firebase_dynamic_links.FirebaseDynamicLinks.instanceFor) method:
+
+```dart
+// Android only
+FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instanceFor(app: secondaryApp);
+```
 
 ## Create a Dynamic Link
 
+### Build Dynamic Link
+
+To build a dynamic link, use the [`FirebaseDynamicLinks.buildLink`](!firebase_dynamic_links.buildLink) API in your application code like so:
+
+```dart highlight={18}
+final DynamicLinkParameters parameters = DynamicLinkParameters(
+          // The Firebase URI domain queried. You can view created URIs on your Firebase console
+          uriPrefix: 'https://example.page.link',
+          // The Dynamic Link passed to your application which you can use to affect change
+          link: Uri.parse('https://www.example.com/view-to-open'),
+          // Android application details needed for opening correct app on device/Play Store
+          androidParameters: const AndroidParameters(
+            packageName: androidPackageName,
+            minimumVersion: 1,
+          ),
+          // iOS application details needed for opening correct app on device/App Store
+          iosParameters: const IOSParameters(
+            bundleId: iosBundleId,
+            minimumVersion: '2',
+          ),
+        );
+
+        final Uri uri = await dynamicLinks.buildLink(parameters);
+```
+
+### Build Short Dynamic Link
+
+You can also build a short dynamic link which makes the clickable URL shorter. This does entail an additional native SDK
+request to the Firebase server whilst the above `buildLink()` does not.  To build a short dynamic link, use the
+[`FirebaseDynamicLinks.buildShortLink`](!firebase_dynamic_links.buildShortLink) API in your application code like so:
+
+```dart highlight={18}
+final DynamicLinkParameters parameters = DynamicLinkParameters(
+          // The Firebase URI domain queried. You can view created URIs on your Firebase console
+          uriPrefix: 'https://example.page.link',
+          // The Dynamic Link passed to your application which you can use to affect change
+          link: Uri.parse('https://www.example.com/view-to-open'),
+          // Android application details needed for opening correct app on device/Play Store
+          androidParameters: const AndroidParameters(
+            packageName: androidPackageName,
+            minimumVersion: 1,
+          ),
+          // iOS application details needed for opening correct app on device/App Store
+          iosParameters: const IOSParameters(
+            bundleId: iosBundleId,
+            minimumVersion: '2',
+          ),
+        );
+
+        final Uri uri = await dynamicLinks.buildShortLink(parameters);
+```
+
 ## Listening for Dynamic Links
+
+
 
 ## Get Dynamic Link
