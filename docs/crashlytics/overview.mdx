@@ -90,7 +90,7 @@ dependencies:
 $ flutter pub get
 ```
 
-### 3. Platform integration
+### 3. Migrating from previous version using Fabric
 
 If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
 guides and remove any legacy Fabric integration steps from your project:
@@ -98,7 +98,7 @@ guides and remove any legacy Fabric integration steps from your project:
  - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
  - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
 
-#### a. Android
+#### Android
 
 1. Add the following classpaths to your `android/build.gradle` file.
 
@@ -128,7 +128,7 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 ```
 
-#### b. iOS
+#### iOS
 
 1. From Xcode select `Runner` from the project navigation.
 2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
@@ -136,7 +136,17 @@ apply plugin: 'com.google.firebase.crashlytics'
 4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
 For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
 
-### 4. Rebuild your app
+### 4. Uploading symbols to Firebase Server
+
+Flutterfire setup has been simplified by removing the need to add Firebase config files to your app. But for Crashlytics, there
+is still additional config to ensure Crashlytics is able to output human readable crash reports of your app.
+
+#### iOS
+TODO - update instructions
+#### Android
+TODO - update instructions
+
+### 5. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
