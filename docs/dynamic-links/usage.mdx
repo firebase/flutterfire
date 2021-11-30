@@ -37,23 +37,23 @@ To build a dynamic link, use the [`FirebaseDynamicLinks.buildLink`](!firebase_dy
 
 ```dart highlight={18}
 final DynamicLinkParameters parameters = DynamicLinkParameters(
-          // The Firebase URI domain queried. You can view created URIs on your Firebase console
-          uriPrefix: 'https://example.page.link',
-          // The Dynamic Link passed to your application which you can use to affect change
-          link: Uri.parse('https://www.example.com/view-to-open'),
-          // Android application details needed for opening correct app on device/Play Store
-          androidParameters: const AndroidParameters(
-            packageName: androidPackageName,
-            minimumVersion: 1,
-          ),
-          // iOS application details needed for opening correct app on device/App Store
-          iosParameters: const IOSParameters(
-            bundleId: iosBundleId,
-            minimumVersion: '2',
-          ),
-        );
+  // The Firebase URI domain queried. You can view created URIs on your Firebase console
+  uriPrefix: 'https://example.page.link',
+  // The Dynamic Link passed to your application which you can use to affect change
+  link: Uri.parse('https://www.example.com/view-to-open'),
+  // Android application details needed for opening correct app on device/Play Store
+  androidParameters: const AndroidParameters(
+    packageName: androidPackageName,
+    minimumVersion: 1,
+  ),
+  // iOS application details needed for opening correct app on device/App Store
+  iosParameters: const IOSParameters(
+    bundleId: iosBundleId,
+    minimumVersion: '2',
+  ),
+);
 
-        final Uri uri = await dynamicLinks.buildLink(parameters);
+final Uri uri = await dynamicLinks.buildLink(parameters);
 ```
 
 ### Build Short Dynamic Link
@@ -64,27 +64,71 @@ request to the Firebase server whilst the above `buildLink()` does not.  To buil
 
 ```dart highlight={18}
 final DynamicLinkParameters parameters = DynamicLinkParameters(
-          // The Firebase URI domain queried. You can view created URIs on your Firebase console
-          uriPrefix: 'https://example.page.link',
-          // The Dynamic Link passed to your application which you can use to affect change
-          link: Uri.parse('https://www.example.com/view-to-open'),
-          // Android application details needed for opening correct app on device/Play Store
-          androidParameters: const AndroidParameters(
-            packageName: androidPackageName,
-            minimumVersion: 1,
-          ),
-          // iOS application details needed for opening correct app on device/App Store
-          iosParameters: const IOSParameters(
-            bundleId: iosBundleId,
-            minimumVersion: '2',
-          ),
-        );
+  // The Firebase URI domain queried. You can view created URIs on your Firebase console
+  uriPrefix: 'https://example.page.link',
+  // The Dynamic Link passed to your application which you can use to affect change
+  link: Uri.parse('https://www.example.com/view-to-open'),
+  // Android application details needed for opening correct app on device/Play Store
+  androidParameters: const AndroidParameters(
+    packageName: androidPackageName,
+    minimumVersion: 1,
+  ),
+  // iOS application details needed for opening correct app on device/App Store
+  iosParameters: const IOSParameters(
+    bundleId: iosBundleId,
+    minimumVersion: '2',
+  ),
+);
 
-        final Uri uri = await dynamicLinks.buildShortLink(parameters);
+final Uri uri = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
 ```
+
+## Get Dynamic Link
+
+If the application is in a background state/quit, use the [`FirebaseDynamicLinks.getInitialLink`](!firebase_dynamic_links.getInitialLink)
+to retrieve the dynamic link that opened the application or brought it to the foreground from a background state.
+
+```dart highlight={2}
+final PendingDynamicLinkData? data =
+                              await FirebaseDynamicLinks.instance.getInitialLink();
+final Uri? deepLink = data?.link;
+
+if (deepLink != null) {
+  // Example of using the dynamic link to push the user to a different view
+  Navigator.pushNamed(context, deepLink.path);
+}
+```
+
+Alternatively, if you wish to select an exact dynamic link from your application, you may also pass the pressed URL to [`FirebaseDynamicLinks.getDynamicLink`](!firebase_dynamic_links.getDynamicLink)
+like so:
+
+```dart highlight={3}
+String Link = 'https://dynamic-link-domain/ke2Qa';
+final PendingDynamicLinkData? data =
+                              await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(Link));
+final Uri? deepLink = data?.link;
+
+if (deepLink != null) {
+  // Example of using the dynamic link to push the user to a different view
+  Navigator.pushNamed(context, deepLink.path);
+}
+```
+
 
 ## Listening for Dynamic Links
 
+Whilst the application is open, you may listen to dynamic links using this stream handler [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
+
+```dart highlight={1}
+FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+  if (dynamicLinkData != null && dynamicLinkData.link != null) {
+    Navigator.pushNamed(context, dynamicLinkData.link.path);
+  }
+}).onError((error) {
+  // Handle errors
+});
+```
 
 
-## Get Dynamic Link
+
+
