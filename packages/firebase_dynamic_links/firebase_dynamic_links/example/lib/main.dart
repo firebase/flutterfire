@@ -59,6 +59,7 @@ class _MainScreenState extends State<_MainScreen> {
       'details.';
 
   final String DynamicLink = 'https://test-app/helloworld';
+  final String Link = "https://reactnativefirebase.page.link/bFkn";
 
   @override
   void initState() {
@@ -150,7 +151,7 @@ class _MainScreenState extends State<_MainScreen> {
                           // the dynamic link.
                           final PendingDynamicLinkData? data =
                               await dynamicLinks
-                                  .getDynamicLink(Uri.parse(DynamicLink));
+                                  .getDynamicLink(Uri.parse(Link));
                           final Uri? deepLink = data?.link;
 
                           if (deepLink != null) {
