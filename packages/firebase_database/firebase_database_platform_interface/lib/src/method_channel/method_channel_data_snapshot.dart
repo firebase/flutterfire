@@ -61,7 +61,6 @@ class MethodChannelDataSnapshot extends DataSnapshotPlatform {
       <String, dynamic>{
         'key': _ref.child(childPath).key,
         'value': childValue,
-        // TODO change underlying SDKs to use exportVal and pluck priority
         'priority': null,
         'childKeys': _childKeysFromValue(childValue),
       },
@@ -90,7 +89,6 @@ class MethodChannelDataSnapshot extends DataSnapshotPlatform {
         <String, dynamic>{
           'key': childKey,
           'value': childValue,
-          // TODO change underlying SDKs to use exportVal and pluck priority
           'priority': null,
           'childKeys': _childKeysFromValue(childValue),
         },

@@ -11,9 +11,6 @@ import 'firebase_list.dart' show ChildCallback, ErrorCallback, ValueCallback;
 import 'utils/stream_subscriber_mixin.dart';
 
 /// Sorts the results of `query` on the client side using to the `comparator`.
-///
-// TODO(lesnitsky) We don't support children moving around.
-// TODO(lesnitsky) Right now this naively sorting the list after an insert.
 // We can be smarter about how we handle insertion and keep the list always
 // sorted. See example here:
 // https://github.com/firebase/FirebaseUI-iOS/blob/master/FirebaseDatabaseUI/FUISortedArray.m

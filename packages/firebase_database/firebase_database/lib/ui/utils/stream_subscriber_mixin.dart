@@ -23,7 +23,6 @@ abstract class StreamSubscriberMixin<T> {
   /// Cancels all streams that were previously added with listen().
   void cancelSubscriptions() {
     for (final subscription in _subscriptions) {
-      // TODO(rrousselGit) await `cancel`
       subscription.cancel();
     }
   }

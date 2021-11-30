@@ -41,7 +41,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
 #if TARGET_OS_OSX
-  // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
+  // Publish does not exist on MacOS version of FlutterPluginRegistrar.
 #else
   [registrar publish:instance];
 #endif
@@ -262,7 +262,6 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
                         result:methodCallResultHandler];
 
         // Wait while Dart side updates the value.
-        // TODO maybe reintroduce timeout?
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
         if (aborted || exception) {
