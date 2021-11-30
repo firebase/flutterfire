@@ -1,3 +1,10 @@
+## [UNRELEASED]
+
+- **NEW**: Added support for multi-app via the `instanceFor()` method.
+- **NEW**: Added support for getting the current App Check token via the `getToken()` method.
+- **NEW**: Added support for enabling automatic token refreshing via the `setTokenAutoRefreshEnabled()` method.
+- **NEW**: Added support for subscribing to token change events (as a `Stream`) via the `tokenChanges()` method.
+
 ## 0.0.3
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
