@@ -1,3 +1,24 @@
+## UNRELEASED
+
+As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Performance rework changes.
+
+Overall, Firebase Performance has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests.
+
+- **`FirebasePerformance`**
+
+- **BREAKING**: `HttpMetric().putAttribute()` method is now synchronous.
+- **BREAKING**: `HttpMetric().removeAttribute()` method is now synchronous.
+- **BREAKING**: `HttpMetric().getAttribute()` method is now synchronous.
+- **BREAKING**: `HttpMetric().getAttributes()` method is now synchronous.
+- **BREAKING**: `Trace().putAttribute()` method is now synchronous.
+- **BREAKING**: `Trace().removeAttribute()` method is now synchronous.
+- **BREAKING**: `Trace().getAttribute()` method is now synchronous.
+- **BREAKING**: `Trace().getAttributes()` method is now synchronous.
+- **BREAKING**: `Trace().incrementMetric()` method is now synchronous.
+- **BREAKING**: `Trace().setMetric()` method is now synchronous.
+- **BREAKING**: `Trace().getMetric()` method is now synchronous.
+
 ## 0.7.1+4
 
  - Update a dependency to the latest release.
