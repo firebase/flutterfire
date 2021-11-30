@@ -14,104 +14,103 @@ class QueryWeb extends QueryPlatform {
     this._queryDelegate,
   ) : super(database: _database);
 
+  database_interop.Query _getQueryDelegateInstance(QueryModifiers modifiers) {
+    database_interop.Query instance = _queryDelegate;
+
+    modifiers.toIterable().forEach((modifier) {
+      if (modifier is LimitModifier) {
+        if (modifier.name == 'limitToFirst') {
+          instance = instance.limitToFirst(modifier.value);
+        }
+        if (modifier.name == 'limitToLast') {
+          instance = instance.limitToLast(modifier.value);
+        }
+      }
+
+      if (modifier is StartCursorModifier) {
+        if (modifier.name == 'startAt') {
+          instance = instance.startAt(modifier.value, modifier.key);
+        }
+        if (modifier.name == 'startAfter') {
+          instance = instance.startAfter(modifier.value, modifier.key);
+        }
+      }
+
+      if (modifier is EndCursorModifier) {
+        if (modifier.name == 'endAt') {
+          instance = instance.startAt(modifier.value, modifier.key);
+        }
+        if (modifier.name == 'endBefore') {
+          instance = instance.startAfter(modifier.value, modifier.key);
+        }
+      }
+
+      if (modifier is OrderModifier) {
+        if (modifier.name == 'orderByChild') {
+          instance = instance.orderByChild(modifier.path!);
+        }
+        if (modifier.name == 'orderByKey') {
+          instance = instance.orderByKey();
+        }
+        if (modifier.name == 'orderByValue') {
+          instance = instance.orderByValue();
+        }
+        if (modifier.name == 'orderByPriority') {
+          instance = instance.orderByPriority();
+        }
+      }
+    });
+
+    return instance;
+  }
+
   @override
   DatabaseReferencePlatform get ref =>
       DatabaseReferenceWeb(_database, _queryDelegate.ref);
 
   @override
-  Future<DataSnapshotPlatform> get() async {
+  Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      return webSnapshotToPlatformSnapshot(ref, await _queryDelegate.get());
+      return webSnapshotToPlatformSnapshot(
+          ref, await _getQueryDelegateInstance(modifiers).get());
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
   }
 
   @override
-  QueryPlatform startAt(Object? value, {String? key}) {
-    return QueryWeb(_database, _queryDelegate.startAt(value, key));
-  }
-
-  @override
-  QueryPlatform startAfter(Object? value, {String? key}) {
-    return QueryWeb(_database, _queryDelegate.startAfter(value, key));
-  }
-
-  @override
-  QueryPlatform endAt(Object? value, {String? key}) {
-    return QueryWeb(_database, _queryDelegate.endAt(value, key));
-  }
-
-  @override
-  QueryPlatform endBefore(Object? value, {String? key}) {
-    return QueryWeb(_database, _queryDelegate.endBefore(value, key));
-  }
-
-  @override
-  QueryPlatform equalTo(Object? value, {String? key}) {
-    return QueryWeb(_database, _queryDelegate.equalTo(value, key));
-  }
-
-  @override
-  QueryPlatform limitToFirst(int limit) {
-    return QueryWeb(_database, _queryDelegate.limitToFirst(limit));
-  }
-
-  @override
-  QueryPlatform limitToLast(int limit) {
-    return QueryWeb(_database, _queryDelegate.limitToLast(limit));
-  }
-
-  @override
-  QueryPlatform orderByChild(String key) {
-    return QueryWeb(_database, _queryDelegate.orderByChild(key));
-  }
-
-  @override
-  QueryPlatform orderByKey() {
-    return QueryWeb(_database, _queryDelegate.orderByKey());
-  }
-
-  @override
-  QueryPlatform orderByPriority() {
-    return QueryWeb(_database, _queryDelegate.orderByPriority());
-  }
-
-  @override
-  QueryPlatform orderByValue() {
-    return QueryWeb(_database, _queryDelegate.orderByValue());
-  }
-
-  @override
-  Future<void> keepSynced(bool value) async {
+  Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     throw UnsupportedError('keepSynced() is not supported on web');
   }
 
   @override
-  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) {
+  Stream<DatabaseEventPlatform> observe(
+      QueryModifiers modifiers, DatabaseEventType eventType) {
+    database_interop.Query instance = _getQueryDelegateInstance(modifiers);
+
     switch (eventType) {
       case DatabaseEventType.childAdded:
         return _webStreamToPlatformStream(
           eventType,
-          _queryDelegate.onChildAdded,
+          instance.onChildAdded,
         );
       case DatabaseEventType.childChanged:
         return _webStreamToPlatformStream(
           eventType,
-          _queryDelegate.onChildChanged,
+          instance.onChildChanged,
         );
       case DatabaseEventType.childMoved:
         return _webStreamToPlatformStream(
           eventType,
-          _queryDelegate.onChildMoved,
+          instance.onChildMoved,
         );
       case DatabaseEventType.childRemoved:
         return _webStreamToPlatformStream(
           eventType,
-          _queryDelegate.onChildRemoved,
+          instance.onChildRemoved,
         );
       case DatabaseEventType.value:
-        return _webStreamToPlatformStream(eventType, _queryDelegate.onValue);
+        return _webStreamToPlatformStream(eventType, instance.onValue);
       default:
         throw Exception("Invalid event type: $eventType");
     }

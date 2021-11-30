@@ -17,11 +17,9 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannelQuery({
     required DatabasePlatform database,
     required this.pathComponents,
-    Map<String, dynamic> parameters = const <String, dynamic>{},
-  }) : super(
-          database: database,
-          parameters: parameters,
-        );
+  }) : super(database: database);
+
+  static Map<String, Stream<DatabaseEventPlatform>> observers = {};
 
   final List<String> pathComponents;
 
@@ -33,24 +31,40 @@ class MethodChannelQuery extends QueryPlatform {
   MethodChannel get channel => MethodChannelDatabase.channel;
 
   @override
-  Stream<DatabaseEventPlatform> observe(DatabaseEventType eventType) async* {
+  Stream<DatabaseEventPlatform> observe(
+    QueryModifiers modifiers,
+    DatabaseEventType eventType,
+  ) async* {
+    List<Map<String, Object?>> modifierList = modifiers.toList();
+
+    // Create an event channel using path, app name, databaseUrl, event type and ordered modifier list
+    EventChannel eventChannel = EventChannel(
+      '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList',
+    );
+
+    if (observers.containsKey(eventChannel.name)) {
+      yield* observers[eventChannel.name]!;
+      return;
+    }
+
     const channel = MethodChannelDatabase.channel;
 
-    final listenArgs = <String, String>{
-      'eventType': eventTypeToString(eventType)
-    };
-
-    final channelName = await channel.invokeMethod<String>(
+    // Create the EventChannel on native.
+    await channel.invokeMethod<String>(
       'Query#observe',
       database.getChannelArguments({
         'path': path,
-        'parameters': parameters,
-        'eventType': eventTypeToString(eventType),
+        'modifiers': modifierList,
+        'eventChannelName': eventChannel.name,
       }),
     );
 
-    yield* EventChannel(channelName!)
-        .receiveBroadcastStream(listenArgs)
+    final arguments = <String, Object?>{
+      'eventType': eventTypeToString(eventType),
+    };
+
+    Stream<DatabaseEventPlatform> stream = eventChannel
+        .receiveBroadcastStream(arguments)
         .map(
           (event) =>
               MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
@@ -59,17 +73,20 @@ class MethodChannelQuery extends QueryPlatform {
           (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,
         );
+
+    observers[eventChannel.name] = stream;
+    yield* stream;
   }
 
   /// Gets the most up-to-date result for this query.
   @override
-  Future<DataSnapshotPlatform> get() async {
+  Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
       final result = await channel.invokeMapMethod(
         'Query#get',
         database.getChannelArguments({
           'path': path,
-          'parameters': parameters,
+          'modifiers': modifiers.toList(),
         }),
       );
 
@@ -80,125 +97,6 @@ class MethodChannelQuery extends QueryPlatform {
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
-  }
-
-  /// Create a query constrained to only return child nodes with a value greater
-  /// than or equal to the given value, using the given orderBy directive or
-  /// priority as default, and optionally only child nodes with a key greater
-  /// than or equal to the given key.
-  @override
-  QueryPlatform startAt(Object? value, {String? key}) {
-    return _addPaginationParameter(value, key, 'startAt');
-  }
-
-  /// Creates a query with the specified starting point (exclusive).
-  /// Using [startAt], [startAfter], [endBefore], [endAt] and [equalTo]
-  /// allows you to choose arbitrary starting and ending points for your
-  /// queries.
-  ///
-  /// The starting point is exclusive.
-  ///
-  /// If only a value is provided, children with a value greater than
-  /// the specified value will be included in the query.
-  /// If a key is specified, then children must have a value greater than
-  /// or equal to the specified value and a a key name greater than
-  /// the specified key.
-  @override
-  QueryPlatform startAfter(Object? value, {String? key}) {
-    return _addPaginationParameter(value, key, 'startAfter');
-  }
-
-  /// Create a query constrained to only return child nodes with a value less
-  /// than or equal to the given value, using the given orderBy directive or
-  /// priority as default, and optionally only child nodes with a key less
-  /// than or equal to the given key.
-  @override
-  QueryPlatform endAt(Object? value, {String? key}) {
-    return _addPaginationParameter(value, key, 'endAt');
-  }
-
-  @override
-  QueryPlatform endBefore(Object? value, {String? key}) {
-    return _addPaginationParameter(value, key, 'endBefore');
-  }
-
-  /// Create a query constrained to only return child nodes with the given
-  /// `value` (and `key`, if provided).
-  ///
-  /// If a key is provided, there is at most one such child as names are unique.
-  @override
-  QueryPlatform equalTo(Object? value, {String? key}) {
-    return _addPaginationParameter(value, key, 'equalTo');
-  }
-
-  QueryPlatform _addPaginationParameter(
-    dynamic value,
-    String? paginationKey,
-    String parameterKey,
-  ) {
-    assert(!this.parameters.containsKey(parameterKey));
-    assert(value is String || value is bool || value is num || value == null);
-
-    final parameters = <String, dynamic>{parameterKey: value};
-    if (paginationKey != null) parameters['${parameterKey}Key'] = paginationKey;
-
-    return _copyWithParameters(parameters);
-  }
-
-  /// Create a query with limit and anchor it to the start of the window.
-  @override
-  QueryPlatform limitToFirst(int limit) {
-    assert(!parameters.containsKey('limitToFirst'));
-    return _copyWithParameters(<String, dynamic>{'limitToFirst': limit});
-  }
-
-  /// Create a query with limit and anchor it to the end of the window.
-  @override
-  QueryPlatform limitToLast(int limit) {
-    assert(!parameters.containsKey('limitToLast'));
-    return _copyWithParameters(<String, dynamic>{'limitToLast': limit});
-  }
-
-  /// Generate a view of the data sorted by values of a particular child key.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
-  @override
-  QueryPlatform orderByChild(String key) {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(
-      <String, dynamic>{'orderBy': 'child', 'orderByChildKey': key},
-    );
-  }
-
-  /// Generate a view of the data sorted by key.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
-  @override
-  QueryPlatform orderByKey() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'key'});
-  }
-
-  /// Generate a view of the data sorted by value.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
-  @override
-  QueryPlatform orderByValue() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'value'});
-  }
-
-  /// Generate a view of the data sorted by priority.
-  ///
-  /// Intended to be used in combination with [startAt], [endAt], or
-  /// [equalTo].
-  @override
-  QueryPlatform orderByPriority() {
-    assert(!parameters.containsKey('orderBy'));
-    return _copyWithParameters(<String, dynamic>{'orderBy': 'priority'});
   }
 
   /// Obtains a DatabaseReference corresponding to this query's location.
@@ -215,26 +113,16 @@ class MethodChannelQuery extends QueryPlatform {
   /// attached for that location. Additionally, while a location is kept synced,
   /// it will not be evicted from the persistent disk cache.
   @override
-  Future<void> keepSynced(bool value) {
+  Future<void> keepSynced(QueryModifiers modifiers, bool value) {
     try {
       return channel.invokeMethod<void>(
         'Query#keepSynced',
         database.getChannelArguments(
-          {'path': path, 'parameters': parameters, 'value': value},
+          {'path': path, 'modifiers': modifiers.toList(), 'value': value},
         ),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
-  }
-
-  MethodChannelQuery _copyWithParameters(Map<String, dynamic> parameters) {
-    return MethodChannelQuery(
-      database: database,
-      pathComponents: pathComponents,
-      parameters: Map<String, dynamic>.unmodifiable(
-        Map<String, dynamic>.from(this.parameters)..addAll(parameters),
-      ),
-    );
   }
 }

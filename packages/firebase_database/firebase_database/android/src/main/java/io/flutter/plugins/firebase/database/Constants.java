@@ -11,6 +11,8 @@ public class Constants {
   public static final String DATABASE_EMULATOR_PORT = "emulatorPort";
   public static final String DATABASE_CACHE_SIZE_BYTES = "cacheSizeBytes";
 
+  public static final String EVENT_CHANNEL_NAME = "eventChannelName";
+
   public static final String PATH = "path";
   public static final String KEY = "key";
   public static final String VALUE = "value";
@@ -19,7 +21,7 @@ public class Constants {
 
   public static final String COMMITTED = "committed";
 
-  public static final String PARAMETERS = "parameters";
+  public static final String MODIFIERS = "modifiers";
   public static final String ORDER_BY = "orderBy";
   public static final Object CHILD = "child";
   public static final String ORDER_BY_CHILD_KEY = "orderByChildKey";

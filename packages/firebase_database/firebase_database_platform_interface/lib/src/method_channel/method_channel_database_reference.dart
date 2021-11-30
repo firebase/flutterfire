@@ -28,7 +28,6 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }) : super(
           database: database,
           pathComponents: pathComponents,
-          parameters: {},
         );
 
   @override

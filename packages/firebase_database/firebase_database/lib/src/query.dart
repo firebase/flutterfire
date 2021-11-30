@@ -6,16 +6,19 @@ part of firebase_database;
 
 /// Represents a query over the data at a particular location.
 class Query {
-  Query._(this._queryDelegate);
+  Query._(this._queryDelegate, [QueryModifiers? modifiers])
+      : _modifiers = modifiers ?? QueryModifiers([]);
 
   final QueryPlatform _queryDelegate;
+
+  final QueryModifiers _modifiers;
 
   /// Obtains a [DatabaseReference] corresponding to this query's location.
   DatabaseReference get ref => DatabaseReference._(_queryDelegate.ref);
 
   /// Gets the most up-to-date result for this query.
   Future<DataSnapshot> get() async {
-    return DataSnapshot._(await _queryDelegate.get());
+    return DataSnapshot._(await _queryDelegate.get(_modifiers));
   }
 
   /// Listens for exactly one event of the specified event type, and then stops listening.
@@ -25,44 +28,59 @@ class Query {
   ]) async {
     switch (eventType) {
       case DatabaseEventType.childAdded:
-        return DatabaseEvent._(await _queryDelegate.onChildAdded.first);
+        return DatabaseEvent._(
+          await _queryDelegate.onChildAdded(_modifiers).first,
+        );
       case DatabaseEventType.childRemoved:
-        return DatabaseEvent._(await _queryDelegate.onChildRemoved.first);
+        return DatabaseEvent._(
+          await _queryDelegate.onChildRemoved(_modifiers).first,
+        );
       case DatabaseEventType.childChanged:
-        return DatabaseEvent._(await _queryDelegate.onChildChanged.first);
+        return DatabaseEvent._(
+          await _queryDelegate.onChildChanged(_modifiers).first,
+        );
       case DatabaseEventType.childMoved:
-        return DatabaseEvent._(await _queryDelegate.onChildMoved.first);
+        return DatabaseEvent._(
+          await _queryDelegate.onChildMoved(_modifiers).first,
+        );
       case DatabaseEventType.value:
-        return DatabaseEvent._(await _queryDelegate.onValue.first);
+        return DatabaseEvent._(await _queryDelegate.onValue(_modifiers).first);
     }
   }
 
   /// Fires when children are added.
-  Stream<DatabaseEvent> get onChildAdded =>
-      _queryDelegate.onChildAdded.map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildAdded => _queryDelegate
+      .onChildAdded(_modifiers)
+      .map((item) => DatabaseEvent._(item));
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<DatabaseEvent> get onChildRemoved =>
-      _queryDelegate.onChildRemoved.map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildRemoved => _queryDelegate
+      .onChildRemoved(_modifiers)
+      .map((item) => DatabaseEvent._(item));
 
   /// Fires when children are changed.
-  Stream<DatabaseEvent> get onChildChanged =>
-      _queryDelegate.onChildChanged.map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildChanged => _queryDelegate
+      .onChildChanged(_modifiers)
+      .map((item) => DatabaseEvent._(item));
 
   /// Fires when children are moved.
-  Stream<DatabaseEvent> get onChildMoved =>
-      _queryDelegate.onChildMoved.map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildMoved => _queryDelegate
+      .onChildMoved(_modifiers)
+      .map((item) => DatabaseEvent._(item));
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
   Stream<DatabaseEvent> get onValue =>
-      _queryDelegate.onValue.map((item) => DatabaseEvent._(item));
+      _queryDelegate.onValue(_modifiers).map((item) => DatabaseEvent._(item));
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or
   /// priority as default, and optionally only child nodes with a key greater
   /// than or equal to the given key.
   Query startAt(Object? value, {String? key}) {
-    return Query._(_queryDelegate.startAt(value, key: key));
+    return Query._(
+      _queryDelegate,
+      _modifiers.start(StartCursorModifier.startAt(value, key)),
+    );
   }
 
   /// Creates a [Query] with the specified starting point (exclusive).
@@ -78,7 +96,10 @@ class Query {
   /// or equal to the specified value and a a key name greater than
   /// the specified key.
   Query startAfter(Object? value, {String? key}) {
-    return Query._(_queryDelegate.startAfter(value, key: key));
+    return Query._(
+      _queryDelegate,
+      _modifiers.start(StartCursorModifier.startAfter(value, key)),
+    );
   }
 
   /// Create a query constrained to only return child nodes with a value less
@@ -86,7 +107,10 @@ class Query {
   /// priority as default, and optionally only child nodes with a key less
   /// than or equal to the given key.
   Query endAt(Object? value, {String? key}) {
-    return Query._(_queryDelegate.endAt(value, key: key));
+    return Query._(
+      _queryDelegate,
+      _modifiers.end(EndCursorModifier.endAt(value, key)),
+    );
   }
 
   /// Creates a [Query] with the specified ending point (exclusive)
@@ -96,7 +120,10 @@ class Query {
   /// than or equal to the specified value and a a key name less than the
   /// specified key.
   Query endBefore(Object? value, {String? key}) {
-    return Query._(_queryDelegate.endBefore(value, key: key));
+    return Query._(
+      _queryDelegate,
+      _modifiers.end(EndCursorModifier.endBefore(value, key)),
+    );
   }
 
   /// Create a query constrained to only return child nodes with the given
@@ -104,27 +131,43 @@ class Query {
   ///
   /// If a key is provided, there is at most one such child as names are unique.
   Query equalTo(Object? value, {String? key}) {
-    return Query._(_queryDelegate.equalTo(value, key: key));
+    return Query._(
+      _queryDelegate,
+      _modifiers
+          .start(StartCursorModifier.startAt(value, key))
+          .end(EndCursorModifier.endAt(value, key)),
+    );
   }
 
   /// Create a query with limit and anchor it to the start of the window.
   Query limitToFirst(int limit) {
-    assert(limit >= 0);
-    return Query._(_queryDelegate.limitToFirst(limit));
+    return Query._(
+      _queryDelegate,
+      _modifiers.limit(LimitModifier.limitToFirst(limit)),
+    );
   }
 
   /// Create a query with limit and anchor it to the end of the window.
   Query limitToLast(int limit) {
-    assert(limit >= 0);
-    return Query._(_queryDelegate.limitToLast(limit));
+    return Query._(
+      _queryDelegate,
+      _modifiers.limit(LimitModifier.limitToLast(limit)),
+    );
   }
 
-  /// Generate a view of the data sorted by values of a particular child key.
+  /// Generate a view of the data sorted by values of a particular child path.
   ///
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
-  Query orderByChild(String key) {
-    return Query._(_queryDelegate.orderByChild(key));
+  Query orderByChild(String path) {
+    assert(
+      path.isNotEmpty,
+      'The key cannot be empty. Use `orderByValue` instead',
+    );
+    return Query._(
+      _queryDelegate,
+      _modifiers.order(OrderModifier.orderByChild(path)),
+    );
   }
 
   /// Generate a view of the data sorted by key.
@@ -132,7 +175,12 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByKey() {
-    return Query._(_queryDelegate.orderByKey());
+    return Query._(
+      _queryDelegate,
+      _modifiers.order(
+        OrderModifier.orderByKey(),
+      ),
+    );
   }
 
   /// Generate a view of the data sorted by value.
@@ -140,7 +188,12 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByValue() {
-    return Query._(_queryDelegate.orderByValue());
+    return Query._(
+      _queryDelegate,
+      _modifiers.order(
+        OrderModifier.orderByValue(),
+      ),
+    );
   }
 
   /// Generate a view of the data sorted by priority.
@@ -148,7 +201,12 @@ class Query {
   /// Intended to be used in combination with [startAt], [endAt], or
   /// [equalTo].
   Query orderByPriority() {
-    return Query._(_queryDelegate.orderByPriority());
+    return Query._(
+      _queryDelegate,
+      _modifiers.order(
+        OrderModifier.orderByPriority(),
+      ),
+    );
   }
 
   /// By calling keepSynced(true) on a location, the data for that location will
@@ -156,6 +214,6 @@ class Query {
   /// attached for that location. Additionally, while a location is kept synced,
   /// it will not be evicted from the persistent disk cache.
   Future<void> keepSynced(bool value) {
-    return _queryDelegate.keepSynced(value);
+    return _queryDelegate.keepSynced(_modifiers, value);
   }
 }

@@ -13,3 +13,4 @@ export 'src/platform_interface/platform_interface_on_disconnect.dart';
 export 'src/platform_interface/platform_interface_query.dart';
 export 'src/platform_interface/platform_interface_transaction_result.dart';
 export 'src/server_value.dart';
+export 'src/query_modifiers.dart';
