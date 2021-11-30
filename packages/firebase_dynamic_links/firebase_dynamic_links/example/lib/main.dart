@@ -132,8 +132,6 @@ class _MainScreenState extends State<_MainScreen> {
                     children: <Widget>[
                       ElevatedButton(
                         onPressed: () async {
-                          // comment out the above onLink() event listener to test `getInitialLink()` when your app is first opened pressing
-                          // the dynamic link.
                           final PendingDynamicLinkData? data =
                               await dynamicLinks.getInitialLink();
                           final Uri? deepLink = data?.link;
@@ -147,8 +145,6 @@ class _MainScreenState extends State<_MainScreen> {
                       ),
                       ElevatedButton(
                         onPressed: () async {
-                          // comment out the above onLink() event listener to test `getDynamicLink(url)` when your app is first opened pressing
-                          // the dynamic link.
                           final PendingDynamicLinkData? data =
                               await dynamicLinks
                                   .getDynamicLink(Uri.parse(Link));
