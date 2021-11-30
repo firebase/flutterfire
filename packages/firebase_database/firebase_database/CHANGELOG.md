@@ -1,3 +1,56 @@
+## [UNRELEASED]
+
+Realtime Database has been fully reworked to bring the plugin inline with the federated plugin
+setup, a more familiar API, better documentation and many more unit and end-to-end tests.
+
+- `FirebaseDatabase`
+ - TODO **DEPRECATED**: `FirebaseDatabase()` has now been deprecated in favor of `FirebaseDatabase.instanceFor()`.
+ - TODO **DEPRECATED**: `reference()` has now been deprecated in favor of `ref()`.
+ - **NEW**: Added support for `ref()`, which allows you to provide an optional path to any database node rather than calling `child()`.
+ - **NEW**: Add emulator support via `useDatabaseEmulator()`.
+ - **NEW**: Add support for  `refFromURL()`.
+ - **BREAKING**: `setPersistenceEnabled()` is now synchronous.
+ - **BREAKING**: `setPersistenceCacheSizeBytes()` is now synchronous.
+ - **BREAKING**: `setLoggingEnabled()` is now synchronous.
+
+- `DatabaseReference`
+ - **BREAKING**: `parent` is now a getter (inline with the JavaScript API).
+ - **BREAKING**: `root` is now a getter (inline with the JavaScript API).
+ - **BREAKING**: `set()` now accepts an `Object?` value (rather than `dynamic`) and no longer accepts a priority.
+ - **NEW**: Added support for `setWithPriority()`.
+ - **NEW**: Added support for locally applying transaction results via the `applyLocally` property on `runTransaction`.
+
+- `Query`
+ - **NEW**: `once()` now accepts an optional `DatabaseEventType` (rather than just subscribing to the value).
+ - **BREAKING**: `limitToFirst()` now asserts the value is positive.
+ - **BREAKING**: `limitToLast()` now asserts the value is positive.
+
+- `OnDisconnect`
+  - **BREAKING**: `set()` now accepts an `Object?` value (rather than `dynamic`) and no longer accepts a priority.
+  - **NEW**: Added support for `setWithPriority()`.
+
+- `Event`
+ - **BREAKING**: The `Event` class returned from database queries has been renamed to `DatabaseEvent`.
+
+- **NEW**: `DatabaseEvent` (old `Event`)
+ - The `DatabaseEventType` is now returned on the event.
+ - The `previousChildKey` is now returned on the event (previously called `previousSiblingKey`).
+
+- **NEW**: `DatabaseEventType`
+ - A `DatabaseEventType` is now returned from a `DatabaseEvent`.
+
+- `DataSnapshot`
+ - **NEW**: Added support for accessing the priority via the `.priority` getter.
+ - **NEW**: Added support for determining whether the snapshot has a child via `hasChild()`.
+ - **NEW**: Added support for accessing a snapshot child node via `child()`.
+ - **NEW**: Added support for iterating the child nodes of the snapshot via the `.children` getter.
+
+- `TransactionResult`
+ - **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` rejection.
+
+- `DatabaseError`
+ - **BREAKING**: The `DatabaseError` class has been removed. Errors are now returned as a `FirebaseException` inline with the other plugins.
+
 ## 8.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
