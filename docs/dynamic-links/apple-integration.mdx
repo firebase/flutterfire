@@ -1,0 +1,50 @@
+---
+title: iOS Dynamic Links Setup
+sidebar_label: Apple Integration
+description: iOS requires additional configuration steps to be completed before you can receive dynamic links.
+---
+
+## Apple Account
+
+To setup Dynamic Links on iOS, it is a prerequisite that you have an Apple developer account [setup](https://developer.apple.com/programs/enroll/).
+
+## Configure your App in the Firebase Console
+
+Add an "App Store ID" & "Team ID" to your app in your Firebase console. If you do not have an "App Store ID" yet, you can put any number in here for now.
+Your "Team ID" can be found in your Apple developer console.
+
+TODO - image
+
+Test the domain (e.g. `https://your-dynamic-link-domain`) you have created in your Firebase console. Go to the following location in your browser "[your domain]/apple-app-site-association".
+The response will have a details array property containing an object that has the property "appID". That will be your app's app ID (It may take some time for
+your domain to register). Please ensure it is registered before proceeding.
+
+TODO - image
+
+## Apple Developer Console
+
+Create a provisioning profile for your app. Please ensure you've enabled the "Associated Domain" capability which you should check before proceeding.
+
+TODO - image
+
+## Project Opened on Xcode
+
+Open your app under the "TARGETS" header. Click the "Signing & Capabilities" tab. You will need to ensure your "Team" is registered, and your "Provisioning Profile" field is completed.
+Please add the domain you created in your Firebase console to the "Associated Domains" and prefix with "applinks:"
+
+TODO - image
+
+Click the "Info" tab, and add a "URL Type" to your project. The "Identifier" can be called "Bundle Id" or whatever you wish. Add your bundle identifier to the "URL Schemes" property.
+
+
+## Dynamic Links With Custom Domains
+
+If you have set up a custom domain for your Firebase project, you must add the dynamic link URL prefix into your iOS project's "Info.plist" file by using the "FirebaseDynamicLinksCustomDomains" key.
+You can add multiple URLs as well.
+
+TODO - image
+
+## Test Dynamic Links
+
+To test your dynamic link, you will need to use a real device as it will not work on a simulator. You will also have to run the app in release mode (i.e. "flutter run --release") as iOS will block you from opening
+the app in debug mode from a dynamic link.

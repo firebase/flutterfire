@@ -136,8 +136,7 @@ module.exports = [
     pub: 'firebase_dynamic_links',
     firebase: 'dynamic-links',
     status: 'Beta',
-    documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_dynamic_links/README.md',
+    documentation: 'https://firebase.flutter.dev/docs/database/overview',
     support: {
       web: false,
       mobile: true,
