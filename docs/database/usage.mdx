@@ -79,13 +79,13 @@ To read the data once, call the `once` method on a `DatabaseReference`:
 DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 
 // Get the data once
-DataSnapshot snapshot = await ref.once();
+DatabaseEvent event = await ref.once();
 
 // Print the data of the snapshot
-print(snapshot.value); // { "name": "John" }
+print(event.snapshot.value); // { "name": "John" }
 ```
 
-The result of a read is a `DataSnapshot`. A snapshot contains the data at the location of the reference,
+The result of a read is a `DatabaseEvent`. This contains a `DataSnapshot` of the data at the location of the reference,
 along with some additional metadata such as the reference key or whether the node exists in your database.
 
 If you'd instead like to subscribe to realtime updates, the `onValue` method returns a `Stream`:
@@ -197,14 +197,14 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("posts/123");
 TransactionResult result = await ref.runTransaction((Object? post) {
   // Ensure a post at the ref exists.
   if (post == null) {
-    return null;
+    return Transaction.abort();
   }
 
   Map<String, dynamic> _post = post as Map<String, dynamic>;
   _post['likes'] = (_post['likes'] ?? 0) + 1;
 
   // Return the new data.
-  return _post;
+  return Transaction.success(_post);
 });
 ```
 
@@ -237,19 +237,15 @@ print('Snapshot? ${result.snapshot}'); // DataSnapshot
 If you wish to safely abort a transaction from executing, you can throw a `AbortTransactionException`:
 
 ```dart
-try {
-  TransactionResult result = await ref.runTransaction((Object? user) {
-    if (user !== null) {
-      throw AbortTransactionException('User already exists!');
-    }
+TransactionResult result = await ref.runTransaction((Object? user) {
+  if (user !== null) {
+    return Transaction.abort();
+  }
 
-    // ...
-  });
-} on FirebaseException catch (e) {
-  print(e.code); // abort-transaction
-  print(e.message); // User already exists!
-}
+  // ...
+});
 
+print(result.committed); // false
 ```
 
 ### Atomic server-side operations

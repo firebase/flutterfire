@@ -274,10 +274,10 @@ void main() {
         final ref = database.ref('foo');
 
         final result = await ref.runTransaction((value) {
-          return {
-            ...value,
-            'fakeKey': 'updated ${value['fakeKey']}',
-          };
+          return Transaction.success(<String, Object?>{
+            ...value! as Map,
+            'fakeKey': 'updated ${(value as Map)['fakeKey']}',
+          });
         });
 
         expect(

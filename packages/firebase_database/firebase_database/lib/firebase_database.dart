@@ -12,11 +12,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 
 export 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart'
-    show
-        ServerValue,
-        TransactionHandler,
-        DatabaseEventType,
-        AbortTransactionException;
+    show ServerValue, TransactionHandler, DatabaseEventType, Transaction;
 
 part 'src/data_snapshot.dart';
 

@@ -39,10 +39,11 @@ class MethodChannelDatabase extends DatabasePlatform {
               // just abort the transaction.
               aborted = true;
             } else {
-              value = handler(call.arguments['snapshot']['value']);
+              Transaction transaction =
+                  handler(call.arguments['snapshot']['value']);
+              aborted = transaction.aborted;
+              value = transaction.value;
             }
-          } on AbortTransactionException {
-            aborted = true;
           } catch (e) {
             exception = true;
             // We store thrown errors so we can rethrow when the runTransaction

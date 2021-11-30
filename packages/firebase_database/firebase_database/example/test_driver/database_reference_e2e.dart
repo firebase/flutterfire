@@ -32,9 +32,9 @@ void runDatabaseReferenceTests() {
       final result = await ref.runTransaction((value) {
         final nextValue = (value as int? ?? 0) + 1;
         if (nextValue > 5) {
-          throw AbortTransactionException();
+          return Transaction.abort();
         }
-        return nextValue;
+        return Transaction.success(nextValue);
       });
 
       expect(result.committed, false);
@@ -45,7 +45,7 @@ void runDatabaseReferenceTests() {
       final snapshot = await ref.get();
       final value = (snapshot.value ?? 0) as int;
       final result = await ref.runTransaction((value) {
-        return (value as int? ?? 0) + 1;
+        return Transaction.success((value as int? ?? 0) + 1);
       });
 
       expect(result.committed, true);
@@ -61,7 +61,7 @@ void runDatabaseReferenceTests() {
       await ref.set({'list': data});
 
       final transactionResult = await ref.runTransaction((mutableData) {
-        return mutableData;
+        return Transaction.success(mutableData);
       });
 
       var value = transactionResult.snapshot.value as dynamic;

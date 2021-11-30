@@ -44,9 +44,18 @@ setup, a more familiar API, better documentation and many more unit and end-to-e
  - **NEW**: Added support for determining whether the snapshot has a child via `hasChild()`.
  - **NEW**: Added support for accessing a snapshot child node via `child()`.
  - **NEW**: Added support for iterating the child nodes of the snapshot via the `.children` getter.
+   - **BREAKING** `snapshot.value` are no longer pre-sorted when using order queries, use `.children`
+     if you need to itterate over your value keys in order.
 
 - `TransactionResult`
- - **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` rejection.
+ - **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` completion error.
+
+- **NEW**: `Transaction` 
+  - **NEW**: Added `Transaction.success(value)` return this from inside your  `TransactionHandler` to indicate a successful execution.
+  - **NEW**: Added `Transaction.abort()` return this from inside your  `TransactionHandler` to indicate that the transaction should be aborted.
+
+- `TransactionHandler`
+   - **BREAKING** Transaction handlers must now always return an instance of `Transaction` either via `Transaction.success()` or `Transaction.abort()`.  
 
 - `DatabaseError`
  - **BREAKING**: The `DatabaseError` class has been removed. Errors are now returned as a `FirebaseException` inline with the other plugins.

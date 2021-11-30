@@ -192,17 +192,11 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
     final transactionUpdateWrap = allowInterop((update) {
       final dartUpdate = dartify(update);
-
-      late dynamic result;
-
-      try {
-        final dartResult = transactionUpdate(dartUpdate);
-        result = jsify(dartResult);
-      } on AbortTransactionException catch (_) {
-        result = undefined;
+      final transaction = transactionUpdate(dartUpdate);
+      if (transaction.aborted) {
+        return undefined;
       }
-
-      return result;
+      return jsify(transaction.value);
     });
 
     final onCompleteWrap = allowInterop((error, committed, snapshot) {

@@ -149,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _incrementAsTransaction() async {
     try {
       final transactionResult = await _counterRef.runTransaction((mutableData) {
-        return (mutableData ?? 0) + 1;
+        return Transaction.success((mutableData as int? ?? 0) + 1);
       });
 
       if (transactionResult.committed) {

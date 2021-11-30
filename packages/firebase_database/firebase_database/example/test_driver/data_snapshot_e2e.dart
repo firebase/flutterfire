@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
@@ -12,7 +13,7 @@ void runDataSnapshotTests() {
       // Regression test for https://github.com/FirebaseExtended/flutterfire/issues/6002
       final ref = database.ref('tests/flutterfire');
       final transactionResult = await ref.runTransaction((_) {
-        return {'v': 'vala'};
+        return Transaction.success({'v': 'vala'});
       });
       expect(transactionResult.committed, true);
       expect(transactionResult.snapshot.value, {'v': 'vala'});

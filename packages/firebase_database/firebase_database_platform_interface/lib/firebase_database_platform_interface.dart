@@ -4,7 +4,7 @@
 
 library firebase_database_platform_interface;
 
-export 'src/abort_transaction.dart';
+export 'src/transaction.dart';
 export 'src/platform_interface/platform_interface_data_snapshot.dart';
 export 'src/platform_interface/platform_interface_database.dart';
 export 'src/platform_interface/platform_interface_database_event.dart';

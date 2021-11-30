@@ -86,8 +86,6 @@ class DatabaseReferenceWeb extends QueryWeb
     return set(null);
   }
 
-  // TODO transaction((_) => null) doesn't work when compiled to JS
-  // https://github.com/dart-lang/sdk/issues/24088
   @override
   Future<TransactionResultPlatform> runTransaction(
     TransactionHandler transactionHandler, {

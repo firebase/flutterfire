@@ -10,10 +10,13 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   /// Returns an instance of [FirebaseDatabase] with the given [FirebaseApp] and/or
   /// [databaseURL).
   @Deprecated(
-      'Accessing FirebaseDatabase via the constructor is now deprecated. Use `.instanceFor` instead.')
+    'Accessing FirebaseDatabase via the constructor is now deprecated. Use `.instanceFor` instead.',
+  )
   factory FirebaseDatabase({FirebaseApp? app, String? databaseURL}) {
     return FirebaseDatabase.instanceFor(
-        app: app ?? Firebase.app(), databaseURL: databaseURL);
+      app: app ?? Firebase.app(),
+      databaseURL: databaseURL,
+    );
   }
 
   FirebaseDatabase._({required this.app, this.databaseURL})

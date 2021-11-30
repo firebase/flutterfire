@@ -6,7 +6,7 @@ import 'package:firebase_database_platform_interface/firebase_database_platform_
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// Interface for [TransactionHandler]
-typedef TransactionHandler = dynamic Function(dynamic value);
+typedef TransactionHandler = Transaction Function(Object? value);
 
 /// Interface for [TransactionResultPlatform]
 class TransactionResultPlatform extends PlatformInterface {
