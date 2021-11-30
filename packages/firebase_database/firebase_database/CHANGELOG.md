@@ -4,8 +4,8 @@ Realtime Database has been fully reworked to bring the plugin inline with the fe
 setup, a more familiar API, better documentation and many more unit and end-to-end tests.
 
 - `FirebaseDatabase`
- - TODO **DEPRECATED**: `FirebaseDatabase()` has now been deprecated in favor of `FirebaseDatabase.instanceFor()`.
- - TODO **DEPRECATED**: `reference()` has now been deprecated in favor of `ref()`.
+ - **DEPRECATED**: `FirebaseDatabase()` has now been deprecated in favor of `FirebaseDatabase.instanceFor()`.
+ - **DEPRECATED**: `reference()` has now been deprecated in favor of `ref()`.
  - **NEW**: Added support for `ref()`, which allows you to provide an optional path to any database node rather than calling `child()`.
  - **NEW**: Add emulator support via `useDatabaseEmulator()`.
  - **NEW**: Add support for  `refFromURL()`.

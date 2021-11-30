@@ -7,6 +7,15 @@ part of firebase_database;
 /// The entry point for accessing a Firebase Database. You can get an instance
 /// by calling `FirebaseDatabase.instance` or `FirebaseDatabase.instanceFor()`.
 class FirebaseDatabase extends FirebasePluginPlatform {
+  /// Returns an instance of [FirebaseDatabase] with the given [FirebaseApp] and/or
+  /// [databaseURL).
+  @Deprecated(
+      'Accessing FirebaseDatabase via the constructor is now deprecated. Use `.instanceFor` instead.')
+  factory FirebaseDatabase({FirebaseApp? app, String? databaseURL}) {
+    return FirebaseDatabase.instanceFor(
+        app: app ?? Firebase.app(), databaseURL: databaseURL);
+  }
+
   FirebaseDatabase._({required this.app, this.databaseURL})
       : super(app.name, 'plugins.flutter.io/firebase_database');
 
@@ -61,6 +70,10 @@ class FirebaseDatabase extends FirebasePluginPlatform {
   void useDatabaseEmulator(String host, int port) {
     _delegate.useDatabaseEmulator(host, port);
   }
+
+  /// Returns a [DatabaseReference] accessing the root of the database.
+  @Deprecated('Deprecated in favor of calling `ref()`.')
+  DatabaseReference reference() => ref();
 
   /// Returns a [DatabaseReference] representing the location in the Database
   /// corresponding to the provided path.
