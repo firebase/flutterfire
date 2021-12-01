@@ -59,7 +59,7 @@ class _MainScreenState extends State<_MainScreen> {
       'details.';
 
   final String DynamicLink = 'https://test-app/helloworld';
-  final String Link = "https://reactnativefirebase.page.link/bFkn";
+  final String Link = 'https://reactnativefirebase.page.link/bFkn';
 
   @override
   void initState() {
