@@ -60,6 +60,7 @@ class AuthResolver extends StatelessWidget {
               ),
             );
           },
+          oauthButtonVariant: ButtonVariant.icon,
           providerConfigs: providerConfigs,
         );
       },

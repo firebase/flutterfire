@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutterfire_ui/src/auth/widgets/internal/universal_scaffold.dart';
 
 import '../../configs/provider_configuration.dart';
 import '../../widgets/internal/keyboard_appearence_listener.dart';
@@ -112,66 +113,69 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.biggest.width > 800) {
-            return Row(
-              textDirection: widget.desktopLayoutDirection,
-              children: <Widget>[
-                if (widget.sideBuilder != null)
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return widget.sideBuilder!(context, constraints);
-                      },
-                    ),
-                  ),
+
+    final body = LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.biggest.width > 800) {
+          return Row(
+            textDirection: widget.desktopLayoutDirection,
+            children: <Widget>[
+              if (widget.sideBuilder != null)
                 Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Center(child: loginContent),
-                    ],
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return widget.sideBuilder!(context, constraints);
+                    },
                   ),
-                )
-              ],
-            );
-          } else {
-            return Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: KeyboardAppearenceListener(
-                listener: _onKeyboardPositionChanged,
-                child: CustomScrollView(
-                  controller: ctrl,
-                  slivers: [
-                    if (widget.headerBuilder != null)
-                      SliverPersistentHeader(
-                        delegate: LoginImageSliverDelegate(
-                          maxExtent: widget.headerMaxExtent ??
-                              defaultHeaderImageHeight,
-                          builder: widget.headerBuilder!,
-                        ),
-                      ),
-                    SliverFillViewport(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return Container(
-                            alignment: Alignment.topCenter,
-                            child: loginContent,
-                          );
-                        },
-                        childCount: 1,
-                      ),
-                    ),
+                ),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(child: loginContent),
                   ],
                 ),
+              )
+            ],
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: KeyboardAppearenceListener(
+              listener: _onKeyboardPositionChanged,
+              child: CustomScrollView(
+                controller: ctrl,
+                slivers: [
+                  if (widget.headerBuilder != null)
+                    SliverPersistentHeader(
+                      delegate: LoginImageSliverDelegate(
+                        maxExtent:
+                            widget.headerMaxExtent ?? defaultHeaderImageHeight,
+                        builder: widget.headerBuilder!,
+                      ),
+                    ),
+                  SliverFillViewport(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Container(
+                          alignment: Alignment.topCenter,
+                          child: loginContent,
+                        );
+                      },
+                      childCount: 1,
+                    ),
+                  ),
+                ],
               ),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
+    );
+
+    return UniversalScaffold(
+      body: body,
+      resizeToAvoidBottomInset: false,
     );
   }
 }

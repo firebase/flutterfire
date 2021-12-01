@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -39,42 +40,62 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l.profile),
-        actions: [
-          IconButton(
-            onPressed: _logout,
-            icon: const Icon(Icons.logout_outlined),
+    final body = Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Align(
+            child: UserAvatar(
+              auth: auth,
+              placeholderColor: avatarPlaceholderColor,
+              shape: avatarShape,
+              size: avatarSize,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Align(child: EditableUserDisplayName(auth: auth)),
+          const SizedBox(height: 16),
+          ...children,
+          DeleteAccountButton(
+            auth: auth,
+            onSignInRequired: () async {
+              _reauthenticate(context);
+            },
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Align(
-              child: UserAvatar(
-                auth: auth,
-                placeholderColor: avatarPlaceholderColor,
-                shape: avatarShape,
-                size: avatarSize,
+    );
+    if (isCupertino) {
+      return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text(l.profile),
+          trailing: Transform.translate(
+            offset: const Offset(0, -6),
+            child: CupertinoButton(
+              onPressed: _logout,
+              child: const Icon(CupertinoIcons.arrow_right_circle),
+            ),
+          ),
+        ),
+        child: SafeArea(child: body),
+      );
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(l.profile),
+          actions: [
+            IconButton(
+              onPressed: _logout,
+              icon: const Icon(
+                Icons.logout_outlined,
               ),
-            ),
-            const SizedBox(height: 16),
-            Align(child: EditableUserDisplayName(auth: auth)),
-            const SizedBox(height: 16),
-            ...children,
-            DeleteAccountButton(
-              auth: auth,
-              onSignInRequired: () async {
-                _reauthenticate(context);
-              },
-            ),
+            )
           ],
         ),
-      ),
-    );
+        body: body,
+      );
+    }
   }
 }

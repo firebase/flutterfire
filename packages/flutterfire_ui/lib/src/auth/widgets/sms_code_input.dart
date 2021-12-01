@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart' show PhoneAuthCredential;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/widgets/internal/universal_text_form_field.dart';
 
 class _NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;
@@ -198,7 +199,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
         children: [
           Opacity(
             opacity: 0,
-            child: TextField(
+            child: UniversalTextFormField(
               autofocus: true,
               focusNode: focusNode,
               controller: controller,
@@ -206,6 +207,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
                   const TextInputType.numberWithOptions(decimal: true),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               onSubmitted: (v) {
+                if (v == null) return;
                 if (v.length < 6) return;
                 widget.onSubmit?.call(v);
               },
@@ -219,12 +221,9 @@ class SMSCodeInputState extends State<SMSCodeInput> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 1,
-                      ),
+                    const LoadingIndicator(
+                      size: 16,
+                      borderWidth: 1,
                     ),
                     const SizedBox(width: 16),
                     Text(l.sendingSMSCodeText),

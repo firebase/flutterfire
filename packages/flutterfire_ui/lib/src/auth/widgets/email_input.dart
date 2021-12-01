@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/widgets/internal/universal_text_form_field.dart';
 
 import '../validators.dart';
 
@@ -21,18 +23,18 @@ class EmailInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
 
-    return TextFormField(
+    return UniversalTextFormField(
       autofocus: autofocus ?? false,
       focusNode: focusNode,
       controller: controller,
-      decoration: InputDecoration(labelText: l.emailInputLabel),
+      placeholder: l.emailInputLabel,
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
       validator: Validator.validateAll([
         NotEmpty(l.accessDisabledErrorText),
         EmailValidator(l.isNotAValidEmailErrorText),
       ]),
-      onFieldSubmitted: onSubmitted,
+      onSubmitted: (v) => onSubmitted(v!),
     );
   }
 }

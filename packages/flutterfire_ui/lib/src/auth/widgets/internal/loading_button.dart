@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
 
 class LoadingButton extends StatelessWidget {
   final bool isLoading;
@@ -18,13 +20,14 @@ class LoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
     Widget child = Text(label);
 
     if (isLoading) {
-      child = const SizedBox(
-        height: 16,
-        width: 16,
-        child: CircularProgressIndicator(strokeWidth: 1),
+      child = LoadingIndicator(
+        size: isCupertino ? 20 : 16,
+        borderWidth: 1,
       );
     }
 
@@ -37,6 +40,29 @@ class LoadingButton extends StatelessWidget {
         ),
         overlayColor: MaterialStateColor.resolveWith(
           (states) => color!.withAlpha(20),
+        ),
+      );
+    }
+
+    if (isCupertino) {
+      if (icon != null) {
+        child = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(icon, size: 20),
+            const SizedBox(width: 8),
+            child,
+          ],
+        );
+      }
+
+      return CupertinoTheme(
+        data: CupertinoTheme.of(context).copyWith(
+          primaryColor: color ?? CupertinoColors.activeBlue,
+        ),
+        child: CupertinoButton.filled(
+          onPressed: onTap,
+          child: child,
         ),
       );
     }

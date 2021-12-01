@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
@@ -10,9 +10,9 @@ Future<void> showReauthenticateDialog({
   FirebaseAuth? auth,
   VoidCallback? onSignedIn,
 }) async {
-  await showDialog(
+  await showGeneralDialog(
     context: context,
-    builder: (context) => ReauthenticateDialog(
+    pageBuilder: (context, _, __) => ReauthenticateDialog(
       providerConfigs: providerConfigs,
       auth: auth,
       onSignedIn: () {
@@ -29,9 +29,9 @@ Future<void> showDifferentMethodSignInDialog({
   FirebaseAuth? auth,
   VoidCallback? onSignedIn,
 }) async {
-  await showDialog(
+  await showGeneralDialog(
     context: context,
-    builder: (context) => DifferentMethodSignInDialog(
+    pageBuilder: (context, _, __) => DifferentMethodSignInDialog(
       availableProviders: availableProviders,
       providerConfigs: providerConfigs,
       auth: auth,

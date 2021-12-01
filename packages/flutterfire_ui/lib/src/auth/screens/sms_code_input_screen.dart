@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-
 import 'package:flutter/material.dart';
-
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/i10n.dart';
+
+import '../widgets/internal/universal_scaffold.dart';
 
 /// A screen displaying a UI which allows users to enter an SMS validation code
 /// sent from Firebase.
@@ -26,9 +25,7 @@ class SMSCodeInputScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
-
-    return Scaffold(
+    return UniversalScaffold(
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),

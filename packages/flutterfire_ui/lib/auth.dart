@@ -1,3 +1,4 @@
+export 'src/loading_indicator.dart';
 export 'src/auth/widgets/auth_flow_builder.dart';
 export 'src/auth/auth_controller.dart' show AuthAction, AuthController;
 export 'src/auth/auth_state.dart'

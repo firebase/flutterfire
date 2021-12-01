@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutter/material.dart';
+
+import '../widgets/internal/universal_page_route.dart';
+import '../widgets/internal/universal_scaffold.dart';
 
 /// A screen displaying a fully styled phone number entry screen, with a country-code
 /// picker.
@@ -21,7 +24,8 @@ class PhoneInputScreen extends StatelessWidget {
 
   void next(BuildContext context, AuthAction? action, Object flowKey, _) {
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
+      createPageRoute(
+        context: context,
         builder: (context) => SMSCodeInputScreen(
           action: action,
           flowKey: flowKey,
@@ -34,7 +38,7 @@ class PhoneInputScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final flowKey = Object();
 
-    return Scaffold(
+    return UniversalScaffold(
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),

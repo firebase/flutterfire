@@ -66,7 +66,7 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   @override
   final String signInHintText;
   @override
-  final String signOut;
+  final String signOutButtonText;
   @override
   final String phoneInputLabel;
   @override
@@ -101,6 +101,14 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String findProviderForEmailTitleText;
   @override
   final String continueText;
+  @override
+  final String countryCode;
+  @override
+  final String codeRequiredErrorText;
+  @override
+  final String invalidCountryCode;
+  @override
+  final String chooseACountry;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -138,7 +146,7 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.registerText = 'Register',
     this.registerHintText = "Don't have an account?",
     this.signInHintText = 'Already have an account?',
-    this.signOut = 'Sign out',
+    this.signOutButtonText = 'Sign out',
     this.phoneInputLabel = 'Phone number',
     this.phoneNumberInvalidErrorText = 'Phone number is invalid',
     this.phoneNumberIsRequiredErrorText = 'Phone number is required',
@@ -157,5 +165,9 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
         'Use one of the follwing methods to sign in',
     this.findProviderForEmailTitleText = 'Enter your email to continue',
     this.continueText = 'Continue',
+    this.countryCode = 'Code',
+    this.codeRequiredErrorText = 'Country code is required',
+    this.invalidCountryCode = 'Invalid code',
+    this.chooseACountry = 'Choose a country',
   });
 }

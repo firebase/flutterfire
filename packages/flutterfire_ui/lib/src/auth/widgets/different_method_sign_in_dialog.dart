@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' hide Title;
+import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import '../configs/provider_configuration.dart';
+import '../widgets/internal/title.dart';
 
 class DifferentMethodSignInDialog extends StatelessWidget {
   final FirebaseAuth? auth;
@@ -30,10 +32,7 @@ class DifferentMethodSignInDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l.differentMethodsSignInTitlText,
-              style: Theme.of(context).textTheme.headline6,
-            ),
+            Title(text: l.differentMethodsSignInTitlText),
             const SizedBox(height: 32),
             DifferentMethodSignInView(
               auth: auth,

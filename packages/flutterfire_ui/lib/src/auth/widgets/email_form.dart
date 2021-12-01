@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
@@ -105,86 +106,88 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     final l = FirebaseUILocalizations.labelsOf(context);
     const spacer = SizedBox(height: 16);
 
+    final children = [
+      if (widget.email == null) ...[
+        EmailInput(
+          focusNode: emailFocusNode,
+          controller: emailCtrl,
+          onSubmitted: (v) {
+            formKey.currentState?.validate();
+            FocusScope.of(context).requestFocus(passwordFocusNode);
+          },
+        ),
+        spacer,
+      ],
+      PasswordInput(
+        focusNode: passwordFocusNode,
+        controller: passwordCtrl,
+        onSubmit: _submit,
+        label: l.passwordInputLabel,
+      ),
+      if (widget.action == AuthAction.signIn) ...[
+        spacer,
+        Align(
+          alignment: Alignment.centerRight,
+          child: ForgotPasswordButton(
+            onPressed: () {
+              showForgotPasswordScreen(context);
+            },
+          ),
+        ),
+      ],
+      if (widget.action == AuthAction.signUp) ...[
+        spacer,
+        PasswordInput(
+          focusNode: confirmPasswordFocusNode,
+          controller: confirmPasswordCtrl,
+          onSubmit: _submit,
+          validator: Validator.validateAll([
+            NotEmpty(l.confirmPasswordIsRequiredErrorText),
+            ConfirmPasswordValidator(
+              passwordCtrl,
+              l.confirmPasswordDoesNotMatchErrorText,
+            )
+          ]),
+          label: l.confirmPasswordInputLabel,
+        ),
+        spacer,
+      ],
+      spacer,
+      Builder(
+        builder: (context) {
+          final state = AuthState.of(context);
+
+          return LoadingButton(
+            label: _chooseButtonLabel(),
+            isLoading: state is SigningIn || state is SigningUp,
+            onTap: _submit,
+          );
+        },
+      ),
+      Builder(
+        builder: (context) {
+          final authState = AuthState.of(context);
+          if (authState is AuthFailed) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: ErrorText(
+                textAlign: TextAlign.center,
+                exception: authState.exception,
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
+    ];
+
     return Form(
       key: formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
-        children: [
-          if (widget.email == null) ...[
-            EmailInput(
-              focusNode: emailFocusNode,
-              controller: emailCtrl,
-              onSubmitted: (v) {
-                formKey.currentState?.validate();
-                FocusScope.of(context).requestFocus(passwordFocusNode);
-              },
-            ),
-            spacer,
-          ],
-          PasswordInput(
-            focusNode: passwordFocusNode,
-            controller: passwordCtrl,
-            onSubmit: _submit,
-            validator: NotEmpty(l.passwordIsRequiredErrorText).validate,
-            label: l.passwordInputLabel,
-          ),
-          if (widget.action == AuthAction.signIn) ...[
-            spacer,
-            Align(
-              alignment: Alignment.centerRight,
-              child: ForgotPssswordButton(
-                onPressed: () {
-                  showForgotPasswordScreen(context);
-                },
-              ),
-            ),
-          ],
-          if (widget.action == AuthAction.signUp) ...[
-            spacer,
-            PasswordInput(
-              focusNode: confirmPasswordFocusNode,
-              controller: confirmPasswordCtrl,
-              onSubmit: _submit,
-              validator: Validator.validateAll([
-                NotEmpty(l.confirmPasswordIsRequiredErrorText),
-                ConfirmPasswordValidator(
-                  passwordCtrl,
-                  l.confirmPasswordDoesNotMatchErrorText,
-                )
-              ]),
-              label: l.confirmPasswordInputLabel,
-            ),
-            spacer,
-          ],
-          Builder(
-            builder: (context) {
-              final state = AuthState.of(context);
-
-              return LoadingButton(
-                label: _chooseButtonLabel(),
-                isLoading: state is SigningIn || state is SigningUp,
-                onTap: _submit,
-              );
-            },
-          ),
-          Builder(
-            builder: (context) {
-              final authState = AuthState.of(context);
-              if (authState is AuthFailed) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: ErrorText(
-                    textAlign: TextAlign.center,
-                    exception: authState.exception,
-                  ),
-                );
-              }
-
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
+        children: children,
       ),
     );
   }

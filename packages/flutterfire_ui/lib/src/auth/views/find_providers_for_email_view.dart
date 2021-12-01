@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui/src/auth/auth_flow.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 
 import '../auth_state.dart';
+import '../widgets/internal/title.dart';
 
 typedef ProvidersFoundCallback = void Function(
   String email,
@@ -60,9 +61,8 @@ class _FindProvidersForEmailViewState extends State<FindProvidersForEmailView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l.findProviderForEmailTitleText,
-            style: Theme.of(context).textTheme.headline6,
+          Title(
+            text: l.findProviderForEmailTitleText,
           ),
           spacer,
           Form(

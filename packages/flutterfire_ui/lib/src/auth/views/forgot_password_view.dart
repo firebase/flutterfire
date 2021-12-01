@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
 
 import 'package:firebase_auth/firebase_auth.dart'
     show ActionCodeSettings, FirebaseAuth, FirebaseAuthException;
@@ -6,6 +6,7 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import '../widgets/internal/loading_button.dart';
+import '../widgets/internal/title.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   final FirebaseAuth? auth;
@@ -50,7 +51,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
-    const spacer = SizedBox(height: 16);
+    const spacer = SizedBox(height: 32);
 
     return Form(
       key: formKey,
@@ -58,9 +59,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l.forgotPasswordViewTitle,
-            style: Theme.of(context).textTheme.headline5,
+          Title(
+            text: l.forgotPasswordViewTitle,
           ),
           spacer,
           EmailInput(

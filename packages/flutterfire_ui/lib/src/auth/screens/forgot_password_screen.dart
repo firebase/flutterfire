@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
+import '../widgets/internal/universal_scaffold.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   final void Function(BuildContext context)? onEmailSent;
@@ -14,7 +15,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final child = ForgotPasswordView(onEmailSent: onEmailSent ?? _onEmailSent);
 
-    return Scaffold(
+    return UniversalScaffold(
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
+import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
@@ -53,10 +54,11 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
+    bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     return LoadingButton(
-      color: Colors.red,
-      icon: Icons.delete,
+      color: isCupertino ? CupertinoColors.destructiveRed : Colors.red,
+      icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
       label: l.deleteAccount,
       onTap: _deleteAccount,
     );

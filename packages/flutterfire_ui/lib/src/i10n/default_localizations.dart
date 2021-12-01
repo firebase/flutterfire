@@ -37,7 +37,7 @@ abstract class FirebaseUILocalizationLabels {
   String get registerText;
   String get registerHintText;
   String get signInHintText;
-  String get signOut;
+  String get signOutButtonText;
   String get phoneInputLabel;
   String get phoneNumberIsRequiredErrorText;
   String get phoneNumberInvalidErrorText;
@@ -55,6 +55,10 @@ abstract class FirebaseUILocalizationLabels {
   String get differentMethodsSignInTitlText;
   String get findProviderForEmailTitleText;
   String get continueText;
+  String get countryCode;
+  String get codeRequiredErrorText;
+  String get invalidCountryCode;
+  String get chooseACountry;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{
