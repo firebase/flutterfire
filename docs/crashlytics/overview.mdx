@@ -128,21 +128,23 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 ```
 
-#### iOS
-
-1. From Xcode select `Runner` from the project navigation.
-2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
-3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
-4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
-For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
-
 ### 4. Uploading symbols to Firebase Server
 
 Flutterfire setup has been simplified by removing the need to add Firebase config files to your app. But for Crashlytics, there
 is still additional config to ensure Crashlytics is able to output human readable crash reports of your app.
 
 #### iOS
-TODO - update instructions
+1. From Xcode, select Runner from the project navigation.
+2. Select the Build Phases tab, then click + > New Run Script Phase.
+3. Add the following to the Type a script... text box underneath the Shell property:
+
+```bash
+$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai <googleAppId>
+$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai <googleAppId>
+```
+
+Retrieve your `<googleAppId>` in your Firebase Console -> Project Settings -> Your apps.
+
 #### Android
 TODO - update instructions
 
