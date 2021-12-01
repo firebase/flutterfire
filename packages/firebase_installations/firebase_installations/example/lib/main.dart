@@ -44,10 +44,15 @@ class _InstallationsCardState extends State<InstallationsCard> {
     super.initState();
     getAuthToken();
     getId();
+
+    // Listen to changes
     FirebaseInstallations.instance.idTokenChanges.listen((event) {
       setState(() {
         id = event;
       });
+
+      // Make sure that the Auth Token is updated once the Installation Id is updated
+      getAuthToken();
 
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('New Firebase Installations Id generated 🎉'),
