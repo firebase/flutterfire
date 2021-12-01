@@ -56,6 +56,7 @@
 }
 
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments {
+  // TODO this is now wrong, modifiers is now an Array
   FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   NSDictionary *parameters = arguments[@"parameters"];
 
@@ -225,6 +226,21 @@
   }
 
   return @[ code, message ];
+}
+
++ (FIRDataEventType)eventTypeFromString:(NSString *)eventTypeString {
+  if ([eventTypeString isEqualToString:@"value"]) {
+    return FIRDataEventTypeValue;
+  } else if ([eventTypeString isEqualToString:@"childAdded"]) {
+    return FIRDataEventTypeChildAdded;
+  } else if ([eventTypeString isEqualToString:@"childChanged"]) {
+    return FIRDataEventTypeChildChanged;
+  } else if ([eventTypeString isEqualToString:@"childRemoved"]) {
+    return FIRDataEventTypeChildRemoved;
+  } else if ([eventTypeString isEqualToString:@"childMoved"]) {
+    return FIRDataEventTypeChildMoved;
+  }
+  return FIRDataEventTypeValue;
 }
 
 @end

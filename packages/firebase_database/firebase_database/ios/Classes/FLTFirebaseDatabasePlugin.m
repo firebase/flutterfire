@@ -2,8 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebaseDatabasePlugin.h"
 #import <firebase_core/FLTFirebasePluginRegistry.h>
+
+#import "FLTFirebaseDatabaseObserveStreamHandler.h"
+#import "FLTFirebaseDatabasePlugin.h"
 #import "FLTFirebaseDatabaseUtils.h"
 
 NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_database";
@@ -11,8 +13,9 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 @implementation FLTFirebaseDatabasePlugin {
   // Used by FlutterStreamHandlers.
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+  NSMutableDictionary<NSString *, int> *_listenerCounts;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
-  NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+  NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
   // Used by transactions.
   FlutterMethodChannel *_channel;
 }
@@ -25,6 +28,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   if (self) {
     _channel = channel;
     _binaryMessenger = messenger;
+    _listenerCounts = [NSMutableDictionary dictionary];
     _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
   }
@@ -355,7 +359,32 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)queryObserve:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  // TODO add event channels back in after PR merge
+  FIRDatabaseQuery *databaseQuery = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+  NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
+  int newListenersCount;
+  @synchronized(_listenerCounts) {
+    int currentListenersCount = _listenerCounts[eventChannelNamePrefix];
+    newListenersCount = currentListenersCount == nil ? 1 : currentListenersCount + 1;
+    _listenerCounts[eventChannelNamePrefix] = newListenersCount;
+  }
+  NSString *eventChannelName =
+      [NSString stringWithFormat:@"%@#%d", eventChannelNamePrefix, newListenersCount];
+  FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
+                                                                binaryMessenger:_binaryMessenger];
+  FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
+      [[FLTFirebaseDatabaseObserveStreamHandler alloc]
+          initWithFIRDatabaseQuery:databaseQuery
+                 andOnDisposeBlock:^() {
+                   [eventChannel setStreamHandler:nil];
+                   @synchronized(_listenerCounts) {
+                     int currentListenersCount = _listenerCounts[eventChannelNamePrefix];
+                     _listenerCounts[eventChannelNamePrefix] =
+                         currentListenersCount == nil ? 0 : currentListenersCount - 1;
+                   }
+                 }];
+  [eventChannel setStreamHandler:streamHandler];
+  _streamHandlers[eventChannelName] = streamHandler;
+  result.success(eventChannelName);
 }
 
 @end
