@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 
 import 'method_channel_database.dart';
 import 'method_channel_on_disconnect.dart';
@@ -78,7 +79,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#set',
         database.getChannelArguments({
           'path': path,
-          'value': value,
+          'value': transformValue(value),
         }),
       );
     } catch (e, s) {
