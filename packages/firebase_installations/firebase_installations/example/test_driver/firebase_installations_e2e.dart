@@ -25,6 +25,10 @@ void testsMain() {
     test('.delete', () async {
       final id = await installations.getId();
       await installations.delete();
+
+      // Wait a little so we don't get a delete-pending exception
+      await Future.delayed(const Duration(seconds: 3));
+
       final newId = await installations.getId();
       expect(newId, isNot(equals(id)));
     });
