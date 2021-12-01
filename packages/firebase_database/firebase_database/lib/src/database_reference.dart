@@ -86,7 +86,7 @@ class DatabaseReference extends Query {
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
   Future<void> setWithPriority(Object? value, Object? priority) {
-    // TODO check priority is a double, null or string
+    assert(priority == null || priority is String || priority is num);
     return _delegate.setWithPriority(value, priority);
   }
 
