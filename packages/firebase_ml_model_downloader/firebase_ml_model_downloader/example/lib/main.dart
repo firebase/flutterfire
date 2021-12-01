@@ -41,7 +41,6 @@ class _MyAppState extends State<MyApp> {
             onPressed: () async {
               final model = await FirebaseMlModelDownloader.instance
                   .getModel('modelName', DownloadType.latestModel);
-
             },
             child: const Text('get model'),
           ),

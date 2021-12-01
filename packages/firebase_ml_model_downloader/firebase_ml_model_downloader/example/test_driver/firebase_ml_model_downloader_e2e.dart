@@ -34,7 +34,7 @@ void testsMain() {
     });
 
     group('listDownloadedModels', () {
-      test('should throw if automatic crash report is enabled', () async {
+      test('should return successfully', () async {
         // await expectLater(
         //   ()=> mlModel.getModel('test', DownloadType.latestModel),
         //   completes);
