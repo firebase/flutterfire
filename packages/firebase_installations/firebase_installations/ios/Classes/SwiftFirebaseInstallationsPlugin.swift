@@ -3,9 +3,10 @@ import UIKit
 import firebase_core
 import FirebaseInstallations
 
+let kFLTFirebaseInstallationsChannelName = "plugins.flutter.io/firebase_installations";
+
 public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin {
     
-    private var channelName:String;
     private var eventSink: FlutterEventSink?
     private var messenger:FlutterBinaryMessenger;
     
@@ -14,15 +15,13 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
     
     var args = NSDictionary.init();
     
-    init(channelName:String, messenger:FlutterBinaryMessenger) {
-        self.channelName = channelName;
+    init(messenger:FlutterBinaryMessenger) {
         self.messenger = messenger;
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channelName = "plugins.flutter.io/firebase_installations";
-        let channel = FlutterMethodChannel(name: channelName, binaryMessenger: registrar.messenger())
-        let instance = SwiftFirebaseInstallationsPlugin(channelName: channelName, messenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: kFLTFirebaseInstallationsChannelName, binaryMessenger: registrar.messenger())
+        let instance = SwiftFirebaseInstallationsPlugin(messenger: registrar.messenger())
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -49,12 +48,14 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
         instance.installationID { (id:String?, error:Error?) in
             if error != nil {
                 self.result!.error(nil, nil, nil, error)
+            } else {
+                installationsId = id ?? ""
+                NSLog("Firebase Installation ID: %@", installationsId)
+                
+                self.result!.success(id)
             }
             
-            installationsId = id ?? ""
-            NSLog("Firebase Installation ID: %@", installationsId)
-            
-            self.result!.success(id)
+
         }
     }
     
@@ -65,12 +66,12 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
         instance.delete { (error:Error?) in
             if error != nil {
                 self.result!.error(nil, nil, nil, error)
+            } else {
+                NSLog("Firebase Installation ID deleted successfully.")
+                self.result!.success(nil)
             }
-            
-            NSLog("Firebase Installation ID deleted successfully.")
         }
         
-        self.result!.success(nil)
     }
     
     /// Gets the token Id for an instance.
@@ -83,21 +84,14 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
         
         instance.authTokenForcingRefresh  (forceRefresh, completion: {(tokenResult:InstallationsAuthTokenResult?, error:Error?) in
             if error != nil {
-                let userInfo:NSDictionary = error!._userInfo as! NSDictionary
-                let underlyingError:NSError = userInfo.object(forKey: NSUnderlyingErrorKey) as! NSError
+                self.result!.error(nil, nil, nil, error)
+            } else {
+                installationsAuthToken = tokenResult?.authToken ?? ""
                 
-                let firebaseDictionary:NSDictionary? = underlyingError.userInfo as NSDictionary;
-                if(firebaseDictionary != nil && firebaseDictionary!["NSLocalizedDescription"] != nil) {
-                    self.result!.error(nil, firebaseDictionary!["NSLocalizedDescription"] as? String, nil, error)
-                }
-                self.result!.error(nil, nil, nil, underlyingError)
+                NSLog("Firebase Installation Auth Token: %@", installationsAuthToken)
+                
+                self.result!.success(installationsAuthToken)
             }
-            
-            installationsAuthToken = tokenResult?.authToken ?? ""
-            
-            NSLog("Firebase Installation Auth Token: %@", installationsAuthToken)
-            
-            self.result!.success(installationsAuthToken)
         });
     }
     
@@ -106,7 +100,7 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
         let instance:Installations = getInstallations();
         
         let appName = (args["appName"] as! String)
-        let eventChannelName:String = channelName + "/token/" + appName;
+        let eventChannelName:String = kFLTFirebaseInstallationsChannelName + "/token/" + appName;
         
         let eventChannel = FlutterEventChannel(name: eventChannelName, binaryMessenger: messenger)
         
@@ -119,28 +113,35 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
         result?.success(eventChannelName)
     }
     
-    internal func getNSDictionaryFromNSError(error:NSError?) -> Dictionary<String, Any?> {
-        let code:NSString = "unknown";
-        let message:NSString = "An unknown error has occurred.";
+    
+    internal func mapInstallationsErrorCodes(code:UInt) -> NSString {
+        let error = InstallationsErrorCode.init(rawValue: code) ?? InstallationsErrorCode.unknown;
         
-        return [
-            "code": code, "message": message, "additionalData": {}
-        ];
+        switch error {
+        case InstallationsErrorCode.invalidConfiguration:
+            return "invalid-configuration";
+        case InstallationsErrorCode.keychain:
+            return "invalid-keychain";
+        case InstallationsErrorCode.serverUnreachable:
+            return "server-unreachable";
+        case InstallationsErrorCode.unknown:
+            return "unknown";
+        default:
+            return "unknown";
+        }
     }
+    
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let args = call.arguments as! NSDictionary
         
-        let errorBlock:FLTFirebaseMethodCallErrorBlock = { (code, message, details, error) in
+        let errorBlock:FLTFirebaseMethodCallErrorBlock = { (code, message, details, error:Error?) in
             var errorDetails:Dictionary = Dictionary<String, Any?>();
             
-            if(error == nil) {
-                errorDetails = self.getNSDictionaryFromNSError(error: error as NSError?);
-            } else {
-                errorDetails["code"] = code ?? "unknown"
-                errorDetails["message"] = message ?? "An unknown error has occurred."
-                errorDetails["additionalData"] = details
-            }
+            errorDetails["code"] = code ?? self.mapInstallationsErrorCodes(code:UInt((error! as NSError).code))
+            errorDetails["message"] = message ?? error?.localizedDescription ?? "An unknown error has occurred.";
+            errorDetails["additionalData"] = details
+            
             
             if(code == "unknown") {
                 NSLog("FLTFirebaseInstallations: An error occured while calling method %@", call.method)

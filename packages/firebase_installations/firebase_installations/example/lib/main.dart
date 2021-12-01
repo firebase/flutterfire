@@ -66,6 +66,41 @@ class _InstallationsCardState extends State<InstallationsCard> {
     });
   }
 
+  Future<void> deleteId() async {
+    try {
+      await FirebaseInstallations.instance.delete();
+
+      setState(() {
+        id = 'None';
+      });
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  Future<void> getId() async {
+    try {
+      final _newid = await FirebaseInstallations.instance.getId();
+
+      setState(() {
+        id = _newid;
+      });
+    } catch (e) {
+      log('$e');
+    }
+  }
+
+  Future<void> getAuthToken() async {
+    try {
+      final token = await FirebaseInstallations.instance.getToken(true);
+      setState(() {
+        authToken = token;
+      });
+    } catch (e) {
+      log('$e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -113,13 +148,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () async {
-                final token =
-                    await FirebaseInstallations.instance.getToken(true);
-                setState(() {
-                  authToken = token;
-                });
-              },
+              onPressed: getAuthToken,
               child: const Text("Force update token"),
             ),
           ),
@@ -128,26 +157,14 @@ class _InstallationsCardState extends State<InstallationsCard> {
             children: [
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () {
-                    FirebaseInstallations.instance
-                        .delete()
-                        .then((_) => setState(() {
-                              id = 'None';
-                            }));
-                  },
+                  onPressed: deleteId,
                   child: const Text("Delete ID"),
                 ),
               ),
               const SizedBox(width: 20),
               Expanded(
                 child: ElevatedButton(
-                  onPressed: () async {
-                    final _newid = await FirebaseInstallations.instance.getId();
-
-                    setState(() {
-                      id = _newid;
-                    });
-                  },
+                  onPressed: getId,
                   child: const Text("Get ID"),
                 ),
               )
