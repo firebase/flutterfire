@@ -1,98 +1,152 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e.dart';
-
 void runDataSnapshotTests() {
   group('DataSnapshot', () {
+    late DatabaseReference ref;
+
     setUp(() async {
-      await database.ref('tests/flutterfire').set(0);
+      ref = FirebaseDatabase.instance.ref('tests');
+
+      // Wipe the database before each test
+      await ref.remove();
     });
 
-    test('supports null childKeys for maps', () async {
-      // Regression test for https://github.com/FirebaseExtended/flutterfire/issues/6002
-      final ref = database.ref('tests/flutterfire');
-      final transactionResult = await ref.runTransaction((_) {
-        return Transaction.success({'v': 'vala'});
-      });
-      expect(transactionResult.committed, true);
-      expect(transactionResult.snapshot.value, {'v': 'vala'});
+    test('it returns the correct key', () async {
+      final s = await ref.get();
+      expect(s.key, 'tests');
     });
 
-    test('#key returns correct key', () async {
-      final s = await database.ref('tests/flutterfire').get();
-      expect(s.key, 'flutterfire');
-    });
-
-    test('children.isNotEmpty is true if snapshot has children', () async {
-      final s = await database.ref('tests/ordered').get();
-      expect(s.children.isNotEmpty, true);
-    });
-
-    test("children.isNotEmpty is false if snapshot doesn't have children",
-        () async {
-      final s = await database.ref('tests/flutterfire').get();
-      expect(s.children.isNotEmpty, false);
-    });
-
-    test('children.length returns a correct number of children', () async {
-      final os = await database.ref('tests/ordered').get();
-      final fs = await database.ref('tests/flutterfire').get();
-
-      expect(os.children.length, 4);
-      expect(fs.children.length, 0);
-    });
-
-    test(
-      'hasChild(String path) returns true if snapshot has a non-null child at a given path',
-      () async {
-        final s = await database.ref('tests/list-values').get();
-        expect(s.hasChild('list/0'), true);
-        expect(s.hasChild('list/1'), true);
-      },
-    );
-
-    test(
-      'hasChild(String path) returns false if snapshot has a non-null child at a given path',
-      () async {
-        final s = await database.ref('tests/list-values').get();
-        expect(s.hasChild('list/2'), false);
-        expect(s.hasChild('non-existing-child'), false);
-      },
-    );
-
-    test('.children iterates over children in a correct order', () async {
-      final ref = database.ref('tests/priority');
-
-      await Future.wait([
-        ref.child('first').set(42),
-        ref.child('second').set(15),
-        ref.child('third').set(18),
-      ]);
-
-      final event = await ref.orderByValue().once();
-      final keys = [];
-      event.snapshot.children.forEach((snapshot) {
-        keys.add(snapshot.key);
+    group('value', () {
+      test('it returns a string value', () async {
+        await ref.set('foo');
+        final s = await ref.get();
+        expect(s.value, 'foo');
       });
 
-      expect(keys, ['second', 'third', 'first']);
+      test('it returns a number value', () async {
+        await ref.set(123);
+        final s = await ref.get();
+        expect(s.value, 123);
+      });
+
+      test('it returns a bool value', () async {
+        await ref.set(false);
+        final s = await ref.get();
+        expect(s.value, false);
+      });
+
+      test('it returns a null value', () async {
+        await ref.set(null);
+        final s = await ref.get();
+        expect(s.value, isNull);
+      });
+
+      test('it returns a List value', () async {
+        final data = [
+          'a',
+          2,
+          true,
+          ['foo'],
+          {
+            0: 'hello',
+            1: 'foo',
+          }
+        ];
+        await ref.set(data);
+        final s = await ref.get();
+        expect(
+          s.value,
+          equals([
+            'a',
+            2,
+            true,
+            ['foo'],
+            ['hello', 'foo']
+          ]),
+        );
+      });
+
+      test('it returns a Map value', () async {
+        final data = {'foo': 'bar'};
+        await ref.set(data);
+        final s = await ref.get();
+        expect(s.value, equals(data));
+      });
+
+      test('non-string Map keys are converted to strings', () async {
+        final data = {1: 'foo', 2: 'bar', 'foo': 'bar'};
+        await ref.set(data);
+        final s = await ref.get();
+        expect(s.value, equals({'1': 'foo', '2': 'bar', 'foo': 'bar'}));
+      });
     });
-  });
 
-  group('DataSnapshot.exists', () {
-    test('false for no data', () async {
-      final databaseRef = database.ref('tests/a-non-existing-reference');
-      final dataSnapshot = await databaseRef.get();
-
-      expect(dataSnapshot.exists, false);
+    test('setWithPriority returns the correct priority', () async {
+      await ref.setWithPriority('foo', 1);
+      final s = await ref.get();
+      expect(s.priority, 1);
     });
 
-    test('true for existing data', () async {
-      final databaseRef = database.ref('tests/ordered/one');
-      final dataSnapshot = await databaseRef.get();
+    test('setPriority returns the correct priority', () async {
+      await ref.set('foo');
+      await ref.setPriority(2);
+      final s = await ref.get();
+      expect(s.priority, 2);
+    });
 
-      expect(dataSnapshot.exists, true);
+    test('exists returns true', () async {
+      await ref.set('foo');
+      final s = await ref.get();
+      expect(s.exists, isTrue);
+    });
+
+    test('exists returns false', () async {
+      final s = await ref.get();
+      expect(s.exists, isFalse);
+    });
+
+    test('hasChild returns false', () async {
+      final s = await ref.get();
+      expect(s.hasChild('bar'), isFalse);
+    });
+
+    test('hasChild returns true', () async {
+      await ref.set({
+        'foo': {'bar': 'baz'}
+      });
+      final s = await ref.get();
+      expect(s.hasChild('bar'), isFalse);
+    });
+
+    test('child returns the correct snapshot for lists', () async {
+      await ref.set([0, 1]);
+      final s = await ref.get();
+      expect(s.child('1'), isA<DataSnapshot>());
+      expect(s.child('1').value, 1);
+    });
+
+    test('child returns the correct snapshot', () async {
+      await ref.set({
+        'foo': {'bar': 'baz'}
+      });
+      final s = await ref.get();
+      expect(s.child('foo/bar'), isA<DataSnapshot>());
+      expect(s.child('foo/bar').value, 'baz');
+    });
+
+    test('children returns the children in order', () async {
+      await ref.set({
+        'a': 3,
+        'b': 2,
+        'c': 1,
+      });
+      final s = await ref.orderByValue().get();
+
+      List<DataSnapshot> children = s.children.toList();
+      expect(children[0].value, 1);
+      expect(children[1].value, 2);
+      expect(children[2].value, 3);
     });
   });
 }

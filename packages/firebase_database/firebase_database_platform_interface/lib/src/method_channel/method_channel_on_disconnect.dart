@@ -17,9 +17,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   }) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(Object? value) {
+  Future<void> set(Object? value) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#set',
         database.getChannelArguments({
           'path': ref.path,
@@ -32,9 +32,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   }
 
   @override
-  Future<void> setWithPriority(Object? value, Object? priority) {
+  Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#setWithPriority',
         database.getChannelArguments(
           {
@@ -53,9 +53,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   Future<void> remove() => set(null);
 
   @override
-  Future<void> cancel() {
+  Future<void> cancel() async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#cancel',
         database.getChannelArguments({
           'appName': database.app!.name,
@@ -69,9 +69,9 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   }
 
   @override
-  Future<void> update(Map<String, Object?> value) {
+  Future<void> update(Map<String, Object?> value) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#update',
         database.getChannelArguments({
           'appName': database.app!.name,

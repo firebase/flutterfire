@@ -16,7 +16,7 @@ Object? transformValue(Object? value) {
   }
 
   if (value is List) {
-    return value.map(transformValue);
+    return value.map(transformValue).toList();
   }
 
   return value;

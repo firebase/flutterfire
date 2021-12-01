@@ -8,6 +8,7 @@ import 'data_snapshot_e2e.dart';
 import 'database_e2e.dart';
 import 'database_reference_e2e.dart';
 import 'firebase_database_configuration_e2e.dart';
+import 'on_disconnect_e2e_test.dart';
 import 'query_e2e.dart';
 
 late FirebaseDatabase database;
@@ -35,6 +36,8 @@ void testsMain() {
   runDatabaseReferenceTests();
   runQueryTests();
   runDataSnapshotTests();
+  // TODO(ehesp): Fix broken tests
+  // runOnDisconnectTests();
 }
 
 void main() => drive.main(testsMain);

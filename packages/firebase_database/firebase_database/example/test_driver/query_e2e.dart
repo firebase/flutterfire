@@ -4,8 +4,6 @@ import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e.dart';
-
 void runQueryTests() {
   group('Query', () {
     late DatabaseReference ref;
@@ -73,7 +71,6 @@ void runQueryTests() {
 
         final expected = ['c', 'd'];
 
-        print(e.snapshot.value.toString());
         expect(e.snapshot.children.length, expected.length);
         e.snapshot.children.toList().forEachIndexed((i, childSnapshot) {
           expect(childSnapshot.key, expected[i]);

@@ -73,9 +73,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  Future<void> set(Object? value) {
+  Future<void> set(Object? value) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#set',
         database.getChannelArguments({
           'path': path,
@@ -88,9 +88,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  Future<void> setWithPriority(Object? value, Object? priority) {
+  Future<void> setWithPriority(Object? value, Object? priority) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#setWithPriority',
         database.getChannelArguments({
           'path': path,
@@ -104,9 +104,9 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   }
 
   @override
-  Future<void> update(Map<String, Object?> value) {
+  Future<void> update(Map<String, Object?> value) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#update',
         database.getChannelArguments({
           'path': path,
@@ -121,7 +121,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
   @override
   Future<void> setPriority(Object? priority) async {
     try {
-      return MethodChannelDatabase.channel.invokeMethod<void>(
+      await MethodChannelDatabase.channel.invokeMethod<void>(
         'DatabaseReference#setPriority',
         database.getChannelArguments({
           'path': path,

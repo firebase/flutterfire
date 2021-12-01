@@ -101,9 +101,9 @@ class MethodChannelQuery extends QueryPlatform {
   /// attached for that location. Additionally, while a location is kept synced,
   /// it will not be evicted from the persistent disk cache.
   @override
-  Future<void> keepSynced(QueryModifiers modifiers, bool value) {
+  Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     try {
-      return channel.invokeMethod<void>(
+      await channel.invokeMethod<void>(
         'Query#keepSynced',
         database.getChannelArguments(
           {'path': path, 'modifiers': modifiers.toList(), 'value': value},
