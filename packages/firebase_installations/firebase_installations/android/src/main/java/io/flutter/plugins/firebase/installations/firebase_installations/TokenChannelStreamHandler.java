@@ -40,7 +40,6 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
     return token -> {
       Map<String, Object> event = new HashMap<>();
 
-      Log.d("TOKEN", token);
       event.put("token" , token);
 
       events.success(event);
