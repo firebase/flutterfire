@@ -11,7 +11,7 @@ public class Constants {
   public static final String DATABASE_EMULATOR_PORT = "emulatorPort";
   public static final String DATABASE_CACHE_SIZE_BYTES = "cacheSizeBytes";
 
-  public static final String EVENT_CHANNEL_NAME = "eventChannelName";
+  public static final String EVENT_CHANNEL_NAME_PREFIX = "eventChannelNamePrefix";
 
   public static final String PATH = "path";
   public static final String KEY = "key";

@@ -37,6 +37,7 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 public class FirebaseDatabasePlugin
   implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   protected static final HashMap<String, FirebaseDatabase> databaseInstanceCache = new HashMap<>();
+  private final Map<String, Integer> queryListenersCount = new HashMap<>();
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
@@ -269,13 +270,26 @@ public class FirebaseDatabasePlugin
       cachedThreadPool,
       () -> {
         final Query query = getQuery(arguments);
-        final String eventChannelName = (String) arguments.get(Constants.EVENT_CHANNEL_NAME);
-        final EventChannel channel = new EventChannel(messenger, eventChannelName);
-        // TODO(ehesp): Is the onDispose stuff needed? What does it do?
-        final EventStreamHandler handler = new EventStreamHandler(query, () -> {});
+        final String eventChannelNamePrefix = (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
 
-        channel.setStreamHandler(handler);
-        streamHandlers.put(channel, handler);
+        int listenersCount = 0;
+        if (queryListenersCount.containsKey(eventChannelNamePrefix)) {
+          listenersCount = queryListenersCount.get(eventChannelNamePrefix) + 1;
+        }
+        queryListenersCount.put(eventChannelNamePrefix, listenersCount);
+        final String eventChannelName = eventChannelNamePrefix + "#" + listenersCount;
+
+        final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
+        final EventStreamHandler streamHandler = new EventStreamHandler(query, () -> {
+          synchronized (queryListenersCount) {
+            eventChannel.setStreamHandler(null);
+            final int currentCount = queryListenersCount.get(eventChannelNamePrefix);
+            queryListenersCount.put(eventChannelNamePrefix, currentCount - 1);
+          }
+        });
+
+        eventChannel.setStreamHandler(streamHandler);
+        streamHandlers.put(eventChannel, streamHandler);
         return eventChannelName;
       });
   }
@@ -418,15 +432,18 @@ public class FirebaseDatabasePlugin
   }
 
   private void cleanup() {
-    removeEventListeners();
+    removeEventStreamHandlers();
+    queryListenersCount.clear();
     databaseInstanceCache.clear();
   }
 
-  private void removeEventListeners() {
+  private void removeEventStreamHandlers() {
     for (EventChannel eventChannel : streamHandlers.keySet()) {
       StreamHandler streamHandler = streamHandlers.get(eventChannel);
-      streamHandler.onCancel(null);
-      eventChannel.setStreamHandler(null);
+      if (streamHandler != null) {
+        streamHandler.onCancel(null);
+        eventChannel.setStreamHandler(null);
+      }
     }
     streamHandlers.clear();
   }

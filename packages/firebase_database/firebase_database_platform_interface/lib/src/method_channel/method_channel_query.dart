@@ -35,36 +35,27 @@ class MethodChannelQuery extends QueryPlatform {
     QueryModifiers modifiers,
     DatabaseEventType eventType,
   ) async* {
-    List<Map<String, Object?>> modifierList = modifiers.toList();
-
-    // Create an event channel using path, app name, databaseUrl, event type and ordered modifier list
-    EventChannel eventChannel = EventChannel(
-      '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList',
-    );
-
-    if (observers.containsKey(eventChannel.name)) {
-      yield* observers[eventChannel.name]!;
-      return;
-    }
-
     const channel = MethodChannelDatabase.channel;
+    List<Map<String, Object?>> modifierList = modifiers.toList();
+    // Create a unique event channel naming prefix using path, app name,
+    // databaseUrl, event type and ordered modifier list
+    String eventChannelNamePrefix =
+        '$path-${database.app!.name}-${database.databaseURL}-$eventType-$modifierList';
 
     // Create the EventChannel on native.
-    await channel.invokeMethod<String>(
+    final channelName = await channel.invokeMethod<String>(
       'Query#observe',
       database.getChannelArguments({
         'path': path,
         'modifiers': modifierList,
-        'eventChannelName': eventChannel.name,
+        'eventChannelNamePrefix': eventChannelNamePrefix,
       }),
     );
 
-    final arguments = <String, Object?>{
-      'eventType': eventTypeToString(eventType),
-    };
-
-    Stream<DatabaseEventPlatform> stream = eventChannel
-        .receiveBroadcastStream(arguments)
+    yield* EventChannel(channelName!)
+        .receiveBroadcastStream(<String, Object?>{
+          'eventType': eventTypeToString(eventType),
+        })
         .map(
           (event) =>
               MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
@@ -73,9 +64,6 @@ class MethodChannelQuery extends QueryPlatform {
           (e, s) => throw convertPlatformException(e, s),
           test: (err) => err is PlatformException,
         );
-
-    observers[eventChannel.name] = stream;
-    yield* stream;
   }
 
   /// Gets the most up-to-date result for this query.
