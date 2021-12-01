@@ -1,19 +1,18 @@
 package io.flutter.plugins.firebase.database;
 
 import androidx.annotation.NonNull;
-
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class QueryBuilder {
-  final private List<Map<String, Object>> modifiers;
+  private final List<Map<String, Object>> modifiers;
   private Query query;
 
-  public QueryBuilder(@NonNull DatabaseReference ref, @NonNull List<Map<String, Object>> modifiers) {
+  public QueryBuilder(
+      @NonNull DatabaseReference ref, @NonNull List<Map<String, Object>> modifiers) {
     this.query = ref;
     this.modifiers = modifiers;
   }
@@ -25,9 +24,15 @@ public class QueryBuilder {
       String type = (String) Objects.requireNonNull(modifier.get("type"));
 
       switch (type) {
-        case Constants.LIMIT -> limit(modifier);
-        case Constants.CURSOR -> cursor(modifier);
-        case Constants.ORDER_BY -> orderBy(modifier);
+        case Constants.LIMIT:
+          limit(modifier);
+          break;
+        case Constants.CURSOR:
+          cursor(modifier);
+          break;
+        case Constants.ORDER_BY:
+          orderBy(modifier);
+          break;
       }
     }
 
@@ -37,7 +42,6 @@ public class QueryBuilder {
   private void limit(Map<String, Object> modifier) {
     String name = (String) Objects.requireNonNull(modifier.get("name"));
     int value = (int) Objects.requireNonNull(modifier.get("limit"));
-
 
     if (Constants.LIMIT_TO_FIRST.equals(name)) {
       query = query.limitToFirst(value);
@@ -50,13 +54,20 @@ public class QueryBuilder {
     String name = (String) Objects.requireNonNull(modifier.get("name"));
 
     switch (name) {
-      case "orderByKey" -> query = query.orderByKey();
-      case "orderByValue" -> query = query.orderByValue();
-      case "orderByPriority" -> query = query.orderByPriority();
-      case "orderByChild" -> {
-        String path = (String) Objects.requireNonNull(modifier.get("path"));
-        query = query.orderByChild(path);
-      }
+      case "orderByKey":
+        query = query.orderByKey();
+        break;
+      case "orderByValue":
+        query = query.orderByValue();
+        break;
+      case "orderByPriority":
+        query = query.orderByPriority();
+        break;
+      case "orderByChild":
+        {
+          String path = (String) Objects.requireNonNull(modifier.get("path"));
+          query = query.orderByChild(path);
+        }
     }
   }
 
@@ -64,10 +75,18 @@ public class QueryBuilder {
     String name = (String) Objects.requireNonNull(modifier.get("name"));
 
     switch (name) {
-      case Constants.START_AT -> startAt(modifier);
-      case Constants.START_AFTER -> startAfter(modifier);
-      case Constants.END_AT -> endAt(modifier);
-      case Constants.END_BEFORE -> endBefore(modifier);
+      case Constants.START_AT:
+        startAt(modifier);
+        break;
+      case Constants.START_AFTER:
+        startAfter(modifier);
+        break;
+      case Constants.END_AT:
+        endAt(modifier);
+        break;
+      case Constants.END_BEFORE:
+        endBefore(modifier);
+        break;
     }
   }
 

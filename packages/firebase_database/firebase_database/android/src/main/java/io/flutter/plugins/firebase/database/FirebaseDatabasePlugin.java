@@ -7,7 +7,6 @@ package io.flutter.plugins.firebase.database;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
@@ -18,12 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Logger;
 import com.google.firebase.database.OnDisconnect;
 import com.google.firebase.database.Query;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
@@ -33,16 +26,19 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class FirebaseDatabasePlugin
-  implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   protected static final HashMap<String, FirebaseDatabase> databaseInstanceCache = new HashMap<>();
-  private final Map<String, Integer> queryListenersCount = new HashMap<>();
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
+  private final Map<String, Integer> queryListenersCount = new HashMap<>();
+  private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
-
-  private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
 
   private static FirebaseDatabase getCachedFirebaseDatabaseInstanceForKey(String key) {
     synchronized (databaseInstanceCache) {
@@ -51,7 +47,7 @@ public class FirebaseDatabasePlugin
   }
 
   private static void setCachedFirebaseDatabaseInstanceForKey(
-    FirebaseDatabase database, String key) {
+      FirebaseDatabase database, String key) {
     synchronized (databaseInstanceCache) {
       FirebaseDatabase existingInstance = databaseInstanceCache.get(key);
       if (existingInstance == null) {
@@ -139,218 +135,225 @@ public class FirebaseDatabasePlugin
   @SuppressWarnings("unchecked")
   private Query getQuery(Map<String, Object> arguments) {
     DatabaseReference ref = getReference(arguments);
-    final List<Map<String, Object>> modifiers = (List<Map<String, Object>>) arguments.get(Constants.MODIFIERS);
+    final List<Map<String, Object>> modifiers =
+        (List<Map<String, Object>>) arguments.get(Constants.MODIFIERS);
 
     return new QueryBuilder(ref, modifiers).build();
   }
 
   private Task<Void> goOnline(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
-        database.goOnline();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final FirebaseDatabase database = getDatabase(arguments);
+          database.goOnline();
+          return null;
+        });
   }
 
   private Task<Void> goOffline(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
-        database.goOffline();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final FirebaseDatabase database = getDatabase(arguments);
+          database.goOffline();
+          return null;
+        });
   }
 
   private Task<Void> purgeOutstandingWrites(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final FirebaseDatabase database = getDatabase(arguments);
-        database.purgeOutstandingWrites();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final FirebaseDatabase database = getDatabase(arguments);
+          database.purgeOutstandingWrites();
+          return null;
+        });
   }
 
   private Task<Void> setValue(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
-        final Object value = arguments.get(Constants.VALUE);
-        Tasks.await(ref.setValue(value));
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
+          final Object value = arguments.get(Constants.VALUE);
+          Tasks.await(ref.setValue(value));
+          return null;
+        });
   }
 
   private Task<Void> setValueWithPriority(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
-        final Object value = arguments.get(Constants.VALUE);
-        final Object priority = arguments.get(Constants.PRIORITY);
-        Tasks.await(ref.setValue(value, priority));
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
+          final Object value = arguments.get(Constants.VALUE);
+          final Object priority = arguments.get(Constants.PRIORITY);
+          Tasks.await(ref.setValue(value, priority));
+          return null;
+        });
   }
 
   private Task<Void> update(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
 
-        @SuppressWarnings("unchecked") final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
-        Tasks.await(ref.updateChildren(value));
+          @SuppressWarnings("unchecked")
+          final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
+          Tasks.await(ref.updateChildren(value));
 
-        return null;
-      });
+          return null;
+        });
   }
 
   private Task<Void> setPriority(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
-        final Object priority = arguments.get(Constants.PRIORITY);
-        Tasks.await(ref.setPriority(priority));
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
+          final Object priority = arguments.get(Constants.PRIORITY);
+          Tasks.await(ref.setPriority(priority));
+          return null;
+        });
   }
 
   private Task<Map<String, Object>> runTransaction(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
 
-        final int transactionKey =
-          (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
-        final boolean transactionApplyLocally =
-          (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
+          final int transactionKey =
+              (int) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_KEY));
+          final boolean transactionApplyLocally =
+              (boolean) Objects.requireNonNull(arguments.get(Constants.TRANSACTION_APPLY_LOCALLY));
 
-        final TransactionHandler handler = new TransactionHandler(methodChannel, transactionKey);
+          final TransactionHandler handler = new TransactionHandler(methodChannel, transactionKey);
 
-        ref.runTransaction(handler, transactionApplyLocally);
+          ref.runTransaction(handler, transactionApplyLocally);
 
-        return Tasks.await(handler.getTask());
-      });
+          return Tasks.await(handler.getTask());
+        });
   }
 
   private Task<Map<String, Object>> queryGet(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final Query query = getQuery(arguments);
-        final DataSnapshot snapshot = Tasks.await(query.get());
-        final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
+        cachedThreadPool,
+        () -> {
+          final Query query = getQuery(arguments);
+          final DataSnapshot snapshot = Tasks.await(query.get());
+          final FlutterDataSnapshotPayload payload = new FlutterDataSnapshotPayload(snapshot);
 
-        return payload.toMap();
-      });
+          return payload.toMap();
+        });
   }
 
   private Task<Void> queryKeepSynced(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final Query query = getQuery(arguments);
-        final boolean keepSynced =
-          (Boolean) Objects.requireNonNull(arguments.get(Constants.VALUE));
-        query.keepSynced(keepSynced);
+        cachedThreadPool,
+        () -> {
+          final Query query = getQuery(arguments);
+          final boolean keepSynced =
+              (Boolean) Objects.requireNonNull(arguments.get(Constants.VALUE));
+          query.keepSynced(keepSynced);
 
-        return null;
-      });
+          return null;
+        });
   }
 
   private Task<String> observe(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final Query query = getQuery(arguments);
-        final String eventChannelNamePrefix = (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
+        cachedThreadPool,
+        () -> {
+          final Query query = getQuery(arguments);
+          final String eventChannelNamePrefix =
+              (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
 
-        int listenersCount = 0;
-        if (queryListenersCount.containsKey(eventChannelNamePrefix)) {
-          listenersCount = queryListenersCount.get(eventChannelNamePrefix) + 1;
-        }
-        queryListenersCount.put(eventChannelNamePrefix, listenersCount);
-        final String eventChannelName = eventChannelNamePrefix + "#" + listenersCount;
-
-        final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
-        final EventStreamHandler streamHandler = new EventStreamHandler(query, () -> {
-          synchronized (queryListenersCount) {
-            eventChannel.setStreamHandler(null);
-            final int currentCount = queryListenersCount.get(eventChannelNamePrefix);
-            queryListenersCount.put(eventChannelNamePrefix, currentCount - 1);
+          int listenersCount = 0;
+          if (queryListenersCount.containsKey(eventChannelNamePrefix)) {
+            listenersCount = queryListenersCount.get(eventChannelNamePrefix) + 1;
           }
-        });
+          queryListenersCount.put(eventChannelNamePrefix, listenersCount);
+          final String eventChannelName = eventChannelNamePrefix + "#" + listenersCount;
 
-        eventChannel.setStreamHandler(streamHandler);
-        streamHandlers.put(eventChannel, streamHandler);
-        return eventChannelName;
-      });
+          final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
+          final EventStreamHandler streamHandler =
+              new EventStreamHandler(
+                  query,
+                  () -> {
+                    synchronized (queryListenersCount) {
+                      eventChannel.setStreamHandler(null);
+                      final int currentCount = queryListenersCount.get(eventChannelNamePrefix);
+                      queryListenersCount.put(eventChannelNamePrefix, currentCount - 1);
+                    }
+                  });
+
+          eventChannel.setStreamHandler(streamHandler);
+          streamHandlers.put(eventChannel, streamHandler);
+          return eventChannelName;
+        });
   }
 
   private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final Object value = arguments.get(Constants.VALUE);
-        final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
-        Tasks.await(onDisconnect.setValue(value));
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final Object value = arguments.get(Constants.VALUE);
+          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+          Tasks.await(onDisconnect.setValue(value));
+          return null;
+        });
   }
 
   private Task<Void> setWithPriorityOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final Object value = arguments.get(Constants.VALUE);
-        final Object priority = arguments.get(Constants.PRIORITY);
-        final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
+        cachedThreadPool,
+        () -> {
+          final Object value = arguments.get(Constants.VALUE);
+          final Object priority = arguments.get(Constants.PRIORITY);
+          final OnDisconnect onDisconnect = getReference(arguments).onDisconnect();
 
-        Task<Void> onDisconnectTask;
-        if (priority instanceof Double) {
-          onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
-        } else if (priority instanceof String) {
-          onDisconnectTask = onDisconnect.setValue(value, (String) priority);
-        } else if (priority == null) {
-          onDisconnectTask = onDisconnect.setValue(value, (String) null);
-        } else {
-          throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
-        }
+          Task<Void> onDisconnectTask;
+          if (priority instanceof Double) {
+            onDisconnectTask = onDisconnect.setValue(value, ((Number) priority).doubleValue());
+          } else if (priority instanceof String) {
+            onDisconnectTask = onDisconnect.setValue(value, (String) priority);
+          } else if (priority == null) {
+            onDisconnectTask = onDisconnect.setValue(value, (String) null);
+          } else {
+            throw new Exception("Invalid priority value for OnDisconnect.setWithPriority");
+          }
 
-        Tasks.await(onDisconnectTask);
-        return null;
-      });
+          Tasks.await(onDisconnectTask);
+          return null;
+        });
   }
 
   private Task<Void> updateOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
 
-        @SuppressWarnings("unchecked") final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
+          @SuppressWarnings("unchecked")
+          final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
 
-        final Task<Void> task = ref.onDisconnect().updateChildren(value);
-        Tasks.await(task);
-        return null;
-      });
+          final Task<Void> task = ref.onDisconnect().updateChildren(value);
+          Tasks.await(task);
+          return null;
+        });
   }
 
   private Task<Void> cancelOnDisconnect(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        final DatabaseReference ref = getReference(arguments);
-        Tasks.await(ref.onDisconnect().cancel());
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          final DatabaseReference ref = getReference(arguments);
+          Tasks.await(ref.onDisconnect().cancel());
+          return null;
+        });
   }
 
   @Override
@@ -359,50 +362,79 @@ public class FirebaseDatabasePlugin
     final Map<String, Object> arguments = call.arguments();
 
     switch (call.method) {
-      case "FirebaseDatabase#goOnline" -> methodCallTask = goOnline(arguments);
-      case "FirebaseDatabase#goOffline" -> methodCallTask = goOffline(arguments);
-      case "FirebaseDatabase#purgeOutstandingWrites" -> methodCallTask = purgeOutstandingWrites(arguments);
-      case "DatabaseReference#set" -> methodCallTask = setValue(arguments);
-      case "DatabaseReference#setWithPriority" -> methodCallTask = setValueWithPriority(arguments);
-      case "DatabaseReference#update" -> methodCallTask = update(arguments);
-      case "DatabaseReference#setPriority" -> methodCallTask = setPriority(arguments);
-      case "DatabaseReference#runTransaction" -> methodCallTask = runTransaction(arguments);
-      case "OnDisconnect#set" -> methodCallTask = setOnDisconnect(arguments);
-      case "OnDisconnect#setWithPriority" -> methodCallTask = setWithPriorityOnDisconnect(arguments);
-      case "OnDisconnect#update" -> methodCallTask = updateOnDisconnect(arguments);
-      case "OnDisconnect#cancel" -> methodCallTask = cancelOnDisconnect(arguments);
-      case "Query#get" -> methodCallTask = queryGet(arguments);
-      case "Query#keepSynced" -> methodCallTask = queryKeepSynced(arguments);
-      case "Query#observe" -> methodCallTask = observe(arguments);
-      default -> {
+      case "FirebaseDatabase#goOnline":
+        methodCallTask = goOnline(arguments);
+        break;
+      case "FirebaseDatabase#goOffline":
+        methodCallTask = goOffline(arguments);
+        break;
+      case "FirebaseDatabase#purgeOutstandingWrites":
+        methodCallTask = purgeOutstandingWrites(arguments);
+        break;
+      case "DatabaseReference#set":
+        methodCallTask = setValue(arguments);
+        break;
+      case "DatabaseReference#setWithPriority":
+        methodCallTask = setValueWithPriority(arguments);
+        break;
+      case "DatabaseReference#update":
+        methodCallTask = update(arguments);
+        break;
+      case "DatabaseReference#setPriority":
+        methodCallTask = setPriority(arguments);
+        break;
+      case "DatabaseReference#runTransaction":
+        methodCallTask = runTransaction(arguments);
+        break;
+      case "OnDisconnect#set":
+        methodCallTask = setOnDisconnect(arguments);
+        break;
+      case "OnDisconnect#setWithPriority":
+        methodCallTask = setWithPriorityOnDisconnect(arguments);
+        break;
+      case "OnDisconnect#update":
+        methodCallTask = updateOnDisconnect(arguments);
+        break;
+      case "OnDisconnect#cancel":
+        methodCallTask = cancelOnDisconnect(arguments);
+        break;
+      case "Query#get":
+        methodCallTask = queryGet(arguments);
+        break;
+      case "Query#keepSynced":
+        methodCallTask = queryKeepSynced(arguments);
+        break;
+      case "Query#observe":
+        methodCallTask = observe(arguments);
+        break;
+      default:
         result.notImplemented();
         return;
-      }
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          final Object r = task.getResult();
-          result.success(r);
-        } else {
-          Exception exception = task.getException();
-
-          FlutterFirebaseDatabaseException e;
-
-          if (exception instanceof FlutterFirebaseDatabaseException) {
-            e = (FlutterFirebaseDatabaseException) exception;
-          } else if (exception instanceof DatabaseException) {
-            e =
-              FlutterFirebaseDatabaseException.fromDatabaseException(
-                (DatabaseException) exception);
+        task -> {
+          if (task.isSuccessful()) {
+            final Object r = task.getResult();
+            result.success(r);
           } else {
-            e = FlutterFirebaseDatabaseException.fromException(exception);
-          }
+            Exception exception = task.getException();
 
-          result.error(e.getCode(), e.getMessage(), e.getAdditionalData());
-        }
-      });
+            FlutterFirebaseDatabaseException e;
+
+            if (exception instanceof FlutterFirebaseDatabaseException) {
+              e = (FlutterFirebaseDatabaseException) exception;
+            } else if (exception instanceof DatabaseException) {
+              e =
+                  FlutterFirebaseDatabaseException.fromDatabaseException(
+                      (DatabaseException) exception);
+            } else {
+              e = FlutterFirebaseDatabaseException.fromException(exception);
+            }
+
+            result.error(e.getCode(), e.getMessage(), e.getAdditionalData());
+          }
+        });
   }
 
   @Override
@@ -424,11 +456,11 @@ public class FirebaseDatabasePlugin
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        cleanup();
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          cleanup();
+          return null;
+        });
   }
 
   private void cleanup() {
