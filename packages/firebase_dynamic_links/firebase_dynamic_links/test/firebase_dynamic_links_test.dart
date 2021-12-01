@@ -354,30 +354,6 @@ class MockFirebaseDynamicLinks extends Mock
   }
 
   @override
-  Future<ShortDynamicLink> shortenUrl(
-    Uri uri, [
-    DynamicLinkParametersOptions? options,
-  ]) {
-    return super.noSuchMethod(
-      Invocation.method(#shortenUrl, [uri, options]),
-      returnValue: Future.value(
-        ShortDynamicLink(
-          shortUrl: uri,
-          warnings: ['warning'],
-          previewLink: Uri.parse('preview'),
-        ),
-      ),
-      returnValueForMissingStub: Future.value(
-        ShortDynamicLink(
-          shortUrl: uri,
-          warnings: ['warning'],
-          previewLink: Uri.parse('preview'),
-        ),
-      ),
-    );
-  }
-
-  @override
   Future<ShortDynamicLink> buildShortLink(DynamicLinkParameters parameters) {
     return super.noSuchMethod(
       Invocation.method(#buildShortLink, [parameters]),
