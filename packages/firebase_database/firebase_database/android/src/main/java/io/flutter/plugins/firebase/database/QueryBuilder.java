@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class QueryBuilder {
-  private Query query;
   final private List<Map<String, Object>> modifiers;
+  private Query query;
 
   public QueryBuilder(@NonNull DatabaseReference ref, @NonNull List<Map<String, Object>> modifiers) {
     this.query = ref;
@@ -22,41 +22,52 @@ public class QueryBuilder {
     if (modifiers.isEmpty()) return query;
 
     for (Map<String, Object> modifier : modifiers) {
-      String name = (String) modifier.get("name");
-      String type = (String) modifier.get("type");
+      String type = (String) Objects.requireNonNull(modifier.get("type"));
 
-      if (Constants.LIMIT_TO_FIRST.equals(name)) {
-        limitToFirst((int) modifier.get("value"));
-      } else if (Constants.LIMIT_TO_LAST.equals(name)) {
-        limitToLast((int) modifier.get("value"));
-      } else if (Constants.ORDER_BY.equals(type)) {
-        orderBy(modifier);
-      } else if (Constants.START_AT.equals(name)) {
-        startAt(modifier);
-      } else if (Constants.START_AFTER.equals(name)) {
-        startAfter(modifier);
-      } else if (Constants.END_AT.equals(name)) {
-        endAt(modifier);
-      } else if (Constants.END_BEFORE.equals(name)) {
-        endBefore(modifier);
+      switch (type) {
+        case Constants.LIMIT -> limit(modifier);
+        case Constants.CURSOR -> cursor(modifier);
+        case Constants.ORDER_BY -> orderBy(modifier);
       }
     }
 
     return query;
   }
 
-  private void orderBy(Map<String, Object> modifier) {
-    String name = (String) modifier.get("name");
+  private void limit(Map<String, Object> modifier) {
+    String name = (String) Objects.requireNonNull(modifier.get("name"));
+    int value = (int) Objects.requireNonNull(modifier.get("limit"));
 
-    if ("orderByKey".equals(name)) {
-      query = query.orderByKey();
-    } else if ("orderByValue".equals(name)) {
-      query = query.orderByValue();
-    } else if ("orderByPriority".equals(name)) {
-      query = query.orderByPriority();
-    } else if ("orderByChild".equals(name)) {
-      String path = (String) Objects.requireNonNull(modifier.get("name"));
-      query = query.orderByChild(path);
+
+    if (Constants.LIMIT_TO_FIRST.equals(name)) {
+      query = query.limitToFirst(value);
+    } else if (Constants.LIMIT_TO_LAST.equals(name)) {
+      query = query.limitToLast(value);
+    }
+  }
+
+  private void orderBy(Map<String, Object> modifier) {
+    String name = (String) Objects.requireNonNull(modifier.get("name"));
+
+    switch (name) {
+      case "orderByKey" -> query = query.orderByKey();
+      case "orderByValue" -> query = query.orderByValue();
+      case "orderByPriority" -> query = query.orderByPriority();
+      case "orderByChild" -> {
+        String path = (String) Objects.requireNonNull(modifier.get("path"));
+        query = query.orderByChild(path);
+      }
+    }
+  }
+
+  private void cursor(Map<String, Object> modifier) {
+    String name = (String) Objects.requireNonNull(modifier.get("name"));
+
+    switch (name) {
+      case Constants.START_AT -> startAt(modifier);
+      case Constants.START_AFTER -> startAfter(modifier);
+      case Constants.END_AT -> endAt(modifier);
+      case Constants.END_BEFORE -> endBefore(modifier);
     }
   }
 
@@ -158,13 +169,5 @@ public class QueryBuilder {
         query = query.endBefore((String) value, key);
       }
     }
-  }
-
-  private void limitToFirst(int value) {
-    query = query.limitToFirst(value);
-  }
-
-  private void limitToLast(int value) {
-    query = query.limitToLast(value);
   }
 }

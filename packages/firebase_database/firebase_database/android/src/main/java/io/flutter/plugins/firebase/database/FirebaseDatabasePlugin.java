@@ -264,7 +264,6 @@ public class FirebaseDatabasePlugin
       });
   }
 
-  @SuppressWarnings("unchecked")
   private Task<String> observe(Map<String, Object> arguments) {
     return Tasks.call(
       cachedThreadPool,
@@ -275,61 +274,10 @@ public class FirebaseDatabasePlugin
         // TODO(ehesp): Is the onDispose stuff needed? What does it do?
         final EventStreamHandler handler = new EventStreamHandler(query, () -> {});
 
-//        final StreamHandler streamHandler =
-//          new EventStreamHandler(
-//            query,
-//            () -> {
-//              synchronized (queryListenersCount) {
-//                eventChannel.setStreamHandler(null);
-//
-//                final int currentCount = queryListenersCount.get(queryId);
-//                queryListenersCount.put(queryId, currentCount - 1);
-//              }
-//            });
-
         channel.setStreamHandler(handler);
         streamHandlers.put(channel, handler);
         return eventChannelName;
       });
-
-
-//    final Map<String, Object> parameters =
-//        (Map<String, Object>) arguments.get(Constants.PARAMETERS);
-//    final String eventType = (String) arguments.get(Constants.EVENT_TYPE);
-//    final String queryParams = QueryBuilder.buildQueryParams(parameters);
-//
-//    final String qs = "?appName=" + appName + "&" + (queryParams.length() > 0 ? queryParams : "");
-//    final String queryId = METHOD_CHANNEL_NAME + "/query/" + path + "/" + eventType + qs;
-//    int listenersCount = 0;
-//
-//    if (queryListenersCount.containsKey(queryId)) {
-//      listenersCount = queryListenersCount.get(queryId) + 1;
-//    }
-//
-//    queryListenersCount.put(queryId, listenersCount);
-//
-//    final String eventChannelName = queryId + "#" + listenersCount;
-//
-//    return Tasks.call(
-//        cachedThreadPool,
-//        () -> {
-//          final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
-//
-//          final StreamHandler streamHandler =
-//              new EventStreamHandler(
-//                  query,
-//                  () -> {
-//                    synchronized (queryListenersCount) {
-//                      eventChannel.setStreamHandler(null);
-//
-//                      final int currentCount = queryListenersCount.get(queryId);
-//                      queryListenersCount.put(queryId, currentCount - 1);
-//                    }
-//                  });
-//
-//          eventChannel.setStreamHandler(streamHandler);
-//          return eventChannelName;
-//        });
   }
 
   private Task<Void> setOnDisconnect(Map<String, Object> arguments) {
@@ -397,54 +345,25 @@ public class FirebaseDatabasePlugin
     final Map<String, Object> arguments = call.arguments();
 
     switch (call.method) {
-      case "FirebaseDatabase#goOnline":
-        methodCallTask = goOnline(arguments);
-        break;
-      case "FirebaseDatabase#goOffline":
-        methodCallTask = goOffline(arguments);
-        break;
-      case "FirebaseDatabase#purgeOutstandingWrites":
-        methodCallTask = purgeOutstandingWrites(arguments);
-        break;
-      case "DatabaseReference#set":
-        methodCallTask = setValue(arguments);
-        break;
-      case "DatabaseReference#setWithPriority":
-        methodCallTask = setValueWithPriority(arguments);
-        break;
-      case "DatabaseReference#update":
-        methodCallTask = update(arguments);
-        break;
-      case "DatabaseReference#setPriority":
-        methodCallTask = setPriority(arguments);
-        break;
-      case "DatabaseReference#runTransaction":
-        methodCallTask = runTransaction(arguments);
-        break;
-      case "OnDisconnect#set":
-        methodCallTask = setOnDisconnect(arguments);
-        break;
-      case "OnDisconnect#setWithPriority":
-        methodCallTask = setWithPriorityOnDisconnect(arguments);
-        break;
-      case "OnDisconnect#update":
-        methodCallTask = updateOnDisconnect(arguments);
-        break;
-      case "OnDisconnect#cancel":
-        methodCallTask = cancelOnDisconnect(arguments);
-        break;
-      case "Query#get":
-        methodCallTask = queryGet(arguments);
-        break;
-      case "Query#keepSynced":
-        methodCallTask = queryKeepSynced(arguments);
-        break;
-      case "Query#observe":
-        methodCallTask = observe(arguments);
-        break;
-      default:
+      case "FirebaseDatabase#goOnline" -> methodCallTask = goOnline(arguments);
+      case "FirebaseDatabase#goOffline" -> methodCallTask = goOffline(arguments);
+      case "FirebaseDatabase#purgeOutstandingWrites" -> methodCallTask = purgeOutstandingWrites(arguments);
+      case "DatabaseReference#set" -> methodCallTask = setValue(arguments);
+      case "DatabaseReference#setWithPriority" -> methodCallTask = setValueWithPriority(arguments);
+      case "DatabaseReference#update" -> methodCallTask = update(arguments);
+      case "DatabaseReference#setPriority" -> methodCallTask = setPriority(arguments);
+      case "DatabaseReference#runTransaction" -> methodCallTask = runTransaction(arguments);
+      case "OnDisconnect#set" -> methodCallTask = setOnDisconnect(arguments);
+      case "OnDisconnect#setWithPriority" -> methodCallTask = setWithPriorityOnDisconnect(arguments);
+      case "OnDisconnect#update" -> methodCallTask = updateOnDisconnect(arguments);
+      case "OnDisconnect#cancel" -> methodCallTask = cancelOnDisconnect(arguments);
+      case "Query#get" -> methodCallTask = queryGet(arguments);
+      case "Query#keepSynced" -> methodCallTask = queryKeepSynced(arguments);
+      case "Query#observe" -> methodCallTask = observe(arguments);
+      default -> {
         result.notImplemented();
         return;
+      }
     }
 
     methodCallTask.addOnCompleteListener(

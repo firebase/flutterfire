@@ -23,24 +23,12 @@ public class Constants {
 
   public static final String MODIFIERS = "modifiers";
   public static final String ORDER_BY = "orderBy";
-  public static final Object CHILD = "child";
-  public static final String ORDER_BY_CHILD_KEY = "orderByChildKey";
-
+  public static final String CURSOR = "cursor";
+  public static final String LIMIT = "limit";
   public static final String START_AT = "startAt";
-  public static final String START_AT_KEY = "startAtKey";
-
   public static final String START_AFTER = "startAfter";
-  public static final String START_AFTER_KEY = "startAfterKey";
-
   public static final String END_AT = "endAt";
-  public static final String END_AT_KEY = "endAtKey";
-
   public static final String END_BEFORE = "endBefore";
-  public static final String END_BEFORE_KEY = "endBeforeKey";
-
-  public static final String EQUAL_TO = "equalTo";
-  public static final String EQUAL_TO_KEY = "equalToKey";
-
   public static final String LIMIT_TO_FIRST = "limitToFirst";
   public static final String LIMIT_TO_LAST = "limitToLast";
 

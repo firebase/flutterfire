@@ -431,7 +431,7 @@ void main() {
       test('keepSynced, simple query', () async {
         const String path = 'foo';
         final QueryPlatform query = database.ref(path);
-        await query.keepSynced(true);
+        await query.keepSynced(QueryModifiers([]), true);
         expect(
           log,
           <Matcher>[
@@ -441,44 +441,8 @@ void main() {
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
-                'parameters': <String, dynamic>{},
+                'modifiers': [],
                 'value': true,
-              },
-            ),
-          ],
-        );
-      });
-      test('keepSynced, complex query', () async {
-        const int startAt = 42;
-        const String path = 'foo';
-        const String childKey = 'bar';
-        const bool endAt = true;
-        const String endAtKey = 'baz';
-        final QueryPlatform query = database
-            .ref()
-            .child(path)
-            .orderByChild(childKey)
-            .startAt(startAt)
-            .endAt(endAt, key: endAtKey);
-        await query.keepSynced(false);
-        final Map<String, dynamic> expectedParameters = <String, dynamic>{
-          'orderBy': 'child',
-          'orderByChildKey': childKey,
-          'startAt': startAt,
-          'endAt': endAt,
-          'endAtKey': endAtKey,
-        };
-        expect(
-          log,
-          <Matcher>[
-            isMethodCall(
-              'Query#keepSynced',
-              arguments: <String, dynamic>{
-                'appName': app.name,
-                'databaseURL': databaseURL,
-                'path': path,
-                'parameters': expectedParameters,
-                'value': false
               },
             ),
           ],
@@ -506,7 +470,9 @@ void main() {
 
         final errors = AsyncQueue<FirebaseException>();
 
-        final subscription = query.onValue.listen((_) {}, onError: errors.add);
+        final subscription = query
+            .onValue(QueryModifiers([]))
+            .listen((_) {}, onError: errors.add);
         await Future<void>.delayed(Duration.zero);
 
         await simulateError('Bad foo');
@@ -555,7 +521,8 @@ void main() {
             AsyncQueue<DatabaseEventPlatform>();
 
         // Subscribe and allow subscription to complete.
-        final subscription = query.onValue.listen(events.add);
+        final subscription =
+            query.onValue(QueryModifiers([])).listen(events.add);
         await Future<void>.delayed(Duration.zero);
 
         await simulateEvent(createValueEvent(1));
