@@ -3,6 +3,9 @@
 Realtime Database has been fully reworked to bring the plugin inline with the federated plugin
 setup, a more familiar API, better documentation and many more unit and end-to-end tests.
 
+- General
+ - Fixed an issue where providing a `Map` with `int` keys would crash.
+
 - `FirebaseDatabase`
  - **DEPRECATED**: `FirebaseDatabase()` has now been deprecated in favor of `FirebaseDatabase.instanceFor()`.
  - **DEPRECATED**: `reference()` has now been deprecated in favor of `ref()`.
@@ -50,12 +53,12 @@ setup, a more familiar API, better documentation and many more unit and end-to-e
 - `TransactionResult`
  - **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` completion error.
 
-- **NEW**: `Transaction` 
+- **NEW**: `Transaction`
   - **NEW**: Added `Transaction.success(value)` return this from inside your  `TransactionHandler` to indicate a successful execution.
   - **NEW**: Added `Transaction.abort()` return this from inside your  `TransactionHandler` to indicate that the transaction should be aborted.
 
 - `TransactionHandler`
-   - **BREAKING** Transaction handlers must now always return an instance of `Transaction` either via `Transaction.success()` or `Transaction.abort()`.  
+   - **BREAKING** Transaction handlers must now always return an instance of `Transaction` either via `Transaction.success()` or `Transaction.abort()`.
 
 - `DatabaseError`
  - **BREAKING**: The `DatabaseError` class has been removed. Errors are now returned as a `FirebaseException` inline with the other plugins.

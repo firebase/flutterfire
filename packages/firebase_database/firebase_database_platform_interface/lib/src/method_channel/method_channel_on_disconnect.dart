@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 
 import 'method_channel_database.dart';
 import 'utils/exception.dart';
@@ -22,7 +23,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         'OnDisconnect#set',
         database.getChannelArguments({
           'path': ref.path,
-          'value': value,
+          'value': transformValue(value),
         }),
       );
     } catch (e, s) {
@@ -36,7 +37,11 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
       return MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#setWithPriority',
         database.getChannelArguments(
-          {'path': ref.path, 'value': value, 'priority': priority},
+          {
+            'path': ref.path,
+            'value': transformValue(value),
+            'priority': priority
+          },
         ),
       );
     } catch (e, s) {
@@ -72,7 +77,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
           'appName': database.app!.name,
           'databaseURL': database.databaseURL,
           'path': ref.path,
-          'value': value
+          'value': transformValue(value),
         }),
       );
     } catch (e, s) {

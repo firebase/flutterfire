@@ -68,12 +68,14 @@ void runQueryTests() {
           'd': 4,
         });
 
-        final snapshot = await ref.orderByValue().startAfter(2).get();
+        // TODO(ehesp): Using `get` returns the wrong results. Have flagged with SDK team.
+        final e = await ref.orderByValue().startAfter(2).once();
 
         final expected = ['c', 'd'];
 
-        expect(snapshot.children.length, expected.length);
-        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+        print(e.snapshot.value.toString());
+        expect(e.snapshot.children.length, expected.length);
+        e.snapshot.children.toList().forEachIndexed((i, childSnapshot) {
           expect(childSnapshot.key, expected[i]);
         });
       });
@@ -235,8 +237,7 @@ void runQueryTests() {
 
         final snapshot = await ref.limitToLast(2).get();
 
-        // TODO(ehesp): JS returns an empty/null value as the first element
-        final expected = ['bar', 'baz'];
+        final expected = [null, 'bar', 'baz'];
         expect(snapshot.value, equals(expected));
       });
 
@@ -286,7 +287,7 @@ void runQueryTests() {
         final snapshot = await ref.orderByChild('number').get();
 
         final expected = ['b', 'c', 'a'];
-        expect(snapshot.children.length, equals(expected));
+        expect(snapshot.children.length, equals(expected.length));
         snapshot.children.toList().forEachIndexed((i, childSnapshot) {
           expect(childSnapshot.key, expected[i]);
         });

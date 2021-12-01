@@ -94,7 +94,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#setWithPriority',
         database.getChannelArguments({
           'path': path,
-          'value': value,
+          'value': transformValue(value),
           'priority': priority,
         }),
       );
@@ -110,7 +110,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#update',
         database.getChannelArguments({
           'path': path,
-          'value': value,
+          'value': transformValue(value),
         }),
       );
     } catch (e, s) {

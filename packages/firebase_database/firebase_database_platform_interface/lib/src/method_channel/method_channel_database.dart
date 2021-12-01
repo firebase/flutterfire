@@ -4,6 +4,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
 import 'package:flutter/services.dart';
 
 import 'method_channel_database_reference.dart';
@@ -53,7 +54,7 @@ class MethodChannelDatabase extends DatabasePlatform {
           }
 
           return {
-            'value': value,
+            'value': transformValue(value),
             'aborted': aborted,
             'exception': exception,
           };
