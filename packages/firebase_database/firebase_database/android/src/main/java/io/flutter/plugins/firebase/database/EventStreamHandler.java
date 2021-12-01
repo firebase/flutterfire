@@ -6,6 +6,7 @@ import com.google.firebase.database.ValueEventListener;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.Map;
+import java.util.Objects;
 
 interface OnDispose {
   void run();
@@ -13,9 +14,9 @@ interface OnDispose {
 
 public class EventStreamHandler implements StreamHandler {
   private final Query query;
+  private final OnDispose onDispose;
   private ValueEventListener valueEventListener;
   private ChildEventListener childEventListener;
-  private final OnDispose onDispose;
 
   public EventStreamHandler(Query query, OnDispose onDispose) {
     this.query = query;
@@ -26,7 +27,7 @@ public class EventStreamHandler implements StreamHandler {
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {
     final Map<String, Object> args = (Map<String, Object>) arguments;
-    final String eventType = (String) args.get(Constants.EVENT_TYPE);
+    final String eventType = (String) Objects.requireNonNull(args.get(Constants.EVENT_TYPE));
 
     if (Constants.EVENT_TYPE_VALUE.equals(eventType)) {
       valueEventListener = new ValueEventsProxy(events);
