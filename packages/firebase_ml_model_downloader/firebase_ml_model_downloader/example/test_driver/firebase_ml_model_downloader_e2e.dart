@@ -27,9 +27,9 @@ void testsMain() {
 
     group('getModel', () {
       test('should return successfully', () async {
-        // await expectLater(
-        //   ()=> mlModel.getModel('test', DownloadType.latestModel),
-        //   completes);
+        await expectLater(
+          ()=> mlModel.getModel('test', DownloadType.latestModel),
+          completes);
       });
     });
 
