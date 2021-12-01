@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.database;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -136,7 +137,7 @@ public class FirebaseDatabasePlugin
   private Query getQuery(Map<String, Object> arguments) {
     DatabaseReference ref = getReference(arguments);
     final List<Map<String, Object>> modifiers =
-        (List<Map<String, Object>>) arguments.get(Constants.MODIFIERS);
+        (List<Map<String, Object>>) Objects.requireNonNull(arguments.get(Constants.MODIFIERS));
 
     return new QueryBuilder(ref, modifiers).build();
   }
@@ -201,7 +202,8 @@ public class FirebaseDatabasePlugin
           final DatabaseReference ref = getReference(arguments);
 
           @SuppressWarnings("unchecked")
-          final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
+          final Map<String, Object> value =
+              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
           Tasks.await(ref.updateChildren(value));
 
           return null;
@@ -271,22 +273,26 @@ public class FirebaseDatabasePlugin
           final String eventChannelNamePrefix =
               (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
 
-          int listenersCount = 0;
-          if (queryListenersCount.containsKey(eventChannelNamePrefix)) {
-            listenersCount = queryListenersCount.get(eventChannelNamePrefix) + 1;
+          int newListenersCount;
+          synchronized (queryListenersCount) {
+            Integer currentListenersCount = queryListenersCount.get(eventChannelNamePrefix);
+            newListenersCount = currentListenersCount == null ? 1 : currentListenersCount + 1;
+            queryListenersCount.put(eventChannelNamePrefix, newListenersCount);
           }
-          queryListenersCount.put(eventChannelNamePrefix, listenersCount);
-          final String eventChannelName = eventChannelNamePrefix + "#" + listenersCount;
 
+          final String eventChannelName = eventChannelNamePrefix + "#" + newListenersCount;
           final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
           final EventStreamHandler streamHandler =
               new EventStreamHandler(
                   query,
                   () -> {
+                    eventChannel.setStreamHandler(null);
                     synchronized (queryListenersCount) {
-                      eventChannel.setStreamHandler(null);
-                      final int currentCount = queryListenersCount.get(eventChannelNamePrefix);
-                      queryListenersCount.put(eventChannelNamePrefix, currentCount - 1);
+                      Integer currentListenersCount =
+                          queryListenersCount.get(eventChannelNamePrefix);
+                      queryListenersCount.put(
+                          eventChannelNamePrefix,
+                          currentListenersCount == null ? 0 : currentListenersCount - 1);
                     }
                   });
 
@@ -338,7 +344,8 @@ public class FirebaseDatabasePlugin
           final DatabaseReference ref = getReference(arguments);
 
           @SuppressWarnings("unchecked")
-          final Map<String, Object> value = (Map<String, Object>) arguments.get(Constants.VALUE);
+          final Map<String, Object> value =
+              (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.VALUE));
 
           final Task<Void> task = ref.onDisconnect().updateChildren(value);
           Tasks.await(task);
@@ -422,6 +429,11 @@ public class FirebaseDatabasePlugin
 
             FlutterFirebaseDatabaseException e;
 
+            Log.e(
+                "firebase_database",
+                "Error occurred handling native method call " + call.method,
+                exception);
+
             if (exception instanceof FlutterFirebaseDatabaseException) {
               e = (FlutterFirebaseDatabaseException) exception;
             } else if (exception instanceof DatabaseException) {
@@ -465,7 +477,9 @@ public class FirebaseDatabasePlugin
 
   private void cleanup() {
     removeEventStreamHandlers();
-    queryListenersCount.clear();
+    synchronized (queryListenersCount) {
+      queryListenersCount.clear();
+    }
     databaseInstanceCache.clear();
   }
 
