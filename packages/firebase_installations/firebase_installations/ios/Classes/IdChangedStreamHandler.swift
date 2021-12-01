@@ -3,34 +3,32 @@ import FirebaseInstallations
 
 class IdChangedStreamHandler: NSObject, FlutterStreamHandler {
     
-    var eventSink: FlutterEventSink?
+    
+    var eventSink: FlutterEventSink?;
     var installationIDObserver: NSObjectProtocol?;
     var instance:Installations;
-    var authToken:String = "";
+    var installationsId:String = "";
     
     init(instance: Installations) {
         self.instance = instance;
     }
     
-    @objc func handleInstallationIDChange() {
-        var events = Dictionary<String, String>();
-        
-        var installationsAuthToken:String = ""
-        
-        // Fetch new auth token
-        self.instance.authTokenForcingRefresh  (true, completion: {(tokenResult:InstallationsAuthTokenResult?, error:Error?) in
-            if error != nil {
-                self.eventSink!(FlutterError())
+        @objc func handleInstallationIDChange() {
+            var events = Dictionary<String, String>();
+    
+            // Fetch new installation Id
+            instance.installationID { (newId:String?, error:Error?) in
+                if error != nil {
+                    self.eventSink!(FlutterError())
+                } else {
+                    if(newId != self.installationsId) {
+                        self.installationsId = newId!;
+                        events["token"] = self.installationsId;
+                        self.eventSink!(events)
+                    }
+                }
             }
-            installationsAuthToken = tokenResult?.authToken ?? ""
-            if(installationsAuthToken != self.authToken) {
-                self.authToken = installationsAuthToken;
-                events["token"] = self.authToken;
-                self.eventSink!(events)
-            }
-            
-        });
-    }
+        }
     
     public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
         eventSink = events

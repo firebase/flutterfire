@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:example/firebase_config.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +9,7 @@ import 'package:firebase_installations/firebase_installations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
 
   runApp(const MyApp());
 }
@@ -41,15 +42,17 @@ class _InstallationsCardState extends State<InstallationsCard> {
   @override
   void initState() {
     super.initState();
-    logResults();
-
+    getAuthToken();
+    getId();
     FirebaseInstallations.instance.idTokenChanges.listen((event) {
       setState(() {
-        authToken = event;
+        id = event;
       });
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Auth token updated!')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('New Firebase Installations Id generated 🎉'),
+        backgroundColor: Colors.green,
+      ));
     }).onError((error) {
       log("$error");
     });
@@ -57,14 +60,6 @@ class _InstallationsCardState extends State<InstallationsCard> {
 
   String id = 'None';
   String authToken = 'None';
-
-  Future<void> logResults() async {
-    final id = await FirebaseInstallations.instance.getId();
-
-    setState(() {
-      this.id = id;
-    });
-  }
 
   Future<void> deleteId() async {
     try {
@@ -90,9 +85,9 @@ class _InstallationsCardState extends State<InstallationsCard> {
     }
   }
 
-  Future<void> getAuthToken() async {
+  Future<void> getAuthToken([forceRefresh = false]) async {
     try {
-      final token = await FirebaseInstallations.instance.getToken(true);
+      final token = await FirebaseInstallations.instance.getToken(forceRefresh);
       setState(() {
         authToken = token;
       });
@@ -105,72 +100,79 @@ class _InstallationsCardState extends State<InstallationsCard> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: [
-          SizedBox(
-            width: double.infinity,
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Expanded(
-                          child: Text("Installation Id: "),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(id),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Expanded(
-                          child: Text("Auth Token: "),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(authToken),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: getAuthToken,
-              child: const Text("Force update token"),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: ElevatedButton(
-                  onPressed: deleteId,
-                  child: const Text("Delete ID"),
+              SizedBox(
+                width: double.infinity,
+                child: Card(
+                  margin: EdgeInsets.zero,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Expanded(
+                              child: Text("Installation Id: "),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(id),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Expanded(
+                              child: Text("Auth Token: "),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Text(authToken),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(width: 20),
-              Expanded(
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: getId,
-                  child: const Text("Get ID"),
+                  onPressed: () => getAuthToken(true),
+                  child: const Text("Force update token"),
                 ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: deleteId,
+                      child: const Text("Delete ID"),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: getId,
+                      child: const Text("Get ID"),
+                    ),
+                  )
+                ],
               )
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
