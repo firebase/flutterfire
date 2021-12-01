@@ -23,7 +23,7 @@ void runInstanceTests() {
       });
     });
 
-    group('buildUrl', () {
+    group('buildLink', () {
       test('build normal dynamic links', () async {
         FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
         const String androidPackageName =

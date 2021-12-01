@@ -127,7 +127,7 @@ public class FlutterFirebaseDynamicLinksPlugin
 
     switch (call.method) {
       case "FirebaseDynamicLinks#buildLink":
-        String url = buildUrl(call.arguments());
+        String url = buildLink(call.arguments());
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
@@ -157,7 +157,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         });
   }
 
-  private String buildUrl(Map<String, Object> arguments) {
+  private String buildLink(Map<String, Object> arguments) {
     DynamicLink.Builder urlBuilder = setupParameters(arguments);
 
     return urlBuilder.buildDynamicLink().getUri().toString();

@@ -95,11 +95,9 @@ void main() {
           'warnings': <dynamic>['This is only a test link'],
         };
         switch (call.method) {
-          case 'FirebaseDynamicLinks#buildUrl':
+          case 'FirebaseDynamicLinks#buildLink':
             return 'google.com';
           case 'FirebaseDynamicLinks#buildShortLink':
-            return returnUrl;
-          case 'FirebaseDynamicLinks#shortenUrl':
             return returnUrl;
           case 'FirebaseDynamicLink#onLinkSuccess':
             const String name = 'FirebaseDynamicLink#onLinkSuccess';
@@ -242,7 +240,7 @@ void main() {
 
         expect(logger, <Matcher>[
           isMethodCall(
-            'FirebaseDynamicLinks#buildUrl',
+            'FirebaseDynamicLinks#buildLink',
             arguments: <String, dynamic>{
               'appName': '[DEFAULT]',
               'uriPrefix': 'https://',

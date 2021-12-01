@@ -138,7 +138,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   }
 
   if ([@"FirebaseDynamicLinks#buildLink" isEqualToString:call.method]) {
-    [self buildUrl:call.arguments withMethodCallResult:methodCallResult];
+    [self buildLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#buildShortLink" isEqualToString:call.method]) {
     [self buildShortLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#getInitialLink" isEqualToString:call.method]) {
@@ -152,7 +152,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
 #pragma mark - Firebase Dynamic Links API
 
-- (void)buildUrl:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)buildLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDynamicLinkComponents *components = [self setupParameters:arguments];
   result.success([components.url absoluteString]);
 }
