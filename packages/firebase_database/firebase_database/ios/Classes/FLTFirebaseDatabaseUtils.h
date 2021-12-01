@@ -14,6 +14,6 @@
                     withPreviousChildKey:(NSString *)previousChildName;
 + (NSDictionary *)dictionaryFromSnapshot:(FIRDataSnapshot *)snapshot;
 + (NSArray *)codeAndMessageFromNSError:(NSError *)error;
-+ (FIRDataEventType)eventTypeFromArguments:(id)arguments;
++ (FIRDataEventType)eventTypeFromString:(NSString *)eventTypeString;
 
 @end

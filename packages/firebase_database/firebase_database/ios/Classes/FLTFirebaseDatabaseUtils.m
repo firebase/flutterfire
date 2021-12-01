@@ -228,17 +228,16 @@
   return @[ code, message ];
 }
 
-+ (FIRDataEventType)eventTypeFromArguments:(id)arguments {
-  NSString *eventTypeName = arguments[@"eventType"];
-  if ([eventTypeName isEqualToString:@"value"]) {
++ (FIRDataEventType)eventTypeFromString:(NSString *)eventTypeString {
+  if ([eventTypeString isEqualToString:@"value"]) {
     return FIRDataEventTypeValue;
-  } else if ([eventTypeName isEqualToString:@"childAdded"]) {
+  } else if ([eventTypeString isEqualToString:@"childAdded"]) {
     return FIRDataEventTypeChildAdded;
-  } else if ([eventTypeName isEqualToString:@"childChanged"]) {
+  } else if ([eventTypeString isEqualToString:@"childChanged"]) {
     return FIRDataEventTypeChildChanged;
-  } else if ([eventTypeName isEqualToString:@"childRemoved"]) {
+  } else if ([eventTypeString isEqualToString:@"childRemoved"]) {
     return FIRDataEventTypeChildRemoved;
-  } else if ([eventTypeName isEqualToString:@"childMoved"]) {
+  } else if ([eventTypeString isEqualToString:@"childMoved"]) {
     return FIRDataEventTypeChildMoved;
   }
   return FIRDataEventTypeValue;

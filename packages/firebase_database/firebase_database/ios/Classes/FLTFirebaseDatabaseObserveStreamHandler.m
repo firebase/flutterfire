@@ -57,10 +57,10 @@
     });
   };
 
-  _databaseHandle =
-      [_databaseQuery observeEventType:[FLTFirebaseDatabaseUtils eventTypeFromArguments:arguments]
-          andPreviousSiblingKeyWithBlock:observeBlock
-                         withCancelBlock:cancelBlock];
+  _databaseHandle = [_databaseQuery
+                    observeEventType:[FLTFirebaseDatabaseUtils eventTypeFromString:eventTypeString]
+      andPreviousSiblingKeyWithBlock:observeBlock
+                     withCancelBlock:cancelBlock];
 
   return nil;
 }
