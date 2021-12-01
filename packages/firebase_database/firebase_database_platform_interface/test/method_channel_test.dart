@@ -549,7 +549,7 @@ void main() {
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': path,
-                'parameters': <String, dynamic>{},
+                'modifiers': [],
                 'eventType': 'value',
               },
             )
