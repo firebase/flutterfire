@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -46,18 +45,24 @@ void main() {
         ValueSource.valueStatic,
       );
 
-      when(mockRemoteConfigPlatform.instanceFor(
-              app: anyNamed('app'),
-              pluginConstants: anyNamed('pluginConstants')))
-          .thenAnswer((_) => mockRemoteConfigPlatform);
+      when(
+        mockRemoteConfigPlatform.instanceFor(
+          app: anyNamed('app'),
+          pluginConstants: anyNamed('pluginConstants'),
+        ),
+      ).thenAnswer((_) => mockRemoteConfigPlatform);
 
-      when(mockRemoteConfigPlatform.delegateFor(
-        app: anyNamed('app'),
-      )).thenAnswer((_) => mockRemoteConfigPlatform);
+      when(
+        mockRemoteConfigPlatform.delegateFor(
+          app: anyNamed('app'),
+        ),
+      ).thenAnswer((_) => mockRemoteConfigPlatform);
 
-      when(mockRemoteConfigPlatform.setInitialValues(
-              remoteConfigValues: anyNamed('remoteConfigValues')))
-          .thenAnswer((_) => mockRemoteConfigPlatform);
+      when(
+        mockRemoteConfigPlatform.setInitialValues(
+          remoteConfigValues: anyNamed('remoteConfigValues'),
+        ),
+      ).thenAnswer((_) => mockRemoteConfigPlatform);
 
       when(mockRemoteConfigPlatform.lastFetchTime)
           .thenReturn(mockLastFetchTime);
@@ -134,7 +139,8 @@ void main() {
         );
         await remoteConfig.setConfigSettings(remoteConfigSettings);
         verify(
-            mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings));
+          mockRemoteConfigPlatform.setConfigSettings(remoteConfigSettings),
+        );
       });
     });
 
@@ -249,7 +255,10 @@ class MockFirebaseRemoteConfig extends Mock
   FirebaseRemoteConfigPlatform setInitialValues({Map? remoteConfigValues}) {
     return super.noSuchMethod(
       Invocation.method(
-          #setInitialValues, [], {#remoteConfigValues: remoteConfigValues}),
+        #setInitialValues,
+        [],
+        {#remoteConfigValues: remoteConfigValues},
+      ),
       returnValue: TestFirebaseRemoteConfigPlatform(),
       returnValueForMissingStub: TestFirebaseRemoteConfigPlatform(),
     );
@@ -257,30 +266,38 @@ class MockFirebaseRemoteConfig extends Mock
 
   @override
   Future<bool> activate() {
-    return super.noSuchMethod(Invocation.method(#activate, []),
-        returnValue: Future<bool>.value(true),
-        returnValueForMissingStub: Future<bool>.value(true));
+    return super.noSuchMethod(
+      Invocation.method(#activate, []),
+      returnValue: Future<bool>.value(true),
+      returnValueForMissingStub: Future<bool>.value(true),
+    );
   }
 
   @override
   Future<void> ensureInitialized() {
-    return super.noSuchMethod(Invocation.method(#ensureInitialized, []),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#ensureInitialized, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
   Future<void> fetch() {
-    return super.noSuchMethod(Invocation.method(#fetch, []),
-        returnValue: Future<void>.value(),
-        returnValueForMissingStub: Future<void>.value());
+    return super.noSuchMethod(
+      Invocation.method(#fetch, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value(),
+    );
   }
 
   @override
   Future<bool> fetchAndActivate() {
-    return super.noSuchMethod(Invocation.method(#fetchAndActivate, []),
-        returnValue: Future<bool>.value(true),
-        returnValueForMissingStub: Future<bool>.value(true));
+    return super.noSuchMethod(
+      Invocation.method(#fetchAndActivate, []),
+      returnValue: Future<bool>.value(true),
+      returnValueForMissingStub: Future<bool>.value(true),
+    );
   }
 
   @override
@@ -409,8 +426,9 @@ class TestFirebaseRemoteConfigPlatform extends FirebaseRemoteConfigPlatform {
   }
 
   @override
-  FirebaseRemoteConfigPlatform setInitialValues(
-      {Map<dynamic, dynamic>? remoteConfigValues}) {
+  FirebaseRemoteConfigPlatform setInitialValues({
+    Map<dynamic, dynamic>? remoteConfigValues,
+  }) {
     return this;
   }
 }

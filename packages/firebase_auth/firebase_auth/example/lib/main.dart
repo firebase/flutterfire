@@ -1,31 +1,20 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/firebase_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import './register_page.dart';
 import './signin_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-    authDomain: 'react-native-firebase-testing.firebaseapp.com',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    projectId: 'react-native-firebase-testing',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    messagingSenderId: '448618578101',
-    appId: '1:448618578101:web:0b650370bb29e29cac3efc',
-    measurementId: 'G-F79DJ0VFGS',
-    iosClientId:
-        '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-  ));
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   runApp(AuthExampleApp());
 }
