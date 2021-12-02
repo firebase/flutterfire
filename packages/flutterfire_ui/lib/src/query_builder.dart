@@ -109,7 +109,11 @@ class _FirestoreQueryBuilderState<Document>
   );
 
   void _fetchNextPage() {
-    if (_snapshot.isFetchingMore) return;
+    if (_snapshot.isFetching ||
+        !_snapshot.hasMore ||
+        _snapshot.isFetchingMore) {
+      return;
+    }
 
     _pageCount++;
     _listenQuery(nextPage: true);
@@ -311,7 +315,6 @@ class _QueryBuilderSnapshot<Document>
     Object? isFetching = const _Sentinel(),
     Object? isFetchingMore = const _Sentinel(),
     Object? stackTrace = const _Sentinel(),
-    Object? fetchMore = const _Sentinel(),
   }) {
     T valueAs<T>(Object? maybeNewValue, T previousValue) {
       if (maybeNewValue == const _Sentinel()) {
@@ -329,7 +332,7 @@ class _QueryBuilderSnapshot<Document>
       isFetching: valueAs(isFetching, this.isFetching),
       isFetchingMore: valueAs(isFetchingMore, this.isFetchingMore),
       stackTrace: valueAs(stackTrace, this.stackTrace),
-      fetchMore: valueAs(fetchMore, this.fetchMore),
+      fetchMore: fetchMore,
     );
   }
 }
