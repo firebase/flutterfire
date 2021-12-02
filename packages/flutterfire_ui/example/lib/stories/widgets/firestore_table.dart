@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 
-final countriesCollection = FirebaseFirestore.instance.collection('firestore');
+final countriesCollection =
+    FirebaseFirestore.instance.collection('firestore-example-app');
 
 class FirestoreTableStory extends StoryWidget {
   const FirestoreTableStory({Key? key})
@@ -13,14 +14,13 @@ class FirestoreTableStory extends StoryWidget {
   Widget build(StoryElement context) {
     return FirestoreTable(
       query: countriesCollection,
-      onError: (err, stack) {},
       columnLabels: const {
-        'bool': Text('is developed'),
-        'foo': Text('Total population'),
-        'geo': Text('Country UID'),
-        'name': Text('Independence date'),
-        'null': Text('Towns'),
-        'ref': Text('ref'),
+        'title': Text('Title'),
+        'runtime': Text('Run time'),
+        'rated': Text('Rated'),
+        'year': Text('Creation date (year)'),
+        'poster': Text('Poster URL'),
+        'likes': Text('Likes'),
       },
     );
   }
