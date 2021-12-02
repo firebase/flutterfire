@@ -1,19 +1,12 @@
 package io.flutter.plugins.firebase.installations.firebase_installations;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.InstallationTokenResult;
-import com.google.firebase.installations.internal.FidListener;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
@@ -23,26 +16,25 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
-/**
- * FirebaseInstallationsPlugin
- */
-public class FirebaseInstallationsPlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+/** FirebaseInstallationsPlugin */
+public class FirebaseInstallationsPlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_installations";
   private final Map<EventChannel, EventChannel.StreamHandler> streamHandlers = new HashMap<>();
 
-  @Nullable
-  private BinaryMessenger messenger;
+  @Nullable private BinaryMessenger messenger;
 
   private MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel =
-      new MethodChannel(binaryMessenger, METHOD_CHANNEL_NAME);
+    final MethodChannel channel = new MethodChannel(binaryMessenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
     this.messenger = binaryMessenger;
     return channel;
   }
-
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
@@ -59,7 +51,6 @@ public class FirebaseInstallationsPlugin implements FlutterFirebasePlugin, Flutt
     messenger = null;
 
     removeEventListeners();
-
   }
 
   private FirebaseInstallations getInstallations(Map<String, Object> arguments) {
@@ -74,31 +65,32 @@ public class FirebaseInstallationsPlugin implements FlutterFirebasePlugin, Flutt
 
   private Task<String> getToken(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseInstallations firebaseInstallations = getInstallations(arguments);
-        Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-        InstallationTokenResult tokenResult = Tasks.await(firebaseInstallations.getToken(forceRefresh));
-        return tokenResult.getToken();
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+          InstallationTokenResult tokenResult =
+              Tasks.await(firebaseInstallations.getToken(forceRefresh));
+          return tokenResult.getToken();
+        });
   }
 
   private Task<String> registerTokenListener(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-        FirebaseInstallations firebaseInstallations = getInstallations(arguments);
+        cachedThreadPool,
+        () -> {
+          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+          FirebaseInstallations firebaseInstallations = getInstallations(arguments);
 
-        TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseInstallations);
+          TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseInstallations);
 
-        final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-        final EventChannel channel = new EventChannel(messenger, name);
-        channel.setStreamHandler(handler);
-        streamHandlers.put(channel, handler);
+          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
 
-        return name;
-      });
+          return name;
+        });
   }
 
   private Task<Void> deleteId(Map<String, Object> arguments) {
@@ -126,21 +118,20 @@ public class FirebaseInstallationsPlugin implements FlutterFirebasePlugin, Flutt
       default:
         result.notImplemented();
         return;
-
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(
-            "firebase_installations",
-            exception != null ? exception.getMessage() : null,
-            getExceptionDetails(exception));
-        }
-      });
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            result.error(
+                "firebase_installations",
+                exception != null ? exception.getMessage() : null,
+                getExceptionDetails(exception));
+          }
+        });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
@@ -153,7 +144,6 @@ public class FirebaseInstallationsPlugin implements FlutterFirebasePlugin, Flutt
     }
     return details;
   }
-
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
