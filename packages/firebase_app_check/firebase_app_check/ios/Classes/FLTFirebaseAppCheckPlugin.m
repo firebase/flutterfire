@@ -40,12 +40,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  // Only a single method implemented.
-  if (![@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
-    flutterResult(FlutterMethodNotImplemented);
-    return;
-  }
-
+  
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
@@ -59,7 +54,16 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-  [self activate:call.arguments withMethodCallResult:methodCallResult];
+  // Only a single method implemented.
+  if ([@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
+    [self activate:call.arguments withMethodCallResult:methodCallResult];
+  } else if([@"FirebaseAppCheck#getToken" isEqualToString:call.method]){
+    [self getToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if([@"FirebaseAppCheck#setTokenAutoRefreshEnabled" isEqualToString:call.method]){
+    [self setTokenAutoRefreshEnabled:call.arguments withMethodCallResult:methodCallResult];
+  } else {
+    flutterResult(FlutterMethodNotImplemented);
+  }
 }
 
 #pragma mark - Firebase Functions API
@@ -77,6 +81,29 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   //    provider = [FIRDeviceCheckProviderFactory alloc];
   //  }
   //  [FIRAppCheck setAppCheckProviderFactory:provider];
+  result.success(nil);
+}
+
+- (void) getToken:(id) arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
+  bool forceRefresh = arguments[@"forceRefresh"];
+  [appCheck tokenForcingRefresh:forceRefresh completion:^(FIRAppCheckToken * _Nullable token, NSError * _Nullable error) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    }
+    
+    NSMutableDictionary *response = [NSMutableDictionary dictionary];
+    
+    response[@"token"] = token;
+    result.success(response);
+  }];
+}
+//setTokenAutoRefreshEnabled
+
+- (void) setTokenAutoRefreshEnabled:(id) arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
+  bool isTokenAutoRefreshEnabled = arguments[@"isTokenAutoRefreshEnabled"];
+  appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled;
   result.success(nil);
 }
 
@@ -100,6 +127,16 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFLTFirebaseAppCheckChannelName;
+}
+
+#pragma mark - Utilities
+
+- (FIRAppCheck *_Nullable)getFIRAppCheckFromArguments:(NSDictionary *)arguments {
+  NSString *appNameDart = arguments[@"appName"];
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  FIRAppCheck *appCheck = [FIRAppCheck appCheckWithApp:app];
+
+  return appCheck;
 }
 
 @end
