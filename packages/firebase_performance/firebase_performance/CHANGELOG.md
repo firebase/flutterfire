@@ -1,23 +1,25 @@
 ## UNRELEASED
 
-As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Performance rework changes.
-
-Overall, Firebase Performance has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+The Firebase Performance plugin has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.
 
-- **`FirebasePerformance`**
+- General
+ - Collecting metric and attribute data was previosuly an asynchronous task. The API has been reworked to better reflect other Firebase APIs, whereby
+   setting such data is now a synchronous task. Once a trace or HTTP metric stops, data will be sent to the Firebase services in a single operation.
+   Because of this, breaking changes are introduced to support the new API.
 
-- **BREAKING**: `HttpMetric().putAttribute()` method is now synchronous.
-- **BREAKING**: `HttpMetric().removeAttribute()` method is now synchronous.
-- **BREAKING**: `HttpMetric().getAttribute()` method is now synchronous.
-- **BREAKING**: `HttpMetric().getAttributes()` method is now synchronous.
-- **BREAKING**: `Trace().putAttribute()` method is now synchronous.
-- **BREAKING**: `Trace().removeAttribute()` method is now synchronous.
-- **BREAKING**: `Trace().getAttribute()` method is now synchronous.
-- **BREAKING**: `Trace().getAttributes()` method is now synchronous.
-- **BREAKING**: `Trace().incrementMetric()` method is now synchronous.
-- **BREAKING**: `Trace().setMetric()` method is now synchronous.
-- **BREAKING**: `Trace().getMetric()` method is now synchronous.
+- **`FirebasePerformance`**
+  - **BREAKING**: `HttpMetric().putAttribute()` method is now synchronous.
+  - **BREAKING**: `HttpMetric().removeAttribute()` method is now synchronous.
+  - **BREAKING**: `HttpMetric().getAttribute()` method is now synchronous.
+  - **BREAKING**: `HttpMetric().getAttributes()` method is now synchronous.
+  - **BREAKING**: `Trace().putAttribute()` method is now synchronous.
+  - **BREAKING**: `Trace().removeAttribute()` method is now synchronous.
+  - **BREAKING**: `Trace().getAttribute()` method is now synchronous.
+  - **BREAKING**: `Trace().getAttributes()` method is now synchronous.
+  - **BREAKING**: `Trace().incrementMetric()` method is now synchronous.
+  - **BREAKING**: `Trace().setMetric()` method is now synchronous.
+  - **BREAKING**: `Trace().getMetric()` method is now synchronous.
 
 ## 0.7.1+4
 
