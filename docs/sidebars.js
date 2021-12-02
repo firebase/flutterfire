@@ -105,6 +105,7 @@ module.exports = {
     ],
     "Performance Monitoring": [
       "performance/overview",
+      "performance/usage",
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],
