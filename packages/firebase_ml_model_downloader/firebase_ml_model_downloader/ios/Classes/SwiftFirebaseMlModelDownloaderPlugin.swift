@@ -53,7 +53,6 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
                 
                 errorDetails["code"] = code ?? self.mapErrorCodes(error:error! as NSError)
                 errorDetails["message"] = message ?? error?.localizedDescription ?? "An unknown error has occurred.";
-                errorDetails["additionalData"] = details ?? [AnyHashable : Any]()
                 errorDetails["additionalData"] = details ?? ["code": errorDetails["code"], "message": errorDetails["message"]]
                 
                 if(code == "unknown") {
