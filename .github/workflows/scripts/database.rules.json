@@ -28,6 +28,21 @@
           "value"
         ]
       }
+    },
+    "/tests": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": [
+        ".value",
+        "number"
+      ],
+      "ordered": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": [
+          "value"
+        ]
+      }
     }
   }
 }

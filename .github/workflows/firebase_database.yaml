@@ -62,6 +62,7 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-macos-desktop
           sudo npm i -g firebase-tools
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
