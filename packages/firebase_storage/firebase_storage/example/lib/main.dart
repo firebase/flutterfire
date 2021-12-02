@@ -20,6 +20,9 @@ Future<void> main() async {
       projectId: 'react-native-firebase-testing',
       storageBucket: 'react-native-firebase-testing.appspot.com',
       databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+      iosClientId:
+          '448618578101-dgsgte6oqc377gdf80gbb8ovtjbagi49.apps.googleusercontent.com',
+      iosBundleId: 'io.flutter.plugins.firebase.storage.example',
     ),
   );
   runApp(StorageExampleApp());
@@ -69,11 +72,12 @@ class _TaskManager extends State<TaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   /// The user selects a file, and the task is added to the list.
-  Future<firebase_storage.UploadTask> uploadFile(XFile file) async {
+  Future<firebase_storage.UploadTask?> uploadFile(XFile? file) async {
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No file was selected'),
       ));
+
       return null;
     }
 
@@ -126,7 +130,8 @@ class _TaskManager extends State<TaskManager> {
         break;
       case UploadType.file:
         final file = await ImagePicker().pickImage(source: ImageSource.gallery);
-        firebase_storage.UploadTask task = await uploadFile(file);
+        firebase_storage.UploadTask? task = await uploadFile(file);
+
         if (task != null) {
           setState(() {
             _uploadTasks = [..._uploadTasks, task];
