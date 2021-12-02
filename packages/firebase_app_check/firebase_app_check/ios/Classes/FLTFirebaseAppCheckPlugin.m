@@ -40,7 +40,6 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
@@ -54,12 +53,12 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-  // Only a single method implemented.
+
   if ([@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
     [self activate:call.arguments withMethodCallResult:methodCallResult];
-  } else if([@"FirebaseAppCheck#getToken" isEqualToString:call.method]){
+  } else if ([@"FirebaseAppCheck#getToken" isEqualToString:call.method]) {
     [self getToken:call.arguments withMethodCallResult:methodCallResult];
-  } else if([@"FirebaseAppCheck#setTokenAutoRefreshEnabled" isEqualToString:call.method]){
+  } else if ([@"FirebaseAppCheck#setTokenAutoRefreshEnabled" isEqualToString:call.method]) {
     [self setTokenAutoRefreshEnabled:call.arguments withMethodCallResult:methodCallResult];
   } else {
     flutterResult(FlutterMethodNotImplemented);
@@ -84,23 +83,25 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   result.success(nil);
 }
 
-- (void) getToken:(id) arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)getToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
   bool forceRefresh = arguments[@"forceRefresh"];
-  [appCheck tokenForcingRefresh:forceRefresh completion:^(FIRAppCheckToken * _Nullable token, NSError * _Nullable error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    }
-    
-    NSMutableDictionary *response = [NSMutableDictionary dictionary];
-    
-    response[@"token"] = token;
-    result.success(response);
-  }];
-}
-//setTokenAutoRefreshEnabled
+  [appCheck tokenForcingRefresh:forceRefresh
+                     completion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {
+                       if (error != nil) {
+                         result.error(nil, nil, nil, error);
+                       }
 
-- (void) setTokenAutoRefreshEnabled:(id) arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+                       NSMutableDictionary *response = [NSMutableDictionary dictionary];
+
+                       response[@"token"] = token;
+                       result.success(response);
+                     }];
+}
+// setTokenAutoRefreshEnabled
+
+- (void)setTokenAutoRefreshEnabled:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
   bool isTokenAutoRefreshEnabled = arguments[@"isTokenAutoRefreshEnabled"];
   appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled;
