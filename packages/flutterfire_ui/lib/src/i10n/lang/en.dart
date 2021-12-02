@@ -109,6 +109,12 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String invalidCountryCode;
   @override
   final String chooseACountry;
+  @override
+  final String enableMoreSignInMethods;
+  @override
+  final String signInMethods;
+  @override
+  final String provideEmail;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -169,5 +175,8 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.codeRequiredErrorText = 'Country code is required',
     this.invalidCountryCode = 'Invalid code',
     this.chooseACountry = 'Choose a country',
+    this.enableMoreSignInMethods = 'Enable more sign in methods',
+    this.signInMethods = 'Sign in methods',
+    this.provideEmail = 'Provide your email and password',
   });
 }

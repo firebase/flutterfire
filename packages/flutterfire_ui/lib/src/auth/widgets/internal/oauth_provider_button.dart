@@ -327,7 +327,7 @@ class OAuthProviderIconButton extends StatelessWidget
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     if (isCupertino) {
-      return AuthFlowBuilder(
+      return AuthFlowBuilder<OAuthController>(
         auth: auth,
         action: action,
         config: providerConfig,
@@ -354,7 +354,7 @@ class OAuthProviderIconButton extends StatelessWidget
       );
     }
 
-    return AuthFlowBuilder(
+    return AuthFlowBuilder<OAuthController>(
       auth: auth,
       action: action,
       config: providerConfig,
@@ -377,13 +377,17 @@ class OAuthProviderIconButton extends StatelessWidget
             Positioned.fill(
               child: Material(
                 color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    if (onTap != null) {
-                      onTap!();
-                    } else {
-                      signIn(context);
-                    }
+                child: Builder(
+                  builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        if (onTap != null) {
+                          onTap!();
+                        } else {
+                          signIn(context);
+                        }
+                      },
+                    );
                   },
                 ),
               ),

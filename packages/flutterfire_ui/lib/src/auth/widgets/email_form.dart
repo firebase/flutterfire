@@ -135,7 +135,8 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           ),
         ),
       ],
-      if (widget.action == AuthAction.signUp) ...[
+      if (widget.action == AuthAction.signUp ||
+          widget.action == AuthAction.link) ...[
         spacer,
         PasswordInput(
           focusNode: confirmPasswordFocusNode,

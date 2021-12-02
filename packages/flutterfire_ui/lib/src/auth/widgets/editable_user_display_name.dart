@@ -63,16 +63,16 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
         offset: Offset(0, _editing ? -12 : 0),
         child: CupertinoButton(
           onPressed: _editing ? _finishEditing : _onEdit,
-          child: Icon(_editing
-              ? CupertinoIcons.check_mark_circled
-              : CupertinoIcons.pen),
+          child: Icon(
+            _editing ? CupertinoIcons.check_mark_circled : CupertinoIcons.pen,
+          ),
         ),
       );
     } else {
       iconButton = IconButton(
-        icon: const Icon(Icons.check),
+        icon: Icon(_editing ? Icons.check : Icons.edit),
         color: theme.colorScheme.secondary,
-        onPressed: _finishEditing,
+        onPressed: _editing ? _finishEditing : _onEdit,
       );
     }
 
@@ -97,7 +97,7 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
         onSubmitted: (_) => _finishEditing(),
       );
     } else {
-      TextField(
+      textField = TextField(
         autofocus: true,
         controller: ctrl,
         decoration: InputDecoration(hintText: l.name, labelText: l.name),

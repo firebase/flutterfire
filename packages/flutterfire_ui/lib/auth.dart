@@ -55,6 +55,7 @@ export 'src/auth/widgets/password_input.dart';
 export 'src/auth/widgets/forgot_password_button.dart';
 export 'src/auth/widgets/reauthenticate_dialog.dart';
 export 'src/auth/widgets/different_method_sign_in_dialog.dart';
+export 'src/auth/widgets/email_sign_up_dialog.dart';
 
 export 'src/auth/views/login_view.dart';
 export 'src/auth/views/phone_input_view.dart';

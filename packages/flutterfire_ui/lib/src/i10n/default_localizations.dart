@@ -59,6 +59,9 @@ abstract class FirebaseUILocalizationLabels {
   String get codeRequiredErrorText;
   String get invalidCountryCode;
   String get chooseACountry;
+  String get enableMoreSignInMethods;
+  String get signInMethods;
+  String get provideEmail;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{
