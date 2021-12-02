@@ -55,82 +55,84 @@
   return [database referenceWithPath:arguments[@"path"]];
 }
 
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyLimitModifier:(id)modifier {
+  NSString *name = modifier[@"name"];
+  NSNumber *limit = modifier[@"limit"];
+  if ([name isEqualToString:@"limitToFirst"]) {
+    return [query queryLimitedToFirst:limit.unsignedIntValue];
+  }
+  if ([name isEqualToString:@"limitToLast"]) {
+    return [query queryLimitedToLast:limit.unsignedIntValue];
+  }
+  return query;
+}
+
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyOrderModifier:(id)modifier {
+  NSString *name = [modifier valueForKey:@"name"];
+  if ([name isEqualToString:@"orderByKey"]) {
+    return [query queryOrderedByKey];
+  }
+  if ([name isEqualToString:@"orderByValue"]) {
+    return [query queryOrderedByValue];
+  }
+  if ([name isEqualToString:@"orderByPriority"]) {
+    return [query queryOrderedByPriority];
+  }
+  if ([name isEqualToString:@"orderByChild"]) {
+    NSString *path = [modifier valueForKey:@"path"];
+    return [query queryOrderedByChild:path];
+  }
+  return query;
+}
+
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyCursorModifier:(id)modifier {
+  NSString *name = [modifier valueForKey:@"name"];
+  NSString *key = [modifier valueForKey:@"key"];
+  id value = [modifier valueForKey:@"value"];
+  if ([name isEqualToString:@"startAt"]) {
+    if (key != nil) {
+      return [query queryStartingAtValue:value childKey:key];
+    } else {
+      return [query queryStartingAtValue:value];
+    }
+  }
+  if ([name isEqualToString:@"startAfter"]) {
+    if (key != nil) {
+      return [query queryStartingAfterValue:value childKey:key];
+    } else {
+      return [query queryStartingAfterValue:value];
+    }
+  }
+  if ([name isEqualToString:@"endAt"]) {
+    if (key != nil) {
+      return [query queryEndingAtValue:value childKey:key];
+    } else {
+      return [query queryEndingAtValue:value];
+    }
+  }
+  if ([name isEqualToString:@"endBefore"]) {
+    if (key != nil) {
+      return [query queryEndingBeforeValue:value childKey:key];
+    } else {
+      return [query queryEndingBeforeValue:value];
+    }
+  }
+  return query;
+}
+
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments {
-  // TODO this is now wrong, modifiers is now an Array
   FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
-  NSDictionary *parameters = arguments[@"parameters"];
-
-  NSString *orderBy = parameters[@"orderBy"];
-  if ([orderBy isEqualToString:@"child"]) {
-    query = [query queryOrderedByChild:parameters[@"orderByChildKey"]];
-  } else if ([orderBy isEqualToString:@"key"]) {
-    query = [query queryOrderedByKey];
-  } else if ([orderBy isEqualToString:@"value"]) {
-    query = [query queryOrderedByValue];
-  } else if ([orderBy isEqualToString:@"priority"]) {
-    query = [query queryOrderedByPriority];
-  }
-
-  id startAt = parameters[@"startAt"];
-  if (startAt != nil) {
-    id startAtKey = parameters[@"startAtKey"];
-    if (startAtKey != nil) {
-      query = [query queryStartingAtValue:startAt childKey:startAtKey];
-    } else {
-      query = [query queryStartingAtValue:startAt];
+  NSArray<NSDictionary *> *modifiers = arguments[@"modifiers"];
+  for (NSDictionary *modifier in modifiers) {
+    NSString *type = [modifier valueForKey:@"type"];
+    if ([type isEqualToString:@"limit"]) {
+      query = [self databaseQuery:query applyLimitModifier:modifier];
+    } else if ([type isEqualToString:@"cursor"]) {
+      query = [self databaseQuery:query applyCursorModifier:modifier];
+    } else if ([type isEqualToString:@"orderBy"]) {
+      query = [self databaseQuery:query applyOrderModifier:modifier];
     }
   }
-
-  id startAfter = parameters[@"startAfter"];
-  if (startAfter != nil) {
-    id startAfterKey = parameters[@"startAfterKey"];
-    if (startAfterKey != nil) {
-      query = [query queryStartingAfterValue:startAfter childKey:startAfterKey];
-    } else {
-      query = [query queryStartingAfterValue:startAfter];
-    }
-  }
-
-  id endAt = parameters[@"endAt"];
-  if (endAt != nil) {
-    id endAtKey = parameters[@"endAtKey"];
-    if (endAtKey != nil) {
-      query = [query queryEndingAtValue:endAt childKey:endAtKey];
-    } else {
-      query = [query queryEndingAtValue:endAt];
-    }
-  }
-
-  id endBefore = parameters[@"endBefore"];
-  if (endBefore != nil) {
-    id endBeforeKey = parameters[@"endBeforeKey"];
-    if (endBeforeKey != nil) {
-      query = [query queryEndingBeforeValue:endBefore childKey:endBeforeKey];
-    } else {
-      query = [query queryEndingBeforeValue:endBefore];
-    }
-  }
-
-  id equalTo = parameters[@"equalTo"];
-  if (equalTo != nil) {
-    id equalToKey = parameters[@"equalToKey"];
-    if (equalToKey != nil) {
-      query = [query queryEqualToValue:equalTo childKey:equalToKey];
-    } else {
-      query = [query queryEqualToValue:equalTo];
-    }
-  }
-
-  NSNumber *limitToFirst = parameters[@"limitToFirst"];
-  if (limitToFirst != nil) {
-    query = [query queryLimitedToFirst:limitToFirst.unsignedIntValue];
-  }
-
-  NSNumber *limitToLast = parameters[@"limitToLast"];
-  if (limitToLast != nil) {
-    query = [query queryLimitedToLast:limitToLast.unsignedIntValue];
-  }
-
   return query;
 }
 
