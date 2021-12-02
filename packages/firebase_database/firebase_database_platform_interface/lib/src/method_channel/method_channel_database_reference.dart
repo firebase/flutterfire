@@ -79,7 +79,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#set',
         database.getChannelArguments({
           'path': path,
-          'value': transformValue(value),
+          if (value != null) 'value': transformValue(value),
         }),
       );
     } catch (e, s) {
@@ -94,8 +94,8 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#setWithPriority',
         database.getChannelArguments({
           'path': path,
-          'value': transformValue(value),
-          'priority': priority,
+          if (value != null) 'value': transformValue(value),
+          if (priority != null) 'priority': priority,
         }),
       );
     } catch (e, s) {
@@ -125,7 +125,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         'DatabaseReference#setPriority',
         database.getChannelArguments({
           'path': path,
-          'priority': priority,
+          if (priority != null) 'priority': priority,
         }),
       );
     } catch (e, s) {

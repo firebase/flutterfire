@@ -213,7 +213,6 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': 'bar',
                 'value': value,
-                'priority': null,
               },
             ),
             isMethodCall(
@@ -367,7 +366,6 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': 'por',
                 'value': value,
-                'priority': null,
               },
             ),
           ],
@@ -419,7 +417,6 @@ void main() {
                 'appName': app.name,
                 'databaseURL': databaseURL,
                 'path': 'foo',
-                'value': null,
               },
             ),
           ],

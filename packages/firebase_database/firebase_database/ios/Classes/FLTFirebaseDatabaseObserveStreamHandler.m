@@ -28,7 +28,7 @@
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
                                        eventSink:(nonnull FlutterEventSink)events {
-  __block NSString *eventTypeString = arguments[@"eventType"];
+  NSString *eventTypeString = arguments[@"eventType"];
   id observeBlock = ^(FIRDataSnapshot *snapshot, NSString *previousChildKey) {
     NSMutableDictionary *eventDictionary = [@{
       @"eventType" : eventTypeString,

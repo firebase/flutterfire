@@ -54,7 +54,7 @@ class MethodChannelDatabase extends DatabasePlatform {
           }
 
           return {
-            'value': transformValue(value),
+            if (value != null) 'value': transformValue(value),
             'aborted': aborted,
             'exception': exception,
           };
@@ -82,7 +82,7 @@ class MethodChannelDatabase extends DatabasePlatform {
   Map<String, Object?> getChannelArguments([Map<String, Object?>? other]) {
     return {
       'appName': app!.name,
-      'databaseURL': databaseURL,
+      if (databaseURL != null) 'databaseURL': databaseURL,
       if (_persistenceEnabled != null)
         'persistenceEnabled': _persistenceEnabled,
       if (_cacheSizeBytes != null) 'cacheSizeBytes': _cacheSizeBytes,

@@ -23,7 +23,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         'OnDisconnect#set',
         database.getChannelArguments({
           'path': ref.path,
-          'value': transformValue(value),
+          if (value != null) 'value': transformValue(value),
         }),
       );
     } catch (e, s) {
@@ -39,8 +39,8 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         database.getChannelArguments(
           {
             'path': ref.path,
-            'value': transformValue(value),
-            'priority': priority
+            if (value != null) 'value': transformValue(value),
+            if (priority != null) 'priority': priority
           },
         ),
       );

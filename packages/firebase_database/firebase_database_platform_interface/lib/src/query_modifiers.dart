@@ -207,8 +207,8 @@ class _CursorModifier implements QueryModifier {
     return <String, dynamic>{
       'type': 'cursor',
       'name': name,
-      'value': value,
-      'key': key
+      if (value != null) 'value': value,
+      if (key != null) 'key': key,
     };
   }
 }
@@ -237,6 +237,10 @@ class OrderModifier implements QueryModifier {
 
   @override
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'type': 'orderBy', 'name': name, 'path': path};
+    return <String, dynamic>{
+      'type': 'orderBy',
+      'name': name,
+      if (path != null) 'path': path,
+    };
   }
 }

@@ -147,7 +147,10 @@ void main() {
         expect(
           instance.toList(),
           equals([
-            {'type': 'orderBy', 'name': 'orderByPriority', 'path': null}
+            {
+              'type': 'orderBy',
+              'name': 'orderByPriority',
+            }
           ]),
         );
       });

@@ -224,7 +224,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 
 - (void)databaseRunTransaction:(id)arguments
           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *transactionKey = arguments[@"transactionKey"];
+  int transactionKey = [arguments[@"transactionKey"] intValue];
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
 
@@ -249,7 +249,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
         __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
         [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
                                  arguments:@{
-                                   @"transactionKey" : transactionKey,
+                                   @"transactionKey" : @(transactionKey),
                                    @"snapshot" : @{
                                      @"key" : currentData.key,
                                      @"value" : currentData.value,
@@ -357,13 +357,13 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   @synchronized(_listenerCounts) {
     NSNumber *currentListenersCount = _listenerCounts[eventChannelNamePrefix];
     newListenersCount = currentListenersCount == nil ? 1 : [currentListenersCount intValue] + 1;
-    _listenerCounts[eventChannelNamePrefix] = [NSNumber numberWithInt:newListenersCount];
+    _listenerCounts[eventChannelNamePrefix] = @(newListenersCount);
   }
   NSString *eventChannelName =
       [NSString stringWithFormat:@"%@#%d", eventChannelNamePrefix, newListenersCount];
 
-  __block FlutterEventChannel *eventChannel =
-      [FlutterEventChannel eventChannelWithName:eventChannelName binaryMessenger:_binaryMessenger];
+  FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
+                                                                binaryMessenger:_binaryMessenger];
   __weak FLTFirebaseDatabasePlugin *weakSelf = self;
   FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
       [[FLTFirebaseDatabaseObserveStreamHandler alloc]
@@ -375,9 +375,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
                      NSNumber *currentListenersCount =
                          strongSelf->_listenerCounts[eventChannelNamePrefix];
                      strongSelf->_listenerCounts[eventChannelNamePrefix] =
-                         [NSNumber numberWithInt:currentListenersCount == nil
-                                                     ? 0
-                                                     : [currentListenersCount intValue] - 1];
+                         @(currentListenersCount == nil ? 0 : [currentListenersCount intValue] - 1);
                    }
                  }];
   [eventChannel setStreamHandler:streamHandler];
