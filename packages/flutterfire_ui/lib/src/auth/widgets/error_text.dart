@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
@@ -42,7 +43,15 @@ class ErrorText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).errorColor;
+    late Color color;
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+    if (isCupertino) {
+      color = CupertinoColors.destructiveRed;
+    } else {
+      color = Theme.of(context).errorColor;
+    }
+
     final l = FirebaseUILocalizations.labelsOf(context);
     String text = l.unknownError;
 

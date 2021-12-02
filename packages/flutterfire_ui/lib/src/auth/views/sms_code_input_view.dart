@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import '../widgets/internal/universal_button.dart';
+
 typedef SMSCodeSubmitCallback = void Function(String smsCode);
 
 class SMSCodeInputView extends StatefulWidget {
@@ -66,13 +68,13 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
               const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.all(8),
-                child: OutlinedButton(
+                child: UniversalButton(
                   onPressed: () {
                     final code = key.currentState!.code;
                     if (code.length < 6) return;
                     submit(code, ctrl);
                   },
-                  child: Text(l.verifyCodeButtonText),
+                  text: l.verifyCodeButtonText,
                 ),
               ),
             ],

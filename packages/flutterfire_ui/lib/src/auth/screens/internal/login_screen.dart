@@ -1,6 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutterfire_ui/src/auth/widgets/internal/universal_scaffold.dart';
 
 import '../../configs/provider_configuration.dart';
 import '../../widgets/internal/keyboard_appearence_listener.dart';
@@ -63,6 +64,8 @@ class LoginScreen extends StatefulWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
   const LoginScreen({
     Key? key,
@@ -76,6 +79,8 @@ class LoginScreen extends StatefulWidget {
     this.desktopLayoutDirection = TextDirection.ltr,
     this.email,
     this.showAuthActionSwitch,
+    this.subtitleBuilder,
+    this.footerBuilder,
   }) : super(key: key);
 
   @override
@@ -109,69 +114,74 @@ class _LoginScreenState extends State<LoginScreen> {
           oauthButtonVariant: widget.oauthButtonVariant,
           email: widget.email,
           showAuthActionSwitch: widget.showAuthActionSwitch,
+          subtitleBuilder: widget.subtitleBuilder,
+          footerBuilder: widget.footerBuilder,
         ),
       ),
     );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.biggest.width > 800) {
-            return Row(
-              textDirection: widget.desktopLayoutDirection,
-              children: <Widget>[
-                if (widget.sideBuilder != null)
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return widget.sideBuilder!(context, constraints);
-                      },
-                    ),
-                  ),
+
+    final body = LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.biggest.width > 800) {
+          return Row(
+            textDirection: widget.desktopLayoutDirection,
+            children: <Widget>[
+              if (widget.sideBuilder != null)
                 Expanded(
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      Center(child: loginContent),
-                    ],
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return widget.sideBuilder!(context, constraints);
+                    },
                   ),
-                )
-              ],
-            );
-          } else {
-            return Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: KeyboardAppearenceListener(
-                listener: _onKeyboardPositionChanged,
-                child: CustomScrollView(
-                  controller: ctrl,
-                  slivers: [
-                    if (widget.headerBuilder != null)
-                      SliverPersistentHeader(
-                        delegate: LoginImageSliverDelegate(
-                          maxExtent: widget.headerMaxExtent ??
-                              defaultHeaderImageHeight,
-                          builder: widget.headerBuilder!,
-                        ),
-                      ),
-                    SliverFillViewport(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          return Container(
-                            alignment: Alignment.topCenter,
-                            child: loginContent,
-                          );
-                        },
-                        childCount: 1,
-                      ),
-                    ),
+                ),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Center(child: loginContent),
                   ],
                 ),
+              )
+            ],
+          );
+        } else {
+          return Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: KeyboardAppearenceListener(
+              listener: _onKeyboardPositionChanged,
+              child: CustomScrollView(
+                controller: ctrl,
+                slivers: [
+                  if (widget.headerBuilder != null)
+                    SliverPersistentHeader(
+                      delegate: LoginImageSliverDelegate(
+                        maxExtent:
+                            widget.headerMaxExtent ?? defaultHeaderImageHeight,
+                        builder: widget.headerBuilder!,
+                      ),
+                    ),
+                  SliverFillViewport(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Container(
+                          alignment: Alignment.topCenter,
+                          child: loginContent,
+                        );
+                      },
+                      childCount: 1,
+                    ),
+                  ),
+                ],
               ),
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
+    );
+
+    return UniversalScaffold(
+      body: body,
+      resizeToAvoidBottomInset: false,
     );
   }
 }

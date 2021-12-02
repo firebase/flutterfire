@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
@@ -24,13 +25,15 @@ class FirebaseAuthUIExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase UI demo',
       theme: ThemeData(
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
+        visualDensity: VisualDensity.standard,
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
       ),
+      title: 'Firebase UI demo',
+      debugShowCheckedModeBanner: false,
       locale: const Locale('en'),
       localizationsDelegates: [
         FirebaseUILocalizations.withDefaultOverrides(const LabelOverrides()),

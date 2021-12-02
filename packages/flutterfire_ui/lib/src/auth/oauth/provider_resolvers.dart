@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'oauth_providers.dart';
@@ -49,17 +51,31 @@ String providerIdOf<T extends OAuthProvider>() {
   }
 }
 
-IconData providerIcon<T extends OAuthProvider>() {
-  switch (T) {
-    case Google:
+IconData providerIcon(BuildContext context, String providerId) {
+  final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+  switch (providerId) {
+    case 'google.com':
       return SocialIcons.google;
-    case Apple:
+    case 'apple.com':
       return SocialIcons.apple;
-    case Twitter:
+    case 'twitter.com':
       return SocialIcons.twitter;
-    case Facebook:
+    case 'facebook.com':
       return SocialIcons.facebook;
+    case 'phone':
+      if (isCupertino) {
+        return CupertinoIcons.phone;
+      } else {
+        return Icons.phone;
+      }
+    case 'password':
+      if (isCupertino) {
+        return CupertinoIcons.mail;
+      } else {
+        return Icons.email_outlined;
+      }
     default:
-      throw Exception('Unknown provider: $T');
+      throw Exception('Unknown provider: $providerId');
   }
 }

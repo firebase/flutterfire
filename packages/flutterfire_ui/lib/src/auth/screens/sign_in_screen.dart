@@ -23,6 +23,8 @@ class SignInScreen extends StatelessWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
   const SignInScreen({
     Key? key,
@@ -35,6 +37,8 @@ class SignInScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.showAuthActionSwitch,
     this.email,
+    this.subtitleBuilder,
+    this.footerBuilder,
   }) : super(key: key);
 
   Future<void> _signInWithDifferentProvider(
@@ -74,6 +78,8 @@ class SignInScreen extends StatelessWidget {
         oauthButtonVariant: oauthButtonVariant,
         email: email,
         showAuthActionSwitch: showAuthActionSwitch,
+        subtitleBuilder: subtitleBuilder,
+        footerBuilder: footerBuilder,
       ),
     );
   }

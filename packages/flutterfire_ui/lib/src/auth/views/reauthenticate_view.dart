@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutter/material.dart';
 
 import '../configs/provider_configuration.dart';
 

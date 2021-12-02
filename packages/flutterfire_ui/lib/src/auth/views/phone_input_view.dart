@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:flutter/widgets.dart' hide Title;
+import 'package:flutterfire_ui/auth.dart' hide ButtonVariant;
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+
+import '../widgets/internal/title.dart';
 
 typedef SMSCodeRequestedCallback = void Function(
   BuildContext context,
@@ -44,9 +47,17 @@ class _PhoneInputViewState extends State<PhoneInputView> {
         }
       };
 
+  void _next(PhoneAuthController ctrl) {
+    final number = PhoneInput.getPhoneNumber(phoneInputKey);
+    if (number != null) {
+      onSubmit(ctrl)(number);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
+    final countryCode = Localizations.localeOf(context).countryCode;
 
     return AuthFlowBuilder<PhoneAuthController>(
       flowKey: widget.flowKey,
@@ -67,25 +78,18 @@ class _PhoneInputViewState extends State<PhoneInputView> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l.phoneVerificationViewTitleText,
-              style: Theme.of(context).textTheme.headline6,
-            ),
+            Title(text: l.phoneVerificationViewTitleText),
             const SizedBox(height: 32),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
+                initialCountryCode: countryCode!,
                 onSubmit: onSubmit(ctrl),
                 key: phoneInputKey,
               ),
               const SizedBox(height: 16),
-              OutlinedButton(
-                onPressed: () {
-                  final number = PhoneInput.getPhoneNumber(phoneInputKey);
-                  if (number != null) {
-                    onSubmit(ctrl)(number);
-                  }
-                },
-                child: Text(l.verifyPhoneNumberButtonText),
+              UniversalButton(
+                text: l.verifyPhoneNumberButtonText,
+                onPressed: () => _next(ctrl),
               ),
             ],
             if (state is AuthFailed) ...[

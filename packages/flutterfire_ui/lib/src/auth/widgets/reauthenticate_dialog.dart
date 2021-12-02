@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import '../configs/provider_configuration.dart';
+import '../widgets/internal/title.dart';
 
 class ReauthenticateDialog extends StatelessWidget {
   final FirebaseAuth? auth;
@@ -21,21 +22,24 @@ class ReauthenticateDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
 
-    return Dialog(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l.verifyItsYouText, style: const TextStyle(fontSize: 18)),
-            const SizedBox(height: 16),
-            ReauthenticateView(
-              auth: auth,
-              providerConfigs: providerConfigs,
-              onSignedIn: onSignedIn,
-            ),
-          ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Title(text: l.verifyItsYouText),
+              const SizedBox(height: 16),
+              ReauthenticateView(
+                auth: auth,
+                providerConfigs: providerConfigs,
+                onSignedIn: onSignedIn,
+              ),
+            ],
+          ),
         ),
       ),
     );

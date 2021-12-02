@@ -1,13 +1,10 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void runListResultTests() {
   group('$ListResult', () {
-    /*late*/ FirebaseStorage storage;
-    /*late*/ ListResult result;
+    late FirebaseStorage storage;
+    late ListResult result;
 
     setUpAll(() async {
       storage = FirebaseStorage.instance;

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
+import '../widgets/internal/universal_page_route.dart';
+import '../widgets/internal/universal_scaffold.dart';
 
 class UniversalEmailSignInScreen extends StatelessWidget {
   final FirebaseAuth? auth;
@@ -36,7 +38,8 @@ class UniversalEmailSignInScreen extends StatelessWidget {
     late Route route;
 
     if (providers.isEmpty) {
-      route = MaterialPageRoute(
+      route = createPageRoute(
+        context: context,
         builder: (context) => _wrap(
           context,
           RegisterScreen(
@@ -57,7 +60,8 @@ class UniversalEmailSignInScreen extends StatelessWidget {
         }
       }
 
-      route = MaterialPageRoute(
+      route = createPageRoute(
+        context: context,
         builder: (context) => _wrap(
           context,
           SignInScreen(
@@ -80,7 +84,7 @@ class UniversalEmailSignInScreen extends StatelessWidget {
           (email, providers) => _defaultAction(context, email, providers),
     );
 
-    return Scaffold(
+    return UniversalScaffold(
       body: Center(
         child: LayoutBuilder(
           builder: (context, constraints) {

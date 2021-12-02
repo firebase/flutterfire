@@ -9,6 +9,7 @@ class PhoneInputStory extends StoryWidget {
   @override
   Widget build(StoryElement context) {
     return PhoneInput(
+      initialCountryCode: 'US',
       onSubmit: (String phoneNumber) {
         context.notify('Phone number submitted: $phoneNumber');
       },

@@ -67,3 +67,12 @@ class ConfirmPasswordValidator extends Validator {
     return value == controller.text ? null : errorText;
   }
 }
+
+class PhoneValidator extends Validator {
+  PhoneValidator(String errorText) : super(errorText, []);
+
+  @override
+  String? validate(String? value) {
+    return value!.length < 7 ? errorText : null;
+  }
+}

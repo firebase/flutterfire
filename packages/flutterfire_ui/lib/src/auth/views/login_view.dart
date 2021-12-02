@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart' hide Title;
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Title;
 
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
@@ -7,6 +8,7 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import '../configs/provider_configuration.dart';
+import '../widgets/internal/title.dart';
 
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
@@ -15,6 +17,8 @@ class LoginView extends StatefulWidget {
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
+  final WidgetBuilder? footerBuilder;
+  final WidgetBuilder? subtitleBuilder;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -27,6 +31,8 @@ class LoginView extends StatefulWidget {
     this.showTitle = true,
     this.email,
     this.showAuthActionSwitch,
+    this.footerBuilder,
+    this.subtitleBuilder,
   }) : super(key: key);
 
   @override
@@ -106,11 +112,22 @@ class _LoginViewState extends State<LoginView> {
       actionText = l.signInText;
     }
 
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+    TextStyle? hintStyle;
+    late Color registerTextColor;
+
+    if (isCupertino) {
+      final theme = CupertinoTheme.of(context);
+      registerTextColor = theme.primaryColor;
+      hintStyle = theme.textTheme.textStyle.copyWith(fontSize: 12);
+    } else {
+      final theme = Theme.of(context);
+      hintStyle = Theme.of(context).textTheme.caption;
+      registerTextColor = theme.colorScheme.primary;
+    }
+
     return [
-      Text(
-        title,
-        style: Theme.of(context).textTheme.headline6,
-      ),
+      Title(text: title),
       const SizedBox(height: 16),
       if (showAuthActionSwitch) ...[
         RichText(
@@ -118,12 +135,12 @@ class _LoginViewState extends State<LoginView> {
             children: [
               TextSpan(
                 text: '$hint ',
-                style: Theme.of(context).textTheme.caption,
+                style: hintStyle,
               ),
               TextSpan(
                 text: actionText,
                 style: Theme.of(context).textTheme.button?.copyWith(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: registerTextColor,
                     ),
                 mouseCursor: SystemMouseCursors.click,
                 recognizer: TapGestureRecognizer()
@@ -132,7 +149,10 @@ class _LoginViewState extends State<LoginView> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        if (widget.subtitleBuilder != null)
+          widget.subtitleBuilder!(context)
+        else
+          const SizedBox(height: 16),
       ]
     ];
   }
@@ -166,13 +186,17 @@ class _LoginViewState extends State<LoginView> {
                   config: config,
                   email: widget.email,
                 )
-              else if (config is PhoneProviderConfiguration)
+              else if (config is PhoneProviderConfiguration) ...[
+                const SizedBox(height: 8),
                 PhoneVerificationButton(
                   label: l.signInWithPhoneButtonText,
                   action: action,
                   auth: widget.auth,
                 ),
-          if (oauthButtons != null) oauthButtons
+                const SizedBox(height: 8),
+              ],
+          if (oauthButtons != null) oauthButtons,
+          if (widget.footerBuilder != null) widget.footerBuilder!(context),
         ],
       ),
     );

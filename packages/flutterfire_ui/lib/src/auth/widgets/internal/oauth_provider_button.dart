@@ -1,13 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutterfire_ui/auth.dart';
 
-import '../../auth_controller.dart';
-import '../auth_flow_builder.dart';
-import '../../auth_state.dart';
-import '../../flows/oauth_flow.dart';
-import '../../configs/oauth_provider_configuration.dart';
 import 'oauth_provider_button_style.dart';
 
 typedef ErrorCallback = void Function(Exception e);
@@ -15,33 +12,6 @@ typedef ErrorCallback = void Function(Exception e);
 enum ButtonVariant {
   icon_and_text,
   icon,
-}
-
-class LoadingIndicator extends StatelessWidget {
-  final double size;
-  final double borderWidth;
-  final OAuthProviderButtonStyle style;
-
-  const LoadingIndicator({
-    Key? key,
-    required this.size,
-    required this.borderWidth,
-    required this.style,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: CircularProgressIndicator(
-          strokeWidth: borderWidth * 2,
-          valueColor: AlwaysStoppedAnimation<Color>(style.color),
-        ),
-      ),
-    );
-  }
 }
 
 class OAuthProviderButtonContent extends StatelessWidget {
@@ -61,6 +31,11 @@ class OAuthProviderButtonContent extends StatelessWidget {
     late Widget content;
 
     if (isLoading) {
+      final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+      if (isCupertino) {
+        return const LoadingIndicator(size: 16, borderWidth: 1);
+      }
       content = const SizedBox.shrink();
     } else {
       content = Text(
@@ -136,7 +111,8 @@ class OAuthProviderButton extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final brightness = Theme.of(context).brightness;
+    final brightness =
+        CupertinoTheme.of(context).brightness ?? Theme.of(context).brightness;
     final style = providerConfig.style.withBrightness(brightness);
     final l = FirebaseUILocalizations.labelsOf(context);
 
@@ -144,6 +120,64 @@ class OAuthProviderButton extends StatelessWidget
     final borderRadius = size / 3;
     const borderWidth = 1.0;
     final iconBorderRadius = borderRadius - borderWidth;
+
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+    if (isCupertino) {
+      return AuthFlowBuilder<OAuthController>(
+        action: action,
+        auth: auth,
+        config: providerConfig,
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: margin),
+          child: CupertinoTheme(
+            data: CupertinoThemeData(
+              primaryColor: style.backgroundColor,
+            ),
+            child: Builder(
+              builder: (context) => CupertinoButton.filled(
+                padding: EdgeInsets.zero,
+                borderRadius: BorderRadius.circular(borderRadius),
+                child: SizedBox(
+                  height: _height,
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(iconBorderRadius),
+                          bottomLeft: Radius.circular(iconBorderRadius),
+                        ),
+                        child: SizedBox(
+                          width: _height,
+                          height: _height,
+                          child: SvgPicture.asset(
+                            style.iconSrc,
+                            package: 'flutterfire_ui',
+                            width: size,
+                            height: size,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: OAuthProviderButtonContent(
+                          label: providerConfig.getLabel(l),
+                          style: style,
+                          size: size,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                onPressed: () {
+                  if (onTap != null) onTap!.call();
+                  signIn(context);
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return AuthFlowBuilder<OAuthController>(
       action: action,
@@ -206,7 +240,7 @@ class OAuthProviderButton extends StatelessWidget
                     child: LoadingIndicator(
                       size: size,
                       borderWidth: borderWidth,
-                      style: style,
+                      color: style.color,
                     ),
                   );
                 } else {
@@ -259,13 +293,68 @@ class OAuthProviderIconButton extends StatelessWidget
     this.onTap,
   }) : super(key: key);
 
+  WidgetBuilder _contentBuilder(
+    BorderRadius borderRadius,
+    OAuthProviderButtonStyle style,
+  ) =>
+      (BuildContext context) {
+        bool isLoading = AuthState.of(context) is SigningIn;
+
+        if (isLoading) {
+          return LoadingIndicator(
+            borderWidth: 1,
+            size: size / 2,
+            color: style.color,
+          );
+        }
+        return ClipRRect(
+          borderRadius: borderRadius,
+          child: SvgPicture.asset(
+            style.iconSrc,
+            package: 'flutterfire_ui',
+            width: size,
+            height: size,
+          ),
+        );
+      };
+
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
     final style = providerConfig.style.withBrightness(brightness);
     final borderRadius = BorderRadius.circular(size / 6);
 
-    return AuthFlowBuilder(
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+    if (isCupertino) {
+      return AuthFlowBuilder<OAuthController>(
+        auth: auth,
+        action: action,
+        config: providerConfig,
+        child: Container(
+          width: size,
+          height: size,
+          margin: EdgeInsets.all(size / 10),
+          child: CupertinoTheme(
+            data: CupertinoThemeData(
+              primaryColor: style.backgroundColor,
+            ),
+            child: Builder(
+              builder: (context) => CupertinoButton.filled(
+                padding: EdgeInsets.zero,
+                child: Builder(builder: _contentBuilder(borderRadius, style)),
+                onPressed: () {
+                  if (onTap != null) onTap!.call();
+                  signIn(context);
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return AuthFlowBuilder<OAuthController>(
       auth: auth,
       action: action,
       config: providerConfig,
@@ -282,35 +371,23 @@ class OAuthProviderIconButton extends StatelessWidget
             ClipRRect(
               borderRadius: borderRadius,
               child: Builder(
-                builder: (context) {
-                  bool isLoading = AuthState.of(context) is SigningIn;
-
-                  if (isLoading) {
-                    return LoadingIndicator(
-                      borderWidth: 1,
-                      size: size / 2,
-                      style: style,
-                    );
-                  }
-                  return SvgPicture.asset(
-                    style.iconSrc,
-                    package: 'flutterfire_ui',
-                    width: size,
-                    height: size,
-                  );
-                },
+                builder: _contentBuilder(borderRadius, style),
               ),
             ),
             Positioned.fill(
               child: Material(
                 color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    if (onTap != null) {
-                      onTap!();
-                    } else {
-                      signIn(context);
-                    }
+                child: Builder(
+                  builder: (context) {
+                    return InkWell(
+                      onTap: () {
+                        if (onTap != null) {
+                          onTap!();
+                        } else {
+                          signIn(context);
+                        }
+                      },
+                    );
                   },
                 ),
               ),

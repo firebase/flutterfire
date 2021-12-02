@@ -1,6 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterfire_ui/src/auth/validators.dart';
+
+import '../widgets/internal/universal_text_form_field.dart';
 
 part '../configs/countries.dart';
 
@@ -73,6 +77,7 @@ class _CountryPickerState extends State<CountryPicker> {
 
 class PhoneInput extends StatefulWidget {
   final SubmitCallback? onSubmit;
+  final String initialCountryCode;
 
   static String? getPhoneNumber(GlobalKey<PhoneInputState> key) {
     final state = key.currentState!;
@@ -84,6 +89,7 @@ class PhoneInput extends StatefulWidget {
 
   const PhoneInput({
     Key? key,
+    required this.initialCountryCode,
     this.onSubmit,
   }) : super(key: key);
 
@@ -92,56 +98,208 @@ class PhoneInput extends StatefulWidget {
 }
 
 class PhoneInputState extends State<PhoneInput> {
-  final controller = TextEditingController();
-  final countryPickerKey = GlobalKey<_CountryPickerState>();
+  late final countryController = TextEditingController()
+    ..addListener(_onCountryChanged);
+  final numberController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final numberFocusNode = FocusNode();
 
   String get phoneNumber =>
-      '+${countryPickerKey.currentState!.phoneCode}${controller.text}';
+      '+${countryController.text}${numberController.text}';
 
-  FirebaseUILocalizationLabels get labels =>
-      FirebaseUILocalizations.labelsOf(context);
+  String? country;
+  bool isValidCountryCode = true;
 
-  String? validator(String? value) {
-    if (value == null || value.isEmpty) {
-      return labels.phoneNumberIsRequiredErrorText;
+  CountryCodeItem? countryCodeItem;
+
+  void _onSubmitted(_) {
+    if (formKey.currentState!.validate()) {
+      widget.onSubmit?.call(phoneNumber);
+    }
+  }
+
+  @override
+  void initState() {
+    _setCountry(countryCode: widget.initialCountryCode);
+    super.initState();
+  }
+
+  void _setCountry({
+    String? phoneCode,
+    String? countryCode,
+    bool updateCountryInput = true,
+  }) {
+    try {
+      final newItem = countries.firstWhere(
+        (element) =>
+            element.countryCode == countryCode ||
+            element.phoneCode == phoneCode,
+      );
+
+      if (phoneCode != null &&
+          newItem.phoneCode == countryCodeItem?.phoneCode) {
+        return;
+      }
+
+      countryCodeItem = newItem;
+      isValidCountryCode = true;
+    } catch (_) {
+      countryCodeItem = null;
+      isValidCountryCode = false;
     }
 
-    if (phoneNumber.length < 11) {
-      return labels.phoneNumberInvalidErrorText;
+    if (updateCountryInput) {
+      countryController.text = countryCodeItem?.phoneCode ?? '';
     }
+  }
 
-    return null;
+  void _onCountryChanged() {
+    setState(() {
+      _setCountry(
+        phoneCode: countryController.text,
+        updateCountryInput: false,
+      );
+    });
+  }
+
+  void _showCountryPicker(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return Container(
+          color: CupertinoTheme.of(context).scaffoldBackgroundColor,
+          height: 300,
+          child: Column(
+            children: [
+              Expanded(
+                child: CupertinoPicker.builder(
+                  useMagnifier: true,
+                  itemExtent: 40,
+                  childCount: countries.length,
+                  onSelectedItemChanged: (i) {
+                    setState(() {
+                      _setCountry(
+                        countryCode: countries.elementAt(i).countryCode,
+                      );
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final item = countries.elementAt(index);
+                    return Center(
+                      child: Text(
+                        '${item.name} (+${item.phoneCode})',
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              CupertinoButton(
+                child: const Text('Done'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CountryPicker(key: countryPickerKey),
-        Expanded(
-          child: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: controller,
-              decoration: InputDecoration(
-                labelText: labels.phoneInputLabel,
-              ),
-              validator: validator,
-              onFieldSubmitted: (v) {
-                if (formKey.currentState!.validate()) {
-                  widget.onSubmit?.call(phoneNumber);
-                }
+    final l = FirebaseUILocalizations.labelsOf(context);
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          if (isCupertino)
+            GestureDetector(
+              onTap: () {
+                _showCountryPicker(context);
               },
-              autofocus: true,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              keyboardType: TextInputType.phone,
+              child: Row(
+                children: [
+                  const Icon(Icons.arrow_drop_down),
+                  Text(
+                    countryController.text.isNotEmpty && !isValidCountryCode
+                        ? l.invalidCountryCode
+                        : countryCodeItem?.name ?? l.chooseACountry,
+                  ),
+                ],
+              ),
+            )
+          else
+            PopupMenuButton<CountryCodeItem>(
+              child: Container(
+                padding: const EdgeInsets.all(16).copyWith(left: 0),
+                child: Row(
+                  children: [
+                    const Icon(Icons.arrow_drop_down),
+                    Text(
+                      countryController.text.isNotEmpty && !isValidCountryCode
+                          ? l.invalidCountryCode
+                          : countryCodeItem?.name ?? l.chooseACountry,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+              itemBuilder: (context) {
+                return countries.map((e) {
+                  return PopupMenuItem(
+                    value: e,
+                    child: Text('${e.name} (+${e.phoneCode})'),
+                  );
+                }).toList();
+              },
+              onSelected: (selected) => _setCountry(
+                countryCode: selected.countryCode,
+              ),
             ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              SizedBox(
+                width: 90,
+                child: UniversalTextFormField(
+                  autofocus: false,
+                  controller: countryController,
+                  prefix: const Text('+'),
+                  placeholder: l.countryCode,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.phone,
+                  validator: NotEmpty('').validate,
+                  onSubmitted: (_) {
+                    numberFocusNode.requestFocus();
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: UniversalTextFormField(
+                  autofocus: true,
+                  focusNode: numberFocusNode,
+                  controller: numberController,
+                  placeholder: l.phoneInputLabel,
+                  validator: Validator.validateAll([
+                    NotEmpty(l.phoneNumberIsRequiredErrorText),
+                    PhoneValidator(l.phoneNumberInvalidErrorText),
+                  ]),
+                  onSubmitted: _onSubmitted,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
+                  keyboardType: TextInputType.phone,
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

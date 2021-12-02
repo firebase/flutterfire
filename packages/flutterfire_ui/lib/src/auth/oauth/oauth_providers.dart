@@ -35,9 +35,9 @@ abstract class Twitter extends OAuthProvider {}
 abstract class Facebook extends OAuthProvider {}
 
 extension OAuthHelpers on User {
-  bool isProviderLinked<T extends OAuthProvider>() {
+  bool isProviderLinked(String providerId) {
     try {
-      providerData.firstWhere((e) => e.providerId == providerIdOf<T>());
+      providerData.firstWhere((e) => e.providerId == providerId);
       return true;
     } catch (_) {
       return false;
