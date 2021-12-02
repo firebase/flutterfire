@@ -63,6 +63,11 @@ setup, a more familiar API, better documentation and many more unit and end-to-e
 - `DatabaseError`
  - **BREAKING**: The `DatabaseError` class has been removed. Errors are now returned as a `FirebaseException` inline with the other plugins.
 
+
+## 8.2.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 8.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

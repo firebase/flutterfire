@@ -1,3 +1,8 @@
+## 10.2.0
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 10.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

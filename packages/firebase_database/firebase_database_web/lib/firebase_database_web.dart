@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:js_util' as util;
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -46,6 +47,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('database');
     DatabasePlatform.instance = FirebaseDatabaseWeb();
   }
 
