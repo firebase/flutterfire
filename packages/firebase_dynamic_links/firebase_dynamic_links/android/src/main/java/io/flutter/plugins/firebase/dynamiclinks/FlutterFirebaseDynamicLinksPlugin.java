@@ -111,7 +111,9 @@ public class FlutterFirebaseDynamicLinksPlugin
             pendingDynamicLinkData -> {
               Map<String, Object> dynamicLink =
                   Utils.getMapFromPendingDynamicLinkData(pendingDynamicLinkData);
-              channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
+              if (dynamicLink != null) {
+                channel.invokeMethod("FirebaseDynamicLink#onLinkSuccess", dynamicLink);
+              }
             })
         .addOnFailureListener(
             exception ->

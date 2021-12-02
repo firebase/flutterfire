@@ -56,7 +56,7 @@ abstract class FirebaseDynamicLinksPlatform extends PlatformInterface {
   }
 
   /// Creates a stream for listening whenever a dynamic link becomes available
-  Stream<PendingDynamicLinkData?> get onLink {
+  Stream<PendingDynamicLinkData> get onLink {
     throw UnimplementedError('onLink is not implemented');
   }
 

@@ -286,7 +286,9 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [_channel invokeMethod:@"FirebaseDynamicLink#onLinkError" arguments:flutterError];
   } else {
     NSMutableDictionary *dictionary = getDictionaryFromDynamicLink(dynamicLink);
-    [_channel invokeMethod:@"FirebaseDynamicLink#onLinkSuccess" arguments:dictionary];
+    if (dictionary != nil) {
+      [_channel invokeMethod:@"FirebaseDynamicLink#onLinkSuccess" arguments:dictionary];
+    }
   }
 
   if (_initialLink == nil && dynamicLink.url != nil) {

@@ -24,7 +24,12 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
         case 'FirebaseDynamicLink#onLinkSuccess':
           Map<String, dynamic> event =
               Map<String, dynamic>.from(call.arguments);
-          _onLinkController.add(_getPendingDynamicLinkDataFromMap(event));
+          PendingDynamicLinkData? data =
+              _getPendingDynamicLinkDataFromMap(event);
+
+          if (data != null) {
+            _onLinkController.add(data);
+          }
           break;
         case 'FirebaseDynamicLink#onLinkError':
           Map<String, dynamic> error =
@@ -50,8 +55,8 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   );
 
   /// The [StreamController] used to update on the latest dynamic link received.
-  final StreamController<PendingDynamicLinkData?> _onLinkController =
-      StreamController<PendingDynamicLinkData?>.broadcast();
+  final StreamController<PendingDynamicLinkData> _onLinkController =
+      StreamController<PendingDynamicLinkData>.broadcast();
 
   /// Gets a [FirebaseDynamicLinksPlatform] with specific arguments such as a different
   /// [FirebaseApp].
@@ -129,7 +134,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   }
 
   @override
-  Stream<PendingDynamicLinkData?> get onLink {
+  Stream<PendingDynamicLinkData> get onLink {
     return _onLinkController.stream;
   }
 

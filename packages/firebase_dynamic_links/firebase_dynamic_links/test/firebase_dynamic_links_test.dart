@@ -375,7 +375,7 @@ class MockFirebaseDynamicLinks extends Mock
   }
 
   @override
-  Stream<PendingDynamicLinkData?> get onLink {
+  Stream<PendingDynamicLinkData> get onLink {
     return super.noSuchMethod(
       Invocation.getter(#onLink),
       returnValue: Stream.value(testData),
