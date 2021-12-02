@@ -88,7 +88,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               if ("ERROR".equalsIgnoreCase(resultType)) {
                 return FlutterFirebaseFirestoreTransactionResult.complete();
               }
-              
+
               @SuppressWarnings("unchecked")
               List<Map<String, Object>> commands =
                   (List<Map<String, Object>>) response.get("commands");
