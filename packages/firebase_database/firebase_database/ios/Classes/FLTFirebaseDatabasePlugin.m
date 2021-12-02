@@ -13,7 +13,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 @implementation FLTFirebaseDatabasePlugin {
   // Used by FlutterStreamHandlers.
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
-  NSMutableDictionary<NSString *, int> *_listenerCounts;
+  NSMutableDictionary<NSString *, NSNumber *> *_listenerCounts;
   NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
   // Used by transactions.
   FlutterMethodChannel *_channel;
@@ -227,6 +227,8 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   NSString *transactionKey = arguments[@"transactionKey"];
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+
+  __weak FLTFirebaseDatabasePlugin *weakSelf = self;
   [reference
       runTransactionBlock:^FIRTransactionResult *(FIRMutableData *currentData) {
         // Create semaphore to allow native side to wait while updates occur on the Dart side.
@@ -244,16 +246,16 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           currentData.value = result[@"value"];
           dispatch_semaphore_signal(semaphore);
         };
-
-        [_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
-                     arguments:@{
-                       @"transactionKey" : transactionKey,
-                       @"snapshot" : @{
-                         @"key" : currentData.key,
-                         @"value" : currentData.value,
-                       }
-                     }
-                        result:methodCallResultHandler];
+        __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
+        [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
+                                 arguments:@{
+                                   @"transactionKey" : transactionKey,
+                                   @"snapshot" : @{
+                                     @"key" : currentData.key,
+                                     @"value" : currentData.value,
+                                   }
+                                 }
+                                    result:methodCallResultHandler];
 
         // Wait while Dart side updates the value.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -353,23 +355,29 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
   int newListenersCount;
   @synchronized(_listenerCounts) {
-    int currentListenersCount = _listenerCounts[eventChannelNamePrefix];
-    newListenersCount = currentListenersCount == nil ? 1 : currentListenersCount + 1;
-    _listenerCounts[eventChannelNamePrefix] = newListenersCount;
+    NSNumber *currentListenersCount = _listenerCounts[eventChannelNamePrefix];
+    newListenersCount = currentListenersCount == nil ? 1 : [currentListenersCount intValue] + 1;
+    _listenerCounts[eventChannelNamePrefix] = [NSNumber numberWithInt:newListenersCount];
   }
   NSString *eventChannelName =
       [NSString stringWithFormat:@"%@#%d", eventChannelNamePrefix, newListenersCount];
-  FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
-                                                                binaryMessenger:_binaryMessenger];
+
+  __block FlutterEventChannel *eventChannel =
+      [FlutterEventChannel eventChannelWithName:eventChannelName binaryMessenger:_binaryMessenger];
+  __weak FLTFirebaseDatabasePlugin *weakSelf = self;
   FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
       [[FLTFirebaseDatabaseObserveStreamHandler alloc]
           initWithFIRDatabaseQuery:databaseQuery
                  andOnDisposeBlock:^() {
+                   __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
                    [eventChannel setStreamHandler:nil];
-                   @synchronized(_listenerCounts) {
-                     int currentListenersCount = _listenerCounts[eventChannelNamePrefix];
-                     _listenerCounts[eventChannelNamePrefix] =
-                         currentListenersCount == nil ? 0 : currentListenersCount - 1;
+                   @synchronized(strongSelf->_listenerCounts) {
+                     NSNumber *currentListenersCount =
+                         strongSelf->_listenerCounts[eventChannelNamePrefix];
+                     strongSelf->_listenerCounts[eventChannelNamePrefix] =
+                         [NSNumber numberWithInt:currentListenersCount == nil
+                                                     ? 0
+                                                     : [currentListenersCount intValue] - 1];
                    }
                  }];
   [eventChannel setStreamHandler:streamHandler];

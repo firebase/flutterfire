@@ -11,7 +11,7 @@
 @interface FLTFirebaseDatabaseObserveStreamHandler ()
 @property(readwrite) FIRDatabaseHandle databaseHandle;
 @property(readonly) FIRDatabaseQuery *databaseQuery;
-@property(readwrite) void (^disposeBlock)();
+@property(readwrite) void (^disposeBlock)(void);
 @end
 
 @implementation FLTFirebaseDatabaseObserveStreamHandler
@@ -70,3 +70,5 @@
   [_databaseQuery removeObserverWithHandle:_databaseHandle];
   return nil;
 }
+
+@end

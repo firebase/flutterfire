@@ -6,8 +6,7 @@
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @implementation FLTFirebaseDatabaseUtils
-static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseInstances =
-    [[NSMutableDictionary alloc] init];
+static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseInstances = nil;
 
 + (dispatch_queue_t)dispatchQueue {
   static dispatch_once_t once;
@@ -23,6 +22,9 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   NSString *appName = arguments[@"appName"] == nil ? @"[DEFAULT]" : arguments[@"appName"];
   NSString *databaseURL = arguments[@"databaseURL"] == nil ? @"" : arguments[@"databaseURL"];
   NSString *instanceKey = [appName stringByAppendingString:databaseURL];
+  if (cachedDatabaseInstances == nil) {
+    cachedDatabaseInstances = [[NSMutableDictionary alloc] init];
+  }
   FIRDatabase *cachedInstance = cachedDatabaseInstances[instanceKey];
   if (cachedInstance != nil) {
     return cachedInstance;

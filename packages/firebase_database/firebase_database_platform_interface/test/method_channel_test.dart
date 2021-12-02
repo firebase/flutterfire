@@ -550,7 +550,8 @@ void main() {
                 'databaseURL': databaseURL,
                 'path': path,
                 'modifiers': [],
-                'eventType': 'value',
+                'eventChannelNamePrefix':
+                    'foo-testApp-https://fake-database-url2.firebaseio.com-DatabaseEventType.value-[]',
               },
             )
           ],
