@@ -14,7 +14,6 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   // Used by FlutterStreamHandlers.
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, int> *_listenerCounts;
-  NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
   // Used by transactions.
   FlutterMethodChannel *_channel;
@@ -29,7 +28,6 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
     _channel = channel;
     _binaryMessenger = messenger;
     _listenerCounts = [NSMutableDictionary dictionary];
-    _eventChannels = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
   }
   return self;
@@ -52,19 +50,11 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
-  for (NSString *channelName in self->_eventChannels) {
-    FlutterEventChannel *channel = self->_eventChannels[channelName];
-    [channel setStreamHandler:nil];
-  }
-  [self->_eventChannels removeAllObjects];
   for (NSString *handlerId in self->_streamHandlers) {
     NSObject<FlutterStreamHandler> *handler = self->_streamHandlers[handlerId];
     [handler onCancelWithArguments:nil];
   }
   [self->_streamHandlers removeAllObjects];
-
-  // TODO cleanup rtdb instances
-
   if (completion != nil) {
     completion();
   }

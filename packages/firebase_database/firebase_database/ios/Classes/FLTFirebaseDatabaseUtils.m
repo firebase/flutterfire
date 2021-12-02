@@ -6,6 +6,8 @@
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @implementation FLTFirebaseDatabaseUtils
+static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseInstances =
+    [[NSMutableDictionary alloc] init];
 
 + (dispatch_queue_t)dispatchQueue {
   static dispatch_once_t once;
@@ -21,8 +23,10 @@
   NSString *appName = arguments[@"appName"] == nil ? @"[DEFAULT]" : arguments[@"appName"];
   NSString *databaseURL = arguments[@"databaseURL"] == nil ? @"" : arguments[@"databaseURL"];
   NSString *instanceKey = [appName stringByAppendingString:databaseURL];
-
-  // TODO check instance already exists and return;
+  FIRDatabase *cachedInstance = cachedDatabaseInstances[instanceKey];
+  if (cachedInstance != nil) {
+    return cachedInstance;
+  }
 
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
   FIRDatabase *database;
@@ -34,10 +38,20 @@
   }
 
   [database setCallbackQueue:[self dispatchQueue]];
+  NSNumber *persistenceEnabled = arguments[@"persistenceEnabled"];
+  if (persistenceEnabled != nil) {
+    database.persistenceEnabled = [persistenceEnabled boolValue];
+  }
 
-  // TODO persistence
-  // TODO logging enabled
-  // TODO cache size
+  NSNumber *cacheSizeBytes = arguments[@"cacheSizeBytes"];
+  if (cacheSizeBytes != nil) {
+    database.persistenceCacheSizeBytes = [cacheSizeBytes unsignedIntegerValue];
+  }
+
+  NSNumber *loggingEnabled = arguments[@"loggingEnabled"];
+  if (loggingEnabled != nil) {
+    [FIRDatabase setLoggingEnabled:[loggingEnabled boolValue]];
+  }
 
   NSString *emulatorHost = arguments[@"emulatorHost"];
   NSNumber *emulatorPort = arguments[@"emulatorPort"];
@@ -45,8 +59,7 @@
     [database useEmulatorWithHost:emulatorHost port:[emulatorPort integerValue]];
   }
 
-  // TODO cache by instance key
-
+  cachedDatabaseInstances[instanceKey] = database;
   return database;
 }
 
