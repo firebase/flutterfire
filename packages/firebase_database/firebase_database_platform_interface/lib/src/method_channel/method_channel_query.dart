@@ -77,7 +77,6 @@ class MethodChannelQuery extends QueryPlatform {
           'modifiers': modifiers.toList(),
         }),
       );
-
       return MethodChannelDataSnapshot(
         ref,
         Map<String, dynamic>.from(result!['snapshot']),

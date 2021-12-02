@@ -340,7 +340,9 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else
-      result.success([FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot]);
+      result.success(@{
+        @"snapshot" : [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
+      });
   }];
 }
 
