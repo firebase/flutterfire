@@ -33,7 +33,7 @@ FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instanceFor(app: second
 
 ### Build Dynamic Link
 
-To build a dynamic link, use the [`FirebaseDynamicLinks.buildLink`](!firebase_dynamic_links.buildLink) API in your application code like so:
+To build a Dynamic Link, use the [`FirebaseDynamicLinks.buildLink`](!firebase_dynamic_links.buildLink) API in your application code like so:
 
 ```dart highlight={18}
 final DynamicLinkParameters parameters = DynamicLinkParameters(
@@ -58,8 +58,8 @@ final Uri uri = await dynamicLinks.buildLink(parameters);
 
 ### Build Short Dynamic Link
 
-You can also build a short dynamic link which simply makes the dynamic link URL shorter. This does entail an additional native SDK
-request to the Firebase server whilst the above `buildLink()` does not.  To build a short dynamic link, use the
+You can also build a short Dynamic Link which simply makes the Dynamic Link URL shorter. This does entail an additional native SDK
+request to the Firebase server whilst the above `buildLink()` does not.  To build a short Dynamic Link, use the
 [`FirebaseDynamicLinks.buildShortLink`](!firebase_dynamic_links.buildShortLink) API in your application code like so:
 
 ```dart highlight={18}
@@ -86,7 +86,7 @@ final Uri uri = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
 ## Get Dynamic Link
 
 If the application is in a background state/quit, use the [`FirebaseDynamicLinks.getInitialLink`](!firebase_dynamic_links.getInitialLink)
-to retrieve the dynamic link that opened the application or brought it to the foreground from a background state.
+to retrieve the Dynamic Link that opened the application or brought it to the foreground from a background state.
 
 ```dart highlight={2}
 final PendingDynamicLinkData? data =
@@ -99,7 +99,7 @@ if (deepLink != null) {
 }
 ```
 
-Alternatively, if you wish to select an exact dynamic link from your application, you may also pass the Dynamic Link URL to [`FirebaseDynamicLinks.getDynamicLink`](!firebase_dynamic_links.getDynamicLink)
+Alternatively, if you wish to select an exact Dynamic Link from your application, you may also pass the Dynamic Link URL to [`FirebaseDynamicLinks.getDynamicLink`](!firebase_dynamic_links.getDynamicLink)
 like so:
 
 ```dart highlight={3}
@@ -117,7 +117,7 @@ if (deepLink != null) {
 
 ## Listening for Dynamic Links
 
-Whilst the application is open, you may listen to dynamic links using this stream handler [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
+Whilst the application is open, you may listen to Dynamic Links using this stream handler [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
 like so:
 
 ```dart highlight={1}
