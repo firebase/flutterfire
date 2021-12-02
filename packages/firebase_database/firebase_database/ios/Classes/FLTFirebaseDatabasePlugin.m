@@ -231,6 +231,7 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   __weak FLTFirebaseDatabasePlugin *weakSelf = self;
   [reference
       runTransactionBlock:^FIRTransactionResult *(FIRMutableData *currentData) {
+        __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
         // Create semaphore to allow native side to wait while updates occur on the Dart side.
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
@@ -246,17 +247,16 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           currentData.value = result[@"value"];
           dispatch_semaphore_signal(semaphore);
         };
-        __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
+
         [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
                                  arguments:@{
                                    @"transactionKey" : @(transactionKey),
                                    @"snapshot" : @{
-                                     @"key" : currentData.key,
-                                     @"value" : currentData.value,
+                                     @"key" : currentData.key ?: [NSNull null],
+                                     @"value" : currentData.value ?: [NSNull null],
                                    }
                                  }
                                     result:methodCallResultHandler];
-
         // Wait while Dart side updates the value.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 

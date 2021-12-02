@@ -6,6 +6,14 @@
       ".read": false,
       ".write": false
     },
+    "messages": {
+      ".read": true,
+      ".write": true
+    },
+    "counter": {
+      ".read": true,
+      ".write": true
+    },
     "tests": {
       ".read": true,
       ".write": true,

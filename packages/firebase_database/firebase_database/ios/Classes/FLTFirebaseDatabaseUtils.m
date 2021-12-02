@@ -39,7 +39,7 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
     database = [FIRDatabase databaseForApp:app URL:databaseURL];
   }
 
-  [database setCallbackQueue:[self dispatchQueue]];
+  //  [database setCallbackQueue:[self dispatchQueue]];
   NSNumber *persistenceEnabled = arguments[@"persistenceEnabled"];
   if (persistenceEnabled != nil) {
     database.persistenceEnabled = [persistenceEnabled boolValue];
@@ -155,7 +155,7 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
                     withPreviousChildKey:(NSString *)previousChildKey {
   return @{
     @"snapshot" : [self dictionaryFromSnapshot:snapshot],
-    @"previousChildKey" : previousChildKey,
+    @"previousChildKey" : previousChildKey ?: [NSNull null],
   };
 }
 
@@ -172,9 +172,9 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   }
 
   return @{
-    @"key" : snapshot.key,
-    @"value" : snapshot.value,
-    @"priority" : snapshot.priority,
+    @"key" : snapshot.key ?: [NSNull null],
+    @"value" : snapshot.value ?: [NSNull null],
+    @"priority" : snapshot.priority ?: [NSNull null],
     @"childKeys" : childKeys,
   };
 }
