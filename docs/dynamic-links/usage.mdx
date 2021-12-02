@@ -145,13 +145,11 @@ final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.
 ## Realtime handling
 
 Whilst the application is open, you may listen to Dynamic Links using a stream handler. The [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
-getter returns a `Stream` containing a nullable `PendingDynamicLinkData`:
+getter returns a `Stream` containing a `PendingDynamicLinkData`:
 
 ```dart
 FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
-  if (dynamicLinkData != null && dynamicLinkData.link != null) {
-    Navigator.pushNamed(context, dynamicLinkData.link.path);
-  }
+  Navigator.pushNamed(context, dynamicLinkData.link.path);
 }).onError((error) {
   // Handle errors
 });
