@@ -85,7 +85,21 @@ dependencies:
 $ flutter pub get
 ```
 
-### 3. Rebuild your app
+### 3. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-storage` JavaScript SDK to your `index.html` file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-storage.js"></script>
+  </body>
+</html>
+```
+
+### 4. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
