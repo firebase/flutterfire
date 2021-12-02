@@ -1,10 +1,11 @@
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-import 'src/trace.dart';
 import 'src/http_metric.dart';
+import 'src/trace.dart';
 
 /// Web implementation for [FirebasePerformancePlatform]
 class FirebasePerformanceWeb extends FirebasePerformancePlatform {
@@ -23,6 +24,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('performance');
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb();
   }
 
