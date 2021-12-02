@@ -89,9 +89,9 @@ module.exports = {
     ],
     'Dynamic Links': [
       "dynamic-links/overview",
-      "dynamic-links/usage",
       "dynamic-links/android-integration",
       "dynamic-links/apple-integration",
+      "dynamic-links/usage",
       toReferenceAPI("firebase_dynamic_links"),
       toGithubExample("firebase_dynamic_links"),
     ],
