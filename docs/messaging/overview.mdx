@@ -138,7 +138,21 @@ thrown when a message eventually comes through.
 iOS & macOS require additional configuration before you can start receiving messages through Firebase.
 Read the integration documentation on how to [setup iOS or macOS with Firebase Cloud Messaging](messaging/apple-integration.mdx).
 
-### 5. Rebuild your app
+### 5. (Web Only) Add the SDK
+
+If using FlutterFire on the web, add the `firebase-messaging` JavaScript SDK to your index.html file:
+
+```html {5} title="web/index.html"
+<html>
+  ...
+  <body>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-messaging.js"></script>
+  </body>
+</html>
+```
+
+### 6. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
