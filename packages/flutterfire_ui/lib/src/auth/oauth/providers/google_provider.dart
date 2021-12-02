@@ -15,14 +15,14 @@ import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
 
 class GoogleProviderImpl extends Google {
-  String? clientId;
+  String clientId;
   String redirectUri;
 
   final _provider = GoogleSignIn();
 
   @override
   late final desktopSignInArgs = GoogleSignInArgs(
-    clientId: clientId!,
+    clientId: clientId,
     redirectUri: redirectUri,
   );
 
@@ -59,7 +59,7 @@ class GoogleProviderImpl extends Google {
 }
 
 class GoogleProviderConfiguration extends OAuthProviderConfiguration {
-  final String? clientId;
+  final String clientId;
   final String? redirectUri;
 
   GoogleProviderImpl get _provider => GoogleProviderImpl(
@@ -68,7 +68,7 @@ class GoogleProviderConfiguration extends OAuthProviderConfiguration {
       );
 
   const GoogleProviderConfiguration({
-    this.clientId,
+    required this.clientId,
     this.redirectUri,
   });
 

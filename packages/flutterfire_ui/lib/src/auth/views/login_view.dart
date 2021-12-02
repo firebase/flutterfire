@@ -17,6 +17,8 @@ class LoginView extends StatefulWidget {
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
+  final WidgetBuilder? footerBuilder;
+  final WidgetBuilder? subtitleBuilder;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -29,6 +31,8 @@ class LoginView extends StatefulWidget {
     this.showTitle = true,
     this.email,
     this.showAuthActionSwitch,
+    this.footerBuilder,
+    this.subtitleBuilder,
   }) : super(key: key);
 
   @override
@@ -145,7 +149,10 @@ class _LoginViewState extends State<LoginView> {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        if (widget.subtitleBuilder != null)
+          widget.subtitleBuilder!(context)
+        else
+          const SizedBox(height: 16),
       ]
     ];
   }
@@ -188,7 +195,8 @@ class _LoginViewState extends State<LoginView> {
                 ),
                 const SizedBox(height: 8),
               ],
-          if (oauthButtons != null) oauthButtons
+          if (oauthButtons != null) oauthButtons,
+          if (widget.footerBuilder != null) widget.footerBuilder!(context),
         ],
       ),
     );

@@ -47,22 +47,19 @@ class AppleSignInButton extends OAuthProviderButtonWidget {
   @override
   final FirebaseAuth? auth;
 
-  final WebAuthenticationOptions? options;
-
   @override
   final VoidCallback? onTap;
 
   @override
-  OAuthProviderConfiguration get providerConfig => AppleProviderConfiguration(
-        options: options,
-      );
+  OAuthProviderConfiguration get providerConfig {
+    return const AppleProviderConfiguration();
+  }
 
   @override
   final double? size;
 
   const AppleSignInButton({
     Key? key,
-    this.options,
     this.action,
     this.auth,
     this.size,
@@ -83,22 +80,19 @@ class AppleSignInIconButton extends OAuthProviderIconButtonWidget {
   @override
   final FirebaseAuth? auth;
 
-  final WebAuthenticationOptions? options;
-
   @override
   final VoidCallback? onTap;
 
   @override
-  OAuthProviderConfiguration get providerConfig => AppleProviderConfiguration(
-        options: options,
-      );
+  OAuthProviderConfiguration get providerConfig {
+    return const AppleProviderConfiguration();
+  }
 
   @override
   final double? size;
 
   const AppleSignInIconButton({
     Key? key,
-    this.options,
     this.action,
     this.auth,
     this.size,

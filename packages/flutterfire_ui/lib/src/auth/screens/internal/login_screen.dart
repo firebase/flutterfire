@@ -64,6 +64,8 @@ class LoginScreen extends StatefulWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
   const LoginScreen({
     Key? key,
@@ -77,6 +79,8 @@ class LoginScreen extends StatefulWidget {
     this.desktopLayoutDirection = TextDirection.ltr,
     this.email,
     this.showAuthActionSwitch,
+    this.subtitleBuilder,
+    this.footerBuilder,
   }) : super(key: key);
 
   @override
@@ -110,6 +114,8 @@ class _LoginScreenState extends State<LoginScreen> {
           oauthButtonVariant: widget.oauthButtonVariant,
           email: widget.email,
           showAuthActionSwitch: widget.showAuthActionSwitch,
+          subtitleBuilder: widget.subtitleBuilder,
+          footerBuilder: widget.footerBuilder,
         ),
       ),
     );

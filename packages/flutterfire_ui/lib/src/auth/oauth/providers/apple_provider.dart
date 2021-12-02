@@ -32,10 +32,6 @@ String sha256ofString(String input) {
 }
 
 class AppleProviderImpl extends Apple {
-  final WebAuthenticationOptions? options;
-
-  AppleProviderImpl(this.options);
-
   @override
   Future<fba.OAuthCredential> signIn() async {
     final rawNonce = generateNonce();
@@ -77,13 +73,11 @@ class AppleProviderImpl extends Apple {
 }
 
 class AppleProviderConfiguration extends OAuthProviderConfiguration {
-  final WebAuthenticationOptions? options;
-
-  const AppleProviderConfiguration({this.options});
+  const AppleProviderConfiguration();
 
   @override
   OAuthProvider createProvider() {
-    return AppleProviderImpl(options);
+    return AppleProviderImpl();
   }
 
   @override
