@@ -11,11 +11,11 @@ and add to your app in your Firebase console.
 
 TODO - image
 
-Go to the following location in your browser "[your-domain]/.well-known/assetlinks.json". The response will have a target object
+Go to the following location in your browser `[your-domain]/.well-known/assetlinks.json`. The response will have a target object
 containing a "package_name" which ought to have your app's package name. Please do not proceed until you see this, it may take a while to register.
 
 ## AndroidManifest.xml Configuration
 
-Add your deep link domains to your "android/app/src/main/AndroidManifest.xml" so your app can receive the Dynamic Link data after it is installed/updated
-from the Play Store  Refer to the official docs to illustrate [setup](https://firebase.google.com/docs/dynamic-links/android/receive#add-an-intent-filter-for-deep-links).
+Add your deep link domains to your `android/app/src/main/AndroidManifest.xml` so your app can receive the Dynamic Link data after it is installed/updated
+from the Play Store.  Refer to the official docs to illustrate [setup](https://firebase.google.com/docs/dynamic-links/android/receive#add-an-intent-filter-for-deep-links).
 
