@@ -8,18 +8,12 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.reg
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.appcheck.AppCheckTokenResult;
 import com.google.firebase.appcheck.FirebaseAppCheck;
 import com.google.firebase.appcheck.safetynet.SafetyNetAppCheckProviderFactory;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.EventChannel;
@@ -28,15 +22,17 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class FlutterFirebaseAppCheckPlugin
-  implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_app_check";
   private final Map<EventChannel, TokenChannelStreamHandler> streamHandlers = new HashMap<>();
 
-  @Nullable
-  private BinaryMessenger messenger;
+  @Nullable private BinaryMessenger messenger;
 
   private MethodChannel channel;
 
@@ -76,51 +72,52 @@ public class FlutterFirebaseAppCheckPlugin
 
   private Task<Void> activate(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-        firebaseAppCheck.installAppCheckProviderFactory(
-          SafetyNetAppCheckProviderFactory.getInstance());
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+          firebaseAppCheck.installAppCheckProviderFactory(
+              SafetyNetAppCheckProviderFactory.getInstance());
+          return null;
+        });
   }
 
   private Task<Map<String, Object>> getToken(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-        Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
-        AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
-        return tokenResultToMap(tokenResult);
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+          Boolean forceRefresh = (Boolean) Objects.requireNonNull(arguments.get("forceRefresh"));
+          AppCheckTokenResult tokenResult = Tasks.await(firebaseAppCheck.getToken(forceRefresh));
+          return tokenResultToMap(tokenResult);
+        });
   }
 
   private Task<Void> setTokenAutoRefreshEnabled(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
-        Boolean isTokenAutoRefreshEnabled = (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
-        firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
-        return null;
-      });
+        cachedThreadPool,
+        () -> {
+          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+          Boolean isTokenAutoRefreshEnabled =
+              (Boolean) Objects.requireNonNull(arguments.get("isTokenAutoRefreshEnabled"));
+          firebaseAppCheck.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
+          return null;
+        });
   }
 
   private Task<String> registerTokenListener(Map<String, Object> arguments) {
     return Tasks.call(
-      cachedThreadPool,
-      () -> {
-        String appName = (String) Objects.requireNonNull(arguments.get("appName"));
-        FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
+        cachedThreadPool,
+        () -> {
+          String appName = (String) Objects.requireNonNull(arguments.get("appName"));
+          FirebaseAppCheck firebaseAppCheck = getAppCheck(arguments);
 
-        final TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseAppCheck);
-        final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
-        final EventChannel channel = new EventChannel(messenger, name);
-        channel.setStreamHandler(handler);
-        streamHandlers.put(channel, handler);
-        return name;
-      });
+          final TokenChannelStreamHandler handler = new TokenChannelStreamHandler(firebaseAppCheck);
+          final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
+          final EventChannel channel = new EventChannel(messenger, name);
+          channel.setStreamHandler(handler);
+          streamHandlers.put(channel, handler);
+          return name;
+        });
   }
 
   @Override
@@ -146,17 +143,17 @@ public class FlutterFirebaseAppCheckPlugin
     }
 
     methodCallTask.addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(
-            "firebase_app_check",
-            exception != null ? exception.getMessage() : null,
-            getExceptionDetails(exception));
-        }
-      });
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            result.error(
+                "firebase_app_check",
+                exception != null ? exception.getMessage() : null,
+                getExceptionDetails(exception));
+          }
+        });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {

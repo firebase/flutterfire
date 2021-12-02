@@ -1,11 +1,9 @@
 package io.flutter.plugins.firebase.appcheck;
 
 import com.google.firebase.appcheck.FirebaseAppCheck;
-
+import io.flutter.plugin.common.EventChannel;
 import java.util.HashMap;
 import java.util.Map;
-
-import io.flutter.plugin.common.EventChannel;
 
 public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
@@ -20,10 +18,11 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
   public void onListen(Object arguments, EventChannel.EventSink events) {
     Map<String, Object> event = new HashMap<>();
 
-    listener = result -> {
-      event.put("token", result.getToken());
-      events.success(event);
-    };
+    listener =
+        result -> {
+          event.put("token", result.getToken());
+          events.success(event);
+        };
 
     firebaseAppCheck.addAppCheckListener(listener);
   }
