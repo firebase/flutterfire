@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -8,26 +7,39 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
+
+// Change to false to use live database instance.
+const useEmulator = true;
+// The port we've set the Firebase Database emulator to run on via the
+// `firebase.json` configuration file.
+const emulatorPort = 9000;
+// Android device emulators consider localhost of the host machine as 10.0.2.2
+// so let's use that if running on Android.
+final emulatorHost =
+    (!kIsWeb && defaultTargetPlatform == TargetPlatform.android)
+        ? '10.0.2.2'
+        : 'localhost';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final FirebaseApp app = await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-        authDomain: 'react-native-firebase-testing.firebaseapp.com',
-        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-        projectId: 'react-native-firebase-testing',
-        storageBucket: 'react-native-firebase-testing.appspot.com',
-        messagingSenderId: '448618578101',
-        appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
-        measurementId: 'G-0N1G9FLDZE'),
+      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+      databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+      storageBucket: 'react-native-firebase-testing.appspot.com',
+    ),
   );
-  runApp(MaterialApp(
-    title: 'Flutter Database Example',
-    home: MyHomePage(app: app),
-  ));
+  runApp(
+    MaterialApp(
+      title: 'Flutter Database Example',
+      home: MyHomePage(app: app),
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -43,52 +55,81 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   late DatabaseReference _counterRef;
   late DatabaseReference _messagesRef;
-  late StreamSubscription<Event> _counterSubscription;
-  late StreamSubscription<Event> _messagesSubscription;
+  late StreamSubscription<DatabaseEvent> _counterSubscription;
+  late StreamSubscription<DatabaseEvent> _messagesSubscription;
   bool _anchorToBottom = false;
 
   String _kTestKey = 'Hello';
   String _kTestValue = 'world!';
-  DatabaseError? _error;
+  FirebaseException? _error;
+  bool initialized = false;
 
   @override
   void initState() {
+    init();
     super.initState();
-    // Demonstrates configuring to the database using a file
-    _counterRef = FirebaseDatabase.instance.reference().child('counter');
-    // Demonstrates configuring the database directly
-    final FirebaseDatabase database = FirebaseDatabase(app: widget.app);
-    _messagesRef = database.reference().child('messages');
-    database.reference().child('counter').get().then((DataSnapshot? snapshot) {
-      print(
-          'Connected to directly configured database and read ${snapshot!.value}');
-    });
+  }
 
-    database.setLoggingEnabled(true);
+  Future<void> init() async {
+    _counterRef = FirebaseDatabase.instance.ref('counter');
 
+    final database = FirebaseDatabase.instanceFor(app: widget.app);
+    _messagesRef = database.ref('messages');
+
+    if (useEmulator) {
+      database.useDatabaseEmulator(emulatorHost, emulatorPort);
+    }
+    database.setLoggingEnabled(false);
     if (!kIsWeb) {
       database.setPersistenceEnabled(true);
       database.setPersistenceCacheSizeBytes(10000000);
-      _counterRef.keepSynced(true);
     }
-    _counterSubscription = _counterRef.onValue.listen((Event event) {
-      setState(() {
-        _error = null;
-        _counter = event.snapshot.value ?? 0;
-      });
-    }, onError: (Object o) {
-      final DatabaseError error = o as DatabaseError;
-      setState(() {
-        _error = error;
-      });
+
+    if (!kIsWeb) {
+      await _counterRef.keepSynced(true);
+    }
+
+    setState(() {
+      initialized = true;
     });
-    _messagesSubscription =
-        _messagesRef.limitToLast(10).onChildAdded.listen((Event event) {
-      print('Child added: ${event.snapshot.value}');
-    }, onError: (Object o) {
-      final DatabaseError error = o as DatabaseError;
-      print('Error: ${error.code} ${error.message}');
-    });
+
+    try {
+      final counterSnapshot = await _counterRef.get();
+
+      print(
+        'Connected to directly configured database and read '
+        '${counterSnapshot.value}',
+      );
+    } catch (err) {
+      print(err);
+    }
+
+    _counterSubscription = _counterRef.onValue.listen(
+      (DatabaseEvent event) {
+        setState(() {
+          _error = null;
+          _counter = (event.snapshot.value ?? 0) as int;
+        });
+      },
+      onError: (Object o) {
+        final error = o as FirebaseException;
+        setState(() {
+          _error = error;
+        });
+      },
+    );
+
+    final messagesQuery = _messagesRef.limitToLast(10);
+
+    _messagesSubscription = messagesQuery.onChildAdded.listen(
+      (DatabaseEvent event) {
+        print('Child added: ${event.snapshot.value}');
+      },
+      onError: (Object o) {
+        final error = o as FirebaseException;
+        print('Error: ${error.code} ${error.message}');
+      },
+    );
   }
 
   @override
@@ -107,33 +148,47 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _incrementAsTransaction() async {
-    // Increment counter in transaction.
-    final TransactionResult transactionResult =
-        await _counterRef.runTransaction((MutableData mutableData) {
-      mutableData.value = (mutableData.value ?? 0) + 1;
-      return mutableData;
-    });
-
-    if (transactionResult.committed) {
-      await _messagesRef.push().set(<String, String>{
-        _kTestKey: '$_kTestValue ${transactionResult.dataSnapshot?.value}'
+    try {
+      final transactionResult = await _counterRef.runTransaction((mutableData) {
+        return Transaction.success((mutableData as int? ?? 0) + 1);
       });
-    } else {
-      print('Transaction not committed.');
-      if (transactionResult.error != null) {
-        print(transactionResult.error!.message);
+
+      if (transactionResult.committed) {
+        final newMessageRef = _messagesRef.push();
+        await newMessageRef.set(<String, String>{
+          _kTestKey: '$_kTestValue ${transactionResult.snapshot.value}'
+        });
       }
+    } on FirebaseException catch (e) {
+      print(e.message);
     }
+  }
+
+  Future<void> _deleteMessage(DataSnapshot snapshot) async {
+    final messageRef = _messagesRef.child(snapshot.key!);
+    await messageRef.remove();
+  }
+
+  void _setAnchorToBottom(bool? value) {
+    if (value == null) {
+      return;
+    }
+
+    setState(() {
+      _anchorToBottom = value;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!initialized) return Container();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter Database Example'),
       ),
       body: Column(
-        children: <Widget>[
+        children: [
           Flexible(
             child: Center(
               child: _error == null
@@ -147,19 +202,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ElevatedButton(
-              onPressed: () async {
-                await _incrementAsTransaction();
-              },
-              child: const Text('Increment as transaction')),
+            onPressed: _incrementAsTransaction,
+            child: const Text('Increment as transaction'),
+          ),
           ListTile(
             leading: Checkbox(
-              onChanged: (bool? value) {
-                if (value != null) {
-                  setState(() {
-                    _anchorToBottom = value;
-                  });
-                }
-              },
+              onChanged: _setAnchorToBottom,
               value: _anchorToBottom,
             ),
             title: const Text('Anchor to bottom'),
@@ -169,19 +217,15 @@ class _MyHomePageState extends State<MyHomePage> {
               key: ValueKey<bool>(_anchorToBottom),
               query: _messagesRef,
               reverse: _anchorToBottom,
-              itemBuilder: (BuildContext context, DataSnapshot snapshot,
-                  Animation<double> animation, int index) {
+              itemBuilder: (context, snapshot, animation, index) {
                 return SizeTransition(
                   sizeFactor: animation,
                   child: ListTile(
                     trailing: IconButton(
-                      onPressed: () =>
-                          _messagesRef.child(snapshot.key!).remove(),
+                      onPressed: () => _deleteMessage(snapshot),
                       icon: const Icon(Icons.delete),
                     ),
-                    title: Text(
-                      '$index: ${snapshot.value.toString()}',
-                    ),
+                    title: Text('$index: ${snapshot.value.toString()}'),
                   ),
                 );
               },

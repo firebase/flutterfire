@@ -10,6 +10,8 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_web/firebase_database_web.dart'
+    show convertFirebaseDatabaseException;
 import 'package:flutter/widgets.dart';
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
@@ -70,9 +72,12 @@ class Database
   /// state with the server state.
   void goOnline() => jsObject.goOnline();
 
+  void useDatabaseEmulator(String host, int port) =>
+      jsObject.useEmulator(host, port);
+
   /// Returns a [DatabaseReference] to the root or provided [path].
-  DatabaseReference ref([String? path]) =>
-      DatabaseReference.getInstance(jsObject.ref(path));
+  DatabaseReference ref([String? path = '/']) =>
+      DatabaseReference.getInstance(jsObject.ref(path ?? '/'));
 
   /// Returns a [DatabaseReference] from provided [url].
   /// Url must be in the same domain as the current database.
@@ -90,11 +95,14 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 
   /// The last part of the current path.
   /// It is `null` in case of root DatabaseReference.
-  String get key => jsObject.key;
+  String? get key => jsObject.key;
 
   /// The parent location of a DatabaseReference.
-  DatabaseReference get parent =>
-      DatabaseReference.getInstance(jsObject.parent);
+  DatabaseReference? get parent {
+    final jsParent = jsObject.parent;
+    if (jsParent == null) return null;
+    return DatabaseReference.getInstance(jsParent);
+  }
 
   /// The root location of a DatabaseReference.
   DatabaseReference get root => DatabaseReference.getInstance(jsObject.root);
@@ -179,23 +187,26 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
   ///
   /// Set [applyLocally] to `false` to not see intermediate states.
   Future<Transaction> transaction(
-    TransactionHandler transactionUpdate, [
-    bool applyLocally = true,
-  ]) async {
+      TransactionHandler transactionUpdate, bool applyLocally) async {
     final c = Completer<Transaction>();
 
     final transactionUpdateWrap = allowInterop((update) {
-      final dartUpdate = MutableData('key', dartify(update));
-      final result = jsify(transactionUpdate(dartUpdate).value);
-      return result;
+      final dartUpdate = dartify(update);
+      final transaction = transactionUpdate(dartUpdate);
+      if (transaction.aborted) {
+        return undefined;
+      }
+      return jsify(transaction.value);
     });
 
-    final onCompleteWrap = allowInterop((error, commited, snapshot) {
+    final onCompleteWrap = allowInterop((error, committed, snapshot) {
       if (error != null) {
-        c.completeError(DatabaseErrorPlatform(dartify(error)));
+        final dartified = dartify(error);
+
+        c.completeError(convertFirebaseDatabaseException(dartified));
       } else {
         c.complete(Transaction(
-          committed: commited,
+          committed: committed,
           snapshot: DataSnapshot._fromJsObject(snapshot),
         ));
       }
@@ -223,7 +234,7 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
 ///
 ///     Database database = firebase.database();
 ///     database.ref('messages').onValue.listen((QueryEvent e) {
-///       DataSnapshot datasnapshot = e.snapshot;
+///       DataSnapshot dataSnapshot = e.snapshot;
 ///       //...
 ///     });
 class QueryEvent {
@@ -307,6 +318,16 @@ class Query<T extends database_interop.QueryJsImpl>
       ? jsObject.endAt(jsify(value))
       : jsObject.endAt(jsify(value), key));
 
+  /// Creates a [Query] with the specified ending point (exclusive)
+  /// The ending point is exclusive. If only a value is provided,
+  /// children with a value less than the specified value will be included in
+  /// the query. If a key is specified, then children must have a value lesss
+  /// than or equal to the specified value and a a key name less than the
+  /// specified key.
+  Query endBefore(value, [String? key]) => Query.fromJsObject(key == null
+      ? jsObject.endBefore(jsify(value))
+      : jsObject.endBefore(jsify(value), key));
+
   /// Returns a Query which includes children which match the specified [value].
   ///
   /// The [value] must be a [num], [String], [bool], or `null`, or the error
@@ -346,10 +367,14 @@ class Query<T extends database_interop.QueryJsImpl>
       streamController.add(QueryEvent(DataSnapshot.getInstance(data), string));
     });
 
+    final cancelCallbackWrap = allowInterop((Object error) {
+      final dartified = dartify(error);
+      streamController.addError(convertFirebaseDatabaseException(dartified));
+      streamController.close();
+    });
+
     void startListen() {
-      // TODO(lesnitsky) – should probably implement cancel callback
-      // See https://firebase.google.com/docs/reference/js/firebase.database.Query#on
-      jsObject.on(eventType, callbackWrap);
+      jsObject.on(eventType, callbackWrap, cancelCallbackWrap);
     }
 
     void stopListen() {
@@ -401,6 +426,10 @@ class Query<T extends database_interop.QueryJsImpl>
             ? jsObject.startAt(jsify(value))
             : jsObject.startAt(jsify(value), key),
       );
+
+  Query startAfter(value, [String? key]) => Query.fromJsObject(key == null
+      ? jsObject.startAfter(jsify(value))
+      : jsObject.startAfter(jsify(value), key));
 
   /// Returns a String representation of Query object.
   @override
