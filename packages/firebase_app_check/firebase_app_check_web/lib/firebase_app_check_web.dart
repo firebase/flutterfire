@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-as core_interop;
+    as core_interop;
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -16,7 +16,7 @@ import 'src/interop/app_check.dart' as app_check_interop;
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   static Map<String, StreamController<AppCheckTokenResult>>
-  _tokenChangesListeners = {};
+      _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
@@ -27,7 +27,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app) {
     _tokenChangesListeners[app.name] =
-    StreamController<AppCheckTokenResult>.broadcast();
+        StreamController<AppCheckTokenResult>.broadcast();
 
     _delegate.onTokenChanged().map((event) {
       _tokenChangesListeners[app.name]!.add(AppCheckTokenResult(event.token));
@@ -69,17 +69,17 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   Future<AppCheckTokenResult> getToken(bool forceRefresh) async {
     return guard<Future<AppCheckTokenResult>>(() async {
       app_check_interop.AppCheckTokenResult result =
-      await _delegate.getToken(forceRefresh);
+          await _delegate.getToken(forceRefresh);
       return AppCheckTokenResult(result.token);
     });
   }
 
   @override
   Future<void> setTokenAutoRefreshEnabled(
-      bool isTokenAutoRefreshEnabled,
-      ) async {
+    bool isTokenAutoRefreshEnabled,
+  ) async {
     return guard<Future<void>>(
-          () async =>
+      () async =>
           _delegate.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled),
     );
   }

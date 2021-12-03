@@ -99,7 +99,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
     bool isTokenAutoRefreshEnabled,
   ) async {
     try {
-      await channel.invokeMapMethod(
+      await channel.invokeMethod(
         'FirebaseAppCheck#setTokenAutoRefreshEnabled',
         {
           'appName': app.name,
