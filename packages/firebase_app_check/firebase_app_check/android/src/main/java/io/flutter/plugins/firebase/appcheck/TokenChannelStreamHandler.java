@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
-  private FirebaseAppCheck firebaseAppCheck;
+  private final FirebaseAppCheck firebaseAppCheck;
   private FirebaseAppCheck.AppCheckListener listener;
 
   public TokenChannelStreamHandler(FirebaseAppCheck firebaseAppCheck) {
