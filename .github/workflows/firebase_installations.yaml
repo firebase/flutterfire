@@ -58,11 +58,10 @@ jobs:
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: 'Drive iOS Example'
         run: ./.github/workflows/scripts/drive-example.sh ios
-      # TODO(pr-mais): enable once macos is supported
-      # - name: 'Build MacOS Example'
-      #   run: ./.github/workflows/scripts/build-example.sh macos
-      # - name: 'Drive MacOS Example'
-      #   run: ./.github/workflows/scripts/drive-example.sh macos
+      - name: 'Build MacOS Example'
+        run: ./.github/workflows/scripts/build-example.sh macos
+      - name: 'Drive MacOS Example'
+        run: ./.github/workflows/scripts/drive-example.sh macos
 
   web:
     runs-on: ubuntu-latest
