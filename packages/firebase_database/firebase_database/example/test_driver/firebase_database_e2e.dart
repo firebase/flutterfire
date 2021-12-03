@@ -25,7 +25,16 @@ final emulatorHost =
 
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+        appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+      ),
+    );
     database = FirebaseDatabase.instance;
     database.useDatabaseEmulator(emulatorHost, emulatorPort);
   });
