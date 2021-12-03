@@ -56,14 +56,14 @@ function PluginsTable(props: { status: PluginStatus }) {
                 <td>
                   <strong>{plugin.name}</strong>
                 </td>
-                <td>
-                  <a href={`https://pub.dev/packages/${plugin.pub}`}>
-                    <img
-                      src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
-                      alt={`${plugin.name} pub.dev badge`}
-                    />
-                  </a>
-                </td>
+                 <td>
+                   <a href={`https://pub.dev/packages/${plugin.pub}`}>
+                     <img
+                       src={`https://img.shields.io/pub/v/${plugin.pub}.svg`}
+                       alt={`${plugin.name} pub.dev badge`}
+                     />
+                   </a>
+                 </td>
                 <td>
                   <a
                     href={
@@ -93,17 +93,9 @@ function PluginsTable(props: { status: PluginStatus }) {
                     <code>{plugin.pub}</code>
                   </a>
                 </td>
-                <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
-                <td>
-                  {plugin.name == 'Crashlytics' ? (
-                    'N/A'
-                  ) : plugin.support.web ? (
-                    <Check />
-                  ) : (
-                    <Cross />
-                  )}
-                </td>
-                <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
+                <td className="icon">{typeof plugin.support.mobile === 'string' ? plugin.support.mobile : plugin.support.mobile ? <Check /> : <Cross />}</td>
+                <td className="icon">{typeof plugin.support.web === 'string' ? plugin.support.web : plugin.support.web ? <Check /> : <Cross />}</td>
+                <td className="icon">{typeof plugin.support.macos === 'string' ? plugin.support.macos : plugin.support.macos ? <span style={{color:'#2196f3'}}>β</span> : <Cross />}</td>
               </tr>
             ))}
           </tbody>
