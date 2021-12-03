@@ -40,8 +40,8 @@ For example, the `my-awesome-app.page.link` has been added on this project:
 
 ## Create a Dynamic Link
 
-A dynamic link can be created directly from the Firebase Console, or programatically via the `firebase_dynamic_links` plugin. Once a link has been created,
-you can use send them to users (via emails, push notifications, in-app content etc). Upon opening, your application can handle the link however you like, for
+A dynamic link can be created directly from the Firebase Console, or programmatically via the `firebase_dynamic_links` plugin. Once a link has been created,
+you can use send them to users (via emails, push notifications, in-app content etc.). Upon opening, your application can handle the link however you like, for
 example opening a specific screen.
 
 ### Build Dynamic Link
@@ -101,14 +101,14 @@ final Uri uri = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
 
 ## Handling Dynamic Links
 
-To handle an Dynamic Link in your application, two scenarios require implementing.
+To handle a Dynamic Link in your application, two scenarios require implementing.
 
 ### Background or Terminated
 
 If the application is in the background or terminated, the [`FirebaseDynamicLinks.getInitialLink`](!firebase_dynamic_links.getInitialLink)
 method allows you to retrieve the Dynamic Link that opened the application or brought it to the foreground.
 
-This is an asynchronous request, so it make sense to handle a link before rendering application logic, such as 
+This is an asynchronous request, so it makes sense to handle a link before rendering application logic, such as 
 a navigator. For example, you could handle this in the `main` function:
 
 ```dart
@@ -142,7 +142,7 @@ String link = 'https://dynamic-link-domain/ke2Qa';
 final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
 ```
 
-## Realtime handling
+## Listen for incoming links
 
 Whilst the application is open, you may listen to Dynamic Links using a stream handler. The [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
 getter returns a `Stream` containing a `PendingDynamicLinkData`:

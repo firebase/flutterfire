@@ -178,8 +178,8 @@ void main() {
           ),
         );
 
-        final PendingDynamicLinkData? data = await dynamicLinks.onLink.first;
-        expect(data!.link.scheme, mockUri.scheme);
+        final PendingDynamicLinkData data = await dynamicLinks.onLink.first;
+        expect(data.link.scheme, mockUri.scheme);
 
         expect(data.android!.clickTimestamp, mockClickTimestamp);
         expect(data.android!.minimumVersion, mockMinimumVersionAndroid);
