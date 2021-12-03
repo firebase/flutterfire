@@ -1,5 +1,9 @@
+#if canImport(FlutterMacOS)
+import FlutterMacOS
+#else
 import Flutter
-import UIKit
+#endif
+
 import firebase_core
 import FirebaseInstallations
 
@@ -20,8 +24,16 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: kFLTFirebaseInstallationsChannelName, binaryMessenger: registrar.messenger())
-        let instance = SwiftFirebaseInstallationsPlugin(messenger: registrar.messenger())
+        let binaryMessenger:FlutterBinaryMessenger;
+        
+        #if os(macOS)
+            binaryMessenger = registrar.messenger
+        #elseif os(iOS)
+            binaryMessenger = registrar.messenger()
+        #endif
+        
+        let channel = FlutterMethodChannel(name: kFLTFirebaseInstallationsChannelName, binaryMessenger: binaryMessenger)
+        let instance = SwiftFirebaseInstallationsPlugin(messenger: binaryMessenger)
         registrar.addMethodCallDelegate(instance, channel: channel)
     }
     
@@ -55,7 +67,7 @@ public class SwiftFirebaseInstallationsPlugin: FLTFirebasePlugin, FlutterPlugin 
                 self.result!.success(id)
             }
             
-
+            
         }
     }
     
