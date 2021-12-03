@@ -1,3 +1,8 @@
+## 2.4.0
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: log development platform to Crashlytics in Crashlytics iOS plugin (#7322).
+
 ## 2.3.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

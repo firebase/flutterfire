@@ -1,15 +1,13 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
+import 'dart:io';
 
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'instance_e2e.dart';
@@ -24,7 +22,35 @@ bool useEmulator = true;
 
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp();
+    if (kIsWeb) {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          projectId: 'react-native-firebase-testing',
+          apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+          authDomain: 'react-native-firebase-testing.firebaseapp.com',
+          storageBucket: 'react-native-firebase-testing.appspot.com',
+          messagingSenderId: '448618578101',
+          appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
+        ),
+      );
+    } else {
+      if (Platform.isMacOS) {
+        //TODO(pr_Mais): macos doesn't build without GoogleService.plist, not possible to initialize from dart only??
+        await Firebase.initializeApp();
+      } else {
+        await Firebase.initializeApp(
+          options: const FirebaseOptions(
+            projectId: 'react-native-firebase-testing',
+            apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+            messagingSenderId: '448618578101',
+            appId: '1:448618578101:ios:6640d5c29008c2a8ac3efc',
+            iosBundleId: 'io.flutter.plugins.firebase.storage.example',
+            storageBucket: 'react-native-firebase-testing.appspot.com',
+          ),
+        );
+      }
+    }
+
     if (useEmulator) {
       await FirebaseStorage.instance
           .useStorageEmulator(testEmulatorHost, testEmulatorPort);

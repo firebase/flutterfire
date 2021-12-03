@@ -12,6 +12,10 @@ documentation and updating unit and end-to-end tests.
   - **NEW**: `DynamicLinkParameters` class is used to build parameters for `buildLink()` & `buildShortLink()`.
   - **NEW**: Multi-app support now available for Android only using `FirebaseDynamicLinks.instanceFor()`.
 
+## 3.0.2
+
+ - Update a dependency to the latest release.
+
 ## 3.0.1
 
  - Update a dependency to the latest release.

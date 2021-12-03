@@ -1,0 +1,33 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "denied_read": {
+      ".read": false,
+      ".write": false
+    },
+    "messages": {
+      ".read": true,
+      ".write": true
+    },
+    "counter": {
+      ".read": true,
+      ".write": true
+    },
+    "tests": {
+      ".read": true,
+      ".write": true,
+      ".indexOn": [
+        ".value",
+        "number"
+      ],
+      "ordered": {
+        ".read": true,
+        ".write": true,
+        ".indexOn": [
+          "value"
+        ]
+      }
+    }
+  }
+}

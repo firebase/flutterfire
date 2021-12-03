@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #import "FLTFirebaseCrashlyticsPlugin.h"
+#import "Crashlytics_Platform.h"
 
 #import <Firebase/Firebase.h>
 
@@ -68,6 +69,9 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     instance = [[FLTFirebaseCrashlyticsPlugin alloc] init];
     // Register with the Flutter Firebase plugin registry.
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+    [[FIRCrashlytics crashlytics] setDevelopmentPlatformName:@"Flutter"];
+    // We can't currently get the Flutter plugin version number, so use -1.
+    [[FIRCrashlytics crashlytics] setDevelopmentPlatformVersion:@"-1"];
   });
 
   return instance;

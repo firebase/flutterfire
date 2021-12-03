@@ -1,3 +1,8 @@
+## 3.1.1
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FIX**: suppress Java unchecked cast lint warning in Android plugin (#7431).
+
 ## 3.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
