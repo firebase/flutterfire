@@ -1,3 +1,7 @@
+## 1.4.0
+
+ - **FEAT**: bump Firebase JS SDK to `8.10.0` (#7460).
+
 ## 1.3.0
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).
