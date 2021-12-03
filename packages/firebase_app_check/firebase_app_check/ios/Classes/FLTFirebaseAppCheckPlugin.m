@@ -115,7 +115,8 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
                                                            binaryMessenger:_binaryMessenger];
 
   FLTTokenRefreshStreamHandler *handler = [[FLTTokenRefreshStreamHandler alloc] init];
-
+  [channel setStreamHandler:handler];
+  
   [_eventChannels setObject:channel forKey:name];
   [_streamHandlers setObject:handler forKey:name];
   result.success(name);
