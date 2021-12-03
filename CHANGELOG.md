@@ -3,6 +3,169 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-02
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`cloud_firestore` - `v3.1.1`](#cloud_firestore---v311)
+- [`cloud_firestore_web` - `v2.6.0`](#cloud_firestore_web---v260)
+- [`cloud_functions` - `v3.2.0`](#cloud_functions---v320)
+- [`cloud_functions_web` - `v4.2.0`](#cloud_functions_web---v420)
+- [`firebase_analytics` - `v9.0.0-dev.4`](#firebase_analytics---v900-dev4)
+- [`firebase_analytics_web` - `v0.4.0-dev.4`](#firebase_analytics_web---v040-dev4)
+- [`firebase_app_check` - `v0.0.4`](#firebase_app_check---v004)
+- [`firebase_app_check_web` - `v0.0.3`](#firebase_app_check_web---v003)
+- [`firebase_auth` - `v3.3.0`](#firebase_auth---v330)
+- [`firebase_auth_web` - `v3.3.0`](#firebase_auth_web---v330)
+- [`firebase_core` - `v1.10.1`](#firebase_core---v1101)
+- [`firebase_core_platform_interface` - `v4.2.0`](#firebase_core_platform_interface---v420)
+- [`firebase_core_web` - `v1.3.0`](#firebase_core_web---v130)
+- [`firebase_crashlytics` - `v2.4.0`](#firebase_crashlytics---v240)
+- [`firebase_database` - `v8.2.0`](#firebase_database---v820)
+- [`firebase_database_web` - `v0.1.2`](#firebase_database_web---v012)
+- [`firebase_messaging` - `v11.2.0`](#firebase_messaging---v1120)
+- [`firebase_messaging_platform_interface` - `v3.1.0`](#firebase_messaging_platform_interface---v310)
+- [`firebase_messaging_web` - `v2.2.0`](#firebase_messaging_web---v220)
+- [`firebase_performance_web` - `v0.0.3`](#firebase_performance_web---v003)
+- [`firebase_remote_config` - `v1.0.0-dev.3`](#firebase_remote_config---v100-dev3)
+- [`firebase_remote_config_web` - `v1.0.0-dev.3`](#firebase_remote_config_web---v100-dev3)
+- [`firebase_storage` - `v10.2.0`](#firebase_storage---v1020)
+- [`firebase_storage_web` - `v3.2.0`](#firebase_storage_web---v320)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_in_app_messaging` - `v0.5.0+14`
+- `firebase_auth_platform_interface` - `v6.1.5`
+- `firebase_crashlytics_platform_interface` - `v3.1.7`
+- `firebase_remote_config_platform_interface` - `v1.0.0-dev.3`
+- `firebase_database_platform_interface` - `v0.1.0+4`
+- `firebase_dynamic_links` - `v3.0.2`
+- `cloud_firestore_platform_interface` - `v5.4.6`
+- `firebase_analytics_platform_interface` - `v3.0.0-dev.4`
+- `firebase_app_check_platform_interface` - `v0.0.1+10`
+- `cloud_functions_platform_interface` - `v5.0.15`
+- `firebase_storage_platform_interface` - `v4.0.7`
+- `firebase_performance_platform_interface` - `v0.0.1+8`
+- `firebase_performance` - `v0.7.1+5`
+
+---
+
+#### `cloud_firestore` - `v3.1.1`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FIX**: suppress Java unchecked cast lint warning in Android plugin (#7431).
+
+#### `cloud_firestore_web` - `v2.6.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `cloud_functions` - `v3.2.0`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `cloud_functions_web` - `v4.2.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_analytics` - `v9.0.0-dev.4`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_analytics_web` - `v0.4.0-dev.4`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_app_check` - `v0.0.4`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_app_check_web` - `v0.0.3`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_auth` - `v3.3.0`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_auth_web` - `v3.3.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_core` - `v1.10.1`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+
+#### `firebase_core_platform_interface` - `v4.2.0`
+
+ - **FEAT**: auto inject Firebase scripts (#7358).
+
+#### `firebase_core_web` - `v1.3.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+ - **FEAT**: auto inject Firebase scripts (#7358).
+
+#### `firebase_crashlytics` - `v2.4.0`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: log development platform to Crashlytics in Crashlytics iOS plugin (#7322).
+
+#### `firebase_database` - `v8.2.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_database_web` - `v0.1.2`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_messaging` - `v11.2.0`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_messaging_platform_interface` - `v3.1.0`
+
+ - **FEAT**: add support for `RemoteMessage` on web (#7430).
+
+#### `firebase_messaging_web` - `v2.2.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_performance_web` - `v0.0.3`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_remote_config` - `v1.0.0-dev.3`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_remote_config_web` - `v1.0.0-dev.3`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_storage` - `v10.2.0`
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+#### `firebase_storage_web` - `v3.2.0`
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+
 ## 2021-11-09
 
 ### Changes
