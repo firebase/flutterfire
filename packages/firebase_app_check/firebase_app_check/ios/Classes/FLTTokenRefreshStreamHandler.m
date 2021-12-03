@@ -5,11 +5,10 @@
 #import "FLTTokenRefreshStreamHandler.h"
 #import "FLTFirebaseAppCheckPlugin.h"
 
-const NSNotificationName FIRAppCheckAppCheckTokenDidChangeNotification =
+const NSNotificationName kNotififactionEvent =
     @"FIRAppCheckAppCheckTokenDidChangeNotification";
 
-NSString *const kFIRAppCheckTokenNotificationKey = @"FIRAppCheckTokenNotificationKey";
-NSString *const kFIRAppCheckAppNameNotificationKey = @"FIRAppCheckAppNameNotificationKey";
+NSString *const kTokenKey = @"FIRAppCheckTokenNotificationKey";
 
 @implementation FLTTokenRefreshStreamHandler {
   id _observer;
@@ -17,11 +16,11 @@ NSString *const kFIRAppCheckAppNameNotificationKey = @"FIRAppCheckAppNameNotific
 
 - (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
   _observer = [NSNotificationCenter.defaultCenter
-      addObserverForName:FIRAppCheckAppCheckTokenDidChangeNotification
+      addObserverForName:kNotififactionEvent
                   object:nil
                    queue:nil
               usingBlock:^(NSNotification *_Nonnull note) {
-                NSString *token = note.userInfo[kFIRAppCheckTokenNotificationKey];
+                NSString *token = note.userInfo[kTokenKey];
 
                 events(@{@"result" : token});
               }];
