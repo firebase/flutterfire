@@ -118,6 +118,7 @@ void main() {
 
     test('throws if .setInitialValues() not implemented', () async {
       await expectLater(
+        // ignore: invalid_use_of_protected_member
         () => firebaseAppCheckPlatform.setInitialValues(),
         throwsA(
           isA<UnimplementedError>().having(

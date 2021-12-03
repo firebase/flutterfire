@@ -25,7 +25,6 @@ void main() {
     });
 
     test('setInitialValues', () {
-      const enabled = true;
       appCheck.setInitialValues();
       verify(appCheck.setInitialValues());
       verifyNoMoreInteractions(appCheck);

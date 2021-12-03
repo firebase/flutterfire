@@ -27,7 +27,9 @@ void testsMain() {
 
     test('activate', () async {
       await expectLater(
-          appCheck.activate(webRecaptchaSiteKey: 'key'), completes);
+        appCheck.activate(webRecaptchaSiteKey: 'key'),
+        completes,
+      );
     });
 
     test('getToken', () async {

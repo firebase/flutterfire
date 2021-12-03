@@ -52,13 +52,17 @@ void main() {
 
     group('delegateFor()', () {
       test('returns a [FirebaseAppCheckPlatform]', () {
-        expect(appCheck.delegateFor(app: secondaryApp),
-            FirebaseAppCheckPlatform.instanceFor(app: secondaryApp));
+        // ignore: invalid_use_of_protected_member
+        expect(
+          appCheck.delegateFor(app: secondaryApp),
+          FirebaseAppCheckPlatform.instanceFor(app: secondaryApp),
+        );
       });
     });
 
     group('setInitialValues()', () {
       test('returns a [MethodChannelFirebaseAppCheck]', () {
+        // ignore: invalid_use_of_protected_member
         expect(appCheck.setInitialValues(), appCheck);
       });
     });

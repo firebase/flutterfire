@@ -43,6 +43,7 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   Func0? _idTokenChangedUnsubscribe;
 
   StreamController<app_check_interop.AppCheckTokenResult>?
+      // ignore: close_sinks
       _idTokenChangedController;
 
   Stream<app_check_interop.AppCheckTokenResult> onTokenChanged() {
