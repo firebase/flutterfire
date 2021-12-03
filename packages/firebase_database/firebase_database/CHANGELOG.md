@@ -1,4 +1,6 @@
-## [UNRELEASED]
+## 9.0.0-dev.0
+
+> Note: This release has breaking changes.
 
 Realtime Database has been fully reworked to bring the plugin inline with the federated plugin
 setup, a more familiar API, better documentation and many more unit and end-to-end tests.
@@ -48,7 +50,7 @@ setup, a more familiar API, better documentation and many more unit and end-to-e
  - **NEW**: Added support for accessing a snapshot child node via `child()`.
  - **NEW**: Added support for iterating the child nodes of the snapshot via the `.children` getter.
    - **BREAKING** `snapshot.value` are no longer pre-sorted when using order queries, use `.children`
-     if you need to itterate over your value keys in order.
+     if you need to iterate over your value keys in order.
 
 - `TransactionResult`
  - **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` completion error.
