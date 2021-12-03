@@ -33,3 +33,5 @@ flutter:
         pluginClass: FirebaseInstallationsPlugin
       ios:
         pluginClass: FirebaseInstallationsPlugin
+      macos:
+        pluginClass: FirebaseInstallationsPlugin
