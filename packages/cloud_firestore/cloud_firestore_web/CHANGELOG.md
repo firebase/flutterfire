@@ -1,3 +1,7 @@
+## 2.6.1
+
+ - Update a dependency to the latest release.
+
 ## 2.6.0
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).
