@@ -41,11 +41,8 @@ and open source.
 - [Core (`firebase_core`)](#firebase_core)
 - [Crashlytics (`firebase_crashlytics`)](#firebase_crashlytics)
 - [Realtime Database (`firebase_database`)](#firebase_database)
-
 - [Dynamic Links (`firebase_dynamic_links`)](#firebase_dynamic_links)
 - [In-App Messaging (`firebase_in_app_messaging`)](#firebase_in_app_messaging)
-- [ML Custom (`firebase_ml_custom`)](#firebase_ml_custom)
-- [ML Vision (`firebase_ml_vision`)](#firebase_ml_vision)
 - [Performance Monitoring (`firebase_performance`)](#firebase_performance)
 - [Remote Config (`firebase_remote_config`)](#firebase_remote_config)
 
@@ -244,38 +241,6 @@ content. [[Learn More][in_app_messaging_product]]
 
 ----
 
-### `firebase_ml_custom`
-
-> [![firebase_ml_custom][ml_custom_badge_pub]][ml_custom_pub] [![pub points][ml_custom_badge_pub_points]][ml_custom_pub_points]
-
-Use Firebase ML to deploy custom models. [[Learn More][ml_custom_product]]
-
-[[View Source][ml_custom_code]]
-
-#### Platform Support
-
-| Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
-
-----
-
-### `firebase_ml_vision`
-
-> [![firebase_ml_vision][ml_vision_badge_pub]][ml_vision_pub] [![pub points][ml_vision_badge_pub_points]][ml_vision_pub_points]
-
-Use Firebase ML turn-key solutions with the Cloud Vision APIs. [[Learn More][ml_vision_product]]
-
-[[View Source][ml_vision_code]]
-
-#### Platform Support
-
-| Android | iOS | MacOS | Web |
-|:-------:|:---:|:-----:|:---:|
-|    ✔️    |  ✔️  |       |     |
-
-----
-
 ### `firebase_performance`
 
 > ![firebase_performance][performance_badge_ci] [![firebase_performance][performance_badge_pub]][performance_pub] [![pub points][performance_badge_pub_points]][performance_pub_points]
@@ -464,30 +429,6 @@ maintainers and other community members on GitHub on a best-effort basis.
 [messaging_badge_pub_points]: https://badges.bar/firebase_messaging/pub%20points
 
 [messaging_badge_pub]: https://img.shields.io/pub/v/firebase_messaging.svg
-
-[ml_custom_pub]: https://pub.dev/packages/firebase_ml_custom
-
-[ml_custom_product]: https://firebase.google.com/products/ml/
-
-[ml_custom_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_custom
-
-[ml_custom_pub_points]: https://pub.dev/packages/firebase_ml_custom/score
-
-[ml_custom_badge_pub_points]: https://badges.bar/firebase_ml_custom/pub%20points
-
-[ml_custom_badge_pub]: https://img.shields.io/pub/v/firebase_ml_custom.svg
-
-[ml_vision_pub]: https://pub.dev/packages/firebase_ml_vision
-
-[ml_vision_product]: https://firebase.google.com/products/ml/
-
-[ml_vision_code]: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_vision
-
-[ml_vision_pub_points]: https://pub.dev/packages/firebase_ml_vision/score
-
-[ml_vision_badge_pub_points]: https://badges.bar/firebase_ml_vision/pub%20points
-
-[ml_vision_badge_pub]: https://img.shields.io/pub/v/firebase_ml_vision.svg
 
 [performance_pub]: https://pub.dev/packages/firebase_performance
 

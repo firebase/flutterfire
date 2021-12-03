@@ -3,15 +3,6 @@ name: FlutterFire
 packages:
   - packages/**
 
-ignore:
-  # TODO Excluded - pending rewrite to use latest SDKs.
-  - firebase_ml_custom
-  - firebase_ml_custom_example
-  # TODO Deprecated - excluded pending removal.
-  - firebase_admob
-  - firebase_ml_vision
-  - firebase_ml_vision_example
-
 scripts:
   lint:all:
     run: melos run analyze && melos run format
@@ -149,9 +140,6 @@ scripts:
       dir-exists:
         - test_driver
       scope: "*example*"
-      ignore:
-        - "*firebase_ml_vision*"
-        - "*firebase_admob*"
 
   test:web_e2e:
     run: |
