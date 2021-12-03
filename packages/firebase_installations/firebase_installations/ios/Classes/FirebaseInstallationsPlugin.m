@@ -1,3 +1,7 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 #import "FirebaseInstallationsPlugin.h"
 #if __has_include(<firebase_installations/firebase_installations-Swift.h>)
 #import <firebase_installations/firebase_installations-Swift.h>
