@@ -1,24 +1,23 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 
 /// DatabaseReference represents a particular location in your Firebase
 /// Database and can be used for reading or writing data to that location.
 ///
 /// This class is the starting point for all Firebase Database operations.
 /// After you’ve obtained your first DatabaseReference via
-/// `FirebaseDatabase.reference()`, you can use it to read data
+/// `FirebaseDatabase.ref()`, you can use it to read data
 /// (ie. `onChildAdded`), write data (ie. `setValue`), and to create new
 /// `DatabaseReference`s (ie. `child`).
 /// Note: [QueryPlatform] extends PlatformInterface already.
 abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Create a [DatabaseReferencePlatform] using [pathComponents]
   DatabaseReferencePlatform._(
-      DatabasePlatform database, List<String> pathComponents)
-      : super(database: database, pathComponents: pathComponents);
+    DatabasePlatform database,
+  ) : super(database: database);
 
   /// Gets a DatabaseReference for the location at the specified relative
   /// path. The relative path can either be a simple child key (e.g. ‘fred’) or
@@ -30,7 +29,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Gets a DatabaseReference for the parent location. If this instance
   /// refers to the root of your Firebase Database, it has no parent, and
   /// therefore parent() will return null.
-  DatabaseReferencePlatform? parent() {
+  DatabaseReferencePlatform? get parent {
     throw UnimplementedError('parent() not implemented');
   }
 
@@ -41,7 +40,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
 
   /// Gets the last token in a Firebase Database location (e.g. ‘fred’ in
   /// https://SampleChat.firebaseIO-demo.com/users/fred)
-  String get key => pathComponents.last;
+  String? get key => throw UnimplementedError('key() is not implemented');
 
   /// Generates a new child location using a unique key and returns a
   /// DatabaseReference to it. This is useful when the children of a Firebase
@@ -54,7 +53,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
     throw UnimplementedError('push() not implemented');
   }
 
-  /// Write `value` to the location with the specified `priority` if applicable.
+  /// Write `value` to the location.
   ///
   /// This will overwrite any data at this location and all child locations.
   ///
@@ -66,12 +65,28 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   ///
   /// Passing null for the new value means all data at this location or any
   /// child location will be deleted.
-  Future<void> set(dynamic value, {dynamic priority}) {
+  Future<void> set(Object? value) {
+    throw UnimplementedError('set() not implemented');
+  }
+
+  /// Write a `value` to the location with the specified `priority` if applicable.
+  ///
+  /// This will overwrite any data at this location and all child locations.
+  ///
+  /// Data types that are allowed are String, boolean, int, double, Map, List.
+  ///
+  /// The effect of the write will be visible immediately and the corresponding
+  /// events will be triggered. Synchronization of the data to the Firebase
+  /// Database servers will also be started.
+  ///
+  /// Passing null for the new value means all data at this location or any
+  /// child location will be deleted.
+  Future<void> setWithPriority(Object? value, Object? priority) {
     throw UnimplementedError('set() not implemented');
   }
 
   /// Update the node with the `value`
-  Future<void> update(Map<String, dynamic> value) {
+  Future<void> update(Map<String, Object?> value) {
     throw UnimplementedError('update() not implemented');
   }
 
@@ -99,7 +114,7 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Note that priorities are parsed and ordered as IEEE 754 double-precision
   /// floating-point numbers. Keys are always stored as strings and are treated
   /// as numbers only when they can be parsed as a 32-bit integer.
-  Future<void> setPriority(dynamic priority) async {
+  Future<void> setPriority(Object? priority) async {
     throw UnimplementedError('setPriority() not implemented');
   }
 
@@ -111,13 +126,14 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   /// Database servers will also be started.
   ///
   /// remove() is equivalent to calling set(null)
-  Future<void> remove() => set(null);
+  Future<void> remove() => throw UnimplementedError('remove() not implemented');
 
   /// Performs an optimistic-concurrency transactional update to the data at
   /// this Firebase Database location.
   Future<TransactionResultPlatform> runTransaction(
-      TransactionHandler transactionHandler,
-      {Duration timeout = const Duration(seconds: 5)}) async {
+    TransactionHandler transactionHandler, {
+    bool applyLocally = true,
+  }) async {
     throw UnimplementedError('runTransaction() not implemented');
   }
 
@@ -125,40 +141,4 @@ abstract class DatabaseReferencePlatform extends QueryPlatform {
   OnDisconnectPlatform onDisconnect() {
     throw UnimplementedError('onDisconnect() not implemented');
   }
-}
-
-class ServerValue {
-  static const Map<String, String> timestamp = <String, String>{
-    '.sv': 'timestamp'
-  };
-
-  /// Returns a placeholder value that can be used to atomically increment the
-  /// current database value by the provided delta.
-  static Map<dynamic, dynamic> increment(int delta) {
-    return <dynamic, dynamic>{
-      '.sv': {'increment': delta}
-    };
-  }
-}
-
-/// Interface for [TransactionHandler]
-typedef TransactionHandler = MutableData Function(MutableData mutableData);
-
-/// Interface for [TransactionResultPlatform]
-class TransactionResultPlatform extends PlatformInterface {
-  /// Constructor for [TransactionResultPlatform]
-  TransactionResultPlatform(this.error, this.committed, this.dataSnapshot)
-      : super(token: _token);
-
-  static final Object _token = Object();
-
-  /// [DatabaseErrorPlatform] associated to this transaction result
-  final DatabaseErrorPlatform? error;
-
-  /// [committed] status associated to this transaction result
-  final bool committed;
-
-  /// [DataSnapshotPlatform] status associated to this transaction result
-
-  final DataSnapshotPlatform? dataSnapshot;
 }
