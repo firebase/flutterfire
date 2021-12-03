@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-03
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`firebase_core_web` - `v1.4.0`](#firebase_core_web---v140)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_auth_web` - `v3.3.1`
+- `firebase_database_web` - `v0.1.2+1`
+- `firebase_remote_config_web` - `v1.0.0-dev.4`
+- `cloud_firestore_web` - `v2.6.1`
+- `firebase_messaging_web` - `v2.2.1`
+- `firebase_core` - `v1.10.2`
+- `firebase_analytics_web` - `v0.4.0-dev.5`
+- `firebase_app_check_web` - `v0.0.3+1`
+- `cloud_functions_web` - `v4.2.1`
+- `firebase_storage_web` - `v3.2.1`
+- `firebase_performance_web` - `v0.0.3+1`
+
+---
+
+#### `firebase_core_web` - `v1.4.0`
+
+ - **FEAT**: bump Firebase JS SDK to `8.10.0` (#7460).
+
+
 ## 2021-12-02
 
 ### Changes
