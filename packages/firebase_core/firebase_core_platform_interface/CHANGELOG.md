@@ -1,3 +1,7 @@
+## 4.2.0
+
+ - **FEAT**: auto inject Firebase scripts (#7358).
+
 ## 4.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

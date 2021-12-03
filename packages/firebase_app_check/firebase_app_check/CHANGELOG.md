@@ -5,6 +5,11 @@
 - **NEW**: Added support for enabling automatic token refreshing via the `setTokenAutoRefreshEnabled()` method.
 - **NEW**: Added support for subscribing to token change events (as a `Stream`) via the `tokenChanges()` method.
 
+## 0.0.4
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 0.0.3
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
