@@ -38,10 +38,10 @@ class QueryWeb extends QueryPlatform {
 
       if (modifier is EndCursorModifier) {
         if (modifier.name == 'endAt') {
-          instance = instance.startAt(modifier.value, modifier.key);
+          instance = instance.endAt(modifier.value, modifier.key);
         }
         if (modifier.name == 'endBefore') {
-          instance = instance.startAfter(modifier.value, modifier.key);
+          instance = instance.endBefore(modifier.value, modifier.key);
         }
       }
 
@@ -71,8 +71,8 @@ class QueryWeb extends QueryPlatform {
   @override
   Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
     try {
-      return webSnapshotToPlatformSnapshot(
-          ref, await _getQueryDelegateInstance(modifiers).get());
+      final result = await _getQueryDelegateInstance(modifiers).get();
+      return webSnapshotToPlatformSnapshot(ref, result);
     } catch (e, s) {
       throw convertFirebaseDatabaseException(e, s);
     }
