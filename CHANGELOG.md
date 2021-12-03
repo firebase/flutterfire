@@ -3,6 +3,100 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-03 (1)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- [`firebase_database` - `v9.0.0-dev.0`](#firebase_database---v900-dev0)
+- [`firebase_database_platform_interface` - `v0.2.0-dev.0`](#firebase_database_platform_interface---v020-dev0)
+- [`firebase_database_web` - `v0.2.0-dev.0`](#firebase_database_web---v020-dev0)
+
+Packages with other changes:
+
+- There are no other changes in this release.
+
+---
+
+#### `firebase_database` - `v9.0.0-dev.0`
+
+
+Realtime Database has been fully reworked to bring the plugin inline with the federated plugin
+setup, a more familiar API, better documentation and many more unit and end-to-end tests.
+
+- General
+- Fixed an issue where providing a `Map` with `int` keys would crash.
+
+- `FirebaseDatabase`
+- **DEPRECATED**: `FirebaseDatabase()` has now been deprecated in favor of `FirebaseDatabase.instanceFor()`.
+- **DEPRECATED**: `reference()` has now been deprecated in favor of `ref()`.
+- **NEW**: Added support for `ref()`, which allows you to provide an optional path to any database node rather than calling `child()`.
+- **NEW**: Add emulator support via `useDatabaseEmulator()`.
+- **NEW**: Add support for  `refFromURL()`.
+- **BREAKING**: `setPersistenceEnabled()` is now synchronous.
+- **BREAKING**: `setPersistenceCacheSizeBytes()` is now synchronous.
+- **BREAKING**: `setLoggingEnabled()` is now synchronous.
+
+- `DatabaseReference`
+- **BREAKING**: `parent` is now a getter (inline with the JavaScript API).
+- **BREAKING**: `root` is now a getter (inline with the JavaScript API).
+- **BREAKING**: `set()` now accepts an `Object?` value (rather than `dynamic`) and no longer accepts a priority.
+- **NEW**: Added support for `setWithPriority()`.
+- **NEW**: Added support for locally applying transaction results via the `applyLocally` property on `runTransaction`.
+
+- `Query`
+- **NEW**: `once()` now accepts an optional `DatabaseEventType` (rather than just subscribing to the value).
+- **BREAKING**: `limitToFirst()` now asserts the value is positive.
+- **BREAKING**: `limitToLast()` now asserts the value is positive.
+
+- `OnDisconnect`
+  - **BREAKING**: `set()` now accepts an `Object?` value (rather than `dynamic`) and no longer accepts a priority.
+  - **NEW**: Added support for `setWithPriority()`.
+
+- `Event`
+- **BREAKING**: The `Event` class returned from database queries has been renamed to `DatabaseEvent`.
+
+- **NEW**: `DatabaseEvent` (old `Event`)
+- The `DatabaseEventType` is now returned on the event.
+- The `previousChildKey` is now returned on the event (previously called `previousSiblingKey`).
+
+- **NEW**: `DatabaseEventType`
+- A `DatabaseEventType` is now returned from a `DatabaseEvent`.
+
+- `DataSnapshot`
+- **NEW**: Added support for accessing the priority via the `.priority` getter.
+- **NEW**: Added support for determining whether the snapshot has a child via `hasChild()`.
+- **NEW**: Added support for accessing a snapshot child node via `child()`.
+- **NEW**: Added support for iterating the child nodes of the snapshot via the `.children` getter.
+  - **BREAKING** `snapshot.value` are no longer pre-sorted when using order queries, use `.children`
+    if you need to iterate over your value keys in order.
+
+- `TransactionResult`
+- **BREAKING**: The result of a transaction no longer returns a `DatabaseError`, instead handle errors of a transaction via a `Future` completion error.
+
+- **NEW**: `Transaction`
+  - **NEW**: Added `Transaction.success(value)` return this from inside your  `TransactionHandler` to indicate a successful execution.
+  - **NEW**: Added `Transaction.abort()` return this from inside your  `TransactionHandler` to indicate that the transaction should be aborted.
+
+- `TransactionHandler`
+  - **BREAKING** Transaction handlers must now always return an instance of `Transaction` either via `Transaction.success()` or `Transaction.abort()`.
+
+- `DatabaseError`
+- **BREAKING**: The `DatabaseError` class has been removed. Errors are now returned as a `FirebaseException` inline with the other plugins.
+
+
+#### `firebase_database_platform_interface` - `v0.2.0-dev.0`
+
+ - **BREAKING** **REFACTOR**: rework as part of #6979 (#7202).
+
+#### `firebase_database_web` - `v0.2.0-dev.0`
+
+ - **BREAKING** **REFACTOR**: rework as part of #6979 (#7202).
+
+
 ## 2021-12-03
 
 ### Changes
