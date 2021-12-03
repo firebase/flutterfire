@@ -22,9 +22,8 @@ NSString *const kFIRAppCheckAppNameNotificationKey = @"FIRAppCheckAppNameNotific
                    queue:nil
               usingBlock:^(NSNotification *_Nonnull note) {
                 NSString *token = note.userInfo[kFIRAppCheckTokenNotificationKey];
-                NSString *appName = note.userInfo[kFIRAppCheckAppNameNotificationKey];
 
-                events(@{@"token" : token, @"appName" : appName});
+                events(@{@"result" : token});
               }];
 
   return nil;
