@@ -14,7 +14,7 @@ import 'query_builder.dart';
 /// - list the columns.
 /// - give them a label.
 /// - order the columns.
-/// - let [FirestoreTable] know what are the expected keys in a Firestore document.
+/// - let [FirestoreDataTable] know what are the expected keys in a Firestore document.
 ///
 /// An example usage would be:
 ///
@@ -25,7 +25,7 @@ import 'query_builder.dart';
 ///
 /// // ...
 ///
-/// FirestoreTable(
+/// FirestoreDataTable(
 ///   query: usersCollection,
 ///   columnLabels: {
 ///      'name': Text('User name'),
@@ -34,9 +34,9 @@ import 'query_builder.dart';
 /// );
 /// ```
 /// {@endtemplate}
-class FirestoreTable extends StatefulWidget {
+class FirestoreDataTable extends StatefulWidget {
   /// {@macro flutterfire_ui.firestore_table}
-  const FirestoreTable({
+  const FirestoreDataTable({
     Key? key,
     required this.query,
     required this.columnLabels,
@@ -172,7 +172,7 @@ class FirestoreTable extends StatefulWidget {
   _FirestoreTableState createState() => _FirestoreTableState();
 }
 
-class _FirestoreTableState extends State<FirestoreTable> {
+class _FirestoreTableState extends State<FirestoreDataTable> {
   late Query<Map<String, Object?>> _query;
 
   late final source = _Source(
@@ -192,7 +192,7 @@ class _FirestoreTableState extends State<FirestoreTable> {
   }
 
   @override
-  void didUpdateWidget(covariant FirestoreTable oldWidget) {
+  void didUpdateWidget(covariant FirestoreDataTable oldWidget) {
     super.didUpdateWidget(oldWidget);
     source.selectionEnabled = selectionEnabled;
     if (widget.query != oldWidget.query) {

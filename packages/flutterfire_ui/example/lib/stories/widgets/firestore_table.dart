@@ -8,11 +8,11 @@ final countriesCollection =
 
 class FirestoreTableStory extends StoryWidget {
   const FirestoreTableStory({Key? key})
-      : super(key: key, category: 'Widgets', title: 'FirestoreTable');
+      : super(key: key, category: 'Widgets', title: 'FirestoreDataTable');
 
   @override
   Widget build(StoryElement context) {
-    return FirestoreTable(
+    return FirestoreDataTable(
       query: countriesCollection,
       columnLabels: const {
         'title': Text('Title'),
