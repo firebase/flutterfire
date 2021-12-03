@@ -49,7 +49,7 @@ A new flutter plugin project.
   s.source_files     = 'Classes/**/*'
   s.public_header_files = 'Classes/*.h'
   
-  s.platform = :osx, '10.12'
+  s.platform = :osx, '10.11'
 
   s.swift_version = '5.5'
   
