@@ -8,47 +8,77 @@ your application, such as Sign In, Registration, Forgot Password, Profile etc.
 To get started with, let's add an authentication flow to an application. In this scenario, users will
 have to be authenticated in order to access the main application.
 
-## Initalizing Firebase
+## Initializing Firebase
 
 If you haven't already done so, you'll need to initialize Firebase before using FlutterFire UI.
 You can learn more about this in the [FlutterFire Overview](https://firebase.flutter.dev/docs/overview#initializing-flutterfire)
-documentation.
+documentation, for example:
 
-```dart
+```dart title="lib/main.dart"
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 ```
 
-## Checking authentication state
+## Material or Cupertino App
 
-Before we can render a sign in screen, we first need to determine whether the user is currently
-authenticated. The most common way to check for this is to listening to authentication state changes
-using the [Firebase Auth plugin](https://firebase.flutter.dev/docs/auth/usage).
+FlutterFire UI requires that your application is wrapped in either a `MaterialApp` or `CupertinoApp`.
+Depending on your choice, the UI will automatically reflect the differences of Material or Cupertino
+widgets. For example, to use `MaterialApp`:
 
-The `authStateChanges` API returns a Stream with either the current user (if they are signed in), or
-`null` if they are not. To subscribe to this state in our application, we can make use of the
-[`StreamBuilder`](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html) widget and pass the stream to it:
-
-```dart
+```dart title="lib/main.dart"
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: StreamBuilder<FirebaseUser?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          // ...
-        },
+      title: 'FlutterFire UI Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
+      home: AuthGate(),
+    );
+  }
+}
+```
+
+The `AuthGate` widget will be implemented in the next step.
+
+## Checking authentication state
+
+Before we can display a sign in screen, we first need to determine whether the user is currently
+authenticated. The most common way to check for this is to listening to authentication state changes
+using the [Firebase Auth plugin](https://firebase.flutter.dev/docs/auth/usage).
+
+The `authStateChanges` API returns a Stream with either the current user (if they are signed in), or
+`null` if they are not. To subscribe to this state in our application, we can make use of the
+[`StreamBuilder`](https://api.flutter.dev/flutter/widgets/StreamBuilder-class.html) widget and pass the stream to it.
+
+In the previous step, the `AuthGate` widget is constructed from `MaterialApp`. This widget will require
+that a user is signed in before accessing the main application.
+
+```dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<FirebaseUser?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // ...
+      },
     );
   }
 }
@@ -57,61 +87,65 @@ class MyApp extends StatelessWidget {
 Our application starts by subscribing to the users authentication state, which is provided as the
 `snapshot` to the Stream builder. To check whether the user is authenticated, the snapshot will contain
 a `FirebaseUser` instance, or `null` if they are not. Using the snapshots [`hasData`](https://api.flutter.dev/flutter/widgets/AsyncSnapshot/hasData.html)
-property we can conditionally render the sign in screen if no value exists:
+property we can conditionally display the sign in screen if no user is signed in:
 
 ```dart
-return MaterialApp(
-  home: StreamBuilder<FirebaseUser?>(
-    stream: FirebaseAuth.instance.authStateChanges(),
-    builder: (context, snapshot) {
-      if (!snapshot.hasData) {
-        // ... not signed in!
-      }
+return StreamBuilder<FirebaseUser?>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (context, snapshot) {
+    // User is not signed in
+    if (!snapshot.hasData) {
+      // ...
+    }
 
-      // Render your application if authenticated
-      return YourApplication();
-    },
-  ),
+    // Render your application if authenticated
+    return YourApplication();
+  },
 );
 ```
 
 ## Constructing a `SignInScreen` widget
 
 FlutterFire UI for Auth provides a different screens for different scenarios. For this example,
-we'll want to prompt the user to first sign-in before accessing the main application. To do this,
+we are requiring that the the user should be sign-in before accessing the main application. To do this,
 we can return a [`SignInScreen`](https://pub.dev/documentation/flutterfire_ui/latest/auth/SignInScreen-class.html) widget.
 
 Screens are customizable fully styled widgets designed to be rendered as a single "screen" within your application. Firstly,
-import the FlutterFire UI for Auth libary:
+import the FlutterFire UI package:
 
-// TODO confirm import
 ```dart
-import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui/flutterfire_ui.dart';
 ```
 
-Next, go ahead and return a new `SignInScreen` from the builder:
+Next, go ahead and return a new `SignInScreen` from the builder if the user is not signed in:
 
 ```dart
-return MaterialApp(
-  home: StreamBuilder<FirebaseUser?>(
-    stream: FirebaseAuth.instance.authStateChanges(),
-    builder: (context, snapshot) {
-      if (!snapshot.hasData) {
-        // ... not signed in!
-        return SignInScreen(
-          providerConfigs: [],
-        );
-      }
-      // ...
-    },
-  ),
+return StreamBuilder<FirebaseUser?>(
+  stream: FirebaseAuth.instance.authStateChanges(),
+  builder: (context, snapshot) {
+    // User is not signed in
+    if (!snapshot.hasData) {
+      return SignInScreen(
+        providerConfigs: []
+      );
+    }
+
+    // Render your application if authenticated
+    return YourApplication();
+  },
 );
 ```
 
+At a minimum, screens require a list of providers (via the `providerConfigs` property).
 Providers are means of authentication, such as Email/Password or Google OAuth. At the moment, our `SignInScreen` has no providers
-configured so the screen will look fairly empty:
+configured so the screen will look empty:
 
-TODO Screenshot of no providers
+<Image
+  src="ui/ui-auth-no-providers.png"
+  alt="FlutterFire UI Auth - No providers"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 You'll also notice there is a "Register" handler, which when pressed will change the UI to a registration screen instead.
 This is fully customizable and can be removed if required (more on customizing screens later).
@@ -141,7 +175,12 @@ return SignInScreen(
 
 Just like that, we've now got a sign in screen which handles email and password authentication!
 
-TODO Screenshot with email provider
+<Image
+  src="ui/ui-auth-email-provider.png"
+  alt="FlutterFire UI Auth - Email provider"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 Behind the scenes, FlutterFire UI for auth will handle the entire sign-in process for us. Once signed in, the `StreamBuilder`
 will be updated with the signed-in user and render our application. If the user signs out, the `SignInScreen` will be rendered.
@@ -154,7 +193,7 @@ The widgets provided by the UI package allow us to configure these providers and
 
 To integrate Google as a provider, we first need to install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in) plugin
 which will handle the native authentication flow for us. For native mobile integration, you'll need to follow the steps as described in the
-README of the plugin.
+README of the `google_sign_in` plugin.
 
 Additionally, ensure that the Google provider is enabled in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
 
@@ -171,7 +210,7 @@ return SignInScreen(
   providerConfigs: [
     EmailProviderConfiguration(),
     GoogleProviderConfiguration(
-      appId: '...',
+      clientId: '...',
     ),
   ],
 );
@@ -182,13 +221,19 @@ the `appId` can be copied from the [Firebase Console](https://console.firebase.g
 
 With the Google provider configuration added, our sign in screen will now include a Google button!
 
-TODO Screenshot with google provider
+<Image
+  src="ui/ui-auth-email-google-provider.png"
+  alt="FlutterFire UI Auth - Email + Google provider"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 Just like Email/Password sign in, a successfully Google sign-in will trigger the authentication listener allowing the user access to the application.
 
 ## Customizing the UI
 
-The screens provided by the UI package are customizable, allowing you to add images, alter text and more.
+The screens provided by the UI package are fairly basic on their own, however they are fully customizable,
+allowing you to add images, alter text and more.
 
 ### Provider order
 
@@ -199,7 +244,7 @@ For example, let's show the Google sign in button first:
 return SignInScreen(
   providerConfigs: [
     GoogleProviderConfiguration(
-      appId: '...',
+      clientId: '...',
     ),
     EmailProviderConfiguration(),
   ],
@@ -233,7 +278,12 @@ return SignInScreen(
 
 Great, our screen how has a nice header!
 
-TODO screenshot with header
+<Image
+  src="ui/ui-auth-signin-header.png"
+  alt="FlutterFire UI Auth - Header"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Side content (desktop)
 
@@ -258,20 +308,29 @@ return SignInScreen(
 
 TODO desktop side content screenshot
 
-### Sub-header & footer content
+### Sub-title & footer content
 
-Another common practice is to add some personalised text to the screen, such as instructions, terms and conditions, 
-privacy policy etc. The `subHeaderBuilder` and `footerBuilder` properties allow us to render custom widgets to 
+Another common practice is to add some personalised text to the screen, such as instructions, terms and conditions,
+privacy policy etc. The `subtitleBuilder` and `footerBuilder` properties allow us to render custom widgets to
 the top and bottom of the screen:
 
-TODO(andrei): improve examples
 ```dart
 return SignInScreen(
-  subHeaderBuilder: (context, constraints) {
-    return Text("Welcome, please sign in to continue.");
+  subtitleBuilder: (context) {
+    return const Padding(
+      padding: EdgeInsets.only(top: 8, bottom: 16),
+      child: Text(
+          'Welcome to FlutterFire UI! To continue, please sign-in to your account.'),
+    );
   },
-  footerBuilder: (context, constraints) {
-    return Text("By signing in, you agree to our terms and conditions.");
+  footerBuilder: (context) {
+    return const Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: Text(
+        'By signing in, you agree to our terms and conditions.',
+        style: TextStyle(color: Colors.grey),
+      ),
+    );
   },
   sideBuilder: (context, constraints) {
     // ...
@@ -285,17 +344,21 @@ return SignInScreen(
 );
 ```
 
-TODO sub-header + footer screenshot
+<Image
+  src="ui/ui-auth-signin-subtitle.png"
+  alt="FlutterFire UI Auth - Subtitle + Footer"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Disabling internal navigation
 
 Currently our sign in screen allows the user to "navigate" to the register screen. In some cases you may want to disable this
-and handle navigation yourself. Set the `internalNavigation` property to `false` to disable this behaviour:
+and handle navigation yourself. Set the `showAuthActionSwitch` property to `false` to disable this behaviour:
 
-TODO(andrei): confirm property name
 ```dart
 return SignInScreen(
-  internalNavigation: false,
+  showAuthActionSwitch: false,
   // ...
 );
 ```
@@ -305,7 +368,7 @@ return SignInScreen(
 FlutterFire UI for Auth offers more than just a sign in screen - most common user scenarios are also available as screens. You'll find
 that the API for screens is very similar to the API for sign in screens.
 
-### Register screen
+### Registration
 
 A screen which allows the user to create an account.
 
@@ -314,15 +377,55 @@ return RegisterScreen(
   providerConfigs: [
     EmailProviderConfiguration(),
     GoogleProviderConfiguration(
-      appId: '...',
+      clientId: '...',
     ),
   ],
+  // ...
 );
 ```
 
-TODO register screen screenshot
+<Image
+  src="ui/ui-auth-register.png"
+  alt="FlutterFire UI Auth - Register"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
-### TODO other screens (phone, forgot pw, provider sign in, etc)
+### Forgot Password
+
+A screen which allows the user enter their email address to send a password reset email.
+
+```dart
+return ForgotPasswordScreen();
+```
+
+TODO screenshot (include header / footer once available)
+
+### Phone Number Authentication
+
+A multi-flow screen which enables users to select a country code and provide their phone number.
+Once provided, the user will be asked to verify the phone number via an SMS code.
+
+TODO screenshot (include header / footer once available)
+
+### Profile
+
+When authenticated, displays a basic profile screen containing meta information such as their
+avatar and editable profile data.
+
+```dart
+return ProfileScreen(
+  providerConfigs: [
+    EmailProviderConfiguration(),
+    GoogleProviderConfiguration(
+      clientId: '...',
+    ),
+  ],
+  avatarSize: 24,
+);
+```
+
+TODO screenshot
 
 ## Next Steps
 
@@ -331,3 +434,4 @@ With your first screen integrated, you can now start adding more providers and i
 - [Configuring Providers](configuring-providers)
 - [Building a custom UI](building-a-custom-ui)
 - [Localization](localization)
+
