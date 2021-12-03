@@ -408,7 +408,9 @@ void runQueryTests() {
                 .having((e) => e.type, 'type', DatabaseEventType.childRemoved),
           ]),
         );
-
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
         await ref.child('bar').remove();
       });
     });
@@ -431,7 +433,9 @@ void runQueryTests() {
                 .having((e) => e.type, 'type', DatabaseEventType.childChanged),
           ]),
         );
-
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
         await ref.child('bar').set('baz');
         await ref.child('foo').set('bar');
       });
@@ -448,17 +452,19 @@ void runQueryTests() {
         });
 
         expect(
-          ref.onChildMoved,
+          ref.orderByChild('nuggets').onChildMoved,
           emitsInOrder([
             isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
               'nuggets': 57
-            }).having((e) => e.type, 'type', DatabaseEventType.childChanged),
+            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
             isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
               'nuggets': 61
-            }).having((e) => e.type, 'type', DatabaseEventType.childChanged),
+            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
           ]),
         );
-
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
         await ref.child('greg/nuggets').set(57);
         await ref.child('rob/nuggets').set(61);
       });
