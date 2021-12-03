@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -24,9 +23,13 @@ void main() {
     setUpAll(() async {
       await Firebase.initializeApp();
       installations = FirebaseInstallations.instance;
-      when(mockInstallations.delegateFor(
-        app: anyNamed('app'),
-      )).thenAnswer((_) => mockInstallations);
+      when(
+        mockInstallations.delegateFor(
+          app: anyNamed('app'),
+        ),
+      ).thenAnswer(
+        (_) => mockInstallations,
+      );
       when(mockInstallations.getId()).thenAnswer(
         (_) => Future.value('some-id'),
       );
@@ -38,7 +41,7 @@ void main() {
     });
     test('getAuthToken', () async {
       await installations.getToken();
-      verify(mockInstallations.getToken(false));
+      verify(mockInstallations.getToken());
     });
     test('delete', () async {
       await installations.delete();
@@ -107,6 +110,7 @@ class MockFirebaseInstallations extends Mock
   }
 
   @override
+  // ignore: type_annotate_public_apis
   Future<String> getToken([forceRefresh = false]) {
     return super.noSuchMethod(
       Invocation.method(#getToken, [forceRefresh]),
