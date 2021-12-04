@@ -95,6 +95,14 @@ module.exports = {
       toReferenceAPI("firebase_crashlytics"),
       toGithubExample("firebase_crashlytics"),
     ],
+    'Dynamic Links': [
+      "dynamic-links/overview",
+      "dynamic-links/android-integration",
+      "dynamic-links/apple-integration",
+      "dynamic-links/usage",
+      toReferenceAPI("firebase_dynamic_links"),
+      toGithubExample("firebase_dynamic_links"),
+    ],
     "Realtime Database": [
       "database/overview",
       toReferenceAPI("firebase_database"),
