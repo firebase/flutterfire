@@ -24,7 +24,6 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
         ShortDynamicLinkType,
         SocialMetaTagParameters;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'dart:io' show Platform;
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 part 'src/firebase_dynamic_links.dart';

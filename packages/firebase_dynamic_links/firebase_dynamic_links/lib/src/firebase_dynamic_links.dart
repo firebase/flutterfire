@@ -23,15 +23,15 @@ class FirebaseDynamicLinks extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   /// Note; multi-app support is only supported on android.
   static FirebaseDynamicLinks instanceFor({required FirebaseApp app}) {
-    if (Platform.isAndroid || app.name == defaultFirebaseAppName) {
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        app.name == defaultFirebaseAppName) {
       return _cachedInstances.putIfAbsent(app.name, () {
         return FirebaseDynamicLinks._(app: app);
       });
     }
 
-    throw PlatformException(
-      code: 'default-app',
-      message: 'Firebase Dynamic Links has multi-app support for android only.',
+    throw UnsupportedError(
+      'FirebaseDynamicLinks.instanceFor() only supports non-default FirebaseApp instances on Android.',
     );
   }
 
