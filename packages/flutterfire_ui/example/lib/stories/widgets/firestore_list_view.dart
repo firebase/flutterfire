@@ -1,53 +1,69 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 
-class Country {
-  Country({required this.towns});
-  Country.fromJson(Map<String, Object?> json)
+class User {
+  User({
+    required this.city,
+    required this.country,
+    required this.streetName,
+    required this.zipCode,
+    required this.prefix,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.userName,
+    required this.number,
+  });
+  User.fromJson(Map<String, Object?> json)
       : this(
-          towns: (json['towns']! as List).map((e) => Town.fromJson(e)).toList(),
+          city: json['city'].toString(),
+          country: json['country'].toString(),
+          streetName: json['streetName'].toString(),
+          zipCode: json['zipCode'].toString(),
+          prefix: json['prefix'].toString(),
+          firstName: json['firstName'].toString(),
+          lastName: json['lastName'].toString(),
+          email: json['email'].toString(),
+          userName: json['userName'].toString(),
+          number: json['number'].toString(),
         );
 
-  final List<Town> towns;
+  final String city;
+  final String country;
+  final String streetName;
+  final String zipCode;
+
+  final String prefix;
+  final String firstName;
+  final String lastName;
+
+  final String email;
+  final String userName;
+  final String number;
 
   Map<String, Object?> toJson() {
     return {
-      'towns': towns.map((e) => e.toJson()).toList(),
+      'city': city,
+      'country': country,
+      'streetName': streetName,
+      'zipCode': zipCode,
+      'prefix': prefix,
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'userName': userName,
+      'number': number,
     };
   }
 }
 
-class Town {
-  Town({required this.name, required this.mayor, required this.population});
-  Town.fromJson(Map<String, Object?> json)
-      : this(
-          name: json['name']! as String,
-          mayor: json['mayor']! as String,
-          population: json['population']! as int,
+final usersCollection =
+    FirebaseFirestore.instance.collection('users').withConverter<User>(
+          fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+          toFirestore: (user, _) => user.toJson(),
         );
-
-  final String name;
-  final String mayor;
-  final int population;
-
-  Map<String, Object?> toJson() {
-    return {
-      'name': name,
-      'mayor': mayor,
-      'population': population,
-    };
-  }
-}
-
-final countriesCollection = FirebaseFirestore.instance
-    .collection('firebasePerfTest')
-    .withConverter<Country>(
-      fromFirestore: (snapshot, _) => Country.fromJson(snapshot.data()!),
-      toFirestore: (country, _) => country.toJson(),
-    );
 
 class FirestoreListViewStory extends StoryWidget {
   const FirestoreListViewStory({Key? key})
@@ -55,17 +71,47 @@ class FirestoreListViewStory extends StoryWidget {
 
   @override
   Widget build(StoryElement context) {
-    return FirestoreListView<Country>(
-      query: countriesCollection,
-      primary: true,
-      itemBuilder: (context, snapshot) {
-        return Column(
-          children: [
-            for (final town in snapshot.data().towns)
-              Text('${town.name} (${town.population})'),
-          ],
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contacts'),
+      ),
+      body: FirestoreListView<User>(
+        query: usersCollection,
+        primary: true,
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, snapshot) {
+          final user = snapshot.data();
+
+          return Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    child: Text(user.firstName[0]),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${user.firstName} ${user.lastName}',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Text(
+                        user.number,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const Divider(),
+            ],
+          );
+        },
+      ),
     );
   }
 }
