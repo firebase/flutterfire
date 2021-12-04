@@ -42,8 +42,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
   @override
   void initState() {
     super.initState();
-    getAuthToken();
-    getId();
+    init();
 
     // Listen to changes
     FirebaseInstallations.instance.idTokenChanges.listen((event) {
@@ -65,6 +64,11 @@ class _InstallationsCardState extends State<InstallationsCard> {
 
   String id = 'None';
   String authToken = 'None';
+
+  init() async {
+    await getId();
+    await getAuthToken();
+  }
 
   Future<void> deleteId() async {
     try {
