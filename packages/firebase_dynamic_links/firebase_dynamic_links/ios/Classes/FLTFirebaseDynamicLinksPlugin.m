@@ -5,7 +5,7 @@
 #import <TargetConditionals.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-#import "Public/FLTFirebaseDynamicLinksPlugin.h"
+#import "FLTFirebaseDynamicLinksPlugin.h"
 
 NSString *const kFLTFirebaseDynamicLinksChannelName = @"plugins.flutter.io/firebase_dynamic_links";
 NSString *const kDLAppName = @"appName";

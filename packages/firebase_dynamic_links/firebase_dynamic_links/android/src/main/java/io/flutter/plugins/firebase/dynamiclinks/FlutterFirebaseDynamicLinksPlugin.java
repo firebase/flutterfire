@@ -171,8 +171,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         cachedThreadPool,
         () -> {
           Integer suffix = 1;
-          Integer shortDynamicLinkPathLength =
-              (Integer) dynamicLinkParametersOptions.get("shortLinkType");
+          Integer shortDynamicLinkPathLength = (Integer) arguments.get("shortLinkType");
           if (shortDynamicLinkPathLength != null) {
             switch (shortDynamicLinkPathLength) {
               case 0:
