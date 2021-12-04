@@ -44,6 +44,7 @@ module.exports = [
   'filesystem',
   'firebase',
   'firestore',
+  'flutterfire',
   'FlutterFire',
   'func',
   'getter',

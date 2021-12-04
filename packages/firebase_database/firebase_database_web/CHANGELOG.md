@@ -1,3 +1,17 @@
+## 0.2.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: rework as part of #6979 (#7202).
+
+## 0.1.2+1
+
+ - Update a dependency to the latest release.
+
+## 0.1.2
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 0.1.1
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore_example/firebase_config.dart';
 import 'package:cloud_firestore_example/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,14 +14,7 @@ bool USE_FIRESTORE_EMULATOR = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-    ),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
 
   if (USE_FIRESTORE_EMULATOR) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
@@ -218,9 +212,7 @@ class _MovieItem extends StatelessWidget {
   Widget get poster {
     return SizedBox(
       width: 100,
-      child: Center(
-        child: Image.network(movie.poster),
-      ),
+      child: Image.network(movie.poster),
     );
   }
 
@@ -255,7 +247,8 @@ class _MovieItem extends StatelessWidget {
   Widget get metadata {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -299,6 +292,7 @@ class _MovieItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4, top: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           poster,
           Flexible(child: details),

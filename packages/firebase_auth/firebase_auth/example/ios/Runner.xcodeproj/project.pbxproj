@@ -362,7 +362,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -490,7 +490,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -513,7 +513,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

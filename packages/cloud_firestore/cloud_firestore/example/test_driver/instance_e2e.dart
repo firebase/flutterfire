@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -14,7 +12,7 @@ void runInstanceTests() {
   group(
     '$FirebaseFirestore.instance',
     () {
-      FirebaseFirestore /*?*/ firestore;
+      late FirebaseFirestore /*?*/ firestore;
 
       setUpAll(() async {
         firestore = FirebaseFirestore.instance;
@@ -107,7 +105,7 @@ void runInstanceTests() {
         DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
             await documentReference.get();
         expect(documentSnapshot.metadata.isFromCache, isTrue);
-        expect(documentSnapshot.data()['foo'], equals('bar'));
+        expect(documentSnapshot.data()!['foo'], equals('bar'));
 
         // Go back online once test complete
         await firestore.enableNetwork();
@@ -132,7 +130,7 @@ void runInstanceTests() {
         } on FirebaseException catch (e) {
           expect(e.code, equals('failed-precondition'));
         } catch (e) {
-          fail(e);
+          fail('$e');
         }
 
         await firestore.terminate();

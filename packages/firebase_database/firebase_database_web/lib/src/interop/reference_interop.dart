@@ -7,17 +7,11 @@ abstract class TransactionResultJsImpl {
 
 @JS('Reference')
 abstract class ReferenceJsImpl extends QueryJsImpl {
-  external String get key;
+  external String? get key;
 
-  external set key(String s);
-
-  external ReferenceJsImpl get parent;
-
-  external set parent(ReferenceJsImpl r);
+  external ReferenceJsImpl? get parent;
 
   external ReferenceJsImpl get root;
-
-  external set root(ReferenceJsImpl r);
 
   external ReferenceJsImpl child(String path);
 

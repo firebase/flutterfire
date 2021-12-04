@@ -1,3 +1,11 @@
+## 0.4.0-dev.5
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-dev.4
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 0.4.0-dev.3
 
  - **FEAT**: add macOS support (#7313).

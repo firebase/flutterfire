@@ -1,60 +1,87 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_database_platform_interface;
+import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
+import 'package:firebase_database_platform_interface/src/method_channel/utils/utils.dart';
+
+import 'method_channel_database.dart';
+import 'utils/exception.dart';
 
 /// Represents a query over the data at a particular location.
 class MethodChannelOnDisconnect extends OnDisconnectPlatform {
   /// Create a [MethodChannelQuery] from [DatabaseReferencePlatform]
-  MethodChannelOnDisconnect(
-      {required DatabasePlatform database,
-      required DatabaseReferencePlatform reference})
-      : path = reference.path,
-        super(database: database, reference: reference);
-
-  final String path;
+  MethodChannelOnDisconnect({
+    required DatabasePlatform database,
+    required DatabaseReferencePlatform ref,
+  }) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(dynamic value, {dynamic priority}) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#set',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value,
-        'priority': priority
-      },
-    );
+  Future<void> set(Object? value) async {
+    try {
+      await MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#set',
+        database.getChannelArguments({
+          'path': ref.path,
+          if (value != null) 'value': transformValue(value),
+        }),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
+  }
+
+  @override
+  Future<void> setWithPriority(Object? value, Object? priority) async {
+    try {
+      await MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#setWithPriority',
+        database.getChannelArguments(
+          {
+            'path': ref.path,
+            if (value != null) 'value': transformValue(value),
+            if (priority != null) 'priority': priority
+          },
+        ),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
   Future<void> remove() => set(null);
 
   @override
-  Future<void> cancel() {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#cancel',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path
-      },
-    );
+  Future<void> cancel() async {
+    try {
+      await MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#cancel',
+        database.getChannelArguments({
+          'appName': database.app!.name,
+          'databaseURL': database.databaseURL,
+          'path': ref.path
+        }),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
-    return MethodChannelDatabase.channel.invokeMethod<void>(
-      'OnDisconnect#update',
-      <String, dynamic>{
-        'app': database.app?.name,
-        'databaseURL': database.databaseURL,
-        'path': path,
-        'value': value
-      },
-    );
+  Future<void> update(Map<String, Object?> value) async {
+    try {
+      await MethodChannelDatabase.channel.invokeMethod<void>(
+        'OnDisconnect#update',
+        database.getChannelArguments({
+          'appName': database.app!.name,
+          'databaseURL': database.databaseURL,
+          'path': ref.path,
+          'value': transformValue(value),
+        }),
+      );
+    } catch (e, s) {
+      throw convertPlatformException(e, s);
+    }
   }
 }

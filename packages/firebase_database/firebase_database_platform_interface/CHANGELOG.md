@@ -1,3 +1,13 @@
+## 0.2.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: rework as part of #6979 (#7202).
+
+## 0.1.0+4
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0+3
 
  - Update a dependency to the latest release.

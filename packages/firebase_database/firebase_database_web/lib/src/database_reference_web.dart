@@ -10,63 +10,75 @@ class DatabaseReferenceWeb extends QueryWeb
   /// Builds an instance of [DatabaseReferenceWeb] delegating to a package:firebase [DatabaseReferencePlatform]
   /// to delegate queries to underlying firebase web plugin
   DatabaseReferenceWeb(
-    database_interop.Database firebaseDatabase,
-    DatabasePlatform databasePlatform,
-    List<String> pathComponents,
-  ) : super(
-          firebaseDatabase,
-          databasePlatform,
-          pathComponents,
-          pathComponents.isEmpty
-              ? firebaseDatabase.ref("/")
-              : firebaseDatabase.ref(pathComponents.join("/")),
-        );
+    DatabasePlatform _database,
+    this._delegate,
+  ) : super(_database, _delegate);
+
+  final database_interop.DatabaseReference _delegate;
 
   @override
   DatabaseReferencePlatform child(String path) {
-    return DatabaseReferenceWeb(_firebaseDatabase, database,
-        List<String>.from(pathComponents)..addAll(path.split("/")));
+    return DatabaseReferenceWeb(_database, _delegate.child(path));
   }
 
   @override
-  DatabaseReferencePlatform? parent() {
-    if (pathComponents.isEmpty) return null;
-    return DatabaseReferenceWeb(_firebaseDatabase, database,
-        List<String>.from(pathComponents)..removeLast());
+  DatabaseReferencePlatform? get parent {
+    database_interop.DatabaseReference? parent = _delegate.parent;
+
+    if (parent == null) {
+      return null;
+    }
+
+    return DatabaseReferenceWeb(_database, parent);
   }
 
   @override
   DatabaseReferencePlatform root() {
-    return DatabaseReferenceWeb(_firebaseDatabase, database, <String>[]);
+    return DatabaseReferenceWeb(_database, _delegate.root);
   }
 
   @override
-  String get key => pathComponents.last;
+  String? get key => _delegate.key;
 
   @override
   DatabaseReferencePlatform push() {
-    final String key = PushIdGenerator.generatePushChildName();
-    final List<String> childPath = List<String>.from(pathComponents)..add(key);
-    return DatabaseReferenceWeb(_firebaseDatabase, database, childPath);
+    return DatabaseReferenceWeb(_database, _delegate.push());
   }
 
   @override
-  Future<void> set(value, {priority}) {
-    if (priority == null) {
-      return _firebaseQuery.ref.set(value);
-    } else {
-      return _firebaseQuery.ref.setWithPriority(value, priority);
+  Future<void> set(Object? value) async {
+    try {
+      await _delegate.set(value);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
-    return _firebaseQuery.ref.update(value);
+  Future<void> setWithPriority(Object? value, Object? priority) async {
+    try {
+      await _delegate.setWithPriority(value, priority);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
-  Future<void> setPriority(priority) {
-    return _firebaseQuery.ref.setPriority(priority);
+  Future<void> update(Map<String, dynamic> value) async {
+    try {
+      await _delegate.update(value);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
+  }
+
+  @override
+  Future<void> setPriority(priority) async {
+    try {
+      await _delegate.setPriority(priority);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
@@ -74,34 +86,21 @@ class DatabaseReferenceWeb extends QueryWeb
     return set(null);
   }
 
-  /// on the web, [timeout] parameter is ignored.
-  /// transaction((_) => null) doesn't work when compiled to JS
-  /// probably because of https://github.com/dart-lang/sdk/issues/24088
   @override
   Future<TransactionResultPlatform> runTransaction(
-    transactionHandler, {
-    Duration timeout = const Duration(seconds: 5),
+    TransactionHandler transactionHandler, {
+    bool applyLocally = true,
   }) async {
     try {
-      final ref = _firebaseQuery.ref;
-      final transaction = await ref.transaction(transactionHandler);
-
-      return TransactionResultPlatform(
-        null,
-        transaction.committed,
-        fromWebSnapshotToPlatformSnapShot(transaction.snapshot),
-      );
-    } on DatabaseErrorPlatform catch (e) {
-      return TransactionResultPlatform(
-        e,
-        false,
-        null,
-      );
+      return TransactionResultWeb._(
+          this, await _delegate.transaction(transactionHandler, applyLocally));
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
     }
   }
 
   @override
   OnDisconnectPlatform onDisconnect() {
-    return OnDisconnectWeb._(_firebaseQuery.ref.onDisconnect(), database, this);
+    return OnDisconnectWeb._(_delegate.onDisconnect(), database, this);
   }
 }
