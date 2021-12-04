@@ -4,12 +4,16 @@
 
 package io.flutter.plugins.firebase.installations.firebase_installations;
 
+import androidx.annotation.NonNull;
 
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.internal.FidListener;
-import io.flutter.plugin.common.EventChannel;
+
 import java.util.HashMap;
 import java.util.Map;
+
+import io.flutter.Log;
+import io.flutter.plugin.common.EventChannel;
 
 public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
@@ -25,6 +29,7 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
     listener = createTokenEventListener(events);
 
+
     firebaseInstallations.registerFidListener(listener);
   }
 
@@ -39,7 +44,7 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
     return token -> {
       Map<String, Object> event = new HashMap<>();
 
-      event.put("token", token);
+      event.put("token" , token);
 
       events.success(event);
     };

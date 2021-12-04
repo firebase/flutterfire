@@ -17,24 +17,25 @@
   [SwiftFirebaseInstallationsPlugin registerWithRegistrar:registrar];
 }
 
-- (void)didReinitializeFirebaseCore:(void (^_Nonnull)(void))completion {
-  completion();
+- (void)didReinitializeFirebaseCore:(void (^ _Nonnull)(void))completion {
+    completion();
 }
 
-- (NSString* _Nonnull)firebaseLibraryName {
-  return LIBRARY_NAME;
+- (NSString * _Nonnull)firebaseLibraryName {
+    return LIBRARY_NAME;
 }
 
-- (NSString* _Nonnull)firebaseLibraryVersion {
-  return LIBRARY_VERSION;
+- (NSString * _Nonnull)firebaseLibraryVersion {
+    return LIBRARY_VERSION;
 }
 
-- (NSString* _Nonnull)flutterChannelName {
-  return @"plugins.flutter.io/firebase_installations";
+- (NSString * _Nonnull)flutterChannelName {
+    return @"plugins.flutter.io/firebase_installations";
 }
 
-- (NSDictionary* _Nonnull)pluginConstantsForFIRApp:(FIRApp* _Nonnull)firebaseApp {
-  return @{};
+- (NSDictionary * _Nonnull)pluginConstantsForFIRApp:(FIRApp * _Nonnull)firebaseApp {
+    return @{};
 }
 
 @end
+
