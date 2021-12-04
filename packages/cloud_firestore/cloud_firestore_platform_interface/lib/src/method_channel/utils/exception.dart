@@ -23,8 +23,7 @@ Exception convertPlatformException(Object exception) {
 /// `details` of the exception exist. Firebase returns specific codes and messages
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
-  PlatformException platformException,
-) {
+    PlatformException platformException) {
   Map<String, String>? details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;
