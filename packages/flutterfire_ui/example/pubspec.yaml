@@ -26,6 +26,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
+  firebase_database: ^8.2.0
   firebase_dynamic_links: ^2.0.7
   flutter:
     sdk: flutter
