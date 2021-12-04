@@ -155,30 +155,33 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
   @override
   Future<ShortDynamicLink> buildShortLink(
-    DynamicLinkParameters parameters,
-  ) async {
+    DynamicLinkParameters parameters, {
+    ShortDynamicLinkType shortLinkType = ShortDynamicLinkType.short,
+  }) async {
     try {
       final Map<String, dynamic>? response =
           await MethodChannelFirebaseDynamicLinks.channel
               .invokeMapMethod<String, dynamic>(
         'FirebaseDynamicLinks#buildShortLink',
-        _withChannelDefaults(parameters.asMap()),
+        _withChannelDefaults(
+          {
+            'shortLinkType': shortLinkType.index,
+            ...parameters.asMap(),
+          },
+        ),
       );
 
-      return _parseShortLink(response!);
+      final List<dynamic>? warnings = response!['warnings'];
+      return ShortDynamicLink(
+        type: shortLinkType,
+        shortUrl: Uri.parse(response['url']),
+        warnings: warnings?.cast(),
+        previewLink: response['previewLink'] != null
+            ? Uri.parse(response['previewLink'])
+            : null,
+      );
     } catch (e, s) {
       throw convertPlatformException(e, s);
     }
-  }
-
-  ShortDynamicLink _parseShortLink(Map<String, dynamic> response) {
-    final List<dynamic>? warnings = response['warnings'];
-    return ShortDynamicLink(
-      shortUrl: Uri.parse(response['url']),
-      warnings: warnings?.cast(),
-      previewLink: response['previewLink'] != null
-          ? Uri.parse(response['previewLink'])
-          : null,
-    );
   }
 }

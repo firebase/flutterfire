@@ -4,7 +4,7 @@ Overall, Firebase Dynamic Links has been heavily reworked to bring it inline wit
 documentation and updating unit and end-to-end tests.
 
 - **`FirebaseDynamicLinks`**
-  - **BREAKING**: `onLink()` method has been removed. Instead use `onLink` getter, it returns a `Stream`; events & errors are now streamed to the user.
+  - **BREAKING**: `onLink()` method has been removed. Instead, use `onLink` getter, it returns a `Stream`; events & errors are now streamed to the user.
   - **BREAKING**: `DynamicLinkParameters` class has been removed. `buildLink()` (replaces `buildUrl()`) & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance`.
   - **BREAKING**: `DynamicLinkParameters.shortenUrl()` has been removed.
   - **NEW**: `buildLink()` which replaces the previous `DynamicLinkParameters().buildUrl()`.

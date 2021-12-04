@@ -37,11 +37,6 @@ void main() {
     providerToken: 'providerToken',
   );
 
-  DynamicLinkParametersOptions parametersOptions =
-      const DynamicLinkParametersOptions(
-    shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable,
-  );
-
   Uri link = Uri.parse('link');
   NavigationInfoParameters navigation =
       const NavigationInfoParameters(forcedRedirectEnabled: true);
@@ -58,7 +53,6 @@ void main() {
       uriPrefix: uriPrefix,
       link: link,
       androidParameters: androidParams,
-      dynamicLinkParametersOptions: parametersOptions,
       googleAnalyticsParameters: googleParams,
       iosParameters: iosParams,
       itunesConnectAnalyticsParameters: itunesParams,
@@ -99,12 +93,6 @@ void main() {
             dynamicLinkParams.androidParameters?.packageName,
           );
           expect(result['uriPrefix'], dynamicLinkParams.uriPrefix);
-          expect(
-            result['dynamicLinkParametersOptions']
-                ['shortDynamicLinkPathLength'],
-            dynamicLinkParams.dynamicLinkParametersOptions
-                ?.shortDynamicLinkPathLength?.index,
-          );
           expect(
             result['googleAnalyticsParameters']['campaign'],
             dynamicLinkParams.googleAnalyticsParameters?.campaign,

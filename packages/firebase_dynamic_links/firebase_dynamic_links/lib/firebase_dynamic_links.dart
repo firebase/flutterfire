@@ -12,7 +12,6 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
     show
         AndroidParameters,
         DynamicLinkParameters,
-        DynamicLinkParametersOptions,
         FirebaseDynamicLinksPlatform,
         GoogleAnalyticsParameters,
         IOSParameters,
@@ -22,7 +21,7 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
         PendingDynamicLinkDataAndroid,
         PendingDynamicLinkDataIOS,
         ShortDynamicLink,
-        ShortDynamicLinkPathLength,
+        ShortDynamicLinkType,
         SocialMetaTagParameters;
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'dart:io' show Platform;

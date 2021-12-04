@@ -40,9 +40,6 @@ void runInstanceTests() {
             packageName: androidPackageName,
             minimumVersion: 1,
           ),
-          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-          ),
           iosParameters: const IOSParameters(
             bundleId: iosBundleId,
             minimumVersion: '2',
@@ -100,9 +97,6 @@ void runInstanceTests() {
           androidParameters: const AndroidParameters(
             packageName: androidPackageName,
             minimumVersion: 1,
-          ),
-          dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-            shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
           ),
           iosParameters: const IOSParameters(
             bundleId: iosBundleId,

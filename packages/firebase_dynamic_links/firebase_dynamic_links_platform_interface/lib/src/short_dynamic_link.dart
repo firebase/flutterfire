@@ -2,9 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'short_dynamic_link_type.dart';
+
 /// Response from creating a short dynamic link with [DynamicLinkBuilder].
 class ShortDynamicLink {
   const ShortDynamicLink({
+    required this.type,
     required this.shortUrl,
     this.warnings,
     this.previewLink,
@@ -12,6 +15,9 @@ class ShortDynamicLink {
 
   /// Short url value.
   final Uri shortUrl;
+
+  /// The type of this short link, e.g. [ShortDynamicLinkType.unguessable].
+  final ShortDynamicLinkType type;
 
   /// Gets the preview link to show the link flow chart. Android only.
   final Uri? previewLink;

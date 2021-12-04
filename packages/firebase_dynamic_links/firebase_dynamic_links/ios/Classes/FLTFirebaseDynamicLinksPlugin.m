@@ -301,24 +301,19 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (FIRDynamicLinkComponentsOptions *)setupOptions:(NSDictionary *)arguments {
-  FIRDynamicLinkComponentsOptions *options;
-  if (![arguments[kDynamicLinkParametersOptions] isEqual:[NSNull null]]) {
-    NSDictionary *params = arguments[kDynamicLinkParametersOptions];
+  FIRDynamicLinkComponentsOptions *options = [FIRDynamicLinkComponentsOptions options];
 
-    options = [FIRDynamicLinkComponentsOptions options];
-
-    NSNumber *shortDynamicLinkPathLength = params[@"shortDynamicLinkPathLength"];
-    if (![shortDynamicLinkPathLength isEqual:[NSNull null]]) {
-      switch (shortDynamicLinkPathLength.intValue) {
-        case 0:
-          options.pathLength = FIRShortDynamicLinkPathLengthUnguessable;
-          break;
-        case 1:
-          options.pathLength = FIRShortDynamicLinkPathLengthShort;
-          break;
-        default:
-          break;
-      }
+  NSNumber *shortDynamicLinkPathLength = arguments[@"shortLinkType"];
+  if (![shortDynamicLinkPathLength isEqual:[NSNull null]]) {
+    switch (shortDynamicLinkPathLength.intValue) {
+      case 0:
+        options.pathLength = FIRShortDynamicLinkPathLengthUnguessable;
+        break;
+      case 1:
+        options.pathLength = FIRShortDynamicLinkPathLengthShort;
+        break;
+      default:
+        break;
     }
   }
 
@@ -349,9 +344,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     components.androidParameters = androidParams;
   }
 
-  if (![arguments[@"dynamicLinkComponentsOptions"] isEqual:[NSNull null]]) {
-    components.options = [self setupOptions:arguments];
-  }
+  components.options = [self setupOptions:arguments];
 
   if (![arguments[@"googleAnalyticsParameters"] isEqual:[NSNull null]]) {
     NSDictionary *params = arguments[@"googleAnalyticsParameters"];

@@ -2,22 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:flutter/foundation.dart';
-
 import '../firebase_dynamic_links_platform_interface.dart';
 
 /// Interface that defines the all the parameters required to build a dynamic link
 class DynamicLinkParameters {
   // ignore: public_member_api_docs
-  @protected
   DynamicLinkParameters({
-    this.androidParameters,
-    required this.uriPrefix,
-    this.dynamicLinkParametersOptions,
-    this.googleAnalyticsParameters,
-    this.iosParameters,
-    this.itunesConnectAnalyticsParameters,
     required this.link,
+    required this.uriPrefix,
+    this.androidParameters,
+    this.iosParameters,
+    this.googleAnalyticsParameters,
+    this.itunesConnectAnalyticsParameters,
     this.navigationInfoParameters,
     this.socialMetaTagParameters,
   });
@@ -31,9 +27,6 @@ class DynamicLinkParameters {
   //
   // The domain URI prefix must start with a valid HTTPS scheme (https://).
   final String uriPrefix;
-
-  /// Defines behavior for generating Dynamic Link URLs.
-  final DynamicLinkParametersOptions? dynamicLinkParametersOptions;
 
   /// Analytics parameters for a generated Dynamic Link URL.
   final GoogleAnalyticsParameters? googleAnalyticsParameters;
@@ -66,8 +59,6 @@ class DynamicLinkParameters {
       'link': link.toString(),
       if (androidParameters != null)
         'androidParameters': androidParameters?.asMap(),
-      if (dynamicLinkParametersOptions != null)
-        'dynamicLinkParametersOptions': dynamicLinkParametersOptions?.asMap(),
       if (googleAnalyticsParameters != null)
         'googleAnalyticsParameters': googleAnalyticsParameters?.asMap(),
       if (iosParameters != null) 'iosParameters': iosParameters?.asMap(),

@@ -88,9 +88,6 @@ class _MainScreenState extends State<_MainScreen> {
         packageName: 'io.flutter.plugins.firebase.dynamiclinksexample',
         minimumVersion: 0,
       ),
-      dynamicLinkParametersOptions: const DynamicLinkParametersOptions(
-        shortDynamicLinkPathLength: ShortDynamicLinkPathLength.short,
-      ),
       iosParameters: const IOSParameters(
         bundleId: 'io.invertase.testing',
         minimumVersion: '0',

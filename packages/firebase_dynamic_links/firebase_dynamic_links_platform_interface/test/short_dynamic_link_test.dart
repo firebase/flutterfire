@@ -12,6 +12,7 @@ void main() {
 
   group('$ShortDynamicLink', () {
     ShortDynamicLink shortLink = ShortDynamicLink(
+      type: ShortDynamicLinkType.short,
       shortUrl: link,
       previewLink: previewLink,
       warnings: warnings,
@@ -21,6 +22,7 @@ void main() {
       test('returns an instance of [ShortDynamicLink]', () {
         expect(shortLink, isA<ShortDynamicLink>());
         expect(shortLink.shortUrl, link);
+        expect(shortLink.type, ShortDynamicLinkType.short);
         expect(shortLink.previewLink, previewLink);
         expect(shortLink.warnings, warnings);
       });

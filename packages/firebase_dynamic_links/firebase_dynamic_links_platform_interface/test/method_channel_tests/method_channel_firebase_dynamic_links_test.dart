@@ -43,10 +43,6 @@ DynamicLinkParameters buildDynamicLinkParameters() {
     providerToken: 'providerToken',
   );
 
-  DynamicLinkParametersOptions parametersOptions =
-      const DynamicLinkParametersOptions(
-          shortDynamicLinkPathLength: ShortDynamicLinkPathLength.unguessable);
-
   Uri link = Uri.parse('link');
   NavigationInfoParameters navigation =
       const NavigationInfoParameters(forcedRedirectEnabled: true);
@@ -61,7 +57,6 @@ DynamicLinkParameters buildDynamicLinkParameters() {
     uriPrefix: uriPrefix,
     link: link,
     androidParameters: android,
-    dynamicLinkParametersOptions: parametersOptions,
     googleAnalyticsParameters: google,
     iosParameters: ios,
     itunesConnectAnalyticsParameters: itunes,
@@ -245,10 +240,6 @@ void main() {
               'appName': '[DEFAULT]',
               'uriPrefix': 'https://',
               'link': 'link',
-              'dynamicLinkParametersOptions': {
-                'shortDynamicLinkPathLength':
-                    ShortDynamicLinkPathLength.unguessable.index,
-              },
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',
                 'minimumVersion': 1,
@@ -337,12 +328,9 @@ void main() {
             'FirebaseDynamicLinks#buildShortLink',
             arguments: <String, dynamic>{
               'appName': '[DEFAULT]',
+              'shortLinkType': ShortDynamicLinkType.short.index,
               'uriPrefix': 'https://',
               'link': 'link',
-              'dynamicLinkParametersOptions': {
-                'shortDynamicLinkPathLength':
-                    ShortDynamicLinkPathLength.unguessable.index,
-              },
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',
                 'minimumVersion': 1,

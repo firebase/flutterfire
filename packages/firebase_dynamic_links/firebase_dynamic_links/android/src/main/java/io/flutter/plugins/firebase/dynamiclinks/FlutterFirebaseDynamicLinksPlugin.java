@@ -134,7 +134,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         return;
       case "FirebaseDynamicLinks#buildShortLink":
         DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
-        methodCallTask = buildShortLink(urlBuilder, call.argument("dynamicLinkParametersOptions"));
+        methodCallTask = buildShortLink(urlBuilder, call.arguments());
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -166,25 +166,23 @@ public class FlutterFirebaseDynamicLinksPlugin
   }
 
   private Task<Map<String, Object>> buildShortLink(
-      DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> dynamicLinkParametersOptions) {
+      DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          Integer suffix = null;
-          if (dynamicLinkParametersOptions != null) {
-            Integer shortDynamicLinkPathLength =
-                (Integer) dynamicLinkParametersOptions.get("shortDynamicLinkPathLength");
-            if (shortDynamicLinkPathLength != null) {
-              switch (shortDynamicLinkPathLength) {
-                case 0:
-                  suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
-                  break;
-                case 1:
-                  suffix = ShortDynamicLink.Suffix.SHORT;
-                  break;
-                default:
-                  break;
-              }
+          Integer suffix = 1;
+          Integer shortDynamicLinkPathLength =
+              (Integer) dynamicLinkParametersOptions.get("shortLinkType");
+          if (shortDynamicLinkPathLength != null) {
+            switch (shortDynamicLinkPathLength) {
+              case 0:
+                suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
+                break;
+              case 1:
+                suffix = ShortDynamicLink.Suffix.SHORT;
+                break;
+              default:
+                break;
             }
           }
 
