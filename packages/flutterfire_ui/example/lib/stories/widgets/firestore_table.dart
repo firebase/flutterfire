@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
-
-final countriesCollection =
-    FirebaseFirestore.instance.collection('firestore-example-app');
+import 'package:flutterfire_ui_example/stories/widgets/firestore_list_view.dart';
 
 class FirestoreTableStory extends StoryWidget {
   const FirestoreTableStory({Key? key})
@@ -13,14 +10,18 @@ class FirestoreTableStory extends StoryWidget {
   @override
   Widget build(StoryElement context) {
     return FirestoreDataTable(
-      query: countriesCollection,
+      query: usersCollection,
       columnLabels: const {
-        'title': Text('Title'),
-        'runtime': Text('Run time'),
-        'rated': Text('Rated'),
-        'year': Text('Creation date (year)'),
-        'poster': Text('Poster URL'),
-        'likes': Text('Likes'),
+        'firstName': Text('First name'),
+        'lastName': Text('Last name'),
+        'prefix': Text('Prefix'),
+        'userName': Text('User name'),
+        'email': Text('Email'),
+        'number': Text('Phone number'),
+        'streetName': Text('Street name'),
+        'city': Text('City'),
+        'zipCode': Text('Zip code'),
+        'country': Text('Country'),
       },
     );
   }
