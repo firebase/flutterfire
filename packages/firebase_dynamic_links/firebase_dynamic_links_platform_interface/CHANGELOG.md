@@ -1,3 +1,3 @@
-# 0.1.0
+## 0.2.0-dev.0
 
-- Initial release.
+ - Initial dev release of platform interface.

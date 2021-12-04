@@ -1,4 +1,6 @@
-## UNRELEASED
+## 4.0.0-dev.0
+
+> Note: This release has breaking changes.
 
 Overall, Firebase Dynamic Links has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.
