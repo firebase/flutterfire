@@ -1,39 +1,12 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# firebase_installations_web
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+The web implementation of `firebase_installations`.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+## Getting Started
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+To get started with Cloud Firestore Web, please [see the documentation](https://firebase.flutter.dev/docs/installations/overview)
+available at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
-## Features
+Once installed, Firestore needs to be configured for Web Installation.  Please [see the documentation](https://firebase.flutter.dev/docs/installations/overview#3-web-only-add-the-sdk) on Web Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+To learn more about managing Firebase Installations for you project, please visit the [Firebase website](https://firebase.google.com/docs/projects/manage-installations)

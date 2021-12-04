@@ -1,39 +1,26 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# firebase_installations_platform_interface
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+A common platform interface for the [`firebase_installations`][1] plugin.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+This interface allows platform-specific implementations of the `cloud_firestore`
+plugin, as well as the plugin itself, to ensure they are supporting the
+same interface.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+To implement a new platform-specific implementation of `firebase_installations`, extend
+[`FirebaseInstallationsPlatform`][2] with an implementation that performs the
+platform-specific behavior, and when you register your plugin, set the default
+`FirebaseInstallationsPlatform` by calling
+`FirebaseInstallationsPlatform.instance = MyFirebaseInstallations()`.
 
-```dart
-const like = 'sample';
-```
+## Note on breaking changes
 
-## Additional information
+Strongly prefer non-breaking changes (such as adding a method to the interface)
+over breaking changes for this package.
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+See https://flutter.dev/go/platform-interface-breaking-changes for a discussion
+on why a less-clean interface is preferable to a breaking change.
+
+[1]: ../firebase_installations
+[2]: lib/firebase_installations_platform_interface.dart
