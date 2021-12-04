@@ -38,7 +38,7 @@ void main() {
     });
     test('getAuthToken', () async {
       await installations.getToken();
-      verify(mockInstallations.getToken(false));
+      verify(mockInstallations.getToken());
     });
     test('delete', () async {
       await installations.delete();
@@ -107,6 +107,7 @@ class MockFirebaseInstallations extends Mock
   }
 
   @override
+  // ignore: type_annotate_public_apis
   Future<String> getToken([forceRefresh = false]) {
     return super.noSuchMethod(
       Invocation.method(#getToken, [forceRefresh]),

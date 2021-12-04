@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 package io.flutter.plugins.firebase.installations.firebase_installations;
+
 import androidx.annotation.Keep;
 import com.google.firebase.components.Component;
 import com.google.firebase.components.ComponentRegistrar;
@@ -15,6 +16,6 @@ public class FlutterFirebaseAppRegistrar implements ComponentRegistrar {
   @Override
   public List<Component<?>> getComponents() {
     return Collections.<Component<?>>singletonList(
-      LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION));
+        LibraryVersionComponent.create(BuildConfig.LIBRARY_NAME, BuildConfig.LIBRARY_VERSION));
   }
 }
