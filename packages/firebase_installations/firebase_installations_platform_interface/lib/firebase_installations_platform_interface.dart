@@ -4,4 +4,4 @@
 
 library firebase_installations_platform_interface;
 
-export 'src/platform_interface/platform_interface_firebase_installations.dart';
+export 'src/platform_interface/firebase_installations_platform_interface.dart';
