@@ -56,7 +56,7 @@ class FirebaseInstallations extends FirebasePluginPlatform {
   }
 
   /// Sends a new event via a [Stream] whenever the Installation ID changes.
-  Stream<String> get idTokenChanges {
-    return _delegate.idTokenChanges;
+  Stream<String> get idChanges {
+    return _delegate.idChanges;
   }
 }

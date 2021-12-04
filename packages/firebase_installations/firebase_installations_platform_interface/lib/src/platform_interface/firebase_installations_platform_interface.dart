@@ -63,7 +63,7 @@ abstract class FirebaseInstallationsPlatform extends PlatformInterface {
   }
 
   /// Sends a new event via a [Stream] whenever the Installation ID changes.
-  Stream<String> get idTokenChanges {
+  Stream<String> get idChanges {
     throw UnimplementedError('get idTokenChanges is not implemented');
   }
 }

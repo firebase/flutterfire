@@ -45,7 +45,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
     init();
 
     // Listen to changes
-    FirebaseInstallations.instance.idTokenChanges.listen((event) {
+    FirebaseInstallations.instance.idChanges.listen((event) {
       setState(() {
         id = event;
       });
