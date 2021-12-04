@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.installations.firebase_installations;
 
+
 import com.google.firebase.installations.FirebaseInstallations;
 import com.google.firebase.installations.internal.FidListener;
 import io.flutter.plugin.common.EventChannel;
