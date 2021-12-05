@@ -1,6 +1,8 @@
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+import 'dart:io';
+
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
@@ -9,7 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void testsMain() {
   group('$FirebaseAppCheck', () {
-    FirebaseAppCheck appCheck;
+    final FirebaseAppCheck appCheck = FirebaseAppCheck.instance;
 
     setUpAll(() async {
       await Firebase.initializeApp(
@@ -22,22 +24,21 @@ void testsMain() {
           projectId: 'react-native-firebase-testing',
         ),
       );
-      appCheck = FirebaseAppCheck.instance;
     });
 
     test('activate', () async {
       await expectLater(
-        appCheck.activate(webRecaptchaSiteKey: 'key'),
+        appCheck.activate(webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8'),
         completes,
       );
     });
 
     test('getToken', () async {
-      AppCheckTokenResult result = await appCheck.getToken(false);
+      AppCheckTokenResult result = await appCheck.getToken(true);
 
       expect(result, isA<AppCheckTokenResult>());
       expect(result.token, isA<String>());
-    });
+    }, skip:Platform.isIOS);
 
     test(
       'setTokenAutoRefreshEnabled',
