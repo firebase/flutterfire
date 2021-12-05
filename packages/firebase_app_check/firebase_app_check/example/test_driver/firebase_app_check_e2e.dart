@@ -28,7 +28,8 @@ void testsMain() {
 
     test('activate', () async {
       await expectLater(
-        appCheck.activate(webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8'),
+        appCheck.activate(
+            webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8'),
         completes,
       );
     });
@@ -38,7 +39,7 @@ void testsMain() {
 
       expect(result, isA<AppCheckTokenResult>());
       expect(result.token, isA<String>());
-    }, skip:Platform.isIOS);
+    }, skip: Platform.isIOS);
 
     test(
       'setTokenAutoRefreshEnabled',

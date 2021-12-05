@@ -63,27 +63,27 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
-      NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
-      NSString *errorCode;
+    NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
+    NSString *errorCode;
 
-        switch(error.code) {
-          case FIRAppCheckErrorCodeServerUnreachable:
-            errorCode = @"server-unreachable";
-            break;
-          case FIRAppCheckErrorCodeInvalidConfiguration:
-            errorCode = @"invalid-configuration";
-            break;
-          case FIRAppCheckErrorCodeKeychain:
-            errorCode = @"code-keychain";
-            break;
-          case FIRAppCheckErrorCodeUnsupported:
-            errorCode = @"code-unsupported";
-            break;
-          case FIRAppCheckErrorCodeUnknown:
-          default:
-            errorCode = @"unknown";
-        }
-        
+    switch (error.code) {
+      case FIRAppCheckErrorCodeServerUnreachable:
+        errorCode = @"server-unreachable";
+        break;
+      case FIRAppCheckErrorCodeInvalidConfiguration:
+        errorCode = @"invalid-configuration";
+        break;
+      case FIRAppCheckErrorCodeKeychain:
+        errorCode = @"code-keychain";
+        break;
+      case FIRAppCheckErrorCodeUnsupported:
+        errorCode = @"code-unsupported";
+        break;
+      case FIRAppCheckErrorCodeUnknown:
+      default:
+        errorCode = @"unknown";
+    }
+
     NSString *errorMessage = error.localizedDescription;
     errorDetails[@"code"] = errorCode;
     errorDetails[@"message"] = errorMessage;
@@ -135,7 +135,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
   FLTTokenRefreshStreamHandler *handler = [[FLTTokenRefreshStreamHandler alloc] init];
   [channel setStreamHandler:handler];
-  
+
   [_eventChannels setObject:channel forKey:name];
   [_streamHandlers setObject:handler forKey:name];
   result.success(name);
@@ -144,7 +144,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 - (void)getToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
   bool forceRefresh = arguments[@"forceRefresh"];
-  
+
   [appCheck tokenForcingRefresh:forceRefresh
                      completion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {
                        if (error != nil) {
