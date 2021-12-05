@@ -9,6 +9,7 @@ abstract class OAuthProvider {
   OAuthCredential fromDesktopAuthResult(AuthResult result);
 
   Future<OAuthCredential> desktopSignIn() async {
+    print(desktopSignInArgs);
     final result = await DesktopWebviewAuth.signIn(desktopSignInArgs);
 
     if (result == null) {
@@ -23,14 +24,6 @@ abstract class OAuthProvider {
     await FirebaseAuth.instance.signOut();
   }
 }
-
-abstract class Google extends OAuthProvider {}
-
-abstract class Apple extends OAuthProvider {}
-
-abstract class Twitter extends OAuthProvider {}
-
-abstract class Facebook extends OAuthProvider {}
 
 extension OAuthHelpers on User {
   bool isProviderLinked(String providerId) {

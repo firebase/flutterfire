@@ -13,7 +13,7 @@ import '../../oauth/provider_resolvers.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class FacebookProviderImpl extends Facebook {
+class FacebookProviderImpl extends OAuthProvider {
   final _provider = FacebookAuth.instance;
   final String clientId;
   final String redirectUri;

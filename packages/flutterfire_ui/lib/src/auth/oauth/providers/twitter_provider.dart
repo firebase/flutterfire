@@ -13,7 +13,7 @@ import '../../widgets/twitter_sign_in_button.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class TwitterProviderImpl extends Twitter {
+class TwitterProviderImpl extends OAuthProvider {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;

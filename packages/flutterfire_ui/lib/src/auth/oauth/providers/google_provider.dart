@@ -14,7 +14,7 @@ import '../../widgets/google_sign_in_button.dart';
 import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
 
-class GoogleProviderImpl extends Google {
+class GoogleProviderImpl extends OAuthProvider {
   String clientId;
   String redirectUri;
 
