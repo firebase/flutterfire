@@ -16,8 +16,8 @@ class AuthResolver extends StatelessWidget {
   Widget build(BuildContext context) {
     const providerConfigs = [
       EmailProviderConfiguration(),
-      // PhoneProviderConfiguration(),
       GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+      // PhoneProviderConfiguration(),
       // AppleProviderConfiguration(),
       // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
       // TwitterProviderConfiguration(
@@ -60,6 +60,17 @@ class AuthResolver extends StatelessWidget {
                 action == AuthAction.signIn
                     ? 'Welcome to FlutterFire UI! Please sign in to continue.'
                     : 'Welcome to FlutterFire UI! Please create an account to continue',
+              ),
+            );
+          },
+          footerBuilder: (context, action) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 16),
+              child: Text(
+                action == AuthAction.signIn
+                    ? 'By signing in, you agree to our terms and conditions.'
+                    : 'By registering, you agree to our terms and conditions.',
+                style: TextStyle(color: Colors.grey),
               ),
             );
           },
