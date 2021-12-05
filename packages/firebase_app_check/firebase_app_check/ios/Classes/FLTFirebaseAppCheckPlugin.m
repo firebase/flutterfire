@@ -153,7 +153,7 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
                        NSMutableDictionary *response = [NSMutableDictionary dictionary];
 
-                       response[@"token"] = token;
+                       response[@"token"] = token.token;
                        result.success(response);
                      }];
 }
