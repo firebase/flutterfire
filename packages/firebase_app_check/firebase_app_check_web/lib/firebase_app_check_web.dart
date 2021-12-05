@@ -55,6 +55,11 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
+  FirebaseAppCheckPlatform delegateFor({required FirebaseApp app}) {
+    return FirebaseAppCheckWeb(app: app);
+  }
+
+  @override
   FirebaseAppCheckWeb setInitialValues() {
     return this;
   }
