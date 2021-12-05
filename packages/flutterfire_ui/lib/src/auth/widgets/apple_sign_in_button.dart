@@ -1,8 +1,6 @@
 import 'package:flutterfire_ui/src/auth/configs/oauth_provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-import 'package:sign_in_with_apple/sign_in_with_apple.dart'
-    show WebAuthenticationOptions;
 
 import 'package:flutterfire_ui/auth.dart' show AuthAction;
 import 'package:flutterfire_ui/auth/apple.dart';

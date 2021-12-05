@@ -18,6 +18,7 @@ class EmailVerificationButton extends StatefulWidget {
   const EmailVerificationButton({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _EmailVerificationButtonState createState() =>
       _EmailVerificationButtonState();
 }

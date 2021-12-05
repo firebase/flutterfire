@@ -1,8 +1,6 @@
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'provider_resolvers.dart';
-
 abstract class OAuthProvider {
   Future<OAuthCredential> signIn();
 

@@ -1,5 +1,5 @@
+import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:desktop_webview_auth/src/auth_result.dart';
 import 'package:desktop_webview_auth/twitter.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/foundation.dart';
