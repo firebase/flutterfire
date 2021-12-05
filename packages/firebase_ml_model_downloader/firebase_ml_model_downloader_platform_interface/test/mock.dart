@@ -57,7 +57,8 @@ Future<void> testExceptionHandling(String type, Function testMethod) async {
       return;
     }
     fail(
-        'testExceptionHandling: $testMethod threw unexpected FirebaseException');
+      'testExceptionHandling: $testMethod threw unexpected FirebaseException',
+    );
   } catch (e) {
     fail('testExceptionHandling: $testMethod threw invalid exception $e');
   }

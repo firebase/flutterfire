@@ -25,15 +25,16 @@ void main() {
 
   group('$FirebaseMlModelDownloader', () {
     setUpAll(() async {
-      final app = await Firebase.initializeApp();
+      await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
-          name: 'secondaryApp',
-          options: const FirebaseOptions(
-            appId: '1:1234567890:ios:42424242424242',
-            apiKey: '123',
-            projectId: '123',
-            messagingSenderId: '1234567890',
-          ));
+        name: 'secondaryApp',
+        options: const FirebaseOptions(
+          appId: '1:1234567890:ios:42424242424242',
+          apiKey: '123',
+          projectId: '123',
+          messagingSenderId: '1234567890',
+        ),
+      );
       FirebaseMlModelDownloaderPlatform.instance =
           MockFirebaseMlModelDownloader();
       mlModelDownloader = FirebaseMlModelDownloader.instance;
@@ -71,17 +72,33 @@ void main() {
       const String modelName = 'modelName';
       final conditions = DownloadConditions();
       final customModel = CustomModel(
-          file: File('file'), hash: 'hash', name: 'name', size: 123);
-      when(kMockDownloaderPlatform.getModel(
-              modelName, DownloadType.latestModel, conditions))
-          .thenAnswer((_) => Future.value(customModel));
+        file: File('file'),
+        hash: 'hash',
+        name: 'name',
+        size: 123,
+      );
+      when(
+        kMockDownloaderPlatform.getModel(
+          modelName,
+          DownloadType.latestModel,
+          conditions,
+        ),
+      ).thenAnswer((_) => Future.value(customModel));
 
       final model = await mlModelDownloader.getModel(
-          modelName, DownloadType.latestModel, conditions);
+        modelName,
+        DownloadType.latestModel,
+        conditions,
+      );
 
       expect(customModel, model);
-      verify(kMockDownloaderPlatform.getModel(
-          modelName, DownloadType.latestModel, conditions));
+      verify(
+        kMockDownloaderPlatform.getModel(
+          modelName,
+          DownloadType.latestModel,
+          conditions,
+        ),
+      );
     });
   });
 

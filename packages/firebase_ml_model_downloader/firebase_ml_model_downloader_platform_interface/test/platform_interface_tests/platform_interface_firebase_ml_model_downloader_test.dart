@@ -43,8 +43,10 @@ void main() {
     });
 
     test('Constructor', () {
-      expect(firebaseMlModelDownloaderPlatform,
-          isA<FirebaseMlModelDownloaderPlatform>());
+      expect(
+        firebaseMlModelDownloaderPlatform,
+        isA<FirebaseMlModelDownloaderPlatform>(),
+      );
       expect(firebaseMlModelDownloaderPlatform, isA<PlatformInterface>());
     });
 
@@ -56,10 +58,14 @@ void main() {
     });
 
     test('get.instance', () {
-      expect(FirebaseMlModelDownloaderPlatform.instance,
-          isA<FirebaseMlModelDownloaderPlatform>());
-      expect(FirebaseMlModelDownloaderPlatform.instance.app.name,
-          equals(defaultFirebaseAppName));
+      expect(
+        FirebaseMlModelDownloaderPlatform.instance,
+        isA<FirebaseMlModelDownloaderPlatform>(),
+      );
+      expect(
+        FirebaseMlModelDownloaderPlatform.instance.app.name,
+        equals(defaultFirebaseAppName),
+      );
     });
 
     group('set.instance', () {
@@ -67,35 +73,57 @@ void main() {
         FirebaseMlModelDownloaderPlatform.instance =
             TestFirebaseMlModelDownloaderPlatform(secondaryApp);
 
-        expect(FirebaseMlModelDownloaderPlatform.instance,
-            isA<FirebaseMlModelDownloaderPlatform>());
-        expect(FirebaseMlModelDownloaderPlatform.instance.app.name,
-            equals('testApp2'));
+        expect(
+          FirebaseMlModelDownloaderPlatform.instance,
+          isA<FirebaseMlModelDownloaderPlatform>(),
+        );
+        expect(
+          FirebaseMlModelDownloaderPlatform.instance.app.name,
+          equals('testApp2'),
+        );
       });
     });
 
     test('throws if delegateFor', () {
       expect(
         () => firebaseMlModelDownloaderPlatform.testDelegateFor(),
-        throwsA(isA<UnimplementedError>().having(
-            (e) => e.message, 'message', 'delegateFor() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'delegateFor() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if getModel', () {
       expect(
         () => firebaseMlModelDownloaderPlatform.getModel(
-            'modelName', DownloadType.latestModel, DownloadConditions()),
-        throwsA(isA<UnimplementedError>().having(
-            (e) => e.message, 'message', 'getModel() is not implemented')),
+          'modelName',
+          DownloadType.latestModel,
+          DownloadConditions(),
+        ),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getModel() is not implemented',
+          ),
+        ),
       );
     });
 
     test('throws if listDownloadedModels', () {
       expect(
         () => firebaseMlModelDownloaderPlatform.listDownloadedModels(),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
-            'listDownloadedModels() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'listDownloadedModels() is not implemented',
+          ),
+        ),
       );
     });
 
@@ -103,8 +131,13 @@ void main() {
       expect(
         () => firebaseMlModelDownloaderPlatform
             .deleteDownloadedModel('modelName'),
-        throwsA(isA<UnimplementedError>().having((e) => e.message, 'message',
-            'deleteDownloadedModel() is not implemented')),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'deleteDownloadedModel() is not implemented',
+          ),
+        ),
       );
     });
   });

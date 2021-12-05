@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: avoid_equals_and_hash_code_on_mutable_classes
+
 import 'dart:io';
 
 /// Stores information about custom models that are being downloaded or are
@@ -12,11 +14,12 @@ import 'dart:io';
 /// to do so.
 class CustomModel {
   /// Creates a new [CustomModel] instance.
-  CustomModel(
-      {required this.file,
-      required this.size,
-      required this.name,
-      required this.hash});
+  CustomModel({
+    required this.file,
+    required this.size,
+    required this.name,
+    required this.hash,
+  });
 
   /// The locally downloaded model file.
   final File file;
@@ -34,7 +37,8 @@ class CustomModel {
   final String hash;
 
   @override
-  bool operator ==(o) => o is CustomModel && hash == o.hash;
+  // ignore: avoid_renaming_method_parameters
+  bool operator ==(Object o) => o is CustomModel && hash == o.hash;
 
   @override
   int get hashCode => hash.hashCode;

@@ -41,8 +41,11 @@ class MethodChannelFirebaseMlModelDownloader
   }
 
   @override
-  Future<CustomModel> getModel(String modelName, DownloadType downloadType,
-      DownloadConditions conditions) async {
+  Future<CustomModel> getModel(
+    String modelName,
+    DownloadType downloadType,
+    DownloadConditions conditions,
+  ) async {
     try {
       final result = await channel.invokeMapMethod<String, dynamic>(
           'FirebaseMlModelDownloader#getModel', {

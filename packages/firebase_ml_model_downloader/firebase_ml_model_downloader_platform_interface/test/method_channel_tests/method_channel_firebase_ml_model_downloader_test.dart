@@ -4,7 +4,6 @@
 
 import 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_model_downloader_platform_interface.dart';
 import 'package:firebase_ml_model_downloader_platform_interface/src/method_channel/method_channel_firebase_ml_model_downloader.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -67,8 +66,10 @@ void main() {
     group('$FirebaseMlModelDownloaderPlatform()', () {
       test('$MethodChannelFirebaseMlModelDownloader is the default instance',
           () {
-        expect(FirebaseMlModelDownloaderPlatform.instance,
-            isA<MethodChannelFirebaseMlModelDownloader>());
+        expect(
+          FirebaseMlModelDownloaderPlatform.instance,
+          isA<MethodChannelFirebaseMlModelDownloader>(),
+        );
       });
 
       test('Can be extended', () {
@@ -97,7 +98,10 @@ void main() {
       test('call delegate method successfully', () async {
         final conditions = DownloadConditions();
         final response = await mlDownloader.getModel(
-            kModelName, DownloadType.latestModel, conditions);
+          kModelName,
+          DownloadType.latestModel,
+          conditions,
+        );
 
         expect(response, isA<CustomModel>());
         // check native method was called
@@ -120,9 +124,13 @@ void main() {
         mockPlatformExceptionThrown = true;
 
         await testExceptionHandling(
-            'PLATFORM',
-            () => mlDownloader.getModel(
-                kModelName, DownloadType.latestModel, DownloadConditions()));
+          'PLATFORM',
+          () => mlDownloader.getModel(
+            kModelName,
+            DownloadType.latestModel,
+            DownloadConditions(),
+          ),
+        );
       });
     });
 
@@ -148,7 +156,9 @@ void main() {
         mockPlatformExceptionThrown = true;
 
         await testExceptionHandling(
-            'PLATFORM', () => mlDownloader.listDownloadedModels());
+          'PLATFORM',
+          () => mlDownloader.listDownloadedModels(),
+        );
       });
     });
 
@@ -174,7 +184,9 @@ void main() {
         mockPlatformExceptionThrown = true;
 
         await testExceptionHandling(
-            'PLATFORM', () => mlDownloader.deleteDownloadedModel(kModelName));
+          'PLATFORM',
+          () => mlDownloader.deleteDownloadedModel(kModelName),
+        );
       });
     });
   });

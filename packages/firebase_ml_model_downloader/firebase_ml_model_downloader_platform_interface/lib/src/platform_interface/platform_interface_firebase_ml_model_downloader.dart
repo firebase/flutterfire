@@ -60,8 +60,11 @@ abstract class FirebaseMlModelDownloaderPlatform extends PlatformInterface {
   }
 
   /// Gets the downloaded model file based on download type and conditions.
-  Future<CustomModel> getModel(String modelName, DownloadType downloadType,
-      DownloadConditions conditions) {
+  Future<CustomModel> getModel(
+    String modelName,
+    DownloadType downloadType,
+    DownloadConditions conditions,
+  ) {
     throw UnimplementedError('getModel() is not implemented');
   }
 

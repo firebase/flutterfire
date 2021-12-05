@@ -41,8 +41,11 @@ class FirebaseMlModelDownloader extends FirebasePluginPlatform {
   }
 
   /// Gets the downloaded model file based on download type and conditions.
-  Future<CustomModel> getModel(String modelName, DownloadType downloadType,
-      [DownloadConditions? conditions]) {
+  Future<CustomModel> getModel(
+    String modelName,
+    DownloadType downloadType, [
+    DownloadConditions? conditions,
+  ]) {
     return delegate.getModel(
       modelName,
       downloadType,
