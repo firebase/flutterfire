@@ -1,6 +1,3 @@
-// ignore_for_file: require_trailing_commas
-// @dart = 2.9
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,12 +6,23 @@ import 'test_utils.dart';
 
 void runInstanceTests() {
   group('$FirebaseStorage', () {
-    /*late*/ FirebaseStorage storage;
-    /*late*/ FirebaseApp secondaryApp;
-    /*late*/ FirebaseApp secondaryAppWithoutBucket;
+    late FirebaseStorage storage;
+    late FirebaseApp secondaryApp;
+    late FirebaseApp secondaryAppWithoutBucket;
 
     setUpAll(() async {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+          authDomain: 'react-native-firebase-testing.firebaseapp.com',
+          databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+          projectId: 'react-native-firebase-testing',
+          storageBucket: 'react-native-firebase-testing.appspot.com',
+          messagingSenderId: '448618578101',
+          appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
+          measurementId: 'G-0N1G9FLDZE',
+        ),
+      );
       storage = FirebaseStorage.instance;
       secondaryApp = await testInitializeSecondaryApp();
     });
@@ -146,16 +154,20 @@ void runInstanceTests() {
       });
 
       test('throws an error if https url could not be parsed', () async {
-        try {
-          storage.refFromURL('https://invertase.io');
-          fail('Did not throw an Error.');
-        } catch (error) {
-          expect(
-              error.message,
+        expect(
+          () {
+            storage.refFromURL('https://invertase.io');
+            fail('Did not throw an Error.');
+          },
+          throwsA(
+            isA<AssertionError>().having(
+              (p0) => p0.message,
+              'assertion message',
               contains(
-                  "url could not be parsed, ensure it's a valid storage url"));
-          return;
-        }
+                  "url could not be parsed, ensure it's a valid storage url"),
+            ),
+          ),
+        );
       });
 
       test('accepts a gs url without a fullPath', () async {
@@ -167,23 +179,33 @@ void runInstanceTests() {
 
       test('throws an error if url does not start with gs:// or https://',
           () async {
-        try {
-          storage.refFromURL('bs://foo/bar/cat.gif');
-          fail('Should have thrown an [AssertionError]');
-        } catch (error) {
-          expect(error.message,
-              contains("a url must start with 'gs://' or 'https://'"));
-        }
+        expect(
+          () {
+            storage.refFromURL('bs://foo/bar/cat.gif');
+            fail('Should have thrown an [AssertionError]');
+          },
+          throwsA(
+            isA<AssertionError>().having(
+              (p0) => p0.message,
+              'assertion message',
+              contains("a url must start with 'gs://' or 'https://'"),
+            ),
+          ),
+        );
       });
     });
 
     group('setMaxOperationRetryTime', () {
       test('should set', () async {
-        expect(storage.maxOperationRetryTime,
-            const Duration(milliseconds: 120000));
+        expect(
+          storage.maxOperationRetryTime,
+          const Duration(milliseconds: 120000),
+        );
         storage.setMaxOperationRetryTime(const Duration(milliseconds: 100000));
-        expect(storage.maxOperationRetryTime,
-            const Duration(milliseconds: 100000));
+        expect(
+          storage.maxOperationRetryTime,
+          const Duration(milliseconds: 100000),
+        );
       });
     });
 

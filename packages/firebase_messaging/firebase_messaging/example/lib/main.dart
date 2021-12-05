@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -8,6 +7,7 @@ import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_messaging_example/firebase_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -25,13 +25,7 @@ import 'token_monitor.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
   print('Handling a background message ${message.messageId}');
 }
 
@@ -44,12 +38,13 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+      messagingSenderId: '448618578101',
+      projectId: 'react-native-firebase-testing',
+    ),
+  );
 
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -136,8 +131,11 @@ class _Application extends State<Application> {
         .getInitialMessage()
         .then((RemoteMessage? message) {
       if (message != null) {
-        Navigator.pushNamed(context, '/message',
-            arguments: MessageArguments(message, true));
+        Navigator.pushNamed(
+          context,
+          '/message',
+          arguments: MessageArguments(message, true),
+        );
       }
     });
 
@@ -146,26 +144,30 @@ class _Application extends State<Application> {
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                // TODO add a proper drawable resource to android, for now using
-                //      one that already exists in example app.
-                icon: 'launch_background',
-              ),
-            ));
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              // TODO add a proper drawable resource to android, for now using
+              //      one that already exists in example app.
+              icon: 'launch_background',
+            ),
+          ),
+        );
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
-      Navigator.pushNamed(context, '/message',
-          arguments: MessageArguments(message, true));
+      Navigator.pushNamed(
+        context,
+        '/message',
+        arguments: MessageArguments(message, true),
+      );
     });
   }
 
@@ -194,19 +196,23 @@ class _Application extends State<Application> {
       case 'subscribe':
         {
           print(
-              'FlutterFire Messaging Example: Subscribing to topic "fcm_test".');
+            'FlutterFire Messaging Example: Subscribing to topic "fcm_test".',
+          );
           await FirebaseMessaging.instance.subscribeToTopic('fcm_test');
           print(
-              'FlutterFire Messaging Example: Subscribing to topic "fcm_test" successful.');
+            'FlutterFire Messaging Example: Subscribing to topic "fcm_test" successful.',
+          );
         }
         break;
       case 'unsubscribe':
         {
           print(
-              'FlutterFire Messaging Example: Unsubscribing from topic "fcm_test".');
+            'FlutterFire Messaging Example: Unsubscribing from topic "fcm_test".',
+          );
           await FirebaseMessaging.instance.unsubscribeFromTopic('fcm_test');
           print(
-              'FlutterFire Messaging Example: Unsubscribing from topic "fcm_test" successful.');
+            'FlutterFire Messaging Example: Unsubscribing from topic "fcm_test" successful.',
+          );
         }
         break;
       case 'get_apns_token':
@@ -218,7 +224,8 @@ class _Application extends State<Application> {
             print('FlutterFire Messaging Example: Got APNs token: $token');
           } else {
             print(
-                'FlutterFire Messaging Example: Getting an APNs token is only supported on iOS and macOS platforms.');
+              'FlutterFire Messaging Example: Getting an APNs token is only supported on iOS and macOS platforms.',
+            );
           }
         }
         break;
@@ -262,16 +269,21 @@ class _Application extends State<Application> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(children: [
-          MetaCard('Permissions', Permissions()),
-          MetaCard('FCM Token', TokenMonitor((token) {
-            _token = token;
-            return token == null
-                ? const CircularProgressIndicator()
-                : Text(token, style: const TextStyle(fontSize: 12));
-          })),
-          MetaCard('Message Stream', MessageList()),
-        ]),
+        child: Column(
+          children: [
+            MetaCard('Permissions', Permissions()),
+            MetaCard(
+              'FCM Token',
+              TokenMonitor((token) {
+                _token = token;
+                return token == null
+                    ? const CircularProgressIndicator()
+                    : Text(token, style: const TextStyle(fontSize: 12));
+              }),
+            ),
+            MetaCard('Message Stream', MessageList()),
+          ],
+        ),
       ),
     );
   }
@@ -288,17 +300,22 @@ class MetaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
-        child: Card(
-            child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(children: [
-                  Container(
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child:
-                          Text(_title, style: const TextStyle(fontSize: 18))),
-                  _children,
-                ]))));
+      width: double.infinity,
+      margin: const EdgeInsets.only(left: 8, right: 8, top: 8),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: Text(_title, style: const TextStyle(fontSize: 18)),
+              ),
+              _children,
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
