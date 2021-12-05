@@ -13,8 +13,9 @@ Future<void> main() async {
         projectId: 'react-native-firebase-testing',
         storageBucket: 'react-native-firebase-testing.appspot.com',
         messagingSenderId: '448618578101',
-        appId: '1:448618578101:ios:eaf25c1747605f69ac3efc',
-        measurementId: 'G-0N1G9FLDZE'),
+        appId: '1:448618578101:ios:a95357dfa9ae51d4ac3efc',
+        measurementId: 'G-0N1G9FLDZE',
+    ),
   );
 
   // Activate app check after initialization, but before
@@ -97,7 +98,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await appCheck.getToken();
+                final result = await appCheck.getToken(true);
                 final token = result.token;
                 setMessage('your token: $token');
               },
