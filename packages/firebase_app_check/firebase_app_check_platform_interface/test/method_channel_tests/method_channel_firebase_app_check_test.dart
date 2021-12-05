@@ -52,8 +52,8 @@ void main() {
 
     group('delegateFor()', () {
       test('returns a [FirebaseAppCheckPlatform]', () {
-        // ignore: invalid_use_of_protected_member
         expect(
+          // ignore: invalid_use_of_protected_member
           appCheck.delegateFor(app: secondaryApp),
           FirebaseAppCheckPlatform.instanceFor(app: secondaryApp),
         );

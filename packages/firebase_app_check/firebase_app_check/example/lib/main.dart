@@ -25,7 +25,8 @@ Future<void> main() async {
   await FirebaseAppCheck.instance
       // Your personal reCaptcha public key goes here:
       .activate(
-          webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8');
+    webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+  );
 
   runApp(MyApp());
 }
@@ -83,56 +84,58 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                if (kIsWeb) {
+                  print(
+                    'Pass in your "webRecaptchaSiteKey" key found on you Firebase Console to activate if using on the web platform.',
+                  );
+                }
+                await appCheck.activate();
+                setMessage('activated!!');
+              },
+              child: const Text('activate()'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final result = await appCheck.getToken(true);
+                final token = result.token;
+                setMessage('your token: $token');
+              },
+              child: const Text('getToken()'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await appCheck.setTokenAutoRefreshEnabled(true);
+                setMessage('successfully set auto token refresh!!');
+              },
+              child: const Text('setTokenAutoRefreshEnabled()'),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              _message, //#007bff
+              style: const TextStyle(
+                color: Color.fromRGBO(47, 79, 79, 1),
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Token received from tokenChanges() API: $_eventToken', //#007bff
+              style: const TextStyle(
+                color: Color.fromRGBO(128, 0, 128, 1),
+                fontSize: 16,
+              ),
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            children: [
-              ElevatedButton(
-                onPressed: () async {
-                  if (kIsWeb) {
-                    print(
-                        'Pass in your "webRecaptchaSiteKey" key found on you Firebase Console to activate if using on the web platform.');
-                  }
-                  await appCheck.activate();
-                  setMessage('activated!!');
-                },
-                child: const Text('activate()'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final result = await appCheck.getToken(true);
-                  final token = result.token;
-                  setMessage('your token: $token');
-                },
-                child: const Text('getToken()'),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  await appCheck.setTokenAutoRefreshEnabled(true);
-                  setMessage('successfully set auto token refresh!!');
-                },
-                child: const Text('setTokenAutoRefreshEnabled()'),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                _message, //#007bff
-                style: const TextStyle(
-                  color: Color.fromRGBO(47, 79, 79, 1),
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Token received from tokenChanges() API: $_eventToken', //#007bff
-                style: const TextStyle(
-                  color: Color.fromRGBO(128, 0, 128, 1),
-                  fontSize: 16,
-                ),
-              ),
-            ],
-          ),
-        ));
+      ),
+    );
   }
 }
