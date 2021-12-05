@@ -144,7 +144,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       ],
       if (widget.action == AuthAction.signUp ||
           widget.action == AuthAction.link) ...[
-        spacer,
+        const SizedBox(height: 8),
         PasswordInput(
           focusNode: confirmPasswordFocusNode,
           controller: confirmPasswordCtrl,
@@ -158,7 +158,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           ]),
           label: l.confirmPasswordInputLabel,
         ),
-        spacer,
+        const SizedBox(height: 8),
       ],
       spacer,
       Builder(

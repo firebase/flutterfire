@@ -16,15 +16,15 @@ class AuthResolver extends StatelessWidget {
   Widget build(BuildContext context) {
     const providerConfigs = [
       EmailProviderConfiguration(),
-      PhoneProviderConfiguration(),
+      // PhoneProviderConfiguration(),
       GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-      AppleProviderConfiguration(),
-      FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-      TwitterProviderConfiguration(
-        apiKey: TWITTER_API_KEY,
-        apiSecretKey: TWITTER_API_SECRET_KEY,
-        redirectUri: TWITTER_REDIRECT_URI,
-      ),
+      // AppleProviderConfiguration(),
+      // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+      // TwitterProviderConfiguration(
+      //   apiKey: TWITTER_API_KEY,
+      //   apiSecretKey: TWITTER_API_SECRET_KEY,
+      //   redirectUri: TWITTER_REDIRECT_URI,
+      // ),
     ];
 
     return StreamBuilder<User?>(
@@ -42,21 +42,24 @@ class AuthResolver extends StatelessWidget {
           headerBuilder: (context, constraints, _) {
             return Padding(
               padding: const EdgeInsets.all(20),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: SvgPicture.asset('assets/images/firebase_logo.svg'),
-              ),
+              child: Image.asset('assets/images/flutterfire_logo.png'),
             );
           },
           sideBuilder: (context, constraints) {
             return Center(
               child: Padding(
-                padding: EdgeInsets.all(constraints.maxWidth / 8),
-                child: SvgPicture.asset(
-                  'assets/images/firebase_logo.svg',
-                  width: constraints.maxWidth / 2,
-                  height: constraints.maxWidth / 2,
-                ),
+                padding: EdgeInsets.all(constraints.maxWidth / 4),
+                child: Image.asset('assets/images/flutterfire_logo.png'),
+              ),
+            );
+          },
+          subtitleBuilder: (context, action) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Text(
+                action == AuthAction.signIn
+                    ? 'Welcome to FlutterFire UI! Please sign in to continue.'
+                    : 'Welcome to FlutterFire UI! Please create an account to continue',
               ),
             );
           },

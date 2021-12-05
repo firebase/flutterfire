@@ -10,6 +10,11 @@ import 'package:flutterfire_ui/i10n.dart';
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
 
+typedef AuthViewContentBuilder = Widget Function(
+  BuildContext context,
+  AuthAction action,
+);
+
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
@@ -17,8 +22,8 @@ class LoginView extends StatefulWidget {
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
-  final WidgetBuilder? footerBuilder;
-  final WidgetBuilder? subtitleBuilder;
+  final AuthViewContentBuilder? footerBuilder;
+  final AuthViewContentBuilder? subtitleBuilder;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -134,7 +139,11 @@ class LoginViewState extends State<LoginView> {
     return [
       Title(text: title),
       const SizedBox(height: 16),
-      if (widget.subtitleBuilder != null) widget.subtitleBuilder!(context),
+      if (widget.subtitleBuilder != null)
+        widget.subtitleBuilder!(
+          context,
+          _action,
+        ),
       if (_showAuthActionSwitch) ...[
         RichText(
           text: TextSpan(
@@ -200,7 +209,11 @@ class LoginViewState extends State<LoginView> {
                 const SizedBox(height: 8),
               ] else if (config is OAuthProviderConfiguration && !_buttonsBuilt)
                 _buildOAuthButtons(platform),
-          if (widget.footerBuilder != null) widget.footerBuilder!(context),
+          if (widget.footerBuilder != null)
+            widget.footerBuilder!(
+              context,
+              widget.action,
+            ),
         ],
       ),
     );

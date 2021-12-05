@@ -21,8 +21,8 @@ class RegisterScreen extends StatelessWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
-  final WidgetBuilder? subtitleBuilder;
-  final WidgetBuilder? footerBuilder;
+  final AuthViewContentBuilder? subtitleBuilder;
+  final AuthViewContentBuilder? footerBuilder;
 
   const RegisterScreen({
     Key? key,

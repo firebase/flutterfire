@@ -64,8 +64,8 @@ class LoginScreen extends StatefulWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
-  final WidgetBuilder? subtitleBuilder;
-  final WidgetBuilder? footerBuilder;
+  final AuthViewContentBuilder? subtitleBuilder;
+  final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
 
   const LoginScreen({
