@@ -13,7 +13,7 @@ Future<void> main() async {
         projectId: 'react-native-firebase-testing',
         storageBucket: 'react-native-firebase-testing.appspot.com',
         messagingSenderId: '448618578101',
-        appId: '1:448618578101:ios:a95357dfa9ae51d4ac3efc',
+        appId: kIsWeb ? '1:448618578101:web:2109c1424695f352ac3efc' : '1:448618578101:ios:a95357dfa9ae51d4ac3efc',
         measurementId: 'G-0N1G9FLDZE',
     ),
   );
@@ -21,7 +21,8 @@ Future<void> main() async {
   // Activate app check after initialization, but before
   // usage of any Firebase services.
   await FirebaseAppCheck.instance
-      .activate(webRecaptchaSiteKey: 'Your reCAPTCHA v3 site key...');
+  // Your personal reCaptcha public key goes here:
+      .activate(webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8');
 
   runApp(MyApp());
 }
