@@ -66,6 +66,7 @@ class LoginScreen extends StatefulWidget {
   final bool? showAuthActionSwitch;
   final WidgetBuilder? subtitleBuilder;
   final WidgetBuilder? footerBuilder;
+  final Key? loginViewKey;
 
   const LoginScreen({
     Key? key,
@@ -81,6 +82,7 @@ class LoginScreen extends StatefulWidget {
     this.showAuthActionSwitch,
     this.subtitleBuilder,
     this.footerBuilder,
+    this.loginViewKey,
   }) : super(key: key);
 
   @override
@@ -109,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Padding(
         padding: const EdgeInsets.all(30),
         child: LoginView(
+          key: widget.loginViewKey,
           action: widget.action,
           providerConfigs: widget.providerConfigs,
           oauthButtonVariant: widget.oauthButtonVariant,

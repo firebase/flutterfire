@@ -79,7 +79,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       case AuthAction.signIn:
         return l.signInActionText;
       case AuthAction.signUp:
-        return l.signUpActionText;
+        return l.registerActionText;
       case AuthAction.link:
         return l.linkEmailButtonText;
     }
@@ -165,6 +165,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           );
         },
       ),
+      spacer,
       Builder(
         builder: (context) {
           final authState = AuthState.of(context);

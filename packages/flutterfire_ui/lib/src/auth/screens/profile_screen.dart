@@ -227,17 +227,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
     final body = Padding(
       padding: const EdgeInsets.all(16),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth > 500) {
-            return ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: content,
-            );
-          } else {
-            return content;
-          }
-        },
+      child: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.maxWidth > 500) {
+              return ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: content,
+              );
+            } else {
+              return content;
+            }
+          },
+        ),
       ),
     );
 

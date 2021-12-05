@@ -8,13 +8,13 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   @override
   final String signInActionText;
   @override
-  final String signUpActionText;
+  final String registerActionText;
   @override
   final String linkEmailButtonText;
   @override
   final String signInButtonText;
   @override
-  final String signUpButtonText;
+  final String registerButtonText;
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -115,14 +115,16 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String signInMethods;
   @override
   final String provideEmail;
+  @override
+  final String goBackButtonLabel;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
     this.passwordInputLabel = 'Password',
     this.signInActionText = 'Sign in',
-    this.signUpActionText = 'Sign up',
+    this.registerActionText = 'Register',
     this.signInButtonText = 'Sign in',
-    this.signUpButtonText = 'Sign up',
+    this.registerButtonText = 'Register',
     this.linkEmailButtonText = 'Next',
     this.signInWithPhoneButtonText = 'Sign in with phone',
     this.signInWithGoogleButtonText = 'Sign in with Google',
@@ -178,5 +180,6 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.enableMoreSignInMethods = 'Enable more sign in methods',
     this.signInMethods = 'Sign in methods',
     this.provideEmail = 'Provide your email and password',
+    this.goBackButtonLabel = 'Go back',
   });
 }

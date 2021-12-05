@@ -4,8 +4,15 @@ import '../widgets/internal/universal_scaffold.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   final void Function(BuildContext context)? onEmailSent;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
-  const ForgotPasswordScreen({Key? key, this.onEmailSent}) : super(key: key);
+  const ForgotPasswordScreen({
+    Key? key,
+    this.onEmailSent,
+    this.subtitleBuilder,
+    this.footerBuilder,
+  }) : super(key: key);
 
   Future<void> _onEmailSent(BuildContext context) async {
     Navigator.of(context).pop();
@@ -13,7 +20,11 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final child = ForgotPasswordView(onEmailSent: onEmailSent ?? _onEmailSent);
+    final child = ForgotPasswordView(
+      onEmailSent: onEmailSent ?? _onEmailSent,
+      subtitleBuilder: subtitleBuilder,
+      footerBuilder: footerBuilder,
+    );
 
     return UniversalScaffold(
       body: Padding(

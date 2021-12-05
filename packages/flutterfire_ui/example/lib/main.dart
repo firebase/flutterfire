@@ -26,7 +26,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        brightness: Brightness.dark,
+        brightness: Brightness.light,
         visualDensity: VisualDensity.standard,
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),

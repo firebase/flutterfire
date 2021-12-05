@@ -6,10 +6,10 @@ abstract class FirebaseUILocalizationLabels {
   String get emailInputLabel;
   String get passwordInputLabel;
   String get signInActionText;
-  String get signUpActionText;
+  String get registerActionText;
 
   String get signInButtonText;
-  String get signUpButtonText;
+  String get registerButtonText;
   String get linkEmailButtonText;
 
   String get signInWithPhoneButtonText;
@@ -62,6 +62,7 @@ abstract class FirebaseUILocalizationLabels {
   String get enableMoreSignInMethods;
   String get signInMethods;
   String get provideEmail;
+  String get goBackButtonLabel;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{
