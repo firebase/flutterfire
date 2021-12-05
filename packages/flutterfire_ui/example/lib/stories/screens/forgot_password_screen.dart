@@ -8,10 +8,6 @@ class ForgotPasswordScreenStory extends StoryWidget {
 
   @override
   Widget build(StoryElement context) {
-    return ForgotPasswordScreen(
-      onEmailSent: (_) {
-        context.notify('Password reset email sent');
-      },
-    );
+    return const ForgotPasswordScreen();
   }
 }

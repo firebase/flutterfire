@@ -37,6 +37,7 @@ class EmailForm extends StatelessWidget {
       action: action,
       config: config,
       child: _SignInFormContent(
+        auth: auth,
         action: action,
         onSubmit: onSubmit,
         email: email,
@@ -46,12 +47,14 @@ class EmailForm extends StatelessWidget {
 }
 
 class _SignInFormContent extends StatefulWidget {
+  final FirebaseAuth? auth;
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
   final String? email;
 
   const _SignInFormContent({
     Key? key,
+    this.auth,
     this.onSubmit,
     this.action,
     this.email,
@@ -130,7 +133,11 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           alignment: Alignment.centerRight,
           child: ForgotPasswordButton(
             onPressed: () {
-              showForgotPasswordScreen(context);
+              showForgotPasswordScreen(
+                context: context,
+                email: emailCtrl.text,
+                auth: widget.auth,
+              );
             },
           ),
         ),

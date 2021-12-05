@@ -1,29 +1,34 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
-  final void Function(BuildContext context)? onEmailSent;
+  final FirebaseAuth? auth;
   final WidgetBuilder? subtitleBuilder;
   final WidgetBuilder? footerBuilder;
+  final String? email;
 
   const ForgotPasswordScreen({
     Key? key,
-    this.onEmailSent,
+    this.auth,
+    this.email,
     this.subtitleBuilder,
     this.footerBuilder,
   }) : super(key: key);
 
-  Future<void> _onEmailSent(BuildContext context) async {
-    Navigator.of(context).pop();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final child = ForgotPasswordView(
-      onEmailSent: onEmailSent ?? _onEmailSent,
-      subtitleBuilder: subtitleBuilder,
-      footerBuilder: footerBuilder,
+    final child = ListView(
+      shrinkWrap: true,
+      children: [
+        ForgotPasswordView(
+          auth: auth,
+          email: email,
+          footerBuilder: footerBuilder,
+          subtitleBuilder: subtitleBuilder,
+        ),
+      ],
     );
 
     return UniversalScaffold(

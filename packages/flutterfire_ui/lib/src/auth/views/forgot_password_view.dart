@@ -12,26 +12,28 @@ import '../widgets/internal/title.dart';
 class ForgotPasswordView extends StatefulWidget {
   final FirebaseAuth? auth;
   final ActionCodeSettings? actionCodeSettings;
-  final void Function(BuildContext context) onEmailSent;
   final WidgetBuilder? subtitleBuilder;
   final WidgetBuilder? footerBuilder;
+  final String? email;
 
   const ForgotPasswordView({
     Key? key,
-    required this.onEmailSent,
     this.auth,
+    this.email,
     this.actionCodeSettings,
     this.subtitleBuilder,
     this.footerBuilder,
   }) : super(key: key);
 
   @override
-  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
+  // ignore: library_private_types_in_public_api
+  _ForgotPasswordViewState createState() => _ForgotPasswordViewState();
 }
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
-  final emailCtrl = TextEditingController();
+  late final emailCtrl = TextEditingController(text: widget.email ?? '');
   final formKey = GlobalKey<FormState>();
+  bool emailSent = false;
 
   FirebaseAuth get auth => widget.auth ?? FirebaseAuth.instance;
   bool isLoading = false;
@@ -45,7 +47,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         actionCodeSettings: widget.actionCodeSettings,
       );
 
-      widget.onEmailSent(context);
+      emailSent = true;
     } on FirebaseAuthException catch (e) {
       exception = e;
     } finally {
@@ -67,25 +69,29 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           Title(text: l.forgotPasswordViewTitle),
           spacer,
           if (widget.subtitleBuilder != null) widget.subtitleBuilder!(context),
-          EmailInput(
-            autofocus: true,
-            controller: emailCtrl,
-            onSubmitted: _submit,
-          ),
+          if (!emailSent)
+            EmailInput(
+              autofocus: true,
+              controller: emailCtrl,
+              onSubmitted: _submit,
+            )
+          else
+            Text(l.passwordResetEmailSentText),
           spacer,
           if (exception != null) ...[
             ErrorText(exception: exception!),
             spacer,
           ],
-          LoadingButton(
-            isLoading: isLoading,
-            label: l.resetPasswordButtonLabel,
-            onTap: () {
-              if (formKey.currentState!.validate()) {
-                _submit(emailCtrl.text);
-              }
-            },
-          ),
+          if (!emailSent)
+            LoadingButton(
+              isLoading: isLoading,
+              label: l.resetPasswordButtonLabel,
+              onTap: () {
+                if (formKey.currentState!.validate()) {
+                  _submit(emailCtrl.text);
+                }
+              },
+            ),
           const SizedBox(height: 8),
           UniversalButton(
             variant: ButtonVariant.text,

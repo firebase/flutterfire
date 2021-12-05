@@ -117,6 +117,8 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String provideEmail;
   @override
   final String goBackButtonLabel;
+  @override
+  final String passwordResetEmailSentText;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -181,5 +183,7 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.signInMethods = 'Sign in methods',
     this.provideEmail = 'Provide your email and password',
     this.goBackButtonLabel = 'Go back',
+    this.passwordResetEmailSentText =
+        "We've sent you an email with a link to reset your password. Please check your email.",
   });
 }
