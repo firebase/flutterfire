@@ -7,7 +7,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+      apiKey: kIsWeb
+          ? 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0'
+          : 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
       authDomain: 'react-native-firebase-testing.firebaseapp.com',
       databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
       projectId: 'react-native-firebase-testing',
@@ -15,8 +17,11 @@ Future<void> main() async {
       messagingSenderId: '448618578101',
       appId: kIsWeb
           ? '1:448618578101:web:2109c1424695f352ac3efc'
-          : '1:448618578101:ios:a95357dfa9ae51d4ac3efc',
-      measurementId: 'G-0N1G9FLDZE',
+          : '1:448618578101:ios:eaf25c1747605f69ac3efc',
+      trackingId: 'G-0N1G9FLDZE',
+      iosClientId:
+          '448618578101-gdvmskjsg1sk5v9pkifk73uqfr2ukta0.apps.googleusercontent.com',
+      iosBundleId: 'io.flutter.plugins.firebase.appcheck.example',
     ),
   );
 
