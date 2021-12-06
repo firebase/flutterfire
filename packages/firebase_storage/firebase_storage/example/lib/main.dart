@@ -72,7 +72,7 @@ class _TaskManager extends State<TaskManager> {
   List<firebase_storage.UploadTask> _uploadTasks = [];
 
   /// The user selects a file, and the task is added to the list.
-  Future<firebase_storage.UploadTask?> uploadFile(Picked? file) async {
+  Future<firebase_storage.UploadTask?> uploadFile(XFile? file) async {
     if (file == null) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('No file was selected'),
