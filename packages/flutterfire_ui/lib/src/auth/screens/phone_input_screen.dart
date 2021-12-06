@@ -15,11 +15,15 @@ import '../widgets/internal/universal_scaffold.dart';
 class PhoneInputScreen extends StatelessWidget {
   final AuthAction? action;
   final FirebaseAuth? auth;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
   const PhoneInputScreen({
     Key? key,
     this.action,
     this.auth,
+    this.subtitleBuilder,
+    this.footerBuilder,
   }) : super(key: key);
 
   void next(BuildContext context, AuthAction? action, Object flowKey, _) {
@@ -45,6 +49,10 @@ class PhoneInputScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: PhoneInputView(
+              auth: auth,
+              action: action,
+              subtitleBuilder: subtitleBuilder,
+              footerBuilder: footerBuilder,
               flowKey: flowKey,
               onSMSCodeRequested: next,
             ),

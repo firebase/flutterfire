@@ -14,7 +14,7 @@ abstract class OAuthProviderConfiguration extends ProviderConfiguration {
   const OAuthProviderConfiguration();
 
   String get defaultRedirectUri =>
-      '${Firebase.apps.first.name}.firebaseapp.com/__/auth/handler';
+      'https://${Firebase.apps.first.options.projectId}.firebaseapp.com/__/auth/handler';
 
   ThemedOAuthProviderButtonStyle get style;
 

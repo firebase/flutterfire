@@ -1,3 +1,7 @@
+## 3.0.0-dev.4
+
+ - Update a dependency to the latest release.
+
 ## 3.0.0-dev.3
 
  - **FEAT**: add macOS support (#7313).

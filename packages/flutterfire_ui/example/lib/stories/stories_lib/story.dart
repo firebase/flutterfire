@@ -152,6 +152,7 @@ class KnobsPanel extends StatefulWidget {
   final List<Knob> knobs;
 
   @override
+  // ignore: library_private_types_in_public_api
   _KnobsPanelState createState() => _KnobsPanelState();
 }
 

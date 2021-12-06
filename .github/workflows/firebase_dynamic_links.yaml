@@ -40,11 +40,10 @@ jobs:
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 28
+          api-level: 29
           arch: x86_64
-          # Firebase Database works without Google Play Services, so we don't use the `googleapis`
-          # emulator target as it's considerably slower on CI.
-          target: default
+          # Firebase Dynamic Links requires Google Play Services, so we use the `google_apis`
+          target: google_apis
           profile: Nexus 5X
           script: ./.github/workflows/scripts/drive-example.sh android
 

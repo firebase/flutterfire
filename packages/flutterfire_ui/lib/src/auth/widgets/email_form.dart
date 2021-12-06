@@ -37,6 +37,7 @@ class EmailForm extends StatelessWidget {
       action: action,
       config: config,
       child: _SignInFormContent(
+        auth: auth,
         action: action,
         onSubmit: onSubmit,
         email: email,
@@ -46,12 +47,14 @@ class EmailForm extends StatelessWidget {
 }
 
 class _SignInFormContent extends StatefulWidget {
+  final FirebaseAuth? auth;
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
   final String? email;
 
   const _SignInFormContent({
     Key? key,
+    this.auth,
     this.onSubmit,
     this.action,
     this.email,
@@ -79,7 +82,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       case AuthAction.signIn:
         return l.signInActionText;
       case AuthAction.signUp:
-        return l.signUpActionText;
+        return l.registerActionText;
       case AuthAction.link:
         return l.linkEmailButtonText;
     }
@@ -130,14 +133,18 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           alignment: Alignment.centerRight,
           child: ForgotPasswordButton(
             onPressed: () {
-              showForgotPasswordScreen(context);
+              showForgotPasswordScreen(
+                context: context,
+                email: emailCtrl.text,
+                auth: widget.auth,
+              );
             },
           ),
         ),
       ],
       if (widget.action == AuthAction.signUp ||
           widget.action == AuthAction.link) ...[
-        spacer,
+        const SizedBox(height: 8),
         PasswordInput(
           focusNode: confirmPasswordFocusNode,
           controller: confirmPasswordCtrl,
@@ -151,7 +158,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           ]),
           label: l.confirmPasswordInputLabel,
         ),
-        spacer,
+        const SizedBox(height: 8),
       ],
       spacer,
       Builder(
@@ -165,6 +172,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           );
         },
       ),
+      spacer,
       Builder(
         builder: (context) {
           final authState = AuthState.of(context);

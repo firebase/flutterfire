@@ -21,6 +21,8 @@ class PhoneInputView extends StatefulWidget {
   final Object flowKey;
   final SMSCodeRequestedCallback? onSMSCodeRequested;
   final PhoneNumberSubmitCallback? onSubmit;
+  final WidgetBuilder? subtitleBuilder;
+  final WidgetBuilder? footerBuilder;
 
   const PhoneInputView({
     Key? key,
@@ -29,6 +31,8 @@ class PhoneInputView extends StatefulWidget {
     this.auth,
     this.action,
     this.onSubmit,
+    this.subtitleBuilder,
+    this.footerBuilder,
   }) : super(key: key);
 
   @override
@@ -80,6 +84,8 @@ class _PhoneInputViewState extends State<PhoneInputView> {
           children: [
             Title(text: l.phoneVerificationViewTitleText),
             const SizedBox(height: 32),
+            if (widget.subtitleBuilder != null)
+              widget.subtitleBuilder!(context),
             if (state is AwaitingPhoneNumber || state is SMSCodeRequested) ...[
               PhoneInput(
                 initialCountryCode: countryCode!,
@@ -96,6 +102,7 @@ class _PhoneInputViewState extends State<PhoneInputView> {
               const SizedBox(height: 8),
               ErrorText(exception: state.exception)
             ],
+            if (widget.footerBuilder != null) widget.footerBuilder!(context),
           ],
         );
       },

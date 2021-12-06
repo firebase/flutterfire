@@ -1,3 +1,11 @@
+## 2.2.1
+
+ - Update a dependency to the latest release.
+
+## 2.2.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 2.1.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

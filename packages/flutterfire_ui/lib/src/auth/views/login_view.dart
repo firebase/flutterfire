@@ -10,6 +10,11 @@ import 'package:flutterfire_ui/i10n.dart';
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
 
+typedef AuthViewContentBuilder = Widget Function(
+  BuildContext context,
+  AuthAction action,
+);
+
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
@@ -17,8 +22,8 @@ class LoginView extends StatefulWidget {
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
-  final WidgetBuilder? footerBuilder;
-  final WidgetBuilder? subtitleBuilder;
+  final AuthViewContentBuilder? footerBuilder;
+  final AuthViewContentBuilder? subtitleBuilder;
 
   final List<ProviderConfiguration> providerConfigs;
 
@@ -36,35 +41,40 @@ class LoginView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<LoginView> createState() => LoginViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  late AuthAction action = widget.action;
-  bool get showTitle => widget.showTitle ?? true;
-  bool get showAuthActionSwitch => widget.showAuthActionSwitch ?? true;
+class LoginViewState extends State<LoginView> {
+  late AuthAction _action = widget.action;
+  bool get _showTitle => widget.showTitle ?? true;
+  bool get _showAuthActionSwitch => widget.showAuthActionSwitch ?? true;
+  bool _buttonsBuilt = false;
 
-  Widget? _buildOAuthButtons(TargetPlatform platform) {
+  void setAction(AuthAction action) {
+    setState(() {
+      _action = action;
+    });
+  }
+
+  Widget _buildOAuthButtons(TargetPlatform platform) {
     final oauthProviderConfigs = widget.providerConfigs
         .whereType<OAuthProviderConfiguration>()
         .where((element) => element.isSupportedPlatform(platform));
 
-    if (oauthProviderConfigs.isEmpty) {
-      return null;
-    }
+    _buttonsBuilt = true;
 
     final oauthButtonsList = oauthProviderConfigs.map((config) {
       if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
         return OAuthProviderButton(
           auth: widget.auth,
-          action: action,
+          action: _action,
           providerConfig: config,
         );
       } else {
         return OAuthProviderIconButton(
           providerConfig: config,
           auth: widget.auth,
-          action: action,
+          action: _action,
         );
       }
     }).toList();
@@ -84,13 +94,13 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _handleDifferentAuthAction(BuildContext context) {
-    if (action == AuthAction.signIn) {
+    if (_action == AuthAction.signIn) {
       setState(() {
-        action = AuthAction.signUp;
+        _action = AuthAction.signUp;
       });
     } else {
       setState(() {
-        action = AuthAction.signIn;
+        _action = AuthAction.signIn;
       });
     }
   }
@@ -102,11 +112,11 @@ class _LoginViewState extends State<LoginView> {
     late String hint;
     late String actionText;
 
-    if (action == AuthAction.signIn) {
+    if (_action == AuthAction.signIn) {
       title = l.signInText;
       hint = l.registerHintText;
       actionText = l.registerText;
-    } else if (action == AuthAction.signUp) {
+    } else if (_action == AuthAction.signUp) {
       title = l.registerText;
       hint = l.signInHintText;
       actionText = l.signInText;
@@ -129,7 +139,12 @@ class _LoginViewState extends State<LoginView> {
     return [
       Title(text: title),
       const SizedBox(height: 16),
-      if (showAuthActionSwitch) ...[
+      if (widget.subtitleBuilder != null)
+        widget.subtitleBuilder!(
+          context,
+          _action,
+        ),
+      if (_showAuthActionSwitch) ...[
         RichText(
           text: TextSpan(
             children: [
@@ -149,10 +164,7 @@ class _LoginViewState extends State<LoginView> {
             ],
           ),
         ),
-        if (widget.subtitleBuilder != null)
-          widget.subtitleBuilder!(context)
-        else
-          const SizedBox(height: 16),
+        const SizedBox(height: 16),
       ]
     ];
   }
@@ -160,7 +172,7 @@ class _LoginViewState extends State<LoginView> {
   @override
   void didUpdateWidget(covariant LoginView oldWidget) {
     if (oldWidget.action != widget.action) {
-      action = widget.action;
+      _action = widget.action;
     }
     super.didUpdateWidget(oldWidget);
   }
@@ -169,34 +181,39 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
     final platform = Theme.of(context).platform;
-    final oauthButtons = _buildOAuthButtons(platform);
+    _buttonsBuilt = false;
 
     return IntrinsicHeight(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (showTitle) ..._buildHeader(context),
+          if (_showTitle) ..._buildHeader(context),
           for (var config in widget.providerConfigs)
             if (config.isSupportedPlatform(platform))
-              if (config is EmailProviderConfiguration)
+              if (config is EmailProviderConfiguration) ...[
+                const SizedBox(height: 8),
                 EmailForm(
-                  key: ValueKey(action),
+                  key: ValueKey(_action),
                   auth: widget.auth,
-                  action: action,
+                  action: _action,
                   config: config,
                   email: widget.email,
                 )
-              else if (config is PhoneProviderConfiguration) ...[
+              ] else if (config is PhoneProviderConfiguration) ...[
                 const SizedBox(height: 8),
                 PhoneVerificationButton(
                   label: l.signInWithPhoneButtonText,
-                  action: action,
+                  action: _action,
                   auth: widget.auth,
                 ),
                 const SizedBox(height: 8),
-              ],
-          if (oauthButtons != null) oauthButtons,
-          if (widget.footerBuilder != null) widget.footerBuilder!(context),
+              ] else if (config is OAuthProviderConfiguration && !_buttonsBuilt)
+                _buildOAuthButtons(platform),
+          if (widget.footerBuilder != null)
+            widget.footerBuilder!(
+              context,
+              widget.action,
+            ),
         ],
       ),
     );

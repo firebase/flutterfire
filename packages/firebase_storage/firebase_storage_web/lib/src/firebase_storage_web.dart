@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
@@ -58,6 +59,7 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web.
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('storage');
     FirebaseStoragePlatform.instance = FirebaseStorageWeb._nullInstance();
   }
 

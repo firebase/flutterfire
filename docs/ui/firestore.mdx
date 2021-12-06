@@ -13,28 +13,26 @@ To get started with Firebase UI for Firestore, you first need to ensure the `clo
 
 If you haven't already done so, install the `flutterfire_ui` package by running the following command in your terminal:
 
-TODO: Change to `flutterfire_ui_firestore` when moved
-
 ```bash
 flutter pub add flutterfire_ui
 ```
 
-## Usage
-
-The package provides a number of widgets that can be used to build your Firestore UI.
+## Initializing Firebase
 
 If you haven't already done so, you'll need to initialize Firebase before using FlutterFire UI.
 You can learn more about this in the [FlutterFire Overview](https://firebase.flutter.dev/docs/overview#initializing-flutterfire)
-documentation.
+documentation, for example:
 
-```dart
+```dart title="lib/main.dart"
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Firebase
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
 ```
@@ -42,80 +40,184 @@ Future<void> main() async {
 Next, import the FlutterFire UI for Firestore package:
 
 ```dart
-import 'package:flutterfire_ui/firestore.dart';
+import 'package:flutterfire_ui/flutterfire_ui.dart';
 ```
 
-### `FirestoreListView`
+## Usage
 
-A [ListView.builder] that obtains its items from a Firestore query.
+### Infinite scrolling
 
-As an example, consider the following collection:
+Infinite scrolling is the concept of continuously loading more data from a database
+as the user scrolls through your application. This is useful when you have a large
+dataset, as it enables the application to render faster as well as reducing network
+overhead for data the user might never see.
+
+FlutterFire UI for Firestore provides a convenient way to implement infinite scrolling
+using the Firestore database with the `FirestoreListView` widget.
+
+At a minimum the widget accepts a Firestore query and an item builder. As the user scrolls
+down (or across) your list, more data will be automatically fetched from the database (whilst
+respecting query conditions such as ordering).
+
+To get started, create a query and provide an item builder. For this example, we'll display
+a list of users from the `users` collection:
 
 ```dart
-class Movie {
-  Movie({required this.title, required this.genre});
+final usersQuery = FirebaseFirestore.instance.collection('users').orderBy('name');
 
-  Movie.fromJson(Map<String, Object?> json)
+FirestoreListView<Movie>(
+  query: usersQuery,
+  itemBuilder: (context, snapshot) {
+    Map<String, dynamic> user = snapshot.data() as Map<String, dynamic>;
+
+    return Text('User name is ${user['name']}');
+  },
+);
+```
+
+The `FirestoreListView` widget is built on-top of Flutter's own [`ListView`](https://api.flutter.dev/flutter/widgets/ListView-class.html)
+widget, and accepts the same parameters which we can optionally provide. For example, to change the scroll-direction to horizontal:
+
+```dart
+FirestoreListView<Movie>(
+  scrollDirection: Axis.horizontal,
+  // ...
+);
+```
+
+### Controlling page size
+
+By default, the widget will fetch 10 items from the collection at a time. This can be changed by providing a `pageSize` parameter:
+
+```dart
+FirestoreListView<Movie>(
+  pageSize: 20,
+  // ...
+);
+```
+
+In general, it is good practice to keep this value as small as possible to reduce network overhead and improve render time. If the height (or width)
+of an individual item is large, it is recommended to lower the page size.
+
+### Using typed responses
+
+The `cloud_firestore` plugin allows us to type the responses we receive from the database using the `withConverter` API. For more information,
+see [the documentation](../../firestore/usage.mdx#typing-collectionreference-and-documentreference).
+
+The `FirestoreListView` works with this out of the box. Simply provide a converted query to the widget, for example:
+
+```dart
+class User {
+  User({required this.name, required this.age});
+
+  User.fromJson(Map<String, Object?> json)
     : this(
-        title: json['title']! as String,
-        genre: json['genre']! as String,
+        name: json['name']! as String,
+        age: json['age']! as int,
       );
 
-  final String title;
-  final String genre;
+  final String name;
+  final int age;
 
   Map<String, Object?> toJson() {
     return {
-      'title': title,
-      'genre': genre,
+      'name': name,
+      'age': age,
     };
   }
 }
 
-final moviesCollection = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
-     fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-     toFirestore: (movie, _) => movie.toJson(),
+final usersQuery = FirebaseFirestore.instance.collection('users')
+  .orderBy('name')
+  .withConverter<User>(
+     fromFirestore: (snapshot, _) => User.fromJson(snapshot.data()!),
+     toFirestore: (user, _) => user.toJson(),
    );
+
+FirestoreListView<User>(
+  query: usersQuery,
+  itemBuilder: (context, snapshot) {
+    // Data is now typeed!
+    User user = snapshot.data();
+
+    return Text(user.name);
+  },
+);
 ```
 
-Using [FirestoreListView], we can now show the list of movies by writing:
+### Loading and error handling
+
+By default, the widget will display a loading indicator while data is being fetched from the database, and ignore any errors which might be thrown
+(such as permission denied). You can override this behaviour by providing a `loadingBuilder` and `errorBuilder` parameters to the widget:
 
 ```dart
 FirestoreListView<Movie>(
-  query: moviesCollection.orderBy('title'),
-  itemBuilder: (context, snapshot) {
-    Movie movie = snapshot.data();
-    return Text(movie.title);
-  },
-)
+  loadingBuilder: (context) => MyCustomLoadingIndicator(),
+  errorBuilder: (context, error, stackTrace) => MyCustomError(error, stackTrace),
+  // ...
+);
 ```
 
-For advanced UI use-cases, consider switching to [FirestoreQueryBuilder].
+### Advanced configuration
 
-### `FirestoreQueryBuilder`
+In many cases, the `FirestoreListView` widget is enough to render simple lists of collection data.
+However, you may have specific requirements which require more control over the widget's behaviour
+(such as using a [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html)).
 
-The [FirestoreQueryBuilder] widget enables you to build any UI within your application, whilst having
-the power of realtime Firestore data and infinite scrolling. The widget is a lower-level abstraction of
-[FirestoreListView], which gives you full control on exactly how your data is displayed.
+The `FirestoreQueryBuilder` provides the building blocks for advanced configuration as the expense of
+requiring more boilerplate code. The widget does not provide any underlying list implementation, instead
+you are expected to provide this yourself.
+
+Much like the `FirestoreListView` widget, provide a query and builder:
 
 ```dart
-FirestoreQueryBuilder<Movie>(
-  query: moviesCollection.orderBy('title'),
+final usersQuery = FirebaseFirestore.instance.collection('users').orderBy('name');
+
+FirestoreQueryBuilder(
+  query: usersQuery,
   builder: (context, snapshot, _) {
-    // Query is loading
+    // ... TODO!
+  },
+);
+```
+
+The main differences to note here is that the `builder` property returns a `QueryBuilderSnapshot`, rather
+than an individual document. The builder returns the current state of the entire query, such as whether
+data is loading, an error has occurred and the documents.
+
+This requires us to implement our own list based implementation. Firstly, let's handle the loading and error
+states:
+
+```dart
+FirestoreQueryBuilder(
+  query: usersQuery,
+  builder: (context, snapshot, _) {
     if (snapshot.isFetching) {
       return const CircularProgressIndicator();
     }
 
-    // Something went wrong (e.g. permission denied)
     if (snapshot.hasError) {
-      return Text('error ${snapshot.error}');
+      return Text('Something went wrong! ${snapshot.error}');
     }
 
+    // ...
+  },
+);
+```
+
+Next we now need to return a list-view based implementation for our application to display the data. For example,
+to display a grid of users, we can use the [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html) widget:
+
+```dart
+FirestoreQueryBuilder(
+  query: usersQuery,
+  builder: (context, snapshot, _) {
+    // ...
+
     return GridView.builder(
-      itemCount: snapshot.docs.length,
+      itemCount: snapshot.documents.length,
       itemBuilder: (context, index) {
-        // If we reached the end of the currently obtained items, we try to
+        // if we reached the end of the currently obtained items, we try to
         // obtain more items
         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
           // Tell FirestoreQueryBuilder to try to obtain more items.
@@ -123,21 +225,21 @@ FirestoreQueryBuilder<Movie>(
           snapshot.fetchMore();
         }
 
-        final movie = snapshot.docs[index];
+        final user = snapshot.documents[index] as Map<String, dynamic>;
 
         return Container(
           padding: const EdgeInsets.all(8),
-          child: const Text("${movive.title}"),
           color: Colors.teal[100],
+          child: const Text("User name is ${user['name']}"),
         );
       },
     );
   },
-)
+);
 ```
 
-The [FirestoreQueryBuilder] widget enables us to return any UI we want, whilst also providing the
-ability to fetch more data as the user scrolls.
+With more power comes more responsibility:
 
-[firestorelistview]: https://firebase.flutter.dev/docs/ui/firestore#firestorelistview
-[firestorequerybuilder]: https://firebase.flutter.dev/docs/ui/firestore#firestorequerybuilder
+1. Within the `itemBuilder` of our `GridView`, we have to manually ensure that we call the `fetchMore()` method on the snapshot when more data is required.
+1. The `FirestoreQueryBuilder` does not provide a list-view based handler, instead you must provide your own implementation.
+

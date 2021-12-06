@@ -21,6 +21,7 @@ class DeleteAccountButton extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _DeleteAccountButtonState createState() => _DeleteAccountButtonState();
 }
 
@@ -57,6 +58,7 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
     bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     return LoadingButton(
+      isLoading: _isLoading,
       color: isCupertino ? CupertinoColors.destructiveRed : Colors.red,
       icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
       label: l.deleteAccount,

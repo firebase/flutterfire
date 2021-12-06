@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -93,34 +91,35 @@ void runTaskTests() {
         await _testPauseTask('Upload');
       }, skip: true);
 
-      test('handles errors, e.g. if permission denied', () async {
-        late FirebaseException streamError;
+      //TODO(pr-mais): causes the emulator to crash
+      // test('handles errors, e.g. if permission denied', () async {
+      //   late FirebaseException streamError;
 
-        List<int> list = utf8.encode('hello world');
-        Uint8List data = Uint8List.fromList(list);
-        UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
+      //   List<int> list = utf8.encode('hello world');
+      //   Uint8List data = Uint8List.fromList(list);
+      //   UploadTask task = storage.ref('/uploadNope.jpeg').putData(data);
 
-        expect(task.snapshot.state, TaskState.running);
+      //   expect(task.snapshot.state, TaskState.running);
 
-        task.snapshotEvents.listen((TaskSnapshot snapshot) {
-          // noop
-        }, onError: (error) {
-          streamError = error;
-        }, cancelOnError: true);
+      //   task.snapshotEvents.listen((TaskSnapshot snapshot) {
+      //     // noop
+      //   }, onError: (error) {
+      //     streamError = error;
+      //   }, cancelOnError: true);
 
-        await expectLater(
-          task,
-          throwsA(isA<FirebaseException>()
-              .having((e) => e.code, 'code', 'unauthorized')),
-        );
+      //   await expectLater(
+      //     task,
+      //     throwsA(isA<FirebaseException>()
+      //         .having((e) => e.code, 'code', 'unauthorized')),
+      //   );
 
-        expect(streamError.plugin, 'firebase_storage');
-        expect(streamError.code, 'unauthorized');
-        expect(streamError.message,
-            'User is not authorized to perform the desired action.');
+      //   expect(streamError.plugin, 'firebase_storage');
+      //   expect(streamError.code, 'unauthorized');
+      //   expect(streamError.message,
+      //       'User is not authorized to perform the desired action.');
 
-        expect(task.snapshot.state, TaskState.error);
-      });
+      //   expect(task.snapshot.state, TaskState.error);
+      // });
     });
 
     group('snapshot', () {

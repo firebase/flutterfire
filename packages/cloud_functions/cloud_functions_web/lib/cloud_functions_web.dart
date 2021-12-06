@@ -5,6 +5,7 @@
 
 import 'package:cloud_functions_platform_interface/cloud_functions_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
@@ -34,6 +35,7 @@ class FirebaseFunctionsWeb extends FirebaseFunctionsPlatform {
 
   /// Create the default instance of the [FirebaseFunctionsPlatform] as a [FirebaseFunctionsWeb]
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('functions');
     FirebaseFunctionsPlatform.instance = FirebaseFunctionsWeb.instance;
   }
 

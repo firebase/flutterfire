@@ -31,7 +31,7 @@ String sha256ofString(String input) {
   return digest.toString();
 }
 
-class AppleProviderImpl extends Apple {
+class AppleProviderImpl extends OAuthProvider {
   @override
   Future<fba.OAuthCredential> signIn() async {
     final rawNonce = generateNonce();

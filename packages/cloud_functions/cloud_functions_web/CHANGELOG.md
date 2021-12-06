@@ -1,3 +1,11 @@
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
+## 4.2.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
 ## 4.1.1
 
  - **FIX**: correctly pass `region` to JS functions interop instance (#7328).

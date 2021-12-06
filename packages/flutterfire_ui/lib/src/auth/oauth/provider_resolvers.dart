@@ -36,21 +36,6 @@ IconData providerIconFromString(String providerId) {
   }
 }
 
-String providerIdOf<T extends OAuthProvider>() {
-  switch (T) {
-    case Google:
-      return 'google.com';
-    case Apple:
-      return 'apple.com';
-    case Twitter:
-      return 'twitter.com';
-    case Facebook:
-      return 'facebook.com';
-    default:
-      throw Exception('Unknown provider: $T');
-  }
-}
-
 IconData providerIcon(BuildContext context, String providerId) {
   final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 

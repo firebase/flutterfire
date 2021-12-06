@@ -16,14 +16,22 @@ function toGithubExample(plugin) {
 
 module.exports = {
   main: {
-    'Getting Started': [
-      'overview',
-      'installation/android',
-      'installation/ios',
-      'installation/macos',
-      'installation/web',
-      'migration',
-      'null-safety',
+    "Getting Started": [
+      "overview",
+      "cli",
+      {
+        type: 'category',
+        label: 'Manual Installation',
+        items: [
+          "manual-installation",
+          "manual-installation/android",
+          "manual-installation/ios",
+          "manual-installation/macos",
+          "manual-installation/web",
+        ],
+      },
+      "migration",
+      "null-safety",
     ],
     Analytics: [
       'analytics/overview',
@@ -87,10 +95,18 @@ module.exports = {
       toReferenceAPI('firebase_crashlytics'),
       toGithubExample('firebase_crashlytics'),
     ],
-    'Realtime Database': [
-      'database/overview',
-      toReferenceAPI('firebase_database'),
-      toGithubExample('firebase_database'),
+    'Dynamic Links': [
+      "dynamic-links/overview",
+      "dynamic-links/android-integration",
+      "dynamic-links/apple-integration",
+      "dynamic-links/usage",
+      toReferenceAPI("firebase_dynamic_links"),
+      toGithubExample("firebase_dynamic_links"),
+    ],
+    "Realtime Database": [
+      "database/overview",
+      toReferenceAPI("firebase_database"),
+      toGithubExample("firebase_database"),
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],

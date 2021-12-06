@@ -9,6 +9,7 @@ class EmailInput extends StatelessWidget {
   final FocusNode? focusNode;
   final bool? autofocus;
   final TextEditingController controller;
+  final String? initialValue;
   final void Function(String value) onSubmitted;
 
   const EmailInput({
@@ -17,6 +18,7 @@ class EmailInput extends StatelessWidget {
     required this.onSubmitted,
     this.focusNode,
     this.autofocus,
+    this.initialValue,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class EmailInput extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       autocorrect: false,
       validator: Validator.validateAll([
-        NotEmpty(l.accessDisabledErrorText),
+        NotEmpty(l.emailIsRequiredErrorText),
         EmailValidator(l.isNotAValidEmailErrorText),
       ]),
       onSubmitted: (v) => onSubmitted(v!),

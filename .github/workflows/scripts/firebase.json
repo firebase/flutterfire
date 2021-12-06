@@ -2,6 +2,9 @@
   "firestore": {
     "rules": "firestore.rules"
   },
+  "database": {
+    "rules": "database.rules.json"
+  },
   "functions": {
     "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build",
     "source": "functions"
@@ -15,6 +18,9 @@
     },
     "storage": {
       "port": "9199"
+    },
+    "database": {
+      "port": "9000"
     },
     "ui": {
       "enabled": true,

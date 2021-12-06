@@ -18,7 +18,7 @@ class LoadingIndicator extends StatelessWidget {
     late Widget indicator;
 
     if (CupertinoUserInterfaceLevel.maybeOf(context) != null) {
-      indicator = CupertinoActivityIndicator();
+      indicator = const CupertinoActivityIndicator();
     } else {
       final _color = color ?? Theme.of(context).colorScheme.secondary;
       indicator = CircularProgressIndicator(
