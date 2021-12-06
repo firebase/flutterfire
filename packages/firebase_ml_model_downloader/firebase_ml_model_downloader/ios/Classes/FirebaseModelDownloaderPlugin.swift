@@ -17,8 +17,6 @@ import firebase_core
 let kFLTFirebaseModelDownloaderChannelName = "plugins.flutter.io/firebase_ml_model_downloader"
 
 public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugin {
-  var result: FLTFirebaseMethodCallResult?
-
   public static func register(with registrar: FlutterPluginRegistrar) {
     let binaryMessenger: FlutterBinaryMessenger
 
@@ -32,7 +30,7 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     let instance = FirebaseModelDownloaderPluginSwift()
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
-    registrar.publish(instance);
+      registrar.publish(instance)
     #endif
   }
 
@@ -73,20 +71,19 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
                                                   andOptionalNSError: nil))
     }
 
-    self.result = .create(success: result, andErrorBlock: errorBlock)
-
+    var result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
     if call.method == "FirebaseModelDownloader#getModel" {
-      getModel(arguments: call.arguments as! [String: Any])
+      getModel(arguments: call.arguments as! [String: Any], result: result)
     }
     if call.method == "FirebaseModelDownloader#listDownloadedModels" {
-      listDownloadedModels(arguments: call.arguments as! [String: Any])
+      listDownloadedModels(arguments: call.arguments as! [String: Any], result: result)
     }
     if call.method == "FirebaseModelDownloader#deleteDownloadedModel" {
-      deleteDownloadedModel(arguments: call.arguments as! [String: Any])
+      deleteDownloadedModel(arguments: call.arguments as! [String: Any], result: result)
     }
   }
 
-  internal func listDownloadedModels(arguments: [String: Any]) {
+  internal func listDownloadedModels(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
 
     modelDownloader?.listDownloadedModels { response in
@@ -100,14 +97,14 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
             "name": $0.name,
           ]
         }
-        self.result!.success(responseList)
+        result.success(responseList)
       case let .failure(error):
-        self.result!.error(nil, nil, nil, error)
+        result.error(nil, nil, nil, error)
       }
     }
   }
 
-  internal func getModel(arguments: [String: Any]) {
+  internal func getModel(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"] as! String
     let downloadType = arguments["downloadType"] as! String
@@ -128,28 +125,28 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     modelDownloader?.getModel(name: modelName, downloadType: downloadTypeEnum, conditions: modelDownloadConditions) { response in
       switch response {
       case let .success(customModel):
-        self.result!.success([
+        result.success([
           "filePath": customModel.path,
           "size": customModel.size,
           "hash": customModel.hash,
           "name": customModel.name,
         ])
       case let .failure(error):
-        self.result!.error(nil, nil, nil, error)
+        result.error(nil, nil, nil, error)
       }
     }
   }
 
-  internal func deleteDownloadedModel(arguments: [String: Any]) {
+  internal func deleteDownloadedModel(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"]
 
     modelDownloader?.deleteDownloadedModel(name: modelName as! String) { response in
       switch response {
       case .success():
-        self.result!.success(nil)
+        result.success(nil)
       case let .failure(error):
-        self.result!.error(nil, nil, nil, error)
+        result.error(nil, nil, nil, error)
       }
     }
   }
