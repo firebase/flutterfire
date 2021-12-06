@@ -29,6 +29,8 @@ flutter:
     platforms:
       android:
         package: io.flutter.plugins.firebase.firebase_ml_model_downloader
-        pluginClass: FirebaseMlModelDownloaderPlugin
+        pluginClass: FirebaseModelDownloaderPlugin
       ios:
-        pluginClass: FirebaseMlModelDownloaderPlugin
+        pluginClass: FirebaseModelDownloaderPlugin
+      macos:
+        pluginClass: FirebaseModelDownloaderPlugin

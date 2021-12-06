@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 
 /// Download conditions for downloading a model via the [getModel] API.
-class DownloadConditions {
+class FirebaseModelDownloadConditions {
   /// Creates a new [DownloadConditions] instance.
-  DownloadConditions({
+  FirebaseModelDownloadConditions({
     this.iosAllowsCellularAccess = true,
     this.iosAllowsBackgroundDownloading = false,
     this.androidChargingRequired = false,

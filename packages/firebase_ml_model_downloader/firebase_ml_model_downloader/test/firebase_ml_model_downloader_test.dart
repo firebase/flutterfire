@@ -14,16 +14,16 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import './mock.dart';
 
-final MockFirebaseMlModelDownloader kMockDownloaderPlatform =
-    MockFirebaseMlModelDownloader();
+final MockFirebaseModelDownloader kMockDownloaderPlatform =
+    MockFirebaseModelDownloader();
 
 void main() {
-  setupFirebaseMlModelDownloaderMocks();
+  setupFirebaseModelDownloaderMocks();
 
-  late FirebaseMlModelDownloader mlModelDownloader;
+  late FirebaseModelDownloader mlModelDownloader;
   late FirebaseApp secondaryApp;
 
-  group('$FirebaseMlModelDownloader', () {
+  group('$FirebaseModelDownloader', () {
     setUpAll(() async {
       await Firebase.initializeApp();
       secondaryApp = await Firebase.initializeApp(
@@ -35,15 +35,14 @@ void main() {
           messagingSenderId: '1234567890',
         ),
       );
-      FirebaseMlModelDownloaderPlatform.instance =
-          MockFirebaseMlModelDownloader();
-      mlModelDownloader = FirebaseMlModelDownloader.instance;
+      FirebaseModelDownloaderPlatform.instance = MockFirebaseModelDownloader();
+      mlModelDownloader = FirebaseModelDownloader.instance;
     });
   });
 
   group('instance', () {
     test('returns an instance', () async {
-      expect(mlModelDownloader, isA<FirebaseMlModelDownloader>());
+      expect(mlModelDownloader, isA<FirebaseModelDownloader>());
     });
 
     test('returns the correct $FirebaseApp', () {
@@ -55,13 +54,13 @@ void main() {
   group('instanceFor', () {
     test('returns an instance', () async {
       final mlModelDownloader =
-          FirebaseMlModelDownloader.instanceFor(app: secondaryApp);
-      expect(mlModelDownloader, isA<FirebaseMlModelDownloader>());
+          FirebaseModelDownloader.instanceFor(app: secondaryApp);
+      expect(mlModelDownloader, isA<FirebaseModelDownloader>());
     });
 
     test('returns the correct $FirebaseApp', () {
       final mlModelDownloader =
-          FirebaseMlModelDownloader.instanceFor(app: secondaryApp);
+          FirebaseModelDownloader.instanceFor(app: secondaryApp);
       expect(mlModelDownloader.app, isA<FirebaseApp>());
       expect(mlModelDownloader.app.name, 'secondaryApp');
     });
@@ -70,8 +69,8 @@ void main() {
   group('getModel', () {
     test('verify delegate method is called', () async {
       const String modelName = 'modelName';
-      final conditions = DownloadConditions();
-      final customModel = CustomModel(
+      final conditions = FirebaseModelDownloadConditions();
+      final customModel = FirebaseCustomModel(
         file: File('file'),
         hash: 'hash',
         name: 'name',
@@ -80,14 +79,14 @@ void main() {
       when(
         kMockDownloaderPlatform.getModel(
           modelName,
-          DownloadType.latestModel,
+          FirebaseModelDownloadType.latestModel,
           conditions,
         ),
       ).thenAnswer((_) => Future.value(customModel));
 
       final model = await mlModelDownloader.getModel(
         modelName,
-        DownloadType.latestModel,
+        FirebaseModelDownloadType.latestModel,
         conditions,
       );
 
@@ -95,7 +94,7 @@ void main() {
       verify(
         kMockDownloaderPlatform.getModel(
           modelName,
-          DownloadType.latestModel,
+          FirebaseModelDownloadType.latestModel,
           conditions,
         ),
       );
@@ -105,7 +104,8 @@ void main() {
   group('listDownloadedModels', () {
     test('verify delegate method is called', () async {
       final customModels = [
-        CustomModel(file: File('file'), hash: 'hash', name: 'name', size: 123)
+        FirebaseCustomModel(
+            file: File('file'), hash: 'hash', name: 'name', size: 123)
       ];
       when(kMockDownloaderPlatform.listDownloadedModels())
           .thenAnswer((_) => Future.value(customModels));
@@ -130,19 +130,19 @@ void main() {
   });
 }
 
-final model =
-    CustomModel(name: 'name', size: 100, hash: 'hash', file: File('path'));
+final model = FirebaseCustomModel(
+    name: 'name', size: 100, hash: 'hash', file: File('path'));
 
-class MockFirebaseMlModelDownloader extends Mock
+class MockFirebaseModelDownloader extends Mock
     with MockPlatformInterfaceMixin
-    implements FirebaseMlModelDownloaderPlatform {
-  MockFirebaseMlModelDownloader() : super();
+    implements FirebaseModelDownloaderPlatform {
+  MockFirebaseModelDownloader() : super();
 
   @override
-  Future<CustomModel> getModel(
+  Future<FirebaseCustomModel> getModel(
     String modelName,
-    DownloadType downloadType,
-    DownloadConditions conditions,
+    FirebaseModelDownloadType downloadType,
+    FirebaseModelDownloadConditions conditions,
   ) {
     return super.noSuchMethod(
       Invocation.method(#getModel, [modelName, downloadType, conditions]),
@@ -152,7 +152,7 @@ class MockFirebaseMlModelDownloader extends Mock
   }
 
   @override
-  FirebaseMlModelDownloaderPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseModelDownloaderPlatform delegateFor({FirebaseApp? app}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: kMockDownloaderPlatform,
@@ -161,7 +161,7 @@ class MockFirebaseMlModelDownloader extends Mock
   }
 
   @override
-  Future<List<CustomModel>> listDownloadedModels() {
+  Future<List<FirebaseCustomModel>> listDownloadedModels() {
     return super.noSuchMethod(
       Invocation.method(#listDownloadedModels, []),
       returnValue: Future.value([model]),

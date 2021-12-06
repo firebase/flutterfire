@@ -25,14 +25,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class FirebaseMlModelDownloaderPlugin
+public class FirebaseModelDownloaderPlugin
     implements FlutterPlugin, MethodCallHandler, FlutterFirebasePlugin {
 
   private static final String METHOD_CHANNEL_NAME =
       "plugins.flutter.io/firebase_ml_model_downloader";
   private MethodChannel channel;
 
-  public FirebaseMlModelDownloaderPlugin() {}
+  public FirebaseModelDownloaderPlugin() {}
 
   static Map<String, String> getExceptionDetails(Exception exception) {
     Map<String, String> details = new HashMap<>();

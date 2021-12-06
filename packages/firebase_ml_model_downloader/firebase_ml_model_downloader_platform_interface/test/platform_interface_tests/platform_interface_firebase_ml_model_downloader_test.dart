@@ -10,13 +10,13 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../mock.dart';
 
 void main() {
-  setupFirebaseMlModelDownloaderMocks();
+  setupFirebaseModelDownloaderMocks();
 
-  late TestFirebaseMlModelDownloaderPlatform firebaseMlModelDownloaderPlatform;
+  late TestFirebaseModelDownloaderPlatform firebaseModelDownloaderPlatform;
   late FirebaseApp app;
   late FirebaseApp secondaryApp;
 
-  group('$FirebaseMlModelDownloaderPlatform()', () {
+  group('$FirebaseModelDownloaderPlatform()', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();
 
@@ -30,7 +30,7 @@ void main() {
         ),
       );
 
-      firebaseMlModelDownloaderPlatform = TestFirebaseMlModelDownloaderPlatform(
+      firebaseModelDownloaderPlatform = TestFirebaseModelDownloaderPlatform(
         app,
       );
 
@@ -44,41 +44,41 @@ void main() {
 
     test('Constructor', () {
       expect(
-        firebaseMlModelDownloaderPlatform,
-        isA<FirebaseMlModelDownloaderPlatform>(),
+        firebaseModelDownloaderPlatform,
+        isA<FirebaseModelDownloaderPlatform>(),
       );
-      expect(firebaseMlModelDownloaderPlatform, isA<PlatformInterface>());
+      expect(firebaseModelDownloaderPlatform, isA<PlatformInterface>());
     });
 
     test('instanceFor', () {
-      final result = FirebaseMlModelDownloaderPlatform.instanceFor(
+      final result = FirebaseModelDownloaderPlatform.instanceFor(
         app: app,
       );
-      expect(result, isA<FirebaseMlModelDownloaderPlatform>());
+      expect(result, isA<FirebaseModelDownloaderPlatform>());
     });
 
     test('get.instance', () {
       expect(
-        FirebaseMlModelDownloaderPlatform.instance,
-        isA<FirebaseMlModelDownloaderPlatform>(),
+        FirebaseModelDownloaderPlatform.instance,
+        isA<FirebaseModelDownloaderPlatform>(),
       );
       expect(
-        FirebaseMlModelDownloaderPlatform.instance.app.name,
+        FirebaseModelDownloaderPlatform.instance.app.name,
         equals(defaultFirebaseAppName),
       );
     });
 
     group('set.instance', () {
       test('sets the current instance', () {
-        FirebaseMlModelDownloaderPlatform.instance =
-            TestFirebaseMlModelDownloaderPlatform(secondaryApp);
+        FirebaseModelDownloaderPlatform.instance =
+            TestFirebaseModelDownloaderPlatform(secondaryApp);
 
         expect(
-          FirebaseMlModelDownloaderPlatform.instance,
-          isA<FirebaseMlModelDownloaderPlatform>(),
+          FirebaseModelDownloaderPlatform.instance,
+          isA<FirebaseModelDownloaderPlatform>(),
         );
         expect(
-          FirebaseMlModelDownloaderPlatform.instance.app.name,
+          FirebaseModelDownloaderPlatform.instance.app.name,
           equals('testApp2'),
         );
       });
@@ -86,7 +86,7 @@ void main() {
 
     test('throws if delegateFor', () {
       expect(
-        () => firebaseMlModelDownloaderPlatform.testDelegateFor(),
+        () => firebaseModelDownloaderPlatform.testDelegateFor(),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
@@ -99,10 +99,10 @@ void main() {
 
     test('throws if getModel', () {
       expect(
-        () => firebaseMlModelDownloaderPlatform.getModel(
+        () => firebaseModelDownloaderPlatform.getModel(
           'modelName',
-          DownloadType.latestModel,
-          DownloadConditions(),
+          FirebaseModelDownloadType.latestModel,
+          FirebaseModelDownloadConditions(),
         ),
         throwsA(
           isA<UnimplementedError>().having(
@@ -116,7 +116,7 @@ void main() {
 
     test('throws if listDownloadedModels', () {
       expect(
-        () => firebaseMlModelDownloaderPlatform.listDownloadedModels(),
+        () => firebaseModelDownloaderPlatform.listDownloadedModels(),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
@@ -129,8 +129,8 @@ void main() {
 
     test('throws if deleteDownloadedModel', () {
       expect(
-        () => firebaseMlModelDownloaderPlatform
-            .deleteDownloadedModel('modelName'),
+        () =>
+            firebaseModelDownloaderPlatform.deleteDownloadedModel('modelName'),
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,
@@ -143,12 +143,12 @@ void main() {
   });
 }
 
-class TestFirebaseMlModelDownloaderPlatform
-    extends FirebaseMlModelDownloaderPlatform {
-  TestFirebaseMlModelDownloaderPlatform(FirebaseApp? app)
+class TestFirebaseModelDownloaderPlatform
+    extends FirebaseModelDownloaderPlatform {
+  TestFirebaseModelDownloaderPlatform(FirebaseApp? app)
       : super(appInstance: app);
 
-  FirebaseMlModelDownloaderPlatform testDelegateFor({FirebaseApp? app}) {
+  FirebaseModelDownloaderPlatform testDelegateFor({FirebaseApp? app}) {
     return delegateFor(app: app ?? Firebase.app());
   }
 }
