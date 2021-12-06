@@ -18,7 +18,7 @@ class AuthResolver extends StatelessWidget {
       EmailProviderConfiguration(),
       GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
       // PhoneProviderConfiguration(),
-      // AppleProviderConfiguration(),
+      AppleProviderConfiguration(),
       // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
       // TwitterProviderConfiguration(
       //   apiKey: TWITTER_API_KEY,
@@ -64,13 +64,15 @@ class AuthResolver extends StatelessWidget {
             );
           },
           footerBuilder: (context, action) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 16),
-              child: Text(
-                action == AuthAction.signIn
-                    ? 'By signing in, you agree to our terms and conditions.'
-                    : 'By registering, you agree to our terms and conditions.',
-                style: const TextStyle(color: Colors.grey),
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  action == AuthAction.signIn
+                      ? 'By signing in, you agree to our terms and conditions.'
+                      : 'By registering, you agree to our terms and conditions.',
+                  style: const TextStyle(color: Colors.grey),
+                ),
               ),
             );
           },

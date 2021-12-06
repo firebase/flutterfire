@@ -7,6 +7,12 @@ import 'package:flutter/material.dart';
 
 import '../validators.dart';
 
+class ForgotPasswordAction extends NavigationAction {
+  final void Function(BuildContext context, String? email) action;
+
+  ForgotPasswordAction({required this.action});
+}
+
 typedef EmailSubmitCallback = void Function(String email, String password);
 
 /// A barebones email form widget.
@@ -133,11 +139,18 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           alignment: Alignment.centerRight,
           child: ForgotPasswordButton(
             onPressed: () {
-              showForgotPasswordScreen(
-                context: context,
-                email: emailCtrl.text,
-                auth: widget.auth,
-              );
+              final navAction =
+                  NavigationActions.ofType<ForgotPasswordAction>(context);
+
+              if (navAction != null) {
+                navAction.action(context, emailCtrl.text);
+              } else {
+                showForgotPasswordScreen(
+                  context: context,
+                  email: emailCtrl.text,
+                  auth: widget.auth,
+                );
+              }
             },
           ),
         ),

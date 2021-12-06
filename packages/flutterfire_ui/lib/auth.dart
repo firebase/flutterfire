@@ -32,13 +32,11 @@ export 'src/auth/flows/email_flow.dart';
 export 'src/auth/flows/oauth_flow.dart' show OAuthController, OAuthFlow;
 
 export 'src/auth/oauth/social_icons.dart' show SocialIcons;
-export 'src/auth/oauth/provider_resolvers.dart'
-    show providerIcon, providerIconFromString, isOAuthProvider, providerIdOf;
-export 'src/auth/oauth/oauth_providers.dart'
-    show Google, Apple, Twitter, Facebook, OAuthHelpers;
+export 'src/auth/oauth/provider_resolvers.dart' show providerIcon;
+export 'src/auth/oauth/oauth_providers.dart' show OAuthHelpers;
 
 export 'src/auth/widgets/auth_flow_builder.dart';
-export 'src/auth/widgets/email_form.dart' show EmailForm;
+export 'src/auth/widgets/email_form.dart' show EmailForm, ForgotPasswordAction;
 export 'src/auth/widgets/error_text.dart' show ErrorText;
 export 'src/auth/widgets/phone_verification_button.dart'
     show PhoneVerificationButton;
@@ -76,6 +74,7 @@ export 'src/auth/screens/universal_email_sign_in_screen.dart';
 export 'src/auth/navigation/phone_verification.dart';
 export 'src/auth/navigation/forgot_password.dart';
 export 'src/auth/navigation/authentication.dart';
+export 'src/auth/navigation/navigation_actions.dart';
 
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';

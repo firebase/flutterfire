@@ -64,6 +64,7 @@ abstract class FirebaseUILocalizationLabels {
   String get provideEmail;
   String get goBackButtonLabel;
   String get passwordResetEmailSentText;
+  String get forgotPasswordHintText;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{
