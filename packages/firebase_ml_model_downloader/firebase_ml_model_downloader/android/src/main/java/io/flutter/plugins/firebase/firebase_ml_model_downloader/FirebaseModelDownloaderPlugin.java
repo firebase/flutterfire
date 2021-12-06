@@ -237,13 +237,13 @@ public class FirebaseModelDownloaderPlugin
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "FirebaseMlModelDownloader#getModel":
+      case "FirebaseModelDownloader#getModel":
         methodCallTask = getModel(call.arguments());
         break;
-      case "FirebaseMlModelDownloader#listDownloadedModels":
+      case "FirebaseModelDownloader#listDownloadedModels":
         methodCallTask = listDownloadedModels(call.arguments());
         break;
-      case "FirebaseMlModelDownloader#deleteDownloadedModel":
+      case "FirebaseModelDownloader#deleteDownloadedModel":
         methodCallTask = deleteDownloadedModel(call.arguments());
         break;
       default:
