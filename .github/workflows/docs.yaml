@@ -1,9 +1,6 @@
 name: publish_docs
 
 on:
-  push:
-    tags:
-      - '**'
   workflow_dispatch:
 
 jobs:

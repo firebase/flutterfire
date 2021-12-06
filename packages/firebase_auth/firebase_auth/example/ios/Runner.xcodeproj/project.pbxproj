@@ -149,7 +149,6 @@
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
-				B7F1A9EA4C114C29858E66FE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -359,7 +358,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -487,7 +486,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -510,7 +509,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.firebase.FlutterfireAuth;
+				PRODUCT_BUNDLE_IDENTIFIER = io.flutter.plugins.firebase.auth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VERSIONING_SYSTEM = "apple-generic";
 			};

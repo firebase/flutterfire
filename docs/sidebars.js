@@ -18,10 +18,18 @@ module.exports = {
   main: {
     "Getting Started": [
       "overview",
-      "installation/android",
-      "installation/ios",
-      "installation/macos",
-      "installation/web",
+      "cli",
+      {
+        type: 'category',
+        label: 'Manual Installation',
+        items: [
+          "manual-installation",
+          "manual-installation/android",
+          "manual-installation/ios",
+          "manual-installation/macos",
+          "manual-installation/web",
+        ],
+      },
       "migration",
       "null-safety",
     ],
@@ -86,6 +94,14 @@ module.exports = {
       "crashlytics/reports",
       toReferenceAPI("firebase_crashlytics"),
       toGithubExample("firebase_crashlytics"),
+    ],
+    'Dynamic Links': [
+      "dynamic-links/overview",
+      "dynamic-links/android-integration",
+      "dynamic-links/apple-integration",
+      "dynamic-links/usage",
+      toReferenceAPI("firebase_dynamic_links"),
+      toGithubExample("firebase_dynamic_links"),
     ],
     "Realtime Database": [
       "database/overview",

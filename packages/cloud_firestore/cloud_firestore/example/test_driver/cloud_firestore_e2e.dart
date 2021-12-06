@@ -1,4 +1,3 @@
-// @dart=2.9
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -12,6 +11,7 @@ import 'collection_reference_e2e.dart';
 import 'document_change_e2e.dart';
 import 'document_reference_e2e.dart';
 import 'field_value_e2e.dart';
+import 'firebase_config.dart';
 import 'geo_point_e2e.dart';
 import 'instance_e2e.dart';
 import 'query_e2e.dart';
@@ -25,7 +25,7 @@ bool kUseFirestoreEmulator = true;
 
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
 
     if (kUseFirestoreEmulator) {
       FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
