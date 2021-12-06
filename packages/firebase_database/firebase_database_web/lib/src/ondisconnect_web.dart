@@ -6,32 +6,56 @@ part of firebase_database_web;
 
 /// Web implementation for firebase [OnDisconnectPlatform]
 class OnDisconnectWeb extends OnDisconnectPlatform {
-  final database_interop.OnDisconnect _onDisconnect;
+  final database_interop.OnDisconnect _delegate;
 
   OnDisconnectWeb._(
-    this._onDisconnect,
+    this._delegate,
     DatabasePlatform database,
-    DatabaseReferencePlatform reference,
-  ) : super(database: database, reference: reference);
+    DatabaseReferencePlatform ref,
+  ) : super(database: database, ref: ref);
 
   @override
-  Future<void> set(value, {priority}) {
-    if (priority != null) return _onDisconnect.set(value);
-    return _onDisconnect.setWithPriority(value, priority);
+  Future<void> set(Object? value) async {
+    try {
+      await _delegate.set(value);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
-  Future<void> remove() {
-    return _onDisconnect.remove();
+  Future<void> setWithPriority(Object? value, Object? priority) async {
+    try {
+      await _delegate.setWithPriority(value, priority);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
-  Future<void> cancel() {
-    return _onDisconnect.cancel();
+  Future<void> remove() async {
+    try {
+      await _delegate.remove();
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
-  Future<void> update(Map<String, dynamic> value) {
-    return _onDisconnect.update(value);
+  Future<void> cancel() async {
+    try {
+      await _delegate.cancel();
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
+  }
+
+  @override
+  Future<void> update(Map<String, Object?> value) async {
+    try {
+      await _delegate.update(value);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 }

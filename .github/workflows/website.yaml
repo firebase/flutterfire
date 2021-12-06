@@ -5,6 +5,7 @@ on:
     paths:
       - "docs/**"
       - "website/**"
+  workflow_dispatch:
 
 jobs:
   validate:

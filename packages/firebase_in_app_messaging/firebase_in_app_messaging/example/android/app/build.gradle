@@ -33,7 +33,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.firebase_in_app_messaging_example"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
