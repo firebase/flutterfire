@@ -54,14 +54,14 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
         }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
-          Boolean suppress = (Boolean) call.arguments;
+          Boolean suppress = (Boolean) call.argument("suppress");
           instance.setMessagesSuppressed(suppress);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
         {
-          Boolean enabled = (Boolean) call.arguments;
+          Boolean enabled = (Boolean) call.argument("enabled");
           instance.setAutomaticDataCollectionEnabled(enabled);
           result.success(null);
           break;
