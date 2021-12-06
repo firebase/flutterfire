@@ -1,6 +1,6 @@
 name: firebase_installations_platform_interface
 description: A common platform interface for the firebase_installations plugin.
-version: 0.0.1
+version: 0.1.0
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_installations/firebase_installations_platform_interface
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_installations/firebase_installations_platform_interface
 
