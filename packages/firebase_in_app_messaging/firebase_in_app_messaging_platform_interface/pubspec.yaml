@@ -1,9 +1,9 @@
 name: firebase_in_app_messaging_platform_interface
-description: A common platform interface for the firebase_in_app_messagin plugin.
+description: A common platform interface for the firebase_in_app_messaging plugin.
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messagin/firebase_in_app_messagin_platform_interface
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messagin/firebase_in_app_messagin_platform_interface
 
-version: 0.1.0
+version: 0.2.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
