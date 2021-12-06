@@ -64,13 +64,13 @@ class AuthResolver extends StatelessWidget {
             );
           },
           footerBuilder: (context, action) {
-            return const Padding(
-              padding: EdgeInsets.only(top: 16),
+            return Padding(
+              padding: const EdgeInsets.only(top: 16),
               child: Text(
                 action == AuthAction.signIn
                     ? 'By signing in, you agree to our terms and conditions.'
                     : 'By registering, you agree to our terms and conditions.',
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.grey),
               ),
             );
           },
