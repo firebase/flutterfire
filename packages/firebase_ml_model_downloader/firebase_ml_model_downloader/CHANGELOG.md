@@ -1,3 +1,3 @@
 ## 0.1.0
 
-* TODO: Describe initial release.
+- Initial Firebase ML Downloader release.
