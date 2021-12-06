@@ -1,6 +1,6 @@
 name: firebase_in_app_messaging_example
 description: Demonstrates how to use the firebase_in_app_messaging plugin.
-publish_to: 'none'
+publish_to: "none"
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -13,6 +13,8 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   firebase_in_app_messaging:
     path: ../
+  firebase_in_app_messaging_platform_interface:
+    path: ../../firebase_in_app_messaging_platform_interface
   flutter:
     sdk: flutter
 
@@ -23,9 +25,11 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
+  firebase_in_app_messaging_platform_interface:
+    path: ../../firebase_in_app_messaging_platform_interface
 
 dev_dependencies:
-  e2e: ^0.7.0+1
+  drive: 1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
   flutter_test:
