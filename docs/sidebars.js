@@ -67,6 +67,10 @@ module.exports = {
       toReferenceAPI("cloud_functions"),
       toGithubExample("cloud_functions"),
     ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+    ],
     "Cloud Messaging": [
       "messaging/overview",
       "messaging/usage",
