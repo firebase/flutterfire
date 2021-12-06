@@ -100,7 +100,7 @@ class MethodChannelFirebaseInstallations extends FirebaseInstallationsPlatform {
   }
 
   @override
-  Stream<String> get idChanges {
+  Stream<String> get onIdChange {
     return _idTokenChangesListeners[app!.name]!.stream;
   }
 }

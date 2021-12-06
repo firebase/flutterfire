@@ -13,8 +13,8 @@ on:
       - '**.md'
 
 env:
-  FLUTTERFIRE_PLUGIN_SCOPE: '*firebase_installations*'
-  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: '*firebase_installations_example*'
+  FLUTTERFIRE_PLUGIN_SCOPE: '*installations*'
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: '*installations_example*'
 
 jobs:
   android:

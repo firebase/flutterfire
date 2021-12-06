@@ -65,7 +65,7 @@ class FirebaseInstallationsWeb extends FirebaseInstallationsPlatform {
   }
 
   @override
-  Stream<String> get idChanges {
+  Stream<String> get onIdChange {
     return guard(() => _delegate.onIdChange);
   }
 }

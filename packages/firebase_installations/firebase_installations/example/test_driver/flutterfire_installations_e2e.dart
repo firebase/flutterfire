@@ -4,7 +4,7 @@
 
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_installations/firebase_installations.dart';
+import 'package:flutterfire_installations/flutterfire_installations.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_config.dart';

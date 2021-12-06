@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-part of firebase_installations;
+part of flutterfire_installations;
 
 class FirebaseInstallations extends FirebasePluginPlatform {
   FirebaseInstallations._({required this.app})
@@ -56,7 +56,7 @@ class FirebaseInstallations extends FirebasePluginPlatform {
   }
 
   /// Sends a new event via a [Stream] whenever the Installation ID changes.
-  Stream<String> get idChanges {
-    return _delegate.idChanges;
+  Stream<String> get onIdChange {
+    return _delegate.onIdChange;
   }
 }

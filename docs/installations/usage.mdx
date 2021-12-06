@@ -6,7 +6,7 @@ sidebar_label: Usage
 To start using the Firebase Installations package within your project, import it at the top of your project files:
 
 ```dart
-import 'package:firebase_installations/firebase_installations.dart';
+import 'package:flutterfire_installations/flutterfire_installations.dart';
 ```
 
 Before using Firebase Installations, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
@@ -45,7 +45,7 @@ To delete an FID, call the `delete` method on the [`FirebaseInstallations`](!fir
 await FirebaseInstallations.instance.delete();
 ```
 
-## Retrieve client identifers
+## Retrieve client identifiers
 
 If you have a requirement to identify particular installations of your app, you can do so by retrieving the Firebase installation ID. 
 For example, to perform testing during Firebase In-App Messaging development, you can identify and target the correct test device using
@@ -65,8 +65,8 @@ you can authenticate a targeted test device using an installation auth token.
 An installation auth token is a short-lived bearer token in JSON web token (JWT) format containing the following information for an installation:
 
 - The Firebase installation ID
-- The associated project (projectNumber)
-- The associated Firebase application ID (appId)
+- The associated project (`projectNumber`)
+- The associated Firebase application ID (`appId`)
 - The token's expiration date
 
 An installation auth token cannot be revoked, and remains valid until its expiration date. The default token lifetime is one week.
@@ -83,24 +83,24 @@ Optionally, you can force a token refresh when called:
 String token = await FirebaseInstallations.instance.getToken(true);
 ```
 
-## Monitor the Firebase installation ID lifecycle
+## Monitor the Firebase Installation ID
 
-During the normal operation of an app, Firebase installation IDs (FIDs) don't require special monitoring. However, apps that explictly retrieve and
+During the normal operation of an app, Firebase installation IDs (FIDs) don't require special monitoring. However, apps that explicitly retrieve and
 use FIDs should add logic to monitor the potential deletion or rotation of the FID. Here are some cases where FIDs could be deleted or rotated:
 
-- Uninstallation or reinstallation of the app, for instance when an end user installs on a new device.
+- Uninstallation or re-installation of the app, for instance when an end user installs on a new device.
 - The end user clears the cache of the app or the device.
 - FID deletion is triggered in the backend due to app inactivity (currently the threshold for this is 270 days of inactivity).
 
-When apps experience FID rotation or deletion in these kinds of cases, they are assigned a new FID. Also, the installation auth token associated with
+When apps experience a FID rotation or deletion in these kinds of cases, they are assigned a new FID. Also, the installation auth token associated with
 a deleted FID is deleted, regardless of its own maturity, and is replaced with a new installation auth token.
 
 Apps can monitor these changes and respond accordingly.
 
-To monitor the FID token, listen to the `Stream` returned from the `idTokenChanges` getter:
+To monitor the FID token, listen to the `Stream` returned from the `onIdChange` getter:
 
 ```dart
-FirebaseInstallations.instance.idTokenChanges.listen((token) {
+FirebaseInstallations.instance.onIdChange.listen((token) {
   print('FID token: $token');
 });
 ```

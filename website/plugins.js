@@ -73,7 +73,7 @@ module.exports = [
   },
   {
     name: 'Installations',
-    pub: 'installations',
+    pub: 'flutterfire_installations',
     firebase: 'https://firebase.google.com/docs/projects/manage-installations',
     status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/installations/overview',

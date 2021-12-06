@@ -28,7 +28,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   firebase_core: ^1.10.0
-  firebase_installations:
+  flutterfire_installations:
     path: ../
   flutter:
     sdk: flutter
@@ -36,7 +36,11 @@ dependencies:
 dependency_overrides:
   firebase_core:
     path: ../../../firebase_core/firebase_core
-
+  firebase_installations_web:
+    path: ../../firebase_installations_web
+  firebase_installations_platform_interface:
+    path: ../../firebase_installations_platform_interface
+    
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:

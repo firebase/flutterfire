@@ -4,7 +4,7 @@ import 'package:firebase_installations_example/firebase_config.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_installations/firebase_installations.dart';
+import 'package:flutterfire_installations/flutterfire_installations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,7 @@ class _InstallationsCardState extends State<InstallationsCard> {
     init();
 
     // Listen to changes
-    FirebaseInstallations.instance.idChanges.listen((event) {
+    FirebaseInstallations.instance.onIdChange.listen((event) {
       setState(() {
         id = event;
       });
