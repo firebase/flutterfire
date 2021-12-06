@@ -79,7 +79,7 @@ public class FirebaseInstallationsPlugin
         });
   }
 
-  private Task<String> registerTokenListener(Map<String, Object> arguments) {
+  private Task<String> registerIdChangeListener(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
@@ -115,8 +115,8 @@ public class FirebaseInstallationsPlugin
       case "FirebaseInstallations#delete":
         methodCallTask = deleteId(call.arguments());
         break;
-      case "FirebaseInstallations#registerIdTokenListener":
-        methodCallTask = registerTokenListener(call.arguments());
+      case "FirebaseInstallations#registerIdChangeListener":
+        methodCallTask = registerIdChangeListener(call.arguments());
         break;
 
       default:

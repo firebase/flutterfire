@@ -29,22 +29,28 @@ class MethodChannelFirebaseInstallations extends FirebaseInstallationsPlatform {
   MethodChannelFirebaseInstallations({required FirebaseApp app}) : super(app) {
     _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
 
-    channel
-        .invokeMethod<String>('FirebaseInstallations#registerIdTokenListener', {
+    channel.invokeMethod<String>(
+        'FirebaseInstallations#registerIdChangeListener', {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen(
-        (arguments) {
-          _handleIdTokenChangesListener(app.name, arguments);
-        },
-      );
+      events.receiveBroadcastStream().listen((arguments) {
+        _handleIdChangedListener(app.name, arguments);
+      }, onError: (error, stackTrace) {
+        _handleIdChangedError(app.name, error, stackTrace);
+      });
     });
+  }
+  void _handleIdChangedError(String appName, Object error,
+      [StackTrace? stackTrace]) {
+    final StreamController<String> controller =
+        _idTokenChangesListeners[appName]!;
+    controller.addError(convertPlatformException(error), stackTrace);
   }
 
   /// Handle any incoming events from Event Channel and forward on to the user.
-  Future<void> _handleIdTokenChangesListener(
-      String appName, Map<dynamic, dynamic> arguments) async {
+  void _handleIdChangedListener(
+      String appName, Map<dynamic, dynamic> arguments) {
     final StreamController<String> controller =
         _idTokenChangesListeners[appName]!;
     controller.add(arguments['token']);
