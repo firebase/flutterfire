@@ -48,6 +48,7 @@ Pod::Spec.new do |s|
 
   # Flutter dependencies
   s.dependency 'FlutterMacOS'
+  s.dependency 'firebase_core'
 
   # Firebase dependencies
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
