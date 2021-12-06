@@ -120,6 +120,10 @@ module.exports = {
       toReferenceAPI("firebase_in_app_messaging"),
       toGithubExample("firebase_in_app_messaging"),
     ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
+    ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     "Remote Config": [

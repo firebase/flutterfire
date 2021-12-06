@@ -32,16 +32,17 @@ export default {
     firebase_remote_config: PUB_FIREBASE_REMOTE_CONFIG,
     firebase_remote_config_ns: PUB_NS_FIREBASE_REMOTE_CONFIG,
     flutterfire_installations: PUB_NS_FLUTTERFIRE_INSTALLATIONS,
-    google_sign_in: '^4.4.4',
+    firebase_ml_model_downloader_ns: PUB_NS_FIREBASE_ML_MODEL_DOWNLOADER,
+    google_sign_in: "^4.4.4",
   },
   android: {
-    google_services: '4.3.8', // com.google.gms:google-services
+    google_services: "4.3.8", // com.google.gms:google-services
   },
   web: {
-    firebase_cdn: '8.6.1', // https://firebase.google.com/support/release-notes/js
+    firebase_cdn: "8.6.1", // https://firebase.google.com/support/release-notes/js
   },
   external: {
-    google_sign_in: '^4.5.1',
-    flutter_facebook_auth: '^3.5.0',
-  },
+    google_sign_in: "^4.5.1",
+    flutter_facebook_auth: "^3.5.0",
+  }
 };
