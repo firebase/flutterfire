@@ -21,7 +21,7 @@ NSString *const kTokenKey = @"FIRAppCheckTokenNotificationKey";
                                                   usingBlock:^(NSNotification *_Nonnull note) {
                                                     NSString *token = note.userInfo[kTokenKey];
 
-                                                    events(@{@"result" : token});
+                                                    events(@{@"token" : token});
                                                   }];
 
   return nil;

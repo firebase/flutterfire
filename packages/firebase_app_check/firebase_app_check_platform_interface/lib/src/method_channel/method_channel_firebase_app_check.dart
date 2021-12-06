@@ -27,7 +27,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
           StreamController<AppCheckTokenResult> controller =
               _tokenChangesListeners[app.name]!;
           Map<dynamic, dynamic> result = arguments;
-          controller.add(AppCheckTokenResult(result['result']));
+          controller.add(AppCheckTokenResult(result['token']));
         },
       );
     });
