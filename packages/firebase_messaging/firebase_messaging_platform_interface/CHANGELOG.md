@@ -1,3 +1,7 @@
+## 3.1.0
+
+ - **FEAT**: add support for `RemoteMessage` on web (#7430).
+
 ## 3.0.9
 
  - Update a dependency to the latest release.

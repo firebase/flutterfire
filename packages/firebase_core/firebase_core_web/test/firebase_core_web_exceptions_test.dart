@@ -9,8 +9,8 @@ import 'dart:js' as js;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:js/js_util.dart' as js_util;
 
 import 'mock/firebase_mock.dart';
 
@@ -20,10 +20,12 @@ void main() {
       FirebasePlatform.instance = FirebaseCoreWeb();
     });
 
-    test('should throw exception if no default app is available', () async {
+    test(
+        'should throw exception if no default app is available & no options are provided',
+        () async {
       await expectLater(
         Firebase.initializeApp,
-        throwsA(coreNotInitialized()),
+        throwsAssertionError,
       );
     });
   });

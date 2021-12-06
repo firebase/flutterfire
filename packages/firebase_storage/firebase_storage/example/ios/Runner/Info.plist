@@ -50,5 +50,11 @@
       <key>NSAllowsLocalNetworking</key>
       <true/>
   </dict>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>This app would like to access your photo library.</string>
+  <key>NSCameraUsageDescription</key>
+  <string>This app would like to access your camera.</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>This app would like to access your microphoner.</string>
 </dict>
 </plist>

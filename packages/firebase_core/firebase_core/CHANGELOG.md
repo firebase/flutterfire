@@ -1,3 +1,7 @@
+## 1.10.1
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+
 ## 1.10.0
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

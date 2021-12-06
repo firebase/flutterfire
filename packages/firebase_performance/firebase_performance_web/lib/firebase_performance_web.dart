@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('performance');
     FirebasePerformancePlatform.instance = FirebasePerformanceWeb.instance;
   }
 
@@ -69,7 +71,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     throw PlatformException(
       code: 'non-existent',
       message:
-          "Performance Web does not currently support 'HttpMetric' (custom network tracing).",
+      "Performance Web does not currently support 'HttpMetric' (custom network tracing).",
     );
   }
 }

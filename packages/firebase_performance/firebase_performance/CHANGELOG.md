@@ -4,7 +4,7 @@ The Firebase Performance plugin has been heavily reworked to bring it inline wit
 documentation and updating unit and end-to-end tests.
 
 - General
- - Collecting metric and attribute data was previosuly an asynchronous task. The API has been reworked to better reflect other Firebase APIs, whereby
+ - Collecting metric and attribute data was previously an asynchronous task. The API has been reworked to better reflect other Firebase APIs, whereby
    setting such data is now a synchronous task. Once a trace or HTTP metric stops, data will be sent to the Firebase services in a single operation.
    Because of this, breaking changes are introduced to support the new API.
 
@@ -20,6 +20,10 @@ documentation and updating unit and end-to-end tests.
   - **BREAKING**: `Trace().incrementMetric()` method is now synchronous.
   - **BREAKING**: `Trace().setMetric()` method is now synchronous.
   - **BREAKING**: `Trace().getMetric()` method is now synchronous.
+
+## 0.7.1+5
+
+ - Update a dependency to the latest release.
 
 ## 0.7.1+4
 
