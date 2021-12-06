@@ -6,6 +6,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/subtitle.dart';
+import '../actions.dart';
 
 class AvailableProvidersRow extends StatelessWidget {
   final FirebaseAuth? auth;
@@ -40,6 +41,7 @@ class AvailableProvidersRow extends StatelessWidget {
             return EmailSignUpDialog(
               config: config as EmailProviderConfiguration,
               auth: auth,
+              action: AuthAction.link,
             );
           },
         );
@@ -142,6 +144,7 @@ class ProfileScreen extends StatefulWidget {
   final Color? avatarPlaceholderColor;
   final ShapeBorder? avatarShape;
   final double? avatarSize;
+  final List<FlutterfireUIAuthAction>? actions;
 
   const ProfileScreen({
     Key? key,
@@ -151,6 +154,7 @@ class ProfileScreen extends StatefulWidget {
     this.avatarShape,
     this.avatarSize,
     this.children = const [],
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -158,8 +162,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  void _logout() {
-    (widget.auth ?? FirebaseAuth.instance).signOut();
+  Future<void> _logout(BuildContext context) async {
+    await (widget.auth ?? FirebaseAuth.instance).signOut();
+    final action = FlutterfireUIAuthAction.ofType<SignedOut>(context);
+
+    action?.callback(context);
   }
 
   void _reauthenticate(BuildContext context) {
@@ -189,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .toList();
 
     final content = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Align(
           child: UserAvatar(
@@ -244,33 +252,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     if (isCupertino) {
-      return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          middle: Text(l.profile),
-          trailing: Transform.translate(
-            offset: const Offset(0, -6),
-            child: CupertinoButton(
-              onPressed: _logout,
-              child: const Icon(CupertinoIcons.arrow_right_circle),
+      return FlutterfireUIAuthActions(
+        actions: widget.actions ?? const [],
+        child: Builder(
+          builder: (context) => CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              middle: Text(l.profile),
+              trailing: Transform.translate(
+                offset: const Offset(0, -6),
+                child: CupertinoButton(
+                  onPressed: () => _logout(context),
+                  child: const Icon(CupertinoIcons.arrow_right_circle),
+                ),
+              ),
             ),
+            child: SafeArea(child: SingleChildScrollView(child: body)),
           ),
         ),
-        child: SafeArea(child: body),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(l.profile),
-          actions: [
-            IconButton(
-              onPressed: _logout,
-              icon: const Icon(
-                Icons.logout_outlined,
-              ),
-            )
-          ],
+      return FlutterfireUIAuthActions(
+        actions: widget.actions ?? const [],
+        child: Builder(
+          builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text(l.profile),
+              actions: [
+                IconButton(
+                  onPressed: () => _logout(context),
+                  icon: const Icon(
+                    Icons.logout_outlined,
+                  ),
+                )
+              ],
+            ),
+            body: SafeArea(child: SingleChildScrollView(child: body)),
+          ),
         ),
-        body: body,
       );
     }
   }

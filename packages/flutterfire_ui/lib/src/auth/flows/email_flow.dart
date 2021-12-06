@@ -1,13 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart'
-    show
-        ActionCodeSettings,
-        AuthCredential,
-        EmailAuthCredential,
-        EmailAuthProvider,
-        FirebaseAuth,
-        UserCredential;
-
-import 'package:flutterfire_ui/src/auth/auth_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../auth_controller.dart';
 
 import '../configs/email_provider_configuration.dart';
 import '../auth_flow.dart';

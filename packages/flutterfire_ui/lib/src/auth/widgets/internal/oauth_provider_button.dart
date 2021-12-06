@@ -9,7 +9,7 @@ import 'oauth_provider_button_style.dart';
 
 typedef ErrorCallback = void Function(Exception e);
 
-enum ButtonVariant {
+enum OAuthButtonVariant {
   icon_and_text,
   icon,
 }

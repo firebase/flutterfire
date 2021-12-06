@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
+import '../widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
+
+import '../actions.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
 typedef SignInRequiredCallback = Future<void> Function();
@@ -36,6 +38,7 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
 
     try {
       await auth.currentUser?.delete();
+      FlutterfireUIAuthAction.ofType<SignedOut>(context)?.callback(context);
     } on FirebaseAuthException catch (err) {
       if (err.code == 'requires-recent-login') {
         if (widget.onSignInRequired != null) {

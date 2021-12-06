@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart' hide Title;
-import 'package:flutterfire_ui/auth.dart' hide ButtonVariant;
+import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+import '../widgets/internal/universal_button.dart';
 
 import '../widgets/internal/title.dart';
 
@@ -100,7 +100,8 @@ class _PhoneInputViewState extends State<PhoneInputView> {
             ],
             if (state is AuthFailed) ...[
               const SizedBox(height: 8),
-              ErrorText(exception: state.exception)
+              ErrorText(exception: state.exception),
+              const SizedBox(height: 8),
             ],
             if (widget.footerBuilder != null) widget.footerBuilder!(context),
           ],

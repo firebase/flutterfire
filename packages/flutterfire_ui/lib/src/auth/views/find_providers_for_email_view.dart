@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/auth_flow.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
+import '../auth_flow.dart';
+import '../widgets/internal/loading_button.dart';
 
 import '../auth_state.dart';
 import '../widgets/internal/title.dart';

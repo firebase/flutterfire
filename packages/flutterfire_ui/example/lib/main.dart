@@ -8,7 +8,6 @@ import 'package:flutterfire_ui/auth/google.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
 import 'config.dart';
-import 'pages/auth_resolver.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,8 +27,8 @@ class LabelOverrides extends DefaultLocalizations {
 
 const providerConfigs = [
   EmailProviderConfiguration(),
+  PhoneProviderConfiguration(),
   GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-  // PhoneProviderConfiguration(),
   AppleProviderConfiguration(),
   // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
   // TwitterProviderConfiguration(
@@ -55,58 +54,57 @@ class FirebaseAuthUIExample extends StatelessWidget {
           if (FirebaseAuth.instance.currentUser != null) {
             return const ProfileScreen(providerConfigs: providerConfigs);
           } else {
-            return NavigationActions(
+            return SignInScreen(
               actions: [
-                ForgotPasswordAction(
-                  action: (context, email) {
-                    Navigator.pushNamed(
-                      context,
-                      '/forgot-password',
-                      arguments: {'email': email},
-                    );
-                  },
-                ),
+                ForgotPassword((context, email) {
+                  Navigator.pushNamed(
+                    context,
+                    '/forgot-password',
+                    arguments: {'email': email},
+                  );
+                }),
+                AuthStateChange<SignedIn>((context, state) {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                }),
               ],
-              child: SignInScreen(
-                headerBuilder: (context, constraints, _) {
-                  return Padding(
-                    padding: const EdgeInsets.all(20),
+              headerBuilder: (context, constraints, _) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Image.asset('assets/images/flutterfire_logo.png'),
+                );
+              },
+              sideBuilder: (context, constraints) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(constraints.maxWidth / 4),
                     child: Image.asset('assets/images/flutterfire_logo.png'),
-                  );
-                },
-                sideBuilder: (context, constraints) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(constraints.maxWidth / 4),
-                      child: Image.asset('assets/images/flutterfire_logo.png'),
-                    ),
-                  );
-                },
-                subtitleBuilder: (context, action) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
+                  ),
+                );
+              },
+              subtitleBuilder: (context, action) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    action == AuthAction.signIn
+                        ? 'Welcome to FlutterFire UI! Please sign in to continue.'
+                        : 'Welcome to FlutterFire UI! Please create an account to continue',
+                  ),
+                );
+              },
+              footerBuilder: (context, action) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 16),
                     child: Text(
                       action == AuthAction.signIn
-                          ? 'Welcome to FlutterFire UI! Please sign in to continue.'
-                          : 'Welcome to FlutterFire UI! Please create an account to continue',
+                          ? 'By signing in, you agree to our terms and conditions.'
+                          : 'By registering, you agree to our terms and conditions.',
+                      style: const TextStyle(color: Colors.grey),
                     ),
-                  );
-                },
-                footerBuilder: (context, action) {
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text(
-                        action == AuthAction.signIn
-                            ? 'By signing in, you agree to our terms and conditions.'
-                            : 'By registering, you agree to our terms and conditions.',
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  );
-                },
-                providerConfigs: providerConfigs,
-              ),
+                  ),
+                );
+              },
+              providerConfigs: providerConfigs,
             );
           }
         },
@@ -137,6 +135,16 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 ),
               );
             },
+          );
+        },
+        '/profile': (context) {
+          return ProfileScreen(
+            providerConfigs: providerConfigs,
+            actions: [
+              SignedOut((context) {
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+            ],
           );
         },
       },

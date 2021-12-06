@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_text_form_field.dart';
+import '../widgets/internal/universal_text_form_field.dart';
 
 import '../validators.dart';
 

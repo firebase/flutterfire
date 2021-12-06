@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
+import '../oauth/oauth_providers.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform, kIsWeb;
 
 import '../auth_controller.dart';

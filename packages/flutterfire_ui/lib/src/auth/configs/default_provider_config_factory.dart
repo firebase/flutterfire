@@ -1,5 +1,5 @@
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/src/auth/configs/provider_configuration.dart';
+import '../configs/provider_configuration.dart';
 
 ProviderConfiguration createDefaltProviderConfig<T extends AuthController>() {
   switch (T) {

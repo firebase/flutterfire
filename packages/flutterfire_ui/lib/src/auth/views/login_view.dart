@@ -18,7 +18,7 @@ typedef AuthViewContentBuilder = Widget Function(
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
-  final ButtonVariant? oauthButtonVariant;
+  final OAuthButtonVariant? oauthButtonVariant;
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
@@ -31,7 +31,7 @@ class LoginView extends StatefulWidget {
     Key? key,
     required this.action,
     required this.providerConfigs,
-    this.oauthButtonVariant = ButtonVariant.icon_and_text,
+    this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.auth,
     this.showTitle = true,
     this.email,
@@ -64,7 +64,7 @@ class LoginViewState extends State<LoginView> {
     _buttonsBuilt = true;
 
     final oauthButtonsList = oauthProviderConfigs.map((config) {
-      if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
+      if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
         return OAuthProviderButton(
           auth: widget.auth,
           action: _action,
@@ -79,7 +79,7 @@ class LoginViewState extends State<LoginView> {
       }
     }).toList();
 
-    if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
+    if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: oauthButtonsList,
