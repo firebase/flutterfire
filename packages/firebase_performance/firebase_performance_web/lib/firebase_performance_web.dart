@@ -71,7 +71,7 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     throw PlatformException(
       code: 'non-existent',
       message:
-      "Performance Web does not currently support 'HttpMetric' (custom network tracing).",
+          "Performance Web does not currently support 'HttpMetric' (custom network tracing).",
     );
   }
 }
