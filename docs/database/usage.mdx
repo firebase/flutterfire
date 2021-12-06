@@ -64,8 +64,8 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 DatabaseReference child = ref.child("name");
 
 print(ref.key); // "123"
-print(ref.parent()); // "users"
-print(ref.root()); // Database root
+print(ref.parent); // "users"
+print(ref.root); // Database root
 ```
 
 ### Read data
