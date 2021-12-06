@@ -169,8 +169,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     action?.callback(context);
   }
 
-  void _reauthenticate(BuildContext context) {
-    showReauthenticateDialog(
+  Future<void> _reauthenticate(BuildContext context) async {
+    await showReauthenticateDialog(
       context: context,
       providerConfigs: widget.providerConfigs,
       auth: widget.auth,
@@ -228,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         DeleteAccountButton(
           auth: widget.auth,
           onSignInRequired: () async {
-            _reauthenticate(context);
+            await _reauthenticate(context);
           },
         ),
       ],
