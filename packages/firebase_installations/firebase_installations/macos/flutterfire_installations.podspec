@@ -34,32 +34,25 @@ rescue
 end
 
 Pod::Spec.new do |s|
-  s.name             = 'firebase_installations'
-  s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
-  s.description      = <<-DESC
-A new flutter plugin project.
-                       DESC
-  s.homepage         = 'http://example.com'
+  s.name             = pubspec['name']
+  s.version          = library_version
+  s.summary          = pubspec['description']
+  s.description      = pubspec['description']
+  s.homepage         = pubspec['homepage']
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.authors          = 'The Chromium Authors'
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
 
-  s.source_files     = 'Classes/**/*'
-  s.public_header_files = 'Classes/*.h'
-  
-  s.platform = :osx, '10.11'
+  s.platform = :osx, '10.12'
 
-  s.swift_version = '5.5'
-  
+  # Flutter dependencies
   s.dependency 'FlutterMacOS'
 
   # Firebase dependencies
-  s.dependency 'firebase_core'
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
   s.dependency 'Firebase/Installations', "~> #{firebase_sdk_version}"
-  
+
   s.static_framework = true
   s.pod_target_xcconfig = {
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-installations\\\"",
