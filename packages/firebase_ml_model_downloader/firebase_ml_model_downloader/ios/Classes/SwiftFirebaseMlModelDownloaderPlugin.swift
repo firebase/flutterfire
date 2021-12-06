@@ -19,13 +19,13 @@ let kConditionsArg = "conditions"
 public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlugin {
   var result:FLTFirebaseMethodCallResult?;
   // MARK: - FlutterPlugin
-  
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: kFLTFirebaseMlModelDownloaderChannelName, binaryMessenger: registrar.messenger())
     let instance = SwiftFirebaseMlModelDownloaderPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
-  
+
   internal func mapErrorCodes(error:Error) -> NSString {
         switch error {
         case DownloadError.notFound:
@@ -47,18 +47,18 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
     }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    
+
     let errorBlock:FLTFirebaseMethodCallErrorBlock = { (code, message, details, error:Error?) in
                 var errorDetails:Dictionary = Dictionary<String, Any?>();
-                
+
                 errorDetails["code"] = code ?? self.mapErrorCodes(error:error! as NSError)
                 errorDetails["message"] = message ?? error?.localizedDescription ?? "An unknown error has occurred.";
                 errorDetails["additionalData"] = details ?? ["code": errorDetails["code"], "message": errorDetails["message"]]
-                
+
                 if(code == "unknown") {
                     NSLog("FLTFirebaseMlModelDownloader: An error occured while calling method %@", call.method)
                 }
-                
+
                 result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
                                                             message: errorDetails["message"] as! String,
                                                             optionalDetails: (errorDetails["additionalData"] as! [AnyHashable:Any]),
@@ -66,7 +66,7 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
             };
 
     self.result = .create(success: result, andErrorBlock: errorBlock)
-    
+
     if ("FirebaseMlModelDownloader#getModel" == call.method) {
       self.getModel(arguments: call.arguments as! Dictionary<String, Any>)
     }
@@ -77,13 +77,13 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
       self.deleteDownloadedModel(arguments: call.arguments as! Dictionary<String, Any>)
     }
   }
-  
-  
+
+
   // MARK: - Firebase Ml Model Downloader API
-  
+
   internal func listDownloadedModels(arguments: Dictionary<String, Any>) -> Void {
     let modelDownloader = getMlModelInstance(arguments: arguments)
-    
+
     modelDownloader?.listDownloadedModels(){ response in
       switch(response){
         case .success(let customModel):
@@ -101,7 +101,7 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
           self.result!.error(nil, nil, nil, error)
           return;
       }
-      
+
     }
   }
 
@@ -110,8 +110,8 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
     let modelName = arguments[kModelNameArg] as! String
     let downloadType = arguments[kDownloadTypeArg] as! String
     let conditions = arguments[kConditionsArg] as! Dictionary<String, Bool>
-    
-    let cellularAccess = conditions["iOSAllowsCellularAccess"]!
+
+    let cellularAccess = conditions["iosAllowsCellularAccess"]!
     var downloadTypeEnum: ModelDownloadType = ModelDownloadType.localModel;
     if(downloadType == "local"){
       downloadTypeEnum = ModelDownloadType.localModel
@@ -122,9 +122,9 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
     if(downloadType == "latest"){
       downloadTypeEnum = ModelDownloadType.latestModel
     }
-    
+
     let modelDownloadConditions = ModelDownloadConditions.init(allowsCellularAccess: cellularAccess)
-    
+
     modelDownloader?.getModel(name: modelName, downloadType: downloadTypeEnum, conditions: modelDownloadConditions) { response in
       switch (response) {
       case .success(let customModel):
@@ -134,7 +134,7 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
             "hash": customModel.hash,
             "name": customModel.name
           ]
-          
+
           self.result!.success(responseDict)
           return
       case .failure(let error):
@@ -143,11 +143,11 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
       }
 }
   }
-  
+
   internal func deleteDownloadedModel(arguments: Dictionary<String, Any>) -> Void {
     let modelDownloader = getMlModelInstance(arguments: arguments)
     let modelName = arguments[kModelNameArg]
-    
+
     modelDownloader?.deleteDownloadedModel(name: modelName as! String) { response in
       switch(response){
         case .success():
@@ -159,7 +159,7 @@ public class SwiftFirebaseMlModelDownloaderPlugin: FLTFirebasePlugin, FlutterPlu
       }
     }
   }
-  
+
   // MARK: - Utilities
 
   internal func getMlModelInstance(arguments: Dictionary<String, Any>) -> ModelDownloader? {
