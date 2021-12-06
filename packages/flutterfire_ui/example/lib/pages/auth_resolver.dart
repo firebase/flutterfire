@@ -1,9 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/auth/facebook.dart';
-import 'package:flutterfire_ui/auth/google.dart';
-import 'package:flutterfire_ui/auth/apple.dart';
-import 'package:flutterfire_ui/auth/twitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -17,14 +13,14 @@ class AuthResolver extends StatelessWidget {
     const providerConfigs = [
       EmailProviderConfiguration(),
       GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-      // PhoneProviderConfiguration(),
+      PhoneProviderConfiguration(),
       AppleProviderConfiguration(),
-      // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-      // TwitterProviderConfiguration(
-      //   apiKey: TWITTER_API_KEY,
-      //   apiSecretKey: TWITTER_API_SECRET_KEY,
-      //   redirectUri: TWITTER_REDIRECT_URI,
-      // ),
+      FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+      TwitterProviderConfiguration(
+        apiKey: TWITTER_API_KEY,
+        apiSecretKey: TWITTER_API_SECRET_KEY,
+        redirectUri: TWITTER_REDIRECT_URI,
+      ),
     ];
 
     return StreamBuilder<User?>(

@@ -2,8 +2,7 @@ import '../configs/oauth_provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
-import 'package:flutterfire_ui/auth.dart' show AuthAction;
-import 'package:flutterfire_ui/auth/apple.dart';
+import 'package:flutterfire_ui/auth.dart';
 
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';

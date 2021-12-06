@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/auth/twitter.dart';
 
 import 'internal/oauth_provider_button.dart';
 import 'internal/oauth_provider_button_style.dart';
