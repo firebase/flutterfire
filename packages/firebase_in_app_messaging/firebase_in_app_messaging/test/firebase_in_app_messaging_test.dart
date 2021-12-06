@@ -1,19 +1,18 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:firebase_in_app_messaging_platform_interface/firebase_in_app_messaging_platform_interface.dart';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 typedef Callback = Function(MethodCall call);
+
 MockFirebaseInAppMessaging mockFiam = MockFirebaseInAppMessaging();
 
 void main() {
@@ -26,9 +25,11 @@ void main() {
       await Firebase.initializeApp();
 
       fiam = FirebaseInAppMessaging.instance;
-      when(mockFiam.delegateFor(
-        app: anyNamed('app'),
-      )).thenAnswer(
+      when(
+        mockFiam.delegateFor(
+          app: anyNamed('app'),
+        ),
+      ).thenAnswer(
         (_) => mockFiam,
       );
       when(mockFiam.triggerEvent('someEvent')).thenAnswer(
