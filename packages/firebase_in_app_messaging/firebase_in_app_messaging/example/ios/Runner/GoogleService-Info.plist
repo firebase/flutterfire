@@ -3,21 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>417703151161-0kmftqj80per9egdcai8c89sefjdptfg.apps.googleusercontent.com</string>
+	<string>448618578101-o61jjl40l7n98kv4da5srcp8cp9o31dj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.417703151161-0kmftqj80per9egdcai8c89sefjdptfg</string>
+	<string>com.googleusercontent.apps.448618578101-o61jjl40l7n98kv4da5srcp8cp9o31dj</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>448618578101-26jgjs0rtl4ts2i667vjb28kldvs2kp6.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAirg5nBv4fsGWF82ITldAd04thCp04WQ0</string>
+	<string>AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0</string>
 	<key>GCM_SENDER_ID</key>
-	<string>417703151161</string>
+	<string>448618578101</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.example.firebaseInAppMessagingExample</string>
 	<key>PROJECT_ID</key>
-	<string>fiamflutter</string>
+	<string>react-native-firebase-testing</string>
 	<key>STORAGE_BUCKET</key>
-	<string>fiamflutter.appspot.com</string>
+	<string>react-native-firebase-testing.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:417703151161:ios:2ad9dffe6e82f02c</string>
+	<string>1:448618578101:ios:f7d2235fb2e4ebbfac3efc</string>
 	<key>DATABASE_URL</key>
-	<string>https://fiamflutter.firebaseio.com</string>
+	<string>https://react-native-firebase-testing.firebaseio.com</string>
 </dict>
 </plist>

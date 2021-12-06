@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-04
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- [`firebase_dynamic_links` - `v4.0.0-dev.0`](#firebase_dynamic_links---v400-dev0)
+
+Packages with other changes:
+
+- There are no other changes in this release.
+
+---
+
+#### `firebase_dynamic_links` - `v4.0.0-dev.0`
+
+Firebase Dynamic Links has been reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests.
+
+- **`FirebaseDynamicLinks`**
+  - **BREAKING**: `onLink()` method has been removed. Instead, use `onLink` getter, it returns a `Stream`; events & errors are now streamed to the user.
+  - **BREAKING**: `DynamicLinkParameters` class has been removed. `buildLink()` (replaces `buildUrl()`) & `buildShortLink()` methods are now found on `FirebaseDynamicLinks.instance`.
+  - **BREAKING**: `DynamicLinkParameters.shortenUrl()` has been removed.
+  - **NEW**: `buildLink()` which replaces the previous `DynamicLinkParameters().buildUrl()`.
+  - **NEW**: `buildShortLink()` which replaces the previous `DynamicLinkParameters().buildShortLink()`.
+  - **NEW**: `DynamicLinkParameters` class is used to build parameters for `buildLink()` & `buildShortLink()`.
+  - **NEW**: Multi-app support now available for Android only using `FirebaseDynamicLinks.instanceFor()`.
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.0-dev.0`
+
+ - Initial dev release of platform interface.
+
+
 ## 2021-12-03 (1)
 
 ### Changes
