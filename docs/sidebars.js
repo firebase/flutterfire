@@ -109,6 +109,7 @@ module.exports = {
     ],
     "Realtime Database": [
       "database/overview",
+      "database/usage",
       toReferenceAPI("firebase_database"),
       toGithubExample("firebase_database"),
     ],
