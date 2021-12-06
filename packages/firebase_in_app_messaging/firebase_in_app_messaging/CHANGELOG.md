@@ -1,3 +1,11 @@
+## 0.6.0+1
+
+ - Update a dependency to the latest release.
+
+## 0.6.0
+
+ - **FEAT**: Add plugin federation (#7345).
+
 ## 0.5.0+14
 
  - Update a dependency to the latest release.

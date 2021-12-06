@@ -6,42 +6,45 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging();
-
+  static FirebaseInAppMessaging fiam = FirebaseInAppMessaging.instance;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text('In-App Messaging example'),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('In-App Messaging example'),
+        ),
+        body: Builder(
+          builder: (BuildContext context) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  AnalyticsEventExample(),
+                  ProgrammaticTriggersExample(),
+                ],
+              ),
+            );
+          },
+        ),
       ),
-      body: Builder(builder: (BuildContext context) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              AnalyticsEventExample(),
-              ProgrammaticTriggersExample(fiam),
-            ],
-          ),
-        );
-      }),
-    ));
+    );
   }
 }
 
 class ProgrammaticTriggersExample extends StatelessWidget {
-  const ProgrammaticTriggersExample(this.fiam);
-
-  final FirebaseInAppMessaging fiam;
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -60,11 +63,13 @@ class ProgrammaticTriggersExample extends StatelessWidget {
             const Text('Manually trigger events programmatically '),
             const SizedBox(height: 8),
             ElevatedButton(
-              onPressed: () {
-                fiam.triggerEvent('chicken_event');
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Triggering event: chicken_event'),
-                ));
+              onPressed: () async {
+                await MyApp.fiam.triggerEvent('awesome_event');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Triggering event: awesome_event'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(primary: Colors.blue),
               child: Text(
@@ -81,10 +86,12 @@ class ProgrammaticTriggersExample extends StatelessWidget {
 
 class AnalyticsEventExample extends StatelessWidget {
   Future<void> _sendAnalyticsEvent() async {
-    await MyApp.analytics
-        .logEvent(name: 'awesome_event', parameters: <String, dynamic>{
-      'int': 42, // not required?
-    });
+    await MyApp.analytics.logEvent(
+      name: 'awesome_event',
+      parameters: <String, dynamic>{
+        //'id': 1, // not required?
+      },
+    );
   }
 
   @override
@@ -107,9 +114,11 @@ class AnalyticsEventExample extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 _sendAnalyticsEvent();
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Firing analytics event: awesome_event'),
-                ));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Firing analytics event: awesome_event'),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(primary: Colors.blue),
               child: Text(

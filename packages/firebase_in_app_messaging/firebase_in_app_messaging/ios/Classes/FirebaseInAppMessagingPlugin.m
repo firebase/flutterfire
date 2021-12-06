@@ -28,18 +28,19 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if ([@"triggerEvent" isEqualToString:call.method]) {
+  if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
     NSString *eventName = call.arguments[@"eventName"];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     [fiam triggerEvent:eventName];
     result(nil);
-  } else if ([@"setMessagesSuppressed" isEqualToString:call.method]) {
-    NSNumber *suppress = [NSNumber numberWithBool:call.arguments];
+  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
+    NSNumber *suppress = [NSNumber numberWithBool:call.arguments[@"suppress"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.messageDisplaySuppressed = [suppress boolValue];
     result(nil);
-  } else if ([@"setAutomaticDataCollectionEnabled" isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:call.arguments];
+  } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
+                 isEqualToString:call.method]) {
+    NSNumber *enabled = [NSNumber numberWithBool:call.arguments[@"enabled"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.automaticDataCollectionEnabled = [enabled boolValue];
     result(nil);
