@@ -105,7 +105,11 @@ void main() {
     test('verify delegate method is called', () async {
       final customModels = [
         FirebaseCustomModel(
-            file: File('file'), hash: 'hash', name: 'name', size: 123)
+          file: File('file'),
+          hash: 'hash',
+          name: 'name',
+          size: 123,
+        )
       ];
       when(kMockDownloaderPlatform.listDownloadedModels())
           .thenAnswer((_) => Future.value(customModels));
@@ -131,7 +135,11 @@ void main() {
 }
 
 final model = FirebaseCustomModel(
-    name: 'name', size: 100, hash: 'hash', file: File('path'));
+  name: 'name',
+  size: 100,
+  hash: 'hash',
+  file: File('path'),
+);
 
 class MockFirebaseModelDownloader extends Mock
     with MockPlatformInterfaceMixin

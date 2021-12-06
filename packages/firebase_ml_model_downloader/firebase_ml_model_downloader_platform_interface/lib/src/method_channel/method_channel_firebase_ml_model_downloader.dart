@@ -89,7 +89,8 @@ class MethodChannelFirebaseModelDownloader
   }
 
   FirebaseCustomModel _resultToFirebaseCustomModel(
-      Map<dynamic, dynamic> result) {
+    Map<dynamic, dynamic> result,
+  ) {
     return FirebaseCustomModel(
       file: File(result['filePath']),
       size: result['size'],
