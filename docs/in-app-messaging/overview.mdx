@@ -1,0 +1,111 @@
+---
+title: In-App Messaging
+sidebar_label: Overview
+---
+
+## What does it do?
+
+Firebase In-App Messaging helps you engage your app's active users by sending them targeted,
+contextual messages that encourage them to use key app features. For example, you could send
+an in-app message to get users to subscribe, watch a video, complete a level, or buy an item.
+You can customize messages as cards, banners, modals, or images, and set up triggers so that
+they appear exactly when they'd benefit your users most.
+Use Firebase In-App Messaging to encourage exploration and discovery: highlight a sale or
+coupon in your ecommerce app, give clues or tips in your game, or prompt a like or share in
+your social media app.
+
+<YouTube id="5MRKpvKV2pg" />
+
+## Installation
+
+Before installing the In-App Messaging for Firebase plugin, ensure that you have followed the [Getting Started](../overview.mdx) documentation
+and have initialized FlutterFire.
+
+<Tabs
+groupId="legacy-or-nullsafe"
+defaultValue="legacy"
+values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+]}
+>
+<TabItem value="legacy">
+
+For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
+
+```dart
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:firebase-in-app-messaging/firebase-in-app-messaging.dart';
+```
+
+</TabItem>
+<TabItem value="null-safe">
+
+Ensure you're using the Flutter `stable` channel:
+
+```bash
+$ flutter channel stable
+```
+
+If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+
+```bash
+$ flutter run --no-sound-null-safety
+```
+
+</TabItem>
+</Tabs>
+
+### 1. Add dependency
+
+<Tabs
+  groupId="legacy-or-nullsafe"
+  defaultValue="legacy"
+  values={[
+    { label: "Legacy", value: "legacy" },
+    { label: "Null safety", value: "null-safe" },
+  ]}
+>
+<TabItem value="legacy">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: '^{{ plugins.firebase_core }}'
+  firebase_in_app_messaging: '^{{ plugins.firebase_in_app_messaging }}'
+```
+
+</TabItem>
+<TabItem value="null-safe">
+
+```yaml {5} title="pubspec.yaml"
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: '^{{ plugins.firebase_core_ns }}'
+  firebase_in_app_messaging: '^{{ plugins.firebase_in_app_messaging_ns }}'
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Download dependency
+
+```
+$ flutter pub get
+```
+
+### 3. Rebuild your app
+
+Once complete, rebuild your Flutter application:
+
+```bash
+$ flutter run
+```
+
+## Next Steps
+
+Once installed, you're ready to start using In-App Messaging in your Flutter Project.
+
+View the [Usage documentation](usage.mdx) to get started.

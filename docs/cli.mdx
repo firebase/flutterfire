@@ -1,0 +1,46 @@
+---
+title: CLI
+---
+
+The FlutterFire CLI is a useful tool which provides commands to help ease the installation process
+of FlutterFire across all supported platforms.
+
+To install the CLI, run the following command:
+
+```bash
+dart pub global activate flutterfire_cli
+```
+
+Once installed, the `flutterfire` command will be globally available.
+
+## Commands
+
+### Configure
+
+Generates a `firebase_options.dart` file which can be provided to the `options` parameter when
+[Initializing Firebase](./overview#initialization).
+
+The `configure` command attempts to find relatable Android, iOS, macOS and Web apps from a
+chosen Firebase Project. The command supports creating new Firebase Projects on the fly,
+auto-detection of the correct platform app using an existing Flutter project and generating
+cross-platform `firebase_options.dart` file.
+
+Within the root of your Flutter project, run the following command:
+
+```
+flutterfire configure
+```
+
+To view all options, such as specifying a project or account email, run:
+
+```
+flutterfire configure --help
+```
+
+## Version
+
+To view the current version of the CLI, run:
+
+```bash
+flutterfire --version
+```
