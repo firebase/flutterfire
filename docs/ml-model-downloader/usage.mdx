@@ -69,7 +69,7 @@ device using the `getModel` method, specifying the model name and download optio
 CustomModel model = await FirebaseMlModelDownloader.instance.getModel('myModel', DownloadType.latestModel);
 ```
 
-The above code will download the latest available `myModel` modle to the device, since the `DownloadType.latestModel` has been specified.
+The above code will download the latest available `myModel` model to the device, since the `DownloadType.latestModel` has been specified.
 The method accepts 3 download types for differing behavior:
 
 | Type                                        | Description                                                                                                                                                                                                                         |
@@ -78,7 +78,7 @@ The method accepts 3 download types for differing behavior:
 | `DownloadType.localModelUpdateInBackground` | Returns the current model if present and triggers an update to fetch a new version in the background. If no local model is present triggers a new download (or finds one in progress) and only completes when download is finished. |
 | `DownloadType.latestModel`                  | Returns the latest model. Checks if latest model is different from local model. If the models are the same, returns the current model. Otherwise, triggers a new model download and returns when this download finishes.            |
 
-You can also provide specific conditions for the download, such as whether the model shoul dbe download whilst the device has access to
+You can also provide specific conditions for the download, such as whether the model should be downloaded whilst the device has access to
 cellular data, or if the device is charging.
 
 To provide conditions, provide a `DownloadConditions` instance to the `getModel` method:

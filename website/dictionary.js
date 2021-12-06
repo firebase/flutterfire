@@ -40,6 +40,7 @@ module.exports = [
   'datastore',
   'deprecations',
   'dex',
+  'downloader',
   'dropdown',
   'filesystem',
   'firebase',
