@@ -7,10 +7,6 @@ import '../auth_flow.dart';
 import '../auth_state.dart';
 import '../configs/oauth_provider_configuration.dart';
 
-class Uninitialized extends AuthState {
-  const Uninitialized();
-}
-
 abstract class OAuthController extends AuthController {
   Future<void> signInWithProvider(TargetPlatform platform);
 }

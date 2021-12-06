@@ -121,6 +121,14 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String passwordResetEmailSentText;
   @override
   final String forgotPasswordHintText;
+  @override
+  final String emailLinkSignInButtonLabel;
+  @override
+  final String signInWithEmailLinkViewTitleText;
+  @override
+  final String signInWithEmailLinkSentText;
+  @override
+  final String sendLinkButtonLabel;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -189,5 +197,10 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
         "We've sent you an email with a link to reset your password. Please check your email.",
     this.forgotPasswordHintText =
         'Provide your email and we will send you a link to reset your password',
+    this.emailLinkSignInButtonLabel = 'Sign in with magic link',
+    this.signInWithEmailLinkViewTitleText = 'Sign in with magic link',
+    this.signInWithEmailLinkSentText =
+        "We've sent you an email with a magic link. Check your email and follow the link to sign in",
+    this.sendLinkButtonLabel = 'Send magic link',
   });
 }

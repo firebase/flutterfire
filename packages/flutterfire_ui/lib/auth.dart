@@ -20,6 +20,13 @@ export 'src/auth/flows/phone_auth_flow.dart'
         SMSCodeRequested,
         SMSCodeSent;
 
+export 'src/auth/flows/email_link_flow.dart'
+    show
+        AwaitingDynamicLink,
+        EmailLinkFlow,
+        EmailLinkFlowController,
+        SendingLink;
+
 export 'src/auth/widgets/phone_input.dart' show PhoneInputState, PhoneInput;
 export 'src/auth/configs/phone_provider_configuration.dart'
     show PhoneProviderConfiguration;
@@ -74,6 +81,7 @@ export 'src/auth/views/reauthenticate_view.dart';
 export 'src/auth/views/forgot_password_view.dart';
 export 'src/auth/views/different_method_sign_in_view.dart';
 export 'src/auth/views/find_providers_for_email_view.dart';
+export 'src/auth/views/email_link_sign_in_view.dart';
 
 export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
@@ -82,6 +90,7 @@ export 'src/auth/screens/register_screen.dart';
 export 'src/auth/screens/profile_screen.dart';
 export 'src/auth/screens/forgot_password_screen.dart';
 export 'src/auth/screens/universal_email_sign_in_screen.dart';
+export 'src/auth/screens/email_link_sign_in_screen.dart';
 
 export 'src/auth/navigation/phone_verification.dart';
 export 'src/auth/navigation/forgot_password.dart';
@@ -91,3 +100,4 @@ export 'src/auth/actions.dart' show AuthStateChange, SignedOut;
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';
 export 'src/auth/configs/oauth_provider_configuration.dart';
+export 'src/auth/configs/email_link_provider_configuration.dart';

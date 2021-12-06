@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/widgets/email_link_sign_in_button.dart';
 
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
@@ -207,6 +208,12 @@ class LoginViewState extends State<LoginView> {
                   auth: widget.auth,
                 ),
                 const SizedBox(height: 8),
+              ] else if (config is EmailLinkProviderConfiguration) ...[
+                const SizedBox(height: 8),
+                EmailLinkSignInButton(
+                  auth: widget.auth,
+                  config: config,
+                ),
               ] else if (config is OAuthProviderConfiguration && !_buttonsBuilt)
                 _buildOAuthButtons(platform),
           if (widget.footerBuilder != null)

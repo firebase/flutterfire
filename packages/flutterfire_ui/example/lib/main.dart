@@ -23,17 +23,27 @@ class LabelOverrides extends DefaultLocalizations {
   String get emailInputLabel => 'Enter your email';
 }
 
-const providerConfigs = [
-  EmailProviderConfiguration(),
-  PhoneProviderConfiguration(),
-  GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-  AppleProviderConfiguration(),
-  // FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-  // TwitterProviderConfiguration(
-  //   apiKey: TWITTER_API_KEY,
-  //   apiSecretKey: TWITTER_API_SECRET_KEY,
-  //   redirectUri: TWITTER_REDIRECT_URI,
-  // ),
+final providerConfigs = [
+  const EmailProviderConfiguration(),
+  EmailLinkProviderConfiguration(
+    actionCodeSettings: ActionCodeSettings(
+      url: 'https://reactnativefirebase.page.link',
+      handleCodeInApp: true,
+      androidMinimumVersion: '12',
+      androidPackageName:
+          'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
+      iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
+    ),
+  ),
+  const PhoneProviderConfiguration(),
+  const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+  const AppleProviderConfiguration(),
+  const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+  const TwitterProviderConfiguration(
+    apiKey: TWITTER_API_KEY,
+    apiSecretKey: TWITTER_API_SECRET_KEY,
+    redirectUri: TWITTER_REDIRECT_URI,
+  ),
 ];
 
 class FirebaseAuthUIExample extends StatelessWidget {
@@ -50,7 +60,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       routes: {
         '/': (context) {
           if (FirebaseAuth.instance.currentUser != null) {
-            return const ProfileScreen(providerConfigs: providerConfigs);
+            return ProfileScreen(providerConfigs: providerConfigs);
           } else {
             return SignInScreen(
               actions: [
