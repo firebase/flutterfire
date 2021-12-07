@@ -9,7 +9,7 @@ import 'package:cloud_firestore_odm_generator_integration_test/simple.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../test_driver/common.dart';
+import 'common.dart';
 
 void main() {
   group('DocumentReference', () {
