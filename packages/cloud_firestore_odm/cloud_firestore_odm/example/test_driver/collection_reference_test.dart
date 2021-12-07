@@ -23,7 +23,17 @@ void main() {
 
     setUpAll(() async {
       defaultFirestore = FirebaseFirestore.instanceFor(
-        app: await Firebase.initializeApp(),
+        app: await Firebase.initializeApp(
+          options: const FirebaseOptions(
+            apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+            appId: '1:448618578101:ios:3a3c8ae9cb0b6408ac3efc',
+            messagingSenderId: '448618578101',
+            projectId: 'react-native-firebase-testing',
+            authDomain: 'react-native-firebase-testing.firebaseapp.com',
+            iosClientId:
+                '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
+          ),
+        ),
       );
       customFirestore = FirebaseFirestore.instanceFor(
         app: await Firebase.initializeApp(
