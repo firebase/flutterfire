@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb;
 import 'package:flutter/material.dart';
 
 // Change to false to use live database instance.
-const useEmulator = true;
+const USE_DATABASE_EMULATOR = true;
 // The port we've set the Firebase Database emulator to run on via the
 // `firebase.json` configuration file.
 const emulatorPort = 9000;
@@ -24,7 +24,7 @@ final emulatorHost =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await Firebase.initializeApp(
+  await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
       appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
@@ -34,18 +34,21 @@ Future<void> main() async {
       storageBucket: 'react-native-firebase-testing.appspot.com',
     ),
   );
+
+  if (USE_DATABASE_EMULATOR) {
+    FirebaseDatabase.instance.useDatabaseEmulator(emulatorHost, emulatorPort);
+  }
+
   runApp(
-    MaterialApp(
+    const MaterialApp(
       title: 'Flutter Database Example',
-      home: MyHomePage(app: app),
+      home: MyHomePage(),
     ),
   );
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.app}) : super(key: key);
-
-  final FirebaseApp app;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -73,13 +76,12 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> init() async {
     _counterRef = FirebaseDatabase.instance.ref('counter');
 
-    final database = FirebaseDatabase.instanceFor(app: widget.app);
+    final database = FirebaseDatabase.instance;
+
     _messagesRef = database.ref('messages');
 
-    if (useEmulator) {
-      database.useDatabaseEmulator(emulatorHost, emulatorPort);
-    }
     database.setLoggingEnabled(false);
+
     if (!kIsWeb) {
       database.setPersistenceEnabled(true);
       database.setPersistenceCacheSizeBytes(10000000);
