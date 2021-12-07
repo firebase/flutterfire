@@ -6,8 +6,9 @@ environment:
   sdk: ">=2.14.0-0.0.dev <3.0.0"
 
 dependencies:
-  cloud_firestore: ^2.3.0
-  cloud_firestore_odm: ^1.0.0-dev.1
+  cloud_firestore: ^3.1.1
+  cloud_firestore_odm:
+    path: ../../cloud_firestore_odm
   flutter:
     sdk: flutter
   freezed_annotation: ^0.14.0
@@ -16,14 +17,21 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.0.0
-  cloud_firestore_odm_generator: ^1.0.0-dev.1
+  cloud_firestore_odm_generator:
+    path: ../../cloud_firestore_odm_generator
   json_serializable: ^5.0.0
 
 dependency_overrides:
+  cloud_firestore:
+    path: ../../../cloud_firestore/cloud_firestore
   cloud_firestore_odm:
     path: ../../cloud_firestore_odm
   cloud_firestore_odm_generator:
     path: ../../cloud_firestore_odm_generator
+  cloud_firestore_platform_interface:
+    path: ../../../cloud_firestore/cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../../../cloud_firestore/cloud_firestore_web
 
 flutter:
   uses-material-design: false

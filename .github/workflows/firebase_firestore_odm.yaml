@@ -33,6 +33,7 @@ jobs:
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
           melos run odm:example_build_runner:build
+          melos run odm:generator_test_build_runner:build
       - name: "Flutter Test"
         run: melos run odm:test:flutter --no-select
       - name: "Dart Test"
@@ -59,6 +60,7 @@ jobs:
         run: |
           melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
           melos run odm:example_build_runner:build
+          melos run odm:generator_test_build_runner:build
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"

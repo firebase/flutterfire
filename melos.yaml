@@ -215,6 +215,15 @@ scripts:
     select-package:
       scope: "*odm_example*"
 
+  odm:generator_test_build_runner:build:
+    run: |
+      melos exec -c 1 -- \
+        "dart pub get && flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run a build_runner build generator test.
+    select-package:
+      scope:
+        - "*odm_generator_integration*"
+
   odm:example_build_runner:watch:
     run: |
       melos exec -c 5 -- \

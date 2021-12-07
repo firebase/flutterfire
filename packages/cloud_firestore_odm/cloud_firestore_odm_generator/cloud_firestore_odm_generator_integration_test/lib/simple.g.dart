@@ -26,6 +26,20 @@ abstract class OptionalJsonCollectionReference
     FirebaseFirestore? firestore,
   ]) = _$OptionalJsonCollectionReference;
 
+  static OptionalJson fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$OptionalJsonFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    OptionalJson value,
+    SetOptions? options,
+  ) {
+    return _$OptionalJsonToJson(value);
+  }
+
   @override
   OptionalJsonDocumentReference doc([String? id]);
 
@@ -41,8 +55,8 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
 
     return _$OptionalJsonCollectionReference._(
       firestore.collection('root').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: OptionalJsonCollectionReference.fromFirestore,
+            toFirestore: OptionalJsonCollectionReference.toFirestore,
           ),
     );
   }
@@ -50,20 +64,6 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
   _$OptionalJsonCollectionReference._(
     CollectionReference<OptionalJson> reference,
   ) : super(reference, reference);
-
-  static OptionalJson _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return _$OptionalJsonFromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    OptionalJson value,
-    SetOptions? options,
-  ) {
-    return _$OptionalJsonToJson(value);
-  }
 
   String get path => reference.path;
 
@@ -428,6 +428,20 @@ abstract class MixedJsonCollectionReference
     FirebaseFirestore? firestore,
   ]) = _$MixedJsonCollectionReference;
 
+  static MixedJson fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return MixedJson.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    MixedJson value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   @override
   MixedJsonDocumentReference doc([String? id]);
 
@@ -443,8 +457,8 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 
     return _$MixedJsonCollectionReference._(
       firestore.collection('root').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: MixedJsonCollectionReference.fromFirestore,
+            toFirestore: MixedJsonCollectionReference.toFirestore,
           ),
     );
   }
@@ -452,20 +466,6 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
   _$MixedJsonCollectionReference._(
     CollectionReference<MixedJson> reference,
   ) : super(reference, reference);
-
-  static MixedJson _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return MixedJson.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    MixedJson value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   String get path => reference.path;
 
@@ -825,6 +825,20 @@ abstract class RootCollectionReference
     FirebaseFirestore? firestore,
   ]) = _$RootCollectionReference;
 
+  static Root fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Root.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Root value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   @override
   RootDocumentReference doc([String? id]);
 
@@ -840,8 +854,8 @@ class _$RootCollectionReference extends _$RootQuery
 
     return _$RootCollectionReference._(
       firestore.collection('root').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: RootCollectionReference.fromFirestore,
+            toFirestore: RootCollectionReference.toFirestore,
           ),
     );
   }
@@ -849,20 +863,6 @@ class _$RootCollectionReference extends _$RootQuery
   _$RootCollectionReference._(
     CollectionReference<Root> reference,
   ) : super(reference, reference);
-
-  static Root _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return Root.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    Root value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   String get path => reference.path;
 
@@ -1345,6 +1345,20 @@ abstract class SubCollectionReference
     DocumentReference<Root> parent,
   ) = _$SubCollectionReference;
 
+  static Sub fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Sub.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Sub value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
 
@@ -1364,8 +1378,8 @@ class _$SubCollectionReference extends _$SubQuery
     return _$SubCollectionReference._(
       RootDocumentReference(parent),
       parent.collection('sub').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: SubCollectionReference.fromFirestore,
+            toFirestore: SubCollectionReference.toFirestore,
           ),
     );
   }
@@ -1374,20 +1388,6 @@ class _$SubCollectionReference extends _$SubQuery
     this.parent,
     CollectionReference<Sub> reference,
   ) : super(reference, reference);
-
-  static Sub _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return Sub.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    Sub value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   @override
   final RootDocumentReference parent;
@@ -1432,8 +1432,8 @@ abstract class SubDocumentReference
   SubCollectionReference get parent {
     return _$SubCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -1467,8 +1467,8 @@ class _$SubDocumentReference
   SubCollectionReference get parent {
     return _$SubCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -1856,6 +1856,20 @@ abstract class AsCamelCaseCollectionReference
     DocumentReference<Root> parent,
   ) = _$AsCamelCaseCollectionReference;
 
+  static AsCamelCase fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return AsCamelCase.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    AsCamelCase value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
 
@@ -1875,8 +1889,8 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
     return _$AsCamelCaseCollectionReference._(
       RootDocumentReference(parent),
       parent.collection('as-camel-case').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: AsCamelCaseCollectionReference.fromFirestore,
+            toFirestore: AsCamelCaseCollectionReference.toFirestore,
           ),
     );
   }
@@ -1885,20 +1899,6 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
     this.parent,
     CollectionReference<AsCamelCase> reference,
   ) : super(reference, reference);
-
-  static AsCamelCase _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return AsCamelCase.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    AsCamelCase value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   @override
   final RootDocumentReference parent;
@@ -1946,8 +1946,8 @@ abstract class AsCamelCaseDocumentReference
   AsCamelCaseCollectionReference get parent {
     return _$AsCamelCaseCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -1980,8 +1980,8 @@ class _$AsCamelCaseDocumentReference
   AsCamelCaseCollectionReference get parent {
     return _$AsCamelCaseCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -2276,6 +2276,20 @@ abstract class CustomSubNameCollectionReference
     DocumentReference<Root> parent,
   ) = _$CustomSubNameCollectionReference;
 
+  static CustomSubName fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return CustomSubName.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    CustomSubName value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
 
@@ -2295,8 +2309,8 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
     return _$CustomSubNameCollectionReference._(
       RootDocumentReference(parent),
       parent.collection('custom-sub-name').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: CustomSubNameCollectionReference.fromFirestore,
+            toFirestore: CustomSubNameCollectionReference.toFirestore,
           ),
     );
   }
@@ -2305,20 +2319,6 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
     this.parent,
     CollectionReference<CustomSubName> reference,
   ) : super(reference, reference);
-
-  static CustomSubName _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return CustomSubName.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    CustomSubName value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   @override
   final RootDocumentReference parent;
@@ -2366,8 +2366,8 @@ abstract class CustomSubNameDocumentReference
   CustomSubNameCollectionReference get parent {
     return _$CustomSubNameCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -2400,8 +2400,8 @@ class _$CustomSubNameDocumentReference
   CustomSubNameCollectionReference get parent {
     return _$CustomSubNameCollectionReference(
       reference.parent.parent!.withConverter<Root>(
-        fromFirestore: (snapshot, _) => Root.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: RootCollectionReference.fromFirestore,
+        toFirestore: RootCollectionReference.toFirestore,
       ),
     );
   }
@@ -2696,6 +2696,20 @@ abstract class ExplicitPathCollectionReference
     FirebaseFirestore? firestore,
   ]) = _$ExplicitPathCollectionReference;
 
+  static ExplicitPath fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return ExplicitPath.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    ExplicitPath value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   @override
   ExplicitPathDocumentReference doc([String? id]);
 
@@ -2711,8 +2725,8 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
 
     return _$ExplicitPathCollectionReference._(
       firestore.collection('root/doc/path').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: ExplicitPathCollectionReference.fromFirestore,
+            toFirestore: ExplicitPathCollectionReference.toFirestore,
           ),
     );
   }
@@ -2720,20 +2734,6 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
   _$ExplicitPathCollectionReference._(
     CollectionReference<ExplicitPath> reference,
   ) : super(reference, reference);
-
-  static ExplicitPath _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return ExplicitPath.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    ExplicitPath value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   String get path => reference.path;
 
@@ -3108,6 +3108,20 @@ abstract class ExplicitSubPathCollectionReference
     DocumentReference<ExplicitPath> parent,
   ) = _$ExplicitSubPathCollectionReference;
 
+  static ExplicitSubPath fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return ExplicitSubPath.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    ExplicitSubPath value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
   /// A reference to the containing [ExplicitPathDocumentReference] if this is a subcollection.
   ExplicitPathDocumentReference get parent;
 
@@ -3127,8 +3141,8 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
     return _$ExplicitSubPathCollectionReference._(
       ExplicitPathDocumentReference(parent),
       parent.collection('sub').withConverter(
-            fromFirestore: _fromFirestore,
-            toFirestore: _toFirestore,
+            fromFirestore: ExplicitSubPathCollectionReference.fromFirestore,
+            toFirestore: ExplicitSubPathCollectionReference.toFirestore,
           ),
     );
   }
@@ -3137,20 +3151,6 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
     this.parent,
     CollectionReference<ExplicitSubPath> reference,
   ) : super(reference, reference);
-
-  static ExplicitSubPath _fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return ExplicitSubPath.fromJson(snapshot.data()!);
-  }
-
-  static Map<String, Object?> _toFirestore(
-    ExplicitSubPath value,
-    SetOptions? options,
-  ) {
-    return value.toJson();
-  }
 
   @override
   final ExplicitPathDocumentReference parent;
@@ -3198,8 +3198,8 @@ abstract class ExplicitSubPathDocumentReference
   ExplicitSubPathCollectionReference get parent {
     return _$ExplicitSubPathCollectionReference(
       reference.parent.parent!.withConverter<ExplicitPath>(
-        fromFirestore: (snapshot, _) => ExplicitPath.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: ExplicitPathCollectionReference.fromFirestore,
+        toFirestore: ExplicitPathCollectionReference.toFirestore,
       ),
     );
   }
@@ -3232,8 +3232,8 @@ class _$ExplicitSubPathDocumentReference
   ExplicitSubPathCollectionReference get parent {
     return _$ExplicitSubPathCollectionReference(
       reference.parent.parent!.withConverter<ExplicitPath>(
-        fromFirestore: (snapshot, _) => ExplicitPath.fromJson(snapshot.data()!),
-        toFirestore: (value, _) => value.toJson(),
+        fromFirestore: ExplicitPathCollectionReference.fromFirestore,
+        toFirestore: ExplicitPathCollectionReference.toFirestore,
       ),
     );
   }
@@ -3525,10 +3525,10 @@ class ExplicitSubPathQueryDocumentSnapshot
 // **************************************************************************
 
 _$assertMinValidation(MinValidation instance) {
-  const Min(0).validate(instance.intNbr);
-  const Max(42).validate(instance.intNbr);
-  const Min(10).validate(instance.doubleNbr);
-  const Min(-10).validate(instance.numNbr);
+  const Min(0).validate(instance.intNbr, "intNbr");
+  const Max(42).validate(instance.intNbr, "intNbr");
+  const Min(10).validate(instance.doubleNbr, "doubleNbr");
+  const Min(-10).validate(instance.numNbr, "numNbr");
 }
 
 // **************************************************************************
