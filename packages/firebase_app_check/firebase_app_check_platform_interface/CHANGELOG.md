@@ -1,3 +1,7 @@
+## 0.0.2
+
+ - **FEAT**: add token apis and documentation (#7419).
+
 ## 0.0.1+10
 
  - Update a dependency to the latest release.

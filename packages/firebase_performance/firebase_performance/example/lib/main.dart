@@ -7,26 +7,14 @@ import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_performance_example/firebase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb || Platform.isIOS) {
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-        appId: '1:448618578101:ios:bfee21690b400a65ac3efc',
-        messagingSenderId: '448618578101',
-        projectId: 'react-native-firebase-testing',
-      ),
-    );
-  } else {
-    // Android SDK inits perf monitoring on application cold start before Firebase app is initialized
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
   runApp(MyApp());
 }
 
@@ -144,7 +132,8 @@ class _MyAppState extends State<MyApp> {
       _trace2HasRan = false;
     });
 
-    final Trace trace = await FirebasePerformance.startTrace('test_trace_2');
+    final Trace trace = FirebasePerformance.instance.newTrace('test_trace_2');
+    await trace.start();
 
     trace.setMetric('sum', 333);
     trace.setMetric('sum_2', 895);

@@ -20,5 +20,13 @@ service cloud.firestore {
     match /flutter-tests/{testid}/group-test/{docid} {
       allow read, write: if true;
     }
+
+    match /firestore-example-app/{document=**} {
+      allow read, write: if true;
+    }
+
+    match /root/{document=**} {
+      allow read, write: if true;
+    }
   }
 }

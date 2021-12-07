@@ -157,6 +157,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
               'https://www.gstatic.com/firebasejs/$version/firebase-remote-config',
           '@firebase/performance':
               'https://www.gstatic.com/firebasejs/$version/firebase-performance',
+          '@firebase/installations':
+              'https://www.gstatic.com/firebasejs/$version/firebase-installations',
         },
       })
     ]);

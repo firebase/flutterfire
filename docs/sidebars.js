@@ -61,11 +61,24 @@ module.exports = {
       toReferenceAPI("cloud_firestore"),
       toGithubExample("cloud_firestore"),
     ],
+    "Cloud Firestore ODM": [
+      "firestore-odm/overview",
+      "firestore-odm/defining-models",
+      "firestore-odm/code-generation",
+      "firestore-odm/references",
+      "firestore-odm/subcollections",
+      toReferenceAPI("cloud_firestore_odm"),
+      toGithubExample("cloud_firestore_odm"),
+    ],
     "Cloud Functions": [
       "functions/overview",
       "functions/usage",
       toReferenceAPI("cloud_functions"),
       toGithubExample("cloud_functions"),
+    ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
     ],
     "Cloud Messaging": [
       "messaging/overview",
@@ -115,6 +128,10 @@ module.exports = {
       "in-app-messaging/usage",
       toReferenceAPI("firebase_in_app_messaging"),
       toGithubExample("firebase_in_app_messaging"),
+    ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
     ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],

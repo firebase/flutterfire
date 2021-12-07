@@ -60,11 +60,34 @@ module.exports = [
     },
   },
   {
+    name: 'Cloud Firestore ODM',
+    pub: 'cloud_firestore_odm',
+    status: 'Alpha',
+    documentation: 'https://firebase.flutter.dev/docs/firestore-odm/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Cloud Functions',
     pub: 'cloud_functions',
     firebase: 'functions',
     status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/functions/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
+    name: 'Installations',
+    pub: 'flutterfire_installations',
+    firebase: 'https://firebase.google.com/docs/projects/manage-installations',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/installations/overview',
     support: {
       web: true,
       mobile: true,
@@ -149,8 +172,7 @@ module.exports = [
     pub: 'firebase_in_app_messaging',
     firebase: 'in-app-messaging',
     status: 'Stable',
-    documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_in_app_messaging/README.md',
+    documentation: 'https://firebase.flutter.dev/docs/in-app-messaging/overview',
     support: {
       web: 'N/A',
       mobile: true,
@@ -168,6 +190,18 @@ module.exports = [
       web: 'N/A',
       mobile: true,
       macos: true,
+    },
+  },
+  {
+    name: 'ML Model Downloader',
+    pub: 'firebase_ml_model_downloader',
+    firebase: 'ml',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/ml-model-downloader/overview',
+    support: {
+      web: false,
+      mobile: true,
+      macos: false,
     },
   },
   {
