@@ -60,6 +60,17 @@ module.exports = [
     },
   },
   {
+    name: 'Cloud Firestore ODM',
+    pub: 'cloud_firestore_odm',
+    status: 'Alpha',
+    documentation: 'https://firebase.flutter.dev/docs/firestore-odm/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Cloud Functions',
     pub: 'cloud_functions',
     firebase: 'functions',
