@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -32,6 +33,7 @@ class FirebaseRemoteConfigWeb extends FirebaseRemoteConfigPlatform {
 
   /// Create the default instance of the [FirebaseRemoteConfigPlatform] as a [FirebaseRemoteConfigWeb]
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('remote-config');
     FirebaseRemoteConfigPlatform.instance = FirebaseRemoteConfigWeb.instance;
   }
 

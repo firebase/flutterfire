@@ -7,14 +7,18 @@ library firebase_database_web;
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/database.dart' as database_interop;
 
 part './src/database_reference_web.dart';
+
 part './src/ondisconnect_web.dart';
+
 part './src/query_web.dart';
+
 part './src/utils/snapshot_utils.dart';
 
 /// Web implementation for [DatabasePlatform]
@@ -34,6 +38,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('database');
     DatabasePlatform.instance = FirebaseDatabaseWeb();
   }
 
