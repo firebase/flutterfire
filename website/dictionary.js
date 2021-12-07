@@ -40,6 +40,7 @@ module.exports = [
   'cryptographically',
   'datastore',
   'deprecations',
+  'dev',
   'dex',
   'downloader',
   'dropdown',
