@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-07 (1)
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- There are no other changes in this release.
+
+Packages graduated to a stable release (see pre-releases prior to the stable version for changelog entries):
+
+- `firebase_analytics` - `v9.0.0`
+- `firebase_analytics_platform_interface` - `v3.0.0`
+- `firebase_analytics_web` - `v0.4.0`
+- `firebase_database` - `v9.0.0`
+- `firebase_database_platform_interface` - `v0.2.0`
+- `firebase_database_web` - `v0.2.0`
+- `firebase_dynamic_links` - `v4.0.0`
+- `firebase_dynamic_links_platform_interface` - `v0.2.0`
+- `firebase_performance` - `v0.8.0`
+- `firebase_performance_platform_interface` - `v0.1.0`
+- `firebase_performance_web` - `v0.1.0`
+- `firebase_remote_config` - `v1.0.0`
+- `firebase_remote_config_platform_interface` - `v1.0.0`
+- `firebase_remote_config_web` - `v1.0.0`
+- `flutterfire_ui` - `v0.1.0`
+
 ## 2021-12-07
 
 ### Changes

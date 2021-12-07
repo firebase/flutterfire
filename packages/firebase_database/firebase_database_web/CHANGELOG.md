@@ -1,3 +1,7 @@
+## 0.2.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
 ## 0.2.0-dev.1
 
  - **FIX**: ignore emulator already set error on web (hot restart issue) (#7483).
