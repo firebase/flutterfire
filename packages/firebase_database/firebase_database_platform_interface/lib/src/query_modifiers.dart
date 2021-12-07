@@ -31,8 +31,9 @@ class QueryModifiers {
       'A starting point was already set (by another call to `startAt`, `startAfter`, or `equalTo`)',
     );
     _assertCursorValue(modifier.value);
-    _start = modifier;
-    return _add(modifier);
+    return _add(modifier)
+      .._start = modifier
+      .._validate();
   }
 
   /// Creates an end cursor modifier.
@@ -42,8 +43,9 @@ class QueryModifiers {
       'A ending point was already set (by another call to `endAt`, `endBefore` or `equalTo`)',
     );
     _assertCursorValue(modifier.value);
-    _end = modifier;
-    return _add(modifier);
+    return _add(modifier)
+      .._end = modifier
+      .._validate();
   }
 
   /// Creates an limitTo modifier.
@@ -53,8 +55,9 @@ class QueryModifiers {
       'A limit was already set (by another call to `limitToFirst` or `limitToLast`)',
     );
     assert(modifier.value >= 0);
-    _limit = modifier;
-    return _add(modifier);
+    return _add(modifier)
+      .._limit = modifier
+      .._validate();
   }
 
   /// Creates an orderBy modifier.
@@ -63,15 +66,14 @@ class QueryModifiers {
       _order == null,
       'An order has already been set, you cannot combine multiple order by calls',
     );
-    _order = modifier;
-    return _add(modifier);
+    return _add(modifier)
+      .._order = modifier
+      .._validate();
   }
 
   /// Adds a modifier, validates and returns a new [QueryModifiers] instance.
   QueryModifiers _add(QueryModifier modifier) {
-    _modifiers.add(modifier);
-    _validate();
-    return QueryModifiers(_modifiers);
+    return QueryModifiers([..._modifiers, modifier]);
   }
 
   /// Validates the current modifiers.

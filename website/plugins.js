@@ -28,7 +28,7 @@ module.exports = [
     pub: 'firebase_app_check',
     firebase: 'https://firebase.google.com/docs/app-check',
     documentation: 'https://firebase.flutter.dev/docs/app-check/overview',
-    status: 'Preview',
+    status: 'Beta',
     support: {
       web: true,
       mobile: true,
@@ -195,7 +195,6 @@ module.exports = [
   {
     name: 'ML Custom',
     pub: 'firebase_ml_custom',
-    //ml-custom page is a 404
     firebase: 'ml',
     status: 'Deprecated',
     documentation:

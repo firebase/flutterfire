@@ -1,0 +1,28 @@
+<html lang="en">
+  <head>
+    <meta name="google-signin-scope" content="profile email" />
+    <meta
+      name="google-signin-client_id"
+      content="448618578101-sg12d2qin42cpr00f8b0gehs5s7inm0v.apps.googleusercontent.com"
+    />
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  </head>
+  <body>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+    <script>
+      function onSignIn(googleUser) {
+        var res = googleUser.getAuthResponse();
+        const b = document.querySelector('.g-signin2');
+        b.style.display = 'none';
+
+        const accessToken = res['access_token'];
+        const idToken = res['id_token'];
+
+        const a = document.createElement('a');
+        a.href = `ffire://google_sign_in?accessToken=${accessToken}&idToken=${idToken}`;
+        a.innerHTML = 'Go back to macos app';
+        document.body.appendChild(a);
+      }
+    </script>
+  </body>
+</html>
