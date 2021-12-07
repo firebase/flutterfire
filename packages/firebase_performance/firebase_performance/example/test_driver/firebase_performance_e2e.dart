@@ -52,11 +52,6 @@ void testsMain() {
       await testTrace.stop();
     });
 
-    test('startTrace()', () async {
-      Trace testTrace = await FirebasePerformance.startTrace('testTrace');
-      expect(testTrace, isA<Trace>());
-    });
-
     test('incrementMetric works correctly', () {
       testTrace.incrementMetric(metricName, 14);
       expect(testTrace.getMetric(metricName), 14);
