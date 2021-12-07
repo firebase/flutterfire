@@ -161,8 +161,7 @@ module.exports = [
     pub: 'firebase_in_app_messaging',
     firebase: 'in-app-messaging',
     status: 'Stable',
-    documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_in_app_messaging/README.md',
+    documentation: 'https://firebase.flutter.dev/docs/in-app-messaging/overview',
     support: {
       web: 'N/A',
       mobile: true,
