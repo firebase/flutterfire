@@ -33,7 +33,8 @@ Pod::Spec.new do |s|
 
   # Firebase dependencies
   s.dependency 'firebase_core'
-  s.dependency 'Firebase/AppCheck', firebase_sdk_version
+  s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
+  s.dependency 'Firebase/AppCheck', "~> #{firebase_sdk_version}"
 
   s.static_framework = true
   s.pod_target_xcconfig = {
