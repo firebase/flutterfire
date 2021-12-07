@@ -1,3 +1,11 @@
+## 0.0.4
+
+ - **FEAT**: add token apis and documentation (#7419).
+
+## 0.0.3+1
+
+ - Update a dependency to the latest release.
+
 ## 0.0.3
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).

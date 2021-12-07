@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -204,7 +203,10 @@ class FirebaseAnimatedListState extends State<FirebaseAnimatedList> {
   }
 
   Widget _buildItem(
-      BuildContext context, int index, Animation<double> animation) {
+    BuildContext context,
+    int index,
+    Animation<double> animation,
+  ) {
     return widget.itemBuilder(context, _model[index], animation, index);
   }
 

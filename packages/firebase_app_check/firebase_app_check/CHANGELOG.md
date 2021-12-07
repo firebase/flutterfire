@@ -1,3 +1,10 @@
+## 0.0.5
+
+- **NEW**: Added support for multi-app via the `instanceFor()` method.
+- **NEW**: Added support for getting the current App Check token via the `getToken()` method.
+- **NEW**: Added support for enabling automatic token refreshing via the `setTokenAutoRefreshEnabled()` method.
+- **NEW**: Added support for subscribing to token change events (as a `Stream`) via `onTokenChange`.
+
 ## 0.0.4
 
  - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).

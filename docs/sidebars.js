@@ -18,10 +18,18 @@ module.exports = {
   main: {
     "Getting Started": [
       "overview",
-      "installation/android",
-      "installation/ios",
-      "installation/macos",
-      "installation/web",
+      "cli",
+      {
+        type: 'category',
+        label: 'Manual Installation',
+        items: [
+          "manual-installation",
+          "manual-installation/android",
+          "manual-installation/ios",
+          "manual-installation/macos",
+          "manual-installation/web",
+        ],
+      },
       "migration",
       "null-safety",
     ],
@@ -59,6 +67,10 @@ module.exports = {
       toReferenceAPI("cloud_functions"),
       toGithubExample("cloud_functions"),
     ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+    ],
     "Cloud Messaging": [
       "messaging/overview",
       "messaging/usage",
@@ -87,6 +99,14 @@ module.exports = {
       toReferenceAPI("firebase_crashlytics"),
       toGithubExample("firebase_crashlytics"),
     ],
+    'Dynamic Links': [
+      "dynamic-links/overview",
+      "dynamic-links/android-integration",
+      "dynamic-links/apple-integration",
+      "dynamic-links/usage",
+      toReferenceAPI("firebase_dynamic_links"),
+      toGithubExample("firebase_dynamic_links"),
+    ],
     "Realtime Database": [
       "database/overview",
       toReferenceAPI("firebase_database"),
@@ -94,7 +114,16 @@ module.exports = {
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
-    // "In-App Messaging": ["in-app-messaging/usage", toReferenceAPI("firebase_in_app_messaging")],
+    "In-App Messaging": [
+      "in-app-messaging/overview",
+      "in-app-messaging/usage",
+      toReferenceAPI("firebase_in_app_messaging"),
+      toGithubExample("firebase_in_app_messaging"),
+    ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
+    ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     "Remote Config": [

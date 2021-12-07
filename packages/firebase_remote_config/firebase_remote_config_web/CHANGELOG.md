@@ -1,3 +1,7 @@
+## 1.0.0-dev.4
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.3
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).

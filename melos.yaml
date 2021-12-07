@@ -3,19 +3,10 @@ name: FlutterFire
 packages:
   - packages/**
 
-ignore:
-  # TODO Excluded - pending rewrite to use latest SDKs.
-  - firebase_ml_custom
-  - firebase_ml_custom_example
-  # TODO Deprecated - excluded pending removal.
-  - firebase_admob
-  - firebase_ml_vision
-  - firebase_ml_vision_example
-
 scripts:
   lint:all:
     run: melos run analyze && melos run format
-    description: Run all static analysis checks
+    description: Run all static analysis checks.
 
   analyze:
     run: |
@@ -42,8 +33,11 @@ scripts:
 
   build:all:
     run: |
-      melos run build:example_ios_pub --no-select && melos run build:example_android_pub --no-select && melos run build:example_macos --no-select && melos bootstrap
-    description: Build all example apps
+      melos run build:example_ios_pub --no-select && \
+      melos run build:example_android_pub --no-select && \
+      melos run build:example_macos --no-select && \
+      melos bootstrap
+    description: Build all example apps.
 
   build:example_android:
     run: |
@@ -97,16 +91,21 @@ scripts:
         "flutter build macos --no-pub"
     description: |
       Build a specific example app for macOS.
-       - Requires `flutter channel stable`.
-       - Requires `flutter config --enable-macos-desktop` set.
     select-package:
       dir-exists:
         - macos
       scope: "*example*"
 
   test:all:
-    run: melos run test --no-select && melos run test:mobile_e2e --no-select
-    description: Run all tests available on stable channel
+    run: |
+      melos run test --no-select && \
+      melos run test:web --no-select && \
+      melos run test:web_e2e --no-select && \
+      melos run test:mobile_e2e --no-select
+    description: |
+      Run all tests available.
+       - Requires chromedriver running on port 4444.
+       - Requires an Android emulator or iOS simulator to be already running.
 
   test:
     run: |
@@ -137,14 +136,11 @@ scripts:
         "flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all Android or iOS test driver e2e tests in a specific example app.
-       - Requires an Android emulator or iOS simulator.
+       - Requires an Android emulator or iOS simulator to be already running.
     select-package:
       dir-exists:
         - test_driver
       scope: "*example*"
-      ignore:
-        - "*firebase_ml_vision*"
-        - "*firebase_admob*"
 
   test:web_e2e:
     run: |
@@ -152,8 +148,6 @@ scripts:
         "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all Web test driver e2e tests in a specific example app.
-       - Requires `flutter channel master` (or beta).
-       - Requires `flutter config --enable-web` set.
        - Requires chromedriver running on port 4444.
     select-package:
       dir-exists:
@@ -167,25 +161,25 @@ scripts:
         "flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
     description: |
       Run all MacOS test driver e2e tests in a specific example app.
-       - Requires `flutter channel master`.
-       - Requires `flutter config --enable-macos-desktop` set.
     select-package:
       dir-exists:
         - macos
         - test_driver
       scope: "*example*"
 
-  # Clean things very deeply, can be used to establish "pristine checkout" status
-  clean:deep: >
-    git clean -x -d -f -q
+  clean:deep:
+    run: git clean -x -d -f -q
+    description: Clean things very deeply, can be used to establish "pristine checkout" status.
 
-  # Additional cleanup lifecycle script, executed when `melos clean` is ran.
-  postclean: >
-    melos exec -c 6 -- "flutter clean"
-
-  # Run all targets generally expected in CI for a full local quality check
-  qualitycheck: >
-    melos run clean:deep && melos clean && melos bootstrap && melos run lint:all && melos run build:all && melos run test:all
+  qualitycheck:
+    run: |
+      melos run clean:deep && \
+      melos clean && \
+      melos bootstrap && \
+      melos run lint:all && \
+      melos run build:all && \
+      melos run test:all
+    description: Run all targets generally expected in CI for a full local quality check.
 
   odm:test:
     run: |
@@ -229,11 +223,6 @@ scripts:
     select-package:
       scope: "*odm_example*"
 
-  postbootstrap: melos run odm:example_build_runner:build
-
-dev_dependencies:
-  pedantic: 1.8.0
-
-environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  # Additional cleanup lifecycle script, executed when `melos clean` is run.
+  postclean: >
+    melos exec -c 6 -- "flutter clean"

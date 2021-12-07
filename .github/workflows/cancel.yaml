@@ -13,7 +13,6 @@ jobs:
           # Ids in order:
           # all_plugins
           # docs
-          # firebase_admob
           # firebase_analytics
           # firebase_auth
           # firebase_core

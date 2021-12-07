@@ -15,7 +15,7 @@ module.exports = [
     name: 'Analytics',
     pub: 'firebase_analytics',
     firebase: 'analytics',
-    status: 'Beta',
+    status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/analytics/overview',
     support: {
       web: true,
@@ -72,6 +72,18 @@ module.exports = [
     },
   },
   {
+    name: 'Installations',
+    pub: 'flutterfire_installations',
+    firebase: 'https://firebase.google.com/docs/projects/manage-installations',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/installations/overview',
+    support: {
+      web: true,
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
     name: 'Cloud Messaging',
     pub: 'firebase_messaging',
     firebase: 'cloud-messaging',
@@ -114,7 +126,7 @@ module.exports = [
     status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/crashlytics/overview',
     support: {
-      web: false,
+      web: 'N/A',
       mobile: true,
       macos: true,
     },
@@ -123,7 +135,7 @@ module.exports = [
     name: 'Realtime Database',
     pub: 'firebase_database',
     firebase: 'database',
-    status: 'Beta',
+    status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/database/overview',
     support: {
       web: true,
@@ -135,22 +147,46 @@ module.exports = [
     name: 'Dynamic Links',
     pub: 'firebase_dynamic_links',
     firebase: 'dynamic-links',
-    status: 'Beta',
+    status: 'Stable',
     documentation:
       'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_dynamic_links/README.md',
     support: {
-      web: false,
+      web: 'N/A',
       mobile: true,
-      macos: false,
+      macos: 'N/A',
     },
   },
   {
     name: 'In-App Messaging',
     pub: 'firebase_in_app_messaging',
     firebase: 'in-app-messaging',
-    status: 'Beta',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/in-app-messaging/overview',
+    support: {
+      web: 'N/A',
+      mobile: true,
+      macos: 'N/A',
+    },
+  },
+  {
+    name: 'ML Model Downloader',
+    pub: 'firebase_ml_model_downloader',
+    firebase: 'ml',
+    status: 'Preview',
     documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_in_app_messaging/README.md',
+      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_ml_model_downloader/firebase_ml_model_downloader/README.md',
+    support: {
+      web: 'N/A',
+      mobile: true,
+      macos: true,
+    },
+  },
+  {
+    name: 'ML Model Downloader',
+    pub: 'firebase_ml_model_downloader',
+    firebase: 'ml',
+    status: 'Stable',
+    documentation: 'https://firebase.flutter.dev/docs/ml-model-downloader/overview',
     support: {
       web: false,
       mobile: true,
@@ -162,7 +198,7 @@ module.exports = [
     pub: 'firebase_ml_custom',
     //ml-custom page is a 404
     firebase: 'ml',
-    status: 'Beta',
+    status: 'Deprecated',
     documentation:
       'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_ml_custom/README.md',
     support: {
@@ -187,19 +223,19 @@ module.exports = [
     name: 'Performance Monitoring',
     pub: 'firebase_performance',
     firebase: 'performance',
-    status: 'Beta',
+    status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/performance/overview',
     support: {
       web: true,
       mobile: true,
-      macos: false,
+      macos: 'N/A',
     },
   },
   {
     name: 'Remote Config',
     pub: 'firebase_remote_config',
     firebase: 'remote-config',
-    status: 'Beta',
+    status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/remote-config/overview',
     support: {
       web: true,
