@@ -1,25 +1,19 @@
-<h1 align="center">Flutter Firestore ODM</h1>
-<p align="center">
-  <span>Build fully type-safe applications using Cloud Firestore</span>
-</p>
-<p align="center">
-  <span><a href="docs/index.md">Documentation</a> &bull;
-  <a href="https://firebase.flutter.dev/">FlutterFire</a></span>
-</p>
-<br />
+# Cloud Firestore ODM Package for Flutter
 
-The Cloud Firestore ODM package enables developers to build fully type-safe applications for Flutter
-using the [FlutterFire Cloud Firestore plugin](https://firebase.flutter.dev/docs/firestore/overview).
+The Cloud Firestore ODM package enables developers to build fully type-safe applications for Flutter using the FlutterFire Cloud Firestore plugin.
 
-## What does it do?
+[![pub package](https://img.shields.io/pub/v/cloud_firestore_odm.svg)](https://pub.dev/packages/cloud_firestore_odm)
 
-The ODM allows data schemas to be defined which represent the data structure of your Cloud
-Firestore database. By defining schemas the ODM provides the following benefits:
+## Getting Started
 
-- ↔️ Bi-directional data validation.
-- 🔒 Type-safe data querying, supporting all Firestore query operations.
-- 🔄 Flutter Widgets for simple data binding with your data.
-- 🎯 Data selectors to help avoid unnecessary Widget rebuilds.
-- 💻 Full API code completion.
+To get started with Cloud Firestore ODM for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/firestore-odm/overview).
 
-To learn more, view the [documentation](docs/index.md).
+## Issues and feedback
+
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+
+To contribute a change to this plugin,
+please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

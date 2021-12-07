@@ -40,6 +40,7 @@ module.exports = [
   'cryptographically',
   'datastore',
   'deprecations',
+  'dev',
   'dex',
   'downloader',
   'dropdown',
@@ -98,4 +99,10 @@ module.exports = [
   'fiam',
   'ecommerce',
   'programmatically',
+  'postfix',
+  'validator',
+  'validators',
+  'schemas',
+  'subcollection',
+  'subcollections',
 ];
