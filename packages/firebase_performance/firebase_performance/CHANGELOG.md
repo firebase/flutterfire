@@ -1,4 +1,6 @@
-## UNRELEASED
+## 0.8.0-dev.0
+
+> Note: This release has breaking changes.
 
 The Firebase Performance plugin has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.
