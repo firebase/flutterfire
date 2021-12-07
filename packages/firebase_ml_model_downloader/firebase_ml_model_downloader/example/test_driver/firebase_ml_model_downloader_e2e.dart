@@ -38,10 +38,7 @@ void testsMain() {
 
     group('listDownloadedModels', () {
       test('should return successfully', () async {
-        expectLater(
-            mlModelDownloader.getModel(
-                kModelName, FirebaseModelDownloadType.latestModel),
-            completes);
+        expectLater(mlModelDownloader.listDownloadedModels(), completes);
       });
     });
 
