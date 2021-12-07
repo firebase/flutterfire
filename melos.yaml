@@ -3,6 +3,10 @@ name: FlutterFire
 packages:
   - packages/**
 
+command:
+  version:
+    workspaceChangelog: true
+
 scripts:
   lint:all:
     run: melos run analyze && melos run format
