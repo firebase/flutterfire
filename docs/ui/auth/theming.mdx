@@ -2,11 +2,16 @@
 title: Themeing
 ---
 
-Flutterfire UI widgets are built on top of `material` and `cupertino` libraries provided by Flutter.
+FlutterFire UI widgets are built on top of Material and Cupertino design patterns provided by Flutter.
 
-To make the rest of your appliaction look the same as the widgets that come with Firebase UI we're minimizing the amount of custom styling and depend on `ThemeData` and `CupertinoThemeData` instead.
+To provide consistency across your application, the FlutterFire UI widgets depend on the [`ThemeData`](https://api.flutter.dev/flutter/material/ThemeData-class.html)
+or [`CupertinoThemeData`](https://api.flutter.dev/flutter/cupertino/CupertinoThemeData-class.html) instances provided to your `MaterialApp` or `CupertinoApp` widget. 
 
-With the following code
+For example, the `SignInScreen` widget with an email provider, wrapped in a `MaterialApp` will use the following widgets:
+
+- [`TextFormField`](https://api.flutter.dev/flutter/material/TextFormField-class.html)
+- [`TextButton`](https://api.flutter.dev/flutter/material/TextButton-class.html)
+- [`OutlinedButton`](https://api.flutter.dev/flutter/material/OutlinedButton-class.html)
 
 ```dart
 class FirebaseAuthUIExample extends StatelessWidget {
@@ -23,7 +28,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
 }
 ```
 
-you will get an email form that uses [`TextFormField`](https://api.flutter.dev/flutter/material/TextFormField-class.html), [`TextButton`](https://api.flutter.dev/flutter/material/TextButton-class.html) and [`OutlinedButton`](https://api.flutter.dev/flutter/material/OutlinedButton-class.html) widgets.
+This will render a screen with the default Material style widgets:
 
 <Image
   src="ui/ui-auth-theming-default.png"
@@ -32,7 +37,8 @@ you will get an email form that uses [`TextFormField`](https://api.flutter.dev/f
   style={{ maxHeight: 300 }}
 />
 
-Let's apply custom style to the input fields.
+To update these styles, we can override the `ThemeData` provided to the `MaterialApp`. For example, to apply a border to the input fields, 
+we can override the `InputDecorationTheme`:
 
 ```dart
 class FirebaseAuthUIExample extends StatelessWidget {
@@ -56,7 +62,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
 }
 ```
 
-Email form respects the material theme properties and after we providdedd the custom `inputDecorationTheme`, the form looks like this:
+The UI widgets will respect the updated theme data, and the UI will be reflected to match:
 
 <Image
   src="ui/ui-auth-theming-outline-border.png"
@@ -65,7 +71,7 @@ Email form respects the material theme properties and after we providdedd the cu
   style={{ maxHeight: 300 }}
 />
 
-Let's also customize the button:
+Furthermore, we can customize the button used in the UI by overriding the `OutlinedButtonThemeData`:
 
 ```dart
 class FirebaseAuthUIExample extends StatelessWidget {
@@ -98,7 +104,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
 }
 ```
 
-The form now looks like this:
+The button will now respect the updated theme data and display a styled button instead:
 
 <Image
   src="ui/ui-auth-theming-button.png"
