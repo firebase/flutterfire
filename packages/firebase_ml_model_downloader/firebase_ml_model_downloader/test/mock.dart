@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 typedef Callback = void Function(MethodCall call);
 
-void setupFirebaseMlModelDownloaderMocks([Callback? customHandlers]) {
+void setupFirebaseModelDownloaderMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {

@@ -13,10 +13,10 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import '../mock.dart';
 
 void main() {
-  setupFirebaseMlModelDownloaderMocks();
+  setupFirebaseModelDownloaderMocks();
 
   late FirebaseApp app;
-  late FirebaseMlModelDownloaderPlatform mlDownloader;
+  late FirebaseModelDownloaderPlatform mlDownloader;
   final List<MethodCall> log = <MethodCall>[];
 
   bool mockPlatformExceptionThrown = false;
@@ -24,7 +24,7 @@ void main() {
   const String kModelName = 'model-name';
   const String kDownloadType = 'latest';
 
-  group('$MethodChannelFirebaseMlModelDownloader', () {
+  group('$MethodChannelFirebaseModelDownloader', () {
     setUpAll(() async {
       app = await Firebase.initializeApp();
 
@@ -36,16 +36,16 @@ void main() {
         }
 
         switch (call.method) {
-          case 'FirebaseMlModelDownloader#getModel':
+          case 'FirebaseModelDownloader#getModel':
             return {
               'filePath': '/path/to/file',
               'size': 1234,
               'name': kModelName,
               'hash': 'model-hash',
             };
-          case 'FirebaseMlModelDownloader#listDownloadedModels':
+          case 'FirebaseModelDownloader#listDownloadedModels':
             return [];
-          case 'FirebaseMlModelDownloader#deleteDownloadedModel':
+          case 'FirebaseModelDownloader#deleteDownloadedModel':
             return null;
           default:
             return <String, dynamic>{};
@@ -56,58 +56,57 @@ void main() {
     setUp(() {
       log.clear();
       mockPlatformExceptionThrown = false;
-      mlDownloader = MethodChannelFirebaseMlModelDownloader(app: app);
+      mlDownloader = MethodChannelFirebaseModelDownloader(app: app);
     });
 
     tearDown(() {
       mockPlatformExceptionThrown = false;
     });
 
-    group('$FirebaseMlModelDownloaderPlatform()', () {
-      test('$MethodChannelFirebaseMlModelDownloader is the default instance',
-          () {
+    group('$FirebaseModelDownloaderPlatform()', () {
+      test('$MethodChannelFirebaseModelDownloader is the default instance', () {
         expect(
-          FirebaseMlModelDownloaderPlatform.instance,
-          isA<MethodChannelFirebaseMlModelDownloader>(),
+          FirebaseModelDownloaderPlatform.instance,
+          isA<MethodChannelFirebaseModelDownloader>(),
         );
       });
 
       test('Can be extended', () {
-        FirebaseMlModelDownloaderPlatform.instance =
-            ExtendsFirebaseMlModelDownloaderPlatform();
+        FirebaseModelDownloaderPlatform.instance =
+            ExtendsFirebaseModelDownloaderPlatform();
       });
 
       test('Can be mocked with `implements`', () {
-        final FirebaseMlModelDownloaderPlatform mock =
-            MocksFirebaseMlModelDownloaderPlatform();
-        FirebaseMlModelDownloaderPlatform.instance = mock;
+        final FirebaseModelDownloaderPlatform mock =
+            MocksFirebaseModelDownloaderPlatform();
+        FirebaseModelDownloaderPlatform.instance = mock;
       });
     });
 
     group('delegateFor', () {
       test('returns correct class instance', () {
         final testMlDownloader =
-            TestMethodChannelFirebaseMlModelDownloader(Firebase.app());
+            TestMethodChannelFirebaseModelDownloader(Firebase.app());
         final result = testMlDownloader.delegateFor(app: Firebase.app());
 
-        expect(result, isA<FirebaseMlModelDownloaderPlatform>());
+        expect(result, isA<FirebaseModelDownloaderPlatform>());
         expect(result.app, isA<FirebaseApp>());
       });
     });
     group('getModel', () {
       test('call delegate method successfully', () async {
-        final conditions = DownloadConditions();
+        final conditions = FirebaseModelDownloadConditions();
         final response = await mlDownloader.getModel(
           kModelName,
-          DownloadType.latestModel,
+          FirebaseModelDownloadType.latestModel,
           conditions,
         );
 
-        expect(response, isA<CustomModel>());
+        expect(response, isA<FirebaseCustomModel>());
         // check native method was called
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebaseMlModelDownloader#getModel',
+            'FirebaseModelDownloader#getModel',
             arguments: <String, dynamic>{
               'appName': app.name,
               'modelName': kModelName,
@@ -127,8 +126,8 @@ void main() {
           'PLATFORM',
           () => mlDownloader.getModel(
             kModelName,
-            DownloadType.latestModel,
-            DownloadConditions(),
+            FirebaseModelDownloadType.latestModel,
+            FirebaseModelDownloadConditions(),
           ),
         );
       });
@@ -138,11 +137,11 @@ void main() {
       test('call delegate method successfully', () async {
         final response = await mlDownloader.listDownloadedModels();
 
-        expect(response, isA<List<CustomModel>>());
+        expect(response, isA<List<FirebaseCustomModel>>());
         // check native method was called
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebaseMlModelDownloader#listDownloadedModels',
+            'FirebaseModelDownloader#listDownloadedModels',
             arguments: <String, dynamic>{
               'appName': app.name,
             },
@@ -169,7 +168,7 @@ void main() {
         // check native method was called
         expect(log, <Matcher>[
           isMethodCall(
-            'FirebaseMlModelDownloader#deleteDownloadedModel',
+            'FirebaseModelDownloader#deleteDownloadedModel',
             arguments: <String, dynamic>{
               'appName': app.name,
               'modelName': kModelName,
@@ -192,14 +191,14 @@ void main() {
   });
 }
 
-class MocksFirebaseMlModelDownloaderPlatform extends Mock
+class MocksFirebaseModelDownloaderPlatform extends Mock
     with MockPlatformInterfaceMixin
-    implements FirebaseMlModelDownloaderPlatform {}
+    implements FirebaseModelDownloaderPlatform {}
 
-class ExtendsFirebaseMlModelDownloaderPlatform
-    extends FirebaseMlModelDownloaderPlatform {}
+class ExtendsFirebaseModelDownloaderPlatform
+    extends FirebaseModelDownloaderPlatform {}
 
-class TestMethodChannelFirebaseMlModelDownloader
-    extends MethodChannelFirebaseMlModelDownloader {
-  TestMethodChannelFirebaseMlModelDownloader(FirebaseApp app) : super(app: app);
+class TestMethodChannelFirebaseModelDownloader
+    extends MethodChannelFirebaseModelDownloader {
+  TestMethodChannelFirebaseModelDownloader(FirebaseApp app) : super(app: app);
 }

@@ -13,6 +13,9 @@ import 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_mode
 import 'package:flutter/foundation.dart';
 
 export 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_model_downloader_platform_interface.dart'
-    show CustomModel, DownloadType, DownloadConditions;
+    show
+        FirebaseCustomModel,
+        FirebaseModelDownloadType,
+        FirebaseModelDownloadConditions;
 
 part 'src/firebase_ml_model_downloader.dart';

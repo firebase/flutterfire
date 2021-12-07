@@ -34,12 +34,12 @@ class _MyAppState extends State<MyApp> {
     initWithLocalModel();
   }
 
-  CustomModel? model;
+  FirebaseCustomModel? model;
 
   /// Initially get the lcoal model if found, and asynchronously get the latest one in background.
   initWithLocalModel() async {
-    final _model = await FirebaseMlModelDownloader.instance
-        .getModel(kModelName, DownloadType.localModelUpdateInBackground);
+    final _model = await FirebaseModelDownloader.instance.getModel(
+        kModelName, FirebaseModelDownloadType.localModelUpdateInBackground);
 
     setState(() {
       model = _model;
@@ -84,9 +84,9 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final _model = await FirebaseMlModelDownloader
-                              .instance
-                              .getModel(kModelName, DownloadType.latestModel);
+                          final _model = await FirebaseModelDownloader.instance
+                              .getModel(kModelName,
+                                  FirebaseModelDownloadType.latestModel);
 
                           setState(() {
                             model = _model;
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          await FirebaseMlModelDownloader.instance
+                          await FirebaseModelDownloader.instance
                               .deleteDownloadedModel(kModelName);
 
                           setState(() {

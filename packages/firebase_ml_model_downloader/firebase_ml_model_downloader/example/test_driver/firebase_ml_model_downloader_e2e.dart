@@ -9,8 +9,8 @@ import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 
 const kModelName = "mobilenet_v1_1_0_224";
 void testsMain() {
-  group('$FirebaseMlModelDownloader', () {
-    late FirebaseMlModelDownloader mlModelDownloader;
+  group('$FirebaseModelDownloader', () {
+    late FirebaseModelDownloader mlModelDownloader;
 
     setUpAll(() async {
       await Firebase.initializeApp(
@@ -24,13 +24,14 @@ void testsMain() {
               '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
         ),
       );
-      mlModelDownloader = FirebaseMlModelDownloader.instance;
+      mlModelDownloader = FirebaseModelDownloader.instance;
     });
 
     group('getModel', () {
       test('should return successfully', () async {
         expectLater(
-            mlModelDownloader.getModel(kModelName, DownloadType.latestModel),
+            mlModelDownloader.getModel(
+                kModelName, FirebaseModelDownloadType.latestModel),
             completes);
       });
     });
@@ -38,7 +39,8 @@ void testsMain() {
     group('listDownloadedModels', () {
       test('should return successfully', () async {
         expectLater(
-            mlModelDownloader.getModel(kModelName, DownloadType.latestModel),
+            mlModelDownloader.getModel(
+                kModelName, FirebaseModelDownloadType.latestModel),
             completes);
       });
     });

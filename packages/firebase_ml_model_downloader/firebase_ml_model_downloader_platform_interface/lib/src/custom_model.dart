@@ -12,9 +12,9 @@ import 'dart:io';
 /// In the case where an update is available, after the updated model file is
 /// fully downloaded, the original model file will be removed once it is safe
 /// to do so.
-class CustomModel {
-  /// Creates a new [CustomModel] instance.
-  CustomModel({
+class FirebaseCustomModel {
+  /// Creates a new [FirebaseCustomModel] instance.
+  FirebaseCustomModel({
     required this.file,
     required this.size,
     required this.name,
@@ -38,7 +38,7 @@ class CustomModel {
 
   @override
   // ignore: avoid_renaming_method_parameters
-  bool operator ==(Object o) => o is CustomModel && hash == o.hash;
+  bool operator ==(Object o) => o is FirebaseCustomModel && hash == o.hash;
 
   @override
   int get hashCode => hash.hashCode;
