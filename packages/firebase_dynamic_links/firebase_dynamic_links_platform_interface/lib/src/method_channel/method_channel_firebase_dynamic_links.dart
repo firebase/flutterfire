@@ -55,7 +55,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
   );
 
   /// The [StreamController] used to update on the latest dynamic link received.
-  final StreamController<PendingDynamicLinkData> _onLinkController =
+  static final StreamController<PendingDynamicLinkData> _onLinkController =
       StreamController<PendingDynamicLinkData>.broadcast();
 
   /// Gets a [FirebaseDynamicLinksPlatform] with specific arguments such as a different
