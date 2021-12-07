@@ -3,8 +3,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 abstract class FlutterFireUIAction {
   static T? ofType<T extends FlutterFireUIAction>(BuildContext context) {
-    final w =
-        context.dependOnInheritedWidgetOfExactType<FlutterFireUIActions>();
+    final w = FlutterFireUIActions.maybeOf(context);
 
     if (w == null) return null;
 
@@ -31,6 +30,23 @@ class SignedOutAction extends FlutterFireUIAction {
 
 class FlutterFireUIActions extends InheritedWidget {
   final List<FlutterFireUIAction> actions;
+
+  static FlutterFireUIActions? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<FlutterFireUIActions>();
+  }
+
+  static Widget inherit({
+    required BuildContext from,
+    required Widget child,
+  }) {
+    final w = maybeOf(from);
+
+    if (w != null) {
+      return FlutterFireUIActions(actions: w.actions, child: child);
+    }
+
+    return child;
+  }
 
   const FlutterFireUIActions({
     Key? key,

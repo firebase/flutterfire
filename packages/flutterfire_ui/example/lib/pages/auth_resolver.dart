@@ -30,10 +30,6 @@ class AuthResolver extends StatelessWidget {
           return const ProfileScreen(providerConfigs: providerConfigs);
         }
 
-        // return const UniversalEmailSignInScreen(
-        //   providerConfigs: providerConfigs,
-        // );
-
         return SignInScreen(
           headerBuilder: (context, constraints, _) {
             return Padding(
