@@ -1,12 +1,17 @@
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'platform_interface_firebase_performance.dart';
-
 abstract class HttpMetricPlatform extends PlatformInterface {
-  HttpMetricPlatform(this.url, this.httpMethod) : super(token: Object());
+  HttpMetricPlatform() : super(token: _token);
 
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [HttpMetricPlatform].
   static void verifyExtends(HttpMetricPlatform instance) {
-    PlatformInterface.verifyToken(instance, Object);
+    PlatformInterface.verifyToken(instance, _token);
   }
 
   /// Maximum allowed length of a key passed to [putAttribute].
@@ -18,66 +23,73 @@ abstract class HttpMetricPlatform extends PlatformInterface {
   /// Maximum allowed number of attributes that can be added.
   static const int maxCustomAttributes = 5;
 
-  final String url;
-  final HttpMethod httpMethod;
-
   /// HttpResponse code of the request.
   int? get httpResponseCode {
-    throw UnimplementedError('getHttpResponseCode() is not implemented');
+    throw UnimplementedError('get httpResponseCode is not implemented');
   }
 
   /// Size of the request payload.
   int? get requestPayloadSize {
-    throw UnimplementedError('getRequestPayloadSize() is not implemented');
+    throw UnimplementedError('get requestPayloadSize is not implemented');
   }
 
   /// Content type of the response such as text/html, application/json, etc...
   String? get responseContentType {
-    throw UnimplementedError('getResponseContentType() is not implemented');
+    throw UnimplementedError('get responseContentType is not implemented');
   }
 
   /// Size of the response payload.
   int? get responsePayloadSize {
-    throw UnimplementedError('getResponsePayloadSize() is not implemented');
+    throw UnimplementedError('get responsePayloadSize is not implemented');
   }
 
+  /// Sets the httpResponse code of the request
   set httpResponseCode(int? httpResponseCode) {
-    throw UnimplementedError('setHttpResponseCode() is not implemented');
+    throw UnimplementedError('set httpResponseCode() is not implemented');
   }
 
+  /// Sets the size of the request payload
   set requestPayloadSize(int? requestPayloadSize) {
-    throw UnimplementedError('setRequestPayloadSize() is not implemented');
+    throw UnimplementedError('set requestPayloadSize() is not implemented');
   }
 
+  /// Sets the size of the response payload
   set responsePayloadSize(int? responsePayloadSize) {
-    throw UnimplementedError('setResponsePayload() is not implemented');
+    throw UnimplementedError('set responsePayload() is not implemented');
   }
 
+  /// Content type of the response such as text/html, application/json, etc..
   set responseContentType(String? responseContentType) {
-    throw UnimplementedError('setResponseContentType() is not implemented');
+    throw UnimplementedError('set responseContentType() is not implemented');
   }
 
+  /// Marks the start time of the request
   Future<void> start() {
     throw UnimplementedError('start() is not implemented');
   }
 
+  /// Marks the end time of the response and queues the network request metric on the device for transmission.
   Future<void> stop() {
     throw UnimplementedError('stop() is not implemented');
   }
 
-  Future<void> putAttribute(String name, String value) {
+  /// Sets a value as a string for the specified attribute. Updates the value of the attribute if a value had already existed.
+  void putAttribute(String name, String value) {
     throw UnimplementedError('putAttribute() is not implemented');
   }
 
-  Future<void> removeAttribute(String name) {
+  /// Removes an attribute from the list. Does nothing if the attribute does not exist.
+  void removeAttribute(String name) {
     throw UnimplementedError('removeAttribute() is not implemented');
   }
 
+  /// Returns the value of an attribute.
   String? getAttribute(String name) {
     throw UnimplementedError('getAttribute() is not implemented');
   }
 
-  Future<Map<String, String>> getAttributes() {
+  /// Returns the map of all the attributes added to this HttpMetric.
+  Map<String, String> getAttributes() {
     throw UnimplementedError('getAttributes() is not implemented');
   }
 }

@@ -1,113 +1,25 @@
-# Google Performance Monitoring for Firebase
+# Firebase Performance Plugin for Flutter
+
+A Flutter plugin to use the [Firebase Performance API](https://firebase.google.com/docs/perf-mon/).
+
+To learn more about Firebase Performance, please visit the [Firebase website](https://firebase.google.com/products/performance)
 
 [![pub package](https://img.shields.io/pub/v/firebase_performance.svg)](https://pub.dev/packages/firebase_performance)
 
-A Flutter plugin to use the [Google Performance Monitoring for Firebase API](https://firebase.google.com/docs/perf-mon/).
+## Getting Started
 
-For Flutter plugins for other Firebase products, see [README.md](https://github.com/FirebaseExtended/flutterfire/blob/master/README.md).
+To get started with Firebase Performance for Flutter, please [see the documentation](https://firebase.flutter.dev/docs/performance/overview).
 
 ## Usage
 
-To use this plugin, first connect to Firebase by following the instructions for [Android](https://firebase.flutter.dev/docs/installation/android) / [iOS](https://firebase.flutter.dev/docs/installation/ios) / [Web](https://firebase.flutter.dev/docs/installation/web). Then add this plugin by following [these instructions](https://firebase.flutter.dev/docs/performance/overview). See [`example/lib/main.dart`](example/lib/main.dart) for details on the API usage.
-
-You can confirm that Performance Monitoring results appear in the [Firebase Performance Monitoring console](https://console.firebase.google.com/project/_/performance). Results should appear within a few minutes.
-
-> :warning: **Note:** *First Paint* and *First Contentful Paint* metrics of web page load trace will not be collected; automatic network request traces and screen traces will not always be collected for mobile apps.
-
-
-### Define a Custom Trace
-
-A custom trace is a report of performance data associated with some of the code in your app. To learn more about custom traces, see the [Performance Monitoring overview](https://firebase.google.com/docs/perf-mon/custom-code-traces).
-
-```dart
-final Trace myTrace = FirebasePerformance.instance.newTrace("test_trace");
-await myTrace.start();
-
-final Item item = cache.fetch("item");
-if (item != null) {
-  await myTrace.incrementMetric("item_cache_hit", 1);
-} else {
-  await myTrace.incrementMetric("item_cache_miss", 1);
-}
-
-await myTrace.stop();
-```
-
-### Add monitoring for specific network requests (mobile only)
-
-Performance Monitoring collects network requests automatically. Although this includes most network requests for your app, some might not be reported. To include specific network requests in Performance Monitoring, add the following code to your app:
-
-```dart
-class _MetricHttpClient extends BaseClient {
-  _MetricHttpClient(this._inner);
-
-  final Client _inner;
-
-  @override
-  Future<StreamedResponse> send(BaseRequest request) async {
-    final HttpMetric metric = FirebasePerformance.instance
-        .newHttpMetric(request.url.toString(), HttpMethod.Get);
-
-    await metric.start();
-
-    StreamedResponse response;
-    try {
-      response = await _inner.send(request);
-      metric
-        ..responsePayloadSize = response.contentLength
-        ..responseContentType = response.headers['Content-Type']
-        ..requestPayloadSize = request.contentLength
-        ..httpResponseCode = response.statusCode;
-    } finally {
-      await metric.stop();
-    }
-
-    return response;
-  }
-}
-
-class _MyAppState extends State<MyApp> {
-.
-.
-.
-  Future<void> testHttpMetric() async {
-    final _MetricHttpClient metricHttpClient = _MetricHttpClient(Client());
-
-    final Request request =
-        Request("SEND", Uri.parse("https://www.google.com"));
-
-    metricHttpClient.send(request);
-  }
-.
-.
-.
-}
-```
+To use this plugin, please visit the [Firebase Performance Usage documentation](https://firebase.flutter.dev/docs/performance/usage)
 
 ## Issues and feedback
 
 Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
-
-## Contribution
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
 please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
-
-### Testing
-
-The unit test is in `test` directory which you can run using `flutter test`.
-
-The integration test is in `example/test_driver/firebase_performance_e2e.dart` which you can run on an emulator:
-```
-cd example
-flutter drive --target=./test_driver/firebase_performance_e2e.dart
-```
-
-To test the web implementation, [download and run ChromeDriver](https://flutter.dev/docs/testing/integration-tests#running-in-a-browser), and then run `flutter_drive`: 
-
-```
-flutter drive --target=./test_driver/firebase_performance_e2e.dart  -d web-server --release --browser-name=chrome --web-port=8080
-```

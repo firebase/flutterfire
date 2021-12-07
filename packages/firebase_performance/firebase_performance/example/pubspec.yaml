@@ -22,13 +22,15 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_platform_interface
   firebase_core_web:
     path: ../../../firebase_core/firebase_core_web
+  firebase_performance:
+    path: ../
   firebase_performance_platform_interface:
     path: ../../firebase_performance_platform_interface
   firebase_performance_web:
     path: ../../firebase_performance_web
 
 dev_dependencies:
-  e2e: ^0.6.1
+  drive: 1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
   flutter_test:
