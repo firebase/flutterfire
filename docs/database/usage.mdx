@@ -81,7 +81,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 DatabaseEvent event = await ref.once();
 
 // Print the data of the snapshot
-print(event.snapshot.value.toString()); // { "name": "John" }
+print(event.snapshot.value); // { "name": "John" }
 ```
 
 The result of a read is a `DatabaseEvent`. This contains a `DataSnapshot` of the data at the location of the reference,
@@ -115,7 +115,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
 Query query = ref.orderByChild("age").limitToFirst(10);
 
-DatabaseEvent event = await query.once();
+DataSnapshot event = await query.get();
 ```
 
 Alternatively we could instead return users between certain ages by using `startAt` and `endAt`:
@@ -125,7 +125,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
 Query query = ref.orderByChild("age").startAt(18).endAt(30);
 
-DatabaseEvent event = await query.once();
+DataSnapshot event = await query.get();
 ```
 
 ### Modifying data
