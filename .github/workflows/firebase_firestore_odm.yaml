@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - name: "Install Flutter"
@@ -39,34 +39,27 @@ jobs:
         run: melos run odm:test:dart --no-select
 
   integration_test:
-    runs-on: macos-latest
-    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
       - uses: actions/setup-java@v2
         with:
-          distribution: 'temurin'
-          java-version: '11'
+          distribution: "temurin"
+          java-version: "11"
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-          melos run odm:example_build_runner:build
       - name: "Build Example"
-        run: ./.github/workflows/scripts/build-example.sh android
+        run: |
+          melos run odm:example_build_runner:build
+          ./.github/workflows/scripts/build-example.sh web
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 28
-          arch: x86_64
-          # Firebase Firestore works without Google Play Services, so we don't use the `googleapis`
-          # emulator target as it's considerably slower on CI.
-          target: default
-          profile: Nexus 5X
-          script: ./.github/workflows/scripts/drive-example.sh android
+        run: ./.github/workflows/scripts/drive-example.sh web
