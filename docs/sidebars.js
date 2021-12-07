@@ -31,7 +31,6 @@ module.exports = {
         ],
       },
       'migration',
-      'null-safety',
     ],
     Analytics: [
       'analytics/overview',
@@ -75,10 +74,6 @@ module.exports = {
       "functions/usage",
       toReferenceAPI("cloud_functions"),
       toGithubExample("cloud_functions"),
-    ],
-    Installations: [
-      "installations/overview",
-      "installations/usage",
     ],
     "Cloud Messaging": [
       "messaging/overview",
@@ -151,6 +146,12 @@ module.exports = {
       'in-app-messaging/usage',
       toReferenceAPI('firebase_in_app_messaging'),
       toGithubExample('firebase_in_app_messaging'),
+    ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+      toReferenceAPI("firebase_app_installations"),
+      toGithubExample("firebase_app_installations"),
     ],
     "ML Model Downloader": [
       "ml-model-downloader/overview",
