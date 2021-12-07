@@ -1,9 +1,6 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2020, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
-
-// @dart=2.9
 
 import 'package:drive/drive.dart' as drive;
 import 'package:flutter/widgets.dart';
@@ -13,7 +10,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 void testsMain() {
   group('$FirebaseCrashlytics', () {
-    /*late*/ FirebaseCrashlytics crashlytics;
+    late FirebaseCrashlytics crashlytics;
 
     setUpAll(() async {
       await Firebase.initializeApp();
@@ -56,19 +53,24 @@ void testsMain() {
       // This is currently only testing that we can log errors without crashing.
       test('should log error', () async {
         await crashlytics.recordError(
-            'foo exception', StackTrace.fromString('during testing'));
+          'foo exception',
+          StackTrace.fromString('during testing'),
+        );
       });
 
       // This is currently only testing that we can log flutter errors without crashing.
       test('should record flutter error', () async {
-        await crashlytics.recordFlutterError(FlutterErrorDetails(
+        await crashlytics.recordFlutterError(
+          FlutterErrorDetails(
             exception: 'foo exception',
             stack: StackTrace.fromString(''),
             context: DiagnosticsNode.message('bar reason'),
             informationCollector: () => <DiagnosticsNode>[
-                  DiagnosticsNode.message('first message'),
-                  DiagnosticsNode.message('second message')
-                ]));
+              DiagnosticsNode.message('first message'),
+              DiagnosticsNode.message('second message')
+            ],
+          ),
+        );
       });
     });
 
@@ -107,10 +109,14 @@ void testsMain() {
 
     group('setCustomKey', () {
       test('should throw if null', () async {
-        expect(
-            () => crashlytics.setCustomKey(null, null), throwsAssertionError);
-        expect(
-            () => crashlytics.setCustomKey('foo', null), throwsAssertionError);
+        // expect(
+        //   () => crashlytics.setCustomKey(null, null),
+        //   throwsAssertionError,
+        // );
+        // expect(
+        //   () => crashlytics.setCustomKey('foo', null),
+        //   throwsAssertionError,
+        // );
         expect(() => crashlytics.setCustomKey('foo', []), throwsAssertionError);
         expect(() => crashlytics.setCustomKey('foo', {}), throwsAssertionError);
       });

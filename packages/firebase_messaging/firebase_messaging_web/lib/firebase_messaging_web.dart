@@ -6,10 +6,12 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/interop/notification.dart';
@@ -41,6 +43,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 

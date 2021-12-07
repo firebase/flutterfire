@@ -10,6 +10,7 @@ import 'package:cloud_firestore_web/src/internals.dart';
 import 'package:cloud_firestore_web/src/load_bundle_task_web.dart';
 import 'package:cloud_firestore_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -36,6 +37,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('firestore');
     FirebaseFirestorePlatform.instance = FirebaseFirestoreWeb();
   }
 

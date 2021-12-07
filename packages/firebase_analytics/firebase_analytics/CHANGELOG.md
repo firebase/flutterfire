@@ -1,3 +1,11 @@
+## 9.0.0-dev.4
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+## 9.0.0-dev.3
+
+ - **FEAT**: add macOS support (#7313).
+
 ## 9.0.0-dev.2
 
  - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).

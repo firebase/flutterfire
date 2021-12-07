@@ -159,7 +159,7 @@ videos. [[Learn More][storage_product]]
 
 ### `firebase_core`
 
-> ![firebase_core][core_badge_ci] ![firebase_core][core_badge_pub] [![pub points][core_badge_pub_points]][core_pub_points]
+> ![firebase_core][core_badge_ci] [![firebase_core][core_badge_pub]][core_pub] [![pub points][core_badge_pub_points]][core_pub_points]
 
 Firebase Core provides APIs to manage your Firebase application instances and credentials. This plugin is required by
 all FlutterFire plugins.
