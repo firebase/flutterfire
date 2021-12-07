@@ -11,7 +11,7 @@ import { Triangle } from '../components/Triangle';
 // @ts-ignore
 import plugins from '../../plugins';
 
-type PluginStatus = 'Stable' | 'Beta' | 'Preview' | 'Deprecated';
+type PluginStatus = 'Stable' | 'Alpha' | 'Beta' | 'Preview' | 'Deprecated';
 interface Plugin {
   name: string;
   pub: string;
@@ -186,6 +186,7 @@ function Home(): JSX.Element {
         <PluginsTable status={'Stable'} />
         <PluginsTable status={'Beta'} />
         <PluginsTable status={'Preview'} />
+        <PluginsTable status={'Alpha'} />
         <PluginsTable status={'Deprecated'} />
       </main>
     </Layout>
