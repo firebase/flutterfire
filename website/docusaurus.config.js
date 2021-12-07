@@ -122,6 +122,7 @@ module.exports = {
     path.resolve(__dirname, './docusaurus-plugins/favicon-tags'),
     path.resolve(__dirname, './docusaurus-plugins/source-versions'),
     path.resolve(__dirname, './docusaurus-plugins/source-api-reference'),
+    path.resolve(__dirname, './docusaurus-plugins/source-ui-widgets'),
   ],
   presets: [
     [

@@ -130,11 +130,13 @@ export default {
     alt,
     caption = true,
     zoom = true,
+    style,
   }: {
     src: string;
     alt?: string;
     zoom?: boolean;
     caption?: boolean;
+    style?: any;
   }): JSX.Element => {
     let image;
     const isExternalImage = src.startsWith('http');
@@ -154,8 +156,8 @@ export default {
 
     return (
       <figure className={styles.figure}>
-        {zoom && withZoom(<img src={image} alt={alt || 'No alt text.'} />)}
-        {!zoom && <img src={image} alt={alt || 'No alt text.'} />}
+        {zoom && withZoom(<img src={image} alt={alt || 'No alt text.'} style={style} />)}
+        {!zoom && <img src={image} alt={alt || 'No alt text.'} style={style} />}
         {!!alt && caption && <figcaption>{alt}</figcaption>}
       </figure>
     );
