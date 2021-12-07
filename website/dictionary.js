@@ -98,4 +98,10 @@ module.exports = [
   'fiam',
   'ecommerce',
   'programmatically',
+  'postfix',
+  'validator',
+  'validators',
+  'schemas',
+  'subcollection',
+  'subcollections',
 ];
