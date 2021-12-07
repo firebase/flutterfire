@@ -3,19 +3,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:firebase_performance_example/firebase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:pedantic/pedantic.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
   runApp(MyApp());
 }
 
@@ -24,8 +23,6 @@ void myLog(String msg) {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -67,7 +64,7 @@ class _MetricHttpClient extends BaseClient {
         .getAttributes()
         .then((attributes) => myLog('Http metric attributes: $attributes')));
 
-    String score = metric.getAttribute('score');
+    String? score = metric.getAttribute('score');
     myLog('Http metric score attribute value: $score');
 
     return response;
@@ -128,7 +125,7 @@ class _MyAppState extends State<MyApp> {
         .getAttributes()
         .then((attributes) => myLog('test_trace_1 attributes: $attributes')));
 
-    String favoriteColor = trace.getAttribute('favorite_color');
+    String? favoriteColor = trace.getAttribute('favorite_color');
     myLog('test_trace_1 favorite_color: $favoriteColor');
 
     setState(() {

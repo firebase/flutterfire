@@ -103,10 +103,10 @@ final Uri uri = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
 
 To handle a Dynamic Link in your application, two scenarios require implementing.
 
-### Background or Terminated
+### Terminated State
 
-If the application is in the background or terminated, the [`FirebaseDynamicLinks.getInitialLink`](!firebase_dynamic_links.getInitialLink)
-method allows you to retrieve the Dynamic Link that opened the application or brought it to the foreground.
+If the application is terminated, the [`FirebaseDynamicLinks.getInitialLink`](!firebase_dynamic_links.getInitialLink)
+method allows you to retrieve the Dynamic Link that opened the application.
 
 This is an asynchronous request, so it makes sense to handle a link before rendering application logic, such as 
 a navigator. For example, you could handle this in the `main` function:
@@ -142,9 +142,9 @@ String link = 'https://dynamic-link-domain/ke2Qa';
 final PendingDynamicLinkData? initialLink = await FirebaseDynamicLinks.instance.getDynamicLink(Uri.parse(link));
 ```
 
-## Listen for incoming links
+## Background / Foreground State
 
-Whilst the application is open, you may listen to Dynamic Links using a stream handler. The [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
+Whilst the application is open, or in the background, you may listen to Dynamic Links events using a stream handler. The [`FirebaseDynamicLinks.onLink`](!firebase_dynamic_links.onLink)
 getter returns a `Stream` containing a `PendingDynamicLinkData`:
 
 ```dart

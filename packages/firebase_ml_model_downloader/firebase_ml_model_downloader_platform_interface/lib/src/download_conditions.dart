@@ -3,11 +3,11 @@
 // found in the LICENSE file.
 
 /// Download conditions for downloading a model via the [getModel] API.
-class DownloadConditions {
+class FirebaseModelDownloadConditions {
   /// Creates a new [DownloadConditions] instance.
-  DownloadConditions({
-    this.iOSAllowsCellularAccess = true,
-    this.iOSAllowsBackgroundDownloading = false,
+  FirebaseModelDownloadConditions({
+    this.iosAllowsCellularAccess = true,
+    this.iosAllowsBackgroundDownloading = false,
     this.androidChargingRequired = false,
     this.androidWifiRequired = false,
     this.androidDeviceIdleRequired = false,
@@ -16,13 +16,13 @@ class DownloadConditions {
   /// Indicates whether download requests should be made over a cellular network.
   ///
   /// Default is `true`. iOS only.
-  bool iOSAllowsCellularAccess;
+  bool iosAllowsCellularAccess;
 
   /// Indicates whether the model can be downloaded while the app is in the
   /// background.
   ///
   /// Default is `false`. iOS only.
-  bool iOSAllowsBackgroundDownloading;
+  bool iosAllowsBackgroundDownloading;
 
   /// Indicates whether the model can only be downloaded whilst the device is
   /// charging.
@@ -45,8 +45,8 @@ class DownloadConditions {
   /// Converts the instance to a [Map].
   Map<String, bool> toMap() {
     return <String, bool>{
-      'iOSAllowsCellularAccess': iOSAllowsCellularAccess,
-      'iOSAllowsBackgroundDownloading': iOSAllowsBackgroundDownloading,
+      'iosAllowsCellularAccess': iosAllowsCellularAccess,
+      'iosAllowsBackgroundDownloading': iosAllowsBackgroundDownloading,
       'androidChargingRequired': androidChargingRequired,
       'androidWifiRequired': androidWifiRequired,
       'androidDeviceIdleRequired': androidDeviceIdleRequired,
