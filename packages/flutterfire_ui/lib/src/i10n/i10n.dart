@@ -42,12 +42,17 @@ class FirebaseUILocalizations<T extends FirebaseUILocalizationLabels> {
 class FirebaseUILocalizationDelegate<T extends FirebaseUILocalizationLabels>
     extends LocalizationsDelegate<FirebaseUILocalizations> {
   final T? overrides;
+  final bool _forceSupportAllLocales;
 
-  const FirebaseUILocalizationDelegate([this.overrides]);
+  const FirebaseUILocalizationDelegate([
+    this.overrides,
+    this._forceSupportAllLocales = false,
+  ]);
 
   @override
   bool isSupported(Locale locale) {
-    return localizations.keys.contains(locale.languageCode);
+    return _forceSupportAllLocales ||
+        localizations.keys.contains(locale.languageCode);
   }
 
   @override
