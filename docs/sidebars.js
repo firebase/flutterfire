@@ -67,6 +67,10 @@ module.exports = {
       toReferenceAPI("cloud_functions"),
       toGithubExample("cloud_functions"),
     ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+    ],
     "Cloud Messaging": [
       "messaging/overview",
       "messaging/usage",
@@ -115,6 +119,10 @@ module.exports = {
       "in-app-messaging/usage",
       toReferenceAPI("firebase_in_app_messaging"),
       toGithubExample("firebase_in_app_messaging"),
+    ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
     ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
