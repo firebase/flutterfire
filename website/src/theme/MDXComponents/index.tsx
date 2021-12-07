@@ -1,6 +1,7 @@
 import React, { HTMLProps } from 'react';
 import Link from '@docusaurus/Link';
 import CodeBlock from '@theme/CodeBlock';
+import useThemeContext from '@theme/hooks/useThemeContext';
 import Tabs from '@theme/Tabs';
 import Heading from '@theme/Heading';
 import TabItem from '@theme/TabItem';
@@ -79,6 +80,36 @@ export default {
   blockquote: (props: HTMLProps<HTMLElement>): JSX.Element => (
     <blockquote className={styles.blockquote} {...props} />
   ),
+
+  DartPad: ({ path, branch }: { path: string; branch?: string }): JSX.Element => {
+    const { isDarkTheme } = useThemeContext();
+
+    return (
+      <div
+        style={{
+          marginBottom: '2rem',
+          position: 'relative',
+          paddingTop: '56.25%',
+        }}
+      >
+        <iframe
+          src={`https://dartpad.dev/embed-flutter.html?theme=${
+            isDarkTheme ? 'dark' : 'light'
+          }&run=true&split=70&null_safety=true&gh_owner=FirebaseExtended&gh_repo=flutterfire&gh_ref=${
+            branch || 'master'
+          }&gh_path=${path}`}
+          style={{
+            border: 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
+    );
+  },
 
   //Enables global usage of <YouTube id="xxxx" /> within MDX files
   YouTube: ({ id }: { id: string }): JSX.Element => {

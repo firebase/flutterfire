@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore_example/firebase_config.dart';
-import 'package:cloud_firestore_example/movie.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
@@ -388,5 +388,49 @@ class _LikesState extends State<Likes> {
         Text('$_likes likes'),
       ],
     );
+  }
+}
+
+@immutable
+class Movie {
+  Movie({
+    required this.genre,
+    required this.likes,
+    required this.poster,
+    required this.rated,
+    required this.runtime,
+    required this.title,
+    required this.year,
+  });
+
+  Movie.fromJson(Map<String, Object?> json)
+      : this(
+          genre: (json['genre']! as List).cast<String>(),
+          likes: json['likes']! as int,
+          poster: json['poster']! as String,
+          rated: json['rated']! as String,
+          runtime: json['runtime']! as String,
+          title: json['title']! as String,
+          year: json['year']! as int,
+        );
+
+  final String poster;
+  final int likes;
+  final String title;
+  final int year;
+  final String runtime;
+  final String rated;
+  final List<String> genre;
+
+  Map<String, Object?> toJson() {
+    return {
+      'genre': genre,
+      'likes': likes,
+      'poster': poster,
+      'rated': rated,
+      'runtime': runtime,
+      'title': title,
+      'year': year,
+    };
   }
 }
