@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`firebase_app_check` - `v0.0.6`](#firebase_app_check---v006)
+- [`firebase_app_check_platform_interface` - `v0.0.3`](#firebase_app_check_platform_interface---v003)
+- [`firebase_app_check_web` - `v0.0.5`](#firebase_app_check_web---v005)
+- [`firebase_core_web` - `v1.5.0`](#firebase_core_web---v150)
+- [`firebase_database` - `v9.0.0-dev.1`](#firebase_database---v900-dev1)
+- [`firebase_database_web` - `v0.2.0-dev.1`](#firebase_database_web---v020-dev1)
+- [`firebase_ml_model_downloader` - `v0.1.0+1`](#firebase_ml_model_downloader---v0101)
+- [`firebase_ml_model_downloader_platform_interface` - `v0.1.0+1`](#firebase_ml_model_downloader_platform_interface---v0101)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_auth_web` - `v3.3.2`
+- `firebase_remote_config_web` - `v1.0.0-dev.5`
+- `cloud_firestore_web` - `v2.6.2`
+- `firebase_app_installations_web` - `v0.1.0+1`
+- `firebase_messaging_web` - `v2.2.2`
+- `firebase_core` - `v1.10.3`
+- `firebase_analytics_web` - `v0.4.0-dev.6`
+- `cloud_functions_web` - `v4.2.2`
+- `firebase_storage_web` - `v3.2.2`
+- `firebase_performance_web` - `v0.1.0-dev.1`
+- `firebase_auth` - `v3.3.1`
+- `firebase_remote_config` - `v1.0.0-dev.4`
+- `cloud_firestore` - `v3.1.2`
+- `firebase_app_installations` - `v0.1.0+1`
+- `firebase_messaging` - `v11.2.1`
+- `firebase_in_app_messaging` - `v0.6.0+2`
+- `firebase_in_app_messaging_platform_interface` - `v0.2.0+2`
+- `firebase_crashlytics` - `v2.4.1`
+- `firebase_crashlytics_platform_interface` - `v3.1.8`
+- `firebase_auth_platform_interface` - `v6.1.6`
+- `firebase_remote_config_platform_interface` - `v1.0.0-dev.4`
+- `firebase_database_platform_interface` - `v0.2.0-dev.1`
+- `firebase_dynamic_links` - `v4.0.0-dev.2`
+- `firebase_dynamic_links_platform_interface` - `v0.2.0-dev.2`
+- `cloud_firestore_platform_interface` - `v5.4.7`
+- `firebase_app_installations_platform_interface` - `v0.1.0+1`
+- `firebase_messaging_platform_interface` - `v3.1.1`
+- `firebase_analytics_platform_interface` - `v3.0.0-dev.5`
+- `flutterfire_ui` - `v0.1.0-dev.5`
+- `firebase_analytics` - `v9.0.0-dev.5`
+- `cloud_functions` - `v3.2.1`
+- `cloud_functions_platform_interface` - `v5.0.16`
+- `firebase_storage_platform_interface` - `v4.0.8`
+- `firebase_storage` - `v10.2.1`
+- `firebase_performance_platform_interface` - `v0.1.0-dev.1`
+- `firebase_performance` - `v0.8.0-dev.1`
+- `cloud_firestore_odm` - `v1.0.0-dev.2`
+- `cloud_firestore_odm_generator` - `v1.0.0-dev.2`
+
+---
+
+#### `firebase_app_check` - `v0.0.6`
+
+ - **FEAT**: add token apis and documentation (#7419).
+
+#### `firebase_app_check_platform_interface` - `v0.0.3`
+
+ - **FEAT**: add token apis and documentation (#7419).
+
+#### `firebase_app_check_web` - `v0.0.5`
+
+ - **FEAT**: add token apis and documentation (#7419).
+
+#### `firebase_core_web` - `v1.5.0`
+
+ - **FEAT**: initial Firebase Installations release (#7377).
+
+#### `firebase_database` - `v9.0.0-dev.1`
+
+ - **FIX**: ignore emulator already set error on web (hot restart issue) (#7483).
+
+#### `firebase_database_web` - `v0.2.0-dev.1`
+
+ - **FIX**: ignore emulator already set error on web (hot restart issue) (#7483).
+
+#### `firebase_ml_model_downloader` - `v0.1.0+1`
+
+ - **FIX**: listDownloadedModels cast error (#7486).
+
+#### `firebase_ml_model_downloader_platform_interface` - `v0.1.0+1`
+
+ - **FIX**: listDownloadedModels cast error (#7486).
+
+
 ## 2021-12-04
 
 ### Changes

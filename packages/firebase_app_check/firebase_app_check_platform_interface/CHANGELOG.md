@@ -1,3 +1,7 @@
+## 0.0.3
+
+ - **FEAT**: add token apis and documentation (#7419).
+
 ## 0.0.2
 
  - **FEAT**: add token apis and documentation (#7419).
