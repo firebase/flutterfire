@@ -11,8 +11,8 @@ button, whilst the Google Provider will render a themed "Sign In with Google" bu
 
 FlutteFire UI for Auth currently supports the following providers:
 
-TODO(andrei): Email link provider (with a note it works on mobile only)
 - [Email/Password](#email)
+- [Email link](#email-link)
 - [Phone Number](#phone-number)
 - [Google](#google)
 - [Facebook](#facebook)
@@ -43,6 +43,38 @@ RegisterScreen(
 
 The registration screen will now render a form with a text input for the email address and a password input, along with
 an action button to trigger the registration process.
+
+## Email Link
+
+To support Email link as a provider, first ensure that the "Email link" is enabled under "Email/Password" provider
+in the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers):
+
+<Image
+  src="ui/ui-email-link-provider.png"
+  alt="Enable Email Link Provider"
+  caption={false}
+/>
+
+On any UI widget which supports providers, you can now provide an instance of a `EmailLinkProviderConfiguration` to the
+`providerConfigs` list, for example:
+
+```dart
+RegisterScreen(
+  providerConfigs: [
+    EmailLinkProviderConfiguration(
+      actionCodeSettings: ActionCodeSettings(
+        url: 'example.com',
+        handleCodeInApp: true,
+        androidMinimumVersion: '12',
+        androidPackageName: 'com.bundle.id',
+        iOSBundleId: 'com.bundle.id',
+      ),
+    ),
+  ],
+)
+```
+
+> Email link providers are only available on iOS and Android.
 
 ## Phone Number
 
