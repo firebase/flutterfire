@@ -16,22 +16,22 @@ function toGithubExample(plugin) {
 
 module.exports = {
   main: {
-    "Getting Started": [
-      "overview",
-      "cli",
+    'Getting Started': [
+      'overview',
+      'cli',
       {
         type: 'category',
         label: 'Manual Installation',
         items: [
-          "manual-installation",
-          "manual-installation/android",
-          "manual-installation/ios",
-          "manual-installation/macos",
-          "manual-installation/web",
+          'manual-installation',
+          'manual-installation/android',
+          'manual-installation/ios',
+          'manual-installation/macos',
+          'manual-installation/web',
         ],
       },
-      "migration",
-      "null-safety",
+      'migration',
+      'null-safety',
     ],
     Analytics: [
       'analytics/overview',
@@ -67,19 +67,16 @@ module.exports = {
       toReferenceAPI('cloud_functions'),
       toGithubExample('cloud_functions'),
     ],
-    Installations: [
-      "installations/overview",
-      "installations/usage",
-    ],
-    "Cloud Messaging": [
-      "messaging/overview",
-      "messaging/usage",
-      "messaging/apple-integration",
-      "messaging/permissions",
-      "messaging/notifications",
-      "messaging/server-integration",
-      toReferenceAPI("firebase_messaging"),
-      toGithubExample("firebase_messaging"),
+    Installations: ['installations/overview', 'installations/usage'],
+    'Cloud Messaging': [
+      'messaging/overview',
+      'messaging/usage',
+      'messaging/apple-integration',
+      'messaging/permissions',
+      'messaging/notifications',
+      'messaging/server-integration',
+      toReferenceAPI('firebase_messaging'),
+      toGithubExample('firebase_messaging'),
     ],
     'Cloud Storage': [
       'storage/overview',
@@ -100,29 +97,29 @@ module.exports = {
       toGithubExample('firebase_crashlytics'),
     ],
     'Dynamic Links': [
-      "dynamic-links/overview",
-      "dynamic-links/android-integration",
-      "dynamic-links/apple-integration",
-      "dynamic-links/usage",
-      toReferenceAPI("firebase_dynamic_links"),
-      toGithubExample("firebase_dynamic_links"),
+      'dynamic-links/overview',
+      'dynamic-links/android-integration',
+      'dynamic-links/apple-integration',
+      'dynamic-links/usage',
+      toReferenceAPI('firebase_dynamic_links'),
+      toGithubExample('firebase_dynamic_links'),
     ],
-    "Realtime Database": [
-      "database/overview",
-      toReferenceAPI("firebase_database"),
-      toGithubExample("firebase_database"),
+    'Realtime Database': [
+      'database/overview',
+      toReferenceAPI('firebase_database'),
+      toGithubExample('firebase_database'),
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
-    "In-App Messaging": [
-      "in-app-messaging/overview",
-      "in-app-messaging/usage",
-      toReferenceAPI("firebase_in_app_messaging"),
-      toGithubExample("firebase_in_app_messaging"),
+    'In-App Messaging': [
+      'in-app-messaging/overview',
+      'in-app-messaging/usage',
+      toReferenceAPI('firebase_in_app_messaging'),
+      toGithubExample('firebase_in_app_messaging'),
     ],
-    "ML Model Downloader": [
-      "ml-model-downloader/overview",
-      "ml-model-downloader/usage",
+    'ML Model Downloader': [
+      'ml-model-downloader/overview',
+      'ml-model-downloader/usage',
     ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
@@ -149,6 +146,7 @@ module.exports = {
           'ui/auth/configuring-providers',
           'ui/auth/building-a-custom-ui',
           'ui/auth/localization',
+          'ui/auth/theming',
           'ui/auth/navigation',
         ],
       },
