@@ -1,3 +1,7 @@
+## 0.0.6
+
+ - **FEAT**: add token apis and documentation (#7419).
+
 ## 0.0.5
 
 - **NEW**: Added support for multi-app via the `instanceFor()` method.

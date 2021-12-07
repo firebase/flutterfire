@@ -1,3 +1,7 @@
+## 10.2.1
+
+ - Update a dependency to the latest release.
+
 ## 10.2.0
 
  - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).

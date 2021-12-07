@@ -1,3 +1,7 @@
+## 1.5.0
+
+ - **FEAT**: initial Firebase Installations release (#7377).
+
 ## 1.4.0
 
  - **FEAT**: bump Firebase JS SDK to `8.10.0` (#7460).
