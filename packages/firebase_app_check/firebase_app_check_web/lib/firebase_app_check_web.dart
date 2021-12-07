@@ -15,8 +15,7 @@ import 'src/internals.dart';
 import 'src/interop/app_check.dart' as app_check_interop;
 
 class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
-  static Map<String, StreamController<AppCheckTokenResult>>
-      _tokenChangesListeners = {};
+  static Map<String, StreamController<String?>> _tokenChangesListeners = {};
 
   /// Stub initializer to allow the [registerWith] to create an instance without
   /// registering the web delegates or listeners.
@@ -26,11 +25,10 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app) {
-    _tokenChangesListeners[app.name] =
-        StreamController<AppCheckTokenResult>.broadcast();
+    _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
 
     _delegate.onTokenChanged().map((event) {
-      _tokenChangesListeners[app.name]!.add(AppCheckTokenResult(event.token));
+      _tokenChangesListeners[app.name]!.add(event.token);
     });
   }
 
@@ -71,11 +69,11 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<AppCheckTokenResult> getToken(bool forceRefresh) async {
-    return guard<Future<AppCheckTokenResult>>(() async {
+  Future<String?> getToken(bool forceRefresh) async {
+    return guard<Future<String?>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate.getToken(forceRefresh);
-      return AppCheckTokenResult(result.token);
+      return result.token;
     });
   }
 
@@ -90,7 +88,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Stream<AppCheckTokenResult> tokenChanges() {
+  Stream<String?> get onTokenChange {
     return _tokenChangesListeners[app.name]!.stream;
   }
 }

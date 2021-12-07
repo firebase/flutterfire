@@ -68,7 +68,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   ///
   /// If `forceRefresh` is true, will always try to fetch a fresh token. If
   /// false, will use a cached token if found in storage.
-  Future<AppCheckTokenResult> getToken(bool forceRefresh) async {
+  Future<String?> getToken(bool forceRefresh) async {
     throw UnimplementedError('getToken() is not implemented');
   }
 
@@ -78,7 +78,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   }
 
   /// Registers a listener to changes in the token state.
-  Stream<AppCheckTokenResult> tokenChanges() {
+  Stream<String?> get onTokenChange {
     throw UnimplementedError('tokenChanges() is not implemented');
   }
 

@@ -49,8 +49,8 @@ void main() {
     });
 
     test('setTokenAutoRefreshEnabled', () async {
-      appCheck.tokenChanges();
-      verify(appCheck.tokenChanges());
+      appCheck.onTokenChange;
+      verify(appCheck.onTokenChange);
       verifyNoMoreInteractions(appCheck);
     });
   });

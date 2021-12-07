@@ -16,10 +16,10 @@ public class TokenChannelStreamHandler implements EventChannel.StreamHandler {
 
   @Override
   public void onListen(Object arguments, EventChannel.EventSink events) {
-    Map<String, Object> event = new HashMap<>();
 
     listener =
         result -> {
+          Map<String, Object> event = new HashMap<>();
           event.put("token", result.getToken());
           events.success(event);
         };

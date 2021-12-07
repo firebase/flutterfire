@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -111,9 +110,9 @@ void main() {
 
     group('tokenChanges', () {
       test('successful call', () async {
-        final stream = appCheck.tokenChanges();
+        final stream = appCheck.onTokenChange;
 
-        expect(stream, isA<Stream<AppCheckTokenResult>>());
+        expect(stream, isA<Stream<String?>>());
       });
     });
   });

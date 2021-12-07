@@ -14,8 +14,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   /// Create an instance of [MethodChannelFirebaseAppCheck].
   MethodChannelFirebaseAppCheck({required FirebaseApp app})
       : super(appInstance: app) {
-    _tokenChangesListeners[app.name] =
-        StreamController<AppCheckTokenResult>.broadcast();
+    _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
 
     channel.invokeMethod<String>('FirebaseAppCheck#registerTokenListener', {
       'appName': app.name,
@@ -24,17 +23,17 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
       events.receiveBroadcastStream().listen(
         (arguments) {
           // ignore: close_sinks
-          StreamController<AppCheckTokenResult> controller =
+          StreamController<String?> controller =
               _tokenChangesListeners[app.name]!;
           Map<dynamic, dynamic> result = arguments;
-          controller.add(AppCheckTokenResult(result['token']));
+          controller.add(result['token'] as String?);
         },
       );
     });
   }
 
-  static final Map<String, StreamController<AppCheckTokenResult>>
-      _tokenChangesListeners = {};
+  static final Map<String, StreamController<String?>> _tokenChangesListeners =
+      {};
 
   static Map<String, MethodChannelFirebaseAppCheck>
       _methodChannelFirebaseAppCheckInstances =
@@ -81,14 +80,14 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Future<AppCheckTokenResult> getToken(bool forceRefresh) async {
+  Future<String?> getToken(bool forceRefresh) async {
     try {
       final result = await channel.invokeMapMethod(
         'FirebaseAppCheck#getToken',
         {'appName': app.name, 'forceRefresh': forceRefresh},
       );
 
-      return AppCheckTokenResult(result!['token']);
+      return result!['token'];
     } on PlatformException catch (e, s) {
       throw platformExceptionToFirebaseException(e, s);
     }
@@ -112,7 +111,7 @@ class MethodChannelFirebaseAppCheck extends FirebaseAppCheckPlatform {
   }
 
   @override
-  Stream<AppCheckTokenResult> tokenChanges() {
+  Stream<String?> get onTokenChange {
     return _tokenChangesListeners[app.name]!.stream;
   }
 }

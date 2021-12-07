@@ -62,7 +62,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   ///
   /// If `forceRefresh` is true, will always try to fetch a fresh token. If
   /// false, will use a cached token if found in storage.
-  Future<AppCheckTokenResult> getToken([bool? forceRefresh]) async {
+  Future<String?> getToken([bool? forceRefresh]) async {
     return _delegate.getToken(forceRefresh ?? false);
   }
 
@@ -72,7 +72,7 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   }
 
   /// Registers a listener to changes in the token state.
-  Stream<AppCheckTokenResult> tokenChanges() {
-    return _delegate.tokenChanges();
+  Stream<String?> get onTokenChange {
+    return _delegate.onTokenChange;
   }
 }

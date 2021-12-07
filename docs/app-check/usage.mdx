@@ -27,7 +27,7 @@ FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
 FirebaseAppCheck appCheck = FirebaseAppCheck.instanceFor(app: secondaryApp);
 ```
 
-## Activating the default provider
+## Activate the default provider
 
 To activate the default App Check attestation provider you must call activate before any usages of your Firebase
 services such as Storage, but after calling `Firebase.initializeApp()`;
@@ -42,7 +42,9 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(webRecaptchaSiteKey: 'recaptcha-v3-site-key');
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+  );
   runApp(App());
 }
 ```
@@ -52,23 +54,23 @@ Future<void> main() async {
 To get the current token associated with App Check, call the `getToken` method:
 
 ```dart
-AppCheckTokenResult result = await FirebaseAppCheck.instance.getToken();
-print(result.token);
+String? token = await FirebaseAppCheck.instance.getToken();
+print(token);
 ```
 
 Optionally, you can force the token to refresh when fetching:
 
 ```dart
-AppCheckTokenResult result = await FirebaseAppCheck.instance.getToken(true);
+String? token = await FirebaseAppCheck.instance.getToken(true);
 ```
 
 ## Listen to token changes
 
-To subscribe to App Check token changes, call the `onTokenChange` method:
+To subscribe to App Check token changes, listen to the `onTokenChange` `Stream`:
 
 ```dart
-FirebaseAppCheck.instance.tokenChanges().listen((result) {
-  print(result.token);
+FirebaseAppCheck.instance.onTokenChange.listen((token) {
+  print(token);
 });
 ```
 

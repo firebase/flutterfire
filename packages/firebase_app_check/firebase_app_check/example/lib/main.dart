@@ -51,8 +51,8 @@ class MyApp extends StatelessWidget {
 
 class FirebaseAppCheckExample extends StatefulWidget {
   FirebaseAppCheckExample({
-    Key key,
-    this.title,
+    Key? key,
+    required this.title,
   }) : super(key: key);
 
   final String title;
@@ -68,9 +68,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
 
   @override
   void initState() {
-    appCheck.tokenChanges().listen((event) {
-      setEventToken(event.token);
-    });
+    appCheck.onTokenChange.listen(setEventToken);
     super.initState();
   }
 
@@ -80,7 +78,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
     });
   }
 
-  void setEventToken(String token) {
+  void setEventToken(String? token) {
     setState(() {
       _eventToken = token ?? 'not yet';
     });
@@ -109,8 +107,7 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final result = await appCheck.getToken(true);
-                final token = result.token;
+                final token = await appCheck.getToken(true);
                 setMessage('your token: $token');
               },
               child: const Text('getToken()'),

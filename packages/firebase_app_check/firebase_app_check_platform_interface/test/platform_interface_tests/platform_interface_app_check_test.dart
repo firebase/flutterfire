@@ -105,7 +105,7 @@ void main() {
 
     test('throws if .tokenChanges() not implemented', () async {
       await expectLater(
-        () => firebaseAppCheckPlatform.tokenChanges(),
+        () => firebaseAppCheckPlatform.onTokenChange,
         throwsA(
           isA<UnimplementedError>().having(
             (e) => e.message,

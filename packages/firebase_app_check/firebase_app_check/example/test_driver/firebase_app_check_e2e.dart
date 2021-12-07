@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_app_check/firebase_app_check.dart';
-import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -38,10 +37,8 @@ void testsMain() {
     test(
       'getToken',
       () async {
-        AppCheckTokenResult result = await appCheck.getToken(true);
-
-        expect(result, isA<AppCheckTokenResult>());
-        expect(result.token, isA<String>());
+        final token = await appCheck.getToken(true);
+        expect(token, isA<String?>());
       },
       skip: Platform.isIOS,
     );
@@ -57,7 +54,7 @@ void testsMain() {
     );
 
     test('tokenChanges', () async {
-      final stream = appCheck.tokenChanges();
+      final stream = appCheck.onTokenChange;
 
       expect(stream, isA<Stream>());
 

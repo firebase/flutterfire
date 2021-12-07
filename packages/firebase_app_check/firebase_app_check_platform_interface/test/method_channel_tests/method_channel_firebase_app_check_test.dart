@@ -95,7 +95,7 @@ void main() {
         ],
       );
 
-      expect(tokenResult, isA<AppCheckTokenResult>());
+      expect(tokenResult, isA<String>());
     });
 
     test('setTokenAutoRefreshEnabled', () async {
@@ -115,8 +115,8 @@ void main() {
     });
 
     test('tokenChanges', () async {
-      final stream = appCheck.tokenChanges();
-      expect(stream, isA<Stream<AppCheckTokenResult>>());
+      final stream = appCheck.onTokenChange;
+      expect(stream, isA<Stream<String?>>());
     });
   });
 }
