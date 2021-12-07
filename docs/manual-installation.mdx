@@ -94,3 +94,31 @@ file located in the file browser.
 -     firebase.initializeApp(firebaseConfig);
     </script>
 ```
+
+## Overriding Firebase SDK Versions
+
+FlutterFire internally sets the versions of the Firebase SDKs that each module uses. Each release is tested against a fixed
+set of SDK version to ensure everything works as expected.
+
+If you wish to change these versions, you can manually override the native SDK versions
+
+### Android
+
+In the `/android/app/build.gradle` file, you can provide your own versions using the options shown below:
+
+```groovy
+rootProject.ext {
+  set('FlutterFire', [
+    FirebaseSDKVersion: '29.0.0'
+  ])
+}
+```
+
+### iOS/macOS
+
+Open your `/ios/Podfile` or `/macos/Podfile` file and add any of the globals below to the top of the file:
+
+```ruby
+# Override Firebase SDK Version
+$FirebaseSDKVersion = '8.9.0'
+```
