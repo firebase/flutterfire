@@ -55,10 +55,10 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-      - name: "Build Example"
+      - name: "Bootstrap Workspace"
         run: |
+          melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
           melos run odm:example_build_runner:build
-          ./.github/workflows/scripts/build-example.sh web
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
