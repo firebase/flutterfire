@@ -1,5 +1,5 @@
 # FlutterFire_X naming due to package being take already on Pub.dev.
-name: flutterfire_installations
+name: firebase_app_installations
 description: A Flutter plugin allowing you to use Firebase Installations.
 version: 0.1.0
 homepage: https://firebase.flutter.dev/docs/installations/overview

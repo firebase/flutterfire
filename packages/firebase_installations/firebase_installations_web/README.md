@@ -1,6 +1,6 @@
 # firebase_installations_web
 
-The web implementation of `flutterfire_installations`.
+The web implementation of `firebase_app_installations`.
 
 ## Getting Started
 

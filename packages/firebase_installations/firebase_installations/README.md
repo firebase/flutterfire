@@ -2,7 +2,7 @@
 
 A Flutter plugin to use the [Firebase Installations API](https://firebase.google.com/docs/projects/manage-installations).
 
-[![pub package](https://img.shields.io/pub/v/flutterfire_installations.svg)](https://pub.dev/packages/flutterfire_installations)
+[![pub package](https://img.shields.io/pub/v/firebase_app_installations.svg)](https://pub.dev/packages/firebase_app_installations)
 
 ## Getting Started
 
