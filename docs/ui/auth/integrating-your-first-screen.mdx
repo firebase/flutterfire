@@ -405,17 +405,53 @@ return RegisterScreen(
 A screen which allows the user enter their email address to send a password reset email.
 
 ```dart
-return ForgotPasswordScreen();
+return ForgotPasswordScreen(
+  headerBuilder: (context, constraints, shrinkOffset) {
+    return Padding(
+      padding: const EdgeInsets.all(20).copyWith(top: 40),
+      child: Icon(
+        Icons.lock,
+        color: Colors.blue,
+        size: constraints.maxWidth / 4 * (1 - shrinkOffset),
+      ),
+    );
+  },
+);
 ```
 
-TODO screenshot (include header / footer once available)
+<Image
+  src="ui/ui-auth-forgot-password.png"
+  alt="FlutterFire UI Auth - Forgot password"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Phone Number Authentication
 
 A multi-flow screen which enables users to select a country code and provide their phone number.
 Once provided, the user will be asked to verify the phone number via an SMS code.
 
-TODO screenshot (include header / footer once available)
+```dart
+return PhoneInputScreen(
+  headerBuilder: (context, constraints, shrinkOffset) {
+    return Padding(
+      padding: const EdgeInsets.all(20).copyWith(top: 40),
+      child: Icon(
+        Icons.phone,
+        color: Colors.blue,
+        size: constraints.maxWidth / 4 * (1 - shrinkOffset),
+      ),
+    );
+  },
+);
+```
+
+<Image
+  src="ui/ui-auth-phone-input-screen.png"
+  alt="FlutterFire UI Auth - Phone input screen"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Profile
 
@@ -429,12 +465,26 @@ return ProfileScreen(
     GoogleProviderConfiguration(
       clientId: '...',
     ),
+    FacebookProviderConfiguration(
+      clientId: '...',
+    ),
+    TwitterProviderConfiguration(
+      clientId: '...',
+    ),
+    AppleProviderConfiguration(
+      clientId: '...',
+    ),
   ],
   avatarSize: 24,
 );
 ```
 
-TODO screenshot
+<Image
+  src="ui/ui-auth-profile-screen.png"
+  alt="FlutterFire UI Auth - Profile"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ## Next Steps
 
@@ -443,3 +493,5 @@ With your first screen integrated, you can now start adding more providers and i
 - [Configuring Providers](configuring-providers)
 - [Building a custom UI](building-a-custom-ui)
 - [Localization](localization)
+- [Themeing](theming)
+- [Navigation](navigation)
