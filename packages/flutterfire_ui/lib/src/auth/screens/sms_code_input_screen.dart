@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
+
 import '../auth_flow.dart';
 import '../widgets/internal/universal_button.dart';
-
 import '../widgets/internal/universal_scaffold.dart';
+import '../screens/internal/responsive_page.dart';
 
 /// A screen displaying a UI which allows users to enter an SMS validation code
 /// sent from Firebase.
@@ -18,12 +19,26 @@ class SMSCodeInputScreen extends StatelessWidget {
   final AuthAction? action;
   final FirebaseAuth? auth;
   final Object flowKey;
+  final TextDirection? desktopLayoutDirection;
+  final SideBuilder? sideBuilder;
+  final HeaderBuilder? headerBuilder;
+  final double? headerMaxExtent;
+  final double? breakpoint;
+  final int? contentFlex;
+  final double? maxWidth;
 
   const SMSCodeInputScreen({
     Key? key,
     this.action,
     this.auth,
     required this.flowKey,
+    this.desktopLayoutDirection,
+    this.sideBuilder,
+    this.headerBuilder,
+    this.headerMaxExtent,
+    this.breakpoint,
+    this.contentFlex,
+    this.maxWidth,
   }) : super(key: key);
 
   void _reset() {
@@ -42,8 +57,13 @@ class SMSCodeInputScreen extends StatelessWidget {
       },
       child: UniversalScaffold(
         body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
+          child: ResponsivePage(
+            breakpoint: 400,
+            maxWidth: maxWidth,
+            desktopLayoutDirection: desktopLayoutDirection,
+            sideBuilder: sideBuilder,
+            headerBuilder: headerBuilder,
+            headerMaxExtent: headerMaxExtent,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
