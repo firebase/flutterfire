@@ -1,0 +1,64 @@
+name: firebase_firestore_odm
+
+on:
+  pull_request:
+    paths:
+      - "packages/cloud_firestore/**"
+      - "packages/cloud_firestore_odm/**"
+      - ".github/workflows/firebase_firestore_odm.yaml"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+
+env:
+  FLUTTERFIRE_PLUGIN_SCOPE: "*cloud_firestore*"
+  FLUTTERFIRE_PLUGIN_SCOPE_EXAMPLE: "*cloud_firestore_odm_example*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: ./.github/workflows/scripts/install-tools.sh
+      - name: "Bootstrap Workspace"
+        run: |
+          melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
+          melos run odm:example_build_runner:build
+          melos run odm:generator_test_build_runner:build
+      - name: "Flutter Test"
+        run: melos run odm:test:flutter --no-select
+      - name: "Dart Test"
+        run: melos run odm:test:dart --no-select
+
+  # TODO Needs adding, currently not working, https://github.com/FirebaseExtended/flutterfire/runs/4441761391?check_suite_focus=true
+  # integration_test:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v2.3.4
+  #       with:
+  #         fetch-depth: 0
+  #     - name: "Install Flutter"
+  #       run: ./.github/workflows/scripts/install-flutter.sh stable
+  #     - name: "Install Tools"
+  #       run: |
+  #         ./.github/workflows/scripts/install-tools.sh
+  #         sudo npm i -g firebase-tools
+  #     - name: "Bootstrap Workspace"
+  #       run: |
+  #         melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
+  #         melos run odm:example_build_runner:build
+  #         melos run odm:generator_test_build_runner:build
+  #     - name: Start Firebase Emulator
+  #       run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+  #     - name: "Drive Example"
+  #       run: ./.github/workflows/scripts/drive-example.sh web

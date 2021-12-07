@@ -1,44 +1,49 @@
-import 'package:firebase/firebase.dart' as firebase;
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
+import 'interop/performance.dart' as performance_interop;
+import 'internals.dart';
 
 /// Web implementation for TracePlatform.
 class TraceWeb extends TracePlatform {
-  final firebase.Trace traceDelegate;
+  final performance_interop.Trace traceDelegate;
 
-  TraceWeb(this.traceDelegate, String name) : super(name);
+  TraceWeb(this.traceDelegate) : super();
 
   @override
   Future<void> start() async {
-    traceDelegate.start();
+    await guard(traceDelegate.start);
   }
 
   @override
   Future<void> stop() async {
-    traceDelegate.stop();
+    await guard(traceDelegate.stop);
   }
 
   @override
-  Future<void> incrementMetric(String name, int value) async {
+  void incrementMetric(String name, int value) {
     traceDelegate.incrementMetric(name, value);
   }
 
   @override
-  Future<void> setMetric(String name, int value) async {
-    return;
+  void setMetric(String name, int value) {
+    traceDelegate.putMetric(name, value);
   }
 
   @override
-  Future<int> getMetric(String name) async {
+  int getMetric(String name) {
     return traceDelegate.getMetric(name);
   }
 
   @override
-  Future<void> putAttribute(String name, String value) async {
+  void putAttribute(String name, String value) {
     traceDelegate.putAttribute(name, value);
   }
 
   @override
-  Future<void> removeAttribute(String name) async {
+  void removeAttribute(String name) {
     traceDelegate.removeAttribute(name);
   }
 
@@ -48,7 +53,7 @@ class TraceWeb extends TracePlatform {
   }
 
   @override
-  Future<Map<String, String>> getAttributes() async {
-    return traceDelegate.getAttributes().cast();
+  Map<String, String> getAttributes() {
+    return traceDelegate.getAttributes();
   }
 }

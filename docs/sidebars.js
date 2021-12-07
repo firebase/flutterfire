@@ -61,6 +61,15 @@ module.exports = {
       toReferenceAPI("cloud_firestore"),
       toGithubExample("cloud_firestore"),
     ],
+    "Cloud Firestore ODM": [
+      "firestore-odm/overview",
+      "firestore-odm/defining-models",
+      "firestore-odm/code-generation",
+      "firestore-odm/references",
+      "firestore-odm/subcollections",
+      toReferenceAPI("cloud_firestore_odm"),
+      toGithubExample("cloud_firestore_odm"),
+    ],
     "Cloud Functions": [
       "functions/overview",
       "functions/usage",
@@ -134,6 +143,7 @@ module.exports = {
     ],
     "Performance Monitoring": [
       "performance/overview",
+      "performance/usage",
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],

@@ -1,77 +1,41 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
-import 'package:e2e/e2e.dart';
+import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-Future<void> main() async {
-  E2EWidgetsFlutterBinding.ensureInitialized();
-
+void testsMain() {
   setUpAll(() async {
     await Firebase.initializeApp();
   });
 
-  group('$FirebasePerformance', () {
-    testWidgets('test instance is singleton', (WidgetTester tester) async {
-      FirebasePerformance performance1 = FirebasePerformance.instance;
-      FirebasePerformance performance2 = FirebasePerformance.instance;
-
-      expect(identical(performance1, performance2), isTrue);
-    });
-
-    testWidgets('setPerformanceCollectionEnabled', (WidgetTester tester) async {
+  group('$FirebasePerformance.instance', () {
+    test('isPerformanceCollectionEnabled', () async {
       FirebasePerformance performance = FirebasePerformance.instance;
 
-      await performance.setPerformanceCollectionEnabled(true);
       expect(
         performance.isPerformanceCollectionEnabled(),
         completion(isTrue),
       );
+    });
+    test('setPerformanceCollectionEnabled', () async {
+      FirebasePerformance performance = FirebasePerformance.instance;
 
       await performance.setPerformanceCollectionEnabled(false);
-
-      if (kIsWeb) {
-        expect(
-          performance.isPerformanceCollectionEnabled(),
-          completion(isTrue),
-        );
-      } else {
-        expect(
-          performance.isPerformanceCollectionEnabled(),
-          completion(isFalse),
-        );
-      }
-    });
-
-    testWidgets('test all Http method values', (WidgetTester tester) async {
-      FirebasePerformance performance = FirebasePerformance.instance;
-      for (final HttpMethod method in HttpMethod.values) {
-        final HttpMetric testMetric = performance.newHttpMetric(
-          'https://www.google.com/',
-          method,
-        );
-        unawaited(testMetric.start());
-        unawaited(testMetric.stop());
-      }
-    });
-
-    testWidgets('startTrace', (WidgetTester tester) async {
-      Trace testTrace = await FirebasePerformance.startTrace('testTrace');
-      await testTrace.stop();
+      expect(
+        performance.isPerformanceCollectionEnabled(),
+        completion(isFalse),
+      );
     });
   });
 
   group('$Trace', () {
-    FirebasePerformance performance;
-    Trace testTrace;
+    late FirebasePerformance performance;
+    late Trace testTrace;
     const String metricName = 'test-metric';
 
     setUpAll(() async {
@@ -79,272 +43,172 @@ Future<void> main() async {
       await performance.setPerformanceCollectionEnabled(true);
     });
 
-    setUp(() {
+    setUp(() async {
       testTrace = performance.newTrace('test-trace');
     });
 
-    tearDown(() {
-      testTrace.stop();
-      testTrace = null;
-    });
-
-    testWidgets('incrementMetric does nothing before the trace is started',
-        (WidgetTester tester) async {
-      await testTrace.incrementMetric(metricName, 100);
-      await testTrace.start();
-
-      expect(testTrace.getMetric(metricName), completion(0));
-    }, skip: kIsWeb);
-
-    testWidgets(
-        "incrementMetric works correctly after the trace is started and before it's stopped",
-        (WidgetTester tester) async {
-      await testTrace.start();
-
-      await testTrace.incrementMetric(metricName, 14);
-      expect(testTrace.getMetric(metricName), completion(14));
-
-      await testTrace.incrementMetric(metricName, 45);
-      expect(testTrace.getMetric(metricName), completion(59));
-    });
-
-    testWidgets('incrementMetric does nothing after the trace is stopped',
-        (WidgetTester tester) async {
+    test('start & stop trace', () async {
       await testTrace.start();
       await testTrace.stop();
-      await testTrace.incrementMetric(metricName, 100);
-
-      expect(testTrace.getMetric(metricName), completion(0));
-    }, skip: kIsWeb);
-
-    testWidgets('setMetric does nothing before the trace is started',
-        (WidgetTester tester) async {
-      await testTrace.setMetric(metricName, 37);
-      await testTrace.start();
-
-      expect(testTrace.getMetric(metricName), completion(0));
     });
 
-    testWidgets(
-        "setMetric works correctly after the trace is started and before it's stopped",
-        (WidgetTester tester) async {
-      await testTrace.start();
+    test('incrementMetric works correctly', () {
+      testTrace.incrementMetric(metricName, 14);
+      expect(testTrace.getMetric(metricName), 14);
 
-      await testTrace.setMetric(metricName, 37);
+      testTrace.incrementMetric(metricName, 45);
+      expect(testTrace.getMetric(metricName), 59);
+    });
+
+    test('setMetric works correctly', () async {
+      testTrace.setMetric(metricName, 37);
 
       if (kIsWeb) {
-        expect(testTrace.getMetric(metricName), completion(0));
+        expect(testTrace.getMetric(metricName), 0);
       } else {
-        expect(testTrace.getMetric(metricName), completion(37));
+        expect(testTrace.getMetric(metricName), 37);
       }
 
-      await testTrace.setMetric(metricName, 3);
+      testTrace.setMetric(metricName, 3);
       if (kIsWeb) {
-        expect(testTrace.getMetric(metricName), completion(0));
+        expect(testTrace.getMetric(metricName), 0);
       } else {
-        expect(testTrace.getMetric(metricName), completion(3));
+        expect(testTrace.getMetric(metricName), 3);
       }
     });
 
-    testWidgets('setMetric does nothing after the trace is stopped',
-        (WidgetTester tester) async {
-      await testTrace.start();
-      await testTrace.stop();
-      await testTrace.setMetric(metricName, 100);
-
-      expect(testTrace.getMetric(metricName), completion(0));
-    });
-
-    testWidgets('putAttribute works correctly before the trace is stopped',
-        (WidgetTester tester) async {
-      await testTrace.putAttribute('apple', 'sauce');
-      await testTrace.putAttribute('banana', 'pie');
+    test('putAttribute works correctly', () {
+      testTrace.putAttribute('apple', 'sauce');
+      testTrace.putAttribute('banana', 'pie');
 
       expect(
         testTrace.getAttributes(),
-        completion(<String, String>{'apple': 'sauce', 'banana': 'pie'}),
+        <String, String>{'apple': 'sauce', 'banana': 'pie'},
       );
 
-      await testTrace.putAttribute('apple', 'sauce2');
+      testTrace.putAttribute('apple', 'sauce2');
       expect(
         testTrace.getAttributes(),
-        completion(<String, String>{'apple': 'sauce2', 'banana': 'pie'}),
+        <String, String>{'apple': 'sauce2', 'banana': 'pie'},
       );
     });
 
-    testWidgets('putAttribute does nothing after the trace is stopped',
-        (WidgetTester tester) async {
-      await testTrace.start();
-      await testTrace.stop();
-      await testTrace.putAttribute('apple', 'sauce');
+    test('removeAttribute works correctly', () {
+      testTrace.putAttribute('sponge', 'bob');
+      testTrace.putAttribute('patrick', 'star');
+      testTrace.removeAttribute('sponge');
 
       expect(
         testTrace.getAttributes(),
-        completion(<String, String>{}),
-      );
-    }, skip: kIsWeb);
-
-    testWidgets('removeAttribute works correctly before the trace is stopped',
-        (WidgetTester tester) async {
-      await testTrace.putAttribute('sponge', 'bob');
-      await testTrace.putAttribute('patrick', 'star');
-      await testTrace.removeAttribute('sponge');
-
-      expect(
-        testTrace.getAttributes(),
-        completion(<String, String>{'patrick': 'star'}),
+        <String, String>{'patrick': 'star'},
       );
 
-      await testTrace.removeAttribute('sponge');
+      testTrace.removeAttribute('sponge');
+
       expect(
         testTrace.getAttributes(),
-        completion(<String, String>{'patrick': 'star'}),
+        <String, String>{'patrick': 'star'},
       );
     });
 
-    testWidgets('removeAttribute does nothing after the trace is stopped',
-        (WidgetTester tester) async {
-      await testTrace.start();
-      await testTrace.putAttribute('sponge', 'bob');
-      await testTrace.stop();
-      await testTrace.removeAttribute('sponge');
-
-      expect(
-        testTrace.getAttributes(),
-        completion(<String, String>{'sponge': 'bob'}),
-      );
-    }, skip: kIsWeb);
-
-    testWidgets('getAttribute', (WidgetTester tester) async {
-      await testTrace.putAttribute('yugi', 'oh');
+    test('getAttribute', () async {
+      testTrace.putAttribute('yugi', 'oh');
 
       expect(testTrace.getAttribute('yugi'), equals('oh'));
-
-      await testTrace.start();
-      await testTrace.stop();
       expect(testTrace.getAttribute('yugi'), equals('oh'));
     });
   });
 
-  group('$HttpMetric', () {
-    FirebasePerformance performance;
-    HttpMetric testHttpMetric;
+  group(
+    '$HttpMetric',
+    () {
+      late FirebasePerformance performance;
+      late HttpMetric testHttpMetric;
 
-    setUpAll(() async {
-      performance = FirebasePerformance.instance;
-      await performance.setPerformanceCollectionEnabled(true);
-    });
+      setUpAll(() async {
+        performance = FirebasePerformance.instance;
+        await performance.setPerformanceCollectionEnabled(true);
+      });
 
-    setUp(() {
-      testHttpMetric = performance.newHttpMetric(
-        'https://www.google.com/',
-        HttpMethod.Delete,
-      );
-    });
+      setUp(() async {
+        testHttpMetric = performance.newHttpMetric(
+          'https://www.google.com/',
+          HttpMethod.Delete,
+        );
+      });
 
-    tearDown(() {
-      testHttpMetric.stop();
-      testHttpMetric = null;
-    });
+      tearDown(() {
+        testHttpMetric.stop();
+      });
 
-    testWidgets(
-        'putAttribute works correctly before the HTTP metric is stopped',
-        (WidgetTester tester) async {
-      await testHttpMetric.putAttribute('apple', 'sauce');
-      await testHttpMetric.putAttribute('banana', 'pie');
+      test('test all Http method values', () async {
+        FirebasePerformance performance = FirebasePerformance.instance;
 
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{'apple': 'sauce', 'banana': 'pie'}),
-      );
+        await Future.forEach(HttpMethod.values, (HttpMethod method) async {
+          final HttpMetric testMetric = performance.newHttpMetric(
+            'https://www.google.com/',
+            method,
+          );
+          await testMetric.start();
+          await testMetric.stop();
+        });
+      });
 
-      await testHttpMetric.putAttribute('apple', 'sauce2');
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{'apple': 'sauce2', 'banana': 'pie'}),
-      );
-    });
+      test('putAttribute works correctly', () {
+        testHttpMetric.putAttribute('apple', 'sauce');
+        testHttpMetric.putAttribute('banana', 'pie');
 
-    testWidgets('putAttribute does nothing after the HTTP metric is stopped',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      await testHttpMetric.stop();
-      await testHttpMetric.putAttribute('apple', 'sauce');
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'apple': 'sauce', 'banana': 'pie'},
+        );
+      });
 
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{}),
-      );
-    });
+      test('removeAttribute works correctly', () {
+        testHttpMetric.putAttribute('sponge', 'bob');
+        testHttpMetric.putAttribute('patrick', 'star');
+        testHttpMetric.removeAttribute('sponge');
 
-    testWidgets(
-        'removeAttribute works correctly before the HTTP metric is stopped',
-        (WidgetTester tester) async {
-      await testHttpMetric.putAttribute('sponge', 'bob');
-      await testHttpMetric.putAttribute('patrick', 'star');
-      await testHttpMetric.removeAttribute('sponge');
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
 
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{'patrick': 'star'}),
-      );
+        testHttpMetric.removeAttribute('sponge');
+        expect(
+          testHttpMetric.getAttributes(),
+          <String, String>{'patrick': 'star'},
+        );
+      });
 
-      await testHttpMetric.removeAttribute('sponge');
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{'patrick': 'star'}),
-      );
-    });
+      test('getAttribute works correctly', () {
+        testHttpMetric.putAttribute('yugi', 'oh');
 
-    testWidgets('removeAttribute does nothing after the HTTP metric is stopped',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      await testHttpMetric.putAttribute('sponge', 'bob');
-      await testHttpMetric.stop();
-      await testHttpMetric.removeAttribute('sponge');
+        expect(testHttpMetric.getAttribute('yugi'), equals('oh'));
+      });
 
-      expect(
-        testHttpMetric.getAttributes(),
-        completion(<String, String>{'sponge': 'bob'}),
-      );
-    });
+      test('set HTTP response code correctly', () {
+        testHttpMetric.httpResponseCode = 443;
+        expect(testHttpMetric.httpResponseCode, equals(443));
+      });
 
-    testWidgets('getAttribute', (WidgetTester tester) async {
-      await testHttpMetric.putAttribute('yugi', 'oh');
+      test('set request payload size correctly', () {
+        testHttpMetric.requestPayloadSize = 56734;
+        expect(testHttpMetric.requestPayloadSize, equals(56734));
+      });
 
-      expect(testHttpMetric.getAttribute('yugi'), equals('oh'));
+      test('set response payload size correctly', () {
+        testHttpMetric.responsePayloadSize = 4949;
+        expect(testHttpMetric.responsePayloadSize, equals(4949));
+      });
 
-      await testHttpMetric.start();
-      await testHttpMetric.stop();
-      expect(testHttpMetric.getAttribute('yugi'), equals('oh'));
-    });
-
-    testWidgets('set HTTP response code correctly',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      testHttpMetric.httpResponseCode = 443;
-      expect(testHttpMetric.httpResponseCode, equals(443));
-    });
-
-    testWidgets('set request payload size correctly',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      testHttpMetric.requestPayloadSize = 56734;
-      expect(testHttpMetric.requestPayloadSize, equals(56734));
-    });
-
-    testWidgets('set response payload size correctly',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      testHttpMetric.responsePayloadSize = 4949;
-      expect(testHttpMetric.responsePayloadSize, equals(4949));
-    });
-
-    testWidgets('set response content type correctly',
-        (WidgetTester tester) async {
-      await testHttpMetric.start();
-      testHttpMetric.responseContentType = '1984';
-      expect(testHttpMetric.responseContentType, equals('1984'));
-    });
-  }, skip: kIsWeb);
+      test('set response content type correctly', () {
+        testHttpMetric.responseContentType = 'content';
+        expect(testHttpMetric.responseContentType, equals('content'));
+      });
+    },
+    skip: kIsWeb,
+  );
 }
+
+void main() => drive.main(testsMain);

@@ -1,5 +1,4 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -23,9 +22,9 @@ part of firebase_performance;
 /// It is highly recommended that one always calls `start()` and `stop()` on
 /// each created [Trace] to not avoid leaking on the platform side.
 class Trace {
-  final TracePlatform _delegate;
-
   Trace._(this._delegate);
+
+  final TracePlatform _delegate;
 
   /// Starts this [Trace].
   ///
@@ -54,7 +53,7 @@ class Trace {
   /// If the metric does not exist, a new one will be created. If the [Trace] has
   /// not been started or has already been stopped, returns immediately without
   /// taking action.
-  Future<void> incrementMetric(String name, int value) {
+  void incrementMetric(String name, int value) {
     return _delegate.incrementMetric(name, value);
   }
 
@@ -63,7 +62,7 @@ class Trace {
   /// If a metric with the given name doesn't exist, a new one will be created.
   /// If the [Trace] has not been started or has already been stopped, returns
   /// immediately without taking action.
-  Future<void> setMetric(String name, int value) {
+  void setMetric(String name, int value) {
     return _delegate.setMetric(name, value);
   }
 
@@ -71,7 +70,7 @@ class Trace {
   ///
   /// If a metric with the given name doesn't exist, it is NOT created and a 0
   /// is returned.
-  Future<int> getMetric(String name) async {
+  int getMetric(String name) {
     return _delegate.getMetric(name);
   }
 
@@ -91,7 +90,7 @@ class Trace {
   ///
   /// If this object has been stopped, this method returns without adding the
   /// attribute.
-  Future<void> putAttribute(String name, String value) {
+  void putAttribute(String name, String value) {
     return _delegate.putAttribute(name, value);
   }
 
@@ -99,7 +98,7 @@ class Trace {
   ///
   /// If this object has been stopped, this method returns without removing the
   /// attribute.
-  Future<void> removeAttribute(String name) {
+  void removeAttribute(String name) {
     return _delegate.removeAttribute(name);
   }
 
@@ -109,7 +108,7 @@ class Trace {
   String? getAttribute(String name) => _delegate.getAttribute(name);
 
   /// All attributes added.
-  Future<Map<String, String>> getAttributes() async {
+  Map<String, String> getAttributes() {
     return _delegate.getAttributes();
   }
 }
