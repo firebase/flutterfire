@@ -11,11 +11,11 @@ import 'package:flutterfire_installations/flutterfire_installations.dart';
 
 Before using Firebase Installations, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
-To create a new Installations instance, call the [`instance`](!firebase_installations.FirebaseInstallations.instance) getter on
-[`FirebaseInstallations`](!firebase_installations.FirebaseInstallations):
+To create a new Installations instance, call the [`instance`](!firebase_app_installations.FirebaseAppInstallations.instance) getter on
+[`FirebaseAppInstallations`](!firebase_app_installations.FirebaseAppInstallations):
 
 ```dart
-FirebaseInstallations installations = FirebaseInstallations.instance;
+FirebaseAppInstallations installations = FirebaseAppInstallations.instance;
 ```
 
 By default, this allows you to interact with Installations using the default Firebase App used whilst installing
@@ -23,7 +23,7 @@ FlutterFire on your platform. If however you'd like to use a secondary Firebase 
 
 ```dart
 FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
-FirebaseInstallations installations = FirebaseInstallations.instanceFor(app: secondaryApp);
+FirebaseAppInstallations installations = FirebaseAppInstallations.instanceFor(app: secondaryApp);
 ```
 
 ## Delete a Firebase installation
@@ -39,22 +39,22 @@ IDs to identify installations within 180 days. This process is described at a hi
 Unless you disable all FID-generating services in your app, FIS creates a new ID within a few days. Firebase considers the newly-created ID to be a new Firebase installation,
 and doesn't associate it with the previous ID or data in any way.
 
-To delete an FID, call the `delete` method on the [`FirebaseInstallations`](!firebase_installations.FirebaseInstallations) instance:
+To delete an FID, call the `delete` method on the [`FirebaseAppInstallations`](!firebase_app_installations.FirebaseAppInstallations) instance:
 
 ```dart
-await FirebaseInstallations.instance.delete();
+await FirebaseAppInstallations.instance.delete();
 ```
 
 ## Retrieve client identifiers
 
-If you have a requirement to identify particular installations of your app, you can do so by retrieving the Firebase installation ID. 
+If you have a requirement to identify particular installations of your app, you can do so by retrieving the Firebase installation ID.
 For example, to perform testing during Firebase In-App Messaging development, you can identify and target the correct test device using
 its Firebase installation ID.
 
-To get the Firebase installation ID, call the `getId` method on the [`FirebaseInstallations`](!firebase_installations.FirebaseInstallations) instance:
+To get the Firebase installation ID, call the `getId` method on the [`FirebaseAppInstallations`](!firebase_app_installations.FirebaseAppInstallations) instance:
 
 ```dart
-String id = await FirebaseInstallations.instance.getId();
+String id = await FirebaseAppInstallations.instance.getId();
 ```
 
 ## Retrieve installation auth tokens
@@ -74,13 +74,13 @@ An installation auth token cannot be revoked, and remains valid until its expira
 To retrieve an installation auth token:
 
 ```dart
-String token = await FirebaseInstallations.instance.getToken();
+String token = await FirebaseAppInstallations.instance.getToken();
 ```
 
 Optionally, you can force a token refresh when called:
 
 ```dart
-String token = await FirebaseInstallations.instance.getToken(true);
+String token = await FirebaseAppInstallations.instance.getToken(true);
 ```
 
 ## Monitor the Firebase Installation ID
@@ -100,7 +100,7 @@ Apps can monitor these changes and respond accordingly.
 To monitor the FID token, listen to the `Stream` returned from the `onIdChange` getter:
 
 ```dart
-FirebaseInstallations.instance.onIdChange.listen((token) {
+FirebaseAppInstallations.instance.onIdChange.listen((token) {
   print('FID token: $token');
 });
 ```

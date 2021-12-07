@@ -1,0 +1,115 @@
+#
+# Copyright (c) 2016-present Invertase Limited & Contributors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this library except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+include: all_lint_rules.yaml
+analyzer:
+  strong-mode:
+    implicit-casts: false
+    implicit-dynamic: false
+  errors:
+    # So we can run ODM dart tests in the melos workspace - otherwise dart test will
+    # source the ODM package from pub - which won't have the local changes
+    # (or is not yet published).
+    # See cloud_firestore_odm_generator/pubspec.yaml
+    unnecessary_dev_dependency: ignore
+    # Otherwise cause the import of all_lint_rules to warn because of some rules conflicts.
+    # We explicitly enabled even conflicting rules and are fixing the conflict
+    # in this file
+    included_file_warning: ignore
+  exclude:
+    - "**.freezed.dart"
+    - "**.g.dart"
+
+linter:
+  rules:
+    # TODO(Salakar) re-enable documentation rule and fix issues.
+    public_member_api_docs: false
+
+    always_put_control_body_on_new_line: false
+    comment_references: true
+    prefer_constructors_over_static_methods: true
+    prefer_final_fields: true
+    omit_local_variable_types: true
+    avoid_equals_and_hash_code_on_mutable_classes: false
+
+    #############
+    # Conflicts with 'unecessary_final'
+    prefer_final_locals: true
+
+    cascade_invocations: false
+
+    # Conflicts with `prefer_single_quotes`
+    # Single quotes are easier to type and don't compromise on readability.
+    prefer_double_quotes: false
+
+    # Conflicts with `omit_local_variable_types` and other rules.
+    # As per Dart guidelines, we want to avoid unnecessary types to make the code
+    # more readable.
+    # See https://dart.dev/guides/language/effective-dart/design#avoid-type-annotating-initialized-local-variables
+    always_specify_types: false
+
+    # Incompatible with `prefer_final_locals`
+    # Having immutable local variables makes larger functions more predictible
+    # so we will use `prefer_final_locals` instead.
+    unnecessary_final: false
+
+    # Not quite suitable for Flutter, which may have a `build` method with a single
+    # return, but that return is still complex enough that a "body" is worth it.
+    prefer_expression_function_bodies: false
+
+    # Conflicts with the convention used by flutter, which puts `Key key`
+    # and `@required Widget child` last.
+    always_put_required_named_parameters_first: false
+
+    # `as` is not that bad (especially with the upcoming non-nullable types).
+    # Explicit exceptions is better than implicit exceptions.
+    avoid_as: false
+
+    # This project doesn't use Flutter-style todos
+    flutter_style_todos: false
+
+    # There are situations where we voluntarily want to catch everything,
+    # especially as a library.
+    avoid_catches_without_on_clauses: false
+
+    # Boring as it sometimes force a line of 81 characters to be split in two.
+    # As long as we try to respect that 80 characters limit, going slightly
+    # above is fine.
+    lines_longer_than_80_chars: false
+
+    # Conflicts with disabling `implicit-dynamic`
+    avoid_annotating_with_dynamic: false
+
+    # conflicts with `prefer_relative_imports`
+    always_use_package_imports: false
+
+    # Disabled for now until NNBD as it otherwise conflicts with `missing_return`
+    no_default_cases: false
+
+    # False positive, null checks don't need a message
+    prefer_asserts_with_message: false
+
+    # Cumbersome with `context.select`
+    avoid_types_on_closure_parameters: false
+
+    # Too many false positive (builders)
+    diagnostic_describe_all_properties: false
+
+    # false positives (setter-like functions)
+    avoid_positional_boolean_parameters: false
+
+    # Does not apply to providers
+    prefer_const_constructors_in_immutables: false

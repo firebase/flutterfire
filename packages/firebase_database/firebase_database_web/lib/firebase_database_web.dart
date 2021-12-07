@@ -117,6 +117,19 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   @override
   void useDatabaseEmulator(String host, int port) {
-    _delegate.useDatabaseEmulator(host, port);
+    try {
+      _delegate.useDatabaseEmulator(host, port);
+    } catch (e) {
+      FirebaseException exception = convertFirebaseDatabaseException(e);
+
+      // Hot reload keeps state, so ignore if this is thrown.
+      if (exception.message != null &&
+          exception.message!.contains(
+              'Cannot call useEmulator() after instance has already been initialized')) {
+        return;
+      }
+
+      throw exception;
+    }
   }
 }

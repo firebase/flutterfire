@@ -16,24 +16,16 @@ to interpret your model.
 
 ## Installation
 
-### 1. Add dependency
+### 1. Make sure to initialize Firebase
 
-Add the `firebase_ml_model_downloader` dependency to your projects `pubspec.yaml` file:
+[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
 
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_ml_model_downloader: "^{{ plugins.firebase_ml_model_downloader_ns }}"
-```
+### 2. Add dependency
 
-### 2. Download dependency
-
-Download the dependency by running the following command in your project:
+On the root of your Flutter project, run the following command to install the plugin:
 
 ```bash
-$ flutter pub get
+flutter pub add firebase_ml_model_downloader
 ```
 
 ### 3. Rebuild your app
@@ -41,10 +33,11 @@ $ flutter pub get
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
 ```
 
 ## Next Steps
 
-Once installed, you're ready to start using Firebase ML Model Downloader in your Flutter Project. View the
-[Usage documentation](./usage.mdx) to get started.
+Once installed, you're ready to start using ML Model Downloader in your Flutter Project.
+
+View the [Usage documentation](usage.mdx) to get started.

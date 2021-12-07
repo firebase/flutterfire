@@ -1,5 +1,4 @@
-// ignore_for_file: require_trailing_commas
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -13,10 +12,9 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import './mock.dart';
 
 MockFirebasePerformance mockPerformancePlatform = MockFirebasePerformance();
-MockTracePlatform mockTracePlatform = MockTracePlatform('foo');
+MockTracePlatform mockTracePlatform = MockTracePlatform();
 String mockUrl = 'https://example.com';
-MockHttpMetricPlatform mockHttpMetricPlatform =
-    MockHttpMetricPlatform(mockUrl, HttpMethod.Get);
+MockHttpMetricPlatform mockHttpMetricPlatform = MockHttpMetricPlatform();
 
 void main() {
   setupFirebasePerformanceMocks();
@@ -24,24 +22,35 @@ void main() {
   late FirebasePerformance performance;
 
   group('$FirebasePerformance', () {
-    FirebasePerformancePlatform.instance = mockPerformancePlatform;
+    when(mockPerformancePlatform.delegateFor(app: anyNamed('app')))
+        .thenReturn(mockPerformancePlatform);
 
     setUpAll(() async {
       await Firebase.initializeApp();
+      FirebasePerformancePlatform.instance = mockPerformancePlatform;
       performance = FirebasePerformance.instance;
     });
 
-    group('performanceCollectionEnabled', () {
-      when(mockPerformancePlatform.isPerformanceCollectionEnabled())
-          .thenAnswer((_) => Future.value(true));
-      when(mockPerformancePlatform.setPerformanceCollectionEnabled(true))
-          .thenAnswer((_) => Future.value());
+    group('instance', () {
+      test('test instance is singleton', () async {
+        FirebasePerformance performance1 = FirebasePerformance.instance;
+        FirebasePerformance performance2 = FirebasePerformance.instance;
 
+        expect(performance1, isA<FirebasePerformance>());
+        expect(identical(performance1, performance2), isTrue);
+      });
+    });
+
+    group('performanceCollectionEnabled', () {
       test('getter should call delegate method', () async {
+        when(mockPerformancePlatform.isPerformanceCollectionEnabled())
+            .thenAnswer((_) => Future.value(true));
         await performance.isPerformanceCollectionEnabled();
         verify(mockPerformancePlatform.isPerformanceCollectionEnabled());
       });
       test('setter should call delegate method', () async {
+        when(mockPerformancePlatform.setPerformanceCollectionEnabled(true))
+            .thenAnswer((_) => Future.value());
         await performance.setPerformanceCollectionEnabled(true);
         verify(mockPerformancePlatform.setPerformanceCollectionEnabled(true));
       });
@@ -50,8 +59,6 @@ void main() {
     group('trace', () {
       when(mockPerformancePlatform.newTrace('foo'))
           .thenReturn(mockTracePlatform);
-      when(FirebasePerformancePlatform.startTrace('foo')).thenAnswer(
-          (realInvocation) => Future.value(MockTracePlatform('foo')));
       when(mockTracePlatform.start())
           .thenAnswer((realInvocation) => Future.value());
       when(mockTracePlatform.incrementMetric('bar', 8))
@@ -60,12 +67,6 @@ void main() {
       test('newTrace should call delegate method', () async {
         performance.newTrace('foo');
         verify(mockPerformancePlatform.newTrace('foo'));
-      });
-
-      test('startTrace should call delegate methods', () async {
-        final trace = await FirebasePerformancePlatform.startTrace('foo');
-        verify(mockPerformancePlatform.newTrace('foo'));
-        verify(trace.start());
       });
 
       test('start and stop should call delegate methods', () async {
@@ -78,19 +79,19 @@ void main() {
 
       test('incrementMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.incrementMetric('bar', 8);
+        trace.incrementMetric('bar', 8);
         verify(mockTracePlatform.incrementMetric('bar', 8));
       });
 
       test('setMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.setMetric('bar', 8);
+        trace.setMetric('bar', 8);
         verify(mockTracePlatform.setMetric('bar', 8));
       });
 
       test('getMetric should call delegate method', () async {
         final trace = performance.newTrace('foo');
-        await trace.getMetric('bar');
+        trace.getMetric('bar');
         verify(mockTracePlatform.getMetric('bar'));
       });
     });
@@ -128,26 +129,33 @@ void main() {
         verify(mockHttpMetricPlatform.responsePayloadSize);
       });
 
-      test('httpResponseCode setter should call delegate setter', () async {
+      test('set httpResponseCode setter should call delegate setter', () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.responsePayloadSize = 8080;
-        verify(mockHttpMetricPlatform.responsePayloadSize = 8080);
+        when(mockHttpMetricPlatform.httpResponseCode = 8080).thenReturn(0);
+        httpMetric.httpResponseCode = 8080;
+        verify(mockHttpMetricPlatform.httpResponseCode = 8080);
       });
 
-      test('requestPayloadSize setter should call delegate setter', () async {
+      test('set requestPayloadSize setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
+        when(mockHttpMetricPlatform.requestPayloadSize = 8).thenReturn(0);
         httpMetric.requestPayloadSize = 8;
         verify(mockHttpMetricPlatform.requestPayloadSize = 8);
       });
 
-      test('responsePayloadSize setter should call delegate setter', () async {
+      test('setResponsePayloadSize setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
-        httpMetric.responsePayloadSize = 8;
-        verify(mockHttpMetricPlatform.responsePayloadSize = 8);
+        when(mockHttpMetricPlatform.responsePayloadSize = 99).thenReturn(0);
+        httpMetric.responsePayloadSize = 99;
+        verify(mockHttpMetricPlatform.responsePayloadSize = 99);
       });
 
-      test('responseContentType setter should call delegate setter', () async {
+      test('set responseContentType setter should call delegate setter',
+          () async {
         final httpMetric = performance.newHttpMetric(mockUrl, HttpMethod.Get);
+        when(mockHttpMetricPlatform.responseContentType = 'foo').thenReturn('');
         httpMetric.responseContentType = 'foo';
         verify(mockHttpMetricPlatform.responseContentType = 'foo');
       });
@@ -175,6 +183,15 @@ class MockFirebasePerformance extends Mock
   }
 
   @override
+  FirebasePerformancePlatform delegateFor({FirebaseApp? app}) {
+    return super.noSuchMethod(
+      Invocation.method(#delegateFor, [], {#app: app}),
+      returnValue: TestFirebasePerformancePlatform(),
+      returnValueForMissingStub: TestFirebasePerformancePlatform(),
+    );
+  }
+
+  @override
   Future<bool> isPerformanceCollectionEnabled() {
     return super.noSuchMethod(
       Invocation.method(#isPerformanceCollectionEnabled, []),
@@ -187,8 +204,8 @@ class MockFirebasePerformance extends Mock
   HttpMetricPlatform newHttpMetric(String url, HttpMethod httpMethod) {
     return super.noSuchMethod(
       Invocation.method(#newHttpMetric, [url, httpMethod]),
-      returnValue: MockHttpMetricPlatform(url, httpMethod),
-      returnValueForMissingStub: MockHttpMetricPlatform(url, httpMethod),
+      returnValue: MockHttpMetricPlatform(),
+      returnValueForMissingStub: MockHttpMetricPlatform(),
     );
   }
 
@@ -196,8 +213,8 @@ class MockFirebasePerformance extends Mock
   TracePlatform newTrace(String name) {
     return super.noSuchMethod(
       Invocation.method(#newTrace, [name]),
-      returnValue: MockTracePlatform(name),
-      returnValueForMissingStub: MockTracePlatform(name),
+      returnValue: MockTracePlatform(),
+      returnValueForMissingStub: MockTracePlatform(),
     );
   }
 
@@ -216,14 +233,14 @@ class TestFirebasePerformancePlatform extends FirebasePerformancePlatform {
 }
 
 class TestTracePlatform extends TracePlatform {
-  TestTracePlatform(String name) : super(name);
+  TestTracePlatform() : super();
 }
 
 class MockTracePlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestTracePlatform {
-  MockTracePlatform(String name) {
-    TestTracePlatform(name);
+  MockTracePlatform() {
+    TestTracePlatform();
   }
 
   @override
@@ -263,25 +280,60 @@ class MockTracePlatform extends Mock
   }
 
   @override
-  Future<int> getMetric(String name) {
+  int getMetric(String name) {
     return super.noSuchMethod(
       Invocation.method(#getMetric, [name]),
-      returnValue: Future<int>.value(8),
-      returnValueForMissingStub: Future<int>.value(8),
+      returnValue: 8,
+      returnValueForMissingStub: 8,
     );
   }
 }
 
 class TestHttpMetricPlatform extends HttpMetricPlatform {
-  TestHttpMetricPlatform(String url, HttpMethod httpMethod)
-      : super(url, httpMethod);
+  TestHttpMetricPlatform() : super();
 }
 
 class MockHttpMetricPlatform extends Mock
     with MockPlatformInterfaceMixin
     implements TestHttpMetricPlatform {
-  MockHttpMetricPlatform(String url, HttpMethod httpMethod) {
-    TestHttpMetricPlatform(url, httpMethod);
+  MockHttpMetricPlatform() {
+    TestHttpMetricPlatform();
+  }
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set httpResponseCode(int? httpResponseCode) {
+    // ignore: void_checks
+    return super.noSuchMethod(
+      Invocation.setter(#httpResponseCode, [httpResponseCode]),
+    );
+  }
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set requestPayloadSize(int? requestPayloadSize) {
+    // ignore: void_checks
+    return super.noSuchMethod(
+      Invocation.setter(#requestPayloadSize, [requestPayloadSize]),
+    );
+  }
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set responsePayloadSize(int? responsePayloadSize) {
+    // ignore: void_checks
+    return super.noSuchMethod(
+      Invocation.setter(#responsePayloadSize, [responsePayloadSize]),
+    );
+  }
+
+  @override
+  // ignore: avoid_setters_without_getters
+  set responseContentType(String? responseContentType) {
+    // ignore: void_checks
+    return super.noSuchMethod(
+      Invocation.setter(#responseContentType, [responseContentType]),
+    );
   }
 
   @override

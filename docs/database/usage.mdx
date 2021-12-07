@@ -64,8 +64,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users/123");
 DatabaseReference child = ref.child("name");
 
 print(ref.key); // "123"
-print(ref.parent()); // "users"
-print(ref.root()); // Database root
+print(ref.parent!.key); // "users"
 ```
 
 ### Read data
@@ -116,7 +115,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
 Query query = ref.orderByChild("age").limitToFirst(10);
 
-DataSnapshot snapshot = await query.once();
+DataSnapshot event = await query.get();
 ```
 
 Alternatively we could instead return users between certain ages by using `startAt` and `endAt`:
@@ -126,7 +125,7 @@ DatabaseReference ref = FirebaseDatabase.instance.ref("users");
 
 Query query = ref.orderByChild("age").startAt(18).endAt(30);
 
-DataSnapshot snapshot = await query.once();
+DataSnapshot event = await query.get();
 ```
 
 ### Modifying data
@@ -200,7 +199,7 @@ TransactionResult result = await ref.runTransaction((Object? post) {
     return Transaction.abort();
   }
 
-  Map<String, dynamic> _post = post as Map<String, dynamic>;
+  Map<String, dynamic> _post = Map<String, dynamic>.from(post as Map);
   _post['likes'] = (_post['likes'] ?? 0) + 1;
 
   // Return the new data.
@@ -213,9 +212,9 @@ multiple times, you may see intermediate states. You can set `applyLocally` to f
 intermediate states and instead wait until the transaction has completed before events are raised:
 
 ```dart
-await ref.runTransaction((Object? post, applyLocally: false) {
+await ref.runTransaction((Object? post) {
  // ...
-});
+}, applyLocally: false);
 ```
 
 The result of a transaction is a `TransactionResult`, which contains information such as whether
@@ -316,12 +315,15 @@ then it is possible to connect to this using the `useDatabaseEmulator` method. E
 Ensure you have enabled network connections to the emulators in your apps following the emulator usage instructions in the general FlutterFire installation notes for each operating system.
 
 ```dart
+import 'package:flutter/foundation.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  bool isAndroid = defaultTargetPlatform == TargetPlatform.android && !kIsWeb;
   // Ideal time to initialize
-  FirebaseDatabase.instance.useDatabaseEmulator('localhost', 9000);
+  FirebaseDatabase.instance.useDatabaseEmulator(isAndroid ? '10.0.2.2' : 'localhost', 9000);
   //...
 }
 ```

@@ -1,4 +1,4 @@
-## [UNRELEASED]
+## 0.0.5
 
 - **NEW**: Added support for multi-app via the `instanceFor()` method.
 - **NEW**: Added support for getting the current App Check token via the `getToken()` method.
