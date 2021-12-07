@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 
 import 'firebase_query_builder.dart';
 
-/// {@template flutterfire_ui.firestore_table}
+/// {@template flutterfire_ui.database_table}
 /// A [PaginatedDataTable] that is connected to Firestore.
 ///
 /// The parameter [columnLabels] is required and is used to
@@ -22,7 +22,7 @@ import 'firebase_query_builder.dart';
 ///
 /// ```dart
 /// // A collection of {'name': string, 'age': number}
-/// final usersCollection = FirebaseFirestore.instance.collection('users');
+/// final usersCollection = FirebaseDatabase.instance.ref('users');
 ///
 /// // ...
 ///
@@ -36,7 +36,7 @@ import 'firebase_query_builder.dart';
 /// ```
 /// {@endtemplate}
 class FirebaseDataTable extends StatefulWidget {
-  /// {@macro flutterfire_ui.firestore_table}
+  /// {@macro flutterfire_ui.database_table}
   const FirebaseDataTable({
     Key? key,
     required this.query,

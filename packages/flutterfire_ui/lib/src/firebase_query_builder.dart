@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-/// {@template firebase_ui.firestore_query_builder}
+/// {@template firebase_ui.database_query_builder}
 /// Listens to a query and paginates the result in a way that is compatible with
 /// infinie scroll views, such as [ListView] or [GridView].
 ///
@@ -18,8 +18,8 @@ import 'package:firebase_database/firebase_database.dart';
 /// An example of how to combine [FirebaseQueryBuilder] with [ListView] would be:
 ///
 /// ```dart
-/// FirebaseQueryBuilder<Movie>(
-///   query: moviesCollection.orderBy('title'),
+/// FirebaseQueryBuilder(
+///   query: moviesCollection),
 ///   builder: (context, snapshot, _) {
 ///     if (snapshot.isFetching) {
 ///       return const CircularProgressIndicator();
@@ -39,20 +39,20 @@ import 'package:firebase_database/firebase_database.dart';
 ///           snapshot.fetchMore();
 ///         }
 ///
-///         final movie = snapshot.docs[index];
-///         return Text(movie.title);
+///         final movie = snapshot.docs[index].value as Map;
+///         return Text(movie['title']);
 ///       },
 ///     );
 ///   },
 /// )
 /// ```
 /// {@endtemplate}
-/// {@subCategory service:firestore}
+/// {@subCategory service:database}
 /// {@subCategory type:widget}
 /// {@subCategory description:A widget that listens to a query.}
 /// {@subCategory img:https://place-hold.it/400x150}
 class FirebaseQueryBuilder extends StatefulWidget {
-  /// {@macro firebase_ui.firestore_query_builder}
+  /// {@macro firebase_ui.database_query_builder}
   const FirebaseQueryBuilder({
     Key? key,
     required this.query,
@@ -338,59 +338,35 @@ class _Sentinel {
   const _Sentinel();
 }
 
-/// {@template flutterfire_ui.firestorelistview}
+/// {@template flutterfire_ui.firebaselistview}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
 /// As an example, consider the following collection:
 ///
 /// ```dart
-/// class Movie {
-///   Movie({required this.title, required this.genre});
-///
-///   Movie.fromJson(Map<String, Object?> json)
-///     : this(
-///         title: json['title']! as String,
-///         genre: json['genre']! as String,
-///       );
-///
-///   final String title;
-///   final String genre;
-///
-///   Map<String, Object?> toJson() {
-///     return {
-///       'title': title,
-///       'genre': genre,
-///     };
-///   }
-/// }
-///
-/// final moviesCollection = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
-///      fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-///      toFirestore: (movie, _) => movie.toJson(),
-///    );
+/// final moviesCollection = FirebaseDatabase.instance.ref('movies');
 /// ```
-///
 ///
 /// Using [FirebaseListView], we can now show the list of movies by writing:
 ///
 /// ```dart
-/// FirebaseListView<Movie>(
-///   query: moviesCollection.orderBy('title'),
+/// FirebaseListView(
+///   query: moviesCollection,
 ///   itemBuilder: (context, snapshot) {
-///     Movie movie = snapshot.data();
-///     return Text(movie.title);
+///     var movie = snapshot.value as Map;
+///     return Text(movie['title']);
 ///   },
 /// )
 /// ```
 ///
 /// For advanced UI use-cases, consider switching to [FirebaseQueryBuilder].
 /// {@endtemplate}
-/// {@subCategory service:firestore}
+/// {@subCategory service:database}
 /// {@subCategory type:widget}
 /// {@subCategory description:A widget that listens to a query and display the items using a ListView}
 /// {@subCategory img:https://place-hold.it/400x150}
 class FirebaseListView extends FirebaseQueryBuilder {
-  /// {@macro flutterfire_ui.firestorelistview}
+  /// {@macro flutterfire_ui.firebaselistview}
   FirebaseListView({
     Key? key,
     required Query query,
