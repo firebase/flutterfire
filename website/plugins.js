@@ -182,18 +182,6 @@ module.exports = [
     },
   },
   {
-    name: 'ML Model Downloader',
-    pub: 'firebase_ml_model_downloader',
-    firebase: 'ml',
-    status: 'Stable',
-    documentation: 'https://firebase.flutter.dev/docs/ml-model-downloader/overview',
-    support: {
-      web: false,
-      mobile: true,
-      macos: false,
-    },
-  },
-  {
     name: 'ML Custom',
     pub: 'firebase_ml_custom',
     //ml-custom page is a 404
