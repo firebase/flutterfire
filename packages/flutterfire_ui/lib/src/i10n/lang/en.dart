@@ -129,6 +129,44 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
   final String signInWithEmailLinkSentText;
   @override
   final String sendLinkButtonLabel;
+  @override
+  final String arrayLabel;
+  @override
+  final String booleanLabel;
+  @override
+  final String mapLabel;
+  @override
+  final String nullLabel;
+  @override
+  final String numberLabel;
+  @override
+  final String stringLabel;
+  @override
+  final String typeLabel;
+  @override
+  final String valueLabel;
+  @override
+  final String cancelLabel;
+  @override
+  final String updateLabel;
+  @override
+  final String northInitialLabel;
+  @override
+  final String southInitialLabel;
+  @override
+  final String westInitialLabel;
+  @override
+  final String eastInitialLabel;
+  @override
+  final String timestampLabel;
+  @override
+  final String latitudeLabel;
+  @override
+  final String longitudeLabel;
+  @override
+  final String geopointLabel;
+  @override
+  final String referenceLabel;
 
   const EnLocalizations({
     this.emailInputLabel = 'Email',
@@ -202,5 +240,24 @@ class EnLocalizations extends FirebaseUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         "We've sent you an email with a magic link. Check your email and follow the link to sign in",
     this.sendLinkButtonLabel = 'Send magic link',
+    this.arrayLabel = 'array',
+    this.booleanLabel = 'boolean',
+    this.mapLabel = 'map',
+    this.nullLabel = 'null',
+    this.numberLabel = 'number',
+    this.stringLabel = 'string',
+    this.typeLabel = 'type',
+    this.valueLabel = 'value',
+    this.cancelLabel = 'cancel',
+    this.updateLabel = 'update',
+    this.northInitialLabel = 'N',
+    this.southInitialLabel = 'S',
+    this.westInitialLabel = 'W',
+    this.eastInitialLabel = 'E',
+    this.timestampLabel = 'timestamp',
+    this.longitudeLabel = 'longitude',
+    this.latitudeLabel = 'latitude',
+    this.geopointLabel = 'geopoint',
+    this.referenceLabel = 'reference',
   });
 }

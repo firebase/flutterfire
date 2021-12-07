@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterfire_ui/i10n.dart';
 
 import 'query_builder.dart';
 
@@ -354,6 +355,7 @@ class _PropertyTypeForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
     final formState = this.formState;
 
     if (formState is _NumberFormState) {
@@ -368,7 +370,7 @@ class _PropertyTypeForm extends StatelessWidget {
               RegExp('[0-9]+?.?[0-9]*'),
             ),
           ],
-          decoration: const InputDecoration(labelText: 'value'),
+          decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
     } else if (formState is _StringFormState) {
@@ -377,7 +379,7 @@ class _PropertyTypeForm extends StatelessWidget {
         child: TextField(
           autofocus: true,
           controller: formState.controller,
-          decoration: const InputDecoration(labelText: 'value'),
+          decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
     } else if (formState is _ReferenceFormState) {
@@ -386,7 +388,7 @@ class _PropertyTypeForm extends StatelessWidget {
         child: TextField(
           autofocus: true,
           controller: formState.controller,
-          decoration: const InputDecoration(labelText: 'value'),
+          decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
     } else if (formState is _TimestampFormState) {
@@ -399,7 +401,7 @@ class _PropertyTypeForm extends StatelessWidget {
           inputFormatters: <TextInputFormatter>[
             FilteringTextInputFormatter.digitsOnly,
           ],
-          decoration: const InputDecoration(labelText: 'timestamp'),
+          decoration: InputDecoration(labelText: localizations.timestampLabel),
         ),
       );
     } else if (formState is _GeoPointFormState) {
@@ -411,8 +413,8 @@ class _PropertyTypeForm extends StatelessWidget {
             child: TextField(
               autofocus: true,
               controller: formState.latitudeController,
-              decoration: const InputDecoration(
-                labelText: 'latitude',
+              decoration: InputDecoration(
+                labelText: localizations.latitudeLabel,
               ),
             ),
           ),
@@ -420,8 +422,8 @@ class _PropertyTypeForm extends StatelessWidget {
             width: 200,
             child: TextField(
               controller: formState.longitudeController,
-              decoration: const InputDecoration(
-                labelText: 'longitude',
+              decoration: InputDecoration(
+                labelText: localizations.longitudeLabel,
               ),
             ),
           ),
@@ -451,19 +453,21 @@ class _EditModalButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
+
     return ButtonBar(
       mainAxisSize: MainAxisSize.min,
       alignment: MainAxisAlignment.end,
       children: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('cancel'),
+          child: Text(localizations.cancelLabel),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context, formState.submit(reference));
           },
-          child: const Text('update'),
+          child: Text(localizations.updateLabel),
         ),
       ],
     );
@@ -483,42 +487,44 @@ class _PropertyTypeDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
+
     return DropdownButtonFormField<_PropertyType?>(
       value: formState?.type,
-      decoration: const InputDecoration(labelText: 'type'),
-      items: const [
+      decoration: InputDecoration(labelText: localizations.typeLabel),
+      items: [
         DropdownMenuItem(
           value: _PropertyType.string,
-          child: Text('string'),
+          child: Text(localizations.stringLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.number,
-          child: Text('number'),
+          child: Text(localizations.numberLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.boolean,
-          child: Text('boolean'),
+          child: Text(localizations.booleanLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.map,
-          child: Text('map'),
+          child: Text(localizations.mapLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.list,
-          child: Text('array'),
+          child: Text(localizations.arrayLabel),
         ),
-        DropdownMenuItem(child: Text('null')),
+        DropdownMenuItem(child: Text(localizations.nullLabel)),
         DropdownMenuItem(
           value: _PropertyType.timestamp,
-          child: Text('timestamp'),
+          child: Text(localizations.timestampLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.geoPoint,
-          child: Text('geopoint'),
+          child: Text(localizations.geopointLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.reference,
-          child: Text('reference'),
+          child: Text(localizations.referenceLabel),
         ),
       ],
       onChanged: onTypeChanged,
@@ -888,6 +894,7 @@ class _ValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
     final value = this.value;
     if (value == null) {
       return Text('null', style: Theme.of(context).textTheme.caption);
@@ -896,8 +903,12 @@ class _ValueView extends StatelessWidget {
     } else if (value is DocumentReference) {
       return Text('/${value.path}');
     } else if (value is GeoPoint) {
-      final latitudeLabel = value.latitude < 0 ? 'S' : 'N';
-      final longitudeLabel = value.longitude < 0 ? 'W' : 'E';
+      final latitudeLabel = value.latitude < 0
+          ? localizations.southInitialLabel
+          : localizations.northInitialLabel;
+      final longitudeLabel = value.longitude < 0
+          ? localizations.westInitialLabel
+          : localizations.eastInitialLabel;
 
       return Text(
         '[${value.latitude.abs()}° $latitudeLabel, '

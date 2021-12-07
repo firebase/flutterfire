@@ -69,6 +69,27 @@ abstract class FirebaseUILocalizationLabels {
   String get signInWithEmailLinkViewTitleText;
   String get signInWithEmailLinkSentText;
   String get sendLinkButtonLabel;
+
+  // DataTable components
+  String get valueLabel;
+  String get typeLabel;
+  String get stringLabel;
+  String get numberLabel;
+  String get booleanLabel;
+  String get mapLabel;
+  String get arrayLabel;
+  String get nullLabel;
+  String get cancelLabel;
+  String get updateLabel;
+  String get northInitialLabel;
+  String get southInitialLabel;
+  String get westInitialLabel;
+  String get eastInitialLabel;
+  String get timestampLabel;
+  String get longitudeLabel;
+  String get latitudeLabel;
+  String get geopointLabel;
+  String get referenceLabel;
 }
 
 const localizations = <String, FirebaseUILocalizationLabels>{

@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../i10n.dart';
 import 'firebase_query_builder.dart';
 
 /// {@template flutterfire_ui.database_table}
@@ -18,7 +19,6 @@ import 'firebase_query_builder.dart';
 /// - let [FirebaseDataTable] know what are the expected keys in a Firestore document.
 ///
 /// An example usage would be:
-///
 ///
 /// ```dart
 /// // A collection of {'name': string, 'age': number}
@@ -331,6 +331,7 @@ class _PropertyTypeForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
     final formState = this.formState;
 
     if (formState is _NumberFormState) {
@@ -345,7 +346,7 @@ class _PropertyTypeForm extends StatelessWidget {
               RegExp('[0-9]+?.?[0-9]*'),
             ),
           ],
-          decoration: const InputDecoration(labelText: 'value'),
+          decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
     } else if (formState is _StringFormState) {
@@ -354,7 +355,7 @@ class _PropertyTypeForm extends StatelessWidget {
         child: TextField(
           autofocus: true,
           controller: formState.controller,
-          decoration: const InputDecoration(labelText: 'value'),
+          decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
     } else if (formState is _BooleanFormState) {
@@ -381,19 +382,21 @@ class _EditModalButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
+
     return ButtonBar(
       mainAxisSize: MainAxisSize.min,
       alignment: MainAxisAlignment.end,
       children: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('cancel'),
+          child: Text(localizations.cancelLabel),
         ),
         ElevatedButton(
           onPressed: () {
             Navigator.pop(context, formState.submit(ref));
           },
-          child: const Text('update'),
+          child: Text(localizations.updateLabel),
         ),
       ],
     );
@@ -413,31 +416,33 @@ class _PropertyTypeDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = FirebaseUILocalizations.labelsOf(context);
+
     return DropdownButtonFormField<_PropertyType?>(
       value: formState?.type,
-      decoration: const InputDecoration(labelText: 'type'),
-      items: const [
+      decoration: InputDecoration(labelText: localizations.typeLabel),
+      items: [
         DropdownMenuItem(
           value: _PropertyType.string,
-          child: Text('string'),
+          child: Text(localizations.stringLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.number,
-          child: Text('number'),
+          child: Text(localizations.numberLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.boolean,
-          child: Text('boolean'),
+          child: Text(localizations.booleanLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.map,
-          child: Text('map'),
+          child: Text(localizations.mapLabel),
         ),
         DropdownMenuItem(
           value: _PropertyType.list,
-          child: Text('array'),
+          child: Text(localizations.arrayLabel),
         ),
-        DropdownMenuItem(child: Text('null')),
+        DropdownMenuItem(child: Text(localizations.nullLabel)),
       ],
       onChanged: onTypeChanged,
     );
