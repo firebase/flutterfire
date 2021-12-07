@@ -3,7 +3,7 @@ title: Crashlytics
 sidebar_label: Overview
 ---
 
-##  What does it do?
+## What does it do?
 
 Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. It does this through three aspects:
 
@@ -11,7 +11,7 @@ Crashlytics helps you to collect analytics and details about crashes and errors 
 - **Crash reports**: Every crash is automatically turned into a crash report and sent when the application next opens.
 - **Stack traces**: Even when an error is caught and your app recovers, the Dart stack trace can still be sent.
 
-<YouTube id="k_mdNRZzd30"/>
+<YouTube id="k_mdNRZzd30" />
 
 ## Installation
 
@@ -34,6 +34,7 @@ $ flutter channel stable
 ```
 
 If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
+
 ```bash
 $ flutter run --no-sound-null-safety
 ```
@@ -50,44 +51,16 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 ### 1. Add dependency
 
-Add the [`firebase_crashlytics`](https://pub.dev/packages/firebase_crashlytics) dependency to your projects `pubspec.yaml` file:
+On the root of your Flutter project, run the following command to install the plugin:
 
-<Tabs
-  groupId="legacy-or-nullsafe"
-  defaultValue="legacy"
-  values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-  ]}
->
-<TabItem value="legacy">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
+```bash {5}
+flutter pub add firebase_crashlytics
 ```
-
-</TabItem>
-<TabItem value="null-safe">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_crashlytics: "^{{ plugins.firebase_crashlytics_ns }}"
-```
-
-</TabItem>
-</Tabs>
 
 ### 2. Download dependency
 
 ```
-$ flutter pub get
+flutter pub get
 ```
 
 ### 3. Platform integration
@@ -95,8 +68,8 @@ $ flutter pub get
 If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
 guides and remove any legacy Fabric integration steps from your project:
 
- - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
- - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
+- [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
+- [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
 
 #### a. Android
 
@@ -134,14 +107,14 @@ apply plugin: 'com.google.firebase.crashlytics'
 2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
 3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
 4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
-For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
+   For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
 
 ### 4. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
 ```
 
 ## Next steps
