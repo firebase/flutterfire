@@ -30,7 +30,9 @@ jobs:
       - name: "Install Tools"
         run: ./.github/workflows/scripts/install-tools.sh
       - name: "Bootstrap Workspace"
-        run: melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
+        run: |
+          melos bootstrap --scope="*firebase_core*" --scope="$FLUTTERFIRE_PLUGIN_SCOPE"
+          melos run odm:example_build_runner:build
       - name: "Flutter Test"
         run: melos run odm:test:flutter --no-select
       - name: "Dart Test"
@@ -53,6 +55,7 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
+          melos run odm:example_build_runner:build
       - name: "Build Example"
         run: ./.github/workflows/scripts/build-example.sh android
       - name: Start Firebase Emulator
