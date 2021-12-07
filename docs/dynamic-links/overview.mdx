@@ -10,83 +10,23 @@ If a user opens a Dynamic Link on iOS or Android, they can be taken directly to 
 If a user doesn't have your app installed, the user can be prompted to install it; then, after installation, your app starts
 and can access the link.
 
-<YouTube id="LvY1JMcrPF8"/>
+<YouTube id="LvY1JMcrPF8" />
 
 ## Installation
 
-<Tabs
-groupId="legacy-or-nullsafe"
-defaultValue="legacy"
-values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-]}
->
-<TabItem value="legacy">
-</TabItem>
-<TabItem value="null-safe">
+### 1. Make sure to initialize Firebase
 
-Ensure you're using the Flutter `stable` channel:
+[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
+
+### 2. Add dependency
+
+On the root of your Flutter project, run the following command to install the plugin:
 
 ```bash
-$ flutter channel stable
+flutter pub add firebase_dynamic_links
 ```
 
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
-
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-```
-</TabItem>
-</Tabs>
-
-### 1. Add dependency
-
-<Tabs
-  groupId="legacy-or-nullsafe"
-  defaultValue="legacy"
-  values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-  ]}
->
-<TabItem value="legacy">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_analytics: "^{{ plugins.firebase_dynamic_links }}"
-```
-
-</TabItem>
-<TabItem value="null-safe">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_dynamic_links: "^{{ plugins.firebase_dynamic_links_ns }}"
-```
-
-</TabItem>
-</Tabs>
-
-### 2. Download dependency
-
-```
-$ flutter pub get
-```
-
-### 4. Rebuild your app
+### 3. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
@@ -94,13 +34,8 @@ Once complete, rebuild your Flutter application:
 $ flutter run
 ```
 
-## Platform Integration
+## Next Steps
 
-Before using Dynamic Links, ensure you have configured your specific platform:
+Once installed, you're ready to start using Firebase Dynamic Links in your Flutter Project.
 
-- [Android](./android-integration.mdx)
-- [Apple](./apple-integration.mdx)
-
-## Next steps
-
-Once your platforms have been configured, head over to the [Usage](./usage.mdx) documentation.
+View the [Usage documentation](usage.mdx) to get started.
