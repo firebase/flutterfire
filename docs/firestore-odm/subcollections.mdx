@@ -1,6 +1,14 @@
-> Note; this documentation is in a temporary location.
+---
+title: Working with Subcollections
+sidebar_label: Subcollections
+---
 
-# Subcollections
+:::danger Alpha Status
+
+The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress.
+See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
+
+:::
 
 The ODM provides support for subcollections via the `Collection` annotation. For example, first define
 the root collection as normal:
@@ -33,7 +41,7 @@ Next, define the path to the subcollection in a new `Collection` annotation:
 final usersRef = UserCollectionReference();
 ```
 
-After [code generation](code-generation.md), we can now access the sub-collection via the `usersRef`
+After [code generation](./code-generation), we can now access the sub-collection via the `usersRef`
 reference:
 
 ```dart
@@ -41,4 +49,4 @@ AddressCollectionReference addressesRef = usersRef.addresses;
 ```
 
 The subcollection reference has full access to the same functionality as root collections. To learn
-more about usage of references, see the [using references](using-references.md) documentation.
+more about usage of references, see the [using references](./using-references) documentation.

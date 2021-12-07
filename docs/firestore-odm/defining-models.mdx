@@ -1,6 +1,13 @@
-> Note; this documentation is in a temporary location.
+---
+title: Defining Models
+---
 
-# Defining Models
+:::danger Alpha Status
+
+The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress.
+See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
+
+:::
 
 A model represents exactly what data we expect to both receive and mutate on Firestore. The ODM
 ensures that all data is validated against a model, and if the model is not valid an error will be
@@ -143,10 +150,10 @@ class User {
 final usersRef = UserCollectionReference();
 ```
 
-> If you are wondering where the `UserCollectionReference` class has come from, keep reading!
+If you are looking to define a model as a reference on a Subcollection, read the [Working with Subcollections](./subcollections.mdx) documentation.
 
 ## Next Steps
 
 Some of the code on this page is created via code generation
 (e.g. `$assertUser`, `UserCollectionReference`) - you can learn more about
-how to generate this code via the [Code Generation](code-generation.md) documentation!
+how to generate this code via the [Code Generation](./code-generation) documentation!
