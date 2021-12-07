@@ -4,6 +4,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// A function that builds a widget from a [QueryBuilderSnapshot]
+///
+/// See also [FirebaseQueryBuilder].
+typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
+  BuildContext context,
+  QueryBuilderSnapshot<T> snapshot,
+  Widget? child,
+);
+
 /// {@template firebase_ui.firestore_query_builder}
 /// Listens to a query and paginates the result in a way that is compatible with
 /// infinie scroll views, such as [ListView] or [GridView].
@@ -72,11 +81,7 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// When it changes, the current progress will be preserved.
   final int pageSize;
 
-  final Widget Function(
-    BuildContext context,
-    QueryBuilderSnapshot<Document> snapshot,
-    Widget? child,
-  ) builder;
+  final FirestoreQueryBuilderSnapshotBuilder<Document> builder;
 
   /// A widget that will be passed to [builder] for optimizations purpose.
   ///
@@ -341,6 +346,22 @@ class _Sentinel {
   const _Sentinel();
 }
 
+/// A type representing the function passed to [FirestoreListView] for its `itemBuilder`.
+typedef FirestoreItemBuilder<Document> = Widget Function(
+  BuildContext context,
+  QueryDocumentSnapshot<Document> doc,
+);
+
+/// A type representing the function passed to [FirestoreListView] for its `loadingBuilder`.
+typedef FirestoreLoadingBuilder = Widget Function(BuildContext context);
+
+/// A type representing the function passed to [FirestoreListView] for its `errorBuilder`.
+typedef FirestoreErrorBuilder = Widget Function(
+  BuildContext context,
+  Object error,
+  StackTrace stackTrace,
+);
+
 /// {@template flutterfire_ui.firestorelistview}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
@@ -397,19 +418,10 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
   FirestoreListView({
     Key? key,
     required Query<Document> query,
-    required Widget Function(
-      BuildContext context,
-      QueryDocumentSnapshot<Document> doc,
-    )
-        itemBuilder,
+    required FirestoreItemBuilder<Document> itemBuilder,
     int pageSize = 10,
-    Widget Function(BuildContext context)? loadingBuilder,
-    Widget Function(
-      BuildContext context,
-      Object error,
-      StackTrace stackTrace,
-    )?
-        errorBuilder,
+    FirestoreLoadingBuilder? loadingBuilder,
+    FirestoreErrorBuilder? errorBuilder,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
     ScrollController? controller,
