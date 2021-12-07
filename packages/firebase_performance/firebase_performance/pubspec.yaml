@@ -35,8 +35,8 @@ flutter:
   plugin:
     platforms:
       android:
-        package: io.flutter.plugins.firebaseperformance
-        pluginClass: FirebasePerformancePlugin
+        package: io.flutter.plugins.firebase.performance
+        pluginClass: FlutterFirebasePerformancePlugin
       ios:
         pluginClass: FLTFirebasePerformancePlugin
       web:
