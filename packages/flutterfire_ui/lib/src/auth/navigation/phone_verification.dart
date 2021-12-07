@@ -12,7 +12,10 @@ Future<void> startPhoneVerification({
   await Navigator.of(context).push(
     createPageRoute(
       context: context,
-      builder: (context) => PhoneInputScreen(action: action),
+      builder: (_) => FlutterFireUIActions.inherit(
+        from: context,
+        child: PhoneInputScreen(action: action),
+      ),
     ),
   );
 }

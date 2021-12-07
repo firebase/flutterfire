@@ -13,11 +13,14 @@ Future<void> showForgotPasswordScreen({
 }) async {
   final route = createPageRoute(
     context: context,
-    builder: (context) => ForgotPasswordScreen(
-      auth: auth,
-      email: email,
-      footerBuilder: footerBuilder,
-      subtitleBuilder: subtitleBuilder,
+    builder: (_) => FlutterFireUIActions.inherit(
+      from: context,
+      child: ForgotPasswordScreen(
+        auth: auth,
+        email: email,
+        footerBuilder: footerBuilder,
+        subtitleBuilder: subtitleBuilder,
+      ),
     ),
   );
 

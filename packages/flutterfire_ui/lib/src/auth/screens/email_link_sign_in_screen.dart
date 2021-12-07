@@ -8,6 +8,7 @@ import '../widgets/internal/universal_scaffold.dart';
 class EmailLinkSignInScreen extends StatelessWidget {
   final FirebaseAuth? auth;
   final EmailLinkProviderConfiguration config;
+  final List<FlutterFireUIAction>? actions;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
   final SideBuilder? sideBuilder;
@@ -16,6 +17,7 @@ class EmailLinkSignInScreen extends StatelessWidget {
   const EmailLinkSignInScreen({
     Key? key,
     this.auth,
+    this.actions,
     required this.config,
     this.headerBuilder,
     this.headerMaxExtent,
@@ -25,19 +27,22 @@ class EmailLinkSignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UniversalScaffold(
-      body: ResponsivePage(
-        breakpoint: 400,
-        headerBuilder: headerBuilder,
-        headerMaxExtent: headerMaxExtent,
-        maxWidth: 1200,
-        sideBuilder: sideBuilder,
-        desktopLayoutDirection: desktoplayoutDirection,
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: EmailLinkSignInView(
-            auth: auth,
-            config: config,
+    return FlutterFireUIActions(
+      actions: actions ?? const [],
+      child: UniversalScaffold(
+        body: ResponsivePage(
+          breakpoint: 400,
+          headerBuilder: headerBuilder,
+          headerMaxExtent: headerMaxExtent,
+          maxWidth: 1200,
+          sideBuilder: sideBuilder,
+          desktopLayoutDirection: desktoplayoutDirection,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: EmailLinkSignInView(
+              auth: auth,
+              config: config,
+            ),
           ),
         ),
       ),

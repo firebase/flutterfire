@@ -36,10 +36,13 @@ class EmailLinkSignInButton extends StatelessWidget {
           Navigator.of(context).push(
             createPageRoute(
               context: context,
-              builder: (context) {
-                return EmailLinkSignInScreen(
-                  auth: auth,
-                  config: config,
+              builder: (_) {
+                return FlutterFireUIActions.inherit(
+                  from: context,
+                  child: EmailLinkSignInScreen(
+                    auth: auth,
+                    config: config,
+                  ),
                 );
               },
             ),

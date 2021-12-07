@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutterfire_ui/auth.dart';
 
-import '../auth_controller.dart';
 import '../auth_flow.dart';
-import '../auth_state.dart';
 
 class AwaitingPhoneNumber extends AuthState {}
 
@@ -108,4 +108,21 @@ class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
       value = AuthFailed(Exception('An unknown error occured'));
     }
   }
+}
+
+class VerifyPhoneAction extends FlutterFireUIAction {
+  final void Function(BuildContext context, AuthAction? action) callback;
+
+  VerifyPhoneAction(this.callback);
+}
+
+class SMSCodeRequestedAction extends FlutterFireUIAction {
+  final void Function(
+    BuildContext context,
+    AuthAction? action,
+    Object flowKey,
+    String phoneNumber,
+  ) callback;
+
+  SMSCodeRequestedAction(this.callback);
 }

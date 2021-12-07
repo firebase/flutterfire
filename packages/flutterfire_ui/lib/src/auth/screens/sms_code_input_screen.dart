@@ -17,6 +17,7 @@ import '../screens/internal/responsive_page.dart';
 /// {@subCategory img:https://place-hold.it/400x150}
 class SMSCodeInputScreen extends StatelessWidget {
   final AuthAction? action;
+  final List<FlutterFireUIAction>? actions;
   final FirebaseAuth? auth;
   final Object flowKey;
   final TextDirection? desktopLayoutDirection;
@@ -30,6 +31,7 @@ class SMSCodeInputScreen extends StatelessWidget {
   const SMSCodeInputScreen({
     Key? key,
     this.action,
+    this.actions,
     this.auth,
     required this.flowKey,
     this.desktopLayoutDirection,
@@ -55,37 +57,42 @@ class SMSCodeInputScreen extends StatelessWidget {
         _reset();
         return true;
       },
-      child: UniversalScaffold(
-        body: Center(
-          child: ResponsivePage(
-            breakpoint: 400,
-            maxWidth: maxWidth,
-            desktopLayoutDirection: desktopLayoutDirection,
-            sideBuilder: sideBuilder,
-            headerBuilder: headerBuilder,
-            headerMaxExtent: headerMaxExtent,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SMSCodeInputView(
-                  auth: auth,
-                  action: action,
-                  flowKey: flowKey,
-                  onCodeVerified: () {
-                    Navigator.of(context).popUntil((route) {
-                      return route.isFirst;
-                    });
-                  },
-                ),
-                UniversalButton(
-                  variant: ButtonVariant.text,
-                  text: l.goBackButtonLabel,
-                  onPressed: () {
-                    _reset();
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
+      child: FlutterFireUIActions(
+        actions: actions ?? const [],
+        child: UniversalScaffold(
+          body: Center(
+            child: ResponsivePage(
+              breakpoint: 400,
+              maxWidth: maxWidth,
+              desktopLayoutDirection: desktopLayoutDirection,
+              sideBuilder: sideBuilder,
+              headerBuilder: headerBuilder,
+              headerMaxExtent: headerMaxExtent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SMSCodeInputView(
+                    auth: auth,
+                    action: action,
+                    flowKey: flowKey,
+                    onCodeVerified: () {
+                      if (actions != null) return;
+
+                      Navigator.of(context).popUntil((route) {
+                        return route.isFirst;
+                      });
+                    },
+                  ),
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    text: l.goBackButtonLabel,
+                    onPressed: () {
+                      _reset();
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),
