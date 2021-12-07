@@ -10,7 +10,8 @@ import 'package:flutter/services.dart';
 
 import 'utils/exception.dart';
 
-class MethodChannelFirebaseAppInstallations extends FirebaseAppInstallationsPlatform {
+class MethodChannelFirebaseAppInstallations
+    extends FirebaseAppInstallationsPlatform {
   /// Returns a stub instance to allow the platform interface to access
   /// the class instance statically.
   static MethodChannelFirebaseAppInstallations get instance {
@@ -26,7 +27,8 @@ class MethodChannelFirebaseAppInstallations extends FirebaseAppInstallationsPlat
       <String, StreamController<String>>{};
 
   /// Creates a new [MethodChannelFirebaseAppInstallations] instance with an [app].
-  MethodChannelFirebaseAppInstallations({required FirebaseApp app}) : super(app) {
+  MethodChannelFirebaseAppInstallations({required FirebaseApp app})
+      : super(app) {
     _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
 
     channel.invokeMethod<String>(

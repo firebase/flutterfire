@@ -126,7 +126,8 @@ class MockFirebaseInstallations extends Mock
   }
 }
 
-class TestFirebaseAppInstallationsPlatform extends FirebaseAppInstallationsPlatform {
+class TestFirebaseAppInstallationsPlatform
+    extends FirebaseAppInstallationsPlatform {
   TestFirebaseAppInstallationsPlatform(FirebaseApp? app) : super(app);
 
   @override

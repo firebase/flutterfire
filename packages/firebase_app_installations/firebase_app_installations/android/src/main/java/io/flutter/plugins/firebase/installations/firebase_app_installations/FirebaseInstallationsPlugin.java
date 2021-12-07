@@ -86,7 +86,11 @@ public class FirebaseInstallationsPlugin
           String appName = (String) Objects.requireNonNull(arguments.get("appName"));
           FirebaseInstallations firebaseInstallations = getInstallations(arguments);
 
-          io.flutter.plugins.firebase.installations.firebase_app_installations.TokenChannelStreamHandler handler = new io.flutter.plugins.firebase.installations.firebase_app_installations.TokenChannelStreamHandler(firebaseInstallations);
+          io.flutter.plugins.firebase.installations.firebase_app_installations
+                  .TokenChannelStreamHandler
+              handler =
+                  new io.flutter.plugins.firebase.installations.firebase_app_installations
+                      .TokenChannelStreamHandler(firebaseInstallations);
 
           final String name = METHOD_CHANNEL_NAME + "/token/" + appName;
           final EventChannel channel = new EventChannel(messenger, name);

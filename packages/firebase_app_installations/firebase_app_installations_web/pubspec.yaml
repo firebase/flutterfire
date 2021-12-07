@@ -28,5 +28,5 @@ flutter:
   plugin:
     platforms:
       web:
-        pluginClass: FirebaseInstallationsWeb
+        pluginClass: FirebaseAppInstallationsWeb
         fileName: firebase_app_installations_web.dart
