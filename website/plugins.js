@@ -84,7 +84,7 @@ module.exports = [
   },
   {
     name: 'Installations',
-    pub: 'flutterfire_installations',
+    pub: 'firebase_app_installations',
     firebase: 'https://firebase.google.com/docs/projects/manage-installations',
     status: 'Stable',
     documentation: 'https://firebase.flutter.dev/docs/installations/overview',
@@ -190,18 +190,6 @@ module.exports = [
       web: 'N/A',
       mobile: true,
       macos: true,
-    },
-  },
-  {
-    name: 'ML Model Downloader',
-    pub: 'firebase_ml_model_downloader',
-    firebase: 'ml',
-    status: 'Stable',
-    documentation: 'https://firebase.flutter.dev/docs/ml-model-downloader/overview',
-    support: {
-      web: false,
-      mobile: true,
-      macos: false,
     },
   },
   {

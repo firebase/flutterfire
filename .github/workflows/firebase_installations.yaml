@@ -1,10 +1,10 @@
-name: firebase_installations
+name: firebase_app_installations
 
 on:
   pull_request:
     paths:
-      - 'packages/firebase_installations/**'
-      - '.github/workflows/firebase_installations.yaml'
+      - 'packages/firebase_app_installations/**'
+      - '.github/workflows/firebase_app_installations.yaml'
   push:
     branches:
       - master
