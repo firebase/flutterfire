@@ -95,7 +95,7 @@ export 'src/auth/screens/email_link_sign_in_screen.dart';
 export 'src/auth/navigation/phone_verification.dart';
 export 'src/auth/navigation/forgot_password.dart';
 export 'src/auth/navigation/authentication.dart';
-export 'src/auth/actions.dart' show AuthStateChangeAction, SignedOutAction;
+export 'src/auth/actions.dart';
 
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';
