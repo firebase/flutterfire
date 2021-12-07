@@ -3,7 +3,7 @@ title: App Check
 sidebar_label: Overview
 ---
 
-##  What does it do?
+## What does it do?
 
 App Check helps protect your backend resources (such as Cloud Storage) from
 abuse (such as billing fraud or phishing).
@@ -27,63 +27,24 @@ with a CDN.
 FlutterFire App Check is an early access preview plugin; APIs may change in a future release.
 :::
 
-Ensure you're using the Flutter `stable` channel:
+### 1. Make sure to initialize Firebase
 
-```bash
-$ flutter channel stable
+[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
+
+### 2. Add dependency
+
+On the root of your Flutter project, run the following command to install the plugin:
+
+```bash {5}
+flutter pub add firebase_app_check
 ```
 
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
-
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_app_check/firebase_app_check.dart';
-```
-
-### 1. Add dependency
-
-Add the [`firebase_app_check`](https://pub.dev/packages/firebase_app_check) dependency to your projects `pubspec.yaml` file:
-
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_app_check: "^{{ plugins.firebase_app_check_ns }}"
-```
-
-### 2. Download dependency
-
-```
-$ flutter pub get
-```
-
-### 3. (Web Only) Add the SDK
-
-If using FlutterFire on the web, add the `firebase-app-check` JavaScript SDK to your `index.html` file:
-
-```html {5} title="web/index.html"
-<html>
-  ...
-  <body>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app-check.js"></script>
-  </body>
-</html>
-```
-
-### 4. Rebuild your app
+### 3. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
 ```
 
 ## Next Steps
