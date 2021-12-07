@@ -434,14 +434,6 @@ class _PropertyTypeDropdown extends StatelessWidget {
           value: _PropertyType.boolean,
           child: Text(localizations.booleanLabel),
         ),
-        DropdownMenuItem(
-          value: _PropertyType.map,
-          child: Text(localizations.mapLabel),
-        ),
-        DropdownMenuItem(
-          value: _PropertyType.list,
-          child: Text(localizations.arrayLabel),
-        ),
         DropdownMenuItem(child: Text(localizations.nullLabel)),
       ],
       onChanged: onTypeChanged,
@@ -458,10 +450,6 @@ _FormState _initialFormStateOfValue(Object? value) {
     return _BooleanFormState(value);
   } else if (value is String) {
     return _StringFormState(value);
-  } else if (value is Map) {
-    return const _MapFormState();
-  } else if (value is List) {
-    return const _ArrayFormState();
   } else {
     throw UnsupportedError('Unknown type ${value.runtimeType}');
   }
@@ -477,10 +465,6 @@ _FormState _initialFormStateForType(_PropertyType? type) {
       return _NumberFormState('');
     case _PropertyType.string:
       return _StringFormState('');
-    case _PropertyType.map:
-      return const _MapFormState();
-    case _PropertyType.list:
-      return const _ArrayFormState();
   }
 }
 
@@ -488,8 +472,6 @@ enum _PropertyType {
   number,
   boolean,
   string,
-  map,
-  list,
 }
 
 abstract class _FormState {
@@ -543,20 +525,6 @@ class _BooleanFormState extends _FormState {
 
   @override
   _Edit submit(DatabaseReference ref) => _Edit(value);
-}
-
-class _MapFormState extends _FormState {
-  const _MapFormState();
-
-  @override
-  _PropertyType get type => _PropertyType.map;
-}
-
-class _ArrayFormState extends _FormState {
-  const _ArrayFormState();
-
-  @override
-  _PropertyType get type => _PropertyType.list;
 }
 
 class _NullFormState extends _FormState {
