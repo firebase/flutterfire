@@ -2,4 +2,99 @@
 title: Navigation
 ---
 
-These docs are still wip.
+Firebase UI uses Flutter navigation capabilities to navigate between pages.
+By default, Firebase UI uses Navigator 1. When a new screen needs to be shown as a result of user interaction, `Navigator.push(context, route)` is used.
+
+For simple scenarios, when your app doesn't have its custom routing with named routes or 3rd-party router libraries, this should be quite enough.
+However, if your app has a complicated routing system, Firebase UI screens could be used as well, but you will need to provide a list of actions to perform navigation as a response to user action or authentication state changes.
+
+## FlutterfireUIActions API
+
+Let's build an example app that uses named routes and `FlutterfireUIActions` API for navigation:
+
+First, we will need to define the root route that checks for authentication state and renders a `SignInScreen` or `ProfileScreen`.
+
+```dart
+class FirebaseAuthUIExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    const providerConfigs = [EmailProviderConfiguration()];
+
+    return MaterialApp(
+      routes: {
+        '/': (context) => FirebaseAuth.instance.currentUser == null
+            ? SignInScreen(providerConfigs: providerConfigs)
+            : ProfileScreen(providerConfigs: providerConfigs),
+      },
+    );
+  }
+}
+```
+
+There is no default action that happens after user successfully signs in, so you will need to pass a list of actions to the `SignInScreen`.
+
+```dart
+// ...
+SignInScreen(
+  actions: [
+    AuthStateChange<SignedIn>((context, _) {
+      // root route gets rendered again, now with user signed in – ProfileScreen rendered
+      Navigator.of(context).pushReplacementNamed('/');
+    }),
+  ],
+  providerConfigs: providerConfigs,
+)
+```
+
+You could also react to the user signing out in a similar manner:
+
+```dart
+ProfileScreen(
+  actions: [
+    AuthStateChange<SignedOut>((context, _) {
+      Navigator.of(context).pushReplacementNamed('/please-dont-leave-us');
+    }),
+  ],
+  providerConfigs: providerConfigs,
+)
+```
+
+> Note: An alternative to `AuthStateChange` action would be subscribing to the `FirebaseAuth.instance.authStateChanges()` stream.
+
+Now let's imagine that `ForgotPassword` screen that comes with the library is not good enough for your use-case, and you want to create a completely custom screen. Here's how you could integrate it with the rest of the app:
+
+```dart
+class FirebaseAuthUIExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    const providerConfigs = [EmailProviderConfiguration()];
+
+    return MaterialApp(
+      routes: {
+        '/': (context) => FirebaseAuth.instance.currentUser == null
+            ? SignInScreen(
+                actions: [
+                  // ...
+                  ForgotPassword((context, email) {
+                    Navigator.of(context).pushReplacementNamed(
+                      '/forgot-password',
+                      arguments: {'email': email},
+                    );
+                  }),
+                ],
+                providerConfigs: providerConfigs,
+              )
+            : ProfileScreen(/*...*/),
+        '/forgot-password': (context) {
+          final args = ModalRoute.of(context)?.settings.arguments;
+          final email = (args as Map?)?['email'];
+
+          return YourCustomForgotPasswordScreen(email: email);
+        }
+      },
+    );
+  }
+}
+```
+
+> Note: check out [FlutterfireUIActions API reference](https://pub.dev/documentation/flutterfire_ui/latest/auth/FlutterfireUIAuthAction-class.html) to learn what other actions exist

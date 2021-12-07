@@ -51,7 +51,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
-            <intent-filter>
+            <intent-filter android:autoVerify="true">
               <action android:name="android.intent.action.VIEW" />
 
               <category android:name="android.intent.category.DEFAULT" />
@@ -59,11 +59,7 @@
               <!-- Accepts URIs that begin with YOUR_SCHEME://YOUR_HOST -->
               <data
                 android:scheme="https"
-                android:host="reactnativefirebase.page.link" />
-
-              <data
-                android:scheme="ffire"
-                android:host="reactnativefirebase.page.link" />
+                android:host="react-native-firebase-testing.firebaseapp.com" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

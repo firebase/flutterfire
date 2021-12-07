@@ -2,4 +2,107 @@
 title: Themeing
 ---
 
-TODO docs
+Flutterfire UI widgets are built on top of `material` and `cupertino` libraries provided by Flutter.
+
+To make the rest of your appliaction look the same as the widgets that come with Firebase UI we're minimizing the amount of custom styling and depend on `ThemeData` and `CupertinoThemeData` instead.
+
+With the following code
+
+```dart
+class FirebaseAuthUIExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: SignInScreen(
+        providerConfigs: [
+          EmailProviderConfiguration(),
+        ],
+      ),
+    );
+  }
+}
+```
+
+you will get an email form that uses [`TextFormField`](https://api.flutter.dev/flutter/material/TextFormField-class.html), [`TextButton`](https://api.flutter.dev/flutter/material/TextButton-class.html) and [`OutlinedButton`](https://api.flutter.dev/flutter/material/OutlinedButton-class.html) widgets.
+
+<Image
+  src="ui/ui-auth-theming-default.png"
+  alt="FlutterFire UI Auth Theming - default email form style"
+  caption={false}
+  style={{ maxHeight: 300 }}
+/>
+
+Let's apply custom style to the input fields.
+
+```dart
+class FirebaseAuthUIExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+      ),
+      home: const SignInScreen(
+        providerConfigs: [
+          EmailProviderConfiguration(),
+        ],
+      ),
+    );
+  }
+}
+```
+
+Email form respects the material theme properties and after we providdedd the custom `inputDecorationTheme`, the form looks like this:
+
+<Image
+  src="ui/ui-auth-theming-outline-border.png"
+  alt="FlutterFire UI Auth Theming - email form outline border"
+  caption={false}
+  style={{ maxHeight: 300 }}
+/>
+
+Let's also customize the button:
+
+```dart
+class FirebaseAuthUIExample extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all<EdgeInsets>(
+              const EdgeInsets.all(24),
+            ),
+            backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          ),
+        ),
+      ),
+      home: const SignInScreen(
+        providerConfigs: [
+          EmailProviderConfiguration(),
+        ],
+      ),
+    );
+  }
+}
+```
+
+The form now looks like this:
+
+<Image
+  src="ui/ui-auth-theming-button.png"
+  alt="FlutterFire UI Auth Theming - email form custom button style"
+  caption={false}
+  style={{ maxHeight: 300 }}
+/>
