@@ -11,18 +11,18 @@ import 'package:firebase_ml_model_downloader/firebase_ml_model_downloader.dart';
 
 Before using the package, you must first have ensured you have [initialized FlutterFire](../overview.mdx#initializing-flutterfire).
 
-To create a new downloader instance, call the [`instance`](!firebase_ml_model_downloader.FirebaseMlModelDownloader.instance) getter on [`FirebaseMlModelDownloader`](!firebase_ml_model_downloader.FirebaseMlModelDownloader):
+To create a new downloader instance, call the [`instance`](!firebase_ml_model_downloader.FirebaseModelDownloader.instance) getter on [`FirebaseModelDownloader`](!firebase_ml_model_downloader.FirebaseModelDownloader):
 
 ```dart
-FirebaseMlModelDownloader downloader = FirebaseMlModelDownloader.instance;
+FirebaseModelDownloader downloader = FirebaseModelDownloader.instance;
 ```
 
 By default, this allows you to interact with the downloader using the default Firebase App used whilst installing FlutterFire on your
-platform. If however you'd like to use a secondary Firebase App, use the [`instanceFor`](!firebase_ml_model_downloader.FirebaseMlModelDownloader.instanceFor) method:
+platform. If however you'd like to use a secondary Firebase App, use the [`instanceFor`](!firebase_ml_model_downloader.FirebaseModelDownloader.instanceFor) method:
 
 ```dart
 FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
-FirebaseMlModelDownloader downloader = FirebaseMlModelDownloader.instanceFor(app: secondaryApp);
+FirebaseModelDownloader downloader = FirebaseModelDownloader.instanceFor(app: secondaryApp);
 ```
 
 ## List downloaded models
@@ -31,7 +31,7 @@ To access any locally downloaded models on the device, call the `listDownloadedM
 downloaded custom models:
 
 ```dart
-List<CustomModel> models = await FirebaseMlModelDownloader.instance.listDownloadedModels();
+List<FirebaseCustomModel> models = await FirebaseModelDownloader.instance.listDownloadedModels();
 ```
 
 ## Custom model
@@ -39,10 +39,10 @@ List<CustomModel> models = await FirebaseMlModelDownloader.instance.listDownload
 A custom model contains information such as the name, size and unique hash of the model. It also contains access to the local `File` on the device,
 allowing you to provide it to an interpreter plugin.
 
-Once a custom model has been downloaded, you can access it using the [`CustomModel`](!firebase_ml_model_downloader.CustomModel) class:
+Once a custom model has been downloaded, you can access it using the [`FirebaseCustomModel`](!firebase_ml_model_downloader.FirebaseCustomModel) class:
 
 ```dart
-List<CustomModel> models = await FirebaseMlModelDownloader.instance.listDownloadedModels();
+List<FirebaseCustomModel> models = await FirebaseModelDownloader.instance.listDownloadedModels();
 
 models.forEach((model) {
   print('Name: ${model.name}');
@@ -66,30 +66,30 @@ Once you have [deployed a TensorFlow model](https://firebase.google.com/docs/ml/
 device using the `getModel` method, specifying the model name and download options.
 
 ```dart
-CustomModel model = await FirebaseMlModelDownloader.instance.getModel('myModel', DownloadType.latestModel);
+FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel('myModel', FirebaseModelDownloadType.latestModel);
 ```
 
-The above code will download the latest available `myModel` model to the device, since the `DownloadType.latestModel` has been specified.
+The above code will download the latest available `myModel` model to the device, since the `FirebaseModelDownloadType.latestModel` has been specified.
 The method accepts 3 download types for differing behavior:
 
 | Type                                        | Description                                                                                                                                                                                                                         |
 | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `DownloadType.localModel`                   | Returns the current model if present, otherwise triggers new download (or finds one in progress) and only completes when download is finished.                                                                                      |
-| `DownloadType.localModelUpdateInBackground` | Returns the current model if present and triggers an update to fetch a new version in the background. If no local model is present triggers a new download (or finds one in progress) and only completes when download is finished. |
-| `DownloadType.latestModel`                  | Returns the latest model. Checks if latest model is different from local model. If the models are the same, returns the current model. Otherwise, triggers a new model download and returns when this download finishes.            |
+| `FirebaseModelDownloadType.localModel`                   | Returns the current model if present, otherwise triggers new download (or finds one in progress) and only completes when download is finished.                                                                                      |
+| `FirebaseModelDownloadType.localModelUpdateInBackground` | Returns the current model if present and triggers an update to fetch a new version in the background. If no local model is present triggers a new download (or finds one in progress) and only completes when download is finished. |
+| `FirebaseModelDownloadType.latestModel`                  | Returns the latest model. Checks if latest model is different from local model. If the models are the same, returns the current model. Otherwise, triggers a new model download and returns when this download finishes.            |
 
 You can also provide specific conditions for the download, such as whether the model should be downloaded whilst the device has access to
 cellular data, or if the device is charging.
 
-To provide conditions, provide a `DownloadConditions` instance to the `getModel` method:
+To provide conditions, provide a `FirebaseModelDownloadConditions` instance to the `getModel` method:
 
 ```dart
 // The following are the default conditions:
-DownloadConditions conditions = DownloadConditions(
+FirebaseModelDownloadConditions conditions = FirebaseModelDownloadConditions(
   // Download whilst connected to cellular data
-  iOSAllowsCellularAccess: true,
+  iosAllowsCellularAccess: true,
   // Allow downloading in the background
-  iOSAllowsBackgroundDownloading: false,
+  iosAllowsBackgroundDownloading: false,
   // Only download whilst charging
   androidChargingRequired: false,
   // Only download whilst on Wifi
@@ -98,7 +98,7 @@ DownloadConditions conditions = DownloadConditions(
   androidDeviceIdleRequired: false,
 );
 
-CustomModel model = await FirebaseMlModelDownloader.instance.getModel('myModel', DownloadType.latestModel, conditions);
+FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel('myModel', FirebaseModelDownloadType.latestModel, conditions);
 ```
 
 ## Deleting a download model
@@ -106,7 +106,7 @@ CustomModel model = await FirebaseMlModelDownloader.instance.getModel('myModel',
 To delete a model from the device, call the `deleteDownloadedModel` method:
 
 ```dart
-await FirebaseMlModelDownloader.instance.deleteDownloadedModel('myModel');
+await FirebaseModelDownloader.instance.deleteDownloadedModel('myModel');
 ```
 
 Note; this does not delete the model from your Firebase project, only the local copy on the device. You can download it again at any time.

@@ -4,57 +4,57 @@
 
 part of firebase_ml_model_downloader;
 
-class FirebaseMlModelDownloader extends FirebasePluginPlatform {
-  FirebaseMlModelDownloader._({required this.app})
+class FirebaseModelDownloader extends FirebasePluginPlatform {
+  FirebaseModelDownloader._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_ml_model_downloader');
 
-  // Cached and lazily loaded instance of [FirebaseMlModelDownloaderPlatform] to avoid
+  // Cached and lazily loaded instance of [FirebaseModelDownloaderPlatform] to avoid
   // creating a [MethodChannelFirebaseFunctions] when not needed or creating an
   // instance with the default app before a user specifies an app.
-  FirebaseMlModelDownloaderPlatform? _delegatePackingProperty;
+  FirebaseModelDownloaderPlatform? _delegatePackingProperty;
 
-  /// The [FirebaseApp] for this current [FirebaseMlModelDownloader] instance.
+  /// The [FirebaseApp] for this current [FirebaseModelDownloader] instance.
   final FirebaseApp app;
 
-  static final Map<String, FirebaseMlModelDownloader> _cachedInstances = {};
+  static final Map<String, FirebaseModelDownloader> _cachedInstances = {};
 
-  /// Returns the underlying [FirebaseMlModelDownloaderPlatform] delegate for this
-  /// [FirebaseMlModelDownloader] instance. This is useful for testing purposes only.
+  /// Returns the underlying [FirebaseModelDownloaderPlatform] delegate for this
+  /// [FirebaseModelDownloader] instance. This is useful for testing purposes only.
   @visibleForTesting
-  FirebaseMlModelDownloaderPlatform get delegate {
+  FirebaseModelDownloaderPlatform get delegate {
     return _delegatePackingProperty ??=
-        FirebaseMlModelDownloaderPlatform.instanceFor(app: app);
+        FirebaseModelDownloaderPlatform.instanceFor(app: app);
   }
 
   /// Returns an instance using the default [FirebaseApp].
-  static FirebaseMlModelDownloader get instance {
-    return FirebaseMlModelDownloader.instanceFor(
+  static FirebaseModelDownloader get instance {
+    return FirebaseModelDownloader.instanceFor(
       app: Firebase.app(),
     );
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseMlModelDownloader.instanceFor({required FirebaseApp app}) {
+  factory FirebaseModelDownloader.instanceFor({required FirebaseApp app}) {
     return _cachedInstances.putIfAbsent(app.name, () {
-      return FirebaseMlModelDownloader._(app: app);
+      return FirebaseModelDownloader._(app: app);
     });
   }
 
   /// Gets the downloaded model file based on download type and conditions.
-  Future<CustomModel> getModel(
+  Future<FirebaseCustomModel> getModel(
     String modelName,
-    DownloadType downloadType, [
-    DownloadConditions? conditions,
+    FirebaseModelDownloadType downloadType, [
+    FirebaseModelDownloadConditions? conditions,
   ]) {
     return delegate.getModel(
       modelName,
       downloadType,
-      conditions ?? DownloadConditions(),
+      conditions ?? FirebaseModelDownloadConditions(),
     );
   }
 
   /// Lists all models downloaded to device.
-  Future<List<CustomModel>> listDownloadedModels() {
+  Future<List<FirebaseCustomModel>> listDownloadedModels() {
     return delegate.listDownloadedModels();
   }
 

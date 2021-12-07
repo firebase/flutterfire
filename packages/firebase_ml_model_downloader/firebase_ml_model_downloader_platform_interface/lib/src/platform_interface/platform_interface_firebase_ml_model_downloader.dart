@@ -10,35 +10,35 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../download_conditions.dart';
 
-abstract class FirebaseMlModelDownloaderPlatform extends PlatformInterface {
+abstract class FirebaseModelDownloaderPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.
   @protected
   final FirebaseApp? appInstance;
 
-  FirebaseMlModelDownloaderPlatform({this.appInstance}) : super(token: _token);
+  FirebaseModelDownloaderPlatform({this.appInstance}) : super(token: _token);
 
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseMlModelDownloaderPlatform.instanceFor({
+  factory FirebaseModelDownloaderPlatform.instanceFor({
     required FirebaseApp app,
   }) {
-    return FirebaseMlModelDownloaderPlatform.instance.delegateFor(app: app);
+    return FirebaseModelDownloaderPlatform.instance.delegateFor(app: app);
   }
 
-  /// The current default [FirebaseMlModelDownloaderPlatform] instance.
+  /// The current default [FirebaseModelDownloaderPlatform] instance.
   ///
-  /// It will always default to [MethodChannelFirebaseMlModelDownloader]
+  /// It will always default to [MethodChannelFirebaseModelDownloader]
   /// if no other implementation was provided.
-  static FirebaseMlModelDownloaderPlatform get instance {
-    _instance ??= MethodChannelFirebaseMlModelDownloader.instance;
+  static FirebaseModelDownloaderPlatform get instance {
+    _instance ??= MethodChannelFirebaseModelDownloader.instance;
     return _instance!;
   }
 
-  static FirebaseMlModelDownloaderPlatform? _instance;
+  static FirebaseModelDownloaderPlatform? _instance;
 
-  /// Sets the [FirebaseMlModelDownloaderPlatform.instance]
-  static set instance(FirebaseMlModelDownloaderPlatform instance) {
+  /// Sets the [FirebaseModelDownloaderPlatform.instance]
+  static set instance(FirebaseModelDownloaderPlatform instance) {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
@@ -55,21 +55,21 @@ abstract class FirebaseMlModelDownloaderPlatform extends PlatformInterface {
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseMlModelDownloaderPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseModelDownloaderPlatform delegateFor({required FirebaseApp app}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Gets the downloaded model file based on download type and conditions.
-  Future<CustomModel> getModel(
+  Future<FirebaseCustomModel> getModel(
     String modelName,
-    DownloadType downloadType,
-    DownloadConditions conditions,
+    FirebaseModelDownloadType downloadType,
+    FirebaseModelDownloadConditions conditions,
   ) {
     throw UnimplementedError('getModel() is not implemented');
   }
 
   /// Lists all models downloaded to device.
-  Future<List<CustomModel>> listDownloadedModels() {
+  Future<List<FirebaseCustomModel>> listDownloadedModels() {
     throw UnimplementedError('listDownloadedModels() is not implemented');
   }
 

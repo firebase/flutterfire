@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 /// A download type to download a custom model when calling the [getModel] API.
-enum DownloadType {
+enum FirebaseModelDownloadType {
   /// Returns the current model if present, otherwise triggers new download
   /// (or finds one in progress) and only completes when download is finished.
   localModel,

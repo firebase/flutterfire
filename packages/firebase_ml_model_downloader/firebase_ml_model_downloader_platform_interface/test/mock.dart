@@ -10,7 +10,7 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 typedef MethodCallCallback = dynamic Function(MethodCall methodCall);
 typedef Callback = Function(MethodCall call);
 
-void setupFirebaseMlModelDownloaderMocks([Callback? customHandlers]) {
+void setupFirebaseModelDownloaderMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
   MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
     if (call.method == 'Firebase#initializeCore') {
@@ -44,7 +44,7 @@ void setupFirebaseMlModelDownloaderMocks([Callback? customHandlers]) {
 }
 
 void handleMethodCall(MethodCallCallback methodCallCallback) =>
-    MethodChannelFirebaseMlModelDownloader.channel
+    MethodChannelFirebaseModelDownloader.channel
         .setMockMethodCallHandler((call) async {
       return await methodCallCallback(call);
     });
