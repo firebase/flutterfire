@@ -64,7 +64,7 @@ class MethodChannelFirebaseModelDownloader
   @override
   Future<List<FirebaseCustomModel>> listDownloadedModels() async {
     try {
-      final result = await channel.invokeListMethod<Map<String, dynamic>>(
+      final result = await channel.invokeListMethod<Map>(
           'FirebaseModelDownloader#listDownloadedModels', {
         'appName': app.name,
       });
@@ -89,7 +89,7 @@ class MethodChannelFirebaseModelDownloader
   }
 
   FirebaseCustomModel _resultToFirebaseCustomModel(
-    Map<dynamic, dynamic> result,
+    Map result,
   ) {
     return FirebaseCustomModel(
       file: File(result['filePath']),
