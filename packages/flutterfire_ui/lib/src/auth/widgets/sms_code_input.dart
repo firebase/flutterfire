@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart' show PhoneAuthCredential;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_text_form_field.dart';
+import '../widgets/internal/universal_text_form_field.dart';
 
 class _NumberDecorationPainter extends BoxPainter {
   final InputBorder inputBorder;
@@ -53,9 +53,8 @@ const NUMBER_SLOT_MARGIN = 5.5;
 
 class _NumberSlot extends StatefulWidget {
   final String number;
-  final VoidCallback? onTap;
 
-  const _NumberSlot({Key? key, this.number = '', this.onTap}) : super(key: key);
+  const _NumberSlot({Key? key, this.number = ''}) : super(key: key);
 
   @override
   _NumberSlotState createState() => _NumberSlotState();
@@ -91,32 +90,26 @@ class _NumberSlotState extends State<_NumberSlot>
 
     final color = hasError ? errorColor : primaryColor;
 
-    return GestureDetector(
-      onTap: () {
-        widget.onTap?.call();
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: NUMBER_SLOT_WIDTH,
-        height: NUMBER_SLOT_HEIGHT,
-        decoration: _NumberSlotDecoration(
-          inputBorder: inputBorder ?? const UnderlineInputBorder(),
-          color: color,
-        ),
-        margin: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
-        child: Center(
-          child: AnimatedBuilder(
-            animation: controller,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: controller.value,
-                child: child,
-              );
-            },
-            child: Text(
-              widget.number,
-              style: const TextStyle(fontSize: 24),
-            ),
+    return Container(
+      width: NUMBER_SLOT_WIDTH,
+      height: NUMBER_SLOT_HEIGHT,
+      decoration: _NumberSlotDecoration(
+        inputBorder: inputBorder ?? const UnderlineInputBorder(),
+        color: color,
+      ),
+      margin: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
+      child: Center(
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: controller.value,
+              child: child,
+            );
+          },
+          child: Text(
+            widget.number,
+            style: const TextStyle(fontSize: 24),
           ),
         ),
       ),
@@ -197,63 +190,49 @@ class SMSCodeInputState extends State<SMSCodeInput> {
       ),
       child: Stack(
         children: [
-          Opacity(
-            opacity: 0,
-            child: UniversalTextFormField(
-              autofocus: true,
-              focusNode: focusNode,
-              controller: controller,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onSubmitted: (v) {
-                if (v == null) return;
-                if (v.length < 6) return;
-                widget.onSubmit?.call(v);
-              },
-            ),
-          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (state is SMSCodeRequested)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const LoadingIndicator(
-                      size: 16,
-                      borderWidth: 1,
-                    ),
-                    const SizedBox(width: 16),
-                    Text(l.sendingSMSCodeText),
-                  ],
-                )
-              else ...[
-                Padding(
-                  padding: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
-                  child: Text(
-                    l.enterSMSCodeText,
-                    style: TextStyle(color: primaryColor),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
+                child: Text(
+                  l.enterSMSCodeText,
+                  style: TextStyle(color: primaryColor),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    for (int i = 0; i < 6; i++)
-                      _NumberSlot(
-                        number: code.length > i ? code[i] : '',
-                        onTap: focusNode.requestFocus,
-                      ),
-                  ],
-                ),
-              ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < 6; i++)
+                    _NumberSlot(number: code.length > i ? code[i] : ''),
+                ],
+              ),
               if (widget.text != null || text != null)
                 Padding(
                   padding: const EdgeInsets.all(6),
                   child: widget.text ?? text,
-                )
+                ),
             ],
+          ),
+          Opacity(
+            opacity: 0,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: UniversalTextFormField(
+                autofocus: true,
+                focusNode: focusNode,
+                controller: controller,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onSubmitted: (v) {
+                  if (v == null) return;
+                  if (v.length < 6) return;
+                  widget.onSubmit?.call(v);
+                },
+              ),
+            ),
           ),
         ],
       ),

@@ -1,8 +1,4 @@
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/auth/apple.dart';
-import 'package:flutterfire_ui/auth/facebook.dart';
-import 'package:flutterfire_ui/auth/google.dart';
-import 'package:flutterfire_ui/auth/twitter.dart';
 import 'package:flutterfire_ui_example/config.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';

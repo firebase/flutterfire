@@ -67,15 +67,19 @@ module.exports = {
       toReferenceAPI('cloud_functions'),
       toGithubExample('cloud_functions'),
     ],
-    'Cloud Messaging': [
-      'messaging/overview',
-      'messaging/usage',
-      'messaging/apple-integration',
-      'messaging/permissions',
-      'messaging/notifications',
-      'messaging/server-integration',
-      toReferenceAPI('firebase_messaging'),
-      toGithubExample('firebase_messaging'),
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+    ],
+    "Cloud Messaging": [
+      "messaging/overview",
+      "messaging/usage",
+      "messaging/apple-integration",
+      "messaging/permissions",
+      "messaging/notifications",
+      "messaging/server-integration",
+      toReferenceAPI("firebase_messaging"),
+      toGithubExample("firebase_messaging"),
     ],
     'Cloud Storage': [
       'storage/overview',
@@ -110,7 +114,16 @@ module.exports = {
     ],
     // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
     // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
-    // "In-App Messaging": ["in-app-messaging/usage", toReferenceAPI("firebase_in_app_messaging")],
+    "In-App Messaging": [
+      "in-app-messaging/overview",
+      "in-app-messaging/usage",
+      toReferenceAPI("firebase_in_app_messaging"),
+      toGithubExample("firebase_in_app_messaging"),
+    ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
+    ],
     // "ML Kit Natural Language": ["ml-language/usage"],
     // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
     'Remote Config': [

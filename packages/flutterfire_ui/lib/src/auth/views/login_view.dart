@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/widgets/email_link_sign_in_button.dart';
 
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
@@ -18,7 +19,7 @@ typedef AuthViewContentBuilder = Widget Function(
 class LoginView extends StatefulWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
-  final ButtonVariant? oauthButtonVariant;
+  final OAuthButtonVariant? oauthButtonVariant;
   final bool? showTitle;
   final String? email;
   final bool? showAuthActionSwitch;
@@ -31,7 +32,7 @@ class LoginView extends StatefulWidget {
     Key? key,
     required this.action,
     required this.providerConfigs,
-    this.oauthButtonVariant = ButtonVariant.icon_and_text,
+    this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.auth,
     this.showTitle = true,
     this.email,
@@ -64,7 +65,7 @@ class LoginViewState extends State<LoginView> {
     _buttonsBuilt = true;
 
     final oauthButtonsList = oauthProviderConfigs.map((config) {
-      if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
+      if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
         return OAuthProviderButton(
           auth: widget.auth,
           action: _action,
@@ -79,7 +80,7 @@ class LoginViewState extends State<LoginView> {
       }
     }).toList();
 
-    if (widget.oauthButtonVariant == ButtonVariant.icon_and_text) {
+    if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: oauthButtonsList,
@@ -207,6 +208,12 @@ class LoginViewState extends State<LoginView> {
                   auth: widget.auth,
                 ),
                 const SizedBox(height: 8),
+              ] else if (config is EmailLinkProviderConfiguration) ...[
+                const SizedBox(height: 8),
+                EmailLinkSignInButton(
+                  auth: widget.auth,
+                  config: config,
+                ),
               ] else if (config is OAuthProviderConfiguration && !_buttonsBuilt)
                 _buildOAuthButtons(platform),
           if (widget.footerBuilder != null)

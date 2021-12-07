@@ -1,12 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import 'package:flutterfire_ui/src/auth/auth_flow.dart';
-import 'package:flutterfire_ui/src/auth/auth_controller.dart';
+import '../auth_flow.dart';
+import '../auth_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
-import 'package:flutterfire_ui/src/auth/configs/provider_configuration.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/oauth_provider_button_style.dart';
+import '../oauth/oauth_providers.dart';
+import '../configs/provider_configuration.dart';
+import '../widgets/internal/oauth_provider_button_style.dart';
 
 import '../flows/oauth_flow.dart';
 

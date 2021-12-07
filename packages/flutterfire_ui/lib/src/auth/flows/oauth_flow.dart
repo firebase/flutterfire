@@ -1,15 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
+import '../oauth/oauth_providers.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform, kIsWeb;
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
 import '../auth_state.dart';
 import '../configs/oauth_provider_configuration.dart';
-
-class Uninitialized extends AuthState {
-  const Uninitialized();
-}
 
 abstract class OAuthController extends AuthController {
   Future<void> signInWithProvider(TargetPlatform platform);

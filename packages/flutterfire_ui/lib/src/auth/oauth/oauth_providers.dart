@@ -9,7 +9,6 @@ abstract class OAuthProvider {
   OAuthCredential fromDesktopAuthResult(AuthResult result);
 
   Future<OAuthCredential> desktopSignIn() async {
-    print(desktopSignInArgs);
     final result = await DesktopWebviewAuth.signIn(desktopSignInArgs);
 
     if (result == null) {

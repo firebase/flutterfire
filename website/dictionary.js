@@ -41,6 +41,7 @@ module.exports = [
   'datastore',
   'deprecations',
   'dex',
+  'downloader',
   'dropdown',
   'filesystem',
   'firebase',
@@ -94,5 +95,7 @@ module.exports = [
   'web.firebase_cdn',
   'xml',
   'yaml',
+  'fiam',
+  'ecommerce',
   'programmatically',
 ];

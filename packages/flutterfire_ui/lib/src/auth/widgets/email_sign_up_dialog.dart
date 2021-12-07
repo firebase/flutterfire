@@ -8,42 +8,46 @@ import 'internal/title.dart';
 
 class EmailSignUpDialog extends StatelessWidget {
   final FirebaseAuth? auth;
+  final AuthAction? action;
   final EmailProviderConfiguration config;
 
   const EmailSignUpDialog({
     Key? key,
     this.auth,
     required this.config,
+    required this.action,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Dialog(
-        child: AuthStateListener<EmailFlowController>(
-          listener: (oldState, newState, ctrl) {
-            if (newState is CredentialLinked) {
-              Navigator.of(context).pop();
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 16),
-                Title(text: l.provideEmail),
-                const SizedBox(height: 32),
-                EmailForm(
-                  auth: auth,
-                  action: AuthAction.link,
-                  config: config,
-                ),
-              ],
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 500),
+        child: Dialog(
+          child: AuthStateListener<EmailFlowController>(
+            listener: (oldState, newState, ctrl) {
+              if (newState is CredentialLinked) {
+                Navigator.of(context).pop();
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16),
+                  Title(text: l.provideEmail),
+                  const SizedBox(height: 32),
+                  EmailForm(
+                    auth: auth,
+                    action: action,
+                    config: config,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

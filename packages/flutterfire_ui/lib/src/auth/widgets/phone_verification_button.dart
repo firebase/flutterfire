@@ -1,8 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/cupertino.dart';
-import 'package:flutterfire_ui/auth.dart' hide ButtonVariant;
+import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+import '../widgets/internal/universal_button.dart';
+
+import '../actions.dart';
+
+class VerifyPhone extends FlutterfireUIAuthAction {
+  final void Function(BuildContext context) action;
+
+  VerifyPhone({required this.action});
+}
 
 class PhoneVerificationButton extends StatelessWidget {
   final FirebaseAuth? auth;
@@ -17,7 +25,12 @@ class PhoneVerificationButton extends StatelessWidget {
   }) : super(key: key);
 
   void _onPressed(BuildContext context) {
-    startPhoneVerification(context: context, action: action, auth: auth);
+    final navAction = FlutterfireUIAuthAction.ofType<VerifyPhone>(context);
+    if (navAction != null) {
+      navAction.action(context);
+    } else {
+      startPhoneVerification(context: context, action: action, auth: auth);
+    }
   }
 
   @override

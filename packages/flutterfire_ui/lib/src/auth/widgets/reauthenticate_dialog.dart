@@ -22,23 +22,25 @@ class ReauthenticateDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = FirebaseUILocalizations.labelsOf(context);
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Title(text: l.verifyItsYouText),
-              const SizedBox(height: 16),
-              ReauthenticateView(
-                auth: auth,
-                providerConfigs: providerConfigs,
-                onSignedIn: onSignedIn,
-              ),
-            ],
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Title(text: l.verifyItsYouText),
+                const SizedBox(height: 16),
+                ReauthenticateView(
+                  auth: auth,
+                  providerConfigs: providerConfigs,
+                  onSignedIn: onSignedIn,
+                ),
+              ],
+            ),
           ),
         ),
       ),

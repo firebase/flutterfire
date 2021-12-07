@@ -2,9 +2,9 @@ import 'package:flutter/material.dart' hide Title;
 
 import 'package:firebase_auth/firebase_auth.dart'
     show ActionCodeSettings, FirebaseAuth, FirebaseAuthException;
-import 'package:flutterfire_ui/auth.dart' hide ButtonVariant;
+import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+import '../widgets/internal/universal_button.dart';
 
 import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
@@ -67,20 +67,27 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Title(text: l.forgotPasswordViewTitle),
+          if (!emailSent) ...[
+            spacer,
+            widget.subtitleBuilder?.call(context) ??
+                Text(l.forgotPasswordHintText),
+          ],
           spacer,
-          if (widget.subtitleBuilder != null) widget.subtitleBuilder!(context),
-          if (!emailSent)
+          if (!emailSent) ...[
             EmailInput(
-              autofocus: true,
+              autofocus: false,
               controller: emailCtrl,
               onSubmitted: _submit,
-            )
-          else
-            Text(l.passwordResetEmailSentText),
-          spacer,
-          if (exception != null) ...[
-            ErrorText(exception: exception!),
+            ),
             spacer,
+          ] else ...[
+            Text(l.passwordResetEmailSentText),
+            spacer,
+          ],
+          if (exception != null) ...[
+            const SizedBox(height: 16),
+            ErrorText(exception: exception!),
+            const SizedBox(height: 16),
           ],
           if (!emailSent)
             LoadingButton(

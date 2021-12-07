@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, User;
 import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 import '../auth_state.dart';
+import '../actions.dart';
+
 import 'internal/login_screen.dart';
+import 'internal/responsive_page.dart';
 
 /// A screen displaying a fully styled Sign In flow for Authentication.
 ///
@@ -19,13 +22,14 @@ class SignInScreen extends StatelessWidget {
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
   final SideBuilder? sideBuilder;
-  final ButtonVariant? oauthButtonVariant;
+  final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
+  final List<FlutterfireUIAuthAction>? actions;
 
   const SignInScreen({
     Key? key,
@@ -34,19 +38,19 @@ class SignInScreen extends StatelessWidget {
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
-    this.oauthButtonVariant = ButtonVariant.icon_and_text,
+    this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
     this.showAuthActionSwitch,
     this.email,
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
+    this.actions,
   }) : super(key: key);
 
   Future<void> _signInWithDifferentProvider(
     BuildContext context,
     DifferentSignInMethodsFound state,
-    AuthController controller,
   ) async {
     await showDifferentMethodSignInDialog(
       availableProviders: state.methods,
@@ -57,18 +61,16 @@ class SignInScreen extends StatelessWidget {
         Navigator.of(context).pop();
       },
     );
-
-    await controller.link(state.credential!);
+    final _auth = auth ?? FirebaseAuth.instance;
+    await _auth.currentUser!.linkWithCredential(state.credential!);
   }
 
   @override
   Widget build(BuildContext context) {
-    return AuthStateListener<OAuthController>(
-      listener: (oldState, newState, controller) {
-        if (newState is DifferentSignInMethodsFound) {
-          _signInWithDifferentProvider(context, newState, controller);
-        }
-      },
+    final defaultActions = [AuthStateChange(_signInWithDifferentProvider)];
+
+    return FlutterfireUIAuthActions(
+      actions: actions ?? defaultActions,
       child: LoginScreen(
         loginViewKey: loginViewKey,
         action: AuthAction.signIn,

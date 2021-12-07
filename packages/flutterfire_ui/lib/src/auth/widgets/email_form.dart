@@ -2,10 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
+import '../widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
 
 import '../validators.dart';
+import '../actions.dart';
+
+class ForgotPassword extends FlutterfireUIAuthAction {
+  final void Function(BuildContext context, String? email) callback;
+
+  ForgotPassword(this.callback);
+}
 
 typedef EmailSubmitCallback = void Function(String email, String password);
 
@@ -128,16 +135,23 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         label: l.passwordInputLabel,
       ),
       if (widget.action == AuthAction.signIn) ...[
-        spacer,
+        const SizedBox(height: 8),
         Align(
           alignment: Alignment.centerRight,
           child: ForgotPasswordButton(
             onPressed: () {
-              showForgotPasswordScreen(
-                context: context,
-                email: emailCtrl.text,
-                auth: widget.auth,
-              );
+              final navAction =
+                  FlutterfireUIAuthAction.ofType<ForgotPassword>(context);
+
+              if (navAction != null) {
+                navAction.callback(context, emailCtrl.text);
+              } else {
+                showForgotPasswordScreen(
+                  context: context,
+                  email: emailCtrl.text,
+                  auth: widget.auth,
+                );
+              }
             },
           ),
         ),
@@ -160,7 +174,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         ),
         const SizedBox(height: 8),
       ],
-      spacer,
+      const SizedBox(height: 8),
       Builder(
         builder: (context) {
           final state = AuthState.of(context);
@@ -172,7 +186,6 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           );
         },
       ),
-      spacer,
       Builder(
         builder: (context) {
           final authState = AuthState.of(context);

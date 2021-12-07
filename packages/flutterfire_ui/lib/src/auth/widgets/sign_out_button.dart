@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+import '../widgets/internal/universal_button.dart';
 
 class SignOutButton extends StatelessWidget {
   final FirebaseAuth? auth;

@@ -4,6 +4,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 import 'internal/login_screen.dart';
+import 'internal/responsive_page.dart';
 
 /// A screen displaying a fully styled Registration flow for Authentication.
 ///
@@ -17,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
   final SideBuilder? sideBuilder;
-  final ButtonVariant? oauthButtonVariant;
+  final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
@@ -31,7 +32,7 @@ class RegisterScreen extends StatelessWidget {
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
-    this.oauthButtonVariant = ButtonVariant.icon_and_text,
+    this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
     this.email,
     this.showAuthActionSwitch,

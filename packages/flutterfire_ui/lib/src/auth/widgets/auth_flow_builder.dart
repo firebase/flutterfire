@@ -1,5 +1,5 @@
-import 'package:flutterfire_ui/src/auth/configs/default_provider_config_factory.dart';
-import 'package:flutterfire_ui/src/auth/configs/provider_configuration.dart';
+import '../configs/default_provider_config_factory.dart';
+import '../configs/provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, FirebaseAuth;
@@ -23,6 +23,12 @@ typedef StateTransitionListener<T extends AuthController> = void Function(
 
 class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   static final _flows = <Object, AuthFlow>{};
+
+  static T? getController<T extends AuthController>(Object flowKey) {
+    final flow = _flows[flowKey];
+    if (flow == null) return null;
+    return flow as T;
+  }
 
   final Object? flowKey;
   final FirebaseAuth? auth;
