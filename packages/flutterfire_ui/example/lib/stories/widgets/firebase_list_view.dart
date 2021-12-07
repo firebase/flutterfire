@@ -1,11 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutterfire_ui/firebase.dart';
+import 'package:flutterfire_ui/database.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 
-final messagesCollection =
-    FirebaseDatabase.instance.reference().child('list-values').child('list');
+final usersCollection = FirebaseDatabase.instance.ref('users');
 
 class FirebaseListViewStory extends StoryWidget {
   const FirebaseListViewStory({Key? key})
@@ -13,11 +11,47 @@ class FirebaseListViewStory extends StoryWidget {
 
   @override
   Widget build(StoryElement context) {
-    return FirebaseListView(
-      query: messagesCollection,
-      itemBuilder: (context, id, snapshot) {
-        return Text('$id: $snapshot');
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Contacts'),
+      ),
+      body: FirebaseListView(
+        query: usersCollection,
+        primary: true,
+        padding: const EdgeInsets.all(8),
+        itemBuilder: (context, snapshot) {
+          final user = snapshot.value! as Map;
+
+          return Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    child: Text(user['firstName'][0]),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${user['firstName']} ${user['lastName']}',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
+                      Text(
+                        user['number'],
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const Divider(),
+            ],
+          );
+        },
+      ),
     );
   }
 }

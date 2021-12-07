@@ -64,7 +64,7 @@ class AuthResolver extends StatelessWidget {
             );
           },
           footerBuilder: (context, action) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.only(top: 16),
               child: Text(
                 action == AuthAction.signIn
