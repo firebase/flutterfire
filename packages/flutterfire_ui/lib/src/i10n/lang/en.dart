@@ -1,6 +1,6 @@
 import '../default_localizations.dart';
 
-class EnLocalizations extends FirebaseUILocalizationLabels {
+class EnLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String emailInputLabel;
   @override

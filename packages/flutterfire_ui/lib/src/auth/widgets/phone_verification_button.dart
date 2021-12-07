@@ -6,10 +6,10 @@ import '../widgets/internal/universal_button.dart';
 
 import '../actions.dart';
 
-class VerifyPhone extends FlutterfireUIAuthAction {
+class VerifyPhoneAction extends FlutterFireUIAction {
   final void Function(BuildContext context) action;
 
-  VerifyPhone({required this.action});
+  VerifyPhoneAction({required this.action});
 }
 
 class PhoneVerificationButton extends StatelessWidget {
@@ -25,7 +25,7 @@ class PhoneVerificationButton extends StatelessWidget {
   }) : super(key: key);
 
   void _onPressed(BuildContext context) {
-    final navAction = FlutterfireUIAuthAction.ofType<VerifyPhone>(context);
+    final navAction = FlutterFireUIAction.ofType<VerifyPhoneAction>(context);
     if (navAction != null) {
       navAction.action(context);
     } else {

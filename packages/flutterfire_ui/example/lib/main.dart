@@ -74,14 +74,14 @@ class FirebaseAuthUIExample extends StatelessWidget {
           } else {
             return SignInScreen(
               actions: [
-                ForgotPassword((context, email) {
+                ForgotPasswordAction((context, email) {
                   Navigator.pushNamed(
                     context,
                     '/forgot-password',
                     arguments: {'email': email},
                   );
                 }),
-                AuthStateChange<SignedIn>((context, state) {
+                AuthStateChangeAction<SignedIn>((context, state) {
                   Navigator.pushReplacementNamed(context, '/profile');
                 }),
               ],
@@ -159,7 +159,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
           return ProfileScreen(
             providerConfigs: providerConfigs,
             actions: [
-              SignedOut((context) {
+              SignedOutAction((context) {
                 Navigator.pushReplacementNamed(context, '/');
               }),
             ],
@@ -170,10 +170,10 @@ class FirebaseAuthUIExample extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       locale: const Locale('en'),
       localizationsDelegates: [
-        FirebaseUILocalizations.withDefaultOverrides(const LabelOverrides()),
+        FlutterFireUILocalizations.withDefaultOverrides(const LabelOverrides()),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        FirebaseUILocalizations.delegate,
+        FlutterFireUILocalizations.delegate,
       ],
     );
   }

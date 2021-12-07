@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-abstract class FlutterfireUIAuthAction {
-  static T? ofType<T extends FlutterfireUIAuthAction>(BuildContext context) {
+abstract class FlutterFireUIAction {
+  static T? ofType<T extends FlutterFireUIAction>(BuildContext context) {
     final w =
-        context.dependOnInheritedWidgetOfExactType<FlutterfireUIAuthActions>();
+        context.dependOnInheritedWidgetOfExactType<FlutterFireUIActions>();
 
     if (w == null) return null;
 
@@ -16,30 +16,30 @@ abstract class FlutterfireUIAuthAction {
   }
 }
 
-class AuthStateChange<T extends AuthState> extends FlutterfireUIAuthAction {
+class AuthStateChangeAction<T extends AuthState> extends FlutterFireUIAction {
   final void Function(BuildContext context, T state) callback;
-  AuthStateChange(this.callback);
+  AuthStateChangeAction(this.callback);
 
   bool matches(AuthState state) => state is T;
   void invoke(BuildContext context, T state) => callback(context, state);
 }
 
-class SignedOut extends FlutterfireUIAuthAction {
+class SignedOutAction extends FlutterFireUIAction {
   final void Function(BuildContext context) callback;
-  SignedOut(this.callback);
+  SignedOutAction(this.callback);
 }
 
-class FlutterfireUIAuthActions extends InheritedWidget {
-  final List<FlutterfireUIAuthAction> actions;
+class FlutterFireUIActions extends InheritedWidget {
+  final List<FlutterFireUIAction> actions;
 
-  const FlutterfireUIAuthActions({
+  const FlutterFireUIActions({
     Key? key,
     required this.actions,
     required Widget child,
   }) : super(key: key, child: child);
 
   @override
-  bool updateShouldNotify(FlutterfireUIAuthActions oldWidget) {
+  bool updateShouldNotify(FlutterFireUIActions oldWidget) {
     return oldWidget.actions != actions;
   }
 
@@ -53,15 +53,14 @@ class FlutterfireUIAuthActionsElement extends InheritedElement {
   FlutterfireUIAuthActionsElement(InheritedWidget widget) : super(widget);
 
   @override
-  FlutterfireUIAuthActions get widget =>
-      super.widget as FlutterfireUIAuthActions;
+  FlutterFireUIActions get widget => super.widget as FlutterFireUIActions;
 
   @override
   Widget build() {
     return AuthStateListener<AuthController>(
       listener: (oldState, newState, controller) {
         for (final action in widget.actions) {
-          if (action is AuthStateChange && action.matches(newState)) {
+          if (action is AuthStateChangeAction && action.matches(newState)) {
             action.invoke(this, newState);
           }
         }

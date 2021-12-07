@@ -22,13 +22,14 @@ class EmailLinkSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return UniversalButton(
       text: l.emailLinkSignInButtonLabel,
       icon: isCupertino ? CupertinoIcons.link : Icons.link,
       onPressed: () {
-        final action = FlutterfireUIAuthAction.ofType<EmailLinkSignIn>(context);
+        final action =
+            FlutterFireUIAction.ofType<EmailLinkSignInAction>(context);
         if (action != null) {
           action.callback(context);
         } else {

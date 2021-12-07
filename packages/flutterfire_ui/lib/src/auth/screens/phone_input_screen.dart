@@ -53,7 +53,7 @@ class PhoneInputScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final flowKey = Object();
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return UniversalScaffold(
       body: ResponsivePage(

@@ -20,7 +20,7 @@ class EmailSignUpDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return Center(
       child: ConstrainedBox(

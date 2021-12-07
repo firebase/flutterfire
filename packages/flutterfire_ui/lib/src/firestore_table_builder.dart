@@ -355,7 +355,7 @@ class _PropertyTypeForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FirebaseUILocalizations.labelsOf(context);
+    final localizations = FlutterFireUILocalizations.labelsOf(context);
     final formState = this.formState;
 
     if (formState is _NumberFormState) {
@@ -453,7 +453,7 @@ class _EditModalButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FirebaseUILocalizations.labelsOf(context);
+    final localizations = FlutterFireUILocalizations.labelsOf(context);
 
     return ButtonBar(
       mainAxisSize: MainAxisSize.min,
@@ -487,7 +487,7 @@ class _PropertyTypeDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FirebaseUILocalizations.labelsOf(context);
+    final localizations = FlutterFireUILocalizations.labelsOf(context);
 
     return DropdownButtonFormField<_PropertyType?>(
       value: formState?.type,
@@ -894,7 +894,7 @@ class _ValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FirebaseUILocalizations.labelsOf(context);
+    final localizations = FlutterFireUILocalizations.labelsOf(context);
     final value = this.value;
     if (value == null) {
       return Text('null', style: Theme.of(context).textTheme.caption);

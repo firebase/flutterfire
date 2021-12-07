@@ -1,7 +1,7 @@
 export 'src/i10n/i10n.dart'
-    show FirebaseUILocalizations, FirebaseUILocalizationDelegate;
+    show FlutterFireUILocalizations, FlutterFireUILocalizationDelegate;
 
 export 'src/i10n/default_localizations.dart'
-    show DefaultLocalizations, FirebaseUILocalizationLabels;
+    show DefaultLocalizations, FlutterFireUILocalizationLabels;
 
 export 'package:flutter_localizations/flutter_localizations.dart';

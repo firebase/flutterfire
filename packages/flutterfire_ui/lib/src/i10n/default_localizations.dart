@@ -1,7 +1,7 @@
 import 'lang/en.dart';
 
-abstract class FirebaseUILocalizationLabels {
-  const FirebaseUILocalizationLabels();
+abstract class FlutterFireUILocalizationLabels {
+  const FlutterFireUILocalizationLabels();
 
   String get emailInputLabel;
   String get passwordInputLabel;
@@ -92,7 +92,7 @@ abstract class FirebaseUILocalizationLabels {
   String get referenceLabel;
 }
 
-const localizations = <String, FirebaseUILocalizationLabels>{
+const localizations = <String, FlutterFireUILocalizationLabels>{
   'en': EnLocalizations(),
 };
 

@@ -8,7 +8,7 @@ import '../flows/phone_auth_flow.dart';
 
 String? localizedErrorText(
   String? errorCode,
-  FirebaseUILocalizationLabels labels,
+  FlutterFireUILocalizationLabels labels,
 ) {
   switch (errorCode) {
     case 'user-not-found':
@@ -52,7 +52,7 @@ class ErrorText extends StatelessWidget {
       color = Theme.of(context).errorColor;
     }
 
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     String text = l.unknownError;
 
     if (exception is AutoresolutionFailedException) {

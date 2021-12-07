@@ -87,7 +87,7 @@ class AppleProviderConfiguration extends OAuthProviderConfiguration {
   ThemedOAuthProviderButtonStyle get style => const AppleProviderButtonStyle();
 
   @override
-  String getLabel(FirebaseUILocalizationLabels labels) {
+  String getLabel(FlutterFireUILocalizationLabels labels) {
     return labels.signInWithAppleButtonText;
   }
 

@@ -29,5 +29,5 @@ abstract class OAuthProviderConfiguration extends ProviderConfiguration {
 
   OAuthProvider createProvider();
 
-  String getLabel(FirebaseUILocalizationLabels labels);
+  String getLabel(FlutterFireUILocalizationLabels labels);
 }

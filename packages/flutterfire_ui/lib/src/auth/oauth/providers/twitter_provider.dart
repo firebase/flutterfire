@@ -94,7 +94,7 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   }
 
   @override
-  String getLabel(FirebaseUILocalizationLabels labels) {
+  String getLabel(FlutterFireUILocalizationLabels labels) {
     return labels.signInWithTwitterButtonText;
   }
 

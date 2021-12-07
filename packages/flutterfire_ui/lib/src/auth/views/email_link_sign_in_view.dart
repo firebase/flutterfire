@@ -27,7 +27,7 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
   final emailCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return AuthFlowBuilder<EmailLinkFlowController>(
       auth: widget.auth,

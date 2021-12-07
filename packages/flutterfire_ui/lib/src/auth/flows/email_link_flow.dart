@@ -79,8 +79,8 @@ class EmailLinkFlow extends AuthFlow implements EmailLinkFlowController {
   }
 }
 
-class EmailLinkSignIn extends FlutterfireUIAuthAction {
+class EmailLinkSignInAction extends FlutterFireUIAction {
   final void Function(BuildContext context) callback;
 
-  EmailLinkSignIn(this.callback);
+  EmailLinkSignInAction(this.callback);
 }

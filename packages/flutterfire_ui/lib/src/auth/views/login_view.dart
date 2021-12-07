@@ -107,7 +107,7 @@ class LoginViewState extends State<LoginView> {
   }
 
   List<Widget> _buildHeader(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     late String title;
     late String hint;
@@ -180,7 +180,7 @@ class LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     final platform = Theme.of(context).platform;
     _buttonsBuilt = false;
 

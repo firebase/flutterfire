@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import '../validators.dart';
 import '../actions.dart';
 
-class ForgotPassword extends FlutterfireUIAuthAction {
+class ForgotPasswordAction extends FlutterFireUIAction {
   final void Function(BuildContext context, String? email) callback;
 
-  ForgotPassword(this.callback);
+  ForgotPasswordAction(this.callback);
 }
 
 typedef EmailSubmitCallback = void Function(String email, String password);
@@ -83,7 +83,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   String _chooseButtonLabel() {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     switch (ctrl.action) {
       case AuthAction.signIn:
@@ -113,7 +113,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     const spacer = SizedBox(height: 16);
 
     final children = [
@@ -141,7 +141,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           child: ForgotPasswordButton(
             onPressed: () {
               final navAction =
-                  FlutterfireUIAuthAction.ofType<ForgotPassword>(context);
+                  FlutterFireUIAction.ofType<ForgotPasswordAction>(context);
 
               if (navAction != null) {
                 navAction.callback(context, emailCtrl.text);

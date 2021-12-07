@@ -38,7 +38,7 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
 
     try {
       await auth.currentUser?.delete();
-      FlutterfireUIAuthAction.ofType<SignedOut>(context)?.callback(context);
+      FlutterFireUIAction.ofType<SignedOutAction>(context)?.callback(context);
     } on FirebaseAuthException catch (err) {
       if (err.code == 'requires-recent-login') {
         if (widget.onSignInRequired != null) {
@@ -57,7 +57,7 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     bool isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     return LoadingButton(

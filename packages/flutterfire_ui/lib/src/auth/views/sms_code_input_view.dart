@@ -42,7 +42,7 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return AuthFlowBuilder<PhoneAuthController>(
       auth: widget.auth,

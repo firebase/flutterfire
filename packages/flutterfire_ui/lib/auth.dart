@@ -51,7 +51,7 @@ export 'src/auth/oauth/providers/facebook_provider.dart'
     show FacebookProviderConfiguration;
 
 export 'src/auth/widgets/auth_flow_builder.dart';
-export 'src/auth/widgets/email_form.dart' show EmailForm, ForgotPassword;
+export 'src/auth/widgets/email_form.dart' show EmailForm, ForgotPasswordAction;
 export 'src/auth/widgets/error_text.dart' show ErrorText;
 export 'src/auth/widgets/phone_verification_button.dart'
     show PhoneVerificationButton;
@@ -95,7 +95,7 @@ export 'src/auth/screens/email_link_sign_in_screen.dart';
 export 'src/auth/navigation/phone_verification.dart';
 export 'src/auth/navigation/forgot_password.dart';
 export 'src/auth/navigation/authentication.dart';
-export 'src/auth/actions.dart' show AuthStateChange, SignedOut;
+export 'src/auth/actions.dart' show AuthStateChangeAction, SignedOutAction;
 
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';

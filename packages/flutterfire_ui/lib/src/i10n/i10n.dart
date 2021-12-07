@@ -6,16 +6,16 @@ import 'lang/en.dart';
 
 const kDefaultLocale = Locale('en');
 
-class FirebaseUILocalizations<T extends FirebaseUILocalizationLabels> {
+class FlutterFireUILocalizations<T extends FlutterFireUILocalizationLabels> {
   final Locale locale;
   final T labels;
 
-  const FirebaseUILocalizations(this.locale, this.labels);
+  const FlutterFireUILocalizations(this.locale, this.labels);
 
-  static FirebaseUILocalizations of(BuildContext context) {
-    final l = Localizations.of<FirebaseUILocalizations>(
+  static FlutterFireUILocalizations of(BuildContext context) {
+    final l = Localizations.of<FlutterFireUILocalizations>(
       context,
-      FirebaseUILocalizations,
+      FlutterFireUILocalizations,
     );
 
     if (l != null) {
@@ -23,28 +23,29 @@ class FirebaseUILocalizations<T extends FirebaseUILocalizationLabels> {
     }
 
     final defaultLocalizations = localizations[kDefaultLocale.languageCode]!;
-    return FirebaseUILocalizations(kDefaultLocale, defaultLocalizations);
+    return FlutterFireUILocalizations(kDefaultLocale, defaultLocalizations);
   }
 
-  static FirebaseUILocalizationLabels labelsOf(BuildContext context) {
-    return FirebaseUILocalizations.of(context).labels;
+  static FlutterFireUILocalizationLabels labelsOf(BuildContext context) {
+    return FlutterFireUILocalizations.of(context).labels;
   }
 
-  static FirebaseUILocalizationDelegate delegate =
-      const FirebaseUILocalizationDelegate();
+  static FlutterFireUILocalizationDelegate delegate =
+      const FlutterFireUILocalizationDelegate();
 
-  static FirebaseUILocalizationDelegate
+  static FlutterFireUILocalizationDelegate
       withDefaultOverrides<T extends EnLocalizations>(T overrides) {
-    return FirebaseUILocalizationDelegate<T>(overrides);
+    return FlutterFireUILocalizationDelegate<T>(overrides);
   }
 }
 
-class FirebaseUILocalizationDelegate<T extends FirebaseUILocalizationLabels>
-    extends LocalizationsDelegate<FirebaseUILocalizations> {
+class FlutterFireUILocalizationDelegate<
+        T extends FlutterFireUILocalizationLabels>
+    extends LocalizationsDelegate<FlutterFireUILocalizations> {
   final T? overrides;
   final bool _forceSupportAllLocales;
 
-  const FirebaseUILocalizationDelegate([
+  const FlutterFireUILocalizationDelegate([
     this.overrides,
     this._forceSupportAllLocales = false,
   ]);
@@ -56,18 +57,18 @@ class FirebaseUILocalizationDelegate<T extends FirebaseUILocalizationLabels>
   }
 
   @override
-  Future<FirebaseUILocalizations> load(Locale locale) {
-    final l = FirebaseUILocalizations(
+  Future<FlutterFireUILocalizations> load(Locale locale) {
+    final l = FlutterFireUILocalizations(
       locale,
       overrides ?? localizations[locale.languageCode]!,
     );
 
-    return SynchronousFuture<FirebaseUILocalizations>(l);
+    return SynchronousFuture<FlutterFireUILocalizations>(l);
   }
 
   @override
   bool shouldReload(
-    covariant LocalizationsDelegate<FirebaseUILocalizations> old,
+    covariant LocalizationsDelegate<FlutterFireUILocalizations> old,
   ) {
     return false;
   }

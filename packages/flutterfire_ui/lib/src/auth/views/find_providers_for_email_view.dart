@@ -44,7 +44,7 @@ class _FindProvidersForEmailViewState extends State<FindProvidersForEmailView> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     const spacer = SizedBox(height: 24);
 
     return AuthFlowBuilder<AuthController>(

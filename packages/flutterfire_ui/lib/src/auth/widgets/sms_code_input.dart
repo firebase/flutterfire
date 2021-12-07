@@ -169,7 +169,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     final state = AuthState.maybeOf(context);
 

@@ -52,7 +52,7 @@ class AvailableProvidersRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     return Column(
@@ -116,7 +116,7 @@ class LinkedProvidersRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +144,7 @@ class ProfileScreen extends StatefulWidget {
   final Color? avatarPlaceholderColor;
   final ShapeBorder? avatarShape;
   final double? avatarSize;
-  final List<FlutterfireUIAuthAction>? actions;
+  final List<FlutterFireUIAction>? actions;
 
   const ProfileScreen({
     Key? key,
@@ -164,7 +164,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _logout(BuildContext context) async {
     await (widget.auth ?? FirebaseAuth.instance).signOut();
-    final action = FlutterfireUIAuthAction.ofType<SignedOut>(context);
+    final action = FlutterFireUIAction.ofType<SignedOutAction>(context);
 
     action?.callback(context);
   }
@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
     final platform = Theme.of(context).platform;
     final _auth = widget.auth ?? FirebaseAuth.instance;
@@ -252,7 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
 
     if (isCupertino) {
-      return FlutterfireUIAuthActions(
+      return FlutterFireUIActions(
         actions: widget.actions ?? const [],
         child: Builder(
           builder: (context) => CupertinoPageScaffold(
@@ -271,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     } else {
-      return FlutterfireUIAuthActions(
+      return FlutterFireUIActions(
         actions: widget.actions ?? const [],
         child: Builder(
           builder: (context) => Scaffold(

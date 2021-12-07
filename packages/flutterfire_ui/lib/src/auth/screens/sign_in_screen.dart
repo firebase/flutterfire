@@ -29,7 +29,7 @@ class SignInScreen extends StatelessWidget {
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
-  final List<FlutterfireUIAuthAction>? actions;
+  final List<FlutterFireUIAction>? actions;
 
   const SignInScreen({
     Key? key,
@@ -67,9 +67,11 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultActions = [AuthStateChange(_signInWithDifferentProvider)];
+    final defaultActions = [
+      AuthStateChangeAction(_signInWithDifferentProvider)
+    ];
 
-    return FlutterfireUIAuthActions(
+    return FlutterFireUIActions(
       actions: actions ?? defaultActions,
       child: LoginScreen(
         loginViewKey: loginViewKey,

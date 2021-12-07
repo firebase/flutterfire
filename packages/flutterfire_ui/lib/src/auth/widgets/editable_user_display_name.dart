@@ -54,7 +54,7 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
     late Widget iconButton;

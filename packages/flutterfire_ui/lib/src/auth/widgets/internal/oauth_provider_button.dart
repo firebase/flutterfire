@@ -114,7 +114,7 @@ class OAuthProviderButton extends StatelessWidget
     final brightness =
         CupertinoTheme.of(context).brightness ?? Theme.of(context).brightness;
     final style = providerConfig.style.withBrightness(brightness);
-    final l = FirebaseUILocalizations.labelsOf(context);
+    final l = FlutterFireUILocalizations.labelsOf(context);
 
     final margin = (size + _padding * 2) / 10;
     final borderRadius = size / 3;
