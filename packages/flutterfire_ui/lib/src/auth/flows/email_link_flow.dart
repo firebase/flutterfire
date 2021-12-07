@@ -1,0 +1,86 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutterfire_ui/auth.dart';
+
+import '../actions.dart';
+import '../auth_flow.dart';
+import '../auth_state.dart';
+
+class SendingLink extends AuthState {
+  const SendingLink();
+}
+
+class AwaitingDynamicLink extends AuthState {
+  const AwaitingDynamicLink();
+}
+
+abstract class EmailLinkFlowController extends AuthController {
+  Future<void> sendLink(String email);
+}
+
+class EmailLinkFlow extends AuthFlow implements EmailLinkFlowController {
+  final ActionCodeSettings actionCodeSettings;
+  final FirebaseDynamicLinks? dynamicLinks;
+
+  EmailLinkFlow({
+    FirebaseAuth? auth,
+    this.dynamicLinks,
+    required this.actionCodeSettings,
+  }) : super(
+          action: AuthAction.signIn,
+          auth: auth,
+          initialState: const Uninitialized(),
+        );
+
+  FirebaseDynamicLinks get _links =>
+      dynamicLinks ?? FirebaseDynamicLinks.instance;
+
+  @override
+  Future<void> sendLink(String email) async {
+    value = const SendingLink();
+
+    try {
+      await auth.sendSignInLinkToEmail(
+        email: email,
+        actionCodeSettings: actionCodeSettings,
+      );
+
+      value = const AwaitingDynamicLink();
+
+      _links.onLink.listen((event) {
+        print(event);
+        print('42');
+      });
+
+      final linkData = await _links.getInitialLink();
+      print(linkData);
+      final link = linkData!.link.toString();
+
+      if (auth.isSignInWithEmailLink(link)) {
+        value = const SigningIn();
+        final userCredential =
+            await auth.signInWithEmailLink(email: email, emailLink: link);
+
+        final user = userCredential.user;
+
+        if (user != null) {
+          value = SignedIn(user);
+        }
+      } else {
+        throw FirebaseAuthException(
+          code: 'invalid-email-signin-link',
+          message: 'Invalid email sign in link',
+        );
+      }
+    } on Exception catch (e) {
+      value = AuthFailed(e);
+    }
+  }
+}
+
+class EmailLinkSignInAction extends FlutterFireUIAction {
+  final void Function(BuildContext context) callback;
+
+  EmailLinkSignInAction(this.callback);
+}
