@@ -6,6 +6,8 @@
 part of firebase_app_check;
 
 class FirebaseAppCheck extends FirebasePluginPlatform {
+  static Map<String, FirebaseAppCheck> _firebaseAppCheckInstances = {};
+
   FirebaseAppCheck._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_app_check');
 
@@ -38,6 +40,13 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
     return _instance!;
   }
 
+  /// Returns an instance using a specified [FirebaseApp].
+  static FirebaseAppCheck instanceFor({required FirebaseApp app}) {
+    return _firebaseAppCheckInstances.putIfAbsent(app.name, () {
+      return FirebaseAppCheck._(app: app);
+    });
+  }
+
   /// Activates the Firebase App Check service.
   ///
   /// On web, provide the reCAPTCHA v3 Site Key which can be found in the
@@ -45,5 +54,25 @@ class FirebaseAppCheck extends FirebasePluginPlatform {
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web).
   Future<void> activate({String? webRecaptchaSiteKey}) {
     return _delegate.activate(webRecaptchaSiteKey: webRecaptchaSiteKey);
+  }
+
+  /// Get the current App Check token. Attaches to the most recent in-flight
+  /// request if one is present. Returns null if no token is present and no
+  /// token requests are in-flight.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<String?> getToken([bool? forceRefresh]) async {
+    return _delegate.getToken(forceRefresh ?? false);
+  }
+
+  /// If true, the SDK automatically refreshes App Check tokens as needed.
+  Future<void> setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) {
+    return _delegate.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
+  }
+
+  /// Registers a listener to changes in the token state.
+  Stream<String?> get onTokenChange {
+    return _delegate.onTokenChange;
   }
 }
