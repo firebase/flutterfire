@@ -27,7 +27,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     _webMessaging ??=
         messaging_interop.getMessagingInstance(core_interop.app(app.name));
 
-    if (!_initialized) {
+    if (!_initialized && messaging_interop.isSupported()) {
       _webMessaging!.onMessage
           .listen((messaging_interop.MessagePayload webMessagePayload) {
         RemoteMessage remoteMessage =
@@ -53,12 +53,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app) {
-    if (!messaging_interop.isSupported()) {
-      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
-      return;
-    }
-  }
+  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app);
 
   /// Updates user on browser support for Firebase.Messaging
   @override
