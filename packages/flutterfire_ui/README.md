@@ -11,7 +11,7 @@ flutter pub add flutterfire_ui
 ## Getting Started
 
 To get started with FlutterFire UI, please
-[explore widget catalog](https://firebase.flutter.dev/docs/ui/widgets), [storybook](https://flutterfire-ui.web.app/#/) and [see the documentation](https://firebase.flutter.dev/docs/ui/overview).
+explore the [widget catalog](https://firebase.flutter.dev/docs/ui/widgets), the [storybook](https://flutterfire-ui.web.app/#/) and [see the documentation](https://firebase.flutter.dev/docs/ui/overview).
 
 ## Usage
 
