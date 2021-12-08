@@ -6,7 +6,6 @@ import '../widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
 
 import '../validators.dart';
-import '../actions.dart';
 
 class ForgotPasswordAction extends FlutterFireUIAction {
   final void Function(BuildContext context, String? email) callback;

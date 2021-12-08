@@ -3,8 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/actions.dart';
-import 'package:flutterfire_ui/src/auth/flows/email_link_flow.dart';
 
 import './internal/universal_button.dart';
 import './internal/universal_page_route.dart';

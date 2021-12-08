@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import '../auth_state.dart';
 import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
 

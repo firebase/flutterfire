@@ -13,7 +13,7 @@ typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
   Widget? child,
 );
 
-/// {@template firebase_ui.database_query_builder}
+/// {@template firebase_ui.firebase_database_query_builder}
 /// Listens to a query and paginates the result in a way that is compatible with
 /// infinie scroll views, such as [ListView] or [GridView].
 ///
@@ -61,7 +61,7 @@ typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
 /// {@subCategory description:A widget that listens to a query.}
 /// {@subCategory img:https://place-hold.it/400x150}
 class FirebaseDatabaseQueryBuilder extends StatefulWidget {
-  /// {@macro firebase_ui.database_query_builder}
+  /// {@macro firebase_ui.firebase_database_query_builder}
   const FirebaseDatabaseQueryBuilder({
     Key? key,
     required this.query,
@@ -359,7 +359,7 @@ typedef FirebaseErrorBuilder = Widget Function(
   StackTrace stackTrace,
 );
 
-/// {@template flutterfire_ui.firebaselistview}
+/// {@template flutterfire_ui.firebase_database_list_view}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
 /// As an example, consider the following collection:
@@ -387,7 +387,7 @@ typedef FirebaseErrorBuilder = Widget Function(
 /// {@subCategory description:A widget that listens to a query and display the items using a ListView}
 /// {@subCategory img:https://place-hold.it/400x150}
 class FirebaseDatabaseListView extends FirebaseDatabaseQueryBuilder {
-  /// {@macro flutterfire_ui.firebaselistview}
+  /// {@macro flutterfire_ui.firebase_database_list_view}
   FirebaseDatabaseListView({
     Key? key,
     required Query query,

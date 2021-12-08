@@ -7,7 +7,6 @@ import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:desktop_webview_auth/facebook.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../../widgets/facebook_sign_in_button.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../../oauth/provider_resolvers.dart';
 import '../../auth_flow.dart';

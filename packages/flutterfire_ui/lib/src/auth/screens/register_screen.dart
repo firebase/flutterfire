@@ -4,7 +4,6 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 import 'internal/login_screen.dart';
-import 'internal/responsive_page.dart';
 
 /// A screen displaying a fully styled Registration flow for Authentication.
 ///
