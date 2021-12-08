@@ -29,33 +29,6 @@ void runDatabaseTests() {
         expect(rootRef.path, '/');
         expect(rootRef.key, isNull);
         expect(rootRef.parent, isNull);
-
-        // Actually test trying to use the root ref
-        // for https://github.com/FirebaseExtended/flutterfire/issues/7515
-        // to make sure it doesn't crash
-        await expectLater(
-          rootRef.update({
-            'foo': 'bar',
-            'flutter': 'bar',
-            'dart': 'bar',
-          }),
-          throwsA(
-            isA<FirebaseException>()
-                .having(
-                  (error) => error.code,
-                  'code',
-                  'permission-denied',
-                )
-                .having(
-                  (error) => error.message,
-                  'message',
-                  predicate(
-                    (String message) =>
-                        message.contains("doesn't have permission"),
-                  ),
-                ),
-          ),
-        );
       },
     );
 
