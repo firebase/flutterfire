@@ -41,7 +41,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.logEvent(name, util.jsify(parameters!), callOptions);
+    return jsObject.logEvent(name, util.jsify(parameters ?? {}), callOptions);
   }
 
   void setAnalyticsCollectionEnabled({required bool enabled}) {
