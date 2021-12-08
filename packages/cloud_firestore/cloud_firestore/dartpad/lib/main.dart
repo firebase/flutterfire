@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors_in_immutables,unnecessary_const
+// ignore_for_file: prefer_const_constructors_in_immutables,unnecessary_const,library_private_types_in_public_api,avoid_print
 // Copyright 2021, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
