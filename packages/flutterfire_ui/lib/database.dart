@@ -2,7 +2,7 @@ export 'src/firebase_query_builder.dart'
     show
         FirebaseQueryBuilder,
         FirebaseListView,
-        QueryBuilderSnapshot,
+        FirebaseQueryBuilderSnapshot,
         FirebaseErrorBuilder,
         FirebaseItemBuilder,
         FirebaseLoadingBuilder;

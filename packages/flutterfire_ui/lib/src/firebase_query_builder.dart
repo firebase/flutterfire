@@ -4,12 +4,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-/// A function that builds a widget from a [QueryBuilderSnapshot]
+/// A function that builds a widget from a [FirebaseQueryBuilderSnapshot]
 ///
 /// See also [FirebaseQueryBuilder].
 typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
   BuildContext context,
-  QueryBuilderSnapshot snapshot,
+  FirebaseQueryBuilderSnapshot snapshot,
   Widget? child,
 );
 
@@ -19,7 +19,7 @@ typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
 ///
 /// [FirebaseQueryBuilder] will subscribe to the query and obtain the first
 /// [pageSize] items (10 by default). Then as the UI needs to render more items,
-/// it is possible to call [QueryBuilderSnapshot.fetchMore] to obtain more items.
+/// it is possible to call [FirebaseQueryBuilderSnapshot.fetchMore] to obtain more items.
 ///
 /// [FirebaseQueryBuilder] is independent from how the query will be rendered
 /// and as such can be used with any existing widget for rendering list of items.
@@ -219,7 +219,7 @@ class _FirestoreQueryBuilderState extends State<FirebaseQueryBuilder> {
 }
 
 /// The result of a paginated query.
-abstract class QueryBuilderSnapshot {
+abstract class FirebaseQueryBuilderSnapshot {
   /// Whether the first page of the query is currently being fetched.
   ///
   /// [isFetching] will reset to `true` when the query changes, in which case
@@ -266,7 +266,7 @@ abstract class QueryBuilderSnapshot {
   void fetchMore();
 }
 
-class _QueryBuilderSnapshot implements QueryBuilderSnapshot {
+class _QueryBuilderSnapshot implements FirebaseQueryBuilderSnapshot {
   _QueryBuilderSnapshot._({
     required this.docs,
     required this.error,
