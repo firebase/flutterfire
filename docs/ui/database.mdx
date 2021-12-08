@@ -62,7 +62,7 @@ To get started, create a query and provide an item builder. For this example, we
 a list of users from the `users` collection:
 
 ```dart
-final usersQuery = FirebaseDatabase.instance.collection('users').orderBy('name');
+final usersQuery = FirebaseDatabase.instance.ref('users').orderByChild('name');
 
 FirebaseListView(
   query: usersQuery,
@@ -124,7 +124,7 @@ you are expected to provide this yourself.
 Much like the `FirebaseListView` widget, provide a query and builder:
 
 ```dart
-final usersQuery = FirebaseDatabase.instance.collection('users').orderBy('name');
+final usersQuery = FirebaseDatabase.instance.ref('users').orderByChild('name');
 
 FirebaseQueryBuilder(
   query: usersQuery,
