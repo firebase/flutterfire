@@ -42,13 +42,14 @@ class FirebaseDatabase extends FirebasePluginPlatform {
     required FirebaseApp app,
     String? databaseURL,
   }) {
-    if (_cachedInstances.containsKey(app.name)) {
-      return _cachedInstances[app.name]!;
+    String cacheKey = '${app.name}|$databaseURL';
+    if (_cachedInstances.containsKey(cacheKey)) {
+      return _cachedInstances[cacheKey]!;
     }
 
     FirebaseDatabase newInstance =
         FirebaseDatabase._(app: app, databaseURL: databaseURL);
-    _cachedInstances[app.name] = newInstance;
+    _cachedInstances[cacheKey] = newInstance;
 
     return newInstance;
   }
