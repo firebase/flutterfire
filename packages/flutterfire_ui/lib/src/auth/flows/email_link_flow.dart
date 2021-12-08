@@ -48,13 +48,7 @@ class EmailLinkFlow extends AuthFlow implements EmailLinkFlowController {
 
       value = const AwaitingDynamicLink();
 
-      _links.onLink.listen((event) {
-        print(event);
-        print('42');
-      });
-
       final linkData = await _links.onLink.first;
-      print(linkData);
       final link = linkData.link.toString();
 
       if (auth.isSignInWithEmailLink(link)) {
