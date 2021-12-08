@@ -99,14 +99,7 @@ class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
 
     final smsCode = await _smsCodeCompleter.future;
     final userCredential = await result.confirm(smsCode);
-    final credential = userCredential.credential;
-
-    if (credential != null) {
-      value = PhoneVerified(credential);
-      setCredential(credential);
-    } else {
-      value = AuthFailed(Exception('An unknown error occured'));
-    }
+    value = SignedIn(userCredential.user);
   }
 }
 

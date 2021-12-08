@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
             providerConfigs: providerConfigs,
             actions: [
               ForgotPasswordAction((context, email) {
-                Navigator.of(context).pushReplacementNamed(
+                Navigator.of(context).pushNamed(
                   '/forgot-password',
                   arguments: {'email': email},
                 );
