@@ -4,6 +4,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'dart:js_util' as util;
+
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
@@ -39,7 +41,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) {
-    return jsObject.logEvent(name, parameters, callOptions);
+    return jsObject.logEvent(name, util.jsify(parameters!), callOptions);
   }
 
   void setAnalyticsCollectionEnabled({required bool enabled}) {
