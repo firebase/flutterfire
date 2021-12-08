@@ -1,32 +1,32 @@
 import 'dart:collection';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutterfire_ui/i10n.dart';
 
+import '../../i10n.dart';
 import 'query_builder.dart';
 
-/// {@template flutterfire_ui.firestore_table}
+/// {@template flutterfire_ui.database_table}
 /// A [PaginatedDataTable] that is connected to Firestore.
 ///
 /// The parameter [columnLabels] is required and is used to
 /// - list the columns.
 /// - give them a label.
 /// - order the columns.
-/// - let [FirestoreDataTable] know what are the expected keys in a Firestore document.
+/// - let [FirebaseDatabaseDataTable] know what are the expected keys in a Firestore document.
 ///
 /// An example usage would be:
 ///
-///
 /// ```dart
 /// // A collection of {'name': string, 'age': number}
-/// final usersCollection = FirebaseFirestore.instance.collection('users');
+/// final usersCollection = FirebaseDatabase.instance.ref('users');
 ///
 /// // ...
 ///
-/// FirestoreDataTable(
+/// FirebaseDatabaseDataTable(
 ///   query: usersCollection,
 ///   columnLabels: {
 ///      'name': Text('User name'),
@@ -35,9 +35,9 @@ import 'query_builder.dart';
 /// );
 /// ```
 /// {@endtemplate}
-class FirestoreDataTable extends StatefulWidget {
-  /// {@macro flutterfire_ui.firestore_table}
-  const FirestoreDataTable({
+class FirebaseDatabaseDataTable extends StatefulWidget {
+  /// {@macro flutterfire_ui.database_table}
+  const FirebaseDatabaseDataTable({
     Key? key,
     required this.query,
     required this.columnLabels,
@@ -65,7 +65,7 @@ class FirestoreDataTable extends StatefulWidget {
         super(key: key);
 
   /// The firestore query that will be displayed
-  final Query<Object?> query;
+  final Query query;
 
   /// Whether documents can be removed from firestore using the table.
   final bool canDeleteItems;
@@ -173,9 +173,7 @@ class FirestoreDataTable extends StatefulWidget {
   _FirestoreTableState createState() => _FirestoreTableState();
 }
 
-class _FirestoreTableState extends State<FirestoreDataTable> {
-  late Query<Map<String, Object?>> _query;
-
+class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
   late final source = _Source(
     getHeaders: () => widget.columnLabels,
     getOnError: () => widget.onError,
@@ -187,31 +185,9 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
   bool get selectionEnabled => widget.canDeleteItems;
 
   @override
-  void initState() {
-    super.initState();
-    _query = _unwrapQuery(widget.query);
-  }
-
-  @override
-  void didUpdateWidget(covariant FirestoreDataTable oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    source.selectionEnabled = selectionEnabled;
-    if (widget.query != oldWidget.query) {
-      _query = _unwrapQuery(widget.query);
-    }
-  }
-
-  Query<Map<String, Object?>> _unwrapQuery(Query<Object?> query) {
-    return query.withConverter<Map<String, Object?>>(
-      fromFirestore: (s, _) => s.data()!,
-      toFirestore: (value, _) => value,
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return FirestoreQueryBuilder<Map<String, Object?>>(
-      query: _query,
+    return FirebaseDatabaseQueryBuilder(
+      query: widget.query,
       builder: (context, snapshot, child) {
         source.setFromSnapshot(snapshot);
 
@@ -259,7 +235,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
   }
 
   Future<void> onEditItem(
-    QueryDocumentSnapshot<Map<String, Object?>> snapshot,
+    DataSnapshot snapshot,
     Object? value,
     String propertyName,
   ) async {
@@ -322,7 +298,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
                           const SizedBox(height: 10),
                           _EditModalButtonBar(
                             formState: formState,
-                            reference: snapshot.reference,
+                            ref: snapshot.ref,
                           ),
                         ],
                       ),
@@ -338,7 +314,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
 
     if (result == null) return;
 
-    await snapshot.reference.update({propertyName: result.newValue});
+    await snapshot.ref.update({propertyName: result.newValue});
   }
 }
 
@@ -382,53 +358,6 @@ class _PropertyTypeForm extends StatelessWidget {
           decoration: InputDecoration(labelText: localizations.valueLabel),
         ),
       );
-    } else if (formState is _ReferenceFormState) {
-      return SizedBox(
-        width: 200,
-        child: TextField(
-          autofocus: true,
-          controller: formState.controller,
-          decoration: InputDecoration(labelText: localizations.valueLabel),
-        ),
-      );
-    } else if (formState is _TimestampFormState) {
-      return SizedBox(
-        width: 200,
-        child: TextField(
-          autofocus: true,
-          controller: formState.controller,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.digitsOnly,
-          ],
-          decoration: InputDecoration(labelText: localizations.timestampLabel),
-        ),
-      );
-    } else if (formState is _GeoPointFormState) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 200,
-            child: TextField(
-              autofocus: true,
-              controller: formState.latitudeController,
-              decoration: InputDecoration(
-                labelText: localizations.latitudeLabel,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 200,
-            child: TextField(
-              controller: formState.longitudeController,
-              decoration: InputDecoration(
-                labelText: localizations.longitudeLabel,
-              ),
-            ),
-          ),
-        ],
-      );
     } else if (formState is _BooleanFormState) {
       return Checkbox(
         onChanged: (_) =>
@@ -445,11 +374,11 @@ class _EditModalButtonBar extends StatelessWidget {
   const _EditModalButtonBar({
     Key? key,
     required this.formState,
-    required this.reference,
+    required this.ref,
   }) : super(key: key);
 
   final _FormState formState;
-  final DocumentReference reference;
+  final DatabaseReference ref;
 
   @override
   Widget build(BuildContext context) {
@@ -465,7 +394,7 @@ class _EditModalButtonBar extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
-            Navigator.pop(context, formState.submit(reference));
+            Navigator.pop(context, formState.submit(ref));
           },
           child: Text(localizations.updateLabel),
         ),
@@ -505,27 +434,7 @@ class _PropertyTypeDropdown extends StatelessWidget {
           value: _PropertyType.boolean,
           child: Text(localizations.booleanLabel),
         ),
-        DropdownMenuItem(
-          value: _PropertyType.map,
-          child: Text(localizations.mapLabel),
-        ),
-        DropdownMenuItem(
-          value: _PropertyType.list,
-          child: Text(localizations.arrayLabel),
-        ),
         DropdownMenuItem(child: Text(localizations.nullLabel)),
-        DropdownMenuItem(
-          value: _PropertyType.timestamp,
-          child: Text(localizations.timestampLabel),
-        ),
-        DropdownMenuItem(
-          value: _PropertyType.geoPoint,
-          child: Text(localizations.geopointLabel),
-        ),
-        DropdownMenuItem(
-          value: _PropertyType.reference,
-          child: Text(localizations.referenceLabel),
-        ),
       ],
       onChanged: onTypeChanged,
     );
@@ -541,19 +450,6 @@ _FormState _initialFormStateOfValue(Object? value) {
     return _BooleanFormState(value);
   } else if (value is String) {
     return _StringFormState(value);
-  } else if (value is Map) {
-    return const _MapFormState();
-  } else if (value is List) {
-    return const _ArrayFormState();
-  } else if (value is Timestamp) {
-    return _TimestampFormState(value.toDate());
-  } else if (value is GeoPoint) {
-    return _GeoPointFormState(
-      longitude: value.longitude.toString(),
-      latitude: value.latitude.toString(),
-    );
-  } else if (value is DocumentReference) {
-    return _ReferenceFormState(value.path);
   } else {
     throw UnsupportedError('Unknown type ${value.runtimeType}');
   }
@@ -569,16 +465,6 @@ _FormState _initialFormStateForType(_PropertyType? type) {
       return _NumberFormState('');
     case _PropertyType.string:
       return _StringFormState('');
-    case _PropertyType.map:
-      return const _MapFormState();
-    case _PropertyType.list:
-      return const _ArrayFormState();
-    case _PropertyType.reference:
-      return _ReferenceFormState('');
-    case _PropertyType.timestamp:
-      return _TimestampFormState(DateTime.now());
-    case _PropertyType.geoPoint:
-      return _GeoPointFormState(longitude: '0', latitude: '0');
   }
 }
 
@@ -586,18 +472,13 @@ enum _PropertyType {
   number,
   boolean,
   string,
-  map,
-  list,
-  timestamp,
-  geoPoint,
-  reference,
 }
 
 abstract class _FormState {
   const _FormState();
   _PropertyType? get type;
 
-  _Edit submit(DocumentReference ref) => throw UnimplementedError();
+  _Edit submit(DatabaseReference ref) => throw UnimplementedError();
 
   void dispose() {}
 }
@@ -612,7 +493,7 @@ class _NumberFormState extends _FormState {
   _PropertyType get type => _PropertyType.number;
 
   @override
-  _Edit submit(DocumentReference ref) => _Edit(num.parse(controller.text));
+  _Edit submit(DatabaseReference ref) => _Edit(num.parse(controller.text));
 
   @override
   void dispose() => controller.dispose();
@@ -628,7 +509,7 @@ class _StringFormState extends _FormState {
   _PropertyType get type => _PropertyType.string;
 
   @override
-  _Edit submit(DocumentReference ref) => _Edit(controller.text);
+  _Edit submit(DatabaseReference ref) => _Edit(controller.text);
 
   @override
   void dispose() => controller.dispose();
@@ -643,21 +524,7 @@ class _BooleanFormState extends _FormState {
   _PropertyType get type => _PropertyType.boolean;
 
   @override
-  _Edit submit(DocumentReference ref) => _Edit(value);
-}
-
-class _MapFormState extends _FormState {
-  const _MapFormState();
-
-  @override
-  _PropertyType get type => _PropertyType.map;
-}
-
-class _ArrayFormState extends _FormState {
-  const _ArrayFormState();
-
-  @override
-  _PropertyType get type => _PropertyType.list;
+  _Edit submit(DatabaseReference ref) => _Edit(value);
 }
 
 class _NullFormState extends _FormState {
@@ -667,81 +534,7 @@ class _NullFormState extends _FormState {
   _PropertyType? get type => null;
 
   @override
-  _Edit submit(DocumentReference ref) => _Edit(null);
-}
-
-class _TimestampFormState extends _FormState {
-  _TimestampFormState(DateTime date)
-      : controller = TextEditingController(
-          text: date.microsecondsSinceEpoch.toString(),
-        );
-
-  final TextEditingController controller;
-
-  @override
-  _PropertyType get type => _PropertyType.timestamp;
-
-  @override
-  _Edit submit(DocumentReference<Object?> ref) {
-    return _Edit(
-      Timestamp.fromDate(
-        DateTime.fromMicrosecondsSinceEpoch(
-          int.parse(controller.text),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() => controller.dispose();
-}
-
-class _GeoPointFormState extends _FormState {
-  _GeoPointFormState({
-    required String longitude,
-    required String latitude,
-  })  : latitudeController = TextEditingController(text: latitude),
-        longitudeController = TextEditingController(text: longitude);
-
-  final TextEditingController longitudeController;
-  final TextEditingController latitudeController;
-
-  @override
-  _PropertyType get type => _PropertyType.geoPoint;
-
-  @override
-  _Edit submit(DocumentReference ref) {
-    return _Edit(
-      GeoPoint(
-        double.parse(latitudeController.text),
-        double.parse(longitudeController.text),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    longitudeController.dispose();
-    latitudeController.dispose();
-  }
-}
-
-class _ReferenceFormState extends _FormState {
-  _ReferenceFormState(String text)
-      : controller = TextEditingController(text: text);
-
-  final TextEditingController controller;
-
-  @override
-  _PropertyType get type => _PropertyType.string;
-
-  @override
-  _Edit submit(DocumentReference ref) {
-    return _Edit(ref.firestore.doc(controller.text));
-  }
-
-  @override
-  void dispose() => controller.dispose();
+  _Edit submit(DatabaseReference ref) => _Edit(null);
 }
 
 /// A data holder class to differentiate setting a property to null from
@@ -762,7 +555,7 @@ class _Source extends DataTableSource {
         _rowsPerpage = rowsPerPage;
 
   final void Function(
-    QueryDocumentSnapshot<Map<String, Object?>> snapshot,
+    DataSnapshot snapshot,
     Object? value,
     String propertyName,
   ) onEditItem;
@@ -818,16 +611,15 @@ class _Source extends DataTableSource {
     if (index >= _previousSnapshot!.docs.length) return null;
 
     final doc = _previousSnapshot!.docs[index];
-    final data = doc.data();
 
     return DataRow(
-      selected: _selectedRowIds.contains(doc.id),
+      selected: _selectedRowIds.contains(doc.key),
       onSelectChanged: selectionEnabled
           ? (selected) {
               if (selected == null) return;
 
-              if ((selected && _selectedRowIds.add(doc.id)) ||
-                  (!selected && _selectedRowIds.remove(doc.id))) {
+              if ((selected && _selectedRowIds.add(doc.key!)) ||
+                  (!selected && _selectedRowIds.remove(doc.key))) {
                 notifyListeners();
               }
             }
@@ -835,11 +627,13 @@ class _Source extends DataTableSource {
       cells: [
         for (final head in getHeaders().keys)
           DataCell(
-            _ValueView(data[head]),
+            _ValueView(
+              doc.children.firstWhereOrNull((e) => e.key == head)?.value,
+            ),
             onTap: () {
               onEditItem(
                 doc,
-                data[head],
+                doc.children.firstWhereOrNull((e) => e.key == head)?.value,
                 head,
               );
             },
@@ -848,9 +642,9 @@ class _Source extends DataTableSource {
     );
   }
 
-  QueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
+  FirebaseQueryBuilderSnapshot? _previousSnapshot;
 
-  void setFromSnapshot(QueryBuilderSnapshot<Map<String, Object?>> snapshot) {
+  void setFromSnapshot(FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,
@@ -868,7 +662,7 @@ class _Source extends DataTableSource {
     if (selected == null) return;
 
     if (selected) {
-      _selectedRowIds.addAll(_previousSnapshot!.docs.map((e) => e.id));
+      _selectedRowIds.addAll(_previousSnapshot!.docs.map((e) => e.key!));
     } else {
       _selectedRowIds.clear();
     }
@@ -877,9 +671,9 @@ class _Source extends DataTableSource {
 
   void onDeleteSelectedItems() {
     for (final doc in _previousSnapshot!.docs) {
-      if (_selectedRowIds.contains(doc.id)) {
-        doc.reference.delete().then<void>(
-              (value) => _selectedRowIds.remove(doc.id),
+      if (_selectedRowIds.contains(doc.key)) {
+        doc.ref.remove().then<void>(
+              (value) => _selectedRowIds.remove(doc.key),
               onError: getOnError(),
             );
       }
@@ -894,26 +688,9 @@ class _ValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FlutterFireUILocalizations.labelsOf(context);
     final value = this.value;
     if (value == null) {
       return Text('null', style: Theme.of(context).textTheme.caption);
-    } else if (value is Timestamp) {
-      return Text(value.toDate().toString());
-    } else if (value is DocumentReference) {
-      return Text('/${value.path}');
-    } else if (value is GeoPoint) {
-      final latitudeLabel = value.latitude < 0
-          ? localizations.southInitialLabel
-          : localizations.northInitialLabel;
-      final longitudeLabel = value.longitude < 0
-          ? localizations.westInitialLabel
-          : localizations.eastInitialLabel;
-
-      return Text(
-        '[${value.latitude.abs()}° $latitudeLabel, '
-        '${value.longitude.abs()}° $longitudeLabel]',
-      );
     } else {
       return Text(value.toString());
     }

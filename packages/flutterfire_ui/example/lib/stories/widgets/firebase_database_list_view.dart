@@ -5,9 +5,9 @@ import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 
 final usersCollection = FirebaseDatabase.instance.ref('users');
 
-class FirebaseListViewStory extends StoryWidget {
-  const FirebaseListViewStory({Key? key})
-      : super(key: key, category: 'Widgets', title: 'FirebaseListView');
+class FirebaseDatabaseListViewStory extends StoryWidget {
+  const FirebaseDatabaseListViewStory({Key? key})
+      : super(key: key, category: 'Widgets', title: 'FirebaseDatabaseListView');
 
   @override
   Widget build(StoryElement context) {
@@ -15,7 +15,7 @@ class FirebaseListViewStory extends StoryWidget {
       appBar: AppBar(
         title: const Text('Contacts'),
       ),
-      body: FirebaseListView(
+      body: FirebaseDatabaseListView(
         query: usersCollection,
         primary: true,
         padding: const EdgeInsets.all(8),

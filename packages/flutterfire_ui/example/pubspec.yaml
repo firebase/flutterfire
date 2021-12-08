@@ -41,7 +41,6 @@ dependencies:
 
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
-  faker: ^2.0.0
   flutter_driver:
     sdk: flutter
   flutter_test:

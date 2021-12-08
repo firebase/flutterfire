@@ -2,33 +2,33 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-/// A function that builds a widget from a [QueryBuilderSnapshot]
+/// A function that builds a widget from a [FirebaseQueryBuilderSnapshot]
 ///
-/// See also [FirebaseQueryBuilder].
-typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
+/// See also [FirebaseDatabaseQueryBuilder].
+typedef FirebaseQueryBuilderSnapshotBuilder = Widget Function(
   BuildContext context,
-  QueryBuilderSnapshot<T> snapshot,
+  FirebaseQueryBuilderSnapshot snapshot,
   Widget? child,
 );
 
-/// {@template firebase_ui.firestore_query_builder}
+/// {@template firebase_ui.firebase_database_query_builder}
 /// Listens to a query and paginates the result in a way that is compatible with
 /// infinie scroll views, such as [ListView] or [GridView].
 ///
-/// [FirestoreQueryBuilder] will subscribe to the query and obtain the first
+/// [FirebaseDatabaseQueryBuilder] will subscribe to the query and obtain the first
 /// [pageSize] items (10 by default). Then as the UI needs to render more items,
-/// it is possible to call [QueryBuilderSnapshot.fetchMore] to obtain more items.
+/// it is possible to call [FirebaseQueryBuilderSnapshot.fetchMore] to obtain more items.
 ///
-/// [FirestoreQueryBuilder] is independent from how the query will be rendered
+/// [FirebaseDatabaseQueryBuilder] is independent from how the query will be rendered
 /// and as such can be used with any existing widget for rendering list of items.
 ///
-/// An example of how to combine [FirestoreQueryBuilder] with [ListView] would be:
+/// An example of how to combine [FirebaseDatabaseQueryBuilder] with [ListView] would be:
 ///
 /// ```dart
-/// FirestoreQueryBuilder<Movie>(
-///   query: moviesCollection.orderBy('title'),
+/// FirebaseDatabaseQueryBuilder(
+///   query: moviesCollection),
 ///   builder: (context, snapshot, _) {
 ///     if (snapshot.isFetching) {
 ///       return const CircularProgressIndicator();
@@ -43,26 +43,26 @@ typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
 ///         // if we reached the end of the currently obtained items, we try to
 ///         // obtain more items
 ///         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-///           // Tell FirestoreQueryBuilder to try to obtain more items.
+///           // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
 ///           // It is safe to call this function from within the build method.
 ///           snapshot.fetchMore();
 ///         }
 ///
-///         final movie = snapshot.docs[index];
-///         return Text(movie.title);
+///         final movie = snapshot.docs[index].value as Map;
+///         return Text(movie['title']);
 ///       },
 ///     );
 ///   },
 /// )
 /// ```
 /// {@endtemplate}
-/// {@subCategory service:firestore}
+/// {@subCategory service:database}
 /// {@subCategory type:widget}
 /// {@subCategory description:A widget that listens to a query.}
 /// {@subCategory img:https://place-hold.it/400x150}
-class FirestoreQueryBuilder<Document> extends StatefulWidget {
-  /// {@macro firebase_ui.firestore_query_builder}
-  const FirestoreQueryBuilder({
+class FirebaseDatabaseQueryBuilder extends StatefulWidget {
+  /// {@macro firebase_ui.firebase_database_query_builder}
+  const FirebaseDatabaseQueryBuilder({
     Key? key,
     required this.query,
     required this.builder,
@@ -74,14 +74,14 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
   /// The query that will be paginated.
   ///
   /// When the query changes, the pagination will restart from first page.
-  final Query<Document> query;
+  final Query query;
 
   /// The number of items that will be fetched at a time.
   ///
   /// When it changes, the current progress will be preserved.
   final int pageSize;
 
-  final FirestoreQueryBuilderSnapshotBuilder<Document> builder;
+  final FirebaseQueryBuilderSnapshotBuilder builder;
 
   /// A widget that will be passed to [builder] for optimizations purpose.
   ///
@@ -91,17 +91,15 @@ class FirestoreQueryBuilder<Document> extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _FirestoreQueryBuilderState<Document> createState() =>
-      _FirestoreQueryBuilderState<Document>();
+  _FirestoreQueryBuilderState createState() => _FirestoreQueryBuilderState();
 }
 
-class _FirestoreQueryBuilderState<Document>
-    extends State<FirestoreQueryBuilder<Document>> {
+class _FirestoreQueryBuilderState extends State<FirebaseDatabaseQueryBuilder> {
   StreamSubscription? _querySubscription;
 
   var _pageCount = 0;
 
-  late var _snapshot = _QueryBuilderSnapshot<Document>._(
+  late var _snapshot = _QueryBuilderSnapshot._(
     docs: [],
     error: null,
     hasData: false,
@@ -131,7 +129,7 @@ class _FirestoreQueryBuilderState<Document>
   }
 
   @override
-  void didUpdateWidget(FirestoreQueryBuilder<Document> oldWidget) {
+  void didUpdateWidget(FirebaseDatabaseQueryBuilder oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.query != widget.query) {
       _pageCount = 0;
@@ -166,9 +164,9 @@ class _FirestoreQueryBuilderState<Document>
         +
         1;
 
-    final query = widget.query.limit(expectedDocsCount);
+    final query = widget.query.limitToFirst(expectedDocsCount);
 
-    _querySubscription = query.snapshots().listen(
+    _querySubscription = query.onValue.listen(
       (event) {
         setState(() {
           if (nextPage) {
@@ -179,11 +177,11 @@ class _FirestoreQueryBuilderState<Document>
 
           _snapshot = _snapshot.copyWith(
             hasData: true,
-            docs: event.size < expectedDocsCount
-                ? event.docs
-                : event.docs.take(expectedDocsCount - 1).toList(),
+            docs: event.snapshot.children.length < expectedDocsCount
+                ? event.snapshot.children.toList()
+                : event.snapshot.children.take(expectedDocsCount - 1).toList(),
             error: null,
-            hasMore: event.size == expectedDocsCount,
+            hasMore: event.snapshot.children.length == expectedDocsCount,
             stackTrace: null,
             hasError: false,
           );
@@ -221,7 +219,7 @@ class _FirestoreQueryBuilderState<Document>
 }
 
 /// The result of a paginated query.
-abstract class QueryBuilderSnapshot<Document> {
+abstract class FirebaseQueryBuilderSnapshot {
   /// Whether the first page of the query is currently being fetched.
   ///
   /// [isFetching] will reset to `true` when the query changes, in which case
@@ -259,7 +257,7 @@ abstract class QueryBuilderSnapshot<Document> {
   StackTrace? get stackTrace;
 
   /// All the items obtained.
-  List<QueryDocumentSnapshot<Document>> get docs;
+  List<DataSnapshot> get docs;
 
   /// Try to obtain more items from the collection.
   ///
@@ -268,8 +266,7 @@ abstract class QueryBuilderSnapshot<Document> {
   void fetchMore();
 }
 
-class _QueryBuilderSnapshot<Document>
-    implements QueryBuilderSnapshot<Document> {
+class _QueryBuilderSnapshot implements FirebaseQueryBuilderSnapshot {
   _QueryBuilderSnapshot._({
     required this.docs,
     required this.error,
@@ -283,7 +280,7 @@ class _QueryBuilderSnapshot<Document>
   }) : _fetchNextPage = fetchMore;
 
   @override
-  final List<QueryDocumentSnapshot<Document>> docs;
+  final List<DataSnapshot> docs;
 
   @override
   final Object? error;
@@ -311,7 +308,7 @@ class _QueryBuilderSnapshot<Document>
   @override
   void fetchMore() => _fetchNextPage();
 
-  _QueryBuilderSnapshot<Document> copyWith({
+  _QueryBuilderSnapshot copyWith({
     Object? docs = const _Sentinel(),
     Object? error = const _Sentinel(),
     Object? hasData = const _Sentinel(),
@@ -346,82 +343,58 @@ class _Sentinel {
   const _Sentinel();
 }
 
-/// A type representing the function passed to [FirestoreListView] for its `itemBuilder`.
-typedef FirestoreItemBuilder<Document> = Widget Function(
+/// A type representing the function passed to [FirebaseDatabaseListView] for its `itemBuilder`.
+typedef FirebaseItemBuilder = Widget Function(
   BuildContext context,
-  QueryDocumentSnapshot<Document> doc,
+  DataSnapshot doc,
 );
 
-/// A type representing the function passed to [FirestoreListView] for its `loadingBuilder`.
-typedef FirestoreLoadingBuilder = Widget Function(BuildContext context);
+/// A type representing the function passed to [FirebaseDatabaseListView] for its `loadingBuilder`.
+typedef FirebaseLoadingBuilder = Widget Function(BuildContext context);
 
-/// A type representing the function passed to [FirestoreListView] for its `errorBuilder`.
-typedef FirestoreErrorBuilder = Widget Function(
+/// A type representing the function passed to [FirebaseDatabaseListView] for its `errorBuilder`.
+typedef FirebaseErrorBuilder = Widget Function(
   BuildContext context,
   Object error,
   StackTrace stackTrace,
 );
 
-/// {@template flutterfire_ui.firestorelistview}
+/// {@template flutterfire_ui.firebase_database_list_view}
 /// A [ListView.builder] that obtains its items from a Firestore query.
 ///
 /// As an example, consider the following collection:
 ///
 /// ```dart
-/// class Movie {
-///   Movie({required this.title, required this.genre});
-///
-///   Movie.fromJson(Map<String, Object?> json)
-///     : this(
-///         title: json['title']! as String,
-///         genre: json['genre']! as String,
-///       );
-///
-///   final String title;
-///   final String genre;
-///
-///   Map<String, Object?> toJson() {
-///     return {
-///       'title': title,
-///       'genre': genre,
-///     };
-///   }
-/// }
-///
-/// final moviesCollection = FirebaseFirestore.instance.collection('movies').withConverter<Movie>(
-///      fromFirestore: (snapshot, _) => Movie.fromJson(snapshot.data()!),
-///      toFirestore: (movie, _) => movie.toJson(),
-///    );
+/// final moviesCollection = FirebaseDatabase.instance.ref('movies');
 /// ```
 ///
-///
-/// Using [FirestoreListView], we can now show the list of movies by writing:
+/// Using [FirebaseDatabaseListView], we can now show the list of movies by writing:
 ///
 /// ```dart
-/// FirestoreListView<Movie>(
-///   query: moviesCollection.orderBy('title'),
+/// FirebaseDatabaseListView(
+///   query: moviesCollection,
 ///   itemBuilder: (context, snapshot) {
-///     Movie movie = snapshot.data();
-///     return Text(movie.title);
+///     var movie = snapshot.value as Map;
+///     return Text(movie['title']);
 ///   },
 /// )
 /// ```
 ///
-/// For advanced UI use-cases, consider switching to [FirestoreQueryBuilder].
+/// For advanced UI use-cases, consider switching to [FirebaseDatabaseQueryBuilder].
 /// {@endtemplate}
-/// {@subCategory service:firestore}
+/// {@subCategory service:database}
 /// {@subCategory type:widget}
 /// {@subCategory description:A widget that listens to a query and display the items using a ListView}
 /// {@subCategory img:https://place-hold.it/400x150}
-class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
-  /// {@macro flutterfire_ui.firestorelistview}
-  FirestoreListView({
+class FirebaseDatabaseListView extends FirebaseDatabaseQueryBuilder {
+  /// {@macro flutterfire_ui.firebase_database_list_view}
+  FirebaseDatabaseListView({
     Key? key,
-    required Query<Document> query,
-    required FirestoreItemBuilder<Document> itemBuilder,
+    required Query query,
+    required FirebaseItemBuilder itemBuilder,
     int pageSize = 10,
-    FirestoreLoadingBuilder? loadingBuilder,
-    FirestoreErrorBuilder? errorBuilder,
+    FirebaseLoadingBuilder? loadingBuilder,
+    FirebaseErrorBuilder? errorBuilder,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
     ScrollController? controller,
