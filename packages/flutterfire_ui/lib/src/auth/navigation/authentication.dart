@@ -4,22 +4,21 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 
-Future<void> showReauthenticateDialog({
+Future<bool> showReauthenticateDialog({
   required BuildContext context,
   required List<ProviderConfiguration> providerConfigs,
   FirebaseAuth? auth,
   VoidCallback? onSignedIn,
 }) async {
-  await showGeneralDialog(
-    context: context,
-    pageBuilder: (context, _, __) => ReauthenticateDialog(
-      providerConfigs: providerConfigs,
-      auth: auth,
-      onSignedIn: () {
-        Navigator.of(context).pop();
-      },
-    ),
-  );
+  return await showGeneralDialog<bool>(
+        context: context,
+        pageBuilder: (context, _, __) => ReauthenticateDialog(
+          providerConfigs: providerConfigs,
+          auth: auth,
+          onSignedIn: onSignedIn,
+        ),
+      ) ??
+      false;
 }
 
 Future<void> showDifferentMethodSignInDialog({

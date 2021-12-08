@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import '../auth_flow.dart';
-import '../widgets/internal/universal_button.dart';
 
+import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_scaffold.dart';
+import '../screens/internal/responsive_page.dart';
 
 /// A screen displaying a UI which allows users to enter an SMS validation code
 /// sent from Firebase.
@@ -16,14 +16,30 @@ import '../widgets/internal/universal_scaffold.dart';
 /// {@subCategory img:https://place-hold.it/400x150}
 class SMSCodeInputScreen extends StatelessWidget {
   final AuthAction? action;
+  final List<FlutterFireUIAction>? actions;
   final FirebaseAuth? auth;
   final Object flowKey;
+  final TextDirection? desktopLayoutDirection;
+  final SideBuilder? sideBuilder;
+  final HeaderBuilder? headerBuilder;
+  final double? headerMaxExtent;
+  final double? breakpoint;
+  final int? contentFlex;
+  final double? maxWidth;
 
   const SMSCodeInputScreen({
     Key? key,
     this.action,
+    this.actions,
     this.auth,
     required this.flowKey,
+    this.desktopLayoutDirection,
+    this.sideBuilder,
+    this.headerBuilder,
+    this.headerMaxExtent,
+    this.breakpoint,
+    this.contentFlex,
+    this.maxWidth,
   }) : super(key: key);
 
   void _reset() {
@@ -40,32 +56,42 @@ class SMSCodeInputScreen extends StatelessWidget {
         _reset();
         return true;
       },
-      child: UniversalScaffold(
-        body: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SMSCodeInputView(
-                  auth: auth,
-                  action: action,
-                  flowKey: flowKey,
-                  onCodeVerified: () {
-                    Navigator.of(context).popUntil((route) {
-                      return route.isFirst;
-                    });
-                  },
-                ),
-                UniversalButton(
-                  variant: ButtonVariant.text,
-                  text: l.goBackButtonLabel,
-                  onPressed: () {
-                    _reset();
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
+      child: FlutterFireUIActions(
+        actions: actions ?? const [],
+        child: UniversalScaffold(
+          body: Center(
+            child: ResponsivePage(
+              breakpoint: 400,
+              maxWidth: maxWidth,
+              desktopLayoutDirection: desktopLayoutDirection,
+              sideBuilder: sideBuilder,
+              headerBuilder: headerBuilder,
+              headerMaxExtent: headerMaxExtent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SMSCodeInputView(
+                    auth: auth,
+                    action: action,
+                    flowKey: flowKey,
+                    onCodeVerified: () {
+                      if (actions != null) return;
+
+                      Navigator.of(context).popUntil((route) {
+                        return route.isFirst;
+                      });
+                    },
+                  ),
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    text: l.goBackButtonLabel,
+                    onPressed: () {
+                      _reset();
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         ),

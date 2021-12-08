@@ -69,7 +69,11 @@ class _PhoneInputViewState extends State<PhoneInputView> {
       auth: widget.auth,
       listener: (oldState, newState, controller) {
         if (newState is SMSCodeRequested) {
-          widget.onSMSCodeRequested!(
+          final cb = widget.onSMSCodeRequested ??
+              FlutterFireUIAction.ofType<SMSCodeRequestedAction>(context)
+                  ?.callback;
+
+          cb?.call(
             context,
             widget.action,
             widget.flowKey,

@@ -21,7 +21,10 @@ class UniversalEmailSignInScreen extends StatelessWidget {
 
   Widget _wrap(BuildContext context, Widget child) {
     return AuthStateListener(
-      child: child,
+      child: FlutterFireUIActions.inherit(
+        from: context,
+        child: child,
+      ),
       listener: (_, newState, controller) {
         if (newState is SignedIn) {
           Navigator.of(context).pop();

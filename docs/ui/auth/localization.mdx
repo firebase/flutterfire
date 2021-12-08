@@ -29,14 +29,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: [
-        // Creates an instance of FirebaseUILocalizationDelegate with overridden labels
+        // Creates an instance of FirebaseUILocalizationDelegate with overriden labels
         FlutterFireUILocalizations.withDefaultOverrides(const LabelOverrides()),
         
         // Delegates below take care of built-in flutter widgets
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
 
-        // This delegate is required to provide the labels that are not overridden by LabelOverrides
+        // This delegate is required to provide the labels that are not overriden by LabelOverrides
         FlutterFireUILocalizations.delegate,
       ],
       // ...

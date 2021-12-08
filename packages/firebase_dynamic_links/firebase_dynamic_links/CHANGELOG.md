@@ -1,12 +1,4 @@
-## 4.0.0-dev.2
-
- - Update a dependency to the latest release.
-
-## 4.0.0-dev.1
-
- - Update a dependency to the latest release.
-
-## 4.0.0-dev.0
+## 4.0.0
 
 > Note: This release has breaking changes.
 

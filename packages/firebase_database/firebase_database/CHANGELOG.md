@@ -1,8 +1,4 @@
-## 9.0.0-dev.1
-
- - **FIX**: ignore emulator already set error on web (hot restart issue) (#7483).
-
-## 9.0.0-dev.0
+## 9.0.0
 
 > Note: This release has breaking changes.
 

@@ -7,10 +7,10 @@ application. Widgets provide different layers of abstraction, such as fully styl
 to underlying controllers enabling you to build your own UI experience. The terminology used for these
 abstractions are:
 
-- **Screen**: A fully function, pre-styled and customizable widget which offers a complete authentication expereince (such as Sign In, Register, Profile Screen).
+- **Screen**: A fully functional, pre-styled and customizable widget which offers a complete authentication experience (such as Sign In, Register, Profile Screen).
 - **View**: A fully controlled widget which offers authentication functionality (such as Sign In), however if minimally styled allowing you to build your own UI around the view.
-- **Widget**: A barebones widget which renders basic elements of a authentication flow, such as text inputs, buttons, etc.
-- **Controller**: The lowest level of abtraction which provides no UI, however provides authentication controls (such as signing in, triggering OAuth flows, etc).
+- **Widget**: A bare-bones widget which renders basic elements of an authentication flow, such as text inputs, buttons, etc.
+- **Controller**: The lowest level of abstraction which provides no UI, however provides authentication controls (such as signing in, triggering OAuth flows, etc.).
 
 Internally the UI package builds upon these abstractions layers. For example a `SignInScreen` implements multiple `View`s, where a `View` implements and provides basic styling of multiple `Widget`s,
 with the `Widget`s implementing a `Controller`.
@@ -19,12 +19,12 @@ with the `Widget`s implementing a `Controller`.
 
 [`AuthFlowBuilder`](https://pub.dev/documentation/flutterfire_ui/latest/auth/AuthFlowBuilder-class.html) is a widget which provides a simple way to wire built-in auth flows with the widget tree.
 
-It takes care of creating an instance of an `AuthFlow` with a provided `ProviderConfiguration`,
+It takes care of creating an instance of `AuthFlow` with the provided `ProviderConfiguration`,
 subscribing to the state changes that happen during the authentication process of a given provider
 and calls back a `builder` with an instance of `BuildContext`, `AuthState` and `AuthController`.
 The latter is used for the flow manipulations
 
-Even if you want to have a full controll over the look and feel of every single widget,
+Even if you want to have a full control over the look and feel of every single widget,
 you could take advantage of the authentication logic provided by the FlutterFire UI library.
 
 ## Building a custom sign in screen
@@ -70,7 +70,7 @@ class CustomEmailSignInForm extends StatelessWidget {
 ```
 
 Next up, we need to handle different states of the `EmailFlow` that are being passed to the `builder`.
-Iniital state is `AwaitingEmailAndPassword`.
+Initial state is `AwaitingEmailAndPassword`.
 
 ```dart
 class CustomEmailSignInForm extends StatelessWidget {
@@ -106,7 +106,7 @@ class CustomEmailSignInForm extends StatelessWidget {
 }
 ```
 
-After button is pressed, controller starts the sign in process, thus triggering an auth state transition, so `builder` gets called again, now with an instance of `SigningIn` state:
+After button is pressed, controller starts the sign-in process, thus triggering an auth state transition, so `builder` gets called again, now with an instance of `SigningIn` state:
 
 ```dart
 class CustomEmailSignInForm extends StatelessWidget {
@@ -127,7 +127,7 @@ class CustomEmailSignInForm extends StatelessWidget {
 }
 ```
 
-The final state of the `EmailFlow` could be `SignedIn`, which means the user is signed in, or `AuthFailed` if the sign in process failed.
+The final state of the `EmailFlow` could be `SignedIn`, which means the user is signed in, or `AuthFailed` if the sign-in process failed.
 
 ```dart
 class CustomEmailSignInForm extends StatelessWidget {

@@ -55,6 +55,11 @@ class AvailableProvidersRow extends StatelessWidget {
     final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
+    final providerConfigs = this
+        .providerConfigs
+        .where((config) => config is! EmailLinkProviderConfiguration)
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,12 +174,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     action?.callback(context);
   }
 
-  Future<void> _reauthenticate(BuildContext context) async {
-    await showReauthenticateDialog(
+  Future<bool> _reauthenticate(BuildContext context) {
+    return showReauthenticateDialog(
       context: context,
       providerConfigs: widget.providerConfigs,
       auth: widget.auth,
-      onSignedIn: () => Navigator.of(context).pop(),
+      onSignedIn: () => Navigator.of(context).pop(true),
     );
   }
 
@@ -227,8 +232,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         const SizedBox(height: 16),
         DeleteAccountButton(
           auth: widget.auth,
-          onSignInRequired: () async {
-            await _reauthenticate(context);
+          onSignInRequired: () {
+            return _reauthenticate(context);
           },
         ),
       ],

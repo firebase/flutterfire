@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../actions.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
-typedef SignInRequiredCallback = Future<void> Function();
+typedef SignInRequiredCallback = Future<bool> Function();
 
 class DeleteAccountButton extends StatefulWidget {
   final FirebaseAuth? auth;
@@ -42,8 +42,10 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
     } on FirebaseAuthException catch (err) {
       if (err.code == 'requires-recent-login') {
         if (widget.onSignInRequired != null) {
-          await widget.onSignInRequired!();
-          await _deleteAccount();
+          final signedIn = await widget.onSignInRequired!();
+          if (signedIn) {
+            await _deleteAccount();
+          }
         }
       }
     } on Exception catch (e) {
