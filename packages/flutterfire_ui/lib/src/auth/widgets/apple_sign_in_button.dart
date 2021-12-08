@@ -1,4 +1,3 @@
-import '../configs/oauth_provider_configuration.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 

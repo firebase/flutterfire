@@ -6,7 +6,6 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../configs/provider_configuration.dart';
 import '../widgets/internal/subtitle.dart';
-import '../actions.dart';
 
 class AvailableProvidersRow extends StatelessWidget {
   final FirebaseAuth? auth;

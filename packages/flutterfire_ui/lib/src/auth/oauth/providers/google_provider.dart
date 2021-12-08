@@ -10,7 +10,6 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../../auth_flow.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
-import '../../widgets/google_sign_in_button.dart';
 import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
 
