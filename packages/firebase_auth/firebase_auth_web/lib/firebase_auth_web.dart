@@ -70,7 +70,18 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
-    FirebaseCoreWeb.registerService('auth');
+    FirebaseCoreWeb.registerService('auth', (apps) async {
+      // Unlike native, the `currentUser` isn't available straight away,
+      // so we need to trigger the server fetch which will populate the
+      // current user for each app (if it exists).
+      await Future.wait(apps.map((app) async {
+        await auth_interop
+            .getAuthInstance(core_interop.app(app.name))
+            .onAuthStateChanged
+            .first;
+      }));
+    });
+
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
     RecaptchaVerifierFactoryPlatform.instance =
         RecaptchaVerifierFactoryWeb.instance;

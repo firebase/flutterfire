@@ -5,13 +5,20 @@
 
 part of firebase_core_web;
 
+typedef FirebaseWebServiceInitializer = Future<void> Function(
+  List<FirebaseAppPlatform> apps,
+);
+
 /// Defines a Firebase service by name.
 class FirebaseWebService {
   /// The name which matches the Firebase JS Web SDK postfix.
   String name;
 
+  /// Defines an initalizer which is called during initalization.
+  FirebaseWebServiceInitializer? initializer;
+
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name);
+  FirebaseWebService._(this.name, [this.initializer]);
 }
 
 /// The entry point for accessing Firebase.
@@ -21,8 +28,14 @@ class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {};
 
   /// Internally registers a Firebase Service to be initialized.
-  static void registerService(String service) {
-    _services.putIfAbsent(service, () => FirebaseWebService._(service));
+  static void registerService(
+    String service, [
+    FirebaseWebServiceInitializer? initializer,
+  ]) {
+    _services.putIfAbsent(
+      service,
+      () => FirebaseWebService._(service, initializer),
+    );
   }
 
   /// Registers that [FirebaseCoreWeb] is the platform implementation.
@@ -316,6 +329,17 @@ class FirebaseCoreWeb extends FirebasePlatform {
         throw _catchJSError(e);
       }
     }
+
+    List<FirebaseAppPlatform> apps =
+        firebase.apps.map(_createFromJsApp).toList();
+
+    await Future.wait(
+      _services.values.map((service) async {
+        if (service.initializer != null) {
+          await service.initializer!(apps);
+        }
+      }),
+    );
 
     return _createFromJsApp(app!);
   }
