@@ -21,6 +21,9 @@ class Query {
     return DataSnapshot._(await _queryDelegate.get(_modifiers));
   }
 
+  /// Slash-delimited path representing the database location of this query.
+  String get path => _queryDelegate.path;
+
   /// Listens for exactly one event of the specified event type, and then stops listening.
   /// Defaults to [DatabaseEventType.value] if no [eventType] provided.
   Future<DatabaseEvent> once([
