@@ -1,3 +1,7 @@
+## 1.0.1
+
+ - **DOCS**: Fix typos and remove unused imports (#7504).
+
 ## 1.0.0
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).

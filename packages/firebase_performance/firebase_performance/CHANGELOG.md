@@ -1,3 +1,7 @@
+## 0.8.0+1
+
+ - Update a dependency to the latest release.
+
 ## 0.8.0
 
 > Note: This release has breaking changes.

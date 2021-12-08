@@ -1,3 +1,7 @@
+## 4.2.1
+
+ - **FIX**: loosen duplicate app detection checks to allow unset options not to cause a duplicate app exception (#7499).
+
 ## 4.2.0
 
  - **FEAT**: auto inject Firebase scripts (#7358).

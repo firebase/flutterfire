@@ -1,3 +1,7 @@
+## 9.0.1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
 ## 9.0.0
 
 > Note: This release has breaking changes.

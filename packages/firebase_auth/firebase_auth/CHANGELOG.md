@@ -1,3 +1,7 @@
+## 3.3.2
+
+ - **DOCS**: Fix typos and remove unused imports (#7504).
+
 ## 3.3.1
 
  - Update a dependency to the latest release.

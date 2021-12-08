@@ -1,3 +1,12 @@
+## 0.2.0
+
+> Note: This release has breaking changes.
+
+ - **FIX**: fix issue with web and phone authentication (#7506).
+ - **DOCS**: add readme documentation (#7508).
+ - **DOCS**: Fix typos and remove unused imports (#7504).
+ - **BREAKING** **FIX**: rename `QueryBuilderSnapshot` ->  `FirebaseQueryBuilderSnapshot` plus internal improvements and additional documentation (#7503).
+
 ## 0.1.0+1
 
  - **FIX**: email link sign in and add additional documentation (#7493).

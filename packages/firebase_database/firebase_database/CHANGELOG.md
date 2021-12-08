@@ -1,3 +1,10 @@
+## 9.0.1
+
+ - **FIX**: issue where setting a `databaseURL` can sometimes be ignored (fixes #7502) (#7510).
+ - **FIX**: add missing `path` getter for Query (fixes #7495).
+ - **DOCS**: fix changelog formatting.
+ - **DOCS**: update documentation of `setPersistenceEnabled` to reflect updated return type (fixes #7496) (#7501).
+
 ## 9.0.0
 
 > Note: This release has breaking changes.

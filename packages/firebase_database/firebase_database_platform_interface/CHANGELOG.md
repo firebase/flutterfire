@@ -1,3 +1,7 @@
+## 0.2.0+1
+
+ - **FIX**: query modifier asserts not correctly triggering.
+
 ## 0.2.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

@@ -1,3 +1,7 @@
+## 0.4.0+1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
 ## 0.4.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
