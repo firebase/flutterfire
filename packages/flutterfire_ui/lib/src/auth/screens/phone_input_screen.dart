@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/flows/phone_auth_flow.dart';
 
 import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_page_route.dart';

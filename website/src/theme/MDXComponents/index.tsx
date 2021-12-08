@@ -136,7 +136,7 @@ export default {
     alt?: string;
     zoom?: boolean;
     caption?: boolean;
-    style?: any;
+    style?: React.CSSProperties;
   }): JSX.Element => {
     let image;
     const isExternalImage = src.startsWith('http');

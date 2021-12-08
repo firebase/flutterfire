@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart' hide Title;
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';

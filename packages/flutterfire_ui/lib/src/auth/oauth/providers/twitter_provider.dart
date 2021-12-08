@@ -8,7 +8,6 @@ import 'package:twitter_login/twitter_login.dart';
 import 'package:flutterfire_ui/auth.dart';
 import '../../oauth/provider_resolvers.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
-import '../../widgets/twitter_sign_in_button.dart';
 
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';

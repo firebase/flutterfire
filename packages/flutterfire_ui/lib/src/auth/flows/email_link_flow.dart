@@ -3,7 +3,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../actions.dart';
 import '../auth_flow.dart';
 import '../auth_state.dart';
 

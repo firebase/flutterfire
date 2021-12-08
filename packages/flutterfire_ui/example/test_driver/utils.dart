@@ -46,7 +46,7 @@ TypeMatcher<QueryDocumentSnapshot<T>> isQueryDocumentSnapshot<T>({
   return matcher;
 }
 
-TypeMatcher<QueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
+TypeMatcher<FirestoreQueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
   Object? isFetching = const _Sentinel(),
   Object? isFetchingNextPage = const _Sentinel(),
   Object? error = const _Sentinel(),
@@ -56,7 +56,7 @@ TypeMatcher<QueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
   Object? hasData = const _Sentinel(),
   Object? hasMore = const _Sentinel(),
 }) {
-  var matcher = isA<QueryBuilderSnapshot<T>>();
+  var matcher = isA<FirestoreQueryBuilderSnapshot<T>>();
 
   matcher = matcher.applyHaving(
     'isFetching',

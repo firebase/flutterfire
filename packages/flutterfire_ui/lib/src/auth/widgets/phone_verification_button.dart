@@ -4,8 +4,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/internal/universal_button.dart';
 
-import '../actions.dart';
-
 class PhoneVerificationButton extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction? action;

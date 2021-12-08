@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_example/decorations.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
-import 'package:flutter/widgets.dart';
 
 class EmailLinkSignInScreenStory extends StoryWidget {
   const EmailLinkSignInScreenStory({Key? key})
