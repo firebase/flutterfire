@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import '../auth_flow.dart';
 import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_scaffold.dart';
 import '../screens/internal/responsive_page.dart';

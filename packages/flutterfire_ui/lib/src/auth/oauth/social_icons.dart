@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/SocialIcons.ttf
 ///
-/// 
+///
 /// * Font Awesome 4, Copyright (C) 2016 by Dave Gandy
 ///         Author:    Dave Gandy
 ///         License:   SIL ()
@@ -25,8 +25,12 @@ class SocialIcons {
   static const _kFontFam = 'SocialIcons';
   static const String _kFontPkg = 'flutterfire_ui';
 
-  static const IconData twitter = IconData(0xf099, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData facebook = IconData(0xf09a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData apple = IconData(0xf179, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData google = IconData(0xf1a0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData twitter =
+      IconData(0xf099, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData facebook =
+      IconData(0xf09a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData apple =
+      IconData(0xf179, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData google =
+      IconData(0xf1a0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
