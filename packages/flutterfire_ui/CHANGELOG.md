@@ -1,3 +1,7 @@
+## 0.1.0+1
+
+ - **FIX**: email link sign in and add additional documentation (#7493).
+
 ## 0.1.0
 
  - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.

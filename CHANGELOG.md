@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`flutterfire_ui` - `v0.1.0+1`](#flutterfire_ui---v0101)
+
+---
+
+#### `flutterfire_ui` - `v0.1.0+1`
+
+ - **FIX**: email link sign in and add additional documentation (#7493).
+
+
 ## 2021-12-07 (1)
 
 ### Changes
