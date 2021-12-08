@@ -159,8 +159,7 @@ module.exports = [
     pub: 'firebase_dynamic_links',
     firebase: 'dynamic-links',
     status: 'Stable',
-    documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_dynamic_links/README.md',
+    documentation: 'https://firebase.flutter.dev/docs/dynamic-links/overview',
     support: {
       web: 'N/A',
       mobile: true,
@@ -184,8 +183,7 @@ module.exports = [
     pub: 'firebase_ml_model_downloader',
     firebase: 'ml',
     status: 'Preview',
-    documentation:
-      'https://github.com/FirebaseExtended/flutterfire/blob/master/packages/firebase_ml_model_downloader/firebase_ml_model_downloader/README.md',
+    documentation: 'https://firebase.flutter.dev/docs/ml-model-downloader/overview',
     support: {
       web: 'N/A',
       mobile: true,
