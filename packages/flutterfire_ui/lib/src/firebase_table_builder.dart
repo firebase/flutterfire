@@ -642,9 +642,9 @@ class _Source extends DataTableSource {
     );
   }
 
-  QueryBuilderSnapshot? _previousSnapshot;
+  FirebaseQueryBuilderSnapshot? _previousSnapshot;
 
-  void setFromSnapshot(QueryBuilderSnapshot snapshot) {
+  void setFromSnapshot(FirebaseQueryBuilderSnapshot snapshot) {
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,
