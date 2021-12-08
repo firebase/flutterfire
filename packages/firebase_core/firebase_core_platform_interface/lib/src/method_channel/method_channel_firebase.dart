@@ -105,10 +105,10 @@ class MethodChannelFirebase extends FirebasePlatform {
       // e.g. hot reloads/restarts).
       if (defaultApp != null && options != null) {
         if (options.apiKey != defaultApp.options.apiKey ||
-            options.databaseURL != null &&
-                options.databaseURL != defaultApp.options.databaseURL ||
-            options.storageBucket != null &&
-                options.storageBucket != defaultApp.options.storageBucket) {
+            (options.databaseURL != null &&
+                options.databaseURL != defaultApp.options.databaseURL) ||
+            (options.storageBucket != null &&
+                options.storageBucket != defaultApp.options.storageBucket)) {
           // Options are different; throw.
           throw duplicateApp(defaultFirebaseAppName);
         }
