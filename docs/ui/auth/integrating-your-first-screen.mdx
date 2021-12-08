@@ -52,7 +52,7 @@ The `AuthGate` widget will be implemented in the next step.
 ## Checking authentication state
 
 Before we can display a sign in screen, we first need to determine whether the user is currently
-authenticated. The most common way to check for this is to listening to authentication state changes
+authenticated. The most common way to check for this is to listen to authentication state changes
 using the [Firebase Auth plugin](https://firebase.flutter.dev/docs/auth/usage).
 
 The `authStateChanges` API returns a Stream with either the current user (if they are signed in), or
@@ -102,8 +102,8 @@ return StreamBuilder<FirebaseUser?>(
 
 ## Constructing a `SignInScreen` widget
 
-FlutterFire UI for Auth provides a different screens for different scenarios. For this example,
-we are requiring that the the user should be sign-in before accessing the main application. To do this,
+FlutterFire UI for Auth provides different screens for different scenarios. For this example,
+we are requiring that the user should be sign-in before accessing the main application. To do this,
 we can return a [`SignInScreen`](https://pub.dev/documentation/flutterfire_ui/latest/auth/SignInScreen-class.html) widget.
 
 Screens are customizable fully styled widgets designed to be rendered as a single "screen" within your application. Firstly,
@@ -134,7 +134,7 @@ return StreamBuilder<FirebaseUser?>(
 
 At a minimum, screens require a list of providers (via the `providerConfigs` property).
 Providers are means of authentication, such as Email/Password or Google OAuth. At the moment, our `SignInScreen` has no providers
-configured so the screen will look empty:
+configured so, the screen will look empty:
 
 <Image
   src="ui/ui-auth-no-providers.png"
@@ -180,7 +180,7 @@ Just like that, we've now got a sign in screen which handles email and password 
 
 Behind the scenes, FlutterFire UI for auth will handle the entire sign-in process for us. Once signed in, the `StreamBuilder`
 will be updated with the signed-in user and render our application. If the user signs out, the `SignInScreen` will be rendered.
-Additionally, the UI handles various states too such as the error messages (e.g. if an invalid email address is provided).
+Additionally, the UI handles various states such as the error messages (e.g. if an invalid email address is provided).
 
 ## Adding Google sign in
 
@@ -257,8 +257,8 @@ return SignInScreen(
 ### Header content
 
 Although functional, the sign in screen could do with a bit of styling. The `headerBuilder` property of screens
-allows us to render a custom widget as a header, which will appear above our sign in flow. For example, let's go ahead
-and add an image to be shown above our sign in flow:
+allows us to render a custom widget as a header, which will appear above our sign-in flow. For example, let's go ahead
+and add an image to be shown above our sign-in flow:
 
 ```dart
 return SignInScreen(
@@ -314,9 +314,9 @@ return SignInScreen(
   style={{ maxHeight: 700 }}
 />
 
-### Sub-title & footer content
+### Subtitle & footer content
 
-Another common practice is to add some personalised text to the screen, such as instructions, terms and conditions,
+Another common practice is to add some personalized text to the screen, such as instructions, terms and conditions,
 privacy policy etc. The `subtitleBuilder` and `footerBuilder` properties allow us to render custom widgets to
 the top and bottom of the screen:
 
@@ -362,8 +362,8 @@ return SignInScreen(
 
 ### Disabling internal navigation
 
-Currently our sign in screen allows the user to "navigate" to the register screen. In some cases you may want to disable this
-and handle navigation yourself. Set the `showAuthActionSwitch` property to `false` to disable this behaviour:
+Currently, our sign in screen allows the user to "navigate" to the register screen. In some cases you may want to disable this
+and handle navigation yourself. Set the `showAuthActionSwitch` property to `false` to disable this behavior:
 
 ```dart
 return SignInScreen(
@@ -405,17 +405,53 @@ return RegisterScreen(
 A screen which allows the user enter their email address to send a password reset email.
 
 ```dart
-return ForgotPasswordScreen();
+return ForgotPasswordScreen(
+  headerBuilder: (context, constraints, shrinkOffset) {
+    return Padding(
+      padding: const EdgeInsets.all(20).copyWith(top: 40),
+      child: Icon(
+        Icons.lock,
+        color: Colors.blue,
+        size: constraints.maxWidth / 4 * (1 - shrinkOffset),
+      ),
+    );
+  },
+);
 ```
 
-TODO screenshot (include header / footer once available)
+<Image
+  src="ui/ui-auth-forgot-password.png"
+  alt="FlutterFire UI Auth - Forgot password"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Phone Number Authentication
 
 A multi-flow screen which enables users to select a country code and provide their phone number.
 Once provided, the user will be asked to verify the phone number via an SMS code.
 
-TODO screenshot (include header / footer once available)
+```dart
+return PhoneInputScreen(
+  headerBuilder: (context, constraints, shrinkOffset) {
+    return Padding(
+      padding: const EdgeInsets.all(20).copyWith(top: 40),
+      child: Icon(
+        Icons.phone,
+        color: Colors.blue,
+        size: constraints.maxWidth / 4 * (1 - shrinkOffset),
+      ),
+    );
+  },
+);
+```
+
+<Image
+  src="ui/ui-auth-phone-input-screen.png"
+  alt="FlutterFire UI Auth - Phone input screen"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ### Profile
 
@@ -429,12 +465,26 @@ return ProfileScreen(
     GoogleProviderConfiguration(
       clientId: '...',
     ),
+    FacebookProviderConfiguration(
+      clientId: '...',
+    ),
+    TwitterProviderConfiguration(
+      clientId: '...',
+    ),
+    AppleProviderConfiguration(
+      clientId: '...',
+    ),
   ],
   avatarSize: 24,
 );
 ```
 
-TODO screenshot
+<Image
+  src="ui/ui-auth-profile-screen.png"
+  alt="FlutterFire UI Auth - Profile"
+  caption={false}
+  style={{ maxHeight: 700 }}
+/>
 
 ## Next Steps
 
@@ -443,3 +493,5 @@ With your first screen integrated, you can now start adding more providers and i
 - [Configuring Providers](configuring-providers)
 - [Building a custom UI](building-a-custom-ui)
 - [Localization](localization)
+- [Theming](theming)
+- [Navigation](navigation)

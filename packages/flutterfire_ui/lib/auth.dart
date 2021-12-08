@@ -10,22 +10,8 @@ export 'src/auth/auth_state.dart'
         SignedIn,
         SigningIn,
         AuthFailed;
-export 'src/auth/flows/phone_auth_flow.dart'
-    show
-        AwaitingPhoneNumber,
-        PhoneAuthFlow,
-        PhoneAuthController,
-        PhoneVerificationFailed,
-        PhoneVerified,
-        SMSCodeRequested,
-        SMSCodeSent;
-
-export 'src/auth/flows/email_link_flow.dart'
-    show
-        AwaitingDynamicLink,
-        EmailLinkFlow,
-        EmailLinkFlowController,
-        SendingLink;
+export 'src/auth/flows/phone_auth_flow.dart';
+export 'src/auth/flows/email_link_flow.dart';
 
 export 'src/auth/widgets/phone_input.dart' show PhoneInputState, PhoneInput;
 export 'src/auth/configs/phone_provider_configuration.dart'
@@ -83,6 +69,8 @@ export 'src/auth/views/different_method_sign_in_view.dart';
 export 'src/auth/views/find_providers_for_email_view.dart';
 export 'src/auth/views/email_link_sign_in_view.dart';
 
+export 'src/auth/screens/internal/responsive_page.dart'
+    show HeaderBuilder, SideBuilder;
 export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
 export 'src/auth/screens/sign_in_screen.dart';

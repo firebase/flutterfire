@@ -50,9 +50,9 @@ typedef SideBuilder = Widget Function(
 );
 
 class ResponsivePage extends StatefulWidget {
+  final Widget child;
   final TextDirection? desktopLayoutDirection;
   final SideBuilder? sideBuilder;
-  final Widget child;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
   final double? breakpoint;

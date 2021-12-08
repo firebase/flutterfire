@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutterfire_ui_example/stories/screens/forgot_password_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/profile_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dart';
 import 'package:flutterfire_ui_example/stories/views/forgot_password_view.dart';
 import 'package:flutterfire_ui_example/stories/widgets/apple_sign_in_button.dart';
 import 'package:flutterfire_ui_example/stories/widgets/facebook_sign_in_button.dart';
-import 'package:flutterfire_ui_example/stories/widgets/firebase_list_view.dart';
-import 'package:flutterfire_ui_example/stories/widgets/firebase_table.dart';
 import 'package:flutterfire_ui_example/stories/widgets/firestore_list_view.dart';
 import 'package:flutterfire_ui_example/stories/widgets/firestore_table.dart';
 import 'package:flutterfire_ui_example/stories/widgets/google_sign_in_button.dart';
@@ -13,11 +12,13 @@ import 'package:flutterfire_ui_example/stories/widgets/sms_code_input.dart';
 import 'package:flutterfire_ui_example/stories/widgets/twitter_sign_in_button.dart';
 import 'package:flutter/material.dart';
 
+import 'stories/screens/email_link_sign_in_screen.dart';
 import 'stories/stories_lib/story.dart';
 
 import 'stories/screens/register_screen.dart';
 import 'stories/screens/sign_in_screen.dart';
 import 'stories/screens/phone_input_screen.dart';
+import 'stories/views/email_link_sign_in_view.dart';
 import 'stories/views/login_view.dart';
 import 'stories/views/phone_input_view.dart';
 import 'stories/views/sms_code_input_view.dart';
@@ -49,10 +50,13 @@ class StoriesApp extends StatelessWidget {
           PhoneInputScreenStory(),
           SMSCodeInputScreenStory(),
           ProfileScreenStory(),
+          ForgotPasswordScreenStory(),
+          EmailLinkSignInScreenStory(),
           LoginViewStory(),
           PhoneInputViewStory(),
           SMSCodeInputViewStory(),
           ForgotPasswordViewStory(),
+          EmailLinkSignInViewStory(),
           EmailFormWidgetStory(),
           OAuthProviderButtonStory(),
           GoogleSignInButtonStory(),
@@ -65,8 +69,6 @@ class StoriesApp extends StatelessWidget {
           SignOutButtonStory(),
           FirestoreListViewStory(),
           FirestoreTableStory(),
-          FirebaseListViewStory(),
-          FirebaseTableStory(),
         ],
       ),
     );

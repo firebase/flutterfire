@@ -6,12 +6,6 @@ import '../widgets/internal/universal_button.dart';
 
 import '../actions.dart';
 
-class VerifyPhoneAction extends FlutterFireUIAction {
-  final void Function(BuildContext context) action;
-
-  VerifyPhoneAction({required this.action});
-}
-
 class PhoneVerificationButton extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction? action;
@@ -25,9 +19,9 @@ class PhoneVerificationButton extends StatelessWidget {
   }) : super(key: key);
 
   void _onPressed(BuildContext context) {
-    final navAction = FlutterFireUIAction.ofType<VerifyPhoneAction>(context);
-    if (navAction != null) {
-      navAction.action(context);
+    final _action = FlutterFireUIAction.ofType<VerifyPhoneAction>(context);
+    if (_action != null) {
+      _action.callback(context, action);
     } else {
       startPhoneVerification(context: context, action: action, auth: auth);
     }

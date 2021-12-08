@@ -38,7 +38,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   final AuthFlowBuilderCallback<T>? builder;
   final Widget? child;
   final Function(AuthCredential credential)? onComplete;
-  final StateTransitionListener? listener;
+  final StateTransitionListener<T>? listener;
 
   const AuthFlowBuilder({
     Key? key,
@@ -114,7 +114,7 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   void onFlowStateChanged() {
     AuthStateTransition(prevState!, flow.value, flow as T).dispatch(context);
-    widget.listener?.call(prevState!, flow.value, flow);
+    widget.listener?.call(prevState!, flow.value, flow as T);
     prevState = flow.value;
   }
 

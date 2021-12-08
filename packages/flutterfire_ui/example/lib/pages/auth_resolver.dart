@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../config.dart';
 
@@ -29,10 +28,6 @@ class AuthResolver extends StatelessWidget {
         if (snapshot.hasData) {
           return const ProfileScreen(providerConfigs: providerConfigs);
         }
-
-        // return const UniversalEmailSignInScreen(
-        //   providerConfigs: providerConfigs,
-        // );
 
         return SignInScreen(
           headerBuilder: (context, constraints, _) {
