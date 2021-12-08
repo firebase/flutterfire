@@ -96,7 +96,8 @@ final DynamicLinkParameters parameters = DynamicLinkParameters(
   ),
 );
 
-final Uri uri = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+final ShortDynamicLink shortDynamicLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+final Uri uri = shortDynamicLink.shortUrl;
 ```
 
 ## Handling Dynamic Links
