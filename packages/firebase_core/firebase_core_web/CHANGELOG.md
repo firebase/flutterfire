@@ -1,3 +1,7 @@
+## 1.5.2
+
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+
 ## 1.5.1
 
  - Update a dependency to the latest release.

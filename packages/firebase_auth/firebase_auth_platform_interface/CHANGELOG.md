@@ -1,3 +1,7 @@
+## 6.1.8
+
+ - Update a dependency to the latest release.
+
 ## 6.1.7
 
  - **DOCS**: Fix typos and remove unused imports (#7504).

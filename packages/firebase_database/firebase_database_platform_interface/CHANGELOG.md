@@ -1,3 +1,7 @@
+## 0.2.0+2
+
+ - **FIX**: database path should default to `/` if no path specified rather than an empty string (fixes #7515). ([c33c3c93](https://github.com/FirebaseExtended/flutterfire/commit/c33c3c931d7e4c654dd0b2cd23d800b43192d95d))
+
 ## 0.2.0+1
 
  - **FIX**: query modifier asserts not correctly triggering.

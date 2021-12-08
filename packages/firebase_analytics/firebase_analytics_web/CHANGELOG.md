@@ -1,3 +1,7 @@
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+1
 
  - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).

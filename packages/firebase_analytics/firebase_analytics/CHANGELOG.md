@@ -1,3 +1,7 @@
+## 9.0.2
+
+ - Update a dependency to the latest release.
+
 ## 9.0.1
 
  - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).

@@ -1,3 +1,7 @@
+## 4.2.2
+
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+
 ## 4.2.1
 
  - **FIX**: loosen duplicate app detection checks to allow unset options not to cause a duplicate app exception (#7499).
