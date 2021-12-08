@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Learn more in [Integrating your first screen section](https://firebase.flutter.dev/docs/ui/auth/integrating-your-first-screen) of the documentation
+Learn more in the [Integrating your first screen section](https://firebase.flutter.dev/docs/ui/auth/integrating-your-first-screen) of the documentation
 
 ## Issues and feedback
 
