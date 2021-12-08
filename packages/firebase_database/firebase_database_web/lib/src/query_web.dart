@@ -65,6 +65,12 @@ class QueryWeb extends QueryPlatform {
   }
 
   @override
+  String get path {
+    final refPath = Uri.parse(_queryDelegate.ref.toString()).path;
+    return refPath.isEmpty ? '/' : refPath;
+  }
+
+  @override
   DatabaseReferencePlatform get ref =>
       DatabaseReferenceWeb(_database, _queryDelegate.ref);
 
