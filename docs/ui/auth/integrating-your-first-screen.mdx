@@ -103,7 +103,7 @@ return StreamBuilder<FirebaseUser?>(
 ## Constructing a `SignInScreen` widget
 
 FlutterFire UI for Auth provides a different screens for different scenarios. For this example,
-we are requiring that the the user should be sign-in before accessing the main application. To do this,
+we are requiring that the user should be sign-in before accessing the main application. To do this,
 we can return a [`SignInScreen`](https://pub.dev/documentation/flutterfire_ui/latest/auth/SignInScreen-class.html) widget.
 
 Screens are customizable fully styled widgets designed to be rendered as a single "screen" within your application. Firstly,
@@ -316,7 +316,7 @@ return SignInScreen(
 
 ### Sub-title & footer content
 
-Another common practice is to add some personalised text to the screen, such as instructions, terms and conditions,
+Another common practice is to add some personalized text to the screen, such as instructions, terms and conditions,
 privacy policy etc. The `subtitleBuilder` and `footerBuilder` properties allow us to render custom widgets to
 the top and bottom of the screen:
 
@@ -363,7 +363,7 @@ return SignInScreen(
 ### Disabling internal navigation
 
 Currently our sign in screen allows the user to "navigate" to the register screen. In some cases you may want to disable this
-and handle navigation yourself. Set the `showAuthActionSwitch` property to `false` to disable this behaviour:
+and handle navigation yourself. Set the `showAuthActionSwitch` property to `false` to disable this behavior:
 
 ```dart
 return SignInScreen(

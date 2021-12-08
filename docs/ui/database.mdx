@@ -48,7 +48,7 @@ import 'package:flutterfire_ui/database.dart';
 
 Infinite scrolling is the concept of continuously loading more data from a database
 as the user scrolls through your application. This is useful when you have a large
-dataset, as it enables the application to render faster as well as reducing network
+datasets, as it enables the application to render faster as well as reducing network
 overhead for data the user might never see.
 
 FlutterFire UI for Realtime Database provides a convenient way to implement infinite scrolling
@@ -101,7 +101,7 @@ of an individual item is large, it is recommended to lower the page size.
 ### Loading and error handling
 
 By default, the widget will display a loading indicator while data is being fetched from the database, and ignore any errors which might be thrown
-(such as permission denied). You can override this behaviour by providing a `loadingBuilder` and `errorBuilder` parameters to the widget:
+(such as permission denied). You can override this behavior by providing a `loadingBuilder` and `errorBuilder` parameters to the widget:
 
 ```dart
 FirebaseListView(
@@ -114,7 +114,7 @@ FirebaseListView(
 ### Advanced configuration
 
 In many cases, the `FirebaseListView` widget is enough to render simple lists of collection data.
-However, you may have specific requirements which require more control over the widget's behaviour
+However, you may have specific requirements which require more control over the widget's behavior
 (such as using a [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html)).
 
 The `FirebaseQueryBuilder` provides the building blocks for advanced configuration as the expense of

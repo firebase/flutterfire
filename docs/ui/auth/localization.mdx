@@ -4,7 +4,7 @@ title: Localization
 
 FlutterFire UI for Auth supports localization, so every single text label can be customized.
 
-If your app supports only a signle langugage, and you want to override labels – you will need to provide a custom class that implements [`DefaultLocalizations`](https://pub.dev/documentation/flutterfire_ui/latest/i10n/DefaultLocalizations-class.html),
+If your app supports only a single language, and you want to override labels – you will need to provide a custom class that implements [`DefaultLocalizations`](https://pub.dev/documentation/flutterfire_ui/latest/i10n/DefaultLocalizations-class.html),
 for example:
 
 ```dart
@@ -29,14 +29,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: [
-        // Creates an instance of FirebaseUILocalizationDelegate with overriden labels
+        // Creates an instance of FirebaseUILocalizationDelegate with overridden labels
         FlutterFireUILocalizations.withDefaultOverrides(const LabelOverrides()),
         
         // Delegates below take care of built-in flutter widgets
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
 
-        // This delegate is required to provide the labels that are not overriden by LabelOverrides
+        // This delegate is required to provide the labels that are not overridden by LabelOverrides
         FlutterFireUILocalizations.delegate,
       ],
       // ...
