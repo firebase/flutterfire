@@ -848,9 +848,11 @@ class _Source extends DataTableSource {
     );
   }
 
-  QueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
+  FirestoreQueryBuilderSnapshot<Map<String, Object?>>? _previousSnapshot;
 
-  void setFromSnapshot(QueryBuilderSnapshot<Map<String, Object?>> snapshot) {
+  void setFromSnapshot(
+    FirestoreQueryBuilderSnapshot<Map<String, Object?>> snapshot,
+  ) {
     if (snapshot == _previousSnapshot) return;
 
     // Try to preserve the selection status when the snapshot got updated,

@@ -6,8 +6,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../i10n.dart';
-import 'firebase_query_builder.dart';
+import '../../i10n.dart';
+import 'query_builder.dart';
 
 /// {@template flutterfire_ui.database_table}
 /// A [PaginatedDataTable] that is connected to Firestore.
@@ -16,7 +16,7 @@ import 'firebase_query_builder.dart';
 /// - list the columns.
 /// - give them a label.
 /// - order the columns.
-/// - let [FirebaseDataTable] know what are the expected keys in a Firestore document.
+/// - let [FirebaseDatabaseDataTable] know what are the expected keys in a Firestore document.
 ///
 /// An example usage would be:
 ///
@@ -26,7 +26,7 @@ import 'firebase_query_builder.dart';
 ///
 /// // ...
 ///
-/// FirebaseDataTable(
+/// FirebaseDatabaseDataTable(
 ///   query: usersCollection,
 ///   columnLabels: {
 ///      'name': Text('User name'),
@@ -35,9 +35,9 @@ import 'firebase_query_builder.dart';
 /// );
 /// ```
 /// {@endtemplate}
-class FirebaseDataTable extends StatefulWidget {
+class FirebaseDatabaseDataTable extends StatefulWidget {
   /// {@macro flutterfire_ui.database_table}
-  const FirebaseDataTable({
+  const FirebaseDatabaseDataTable({
     Key? key,
     required this.query,
     required this.columnLabels,
@@ -173,7 +173,7 @@ class FirebaseDataTable extends StatefulWidget {
   _FirestoreTableState createState() => _FirestoreTableState();
 }
 
-class _FirestoreTableState extends State<FirebaseDataTable> {
+class _FirestoreTableState extends State<FirebaseDatabaseDataTable> {
   late final source = _Source(
     getHeaders: () => widget.columnLabels,
     getOnError: () => widget.onError,
@@ -186,7 +186,7 @@ class _FirestoreTableState extends State<FirebaseDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return FirebaseQueryBuilder(
+    return FirebaseDatabaseQueryBuilder(
       query: widget.query,
       builder: (context, snapshot, child) {
         source.setFromSnapshot(snapshot);

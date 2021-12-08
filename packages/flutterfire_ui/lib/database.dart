@@ -1,10 +1,11 @@
-export 'src/firebase_query_builder.dart'
+export 'src/firebase_database/query_builder.dart'
     show
-        FirebaseQueryBuilder,
-        FirebaseListView,
+        FirebaseDatabaseQueryBuilder,
+        FirebaseDatabaseListView,
         FirebaseQueryBuilderSnapshot,
         FirebaseErrorBuilder,
         FirebaseItemBuilder,
         FirebaseLoadingBuilder;
 
-export 'src/firebase_table_builder.dart' show FirebaseDataTable;
+export 'src/firebase_database/table_builder.dart'
+    show FirebaseDatabaseDataTable;

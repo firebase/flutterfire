@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/database.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
-import 'package:flutterfire_ui_example/stories/widgets/firebase_list_view.dart';
+import 'package:flutterfire_ui_example/stories/widgets/firebase_database_list_view.dart';
 
-class FirebaseTableStory extends StoryWidget {
-  const FirebaseTableStory({Key? key})
-      : super(key: key, category: 'Widgets', title: 'FirebaseDataTable');
+class FirebaseDatabaseTableStory extends StoryWidget {
+  const FirebaseDatabaseTableStory({Key? key})
+      : super(
+          key: key,
+          category: 'Widgets',
+          title: 'FirebaseDatabaseDataTable',
+        );
 
   @override
   Widget build(StoryElement context) {
-    return FirebaseDataTable(
+    return FirebaseDatabaseDataTable(
       query: usersCollection,
       columnLabels: const {
         'firstName': Text('First name'),

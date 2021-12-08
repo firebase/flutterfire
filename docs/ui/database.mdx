@@ -52,7 +52,7 @@ datasets, as it enables the application to render faster as well as reducing net
 overhead for data the user might never see.
 
 FlutterFire UI for Realtime Database provides a convenient way to implement infinite scrolling
-using the Realtime Database database with the `FirebaseListView` widget.
+using the Realtime Database database with the `FirebaseDatabaseListView` widget.
 
 At a minimum the widget accepts a Realtime Database query and an item builder. As the user scrolls
 down (or across) your list, more data will be automatically fetched from the database (whilst
@@ -64,7 +64,7 @@ a list of users from the `users` collection:
 ```dart
 final usersQuery = FirebaseDatabase.instance.ref('users').orderByChild('name');
 
-FirebaseListView(
+FirebaseDatabaseListView(
   query: usersQuery,
   itemBuilder: (context, snapshot) {
     Map<String, dynamic> user = snapshot.value as Map<String, dynamic>;
@@ -74,11 +74,11 @@ FirebaseListView(
 );
 ```
 
-The `FirebaseListView` widget is built on-top of Flutter's own [`ListView`](https://api.flutter.dev/flutter/widgets/ListView-class.html)
+The `FirebaseDatabaseListView` widget is built on-top of Flutter's own [`ListView`](https://api.flutter.dev/flutter/widgets/ListView-class.html)
 widget, and accepts the same parameters which we can optionally provide. For example, to change the scroll-direction to horizontal:
 
 ```dart
-FirebaseListView(
+FirebaseDatabaseListView(
   scrollDirection: Axis.horizontal,
   // ...
 );
@@ -89,7 +89,7 @@ FirebaseListView(
 By default, the widget will fetch 10 items from the collection at a time. This can be changed by providing a `pageSize` parameter:
 
 ```dart
-FirebaseListView(
+FirebaseDatabaseListView(
   pageSize: 20,
   // ...
 );
@@ -104,7 +104,7 @@ By default, the widget will display a loading indicator while data is being fetc
 (such as permission denied). You can override this behavior by providing a `loadingBuilder` and `errorBuilder` parameters to the widget:
 
 ```dart
-FirebaseListView(
+FirebaseDatabaseListView(
   loadingBuilder: (context) => MyCustomLoadingIndicator(),
   errorBuilder: (context, error, stackTrace) => MyCustomError(error, stackTrace),
   // ...
@@ -113,20 +113,20 @@ FirebaseListView(
 
 ### Advanced configuration
 
-In many cases, the `FirebaseListView` widget is enough to render simple lists of collection data.
+In many cases, the `FirebaseDatabaseListView` widget is enough to render simple lists of collection data.
 However, you may have specific requirements which require more control over the widget's behavior
 (such as using a [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html)).
 
-The `FirebaseQueryBuilder` provides the building blocks for advanced configuration as the expense of
+The `FirebaseDatabaseQueryBuilder` provides the building blocks for advanced configuration as the expense of
 requiring more boilerplate code. The widget does not provide any underlying list implementation, instead
 you are expected to provide this yourself.
 
-Much like the `FirebaseListView` widget, provide a query and builder:
+Much like the `FirebaseDatabaseListView` widget, provide a query and builder:
 
 ```dart
 final usersQuery = FirebaseDatabase.instance.ref('users').orderByChild('name');
 
-FirebaseQueryBuilder(
+FirebaseDatabaseQueryBuilder(
   query: usersQuery,
   builder: (context, snapshot, _) {
     // ... TODO!
@@ -142,7 +142,7 @@ This requires us to implement our own list based implementation. Firstly, let's 
 states:
 
 ```dart
-FirebaseQueryBuilder(
+FirebaseDatabaseQueryBuilder(
   query: usersQuery,
   builder: (context, snapshot, _) {
     if (snapshot.isFetching) {
@@ -162,7 +162,7 @@ Next we now need to return a list-view based implementation for our application 
 to display a grid of users, we can use the [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html) widget:
 
 ```dart
-FirebaseQueryBuilder(
+FirebaseDatabaseQueryBuilder(
   query: usersQuery,
   builder: (context, snapshot, _) {
     // ...
@@ -173,7 +173,7 @@ FirebaseQueryBuilder(
         // if we reached the end of the currently obtained items, we try to
         // obtain more items
         if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
-          // Tell FirebaseQueryBuilder to try to obtain more items.
+          // Tell FirebaseDatabaseQueryBuilder to try to obtain more items.
           // It is safe to call this function from within the build method.
           snapshot.fetchMore();
         }
@@ -194,5 +194,5 @@ FirebaseQueryBuilder(
 With more power comes more responsibility:
 
 1. Within the `itemBuilder` of our `GridView`, we have to manually ensure that we call the `fetchMore()` method on the snapshot when more data is required.
-1. The `FirebaseQueryBuilder` does not provide a list-view based handler, instead you must provide your own implementation.
+1. The `FirebaseDatabaseQueryBuilder` does not provide a list-view based handler, instead you must provide your own implementation.
 

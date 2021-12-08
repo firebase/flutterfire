@@ -860,7 +860,8 @@ class QueryBuilderSpy<T> extends Mock {
       when(call(any, any, any)).thenAnswer((realInvocation) {
         return _builder!(
           realInvocation.positionalArguments[0] as BuildContext,
-          realInvocation.positionalArguments[1] as QueryBuilderSnapshot<T>,
+          realInvocation.positionalArguments[1]
+              as FirestoreQueryBuilderSnapshot<T>,
           realInvocation.positionalArguments[2] as Widget?,
         );
       });
@@ -869,15 +870,15 @@ class QueryBuilderSpy<T> extends Mock {
 
   final Widget Function(
     BuildContext context,
-    QueryBuilderSnapshot<T> snapshot,
+    FirestoreQueryBuilderSnapshot<T> snapshot,
     Widget? child,
   )? _builder;
 
-  QueryBuilderSnapshot<T>? lastSnapshot;
+  FirestoreQueryBuilderSnapshot<T>? lastSnapshot;
 
   Widget call(
     BuildContext? context,
-    QueryBuilderSnapshot<T>? snapshot,
+    FirestoreQueryBuilderSnapshot<T>? snapshot,
     Widget? child,
   ) {
     if (snapshot != null) lastSnapshot = snapshot;
