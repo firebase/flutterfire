@@ -9,10 +9,29 @@ class QueryModifiers {
 
   final List<QueryModifier> _modifiers;
 
-  LimitModifier? _limit;
-  OrderModifier? _order;
-  StartCursorModifier? _start;
-  EndCursorModifier? _end;
+  LimitModifier? get _limit {
+    final ofType = _modifiers.whereType<LimitModifier>();
+    if (ofType.isEmpty) return null;
+    return ofType.first;
+  }
+
+  OrderModifier? get _order {
+    final ofType = _modifiers.whereType<OrderModifier>();
+    if (ofType.isEmpty) return null;
+    return ofType.first;
+  }
+
+  StartCursorModifier? get _start {
+    final ofType = _modifiers.whereType<StartCursorModifier>();
+    if (ofType.isEmpty) return null;
+    return ofType.first;
+  }
+
+  EndCursorModifier? get _end {
+    final ofType = _modifiers.whereType<EndCursorModifier>();
+    if (ofType.isEmpty) return null;
+    return ofType.first;
+  }
 
   /// Transforms the instance into an ordered serializable list.
   List<Map<String, Object?>> toList() {
@@ -31,9 +50,7 @@ class QueryModifiers {
       'A starting point was already set (by another call to `startAt`, `startAfter`, or `equalTo`)',
     );
     _assertCursorValue(modifier.value);
-    return _add(modifier)
-      .._start = modifier
-      .._validate();
+    return _add(modifier).._validate();
   }
 
   /// Creates an end cursor modifier.
@@ -43,9 +60,7 @@ class QueryModifiers {
       'A ending point was already set (by another call to `endAt`, `endBefore` or `equalTo`)',
     );
     _assertCursorValue(modifier.value);
-    return _add(modifier)
-      .._end = modifier
-      .._validate();
+    return _add(modifier).._validate();
   }
 
   /// Creates an limitTo modifier.
@@ -55,9 +70,7 @@ class QueryModifiers {
       'A limit was already set (by another call to `limitToFirst` or `limitToLast`)',
     );
     assert(modifier.value >= 0);
-    return _add(modifier)
-      .._limit = modifier
-      .._validate();
+    return _add(modifier).._validate();
   }
 
   /// Creates an orderBy modifier.
@@ -66,9 +79,7 @@ class QueryModifiers {
       _order == null,
       'An order has already been set, you cannot combine multiple order by calls',
     );
-    return _add(modifier)
-      .._order = modifier
-      .._validate();
+    return _add(modifier).._validate();
   }
 
   /// Adds a modifier, validates and returns a new [QueryModifiers] instance.

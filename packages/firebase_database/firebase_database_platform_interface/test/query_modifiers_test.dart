@@ -20,10 +20,11 @@ void main() {
     group('start()', () {
       test('fails assertion if a starting point is already set', () {
         final instance = QueryModifiers([]);
-        instance.start(StartCursorModifier.startAt('foo', 'bar'));
+        final modifier =
+            instance.start(StartCursorModifier.startAt('foo', 'bar'));
 
         expect(
-          () => instance.start(StartCursorModifier.startAfter('foo', 'bar')),
+          () => modifier.start(StartCursorModifier.startAfter('foo', 'bar')),
           throwsAssertionError,
         );
       });
@@ -41,10 +42,11 @@ void main() {
         final instance = QueryModifiers([]);
         expect(instance.toList().length, 0);
 
-        instance.start(StartCursorModifier.startAfter('foo', 'bar'));
+        final modifiers =
+            instance.start(StartCursorModifier.startAfter('foo', 'bar'));
 
         expect(
-          instance.toList(),
+          modifiers.toList(),
           equals([
             {
               'type': 'cursor',
@@ -60,10 +62,10 @@ void main() {
     group('end()', () {
       test('fails assertion if a ending point is already set', () {
         final instance = QueryModifiers([]);
-        instance.end(EndCursorModifier.endAt('foo', 'bar'));
+        final modifiers = instance.end(EndCursorModifier.endAt('foo', 'bar'));
 
         expect(
-          () => instance.end(EndCursorModifier.endBefore('foo', 'bar')),
+          () => modifiers.end(EndCursorModifier.endBefore('foo', 'bar')),
           throwsAssertionError,
         );
       });
@@ -81,10 +83,10 @@ void main() {
         final instance = QueryModifiers([]);
         expect(instance.toList().length, 0);
 
-        instance.end(EndCursorModifier.endAt('foo', 'bar'));
+        final modifiers = instance.end(EndCursorModifier.endAt('foo', 'bar'));
 
         expect(
-          instance.toList(),
+          modifiers.toList(),
           equals([
             {'type': 'cursor', 'name': 'endAt', 'value': 'foo', 'key': 'bar'}
           ]),
@@ -95,10 +97,10 @@ void main() {
     group('limit()', () {
       test('fails assertion if a limit is already set', () {
         final instance = QueryModifiers([]);
-        instance.limit(LimitModifier.limitToFirst(10));
+        final modifiers = instance.limit(LimitModifier.limitToFirst(10));
 
         expect(
-          () => instance.limit(LimitModifier.limitToLast(10)),
+          () => modifiers.limit(LimitModifier.limitToLast(10)),
           throwsAssertionError,
         );
       });
@@ -116,10 +118,10 @@ void main() {
         final instance = QueryModifiers([]);
         expect(instance.toList().length, 0);
 
-        instance.limit(LimitModifier.limitToLast(10));
+        final modifiers = instance.limit(LimitModifier.limitToLast(10));
 
         expect(
-          instance.toList(),
+          modifiers.toList(),
           equals([
             {'type': 'limit', 'name': 'limitToLast', 'limit': 10}
           ]),
@@ -130,10 +132,10 @@ void main() {
     group('order()', () {
       test('fails assertion if a order is already set', () {
         final instance = QueryModifiers([]);
-        instance.order(OrderModifier.orderByKey());
+        final modifiers = instance.order(OrderModifier.orderByKey());
 
         expect(
-          () => instance.order(OrderModifier.orderByPriority()),
+          () => modifiers.order(OrderModifier.orderByPriority()),
           throwsAssertionError,
         );
       });
@@ -142,10 +144,10 @@ void main() {
         final instance = QueryModifiers([]);
         expect(instance.toList().length, 0);
 
-        instance.order(OrderModifier.orderByPriority());
+        final modifiers = instance.order(OrderModifier.orderByPriority());
 
         expect(
-          instance.toList(),
+          modifiers.toList(),
           equals([
             {
               'type': 'orderBy',
@@ -162,10 +164,11 @@ void main() {
           () {
         final instance = QueryModifiers([]);
 
-        instance.start(StartCursorModifier.startAt('foo', 'bar'));
+        final modifiers =
+            instance.start(StartCursorModifier.startAt('foo', 'bar'));
 
         expect(
-          () => instance.order(OrderModifier.orderByKey()),
+          () => modifiers.order(OrderModifier.orderByKey()),
           throwsAssertionError,
         );
       });
@@ -175,10 +178,11 @@ void main() {
           () {
         final instance = QueryModifiers([]);
 
-        instance.start(StartCursorModifier.startAt(123, null));
+        final modifiers =
+            instance.start(StartCursorModifier.startAt(123, null));
 
         expect(
-          () => instance.order(OrderModifier.orderByKey()),
+          () => modifiers.order(OrderModifier.orderByKey()),
           throwsAssertionError,
         );
       });
@@ -188,10 +192,11 @@ void main() {
           () {
         final instance = QueryModifiers([]);
 
-        instance.start(StartCursorModifier.startAfter(true, null));
+        final modifiers =
+            instance.start(StartCursorModifier.startAfter(true, null));
 
         expect(
-          () => instance.order(OrderModifier.orderByPriority()),
+          () => modifiers.order(OrderModifier.orderByPriority()),
           throwsAssertionError,
         );
       });
@@ -201,10 +206,10 @@ void main() {
           () {
         final instance = QueryModifiers([]);
 
-        instance.end(EndCursorModifier.endBefore(true, null));
+        final modifiers = instance.end(EndCursorModifier.endBefore(true, null));
 
         expect(
-          () => instance.order(OrderModifier.orderByPriority()),
+          () => modifiers.order(OrderModifier.orderByPriority()),
           throwsAssertionError,
         );
       });
