@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui_example/decorations.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
 
@@ -8,8 +10,12 @@ class SMSCodeInputScreenStory extends StoryWidget {
 
   @override
   Widget build(StoryElement context) {
-    return const SMSCodeInputScreen(
+    final withImage = context.knob<bool>(title: 'With image', value: true);
+
+    return SMSCodeInputScreen(
       flowKey: Object(),
+      headerBuilder: withImage ? headerIcon(Icons.sms) : null,
+      sideBuilder: withImage ? sideIcon(Icons.sms) : null,
     );
   }
 }

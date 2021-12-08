@@ -25,26 +25,34 @@ class ProfileScreenStory extends StoryWidget {
       value: true,
     );
 
-    return ProfileScreen(
-      providerConfigs: [
-        if (emailEnabled) const EmailProviderConfiguration(),
-        if (phoneEnabled) const PhoneProviderConfiguration(),
-        if (googleEnabled)
-          const GoogleProviderConfiguration(
-            clientId: GOOGLE_CLIENT_ID,
-          ),
-        if (appleEnabled) const AppleProviderConfiguration(),
-        if (facebookEnabled)
-          const FacebookProviderConfiguration(
-            clientId: FACEBOOK_CLIENT_ID,
-          ),
-        if (twitterEnabled)
-          const TwitterProviderConfiguration(
-            apiKey: TWITTER_API_KEY,
-            apiSecretKey: TWITTER_API_SECRET_KEY,
-            redirectUri: TWITTER_REDIRECT_URI,
-          )
-      ],
+    return StreamBuilder(
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return ProfileScreen(
+            providerConfigs: [
+              if (emailEnabled) const EmailProviderConfiguration(),
+              if (phoneEnabled) const PhoneProviderConfiguration(),
+              if (googleEnabled)
+                const GoogleProviderConfiguration(
+                  clientId: GOOGLE_CLIENT_ID,
+                ),
+              if (appleEnabled) const AppleProviderConfiguration(),
+              if (facebookEnabled)
+                const FacebookProviderConfiguration(
+                  clientId: FACEBOOK_CLIENT_ID,
+                ),
+              if (twitterEnabled)
+                const TwitterProviderConfiguration(
+                  apiKey: TWITTER_API_KEY,
+                  apiSecretKey: TWITTER_API_SECRET_KEY,
+                  redirectUri: TWITTER_REDIRECT_URI,
+                )
+            ],
+          );
+        } else {
+          return const Center(child: Text('Not authroized'));
+        }
+      },
     );
   }
 }
