@@ -4,22 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
+import 'init.dart'
+    if (dart.library.html) 'web_init.dart'
+    if (dart.library.io) 'io_init.dart';
+
 import 'config.dart';
 import 'decorations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-      appId: '1:448618578101:android:5180baaa9cc2b8fcac3efc',
-      projectId: 'react-native-firebase-testing',
-      authDomain: 'react-native-firebase-testing.firebaseapp.com',
-      messagingSenderId: '448618578101',
-      iosClientId:
-          '448618578101-4km55qmv55tguvnivgjdiegb3r0jquv5.apps.googleusercontent.com',
-    ),
-  );
+  await initializeFirebase();
   runApp(FirebaseAuthUIExample());
 }
 
@@ -84,7 +78,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 );
               }),
               VerifyPhoneAction((context, _) {
-                Navigator.pushReplacementNamed(context, '/phone');
+                Navigator.pushNamed(context, '/phone');
               }),
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacementNamed(context, '/profile');
