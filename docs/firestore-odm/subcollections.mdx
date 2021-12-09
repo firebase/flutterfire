@@ -19,7 +19,7 @@ class User {
  // ...
 }
 
-@Collection<User>('/users')
+@Collection<User>('users')
 final usersRef = UserCollectionReference();
 ```
 
@@ -36,8 +36,8 @@ class Address {
 Next, define the path to the subcollection in a new `Collection` annotation:
 
 ```dart
-@Collection<User>('/users')
-@Collection<Address>('/users/*/addresses')
+@Collection<User>('users')
+@Collection<Address>('users/*/addresses')
 final usersRef = UserCollectionReference();
 ```
 
