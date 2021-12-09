@@ -12,12 +12,14 @@ analyzer:
     # in this file
     included_file_warning: ignore
     unnecessary_import: ignore
+    unused_import: ignore
+    const_constructor_param_type_mismatch: ignore
 
 linter:
   rules:
     ## currently enabled only for firebase_core
     avoid_dynamic_calls: false
-
+    unnecessary_import: false
     ## Disabled rules because the repository doesn't respect them (yet)
     use_build_context_synchronously: false
     directives_ordering: false
