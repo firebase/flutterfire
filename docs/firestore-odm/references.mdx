@@ -22,7 +22,7 @@ Provide a collection reference instance to the `FirestoreBuilder`, returning a b
 
 ```dart
 
-@Collection<User>('/users')
+@Collection<User>('users')
 final usersRef = UserCollectionReference();
 
 // ...
@@ -72,7 +72,7 @@ specific document instead by calling the `doc()` method:
 
 ```dart
 
-@Collection<User>('/users')
+@Collection<User>('users')
 final usersRef = UserCollectionReference();
 
 // ...
