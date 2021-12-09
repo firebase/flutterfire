@@ -97,13 +97,20 @@ void testsMain() {
     test(
       'setSessionTimeoutDuration',
       () async {
-        await expectLater(
-          analytics
-              .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
-          completes,
-        );
+        if (kIsWeb) {
+          await expectLater(
+            analytics
+                .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            analytics
+                .setSessionTimeoutDuration(const Duration(milliseconds: 5000)),
+            completes,
+          );
+        }
       },
-      skip: kIsWeb,
     );
 
     test('setAnalyticsCollectionEnabled', () async {
@@ -134,23 +141,55 @@ void testsMain() {
     test(
       'resetAnalyticsData',
       () async {
-        await expectLater(analytics.resetAnalyticsData(), completes);
+        if (kIsWeb) {
+          await expectLater(
+            analytics.resetAnalyticsData(),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(analytics.resetAnalyticsData(), completes);
+        }
       },
-      skip: kIsWeb,
     );
 
     test(
       'setConsent',
       () async {
-        await expectLater(
-          analytics.setConsent(
-            analyticsStorageConsentGranted: false,
-            adStorageConsentGranted: true,
-          ),
-          completes,
-        );
+        if (kIsWeb) {
+          await expectLater(
+            analytics.setConsent(
+              analyticsStorageConsentGranted: false,
+              adStorageConsentGranted: true,
+            ),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            analytics.setConsent(
+              analyticsStorageConsentGranted: false,
+              adStorageConsentGranted: true,
+            ),
+            completes,
+          );
+        }
       },
-      skip: kIsWeb,
+    );
+
+    test(
+      'setDefaultEventParameters',
+      () async {
+        if (kIsWeb) {
+          await expectLater(
+            analytics.setDefaultEventParameters({'default': 'parameters'}),
+            throwsA(isA<UnimplementedError>()),
+          );
+        } else {
+          await expectLater(
+            analytics.setDefaultEventParameters({'default': 'parameters'}),
+            completes,
+          );
+        }
+      },
     );
   });
 }

@@ -121,4 +121,13 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
       'setSessionTimeoutDuration() is not supported on Web.',
     );
   }
+
+  @override
+  Future<void> setDefaultEventParameters(
+    Map<String, Object> defaultParameters,
+  ) async {
+    throw UnimplementedError(
+      'setDefaultEventParameters() is not supported on web',
+    );
+  }
 }
