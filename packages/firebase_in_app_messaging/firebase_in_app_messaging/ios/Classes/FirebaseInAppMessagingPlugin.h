@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <TargetConditionals.h>
 #import <Flutter/Flutter.h>
-
+#import <TargetConditionals.h>
 
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>

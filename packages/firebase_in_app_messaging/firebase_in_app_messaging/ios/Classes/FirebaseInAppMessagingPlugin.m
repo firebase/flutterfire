@@ -6,8 +6,8 @@
 
 #import <Firebase/Firebase.h>
 
-
-NSString *const kFLTFirebaseInAppMessagingChannelName = @"plugins.flutter.io/firebase_in_app_messaging";
+NSString *const kFLTFirebaseInAppMessagingChannelName =
+    @"plugins.flutter.io/firebase_in_app_messaging";
 
 @implementation FirebaseInAppMessagingPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
@@ -29,7 +29,6 @@ NSString *const kFLTFirebaseInAppMessagingChannelName = @"plugins.flutter.io/fir
   }
   return self;
 }
-
 
 #pragma mark - FLTFirebasePlugin
 
