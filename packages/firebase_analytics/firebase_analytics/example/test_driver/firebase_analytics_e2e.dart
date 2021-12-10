@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';

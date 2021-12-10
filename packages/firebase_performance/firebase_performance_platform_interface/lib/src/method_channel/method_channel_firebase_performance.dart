@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_performance_platform_interface.dart';
-import '../platform_interface/platform_interface_firebase_performance.dart';
 import 'method_channel_http_metric.dart';
 import 'utils/exception.dart';
 

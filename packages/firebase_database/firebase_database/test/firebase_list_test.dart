@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
 import 'package:firebase_database/ui/firebase_sorted_list.dart';
-import 'package:flutter_test/flutter_test.dart' show TestWidgetsFlutterBinding;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 

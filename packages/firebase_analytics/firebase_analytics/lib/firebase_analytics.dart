@@ -11,7 +11,6 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart'
     show FirebasePluginPlatform;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 export 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart'
     show AnalyticsEventItem, AnalyticsCallOptions;

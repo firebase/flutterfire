@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:firebase_auth_platform_interface/src/auth_provider.dart';
 
 const _kProviderId = 'facebook.com';
 
