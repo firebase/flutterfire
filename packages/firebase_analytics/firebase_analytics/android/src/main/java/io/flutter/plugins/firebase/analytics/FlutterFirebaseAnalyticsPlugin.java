@@ -166,7 +166,7 @@ public class FlutterFirebaseAnalyticsPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final String id = (String) Objects.requireNonNull(arguments.get(Constants.USER_ID));
+          final String id = (String) arguments.get(Constants.USER_ID);
           analytics.setUserId(id);
           return null;
         });
