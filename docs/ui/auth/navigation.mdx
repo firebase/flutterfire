@@ -54,7 +54,7 @@ You could also react to the user signing out in a similar manner:
 ```dart
 ProfileScreen(
   actions: [
-    AuthStateChangeAction<SignedOut>((context, _) {
+    SignedOutAction((context, _) {
       Navigator.of(context).pushReplacementNamed('/sign-in');
     }),
   ],

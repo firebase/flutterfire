@@ -6,13 +6,21 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../get_options.dart';
 import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
+import '../settings.dart';
+import 'platform_interface_collection_reference.dart';
+import 'platform_interface_document_reference.dart';
+import 'platform_interface_load_bundle_task.dart';
+import 'platform_interface_query.dart';
+import 'platform_interface_query_snapshot.dart';
+import 'platform_interface_transaction.dart';
+import 'platform_interface_write_batch.dart';
 
 /// Defines an interface to work with Cloud Firestore on web and mobile
 abstract class FirebaseFirestorePlatform extends PlatformInterface {

@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2021-12-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`firebase_analytics` - `v9.0.3`](#firebase_analytics---v903)
+- [`firebase_analytics_web` - `v0.4.0+3`](#firebase_analytics_web---v0403)
+- [`firebase_database` - `v9.0.3`](#firebase_database---v903)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `flutterfire_ui` - `v0.2.0+2`
+
+---
+
+#### `firebase_analytics` - `v9.0.3`
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522).
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529).
+ - **FIX**: userId can be null (#7545).
+
+#### `firebase_analytics_web` - `v0.4.0+3`
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522).
+
+#### `firebase_database` - `v9.0.3`
+
+ - **FIX**: downgrade the Android min SDK to 19 (#7533).
+
+
 ## 2021-12-08
 
 ### Changes

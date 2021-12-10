@@ -16,7 +16,6 @@ examples/all_plugins/pubspec.yaml
 
 Podfile.lock
 Pods/
-Podfile
 .symlinks/
 **/Flutter/ephemeral/
 **/Flutter/Flutter.podspec
