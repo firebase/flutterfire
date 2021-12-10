@@ -1,3 +1,7 @@
+## 9.0.3
+
+ - **FIX**: downgrade the Android min SDK to 19 (#7533). ([c657adec](https://github.com/FirebaseExtended/flutterfire/commit/c657adeca078a83ad7157eba91179f3e3ddb5001))
+
 ## 9.0.2
 
  - **FIX**: web reference `path` should now correctly return a path string. ([f9995ce0](https://github.com/FirebaseExtended/flutterfire/commit/f9995ce043d8d60d1e74077064f0df2226291738))

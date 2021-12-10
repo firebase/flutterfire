@@ -1,3 +1,7 @@
+## 0.4.0+3
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+
 ## 0.4.0+2
 
  - Update a dependency to the latest release.

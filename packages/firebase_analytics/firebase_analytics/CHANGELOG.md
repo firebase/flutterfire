@@ -1,3 +1,9 @@
+## 9.0.3
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
+
 ## 9.0.2
 
  - Update a dependency to the latest release.
