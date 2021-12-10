@@ -132,9 +132,11 @@ await FirebaseAnalytics.instance
 
 ## Default Parameters
 
-Use the `setDefaultEventParameters` method if you have common parameters which need to be sent with each event:
+Use the `setDefaultEventParameters` method if you have common parameters which need to be sent with each event. Please
+note that this API is not supported on web.
 
 ```dart
+// Not supported on web
 await FirebaseAnalytics.instance
   .setDefaultEventParameters({
     version: '1.2.3'
@@ -168,9 +170,33 @@ You can provide a `null` value to remove any previous properties.
 
 ## Resetting data
 
-To clear all data associated with the current session, use the `resetAnalyticsData` method:
+To clear all data associated with the current session, use the `resetAnalyticsData` method. Please
+note that this API is not supported on web.
 
 ```dart
+// Not supported on web
 await FirebaseAnalytics.instance
   .resetAnalyticsData();
+```
+
+## Set user consent
+
+Set the applicable end user consent state. `default` value for adStorageConsentGranted` & analyticsStorageConsentGranted` is true`.
+Please note that this API is not supported on web.
+
+```dart
+// Not supported on web
+await FirebaseAnalytics.instance
+  setConsent(adStorageConsentGranted: false, analyticsStorageConsentGranted: true);
+```
+
+## Set session timeout duration
+
+Set the duration of inactivity that terminates the current session.
+Please note that this API is android only.
+
+```dart
+// android support only
+await FirebaseAnalytics.instance
+  setSessionTimeoutDuration(const Duration(minutes: 1))
 ```

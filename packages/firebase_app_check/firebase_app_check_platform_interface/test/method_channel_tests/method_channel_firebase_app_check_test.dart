@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_app_check_platform_interface/src/method_channel/method_channel_firebase_app_check.dart';
 import 'package:flutter/services.dart';
 
 import '../mock.dart';

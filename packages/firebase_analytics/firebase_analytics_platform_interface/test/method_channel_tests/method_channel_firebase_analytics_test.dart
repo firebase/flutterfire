@@ -5,7 +5,6 @@
 import 'package:firebase_analytics_platform_interface/firebase_analytics_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_analytics_platform_interface/src/method_channel/method_channel_firebase_analytics.dart';
 import 'package:flutter/services.dart';
 
 import '../mock.dart';

@@ -1,3 +1,7 @@
+## 0.2.0+2
+
+ - **FIX**: web reference `path` should now correctly return a path string. ([f9995ce0](https://github.com/FirebaseExtended/flutterfire/commit/f9995ce043d8d60d1e74077064f0df2226291738))
+
 ## 0.2.0+1
 
  - Update a dependency to the latest release.

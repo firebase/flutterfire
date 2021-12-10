@@ -22,6 +22,16 @@ void runDatabaseTests() {
     });
 
     test(
+      'root reference path returns as "/"',
+      () async {
+        final rootRef = database.ref();
+        expect(rootRef.path, '/');
+        expect(rootRef.key, isNull);
+        expect(rootRef.parent, isNull);
+      },
+    );
+
+    test(
       'returns a reference to the root of the database if no path specified',
       () async {
         final rootRef = database.ref();

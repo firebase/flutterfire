@@ -1,10 +1,16 @@
 name: FlutterFire
+repository: https://github.com/FirebaseExtended/flutterfire
 
 packages:
   - packages/**
 
 command:
   version:
+    # Generate commit links in package changelogs.
+    linkToCommits: true
+    # Only allow versioning to happen on main branch.
+    branch: master
+    # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
 
 scripts:
