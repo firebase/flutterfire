@@ -4,6 +4,9 @@ version: 0.2.0+2
 repository: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
 
+false_secrets:
+ - example/**
+
 environment:
   sdk: '>=2.12.0 <3.0.0'
   flutter: '>=1.17.0'
