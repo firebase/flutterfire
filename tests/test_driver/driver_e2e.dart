@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:drive/drive.dart' as drive;
-import 'package:flutter_test/flutter_test.dart';
+import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
 
-void testsMain() {
-  // TODO
+void setupTests() {
+  firebase_core.setupTests();
 }
 
-void main() => drive.main(testsMain);
+void main() => drive.main(setupTests);
