@@ -82,11 +82,11 @@ class AuthGate extends StatelessWidget {
 
 Our application starts by subscribing to the users authentication state, which is provided as the
 `snapshot` to the Stream builder. To check whether the user is authenticated, the snapshot will contain
-a `FirebaseUser` instance, or `null` if they are not. Using the snapshots [`hasData`](https://api.flutter.dev/flutter/widgets/AsyncSnapshot/hasData.html)
+a `User` instance, or `null` if they are not. Using the snapshots [`hasData`](https://api.flutter.dev/flutter/widgets/AsyncSnapshot/hasData.html)
 property we can conditionally display the sign in screen if no user is signed in:
 
 ```dart
-return StreamBuilder<FirebaseUser?>(
+return StreamBuilder<User?>(
   stream: FirebaseAuth.instance.authStateChanges(),
   builder: (context, snapshot) {
     // User is not signed in
@@ -116,7 +116,7 @@ import 'package:flutterfire_ui/auth.dart';
 Next, go ahead and return a new `SignInScreen` from the builder if the user is not signed in:
 
 ```dart
-return StreamBuilder<FirebaseUser?>(
+return StreamBuilder<User?>(
   stream: FirebaseAuth.instance.authStateChanges(),
   builder: (context, snapshot) {
     // User is not signed in
