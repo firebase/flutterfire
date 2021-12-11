@@ -70,7 +70,7 @@ class AuthGate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<FirebaseUser?>(
+    return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         // ...
@@ -110,7 +110,7 @@ Screens are customizable fully styled widgets designed to be rendered as a singl
 import the FlutterFire UI package:
 
 ```dart
-import 'package:flutterfire_ui/flutterfire_ui.dart';
+import 'package:flutterfire_ui/auth.dart';
 ```
 
 Next, go ahead and return a new `SignInScreen` from the builder if the user is not signed in:
