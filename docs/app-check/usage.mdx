@@ -238,3 +238,24 @@ After you register the token, Firebase backend services will accept it as valid.
 Because this token allows access to your Firebase resources without a valid device, it is crucial that you keep it private.
 Don't commit it to a public repository, and if a registered token is ever compromised, revoke it immediately in the
 Firebase console.
+
+## App Check for Functions with Firebase Local Emulator Suite
+
+If you use [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) and have [App Check for Functions enabled](https://firebase.google.com/docs/app-check/cloud-functions), following the instructions you will check if app is verified app using the following code:
+
+```
+if (context.app == undefined) {
+  // handle if function invocation comes from an unverified app, return and / or throw error
+}
+```
+
+The above code will not allow your functions to run in Firebase Local Emulator Suite, because App Check token won't be added when the function is called. To solve this, change the above verification code to the following, so that App Check for functions is only enforced when not running in the Firebase Local Emulator Suite.
+
+```
+if (context.app == undefined && !process.env.FUNCTIONS_EMULATOR) {
+  // handle if function invocation comes from an unverified app, return and / or throw error
+}
+```
+
+
+
