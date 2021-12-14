@@ -1,3 +1,7 @@
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
 ## 3.1.3
 
  - **DOCS**: update firestore dartpad example.

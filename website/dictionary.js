@@ -11,6 +11,7 @@ module.exports = [
   // Known words;
   '&raquo',
   '.dex',
+  'ai',
   'acs',
   'alloc',
   'analytics',
@@ -45,6 +46,7 @@ module.exports = [
   'downloader',
   'dropdown',
   'filesystem',
+  'facebook',
   'firebase',
   'firestore',
   'flutterfire',
@@ -105,4 +107,7 @@ module.exports = [
   'schemas',
   'subcollection',
   'subcollections',
+  'dartpad',
+  'customizable',
+  'ui',
 ];

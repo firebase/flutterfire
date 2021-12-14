@@ -34,7 +34,7 @@ android {
 
   defaultConfig {
     applicationId 'com.invertase.testing'
-    minSdkVersion 21
+    minSdkVersion 19
     targetSdkVersion 30
     versionCode flutterVersionCode.toInteger()
     versionName flutterVersionName

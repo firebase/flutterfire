@@ -3,12 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_model_downloader_platform_interface.dart';
-import 'package:firebase_ml_model_downloader_platform_interface/src/method_channel/method_channel_firebase_ml_model_downloader.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import '../custom_model.dart';
+import '../download_type.dart';
 import '../download_conditions.dart';
+import '../method_channel/method_channel_firebase_ml_model_downloader.dart';
 
 abstract class FirebaseModelDownloaderPlatform extends PlatformInterface {
   /// The [FirebaseApp] this instance was initialized with.

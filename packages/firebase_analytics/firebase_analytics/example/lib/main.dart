@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +41,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      navigatorObservers: <NavigatorObserver>[observer],
       home: MyHomePage(
         title: 'Firebase Analytics Demo',
         analytics: analytics,
+        observer: observer,
       ),
     );
   }
@@ -52,10 +56,12 @@ class MyHomePage extends StatefulWidget {
     Key? key,
     required this.title,
     required this.analytics,
+    required this.observer,
   }) : super(key: key);
 
   final String title;
   final FirebaseAnalytics analytics;
+  final FirebaseAnalyticsObserver observer;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -184,7 +190,7 @@ class _MyHomePageState extends State<MyHomePage> {
       level: 5,
       character: 'witch doctor',
     );
-    await widget.analytics.logLogin(loginMethod: 'sign up');
+    await widget.analytics.logLogin(loginMethod: 'login');
     await widget.analytics.logPostScore(
       score: 1000000,
       level: 70,
@@ -319,7 +325,7 @@ class _MyHomePageState extends State<MyHomePage> {
             MaterialPageRoute<TabsPage>(
               settings: const RouteSettings(name: TabsPage.routeName),
               builder: (BuildContext context) {
-                return const TabsPage();
+                return TabsPage(widget.observer);
               },
             ),
           );

@@ -1,3 +1,7 @@
+## 11.2.3
+
+ - Update a dependency to the latest release.
+
 ## 11.2.2
 
  - **DOCS**: Fix typos and remove unused imports (#7504).

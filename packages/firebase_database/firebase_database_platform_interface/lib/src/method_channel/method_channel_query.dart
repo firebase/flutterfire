@@ -25,6 +25,7 @@ class MethodChannelQuery extends QueryPlatform {
 
   @override
   String get path {
+    if (pathComponents.isEmpty) return '/';
     return pathComponents.join('/');
   }
 

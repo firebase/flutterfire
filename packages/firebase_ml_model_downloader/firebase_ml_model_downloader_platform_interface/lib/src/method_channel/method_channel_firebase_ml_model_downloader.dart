@@ -5,10 +5,10 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_ml_model_downloader_platform_interface/firebase_ml_model_downloader_platform_interface.dart';
-import 'package:firebase_ml_model_downloader_platform_interface/src/download_conditions.dart';
-import 'package:firebase_ml_model_downloader_platform_interface/src/method_channel/utils/exception.dart';
 import 'package:flutter/services.dart';
+
+import './utils/exception.dart';
+import '../../firebase_ml_model_downloader_platform_interface.dart';
 
 class MethodChannelFirebaseModelDownloader
     extends FirebaseModelDownloaderPlatform {
