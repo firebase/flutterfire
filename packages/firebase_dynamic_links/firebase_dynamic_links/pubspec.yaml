@@ -6,6 +6,9 @@ version: 4.0.2
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links
 
+false_secrets:
+  - example/**
+
 environment:
   sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.12.13+hotfix.5"
