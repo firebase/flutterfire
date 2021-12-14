@@ -45,16 +45,16 @@
         [_metric setValue:value forAttribute:attributeName];
       }];
 
-  if (httpResponseCode != nil) {
+  if (![httpResponseCode isKindOfClass:[NSNull class]] && httpResponseCode != nil) {
     _metric.responseCode = [httpResponseCode integerValue];
   }
-  if (responseContentType != nil) {
+  if (![responseContentType isKindOfClass:[NSNull class]] && responseContentType != nil) {
     _metric.responseContentType = responseContentType;
   }
-  if (requestPayloadSize != nil) {
+  if (![requestPayloadSize isKindOfClass:[NSNull class]] && requestPayloadSize != nil) {
     _metric.requestPayloadSize = [requestPayloadSize longValue];
   }
-  if (responsePayloadSize != nil) {
+  if (![responsePayloadSize isKindOfClass:[NSNull class]] && responsePayloadSize != nil) {
     _metric.responsePayloadSize = [responsePayloadSize longValue];
   }
 
