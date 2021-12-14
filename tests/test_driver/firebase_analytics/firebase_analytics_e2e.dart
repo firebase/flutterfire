@@ -19,7 +19,9 @@ void setupTests() {
 
     test('logEvent', () async {
       await expectLater(
-          FirebaseAnalytics.instance.logEvent(name: 'testing'), completes);
+        FirebaseAnalytics.instance.logEvent(name: 'testing'),
+        completes,
+      );
 
       AnalyticsEventItem analyticsEventItem = AnalyticsEventItem(
         affiliation: 'affil',
@@ -114,7 +116,9 @@ void setupTests() {
 
     test('setUserId', () async {
       await expectLater(
-          FirebaseAnalytics.instance.setUserId(id: 'foo'), completes);
+        FirebaseAnalytics.instance.setUserId(id: 'foo'),
+        completes,
+      );
     });
 
     test('setCurrentScreen', () async {
@@ -141,7 +145,9 @@ void setupTests() {
           );
         } else {
           await expectLater(
-              FirebaseAnalytics.instance.resetAnalyticsData(), completes);
+            FirebaseAnalytics.instance.resetAnalyticsData(),
+            completes,
+          );
         }
       },
     );
