@@ -93,10 +93,13 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
         <String, Object?>{
           'handle': _httpMetricHandle,
           'attributes': _attributes,
-          'httpResponseCode': _httpResponseCode,
-          'requestPayloadSize': _requestPayloadSize,
-          'responseContentType': _responseContentType,
-          'responsePayloadSize': _responsePayloadSize,
+          if (_httpResponseCode != null) 'httpResponseCode': _httpResponseCode,
+          if (_requestPayloadSize != null)
+            'requestPayloadSize': _requestPayloadSize,
+          if (_responseContentType != null)
+            'responseContentType': _responseContentType,
+          if (_responsePayloadSize != null)
+            'responsePayloadSize': _responsePayloadSize,
         },
       );
       _hasStopped = true;

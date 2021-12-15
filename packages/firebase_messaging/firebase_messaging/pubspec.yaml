@@ -5,6 +5,9 @@ homepage: https://firebase.flutter.dev/docs/messaging/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging
 version: 11.2.3
 
+false_secrets:
+  - example/**
+
 environment:
   sdk: '>=2.12.0 <3.0.0'
   flutter: ">=1.12.13+hotfix.5"
