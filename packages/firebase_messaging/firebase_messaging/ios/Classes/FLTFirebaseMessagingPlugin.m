@@ -325,10 +325,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
              withCompletionHandler:(void (^)(void))completionHandler
     API_AVAILABLE(macos(10.14), ios(10.0)) {
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
+  NSDate *date = response.notification.date;
   // We only want to handle FCM notifications.
   if (remoteNotification[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification date:date];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
     @synchronized(self) {
       _initialNotification = notificationDict;
@@ -424,7 +425,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
     NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo date:nil];
 
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
       __block BOOL completed = NO;
@@ -752,10 +753,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #else
 + (NSDictionary *)NSDictionaryFromUNNotification:(UNNotification *)notification {
 #endif
-  return [self remoteMessageUserInfoToDict:notification.request.content.userInfo];
+  return [self remoteMessageUserInfoToDict:notification.request.content.userInfo
+                                      date:notification.date];
 }
 
-+ (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo {
++ (NSDictionary *)remoteMessageUserInfoToDict:(NSDictionary *)userInfo
+                                         date:(NSDate *)notificationDate {
   NSMutableDictionary *message = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *data = [[NSMutableDictionary alloc] init];
   NSMutableDictionary *notification = [[NSMutableDictionary alloc] init];
@@ -942,6 +945,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       notification[@"apple"] = notificationIOS;
       message[@"notification"] = notification;
     }
+  }
+
+  if (message[@"sentTime"] == nil && notificationDate != nil) {
+    NSNumber *milliSeconds =
+        [NSNumber numberWithDouble:[notificationDate timeIntervalSinceReferenceDate] * 1000];
+    message[@"sentTime"] = @([milliSeconds doubleValue]);
   }
 
   return message;
