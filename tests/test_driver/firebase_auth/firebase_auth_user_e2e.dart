@@ -419,7 +419,7 @@ void setupTests() {
           // Setup
           ActionCodeSettings actionCodeSettings = ActionCodeSettings(
             handleCodeInApp: true,
-            url: 'https://react-native-firebase-testing.firebaseapp.com/foo',
+            url: 'https://flutterfire-e2e-tests.firebaseapp.com/foo',
           );
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: generateRandomEmail(),

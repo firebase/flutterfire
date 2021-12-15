@@ -25,22 +25,18 @@ void setupTests() {
     setUp(() async {
       // Reset users on emulator.
       await emulatorClearAllUsers();
-
       // Create a generic testing user account.
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: testEmail,
         password: testPassword,
       );
-
       // Create a disabled user account.
       final disabledUserCredential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: testDisabledEmail,
         password: testPassword,
       );
-
       await emulatorDisableUser(disabledUserCredential.user!.uid);
-
       await ensureSignedOut();
     });
 

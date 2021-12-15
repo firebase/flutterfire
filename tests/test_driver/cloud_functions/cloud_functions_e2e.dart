@@ -148,8 +148,9 @@ void setupTests() {
 
     group('HttpsCallableOptions', () {
       test('times out when the provided timeout option is exceeded', () async {
-        HttpsCallable timeoutCallable =
-            FirebaseFunctions.instance.httpsCallable(
+        final instance = FirebaseFunctions.instance;
+        instance.useFunctionsEmulator('localhost', 5001);
+        final timeoutCallable = FirebaseFunctions.instance.httpsCallable(
           kTestFunctionTimeout,
           options: HttpsCallableOptions(timeout: const Duration(seconds: 3)),
         );

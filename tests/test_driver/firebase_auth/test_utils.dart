@@ -14,7 +14,7 @@ const String testDisabledEmail = 'disabled@example.com';
 const String testEmail = 'test@example.com';
 const String testPassword = 'testpassword';
 const String testPhoneNumber = '+447111555666';
-const String _testFirebaseProjectId = 'react-native-firebase-testing';
+const String _testFirebaseProjectId = 'flutterfire-e2e-tests';
 
 // TODO can this be moved to be shared for all plugins that use emulators?
 String get testEmulatorHost {
