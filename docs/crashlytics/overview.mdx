@@ -65,8 +65,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 3. Add the following to the Type a script... text box underneath the Shell property:
 
 ```bash
-$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai <googleAppId>
-$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai <googleAppId>
+${PODS_ROOT}/FirebaseCrashlytics/run
 ```
 
 Retrieve your `<googleAppId>` from your generated `DefaultFirebaseOptions` file (`appId`) or from the Firebase Console -> Project Settings -> Your apps.
