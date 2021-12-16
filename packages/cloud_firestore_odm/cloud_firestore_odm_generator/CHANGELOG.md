@@ -1,3 +1,7 @@
+## 1.0.0-dev.5
+
+ - **FIX**: an issue where invalid code was generated when a model has no queryable fields (#7604).
+
 ## 1.0.0-dev.4
 
  - Update a dependency to the latest release.
