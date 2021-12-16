@@ -34,7 +34,7 @@ class DifferentMethodSignInDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Title(text: l.differentMethodsSignInTitlText),
+                Title(text: l.differentMethodsSignInTitleText),
                 const SizedBox(height: 32),
                 DifferentMethodSignInView(
                   auth: auth,
