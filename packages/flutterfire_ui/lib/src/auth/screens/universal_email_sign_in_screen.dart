@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../configs/provider_configuration.dart';
 import '../widgets/internal/universal_page_route.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
