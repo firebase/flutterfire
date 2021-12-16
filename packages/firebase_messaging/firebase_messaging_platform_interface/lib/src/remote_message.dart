@@ -25,6 +25,10 @@ class RemoteMessage {
 
   /// Constructs a [RemoteMessage] from a raw Map.
   factory RemoteMessage.fromMap(Map<String, dynamic> map) {
+    if (map['sentTime'] is double) {
+      map['sentTime'] = (map['sentTime'] as double).round();
+    }
+
     return RemoteMessage(
       senderId: map['senderId'],
       category: map['category'],

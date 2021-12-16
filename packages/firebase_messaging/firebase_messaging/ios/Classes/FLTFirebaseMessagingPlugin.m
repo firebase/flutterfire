@@ -948,9 +948,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   if (message[@"sentTime"] == nil && notificationDate != nil) {
-    NSNumber *milliSeconds =
-        [NSNumber numberWithDouble:[notificationDate timeIntervalSinceReferenceDate] * 1000];
-    message[@"sentTime"] = @([milliSeconds doubleValue]);
+    NSTimeInterval seconds = [notificationDate timeIntervalSince1970];
+    NSNumber *milliseconds = [NSNumber numberWithDouble:seconds * 1000];
+    message[@"sentTime"] = @([milliseconds doubleValue]);
   }
 
   return message;
