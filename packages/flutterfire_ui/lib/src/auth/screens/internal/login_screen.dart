@@ -3,7 +3,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import '../../widgets/internal/universal_scaffold.dart';
-import '../../configs/provider_configuration.dart';
 
 import 'responsive_page.dart';
 
