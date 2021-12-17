@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
-import '../configs/provider_configuration.dart';
 import 'internal/login_screen.dart';
 
 /// A screen displaying a fully styled Registration flow for Authentication.

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
-import '../configs/provider_configuration.dart';
 import '../auth_state.dart';
 
 import 'internal/login_screen.dart';

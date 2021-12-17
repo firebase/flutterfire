@@ -52,7 +52,7 @@ abstract class FlutterFireUILocalizationLabels {
   String get forgotPasswordViewTitle;
   String get resetPasswordButtonLabel;
   String get verifyItsYouText;
-  String get differentMethodsSignInTitlText;
+  String get differentMethodsSignInTitleText;
   String get findProviderForEmailTitleText;
   String get continueText;
   String get countryCode;

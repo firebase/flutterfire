@@ -1,3 +1,7 @@
+## 11.2.4
+
+ - **FIX**: Return app constants for default app only on `Android`. (#7592). ([b803c425](https://github.com/FirebaseExtended/flutterfire/commit/b803c425b420acae155fea93a62ab9b3de4556a5))
+
 ## 11.2.3
 
  - Update a dependency to the latest release.
