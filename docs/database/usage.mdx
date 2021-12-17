@@ -250,7 +250,7 @@ print(result.committed); // false
 ### Atomic server-side operations
 
 Alternatively we're able to execute atomic operations on the server to ensure there is no chance of conflicts
-or out-of-sync updates.
+or out-of-sync updates. Also, since this is run on the server, there are no re-trys of the code from the client's side.
 
 For example, we can increment an age and set a timestamp on the server, rather than the client by using the
 `ServerValue` class:
