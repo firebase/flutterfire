@@ -47,6 +47,7 @@ class LoginScreen extends StatelessWidget {
         child: LoginView(
           key: loginViewKey,
           action: action,
+          auth: auth,
           providerConfigs: providerConfigs,
           oauthButtonVariant: oauthButtonVariant,
           email: email,
