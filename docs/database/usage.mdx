@@ -210,6 +210,7 @@ TransactionResult result = await ref.runTransaction((Object? post) {
 By default, events are raised each time the transaction update function runs. So if it is run
 multiple times, you may see intermediate states. You can set `applyLocally` to false to suppress these
 intermediate states and instead wait until the transaction has completed before events are raised:
+Important to keep in mind - "Setting applyLocally to false doesn't fundamentally change how transactions behave on the wire. It only changes when the client/SDK raises events."
 
 ```dart
 await ref.runTransaction((Object? post) {
