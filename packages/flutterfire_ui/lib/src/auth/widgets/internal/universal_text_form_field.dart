@@ -16,6 +16,7 @@ class UniversalTextFormField extends PlatformWidget {
   final bool? enableSuggestions;
   final bool? autocorrect;
   final Widget? prefix;
+  final Iterable<String>? autofillHints;
 
   const UniversalTextFormField({
     Key? key,
@@ -31,6 +32,7 @@ class UniversalTextFormField extends PlatformWidget {
     this.focusNode,
     this.enableSuggestions,
     this.autocorrect,
+    this.autofillHints,
   }) : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class UniversalTextFormField extends PlatformWidget {
         ),
       ),
       child: CupertinoTextFormFieldRow(
+        autofillHints: autofillHints,
         focusNode: focusNode,
         padding: EdgeInsets.zero,
         controller: controller,
@@ -63,6 +66,7 @@ class UniversalTextFormField extends PlatformWidget {
   @override
   Widget buildMaterial(BuildContext context) {
     return TextFormField(
+      autofillHints: autofillHints,
       autofocus: autofocus ?? false,
       focusNode: focusNode,
       controller: controller,

@@ -26,6 +26,7 @@ class EmailInput extends StatelessWidget {
     final l = FlutterFireUILocalizations.labelsOf(context);
 
     return UniversalTextFormField(
+      autofillHints: const [AutofillHints.email],
       autofocus: autofocus ?? false,
       focusNode: focusNode,
       controller: controller,
