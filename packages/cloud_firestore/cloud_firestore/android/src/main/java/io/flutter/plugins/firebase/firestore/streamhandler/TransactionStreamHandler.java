@@ -148,9 +148,10 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               } else if (task.getResult() != null) {
                 map.put("complete", true);
               }
-
-              activityRef.get().runOnUiThread(() -> events.success(map));
-              activityRef.get().runOnUiThread(events::endOfStream);
+              if (activityRef.get() != null) {
+                activityRef.get().runOnUiThread(() -> events.success(map));
+                activityRef.get().runOnUiThread(events::endOfStream);
+              }
             });
   }
 
