@@ -6,7 +6,7 @@ import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_config.dart';
+import 'package:firebase_messaging_example/firebase_options.dart';
 import 'instance_e2e.dart';
 
 // Requires that an emulator is running locally
@@ -14,7 +14,7 @@ bool USE_EMULATOR = false;
 
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp(options: TestFirebaseConfig.platformOptions);
+    await Firebase.initializeApp(options:DefaultFirebaseOptions.currentPlatform );
   });
 
   runInstanceTests();
