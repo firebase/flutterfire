@@ -99,8 +99,10 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
 
   auth_interop.ActionCodeSettings webActionCodeSettings =
       auth_interop.ActionCodeSettings(
-          url: actionCodeSettings.url,
-          handleCodeInApp: actionCodeSettings.handleCodeInApp);
+    url: actionCodeSettings.url,
+    handleCodeInApp: actionCodeSettings.handleCodeInApp,
+    dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+  );
 
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(

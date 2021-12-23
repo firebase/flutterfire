@@ -423,11 +423,14 @@ class ActionCodeSettings {
   external set android(AndroidSettings a);
   external bool get handleCodeInApp;
   external set handleCodeInApp(bool b);
+  external String get dynamicLinkDomain;
+  external set dynamicLinkDomain(String d);
   external factory ActionCodeSettings({
     String? url,
     IosSettings? iOS,
     AndroidSettings? android,
     bool? handleCodeInApp,
+    String? dynamicLinkDomain,
   });
 }
 
