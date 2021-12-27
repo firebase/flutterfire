@@ -14,7 +14,7 @@ typedef ScreenNameExtractor = String? Function(RouteSettings settings);
 String? defaultNameExtractor(RouteSettings settings) => settings.name;
 
 /// A [NavigatorObserver] that sends events to Firebase Analytics when the
-/// currently active [PageRoute] changes.
+/// currently active [ModalRoute] changes.
 ///
 /// When a route is pushed or popped, [nameExtractor] is used to extract a name
 /// from [RouteSettings] of the now active route and that name is sent to
@@ -46,10 +46,10 @@ String? defaultNameExtractor(RouteSettings settings) => settings.name;
 /// );
 /// ```
 ///
-/// You can also track screen views within your [PageRoute] by implementing
-/// [PageRouteAware] and subscribing it to [FirebaseAnalyticsObserver]. See the
-/// [PageRouteObserver] docs for an example.
-class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
+/// You can also track screen views within your [ModalRoute] by implementing
+/// [RouteAware<ModalRoute<dynamic>>] and subscribing it to [FirebaseAnalyticsObserver]. See the
+/// [RouteObserver<ModalRoute<dynamic>>] docs for an example.
+class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   /// Creates a [NavigatorObserver] that sends events to [FirebaseAnalytics].
   ///
   /// When a route is pushed or popped, [nameExtractor] is used to extract a
@@ -70,7 +70,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   final ScreenNameExtractor nameExtractor;
   final void Function(PlatformException error)? _onError;
 
-  void _sendScreenView(PageRoute<dynamic> route) {
+  void _sendScreenView(ModalRoute<dynamic> route) {
     final String? screenName = nameExtractor(route.settings);
     if (screenName != null) {
       analytics.setCurrentScreen(screenName: screenName).catchError(
@@ -90,7 +90,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
-    if (route is PageRoute) {
+    if (route is ModalRoute) {
       _sendScreenView(route);
     }
   }
@@ -98,7 +98,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    if (newRoute is PageRoute) {
+    if (newRoute is ModalRoute) {
       _sendScreenView(newRoute);
     }
   }
@@ -106,7 +106,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    if (previousRoute is PageRoute && route is PageRoute) {
+    if (previousRoute is ModalRoute && route is ModalRoute) {
       _sendScreenView(previousRoute);
     }
   }
