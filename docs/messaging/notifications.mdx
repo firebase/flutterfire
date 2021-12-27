@@ -198,7 +198,7 @@ of the scope of FlutterFire, we can take advantage of the [flutter_local_notific
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel', // id
   'High Importance Notifications', // title
-  'This channel is used for important notifications.', // description
+  description: 'This channel is used for important notifications.', // description
   importance: Importance.max,
 );
 ```
@@ -248,7 +248,7 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
           android: AndroidNotificationDetails(
             channel.id,
             channel.name,
-            channel.description,
+            description: channel.description,
             icon: android?.smallIcon,
             // other properties...
           ),
