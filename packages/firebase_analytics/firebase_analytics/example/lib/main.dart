@@ -60,12 +60,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _message = '';
 
-  @override
-  void initState() {
-    FirebaseAnalytics.instance.setUserProperty(name: "key", value: null);
-    super.initState();
-  }
-
   void setMessage(String message) {
     setState(() {
       _message = message;
