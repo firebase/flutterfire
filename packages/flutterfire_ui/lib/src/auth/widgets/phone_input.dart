@@ -135,6 +135,7 @@ class PhoneInputState extends State<PhoneInput> {
         (element) =>
             element.countryCode == countryCode ||
             element.phoneCode == phoneCode,
+        orElse: () => countries.first,
       );
 
       if (phoneCode != null &&
