@@ -49,6 +49,56 @@ Future<void> getFruit() async {
   List fruit = results.data;  // ["Apple", "Banana", "Cherry", "Date", "Fig", "Grapes"]
 }
 ```
+### Calling Endpoints with Parameters
+Let's have a look at calling Cloud functions with additional Parameters. For example:
+
+```javascript title="Deployed Function"
+exports.writeMessage = functions.https.onCall(async (data, context) => {
+  // Grab the text parameter.
+  const original = data.text;
+  //Returns the text received
+  return `Successfully received: ${original}`;
+});
+```
+
+Within Flutter, the function can be called, and the results accessed:
+
+```dart
+import 'package:cloud_functions/cloud_functions.dart';
+
+Future<void> writeMessage(String message) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('writeMessage');
+    final resp = await callable.call(<String, dynamic>{
+      'text': 'A message send from a client device',
+    });
+    print("result: ${resp.data}");
+  }
+```
+
+## Listening to Events
+
+What if we want to change things after data has been uploaded to the cloud? Here we can listen to changes of documents such as `onCreate`, `onUpdate`,`onDelete`, `onWrite`. In the next example we are listening for new messages in a firestore directory and making a copy as uppercase:
+
+```javascript title="Deployed Function"
+// Listens for new messages added to /messages/:documentId/original and creates an
+// uppercase version of the message to /messages/:documentId/uppercase
+exports.makeUppercase = functions.region('europe-west3').firestore.document('/messages/{documentId}')
+  .onCreate((snap, context) => {
+    // Grab the current value of what was written to Firestore.
+    const original = snap.data().original;
+
+    // Access the parameter `{documentId}` with `context.params`
+    functions.logger.log('Uppercasing', context.params.documentId, original);
+
+    const uppercase = original.toUpperCase();
+
+    // You must return a Promise when performing asynchronous tasks inside a Functions such as
+    // writing to Firestore.
+    // Setting an 'uppercase' field in Firestore document returns a Promise.
+    return snap.ref.set({ uppercase }, { merge: true });
+  });
+
+```
 
 ### Specifying regions
 
