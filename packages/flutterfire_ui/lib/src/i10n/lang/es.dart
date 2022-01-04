@@ -196,7 +196,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.emailIsRequiredErrorText = 'El correo electrónico es requirido',
     this.isNotAValidEmailErrorText = 'Ingresa un correo electrónico válido',
     this.userNotFoundErrorText = 'No existe una cuenta con este usuario',
-    this.emailTakenErrorText = 'La cuenta con ese correo electrónico ya existe',
+    this.emailTakenErrorText = 'Ya existe una cuenta con este correo electrónico',
     this.accessDisabledErrorText =
         'El acceso a esta cuenta se ha inhabilitado temporalmente',
     this.wrongOrNoPasswordErrorText =
