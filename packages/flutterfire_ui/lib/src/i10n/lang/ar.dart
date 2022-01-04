@@ -242,7 +242,7 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
     this.sendLinkButtonLabel = 'أرسل رابط تسجيل الدخول',
     this.arrayLabel = 'مصفوفة',
     this.booleanLabel = 'قيمة منطقية',
-    this.mapLabel = 'map',
+    this.mapLabel = 'كائن',
     this.nullLabel = 'بدون قيمة',
     this.numberLabel = 'رقم',
     this.stringLabel = 'نص',
