@@ -181,7 +181,7 @@ RegisterScreen(
     TwitterProviderConfiguration(
       apiKey: '...',
       apiSecretKey: '...',
-      redirectUri: 'https://my-app.firebaseapp.com/__/auth/handler'
+      redirectUri: '<your-scheme>://'
     )
   ],
 )
@@ -220,14 +220,12 @@ Next, enable the "Apple" provider in the Firebase Console:
   caption={false}
 />
 
-Once installed, add a `AppleProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once installed, add an `AppleProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providerConfigs: [
-    AppleProviderConfiguration(
-      clientId: '...',
-    )
+    AppleProviderConfiguration(),
   ],
 )
 ```
