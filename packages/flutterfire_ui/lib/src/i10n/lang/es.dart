@@ -201,7 +201,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
         'El acceso a esta cuenta se ha inhabilitado temporalmente',
     this.wrongOrNoPasswordErrorText =
         'La contraseña no es válida o el usuario no tiene contraseña.',
-    this.signInText = 'Ingresar',
+    this.signInText = 'Iniciar sesión',
     this.registerText = 'Registrarse',
     this.registerHintText = '¿No tienes una cuenta?',
     this.signInHintText = '¿Ya tienes una cuenta?',
