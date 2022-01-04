@@ -235,7 +235,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordResetEmailSentText =
         'Le enviamos un correo electrónico con un enlace para restablecer su contraseña. Por favor revise su correo electrónico.',
     this.forgotPasswordHintText =
-        'Proporcione su correo electrónico y le enviaremos un enlace para restablecer su contraseña',
+        'Introduce su correo electrónico y le enviaremos un enlace para restablecer su contraseña',
     this.emailLinkSignInButtonLabel = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkViewTitleText = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkSentText =
