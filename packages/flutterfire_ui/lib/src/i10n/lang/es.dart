@@ -195,7 +195,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.enterSMSCodeText = 'Introduce el código SMS',
     this.emailIsRequiredErrorText = 'El correo electrónico es requirido',
     this.isNotAValidEmailErrorText = 'Ingresa un correo electrónico válido',
-    this.userNotFoundErrorText = 'La cuenta NO existe',
+    this.userNotFoundErrorText = 'No existe una cuenta con este usuario',
     this.emailTakenErrorText = 'La cuenta con ese correo electrónico ya existe',
     this.accessDisabledErrorText =
         'El acceso a esta cuenta se ha inhabilitado temporalmente',
