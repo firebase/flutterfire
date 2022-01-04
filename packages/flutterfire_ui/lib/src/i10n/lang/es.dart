@@ -205,7 +205,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.registerText = 'Registrarse',
     this.registerHintText = '¿No tienes una cuenta?',
     this.signInHintText = '¿Ya tienes una cuenta?',
-    this.signOutButtonText = 'Salir',
+    this.signOutButtonText = 'Cerrar sesión',
     this.phoneInputLabel = 'Número de teléfono',
     this.phoneNumberInvalidErrorText = 'El número de teléfono no es válido',
     this.phoneNumberIsRequiredErrorText = 'El número de teléfono es obligatorio',
