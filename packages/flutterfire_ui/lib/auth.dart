@@ -89,3 +89,4 @@ export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';
 export 'src/auth/configs/oauth_provider_configuration.dart';
 export 'src/auth/configs/email_link_provider_configuration.dart';
+export 'src/auth/configs/provider_configuration.dart';

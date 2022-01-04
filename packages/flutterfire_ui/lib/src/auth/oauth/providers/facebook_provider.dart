@@ -90,6 +90,7 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
   bool isSupportedPlatform(TargetPlatform platform) {
     return platform == TargetPlatform.android ||
         platform == TargetPlatform.iOS ||
-        platform == TargetPlatform.macOS;
+        platform == TargetPlatform.macOS ||
+        kIsWeb;
   }
 }

@@ -5,6 +5,19 @@ import 'package:json_annotation/json_annotation.dart';
 part 'simple.g.dart';
 
 @JsonSerializable()
+class EmptyModel {
+  EmptyModel();
+
+  factory EmptyModel.fromJson(Map<String, dynamic> json) =>
+      _$EmptyModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EmptyModelToJson(this);
+}
+
+@Collection<EmptyModel>('config')
+final emptyModelRef = EmptyModelCollectionReference();
+
+@JsonSerializable()
 class MinValidation {
   MinValidation(this.intNbr, this.doubleNbr, this.numNbr) {
     _$assertMinValidation(this);

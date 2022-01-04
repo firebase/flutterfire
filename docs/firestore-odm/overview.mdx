@@ -24,7 +24,19 @@ The ODM allows data schemas to be defined which represent the data structure of 
 
 ## Installation
 
-### 1. FlutterFire Initialization
+### 1. Use a recent Dart version
+
+The ODM relies on a recent Dart feature: generic annotations.  
+As such, to use the ODM you will need to upgrade your Dart SDK to enable this feature.
+
+That is done by adding the following to your `pubspec.yaml`:
+
+```yaml
+environment:
+  sdk: ">=2.14.0 <3.0.0"
+```
+
+### 2. FlutterFire Initialization
 
 Before getting started, ensure you have [initialized FlutterFire](../overview.mdx).
 
@@ -38,11 +50,11 @@ void main() async {
 }
 ```
 
-### 2. Install `cloud_firestore` plugin
+### 3. Install `cloud_firestore` plugin
 
 The ODM depends on the `cloud_firestore` plugin, so first ensure you have it [installed on your project](../firestore/overview.mdx#installation).
 
-### 3. Install dependency
+### 4. Install dependency
 
 To install the ODM, you'll need to install both the [`cloud_firestore_odm`](https://pub.dev/packages/cloud_firestore_odm) and [`json_annotation`](https://pub.dev/packages/json_annotation) packages
 from pub:
@@ -62,4 +74,4 @@ flutter pub add --dev json_serializable
 
 ## Next Steps
 
-Once installed, read the documentation on [defining models](./defining-models).
+Once installed, read the documentation on [defining models](./defining-models.mdx).

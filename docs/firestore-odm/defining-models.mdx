@@ -48,7 +48,7 @@ but what about more bespoke validation?
 For example, a users age cannot be a negative value, so how do we validate against this?
 
 The ODM provides some basic annotation validators which can be used on model properties. In this
-example, we can take advantage of the `min` validator:
+example, we can take advantage of the `Min` validator:
 
 ```dart
 @JsonSerializable()
@@ -65,13 +65,13 @@ class User {
   final String name;
   final String email;
 
-  // Apply the `min` validator
-  @min(0)
+  // Apply the `Min` validator
+  @Min(0)
   final int age;
 }
 ```
 
-The `min` annotation ensures that any value for the `age` property is always positive, otherwise an
+The `Min` annotation ensures that any value for the `age` property is always positive, otherwise an
 error will be thrown.
 
 To ensure validators are applied, the model instance is provided to the generated `$asserUser`
@@ -86,8 +86,8 @@ The following annotations are available for `int` properties:
 
 | Annotation | Description                                        |
 |------------|----------------------------------------------------|
-| `min`      | Validates a number is not less than this value.    |
-| `max`      | Validates a number is not greater than this value. |
+| `Min`      | Validates a number is not less than this value.    |
+| `Max`      | Validates a number is not greater than this value. |
 
 ### Custom validators
 

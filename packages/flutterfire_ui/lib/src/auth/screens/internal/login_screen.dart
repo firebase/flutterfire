@@ -3,7 +3,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import '../../widgets/internal/universal_scaffold.dart';
-import '../../configs/provider_configuration.dart';
 
 import 'responsive_page.dart';
 
@@ -48,6 +47,7 @@ class LoginScreen extends StatelessWidget {
         child: LoginView(
           key: loginViewKey,
           action: action,
+          auth: auth,
           providerConfigs: providerConfigs,
           oauthButtonVariant: oauthButtonVariant,
           email: email,
