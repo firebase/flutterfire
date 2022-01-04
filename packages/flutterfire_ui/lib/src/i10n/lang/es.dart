@@ -253,7 +253,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.updateLabel = 'update',
     this.northInitialLabel = 'N',
     this.southInitialLabel = 'S',
-    this.westInitialLabel = 'W',
+    this.westInitialLabel = 'O',
     this.eastInitialLabel = 'E',
     this.timestampLabel = 'timestamp',
     this.longitudeLabel = 'longitude',
