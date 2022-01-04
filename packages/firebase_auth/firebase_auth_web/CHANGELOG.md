@@ -1,3 +1,35 @@
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
+## 3.3.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+## 3.2.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
 ## 3.1.3
 
  - Update a dependency to the latest release.

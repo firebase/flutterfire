@@ -3,8 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:io';
 
@@ -20,10 +18,18 @@ const _kShouldTestAsyncErrorOnInit = false;
 // Toggle this for testing Crashlytics in your app locally.
 const _kTestingCrashlytics = true;
 
-void main() {
-  runZonedGuarded(() async {
+Future<void> main() async {
+  await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+        appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
+        messagingSenderId: '448618578101',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        projectId: 'react-native-firebase-testing',
+      ),
+    );
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(MyApp());
   }, (error, stackTrace) {
@@ -32,13 +38,13 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<void> _initializeFlutterFireFuture;
+  late Future<void> _initializeFlutterFireFuture;
 
   Future<void> _testAsyncErrorOnInit() async {
     Future<void>.delayed(const Duration(seconds: 2), () {
@@ -218,7 +224,6 @@ class _MyAppState extends State<MyApp> {
                     ],
                   ),
                 );
-                break;
               default:
                 return const Center(child: Text('Loading'));
             }

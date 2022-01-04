@@ -2,16 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTimestampTests() {
   group('$Timestamp', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -33,7 +29,7 @@ void runTimestampTests() {
       await doc.set({'foo': Timestamp.fromDate(date)});
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot.data()!['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(
         timestamp.millisecondsSinceEpoch,
@@ -50,7 +46,7 @@ void runTimestampTests() {
       await doc.update({'foo': date});
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
-      Timestamp timestamp = snapshot.data()['foo'];
+      Timestamp timestamp = snapshot.data()!['foo'];
       expect(timestamp, isA<Timestamp>());
       expect(
         timestamp.millisecondsSinceEpoch,

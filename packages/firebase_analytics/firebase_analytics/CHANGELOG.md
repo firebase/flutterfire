@@ -1,3 +1,59 @@
+## 9.0.4
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 9.0.3
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
+
+## 9.0.2
+
+ - Update a dependency to the latest release.
+
+## 9.0.1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
+## 9.0.0
+
+> Note: This release has breaking changes.
+
+As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
+
+Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
+documentation and updating unit and end-to-end tests.
+
+- **DEPRECATED**: `FirebaseAnalytics.android` namespace has been deprecated in favour of calling `setSessionTimeoutDuration()` directly: `FirebaseAnalytics.instance.setSessionTimeoutDuration(const Duration(milliseconds: 2000))`.
+- **DEPRECATED**: `logEcommercePurchase()` has been deprecated in favour of using `logPurchase()`.
+- **DEPRECATED**: `logPresentOffer()` has been deprecated in favour of using `logViewPromotion()`.
+- **DEPRECATED**: `logPurchaseRefund()` has been deprecated in favour of using `logRefund()`.
+- **DEPRECATED**: `logSetCheckoutOption()` has been deprecated.
+
+- **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+- **BREAKING**: `FirebaseAnalyticsObserver()` class has been removed.
+- **BREAKING**: Constructing a `FirebaseAnalytics` instance is now deprecated, use `FirebaseAnalytics.instanceFor` (web only) or `FirebaseAnalytics.instance` instead.
+- **BREAKING**: `logAddPaymentInfo()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logAddToWishlist()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logBeginCheckout()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logRemoveFromCart()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItem()` updated parameters to be logged in Analytics console.
+- **BREAKING**: `logViewItemList()` updated parameters to be logged in Analytics console.
+
+- **NEW**: `logAddShippingInfo()` added support for logging shipping information.
+- **NEW**: `logAdImpression()` added support for logging ad impression.
+- **NEW**: `logPurchase()` added support for logging a purchase.
+- **NEW**: `logRefund()` added support for logging a refund.
+- **NEW**: `logScreenView()` added support for logging a screen view.
+- **NEW**: `logSelectItem()` added support for logging a item that has been selected.
+- **NEW**: `logSelectPromotion()` added support for logging a promotion that has been selected.
+- **NEW**: `logViewCart()` added support for logging a view of the current cart.
+- **NEW**: `logViewPromotion()` added support for logging a view of the current promotion.
+- **NEW**: `setConsent()` added support for setting the applicable end user consent state (e.g., for device identifiers) for the app on this device.
+- **NEW**: `setDefaultEventParameters()` added support for setting default parameters that will be set on every event logged from the SDK, including automatic ones.
+
 ## 8.3.4
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).

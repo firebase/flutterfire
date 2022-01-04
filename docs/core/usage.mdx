@@ -12,39 +12,6 @@ as:
 
 ## Installation
 
-<Tabs
-groupId="legacy-or-nullsafe"
-defaultValue="legacy"
-values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-]}
->
-<TabItem value="legacy">
-</TabItem>
-<TabItem value="null-safe">
-
-Ensure you're using the Flutter `stable` channel:
-
-```bash
-$ flutter channel stable
-```
-
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
-
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_analytics/firebase_analytics.dart';
-```
-
-</TabItem>
-</Tabs>
-
 The [`firebase_core`](!firebase_core) plugin can be installed by following the [Getting Started](../overview.mdx) documentation. Once installed,
 import the plugin:
 

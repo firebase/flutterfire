@@ -6,7 +6,6 @@ environment:
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
-  e2e: ^0.6.1
   firebase_analytics:
     path: ../
   firebase_core:
@@ -15,6 +14,10 @@ dependencies:
     sdk: flutter
 
 dependency_overrides:
+  firebase_analytics_platform_interface:
+    path: ../../firebase_analytics_platform_interface
+  firebase_analytics_web:
+    path: ../../../firebase_analytics/firebase_analytics_web
   firebase_core:
     path: ../../../firebase_core/firebase_core
   firebase_core_platform_interface:
@@ -23,11 +26,11 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_web
 
 dev_dependencies:
+  drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  pedantic: ^1.8.0
   test: any
 
 flutter:

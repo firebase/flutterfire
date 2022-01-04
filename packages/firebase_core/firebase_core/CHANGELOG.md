@@ -1,3 +1,36 @@
+## 1.10.6
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 1.10.5
+
+ - Update a dependency to the latest release.
+
+## 1.10.4
+
+ - Update a dependency to the latest release.
+
+## 1.10.3
+
+ - Update a dependency to the latest release.
+
+## 1.10.2
+
+ - Update a dependency to the latest release.
+
+## 1.10.1
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+
+## 1.10.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 1.9.0
+
+ - **FEAT**: bump Firebase Android SDK version to `29.0.0` (#7296).
+ - **FEAT**: bump Firebase iOS SDK to `8.9.0` (#7289).
+
 ## 1.8.0
 
  - **FEAT**: Firebase iOS SDK version bumped to `8.8.0` (#7213).

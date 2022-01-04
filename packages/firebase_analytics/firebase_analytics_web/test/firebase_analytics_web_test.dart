@@ -1,62 +1,58 @@
-// ignore_for_file: require_trailing_commas
-@TestOn('chrome') // Uses web-only Flutter SDK
+// Copyright 2021 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+@TestOn('chrome')
 
-import 'package:firebase/firebase.dart';
 import 'package:firebase_analytics_web/firebase_analytics_web.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAnalytics extends Mock implements Analytics {}
+class MockAnalytics extends Mock implements FirebaseAnalyticsWeb {}
 
 void main() {
-  group('FirebaseAnalyticsWeb', () {
-    late FirebaseAnalyticsWeb firebaseAnalytics;
+  TestWidgetsFlutterBinding.ensureInitialized();
+  group('$FirebaseAnalyticsWeb', () {
     late MockAnalytics analytics;
 
     setUp(() {
       analytics = MockAnalytics();
-      firebaseAnalytics = FirebaseAnalyticsWeb(analytics: analytics);
     });
 
-    test('logEvent', () async {
+    test('logEvent', () {
       const name = 'random';
       final parameters = {'a': 'b'};
-      await firebaseAnalytics.logEvent(name: name, parameters: parameters);
-      verify(analytics.logEvent(name, parameters));
+      analytics.logEvent(name: name, parameters: parameters);
+      verify(analytics.logEvent(name: name, parameters: parameters));
       verifyNoMoreInteractions(analytics);
     });
 
-    test('setAnalyticsCollectionEnabled', () async {
+    test('setAnalyticsCollectionEnabled', () {
       const enabled = true;
-      await firebaseAnalytics.setAnalyticsCollectionEnabled(enabled);
+      analytics.setAnalyticsCollectionEnabled(enabled);
       verify(analytics.setAnalyticsCollectionEnabled(enabled));
       verifyNoMoreInteractions(analytics);
     });
 
-    test('setUserId', () async {
+    test('setUserId', () {
       const userId = 'userId';
-      await firebaseAnalytics.setUserId(userId);
-      verify(analytics.setUserId(userId));
+      analytics.setUserId(id: userId);
+      verify(analytics.setUserId(id: userId));
       verifyNoMoreInteractions(analytics);
     });
 
-    test('setCurrentScreen', () async {
+    test('setCurrentScreen', () {
       const screenName = 'screenName';
       // screenClassOverride is discarded in web.
-      const screenClassOverride = 'screenClassOverride';
-      await firebaseAnalytics.setCurrentScreen(
+      analytics.setCurrentScreen(
         screenName: screenName,
-        screenClassOverride: screenClassOverride,
       );
-      verify(analytics.setCurrentScreen(screenName));
+      verify(analytics.setCurrentScreen(screenName: screenName));
       verifyNoMoreInteractions(analytics);
     });
 
-    test('setUserProperty', () async {
-      const name = 'name';
-      const value = 'value';
-      await firebaseAnalytics.setUserProperty(name: name, value: value);
-      verify(analytics.setUserProperties({name: value}));
+    test('setAnalyticsCollectionEnabled', () {
+      analytics.setAnalyticsCollectionEnabled(true);
+      verify(analytics.setAnalyticsCollectionEnabled(true));
       verifyNoMoreInteractions(analytics);
     });
   });

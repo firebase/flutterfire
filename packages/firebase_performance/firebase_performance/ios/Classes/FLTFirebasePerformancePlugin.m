@@ -1,8 +1,10 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
 #import "FLTFirebasePerformancePlugin+Internal.h"
+
+NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/firebase_performance";
 
 @implementation FLTFirebasePerformancePlugin
 static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
@@ -54,4 +56,29 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 + (void)removeMethodHandler:(NSNumber *)handle {
   [methodHandlers removeObjectForKey:handle];
 }
+
+#pragma mark - FLTFirebasePlugin
+
+- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  if (completion != nil) {
+    completion();
+  }
+}
+
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  return @{};
+}
+
+- (NSString *_Nonnull)firebaseLibraryName {
+  return LIBRARY_NAME;
+}
+
+- (NSString *_Nonnull)firebaseLibraryVersion {
+  return LIBRARY_VERSION;
+}
+
+- (NSString *_Nonnull)flutterChannelName {
+  return kFLTFirebasePerformanceChannelName;
+}
+
 @end

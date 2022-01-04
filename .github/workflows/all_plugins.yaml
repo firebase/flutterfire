@@ -16,7 +16,7 @@ on:
 
 jobs:
   analyze:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -31,14 +31,13 @@ jobs:
         run: melos bootstrap
       - name: "Run Analyze"
         run: melos run analyze
-      # TODO ML Custom has not been migrated to NNBD yet, so ignore checking it.
       - name: "Pub Check"
         run: |
-          melos exec -c 1 --no-private --ignore="*example*" --ignore="*ml_custom*" --ignore="*admob*" -- \
+          melos exec -c 1 --no-private --ignore="*example*" -- \
             pub publish --dry-run
 
   pub_get_check:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -56,7 +55,7 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2.3.4
         with:
@@ -88,7 +87,7 @@ jobs:
           ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
-    timeout-minutes: 15
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -109,7 +108,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2.3.4
         with:

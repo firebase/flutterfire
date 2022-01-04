@@ -1,3 +1,39 @@
+## 4.2.5
+
+ - Update a dependency to the latest release.
+
+## 4.2.4
+
+ - Update a dependency to the latest release.
+
+## 4.2.3
+
+ - Update a dependency to the latest release.
+
+## 4.2.2
+
+ - Update a dependency to the latest release.
+
+## 4.2.1
+
+ - Update a dependency to the latest release.
+
+## 4.2.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+## 4.1.1
+
+ - **FIX**: correctly pass `region` to JS functions interop instance (#7328).
+
+## 4.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 4.0.15
+
+ - Update a dependency to the latest release.
+
 ## 4.0.14
 
  - Update a dependency to the latest release.

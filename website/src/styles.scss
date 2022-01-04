@@ -66,6 +66,8 @@ html[data-theme='dark'] {
   --ifm-color-primary-light: var(--flutter-blue-primary-light);
   --ifm-color-primary-lighter: var(--flutter-blue-primary-light);
   --ifm-color-primary-lightest: var(--flutter-blue-primary-light);
+  --ifm-color-warning: var(--firebase-yellow);
+  --ifm-alert-color: var(--black);
   --ifm-code-font-size: 90%;
 
   --header-height: 320px;
@@ -112,4 +114,27 @@ li.menu__list-item > a[target='_blank'] {
 
 .keyword {
   color: var(--firebase-amber);
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.grid.grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid.grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.grid.grid-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media only screen and (max-width: 700px) {
+  .grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
 }

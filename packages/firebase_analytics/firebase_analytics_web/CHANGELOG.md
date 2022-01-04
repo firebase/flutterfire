@@ -1,3 +1,55 @@
+## 0.4.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+3
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
+## 0.4.0
+
+ - Graduate package to a stable release. See pre-releases prior to this version for changelog entries.
+
+## 0.4.0-dev.6
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-dev.5
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-dev.4
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+## 0.4.0-dev.3
+
+ - **FEAT**: add macOS support (#7313).
+
+## 0.4.0-dev.2
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 0.4.0-dev.1
+
+ - Update a dependency to the latest release.
+
+## 0.4.0-dev.0
+
+> Note: This release has breaking changes.
+
+ - **STYLE**: enable additional lint rules (#6832).
+ - **BREAKING** **REFACTOR**: update Firebase Analytics plugin to match latest Firebase APIs (#7032).
+   - See `firebase_analytics` package changelog for more information.
+
 ## 0.3.0+1
 
  - **DOCS**: Add missing homepage/repository links (#6054).

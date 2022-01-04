@@ -1,153 +1,471 @@
-// ignore_for_file: require_trailing_commas
-
-import 'dart:async';
-
+import 'package:collection/collection.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'firebase_database_e2e.dart';
-
 void runQueryTests() {
-  group('$Query', () {
-    late FirebaseDatabase database;
+  group('Query', () {
+    late DatabaseReference ref;
 
-    setUpAll(() async {
-      database = FirebaseDatabase.instance;
-      await setTestData();
+    setUp(() async {
+      ref = FirebaseDatabase.instance.ref('tests');
+
+      // Wipe the database before each test
+      await ref.remove();
     });
 
-    test('once', () async {
-      final dataSnapshot =
-          await database.reference().child('ordered/one').once();
-      expect(dataSnapshot, isNot(null));
-      expect(dataSnapshot.key, 'one');
-      expect(dataSnapshot.value['ref'], 'one');
-      expect(dataSnapshot.value['value'], 23);
-    });
+    group('startAt', () {
+      test('returns null when no order modifier is applied', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
-    test('get', () async {
-      final dataSnapshot =
-          await database.reference().child('ordered/two').get();
-      expect(dataSnapshot, isNot(null));
-      expect(dataSnapshot.key, 'two');
-      expect(dataSnapshot.value['ref'], 'two');
-      expect(dataSnapshot.value['value'], 56);
-    });
-
-    test('DataSnapshot.exists is false for no data', () async {
-      final databaseRef =
-          database.reference().child('a-non-existing-reference');
-      final dataSnapshot = await databaseRef.get();
-      expect(dataSnapshot.exists, false);
-    });
-
-    test('DataSnapshot.exists is true for existing data', () async {
-      final databaseRef = database.reference().child('ordered/one');
-      final dataSnapshot = await databaseRef.get();
-      expect(dataSnapshot.exists, true);
-    });
-
-    test('correct order returned from query', () async {
-      final c = Completer<List<Map<String, dynamic>>>();
-      final items = <Map<String, dynamic>>[];
-
-      // ignore: unawaited_futures
-      database
-          .reference()
-          .child('ordered')
-          .orderByChild('value')
-          .onChildAdded
-          .forEach((element) {
-        items.add(element.snapshot.value.cast<String, dynamic>());
-        if (items.length == testDocuments.length) c.complete(items);
+        final snapshot = await ref.startAt(2).get();
+        expect(snapshot.value, isNull);
       });
 
-      final snapshots = await c.future;
+      test('starts at the correct value', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
 
-      final documents = snapshots.map((v) => v['value'] as int).toList();
-      final ordered = testDocuments.map((doc) => doc['value']).toList()..sort();
+        final snapshot = await ref.orderByValue().startAt(2).get();
 
-      expect(documents[0], ordered[0]);
-      expect(documents[1], ordered[1]);
-      expect(documents[2], ordered[2]);
-      expect(documents[3], ordered[3]);
-    });
+        final expected = ['b', 'c', 'd'];
 
-    test('limitToFirst', () async {
-      final snapshot =
-          await database.reference().child('ordered').limitToFirst(2).once();
-      Map<dynamic, dynamic> data = snapshot.value;
-      expect(data.length, 2);
-
-      final snapshot1 = await database
-          .reference()
-          .child('ordered')
-          .limitToFirst(testDocuments.length + 2)
-          .once();
-      Map<dynamic, dynamic> data1 = snapshot1.value;
-      expect(data1.length, testDocuments.length);
-    });
-
-    test('limitToLast', () async {
-      final snapshot =
-          await database.reference().child('ordered').limitToLast(3).once();
-      Map<dynamic, dynamic> data = snapshot.value;
-      expect(data.length, 3);
-
-      final snapshot1 = await database
-          .reference()
-          .child('ordered')
-          .limitToLast(testDocuments.length + 2)
-          .once();
-      Map<dynamic, dynamic> data1 = snapshot1.value;
-      expect(data1.length, testDocuments.length);
-    });
-
-    test('startAt & endAt', () async {
-      // query to get the data that has key starts with t only
-      final snapshot = await database
-          .reference()
-          .child('ordered')
-          .orderByKey()
-          .startAt('t')
-          .endAt('t\uf8ff')
-          .once();
-      Map<dynamic, dynamic> data = snapshot.value;
-      bool eachKeyStartsWithF = true;
-      data.forEach((key, value) {
-        if (!key.toString().startsWith('t')) {
-          eachKeyStartsWithF = false;
-        }
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
       });
-      expect(eachKeyStartsWithF, true);
-      // as there are two snaps that starts with t (two, three)
-      expect(data.length, 2);
-
-      final snapshot1 = await database
-          .reference()
-          .child('ordered')
-          .orderByKey()
-          .startAt('t')
-          .endAt('three')
-          .once();
-      Map<dynamic, dynamic> data1 = snapshot1.value;
-      // as the endAt is equal to 'three' and this will skip the data with key 'two'.
-      expect(data1.length, 1);
     });
 
-    test('equalTo', () async {
-      final snapshot = await database
-          .reference()
-          .child('ordered')
-          .orderByKey()
-          .equalTo('one')
-          .once();
+    group('startAfter', () {
+      test('returns null when no order modifier is applied', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
 
-      Map<dynamic, dynamic> data = snapshot.value;
+        final snapshot = await ref.startAfter(2).get();
+        expect(snapshot.value, isNull);
+      });
 
-      expect(data.containsKey('one'), true);
-      expect(data['one']['ref'], 'one');
-      expect(data['one']['value'], 23);
+      test('starts after the correct value', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
+
+        // TODO(ehesp): Using `get` returns the wrong results. Have flagged with SDK team.
+        final e = await ref.orderByValue().startAfter(2).once();
+
+        final expected = ['c', 'd'];
+
+        expect(e.snapshot.children.length, expected.length);
+        e.snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('endAt', () {
+      test('returns all values when no order modifier is applied', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
+
+        final expected = ['a', 'b', 'c'];
+
+        final snapshot = await ref.endAt(2).get();
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+
+      test('ends at the correct value', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
+
+        final snapshot = await ref.orderByValue().endAt(2).get();
+
+        final expected = ['a', 'b'];
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('endBefore', () {
+      test('returns all values when no order modifier is applied', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
+
+        final expected = ['a', 'b', 'c'];
+
+        final snapshot = await ref.endBefore(2).get();
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+
+      test('ends before the correct value', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+        });
+
+        final snapshot = await ref.orderByValue().endBefore(2).get();
+
+        final expected = ['a'];
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('equalTo', () {
+      test('returns null when no order modifier is applied', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+        });
+
+        final snapshot = await ref.equalTo(2).get();
+        expect(snapshot.value, isNull);
+      });
+
+      test('returns the correct value', () async {
+        await ref.set({
+          'a': 1,
+          'b': 2,
+          'c': 3,
+          'd': 4,
+          'e': 2,
+        });
+
+        final snapshot = await ref.orderByValue().equalTo(2).get();
+
+        final expected = ['b', 'e'];
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('limitToFirst', () {
+      test('returns a limited array', () async {
+        await ref.set({
+          0: 'foo',
+          1: 'bar',
+          2: 'baz',
+        });
+
+        final snapshot = await ref.limitToFirst(2).get();
+
+        final expected = ['foo', 'bar'];
+        expect(snapshot.value, equals(expected));
+      });
+
+      test('returns a limited object', () async {
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
+
+        final snapshot = await ref.limitToFirst(2).get();
+
+        final expected = {
+          'a': 'foo',
+          'b': 'bar',
+        };
+
+        expect(snapshot.value, equals(expected));
+      });
+
+      test('returns null when no limit is possible', () async {
+        await ref.set('foo');
+
+        final snapshot = await ref.limitToFirst(2).get();
+
+        expect(snapshot.value, isNull);
+      });
+    });
+
+    group('limitToLast', () {
+      test('returns a limited array', () async {
+        await ref.set({
+          0: 'foo',
+          1: 'bar',
+          2: 'baz',
+        });
+
+        final snapshot = await ref.limitToLast(2).get();
+
+        final expected = [null, 'bar', 'baz'];
+        expect(snapshot.value, equals(expected));
+      });
+
+      test('returns a limited object', () async {
+        await ref.set({
+          'a': 'foo',
+          'b': 'bar',
+          'c': 'baz',
+        });
+
+        final snapshot = await ref.limitToLast(2).get();
+
+        final expected = {
+          'b': 'bar',
+          'c': 'baz',
+        };
+
+        expect(snapshot.value, equals(expected));
+      });
+
+      test('returns null when no limit is possible', () async {
+        await ref.set('foo');
+
+        final snapshot = await ref.limitToLast(2).get();
+
+        expect(snapshot.value, isNull);
+      });
+    });
+
+    group('orderByChild', () {
+      test('orders by a child value', () async {
+        await ref.set({
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
+        });
+
+        final snapshot = await ref.orderByChild('number').get();
+
+        final expected = ['b', 'c', 'a'];
+        expect(snapshot.children.length, equals(expected.length));
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('orderByKey', () {
+      test('orders by a key', () async {
+        await ref.set({
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
+        });
+
+        final snapshot = await ref.orderByKey().get();
+
+        final expected = ['a', 'b', 'c'];
+
+        expect(snapshot.children.length, expected.length);
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('orderByPriority', () {
+      test('orders by priority', () async {
+        await ref.set({
+          'a': {
+            'string': 'foo',
+            'number': 10,
+          },
+          'b': {
+            'string': 'bar',
+            'number': 5,
+          },
+          'c': {
+            'string': 'baz',
+            'number': 8,
+          },
+        });
+
+        await Future.wait([
+          ref.child('a').setPriority(2),
+          ref.child('b').setPriority(3),
+          ref.child('c').setPriority(1),
+        ]);
+
+        final snapshot = await ref.orderByPriority().get();
+
+        final expected = ['c', 'a', 'b'];
+        expect(snapshot.children.length, equals(expected.length));
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('orderByValue', () {
+      test('orders by a value', () async {
+        await ref.set({
+          'a': 2,
+          'b': 3,
+          'c': 1,
+        });
+
+        await Future.wait([
+          ref.child('a').setPriority(2),
+          ref.child('b').setPriority(3),
+          ref.child('c').setPriority(1),
+        ]);
+
+        final snapshot = await ref.orderByValue().get();
+
+        final expected = ['c', 'a', 'b'];
+        expect(snapshot.children.length, equals(expected.length));
+        snapshot.children.toList().forEachIndexed((i, childSnapshot) {
+          expect(childSnapshot.key, expected[i]);
+        });
+      });
+    });
+
+    group('onChildAdded', () {
+      test('emits an event when a child is added', () async {
+        expect(
+          ref.onChildAdded,
+          emitsInOrder([
+            isA<DatabaseEvent>()
+                .having((s) => s.snapshot.value, 'value', 'foo')
+                .having((e) => e.type, 'type', DatabaseEventType.childAdded),
+            isA<DatabaseEvent>()
+                .having((s) => s.snapshot.value, 'value', 'bar')
+                .having((e) => e.type, 'type', DatabaseEventType.childAdded),
+          ]),
+        );
+
+        await ref.child('foo').set('foo');
+        await ref.child('bar').set('bar');
+      });
+    });
+
+    group('onChildRemoved', () {
+      test('emits an event when a child is removed', () async {
+        await ref.child('foo').set('foo');
+        await ref.child('bar').set('bar');
+
+        expect(
+          ref.onChildRemoved,
+          emitsInOrder([
+            isA<DatabaseEvent>()
+                .having((s) => s.snapshot.value, 'value', 'bar')
+                .having((e) => e.type, 'type', DatabaseEventType.childRemoved),
+          ]),
+        );
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
+        await ref.child('bar').remove();
+      });
+    });
+
+    group('onChildChanged', () {
+      test('emits an event when a child is changed', () async {
+        await ref.child('foo').set('foo');
+        await ref.child('bar').set('bar');
+
+        expect(
+          ref.onChildChanged,
+          emitsInOrder([
+            isA<DatabaseEvent>()
+                .having((s) => s.snapshot.key, 'key', 'bar')
+                .having((s) => s.snapshot.value, 'value', 'baz')
+                .having((e) => e.type, 'type', DatabaseEventType.childChanged),
+            isA<DatabaseEvent>()
+                .having((s) => s.snapshot.key, 'key', 'foo')
+                .having((s) => s.snapshot.value, 'value', 'bar')
+                .having((e) => e.type, 'type', DatabaseEventType.childChanged),
+          ]),
+        );
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
+        await ref.child('bar').set('baz');
+        await ref.child('foo').set('bar');
+      });
+    });
+
+    group('onChildMoved', () {
+      test('emits an event when a child is moved', () async {
+        await ref.set({
+          'alex': {'nuggets': 60},
+          'rob': {'nuggets': 56},
+          'vassili': {'nuggets': 55.5},
+          'tony': {'nuggets': 52},
+          'greg': {'nuggets': 52},
+        });
+
+        expect(
+          ref.orderByChild('nuggets').onChildMoved,
+          emitsInOrder([
+            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+              'nuggets': 57
+            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
+            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+              'nuggets': 61
+            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
+          ]),
+        );
+        // Give time for listen to be registered on native.
+        // TODO is there a better way to do this?
+        await Future.delayed(const Duration(seconds: 1));
+        await ref.child('greg/nuggets').set(57);
+        await ref.child('rob/nuggets').set(61);
+      });
     });
   });
 }

@@ -1,3 +1,34 @@
+## 3.1.5
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
+## 3.1.3
+
+ - **DOCS**: update firestore dartpad example.
+
+## 3.1.2
+
+ - Update a dependency to the latest release.
+
+## 3.1.1
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FIX**: suppress Java unchecked cast lint warning in Android plugin (#7431).
+
+## 3.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
 ## 2.5.4
 
  - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7147).

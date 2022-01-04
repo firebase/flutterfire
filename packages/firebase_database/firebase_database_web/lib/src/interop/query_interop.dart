@@ -8,7 +8,13 @@ abstract class QueryJsImpl {
 
   external PromiseJsImpl<DataSnapshotJsImpl> get();
 
+  external QueryJsImpl startAt(value, [String key]);
+
+  external QueryJsImpl startAfter(value, [String key]);
+
   external QueryJsImpl endAt(value, [String key]);
+
+  external QueryJsImpl endBefore(value, [String key]);
 
   external QueryJsImpl equalTo(value, [String key]);
 
@@ -46,8 +52,6 @@ abstract class QueryJsImpl {
   external QueryJsImpl orderByPriority();
 
   external QueryJsImpl orderByValue();
-
-  external QueryJsImpl startAt(value, [String key]);
 
   external Object toJSON();
 

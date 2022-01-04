@@ -78,9 +78,8 @@ class FirebaseOptions {
         iosBundleId = map['iosBundleId'],
         appGroupId = map['appGroupId'];
 
-  /// An API key used for authenticating requests from your app, for example
-  /// "AIzaSyDdVgKwhZl0sTTTLZ7iTmt1r3N2cJLnaDk", used to identify your app to
-  /// Google servers.
+  /// An API key used for authenticating requests from your app to Google
+  /// servers.
   final String apiKey;
 
   /// The Google App ID that is used to uniquely identify an instance of an app.

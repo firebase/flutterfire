@@ -1,40 +1,48 @@
 function toReferenceAPI(plugin) {
   return {
-    type: "link",
-    label: "Reference API",
+    type: 'link',
+    label: 'Reference API',
     href: `https://pub.dev/documentation/${plugin}/latest/`,
   };
 }
 
 function toGithubExample(plugin) {
   return {
-    type: "link",
-    label: "Example",
+    type: 'link',
+    label: 'Example',
     href: `https://github.com/FirebaseExtended/flutterfire/tree/master/packages/${plugin}/${plugin}/example`,
   };
 }
 
 module.exports = {
   main: {
-    "Getting Started": [
-      "overview",
-      "installation/android",
-      "installation/ios",
-      "installation/macos",
-      "installation/web",
-      "migration",
-      "null-safety",
+    'Getting Started': [
+      'overview',
+      'cli',
+      {
+        type: 'category',
+        label: 'Manual Installation',
+        items: [
+          'manual-installation',
+          'manual-installation/android',
+          'manual-installation/ios',
+          'manual-installation/macos',
+          'manual-installation/web',
+        ],
+      },
+      'migration',
     ],
     Analytics: [
-      "analytics/overview",
-      toReferenceAPI("firebase_analytics"),
-      toGithubExample("firebase_analytics"),
+      'analytics/overview',
+      'analytics/usage',
+      toReferenceAPI('firebase_analytics'),
+      toGithubExample('firebase_analytics'),
     ],
-    "App Check": [
-      "app-check/overview",
-      "app-check/usage",
-      toReferenceAPI("firebase_app_check"),
-      toGithubExample("firebase_app_check"),
+    'App Check': [
+      'app-check/overview',
+      'app-check/usage',
+      toReferenceAPI('firebase_app_check'),
+      toGithubExample('firebase_app_check'),
     ],
     Authentication: [
       "auth/overview",
@@ -50,7 +58,16 @@ module.exports = {
       "firestore/usage",
       "firestore/2.0.0_migration",
       toReferenceAPI("cloud_firestore"),
-      toGithubExample("cloud_firestore"),
+      "firestore/example",
+    ],
+    "Cloud Firestore ODM": [
+      "firestore-odm/overview",
+      "firestore-odm/defining-models",
+      "firestore-odm/code-generation",
+      "firestore-odm/references",
+      "firestore-odm/subcollections",
+      toReferenceAPI("cloud_firestore_odm"),
+      toGithubExample("cloud_firestore_odm"),
     ],
     "Cloud Functions": [
       "functions/overview",
@@ -75,27 +92,73 @@ module.exports = {
       toGithubExample("firebase_storage"),
     ],
     Core: [
-      "core/usage",
-      toReferenceAPI("firebase_core"),
-      toGithubExample("firebase_core"),
+      'core/usage',
+      toReferenceAPI('firebase_core'),
+      toGithubExample('firebase_core'),
     ],
     Crashlytics: [
-      "crashlytics/overview",
-      "crashlytics/usage",
-      "crashlytics/reports",
-      toReferenceAPI("firebase_crashlytics"),
-      toGithubExample("firebase_crashlytics"),
+      'crashlytics/overview',
+      'crashlytics/usage',
+      'crashlytics/reports',
+      toReferenceAPI('firebase_crashlytics'),
+      toGithubExample('firebase_crashlytics'),
+    ],
+    'Dynamic Links': [
+      "dynamic-links/overview",
+      "dynamic-links/android-integration",
+      "dynamic-links/apple-integration",
+      "dynamic-links/usage",
+      toReferenceAPI("firebase_dynamic_links"),
+      toGithubExample("firebase_dynamic_links"),
     ],
     "Realtime Database": [
       "database/overview",
+      "database/usage",
       toReferenceAPI("firebase_database"),
       toGithubExample("firebase_database"),
     ],
-    // "Dynamic Links": ["dynamic-links/usage", toReferenceAPI("firebase_dynamic_links")],
-    // "Instance ID": ["iid/usage", toReferenceAPI("firebase_in_app_messaging")],
-    // "In-App Messaging": ["in-app-messaging/usage", toReferenceAPI("firebase_in_app_messaging")],
-    // "ML Kit Natural Language": ["ml-language/usage"],
-    // "ML Kit Vision": ["ml-vision/usage", toReferenceAPI("firebase_ml_vision")],
+    'FlutterFire UI': [
+      'ui/overview',
+      'ui/widgets',
+      {
+        type: 'category',
+        label: 'Authentication',
+        items: [
+          'ui/auth',
+          'ui/auth/integrating-your-first-screen',
+          'ui/auth/configuring-providers',
+          'ui/auth/building-a-custom-ui',
+          'ui/auth/localization',
+          'ui/auth/theming',
+          'ui/auth/navigation',
+        ],
+      },
+      'ui/firestore',
+      'ui/database',
+      {
+        type: 'link',
+        label: 'Story Book',
+        href: 'https://flutterfire-ui.web.app',
+      },
+    ],
+    'In-App Messaging': [
+      'in-app-messaging/overview',
+      'in-app-messaging/usage',
+      toReferenceAPI('firebase_in_app_messaging'),
+      toGithubExample('firebase_in_app_messaging'),
+    ],
+    Installations: [
+      "installations/overview",
+      "installations/usage",
+      toReferenceAPI("firebase_app_installations"),
+      toGithubExample("firebase_app_installations"),
+    ],
+    "ML Model Downloader": [
+      "ml-model-downloader/overview",
+      "ml-model-downloader/usage",
+      toReferenceAPI("firebase_in_app_messaging"),
+      toGithubExample("firebase_in_app_messaging"),
+    ],
     "Remote Config": [
       "remote-config/overview",
       "remote-config/usage",
@@ -104,6 +167,7 @@ module.exports = {
     ],
     "Performance Monitoring": [
       "performance/overview",
+      "performance/usage",
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],

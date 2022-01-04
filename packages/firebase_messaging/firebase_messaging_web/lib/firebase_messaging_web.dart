@@ -6,10 +6,12 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:firebase_messaging_platform_interface/firebase_messaging_platform_interface.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+
 import 'src/internals.dart';
 import 'src/interop/messaging.dart' as messaging_interop;
 import 'src/interop/notification.dart';
@@ -19,10 +21,29 @@ import 'src/utils.dart' as utils;
 /// delegates calls to messaging web plugin.
 class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
   /// Instance of Messaging from the web plugin
-  late messaging_interop.Messaging _webMessaging;
+  messaging_interop.Messaging? _webMessaging;
+
+  messaging_interop.Messaging get _delegate {
+    _webMessaging ??=
+        messaging_interop.getMessagingInstance(core_interop.app(app.name));
+
+    if (!_initialized && messaging_interop.isSupported()) {
+      _webMessaging!.onMessage
+          .listen((messaging_interop.MessagePayload webMessagePayload) {
+        RemoteMessage remoteMessage =
+            RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
+        FirebaseMessagingPlatform.onMessage.add(remoteMessage);
+      });
+
+      _initialized = true;
+    }
+
+    return _webMessaging!;
+  }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('messaging');
     FirebaseMessagingPlatform.instance = FirebaseMessagingWeb();
   }
 
@@ -32,25 +53,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Builds an instance of [FirebaseMessagingWeb] with an optional [FirebaseApp] instance
   /// If [app] is null then the created instance will use the default [FirebaseApp]
-  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app) {
-    if (!messaging_interop.isSupported()) {
-      // The browser is not supported (Safari). Initialize a full no-op FirebaseMessagingWeb
-      return;
-    }
-
-    _webMessaging =
-        messaging_interop.getMessagingInstance(core_interop.app(app?.name));
-    if (app != null && _initialized) return;
-
-    _webMessaging.onMessage
-        .listen((messaging_interop.MessagePayload webMessagePayload) {
-      RemoteMessage remoteMessage =
-          RemoteMessage.fromMap(utils.messagePayloadToMap(webMessagePayload));
-      FirebaseMessagingPlatform.onMessage.add(remoteMessage);
-    });
-
-    _initialized = true;
-  }
+  FirebaseMessagingWeb({FirebaseApp? app}) : super(appInstance: app);
 
   /// Updates user on browser support for Firebase.Messaging
   @override
@@ -86,12 +89,14 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<void> deleteToken() async {
+    _delegate;
+
     if (!_initialized) {
       // no-op for unsupported browsers
       return;
     }
 
-    return guard(_webMessaging.deleteToken);
+    return guard(_delegate.deleteToken);
   }
 
   @override
@@ -101,13 +106,15 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   @override
   Future<String?> getToken({String? vapidKey}) async {
+    _delegate;
+
     if (!_initialized) {
       // no-op for unsupported browsers
       return null;
     }
 
     return guard(
-      () => _webMessaging.getToken(vapidKey: vapidKey),
+      () => _delegate.getToken(vapidKey: vapidKey),
     );
   }
 
