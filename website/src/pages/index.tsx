@@ -11,7 +11,7 @@ import { Triangle } from '../components/Triangle';
 // @ts-ignore
 import plugins from '../../plugins';
 
-type PluginStatus = 'Stable' | 'Beta' | 'Preview' | 'Deprecated';
+type PluginStatus = 'Stable' | 'Alpha' | 'Beta' | 'Preview' | 'Deprecated';
 interface Plugin {
   name: string;
   pub: string;
@@ -93,17 +93,33 @@ function PluginsTable(props: { status: PluginStatus }) {
                     <code>{plugin.pub}</code>
                   </a>
                 </td>
-                <td className="icon">{plugin.support.mobile ? <Check /> : <Cross />}</td>
-                <td>
-                  {plugin.name == 'Crashlytics' ? (
-                    'N/A'
+                <td className="icon">
+                  {typeof plugin.support.mobile === 'string' ? (
+                    plugin.support.mobile
+                  ) : plugin.support.mobile ? (
+                    <Check />
+                  ) : (
+                    <Cross />
+                  )}
+                </td>
+                <td className="icon">
+                  {typeof plugin.support.web === 'string' ? (
+                    plugin.support.web
                   ) : plugin.support.web ? (
                     <Check />
                   ) : (
                     <Cross />
                   )}
                 </td>
-                <td>{plugin.support.macos ? <Check /> : <Cross />}</td>
+                <td className="icon">
+                  {typeof plugin.support.macos === 'string' ? (
+                    plugin.support.macos
+                  ) : plugin.support.macos ? (
+                    <span style={{ color: '#2196f3' }}>β</span>
+                  ) : (
+                    <Cross />
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -170,6 +186,7 @@ function Home(): JSX.Element {
         <PluginsTable status={'Stable'} />
         <PluginsTable status={'Beta'} />
         <PluginsTable status={'Preview'} />
+        <PluginsTable status={'Alpha'} />
         <PluginsTable status={'Deprecated'} />
       </main>
     </Layout>

@@ -157,6 +157,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
               'https://www.gstatic.com/firebasejs/$version/firebase-remote-config',
           '@firebase/performance':
               'https://www.gstatic.com/firebasejs/$version/firebase-performance',
+          '@firebase/installations':
+              'https://www.gstatic.com/firebasejs/$version/firebase-installations',
         },
       })
     ]);
@@ -329,7 +331,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
     try {
       app = firebase.app(name);
     } catch (e) {
-      if (e.toString().contains("Cannot read property 'app' of undefined")) {
+      if ((e.toString().contains('Cannot read property') ||
+              e.toString().contains('Cannot read properties')) &&
+          e.toString().contains("'app'")) {
         throw coreNotInitialized();
       }
 

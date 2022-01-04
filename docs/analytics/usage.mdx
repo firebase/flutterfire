@@ -63,9 +63,9 @@ await FirebaseAnalytics.instance
     value: 10.0,
     currency: 'USD',
     items: [
-      Item(
-        item_name: 'Socks',
-        item_id: 'xjw73ndnw',
+      AnalyticsEventItem(
+        itemName: 'Socks',
+        itemId: 'xjw73ndnw',
         price: '10.0'
       ),
     ],
@@ -73,12 +73,12 @@ await FirebaseAnalytics.instance
   );
 ```
 
-The `Item` class provided above is a class which represents *some* item which is sent to Analytics. It
+The `AnalyticsEventItem` class provided above is a class which represents *some* item which is sent to Analytics. It
 accepts a number of predefined parameters which will be used for analysis on the dashboard. Although
 optional, to get the best experience from Firebase Analytics it is best to ensure as many relevant
 parameters are provided.
 
-You can learn more about the `Item` class [here](!firebase_analytics_platform_interface.Item).
+You can learn more about the `AnalyticsEventItem` class [here](!firebase_analytics_platform_interface.AnalyticsEventItem).
 
 Below is a table containing all predefined events available from the plugin:
 
@@ -87,8 +87,8 @@ Below is a table containing all predefined events available from the plugin:
 | `logAddPaymentInfo`       | This event signifies that a user has submitted their payment information to your app.                                                           |
 | `logAddShippingInfo`      | This event signifies that a user has submitted their shipping information to your app.                                                          |
 | `logAddToCart`            | This event signifies that an item was added to a cart for purchase.                                                                             |
-| `logAddToWishlist`        | This event signifies that an item was added to a wish list. Use this event to identify popular gift items in your app.                           |
-| `logAdImpression`         | This event signifies that an item was added to a wish list. Use this event to identify popular gift items in your app.                           |
+| `logAddToWishlist`        | This event signifies that an item was added to a wish list. Use this event to identify popular gift items in your app.                          |
+| `logAdImpression`         | This event signifies an ad impression. Use this when an ad has been shown to the user.                                                          |
 | `logAppOpen`              | Logs that the application has been opened.                                                                                                      |
 | `logBeginCheckout`        | This event signifies that a user has begun the process of checking out.                                                                         |
 | `logCampaignDetails`      | Log this event to supply the referral details of a re-engagement campaign.                                                                      |
@@ -132,9 +132,11 @@ await FirebaseAnalytics.instance
 
 ## Default Parameters
 
-Use the `setDefaultEventParameters` method if you have common parameters which need to be sent with each event:
+Use the `setDefaultEventParameters` method if you have common parameters which need to be sent with each event. Please
+note that this API is not supported on web.
 
 ```dart
+// Not supported on web
 await FirebaseAnalytics.instance
   .setDefaultEventParameters({
     version: '1.2.3'
@@ -168,9 +170,33 @@ You can provide a `null` value to remove any previous properties.
 
 ## Resetting data
 
-To clear all data associated with the current session, use the `resetAnalyticsData` method:
+To clear all data associated with the current session, use the `resetAnalyticsData` method. Please
+note that this API is not supported on web.
 
 ```dart
+// Not supported on web
 await FirebaseAnalytics.instance
   .resetAnalyticsData();
+```
+
+## Set user consent
+
+Set the applicable end user consent state. `default` value for adStorageConsentGranted` & analyticsStorageConsentGranted` is true`.
+Please note that this API is not supported on web.
+
+```dart
+// Not supported on web
+await FirebaseAnalytics.instance
+  setConsent(adStorageConsentGranted: false, analyticsStorageConsentGranted: true);
+```
+
+## Set session timeout duration
+
+Set the duration of inactivity that terminates the current session.
+Please note that this API is android only.
+
+```dart
+// android support only
+await FirebaseAnalytics.instance
+  setSessionTimeoutDuration(const Duration(minutes: 1))
 ```

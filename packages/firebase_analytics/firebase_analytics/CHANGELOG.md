@@ -1,20 +1,22 @@
-## 9.0.0-dev.4
+## 9.0.4
 
- - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
-## 9.0.0-dev.3
+## 9.0.3
 
- - **FEAT**: add macOS support (#7313).
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
 
-## 9.0.0-dev.2
-
- - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
-
-## 9.0.0-dev.1
+## 9.0.2
 
  - Update a dependency to the latest release.
 
-## 9.0.0-dev.0
+## 9.0.1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
+## 9.0.0
 
 > Note: This release has breaking changes.
 

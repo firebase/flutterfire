@@ -1,369 +1,388 @@
-// Copyright 2020 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+
+#import "FLTFirebaseDatabaseObserveStreamHandler.h"
 #import "FLTFirebaseDatabasePlugin.h"
+#import "FLTFirebaseDatabaseUtils.h"
 
-#import <Firebase/Firebase.h>
-#import <firebase_core/FLTFirebasePlugin.h>
+NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_database";
 
-static FlutterError *getFlutterError(NSError *error) {
-  if (error == nil) return nil;
-
-  return [FlutterError errorWithCode:[NSString stringWithFormat:@"Error %ld", error.code]
-                             message:error.domain
-                             details:error.localizedDescription];
+@implementation FLTFirebaseDatabasePlugin {
+  // Used by FlutterStreamHandlers.
+  NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+  NSMutableDictionary<NSString *, NSNumber *> *_listenerCounts;
+  NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
+  // Used by transactions.
+  FlutterMethodChannel *_channel;
 }
 
-static NSDictionary *getDictionaryFromError(NSError *error) {
-  if (!error) {
-    return nil;
-  }
-  return @{
-    @"code" : @(error.code),
-    @"message" : error.domain ?: [NSNull null],
-    @"details" : error.localizedDescription ?: [NSNull null],
-  };
-}
+#pragma mark - FlutterPlugin
 
-@interface FLTFirebaseDatabasePlugin ()
-
-@end
-
-FIRDatabaseReference *getReference(FIRDatabase *database, NSDictionary *arguments) {
-  NSString *path = arguments[@"path"];
-  FIRDatabaseReference *ref = database.reference;
-  if ([path length] > 0) ref = [ref child:path];
-  return ref;
-}
-
-FIRDatabaseQuery *getDatabaseQuery(FIRDatabase *database, NSDictionary *arguments) {
-  FIRDatabaseQuery *query = getReference(database, arguments);
-  NSDictionary *parameters = arguments[@"parameters"];
-  NSString *orderBy = parameters[@"orderBy"];
-  if ([orderBy isEqualToString:@"child"]) {
-    query = [query queryOrderedByChild:parameters[@"orderByChildKey"]];
-  } else if ([orderBy isEqualToString:@"key"]) {
-    query = [query queryOrderedByKey];
-  } else if ([orderBy isEqualToString:@"value"]) {
-    query = [query queryOrderedByValue];
-  } else if ([orderBy isEqualToString:@"priority"]) {
-    query = [query queryOrderedByPriority];
-  }
-  id startAt = parameters[@"startAt"];
-  if (startAt) {
-    id startAtKey = parameters[@"startAtKey"];
-    if (startAtKey) {
-      query = [query queryStartingAtValue:startAt childKey:startAtKey];
-    } else {
-      query = [query queryStartingAtValue:startAt];
-    }
-  }
-  id endAt = parameters[@"endAt"];
-  if (endAt) {
-    id endAtKey = parameters[@"endAtKey"];
-    if (endAtKey) {
-      query = [query queryEndingAtValue:endAt childKey:endAtKey];
-    } else {
-      query = [query queryEndingAtValue:endAt];
-    }
-  }
-  id equalTo = parameters[@"equalTo"];
-  if (equalTo) {
-    id equalToKey = parameters[@"equalToKey"];
-    if (equalToKey) {
-      query = [query queryEqualToValue:equalTo childKey:equalToKey];
-    } else {
-      query = [query queryEqualToValue:equalTo];
-    }
-  }
-  NSNumber *limitToFirst = parameters[@"limitToFirst"];
-  if (limitToFirst) {
-    query = [query queryLimitedToFirst:limitToFirst.intValue];
-  }
-  NSNumber *limitToLast = parameters[@"limitToLast"];
-  if (limitToLast) {
-    query = [query queryLimitedToLast:limitToLast.intValue];
-  }
-  return query;
-}
-
-FIRDataEventType parseEventType(NSString *eventTypeString) {
-  if ([@"EventType.childAdded" isEqual:eventTypeString]) {
-    return FIRDataEventTypeChildAdded;
-  } else if ([@"EventType.childRemoved" isEqual:eventTypeString]) {
-    return FIRDataEventTypeChildRemoved;
-  } else if ([@"EventType.childChanged" isEqual:eventTypeString]) {
-    return FIRDataEventTypeChildChanged;
-  } else if ([@"EventType.childMoved" isEqual:eventTypeString]) {
-    return FIRDataEventTypeChildMoved;
-  } else if ([@"EventType.value" isEqual:eventTypeString]) {
-    return FIRDataEventTypeValue;
-  }
-  assert(false);
-  return 0;
-}
-
-id roundDoubles(id value) {
-  // Workaround for https://github.com/firebase/firebase-ios-sdk/issues/91
-  // The Firebase iOS SDK sometimes returns doubles when ints were stored.
-  // We detect doubles that can be converted to ints without loss of precision
-  // and convert them.
-  if ([value isKindOfClass:[NSNumber class]]) {
-    CFNumberType type = CFNumberGetType((CFNumberRef)value);
-    if (type == kCFNumberDoubleType || type == kCFNumberFloatType) {
-      if ((double)(long long)[value doubleValue] == [value doubleValue]) {
-        return [NSNumber numberWithLongLong:(long long)[value doubleValue]];
-      }
-    }
-  } else if ([value isKindOfClass:[NSArray class]]) {
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:[value count]];
-    [value enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-      [result addObject:roundDoubles(obj)];
-    }];
-    return result;
-  } else if ([value isKindOfClass:[NSDictionary class]]) {
-    NSMutableDictionary *result = [NSMutableDictionary dictionaryWithCapacity:[value count]];
-    [value enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-      result[key] = roundDoubles(obj);
-    }];
-    return result;
-  }
-  return value;
-}
-
-// TODO(Salakar): Should also implement io.flutter.plugins.firebase.core.FlutterFirebasePlugin when
-// reworked.
-@interface FLTFirebaseDatabasePlugin ()
-@property(nonatomic, retain) FlutterMethodChannel *channel;
-@end
-
-@implementation FLTFirebaseDatabasePlugin
-
-+ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_database"
-                                  binaryMessenger:[registrar messenger]];
-  FLTFirebaseDatabasePlugin *instance = [[FLTFirebaseDatabasePlugin alloc] init];
-  instance.channel = channel;
-  [registrar addMethodCallDelegate:instance channel:channel];
-
-  SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
-  if ([FIRApp respondsToSelector:sel]) {
-    [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
-  }
-}
-
-+ (NSMutableArray *)getSnapshotChildKeys:(FIRDataSnapshot *)dataSnapshot {
-  NSMutableArray *childKeys = [NSMutableArray array];
-  if (dataSnapshot.childrenCount > 0) {
-    NSEnumerator *children = [dataSnapshot children];
-    FIRDataSnapshot *child;
-    child = [children nextObject];
-    while (child) {
-      [childKeys addObject:child.key];
-      child = [children nextObject];
-    }
-  }
-  return childKeys;
-}
-
-- (instancetype)init {
+- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger
+          andChannel:(FlutterMethodChannel *)channel {
   self = [super init];
   if (self) {
-    self.updatedSnapshots = [NSMutableDictionary new];
+    _channel = channel;
+    _binaryMessenger = messenger;
+    _listenerCounts = [NSMutableDictionary dictionary];
+    _streamHandlers = [NSMutableDictionary dictionary];
   }
   return self;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  FIRDatabase *database;
-  NSString *appName = call.arguments[@"app"];
-  NSString *databaseURL = call.arguments[@"databaseURL"];
-  // TODO(Salakar): `appName` Should never be null after upcoming re-work in Dart.
-  if (![appName isEqual:[NSNull null]] && ![databaseURL isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]
-                                       URL:databaseURL];
-  } else if (![appName isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseForApp:[FLTFirebasePlugin firebaseAppNamed:appName]];
-  } else if (![databaseURL isEqual:[NSNull null]]) {
-    database = [FIRDatabase databaseWithURL:databaseURL];
-  } else {
-    database = [FIRDatabase database];
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  FlutterMethodChannel *channel =
+      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseDatabaseChannelName
+                                  binaryMessenger:[registrar messenger]];
+  FLTFirebaseDatabasePlugin *instance =
+      [[FLTFirebaseDatabasePlugin alloc] init:[registrar messenger] andChannel:channel];
+  [registrar addMethodCallDelegate:instance channel:channel];
+  [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+
+#if TARGET_OS_OSX
+  // Publish does not exist on MacOS version of FlutterPluginRegistrar.
+#else
+  [registrar publish:instance];
+#endif
+}
+
+- (void)cleanupWithCompletion:(void (^)(void))completion {
+  for (NSString *handlerId in self->_streamHandlers) {
+    NSObject<FlutterStreamHandler> *handler = self->_streamHandlers[handlerId];
+    [handler onCancelWithArguments:nil];
   }
-  void (^defaultCompletionBlock)(NSError *, FIRDatabaseReference *) =
-      ^(NSError *error, FIRDatabaseReference *ref) {
-        result(getFlutterError(error));
+  [self->_streamHandlers removeAllObjects];
+  if (completion != nil) {
+    completion();
+  }
+}
+
+- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  [self cleanupWithCompletion:nil];
+}
+
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+  FLTFirebaseMethodCallErrorBlock errorBlock =
+      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
+        NSError *_Nullable error) {
+        if (code == nil) {
+          NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
+          code = codeAndErrorMessage[0];
+          message = codeAndErrorMessage[1];
+          details = @{
+            @"code" : code,
+            @"message" : message,
+          };
+        }
+        if ([@"unknown" isEqualToString:code]) {
+          NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
+        }
+        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                            message:message
+                                                    optionalDetails:details
+                                                 andOptionalNSError:error]);
       };
+
+  FLTFirebaseMethodCallResult *methodCallResult =
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+
   if ([@"FirebaseDatabase#goOnline" isEqualToString:call.method]) {
-    [database goOnline];
-    result(nil);
+    [self databaseGoOnline:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDatabase#goOffline" isEqualToString:call.method]) {
-    [database goOffline];
-    result(nil);
+    [self databaseGoOffline:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDatabase#purgeOutstandingWrites" isEqualToString:call.method]) {
-    [database purgeOutstandingWrites];
-    result(nil);
-  } else if ([@"FirebaseDatabase#setPersistenceEnabled" isEqualToString:call.method]) {
-    NSNumber *value = call.arguments[@"enabled"];
-    @try {
-      database.persistenceEnabled = value.boolValue;
-      result([NSNumber numberWithBool:YES]);
-    } @catch (NSException *exception) {
-      if ([@"FIRDatabaseAlreadyInUse" isEqualToString:exception.name]) {
-        // Database is already in use, e.g. after hot reload/restart.
-        result([NSNumber numberWithBool:NO]);
-      } else {
-        @throw;
-      }
-    }
-  } else if ([@"FirebaseDatabase#setPersistenceCacheSizeBytes" isEqualToString:call.method]) {
-    NSNumber *value = call.arguments[@"cacheSize"];
-    @try {
-      database.persistenceCacheSizeBytes = value.unsignedIntegerValue;
-      result([NSNumber numberWithBool:YES]);
-    } @catch (NSException *exception) {
-      if ([@"FIRDatabaseAlreadyInUse" isEqualToString:exception.name]) {
-        // Database is already in use, e.g. after hot reload/restart.
-        result([NSNumber numberWithBool:NO]);
-      } else {
-        @throw;
-      }
-    }
-  } else if ([@"FirebaseDatabase#setLoggingEnabled" isEqualToString:call.method]) {
-    BOOL enabled = call.arguments[@"enabled"];
-    [FIRDatabase setLoggingEnabled:enabled];
-    result(nil);
+    [self databasePurgeOutstandingWrites:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#set" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) setValue:call.arguments[@"value"]
-                                         andPriority:call.arguments[@"priority"]
-                                 withCompletionBlock:defaultCompletionBlock];
+    [self databaseSet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"DatabaseReference#setWithPriority" isEqualToString:call.method]) {
+    [self databaseSetWithPriority:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#update" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) updateChildValues:call.arguments[@"value"]
-                                          withCompletionBlock:defaultCompletionBlock];
+    [self databaseUpdate:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#setPriority" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) setPriority:call.arguments[@"priority"]
-                                    withCompletionBlock:defaultCompletionBlock];
+    [self databaseSetPriority:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#runTransaction" isEqualToString:call.method]) {
-    [getReference(database, call.arguments)
-        runTransactionBlock:^FIRTransactionResult *_Nonnull(FIRMutableData *_Nonnull currentData) {
-          // Create semaphore to allow native side to wait while snapshot
-          // updates occur on the Dart side.
-          dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
-          NSObject *snapshot =
-              @{@"key" : currentData.key ?: [NSNull null], @"value" : currentData.value};
-
-          __block bool shouldAbort = false;
-
-          [self.channel invokeMethod:@"DoTransaction"
-                           arguments:@{
-                             @"transactionKey" : call.arguments[@"transactionKey"],
-                             @"snapshot" : snapshot
-                           }
-                              result:^(id _Nullable result) {
-                                if ([result isKindOfClass:[FlutterError class]]) {
-                                  FlutterError *flutterError = ((FlutterError *)result);
-                                  NSLog(@"Error code: %@", flutterError.code);
-                                  NSLog(@"Error message: %@", flutterError.message);
-                                  NSLog(@"Error details: %@", flutterError.details);
-                                  shouldAbort = true;
-                                } else if ([result isEqual:FlutterMethodNotImplemented]) {
-                                  NSLog(@"DoTransaction not implemented on the Dart side.");
-                                  shouldAbort = true;
-                                } else {
-                                  [self.updatedSnapshots
-                                      setObject:result
-                                         forKey:call.arguments[@"transactionKey"]];
-                                }
-                                dispatch_semaphore_signal(semaphore);
-                              }];
-
-          // Wait while Dart side updates the snapshot. Incoming transactionTimeout is in
-          // milliseconds so converting to nanoseconds for use with dispatch_semaphore_wait.
-          long result = dispatch_semaphore_wait(
-              semaphore,
-              dispatch_time(DISPATCH_TIME_NOW,
-                            [call.arguments[@"transactionTimeout"] integerValue] * 1000000));
-
-          if (result == 0 && !shouldAbort) {
-            // Set FIRMutableData value to value returned from the Dart side.
-            currentData.value =
-                [self.updatedSnapshots objectForKey:call.arguments[@"transactionKey"]][@"value"];
-          } else {
-            if (result != 0) {
-              NSLog(@"Transaction at %@ timed out.", [getReference(database, call.arguments) URL]);
-            }
-            return [FIRTransactionResult abort];
-          }
-
-          return [FIRTransactionResult successWithValue:currentData];
-        }
-        andCompletionBlock:^(NSError *_Nullable error, BOOL committed,
-                             FIRDataSnapshot *_Nullable snapshot) {
-          // Invoke transaction completion on the Dart side.
-          result(@{
-            @"transactionKey" : call.arguments[@"transactionKey"],
-            @"error" : getDictionaryFromError(error) ?: [NSNull null],
-            @"committed" : [NSNumber numberWithBool:committed],
-            @"snapshot" : @{@"key" : snapshot.key ?: [NSNull null], @"value" : snapshot.value}
-          });
-        }];
+    [self databaseRunTransaction:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#set" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) onDisconnectSetValue:call.arguments[@"value"]
-                                                     andPriority:call.arguments[@"priority"]
-                                             withCompletionBlock:defaultCompletionBlock];
+    [self onDisconnectSet:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"OnDisconnect#setWithPriority" isEqualToString:call.method]) {
+    [self onDisconnectSetWithPriority:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#update" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) onDisconnectUpdateChildValues:call.arguments[@"value"]
-                                                      withCompletionBlock:defaultCompletionBlock];
+    [self onDisconnectUpdate:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#cancel" isEqualToString:call.method]) {
-    [getReference(database, call.arguments)
-        cancelDisconnectOperationsWithCompletionBlock:defaultCompletionBlock];
+    [self onDisconnectCancel:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
-    [getReference(database, call.arguments) getDataWithCompletionBlock:^(
-                                                NSError *error, FIRDataSnapshot *snapshot) {
-      result(@{
-        @"error" : getDictionaryFromError(error) ?: [NSNull null],
-        @"snapshot" :
-            @{@"key" : snapshot.key ?: [NSNull null], @"value" : snapshot.value ?: [NSNull null]}
-      });
-    }];
-  } else if ([@"Query#observe" isEqualToString:call.method]) {
-    FIRDataEventType eventType = parseEventType(call.arguments[@"eventType"]);
-    __block FIRDatabaseHandle handle = [getDatabaseQuery(database, call.arguments)
-        observeEventType:eventType
-        andPreviousSiblingKeyWithBlock:^(FIRDataSnapshot *snapshot, NSString *previousSiblingKey) {
-          [self.channel
-              invokeMethod:@"Event"
-                 arguments:@{
-                   @"handle" : [NSNumber numberWithUnsignedInteger:handle],
-                   @"snapshot" : @{
-                     @"key" : snapshot.key ?: [NSNull null],
-                     @"value" : roundDoubles(snapshot.value) ?: [NSNull null],
-                   },
-                   @"previousSiblingKey" : previousSiblingKey ?: [NSNull null],
-                   @"childKeys" : [FLTFirebaseDatabasePlugin getSnapshotChildKeys:snapshot]
-                 }];
-        }
-        withCancelBlock:^(NSError *error) {
-          [self.channel invokeMethod:@"Error"
-                           arguments:@{
-                             @"handle" : [NSNumber numberWithUnsignedInteger:handle],
-                             @"error" : getDictionaryFromError(error),
-                           }];
-        }];
-    result([NSNumber numberWithUnsignedInteger:handle]);
-  } else if ([@"Query#removeObserver" isEqualToString:call.method]) {
-    FIRDatabaseHandle handle = [call.arguments[@"handle"] unsignedIntegerValue];
-    [getDatabaseQuery(database, call.arguments) removeObserverWithHandle:handle];
-    result(nil);
+    [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#keepSynced" isEqualToString:call.method]) {
-    NSNumber *value = call.arguments[@"value"];
-    [getDatabaseQuery(database, call.arguments) keepSynced:value.boolValue];
-    result(nil);
+    [self queryKeepSynced:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Query#observe" isEqualToString:call.method]) {
+    [self queryObserve:call.arguments withMethodCallResult:methodCallResult];
   } else {
-    result(FlutterMethodNotImplemented);
+    methodCallResult.success(FlutterMethodNotImplemented);
   }
+}
+
+#pragma mark - FLTFirebasePlugin
+
+- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  [self cleanupWithCompletion:completion];
+}
+
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  return @{};
+}
+
+- (NSString *_Nonnull)firebaseLibraryName {
+  return LIBRARY_NAME;
+}
+
+- (NSString *_Nonnull)firebaseLibraryVersion {
+  return LIBRARY_VERSION;
+}
+
+- (NSString *_Nonnull)flutterChannelName {
+  return kFLTFirebaseDatabaseChannelName;
+}
+
+#pragma mark - Database API
+
+- (void)databaseGoOnline:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+  [database goOnline];
+  result.success(nil);
+}
+
+- (void)databaseGoOffline:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+  [database goOffline];
+  result.success(nil);
+}
+
+- (void)databasePurgeOutstandingWrites:(id)arguments
+                  withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+  [database purgeOutstandingWrites];
+  result.success(nil);
+}
+
+- (void)databaseSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference setValue:arguments[@"value"]
+      withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(nil);
+        }
+      }];
+}
+
+- (void)databaseSetWithPriority:(id)arguments
+           withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference setValue:arguments[@"value"]
+              andPriority:arguments[@"priority"]
+      withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(nil);
+        }
+      }];
+}
+
+- (void)databaseUpdate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference updateChildValues:arguments[@"value"]
+           withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+             if (error != nil) {
+               result.error(nil, nil, nil, error);
+             } else {
+               result.success(nil);
+             }
+           }];
+}
+
+- (void)databaseSetPriority:(id)arguments
+       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference setPriority:arguments[@"priority"]
+      withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(nil);
+        }
+      }];
+}
+
+- (void)databaseRunTransaction:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  int transactionKey = [arguments[@"transactionKey"] intValue];
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+
+  __weak FLTFirebaseDatabasePlugin *weakSelf = self;
+  [reference
+      runTransactionBlock:^FIRTransactionResult *(FIRMutableData *currentData) {
+        __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
+        // Create semaphore to allow native side to wait while updates occur on the Dart side.
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+        // Whether the transaction was aborted in Dart by the user or by a Dart exception
+        // occurring.
+        __block bool aborted = false;
+        // Whether an exception occurred in users Dart transaction handler.
+        __block bool exception = false;
+
+        id methodCallResultHandler = ^(id _Nullable result) {
+          aborted = [result[@"aborted"] boolValue];
+          exception = [result[@"exception"] boolValue];
+          currentData.value = result[@"value"];
+          dispatch_semaphore_signal(semaphore);
+        };
+
+        [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
+                                 arguments:@{
+                                   @"transactionKey" : @(transactionKey),
+                                   @"snapshot" : @{
+                                     @"key" : currentData.key ?: [NSNull null],
+                                     @"value" : currentData.value ?: [NSNull null],
+                                   }
+                                 }
+                                    result:methodCallResultHandler];
+        // Wait while Dart side updates the value.
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+        if (aborted || exception) {
+          return [FIRTransactionResult abort];
+        }
+        return [FIRTransactionResult successWithValue:currentData];
+      }
+      andCompletionBlock:^(NSError *error, BOOL committed, FIRDataSnapshot *snapshot) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(@{
+            @"committed" : @(committed),
+            @"snapshot" : [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
+          });
+        }
+      }
+      withLocalEvents:[arguments[@"transactionApplyLocally"] boolValue]];
+}
+
+- (void)onDisconnectSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference onDisconnectSetValue:arguments[@"value"]
+              withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+                if (error != nil) {
+                  result.error(nil, nil, nil, error);
+                } else {
+                  result.success(nil);
+                }
+              }];
+}
+
+- (void)onDisconnectSetWithPriority:(id)arguments
+               withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference onDisconnectSetValue:arguments[@"value"]
+                      andPriority:arguments[@"priority"]
+              withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+                if (error != nil) {
+                  result.error(nil, nil, nil, error);
+                } else {
+                  result.success(nil);
+                }
+              }];
+}
+
+- (void)onDisconnectUpdate:(id)arguments
+      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference onDisconnectUpdateChildValues:arguments[@"value"]
+                       withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+                         if (error != nil) {
+                           result.error(nil, nil, nil, error);
+                         } else {
+                           result.success(nil);
+                         }
+                       }];
+}
+
+- (void)onDisconnectCancel:(id)arguments
+      withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseReference *reference =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  [reference
+      cancelDisconnectOperationsWithCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success(nil);
+        }
+      }];
+}
+
+- (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+  [query getDataWithCompletionBlock:^(NSError *error, FIRDataSnapshot *snapshot) {
+    if (error != nil) {
+      result.error(nil, nil, nil, error);
+    } else
+      result.success(@{
+        @"snapshot" : [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
+      });
+  }];
+}
+
+- (void)queryKeepSynced:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+  [query keepSynced:[arguments[@"value"] boolValue]];
+  result.success(nil);
+}
+
+- (void)queryObserve:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *databaseQuery = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+  NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
+  int newListenersCount;
+  @synchronized(_listenerCounts) {
+    NSNumber *currentListenersCount = _listenerCounts[eventChannelNamePrefix];
+    newListenersCount = currentListenersCount == nil ? 1 : [currentListenersCount intValue] + 1;
+    _listenerCounts[eventChannelNamePrefix] = @(newListenersCount);
+  }
+  NSString *eventChannelName =
+      [NSString stringWithFormat:@"%@#%d", eventChannelNamePrefix, newListenersCount];
+
+  FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
+                                                                binaryMessenger:_binaryMessenger];
+  __weak FLTFirebaseDatabasePlugin *weakSelf = self;
+  FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
+      [[FLTFirebaseDatabaseObserveStreamHandler alloc]
+          initWithFIRDatabaseQuery:databaseQuery
+                 andOnDisposeBlock:^() {
+                   __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
+                   [eventChannel setStreamHandler:nil];
+                   @synchronized(strongSelf->_listenerCounts) {
+                     NSNumber *currentListenersCount =
+                         strongSelf->_listenerCounts[eventChannelNamePrefix];
+                     strongSelf->_listenerCounts[eventChannelNamePrefix] =
+                         @(currentListenersCount == nil ? 0 : [currentListenersCount intValue] - 1);
+                   }
+                 }];
+  [eventChannel setStreamHandler:streamHandler];
+  _streamHandlers[eventChannelName] = streamHandler;
+  result.success(eventChannelName);
 }
 
 @end

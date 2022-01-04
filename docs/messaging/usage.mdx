@@ -278,18 +278,26 @@ The file must import both the app and messaging SDKs, initialize Firebase and ex
 
 Next, the worker must be registered. Within the entry file, **after** the `main.dart.js` file has loaded, register your worker:
 
-```js {9} title=web/index.html
+```js {10} title=web/index.html
 <html>
 <body>
   ...
   <script src="main.dart.js" type="application/javascript"></script>
   <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/flutter_service_worker.js");
-        navigator.serviceWorker.register("/firebase-messaging-sw.js");
-      });
-    }
+       if ('serviceWorker' in navigator) {
+          // Service workers are supported. Use them.
+          window.addEventListener('load', function () {
+            // ADD THIS LINE
+            navigator.serviceWorker.register('/firebase-messaging-sw.js');
+
+            // Wait for registration to finish before dropping the <script> tag.
+            // Otherwise, the browser will load the script multiple times,
+            // potentially different versions.
+            var serviceWorkerUrl = 'flutter_service_worker.js?v=' + serviceWorkerVersion;
+
+            //  ...
+          });
+      }
   </script>
 ```
 

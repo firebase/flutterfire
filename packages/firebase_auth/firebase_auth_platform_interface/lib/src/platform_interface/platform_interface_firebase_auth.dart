@@ -347,7 +347,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///  Once this has been called, every call to PhoneAuthProvider#verifyPhoneNumber() with the same phone number as the one that is configured here will have onVerificationCompleted() triggered as the callback.
   ///  Calling this method a second time will overwrite the previously passed parameters. Only one number can be configured at a given time.
   ///  Calling this method with either parameter set to null removes this functionality until valid parameters are passed.
-  ///  Verifying a phone number other than the one configured here will trigger normal behaviour. If the phone number is configured as a test phone number in the console, the regular testing flow occurs. Otherwise, normal phone number verification will take place.
+  ///  Verifying a phone number other than the one configured here will trigger normal behavior. If the phone number is configured as a test phone number in the console, the regular testing flow occurs. Otherwise, normal phone number verification will take place.
   ///  When this is set and PhoneAuthProvider#verifyPhoneNumber() is called with a matching phone number, PhoneAuthProvider.OnVerificationStateChangedCallbacks.onCodeAutoRetrievalTimeOut(String) will never be called.
   ///
   ///  [userAccessGroup] This setting only applies to iOS and MacOS platforms.
@@ -520,7 +520,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
-  /// reCAPTCHA widget apperance and behaviour.
+  /// reCAPTCHA widget apperance and behavior.
   ///
   /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
   /// with the users SMS verification code to complete the authentication flow.

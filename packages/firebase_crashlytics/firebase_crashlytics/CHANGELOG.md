@@ -1,3 +1,21 @@
+## 2.4.4
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **FIX**: set build id as not required, to allow Dart default app initialization (#7594). ([c15fdda3](https://github.com/FirebaseExtended/flutterfire/commit/c15fdda33b447ddd0c8e066e9c9ec7cabf9cd6fd))
+ - **FIX**: Return app constants for default app only on `Android`. (#7592). ([b803c425](https://github.com/FirebaseExtended/flutterfire/commit/b803c425b420acae155fea93a62ab9b3de4556a5))
+
+## 2.4.3
+
+ - Update a dependency to the latest release.
+
+## 2.4.2
+
+ - Update a dependency to the latest release.
+
+## 2.4.1
+
+ - Update a dependency to the latest release.
+
 ## 2.4.0
 
  - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).

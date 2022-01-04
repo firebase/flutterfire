@@ -16,7 +16,6 @@ examples/all_plugins/pubspec.yaml
 
 Podfile.lock
 Pods/
-Podfile
 .symlinks/
 **/Flutter/ephemeral/
 **/Flutter/Flutter.podspec
@@ -75,4 +74,5 @@ yarn-error.log*
 
 firebase-debug.log
 firestore-debug.log
+database-debug.log
 ui-debug.log

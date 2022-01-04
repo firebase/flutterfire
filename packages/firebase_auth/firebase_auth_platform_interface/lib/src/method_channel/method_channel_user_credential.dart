@@ -5,7 +5,6 @@
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
-import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_user_credential.dart';
 
 /// Method Channel delegate for [UserCredentialPlatform].
 class MethodChannelUserCredential extends UserCredentialPlatform {

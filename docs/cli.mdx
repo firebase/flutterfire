@@ -1,0 +1,94 @@
+---
+title: CLI
+---
+
+The FlutterFire CLI is a useful tool which provides commands to help ease the installation process
+of FlutterFire across all supported platforms.
+
+## Installation
+
+The CLI depends on the underlying Firebase CLI. If you haven't done so already, ensure the
+[Firebase CLI](https://firebase.google.com/docs/cli) is installed on your machine.
+
+Next, install the FlutterFire CLI by running the following command:
+
+```bash
+dart pub global activate flutterfire_cli
+```
+
+Once installed, the `flutterfire` command will be globally available.
+
+## Usage
+
+### Generating Firebase Options
+
+FlutterFire can now be initialized from Dart on all platforms using `Firebase.initializeApp`, however
+the options for different platforms can vary. The CLI can help, by generating a file
+(by default called `firebase_options.dart`) which can be used when calling the initialization method.
+
+The CLI extracts information from your Firebase project and selected project applications to generate
+all the configuration for a specific platform.
+
+In the root of your application, run the `configure` command:
+
+```bash
+flutterfire configure
+```
+
+The configuration command will guide you through a number of processes:
+
+1. Selecting a Firebase project (based on the `.firebaserc` file or from the Firebase Console).
+1. Prompt what platforms (e.g. Android, iOS, macOS & web) you would like configuration for.
+1. Identify which Firebase applications for the chosen platforms should be used to extract configuration for. By default, the CLI will attempt to automatically match Firebase apps based on your current project configuration.
+1. Generate a `firebase_options.dart` file in your project.
+
+Once complete, you can now import the generated file and provide it to the `initializeApp` method:
+
+```dart title="lib/main.dart"
+// Import the generated file
+import 'firebase_options.dart';
+```
+
+Then, provide the current platform options via the `currentPlatform` getter from the `DefaultFirebaseOptions`
+class:
+
+```dart
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+```
+
+## Commands
+
+### Configure
+
+Generates a `firebase_options.dart` file which can be provided to the `options` parameter when
+[Initializing Firebase](./overview#initialization).
+
+```bash
+flutterfire configure
+```
+
+The command supports the following option arguments:
+
+| Argument          | Alias | Description                                                                                                                                                                                     |
+| ----------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --project         | -p    | Sets the Firebase Project ID to use. By default, the CLI will attempt to fetch the project defined in the `.firebaserc` file, or prompt you to select the project from the Firebase Console.    |
+| --account         | -e    | Sets the email address which should be used to authenticate with Firebase against. By default, this will use the primary account defined on the Firebase CLI.                                   |
+| --out             | -o    | Specifies the path & file name for the generated file. Defaults to "lib/firebase_options.dart".                                                                                                 |
+| --ios-bundle-id   | -i    | The bundle identifier of your iOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "ios" folder (if it exists).      |
+| --macos-bundle-id | -m    | The bundle identifier of your macOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "macos" folder (if it exists).  |
+| --android-app-id  | -a    | The application id of your Android app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "android" folder (if it exists). |
+
+## Version
+
+To view the current version of the CLI, run:
+
+```bash
+flutterfire --version
+```
+
+## Reporting an issue
+
+If you have encountered any issues with the CLI, please report them
+[here](https://github.com/invertase/flutterfire_cli/issues).

@@ -409,8 +409,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         cachedThreadPool,
         () -> {
           Map<String, Object> constants = new HashMap<>();
-          FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
-          constants.put("AUTO_INIT_ENABLED", firebaseMessaging.isAutoInitEnabled());
+          if (firebaseApp.getName().equals("[DEFAULT]")) {
+            FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+            constants.put("AUTO_INIT_ENABLED", firebaseMessaging.isAutoInitEnabled());
+          }
           return constants;
         });
   }

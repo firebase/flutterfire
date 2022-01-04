@@ -1,3 +1,23 @@
+## 2.2.5
+
+ - Update a dependency to the latest release.
+
+## 2.2.4
+
+ - **FIX**: messaging `isSupported()` check on web should be used lazily in `_delegate` (fixes #7511). ([9a3d1d93](https://github.com/FirebaseExtended/flutterfire/commit/9a3d1d9300c49ccdffa90b8193269badd79d2c9b))
+
+## 2.2.3
+
+ - Update a dependency to the latest release.
+
+## 2.2.2
+
+ - Update a dependency to the latest release.
+
+## 2.2.1
+
+ - Update a dependency to the latest release.
+
 ## 2.2.0
 
  - **FEAT**: automatically inject Firebase JS SDKs (#7359).

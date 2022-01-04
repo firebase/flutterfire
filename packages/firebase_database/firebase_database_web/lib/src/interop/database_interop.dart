@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references, require_trailing_commas
+// ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, comment_references
 // Copyright 2017, the Chromium project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
@@ -13,9 +13,11 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import 'package:firebase_database_web/src/interop/app_interop.dart';
 import 'package:js/js.dart';
 
-part 'query_interop.dart';
-part 'reference_interop.dart';
 part 'data_snapshot_interop.dart';
+
+part 'query_interop.dart';
+
+part 'reference_interop.dart';
 
 external void enableLogging([logger, bool persistent]);
 
@@ -39,6 +41,8 @@ abstract class DatabaseJsImpl {
   external void goOffline();
 
   external void goOnline();
+
+  external void useEmulator(String host, int port);
 
   external ReferenceJsImpl ref([String? path]);
 

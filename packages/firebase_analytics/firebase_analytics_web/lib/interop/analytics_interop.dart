@@ -18,7 +18,7 @@ abstract class AnalyticsJsImpl {
 
   external void logEvent(
     String eventName,
-    Map<String, Object?>? parameters,
+    dynamic parameters,
     AnalyticsCallOptions? callOptions,
   );
 

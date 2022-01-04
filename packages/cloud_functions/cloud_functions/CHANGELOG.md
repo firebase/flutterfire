@@ -1,3 +1,19 @@
+## 3.2.4
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 3.2.3
+
+ - Update a dependency to the latest release.
+
+## 3.2.2
+
+ - Update a dependency to the latest release.
+
+## 3.2.1
+
+ - Update a dependency to the latest release.
+
 ## 3.2.0
 
  - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).

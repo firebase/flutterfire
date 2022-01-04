@@ -1,18 +1,19 @@
-## 1.0.0-dev.3
-
- - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
- - **FEAT**: automatically inject Firebase JS SDKs (#7359).
-
-## 1.0.0-dev.2
-
- - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
-
-## 1.0.0-dev.1
+## 1.0.3
 
  - Update a dependency to the latest release.
 
-## 1.0.0-dev.0
+## 1.0.2
 
+ - Update a dependency to the latest release.
+
+## 1.0.1
+
+ - **DOCS**: Fix typos and remove unused imports (#7504).
+
+## 1.0.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
  - **FEAT**: Add initial platform support for Web.
  - Bump "firebase_remote_config" to stable versioning `0.x.x` -> `x.x.x`.
 
