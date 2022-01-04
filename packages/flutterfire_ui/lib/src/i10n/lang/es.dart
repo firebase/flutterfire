@@ -226,7 +226,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.continueText = 'Continuar',
     this.countryCode = 'Código de país',
     this.codeRequiredErrorText = 'El código de país es obligatorio',
-    this.invalidCountryCode = 'Código de país inválido',
+    this.invalidCountryCode = 'El código del país es inválido',
     this.chooseACountry = 'Seleccione un país',
     this.enableMoreSignInMethods = 'Habilitar más métodos de inicio de sesión',
     this.signInMethods = 'Métodos de inicio de sesión',
