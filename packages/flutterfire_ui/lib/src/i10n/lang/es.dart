@@ -177,7 +177,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.signInButtonText = 'Ingresar',
     this.registerButtonText = 'Registrarse',
     this.linkEmailButtonText = 'Siguiente',
-    this.signInWithPhoneButtonText = 'Entra con phone',
+    this.signInWithPhoneButtonText = 'Entra con teléfono',
     this.signInWithGoogleButtonText = 'Entra con Google',
     this.signInWithAppleButtonText = 'Entra con Apple',
     this.signInWithTwitterButtonText = 'Entra con Twitter',
