@@ -216,7 +216,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.confirmPasswordIsRequiredErrorText = 'Confirma tu contraseña',
     this.confirmPasswordDoesNotMatchErrorText = 'Las contraseñas no coinciden',
     this.confirmPasswordInputLabel = 'Confirma la contraseña',
-    this.forgotPasswordButtonLabel = '¿Olvidaste tu contraseña?',
+    this.forgotPasswordButtonLabel = '¿Has olvidado tu contraseña?',
     this.forgotPasswordViewTitle = 'Contraseña olvidada',
     this.resetPasswordButtonLabel = 'Restablecer contraseña',
     this.verifyItsYouText = 'Verifica que eres tú',
