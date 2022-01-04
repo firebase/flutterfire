@@ -16,6 +16,7 @@ dependencies:
   collection: ^1.15.0
   crypto: ^3.0.1
   desktop_webview_auth: ^0.0.2
+  email_validator: ^2.0.1
   firebase_auth: ^3.3.4
   firebase_core: ^1.10.2
   firebase_database: ^9.0.4
