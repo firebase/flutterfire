@@ -185,7 +185,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Ingresa tu número de teléfono',
     this.verifyPhoneNumberButtonText = 'Siguiente',
     this.verifyCodeButtonText = 'Verificar',
-    this.verifyingPhoneNumberViewTitle = 'Ingrese el código de SMS',
+    this.verifyingPhoneNumberViewTitle = 'Introduce el código del SMS',
     this.unknownError = 'Ocurrió un error desconocido',
     this.smsAutoresolutionFailedError =
         'No se pudo resolver el código SMS automáticamente. Por favor ingrese su código manualmente',
