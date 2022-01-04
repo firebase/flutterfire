@@ -239,7 +239,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.emailLinkSignInButtonLabel = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkViewTitleText = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkSentText =
-        'Le enviamos un correo electrónico con un enlace mágico. Revise su correo electrónico y siga el enlace para iniciar sesión',
+        'Le hemos enviado un correo electrónico con un enlace mágico. Revise su correo electrónico y siga el enlace para iniciar sesión',
     this.sendLinkButtonLabel = 'Enviar enlace mágico',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
