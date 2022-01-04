@@ -212,7 +212,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.profile = 'Perfil',
     this.name = 'Nombre',
     this.deleteAccount = 'Eliminar cuenta',
-    this.passwordIsRequiredErrorText = 'La contraseña es requerida',
+    this.passwordIsRequiredErrorText = 'La contraseña es obligatoria',
     this.confirmPasswordIsRequiredErrorText = 'Confirma tu contraseña',
     this.confirmPasswordDoesNotMatchErrorText = 'Las contraseñas no coinciden',
     this.confirmPasswordInputLabel = 'Confirma la contraseña',
