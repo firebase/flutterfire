@@ -208,7 +208,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.signOutButtonText = 'Salir',
     this.phoneInputLabel = 'Número de teléfono',
     this.phoneNumberInvalidErrorText = 'El número de teléfono no es válido',
-    this.phoneNumberIsRequiredErrorText = 'El número de teléfono es requerido',
+    this.phoneNumberIsRequiredErrorText = 'El número de teléfono es obligatorio',
     this.profile = 'Perfil',
     this.name = 'Nombre',
     this.deleteAccount = 'Eliminar cuenta',
