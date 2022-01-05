@@ -55,6 +55,7 @@ DynamicLinkParameters buildDynamicLinkParameters() {
 
   return DynamicLinkParameters(
     uriPrefix: uriPrefix,
+    desktopLink: Uri.parse('desktop-link.org'),
     link: link,
     androidParameters: android,
     googleAnalyticsParameters: google,
@@ -229,9 +230,7 @@ void main() {
 
     group('buildLink()', () {
       test('buildLink', () async {
-        DynamicLinkParameters options = buildDynamicLinkParameters();
-
-        await dynamicLinks.buildLink(options);
+        await dynamicLinks.buildLink(buildDynamicLinkParameters());
 
         expect(logger, <Matcher>[
           isMethodCall(
@@ -239,6 +238,7 @@ void main() {
             arguments: <String, dynamic>{
               'appName': '[DEFAULT]',
               'uriPrefix': 'https://',
+              'desktopLink': 'desktop-link.org',
               'link': 'link',
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',
@@ -330,6 +330,7 @@ void main() {
               'appName': '[DEFAULT]',
               'shortLinkType': ShortDynamicLinkType.short.index,
               'uriPrefix': 'https://',
+              'desktopLink': 'desktop-link.org',
               'link': 'link',
               'androidParameters': {
                 'fallbackUrl': 'fallbackUrl',

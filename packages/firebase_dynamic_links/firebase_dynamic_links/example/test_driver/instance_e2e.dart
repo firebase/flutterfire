@@ -32,10 +32,12 @@ void runInstanceTests() {
             'com.google.FirebaseCppDynamicLinksTestApp.dev';
         const String urlHost = 'reactnativefirebase.page.link';
         const String link = 'https://invertase.io';
+        final Uri desktopLink = Uri.parse('https://desktop-link.org/');
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
           link: Uri.parse(link),
+          desktopLink: desktopLink,
           androidParameters: const AndroidParameters(
             packageName: androidPackageName,
             minimumVersion: 1,
@@ -48,6 +50,10 @@ void runInstanceTests() {
 
         final Uri uri = await dynamicLinks.buildLink(parameters);
 
+        expect(
+          uri.queryParameters['ofl'],
+          desktopLink.toString(),
+        );
         // androidParameters.minimumVersion
         expect(
           uri.queryParameters['amv'],
@@ -90,10 +96,12 @@ void runInstanceTests() {
             'io.flutter.plugins.firebase.dynamiclinksexample';
         const String urlHost = 'reactnativefirebase.page.link';
         const String link = 'https://invertase.io';
+        final Uri desktopLink = Uri.parse('https://desktop-link.org/');
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
           link: Uri.parse(link),
+          desktopLink: desktopLink,
           androidParameters: const AndroidParameters(
             packageName: androidPackageName,
             minimumVersion: 1,

@@ -153,16 +153,19 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 #pragma mark - Firebase Dynamic Links API
 
 - (void)buildLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
-  result.success([components.url absoluteString]);
+  NSString *uri = [self generateUrl:arguments];
+
+  result.success(uri);
 }
 
 - (void)buildShortLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
-
-  [components
-      shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                              NSError *_Nullable error) {
+  FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
+  NSURL *url = [NSURL URLWithString:[self generateUrl:arguments]];
+  [FIRDynamicLinkComponents
+      shortenURL:url
+         options:options
+      completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                   NSError *_Nullable error) {
         if (error != nil) {
           result.error(nil, nil, nil, error);
         } else {
@@ -255,6 +258,19 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 #pragma mark - Utilities
+
+- (NSString *)generateUrl:(id)arguments {
+  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+  NSString *desktopLink = arguments[@"desktopLink"];
+
+  if (![desktopLink isEqual:[NSNull null]]) {
+    NSString *uri = [NSString
+        stringWithFormat:@"%@/%@/%@", [components.url absoluteString], @"&ofl=", desktopLink];
+    return uri;
+  } else {
+    return [components.url absoluteString];
+  }
+}
 
 - (void)checkForDynamicLink:(NSURL *)url {
   FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
