@@ -151,7 +151,7 @@ class _Application extends State<Application> {
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
-              channel.description,
+              description: channel.description,
               // TODO add a proper drawable resource to android, for now using
               //      one that already exists in example app.
               icon: 'launch_background',
