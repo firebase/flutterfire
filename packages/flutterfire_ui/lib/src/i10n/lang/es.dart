@@ -196,7 +196,8 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.emailIsRequiredErrorText = 'El correo electrónico es obligatorio',
     this.isNotAValidEmailErrorText = 'Ingresa un correo electrónico válido',
     this.userNotFoundErrorText = 'No existe una cuenta con este usuario',
-    this.emailTakenErrorText = 'Ya existe una cuenta con este correo electrónico',
+    this.emailTakenErrorText =
+        'Ya existe una cuenta con este correo electrónico',
     this.accessDisabledErrorText =
         'El acceso a esta cuenta se ha inhabilitado temporalmente',
     this.wrongOrNoPasswordErrorText =
@@ -208,7 +209,8 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.signOutButtonText = 'Cerrar sesión',
     this.phoneInputLabel = 'Número de teléfono',
     this.phoneNumberInvalidErrorText = 'El número de teléfono no es válido',
-    this.phoneNumberIsRequiredErrorText = 'El número de teléfono es obligatorio',
+    this.phoneNumberIsRequiredErrorText =
+        'El número de teléfono es obligatorio',
     this.profile = 'Perfil',
     this.name = 'Nombre',
     this.deleteAccount = 'Eliminar cuenta',
@@ -222,7 +224,8 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyItsYouText = 'Verifica que eres tú',
     this.differentMethodsSignInTitleText =
         'Utilice uno de los siguientes métodos para iniciar sesión',
-    this.findProviderForEmailTitleText = 'Introduce su correo electrónico para continuar',
+    this.findProviderForEmailTitleText =
+        'Introduce su correo electrónico para continuar',
     this.continueText = 'Continuar',
     this.countryCode = 'Código de país',
     this.codeRequiredErrorText = 'El código de país es obligatorio',
