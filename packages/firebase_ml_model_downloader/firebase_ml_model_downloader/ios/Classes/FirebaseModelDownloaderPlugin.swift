@@ -26,7 +26,10 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
       binaryMessenger = registrar.messenger()
     #endif
 
-    let channel = FlutterMethodChannel(name: kFLTFirebaseModelDownloaderChannelName, binaryMessenger: binaryMessenger)
+    let channel = FlutterMethodChannel(
+      name: kFLTFirebaseModelDownloaderChannelName,
+      binaryMessenger: binaryMessenger
+    )
     let instance = FirebaseModelDownloaderPluginSwift()
     registrar.addMethodCallDelegate(instance, channel: channel)
     #if os(iOS)
@@ -58,8 +61,10 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
       var errorDetails = [String: Any?]()
 
       errorDetails["code"] = code ?? self.mapErrorCodes(error: error! as NSError)
-      errorDetails["message"] = message ?? error?.localizedDescription ?? "An unknown error has occurred."
-      errorDetails["additionalData"] = details ?? ["code": errorDetails["code"], "message": errorDetails["message"]]
+      errorDetails["message"] = message ?? error?
+        .localizedDescription ?? "An unknown error has occurred."
+      errorDetails["additionalData"] = details ??
+        ["code": errorDetails["code"], "message": errorDetails["message"]]
 
       if code == "unknown" {
         NSLog("FLTFirebaseModelDownloader: An error occurred while calling method %@", call.method)
@@ -67,7 +72,9 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
 
       result(FLTFirebasePlugin.createFlutterError(fromCode: errorDetails["code"] as! String,
                                                   message: errorDetails["message"] as! String,
-                                                  optionalDetails: errorDetails["additionalData"] as? [AnyHashable: Any],
+                                                  optionalDetails: errorDetails[
+                                                    "additionalData"
+                                                  ] as? [AnyHashable: Any],
                                                   andOptionalNSError: nil))
     }
 
@@ -83,7 +90,8 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func listDownloadedModels(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
+  internal func listDownloadedModels(arguments: [String: Any],
+                                     result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
 
     modelDownloader?.listDownloadedModels { response in
@@ -122,7 +130,11 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
 
     let modelDownloadConditions = ModelDownloadConditions(allowsCellularAccess: cellularAccess)
 
-    modelDownloader?.getModel(name: modelName, downloadType: downloadTypeEnum, conditions: modelDownloadConditions) { response in
+    modelDownloader?.getModel(
+      name: modelName,
+      downloadType: downloadTypeEnum,
+      conditions: modelDownloadConditions
+    ) { response in
       switch response {
       case let .success(customModel):
         result.success([
@@ -137,7 +149,8 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
     }
   }
 
-  internal func deleteDownloadedModel(arguments: [String: Any], result: FLTFirebaseMethodCallResult) {
+  internal func deleteDownloadedModel(arguments: [String: Any],
+                                      result: FLTFirebaseMethodCallResult) {
     let modelDownloader = modelDownloaderFromArguments(arguments: arguments)
     let modelName = arguments["modelName"]
 
