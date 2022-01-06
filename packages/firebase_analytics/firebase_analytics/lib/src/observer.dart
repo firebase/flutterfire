@@ -13,12 +13,19 @@ typedef ScreenNameExtractor = String? Function(RouteSettings settings);
 
 String? defaultNameExtractor(RouteSettings settings) => settings.name;
 
+/// [RouteFilter] allows to filter out routes that should not be tracked.
+///
+/// By default, only [PageRoute]s are tracked.
+typedef RouteFilter = bool Function(ModalRoute<dynamic> route);
+
+bool defaultRouteFilter(ModalRoute<dynamic> route) => route is PageRoute;
+
 /// A [NavigatorObserver] that sends events to Firebase Analytics when the
 /// currently active [ModalRoute] changes.
 ///
-/// When a route is pushed or popped, [nameExtractor] is used to extract a name
-/// from [RouteSettings] of the now active route and that name is sent to
-/// Firebase.
+/// When a route is pushed or popped, and if [routeFilter] is true,
+/// [nameExtractor] is used to extract a name  from [RouteSettings] of the now
+/// active route and that name is sent to Firebase.
 ///
 /// The following operations will result in sending a screen view event:
 /// ```dart
@@ -63,11 +70,13 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   FirebaseAnalyticsObserver({
     required this.analytics,
     this.nameExtractor = defaultNameExtractor,
+    this.routeFilter = defaultRouteFilter,
     Function(PlatformException error)? onError,
   }) : _onError = onError;
 
   final FirebaseAnalytics analytics;
   final ScreenNameExtractor nameExtractor;
+  final RouteFilter routeFilter;
   final void Function(PlatformException error)? _onError;
 
   void _sendScreenView(ModalRoute<dynamic> route) {
@@ -90,7 +99,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPush(route, previousRoute);
-    if (route is ModalRoute) {
+    if (routeFilter(route)) {
       _sendScreenView(route);
     }
   }
@@ -98,7 +107,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    if (newRoute is ModalRoute) {
+    if (routeFilter(newRoute)) {
       _sendScreenView(newRoute);
     }
   }
@@ -106,7 +115,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    if (previousRoute is ModalRoute && route is ModalRoute) {
+    if (routeFilter(previousRoute) && routeFilter(route)) {
       _sendScreenView(previousRoute);
     }
   }
