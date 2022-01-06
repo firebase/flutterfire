@@ -183,14 +183,14 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithFacebookButtonText = 'Se connecter avec Facebook',
     this.phoneVerificationViewTitleText = 'Entrez votre numéro de téléphone',
     this.verifyPhoneNumberButtonText = 'Suivant',
-    this.verifyCodeButtonText = 'Verifier',
+    this.verifyCodeButtonText = 'Vérifier',
     this.verifyingPhoneNumberViewTitle = 'Entrez le code reçu par sms',
     this.unknownError = 'Une erreur inconnue s\'est produite',
     this.smsAutoresolutionFailedError =
         'Impossible de retrouver le code automatiquement. Veuillez entrer votre code manuellement',
     this.smsCodeSentText = 'Code envoyé par SMS',
     this.sendingSMSCodeText = 'Envoi du code par SMS',
-    this.verifyingSMSCodeText = 'Verification du code SMS',
+    this.verifyingSMSCodeText = 'Vérification du code SMS',
     this.enterSMSCodeText = 'Entrez le code reçu par SMS',
     this.emailIsRequiredErrorText = 'Un email est requis',
     this.isNotAValidEmailErrorText = 'Veuillez entrer un email valide',
@@ -232,13 +232,13 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = 'Fournissez votre adresse email et votre mot de passe',
     this.goBackButtonLabel = 'Retour',
     this.passwordResetEmailSentText =
-        "Nous vous avons envoyé un email avec un lien pour réinitialiser votre mot de passe. Veuillez verifier vos emails.",
+        "Nous vous avons envoyé un email avec un lien pour réinitialiser votre mot de passe. Veuillez vérifier vos emails.",
     this.forgotPasswordHintText =
         'Fournissez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe',
     this.emailLinkSignInButtonLabel = 'Connectez-vous avec le lien magique',
     this.signInWithEmailLinkViewTitleText = 'Connectez-vous avec le lien magique',
     this.signInWithEmailLinkSentText =
-        "Nous vous avons envoyé un email avec un lien magique. Verifiez vos emails et clickez sur le lien pour vous connecter",
+        "Nous vous avons envoyé un email avec un lien magique. Vérifiez vos emails et clickez sur le lien pour vous connecter",
     this.sendLinkButtonLabel = 'Envoyer un lien magique',
     this.arrayLabel = 'liste',
     this.booleanLabel = 'booléen',
