@@ -83,6 +83,7 @@ class _MainScreenState extends State<_MainScreen> {
 
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://reactnativefirebase.page.link',
+      desktopLink: Uri.parse('https://desktop-link.com'),
       link: Uri.parse(DynamicLink),
       androidParameters: const AndroidParameters(
         packageName: 'io.flutter.plugins.firebase.dynamiclinksexample',
