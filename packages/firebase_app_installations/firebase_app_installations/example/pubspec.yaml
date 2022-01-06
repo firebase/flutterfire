@@ -42,7 +42,6 @@ dependency_overrides:
     path: ../../firebase_app_installations_platform_interface
 
 dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.1
   flutter_driver:
     sdk: flutter
 
