@@ -16,9 +16,9 @@ String? defaultNameExtractor(RouteSettings settings) => settings.name;
 /// [RouteFilter] allows to filter out routes that should not be tracked.
 ///
 /// By default, only [PageRoute]s are tracked.
-typedef RouteFilter = bool Function(ModalRoute<dynamic> route);
+typedef RouteFilter = bool Function(Route<dynamic>? route);
 
-bool defaultRouteFilter(ModalRoute<dynamic> route) => route is PageRoute;
+bool defaultRouteFilter(Route<dynamic>? route) => route is PageRoute;
 
 /// A [NavigatorObserver] that sends events to Firebase Analytics when the
 /// currently active [ModalRoute] changes.
