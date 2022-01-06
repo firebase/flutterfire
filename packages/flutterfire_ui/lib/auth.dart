@@ -9,7 +9,8 @@ export 'src/auth/auth_state.dart'
         CredentialReceived,
         SignedIn,
         SigningIn,
-        AuthFailed;
+        AuthFailed,
+        DifferentSignInMethodsFound;
 export 'src/auth/flows/phone_auth_flow.dart';
 export 'src/auth/flows/email_link_flow.dart';
 

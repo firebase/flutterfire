@@ -37,8 +37,12 @@ Install the official [`google_sign_in`](https://pub.dev/packages/google_sign_in)
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  google_sign_in: "{{ external.google_sign_in }}"
+  google_sign_in: '{{ external.google_sign_in }}'
 ```
+
+:::caution
+Dart-only Firebase initialization isn't yet supported by `google_sign_in` plugin, if you're using Google as an auth provider you'll still have to do the [manual installation](./manual-installation.mdx) steps to integrate the Firebase configuration files.
+:::
 
 Once installed, trigger the sign-in flow and create a new credential:
 
@@ -127,7 +131,7 @@ Install the [`flutter_facebook_auth`](https://pub.dev/packages/flutter_facebook_
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  flutter_facebook_auth: "{{ external.flutter_facebook_auth }}"
+  flutter_facebook_auth: '{{ external.flutter_facebook_auth }}'
 ```
 
 You will need to follow the steps in the plugin documentation to ensure that both the Android & iOS Facebook SDKs have been initialized
@@ -198,7 +202,6 @@ Firebase will not set the `User.emailVerified` property
 to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
 For further information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
 :::
-
 
 ## Apple
 
@@ -283,12 +286,13 @@ Future<UserCredential> signInWithApple() async {
   return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 }
 ```
+
 </TabItem>
 
 <TabItem value="android">
 
-  At the moment, the preferable solution is blocked by this
-  [issue](https://github.com/FirebaseExtended/flutterfire/issues/2691).
+At the moment, the preferable solution is blocked by this
+[issue](https://github.com/FirebaseExtended/flutterfire/issues/2691).
 
 </TabItem>
 
@@ -313,6 +317,7 @@ Future<UserCredential> signInWithApple() async {
 
 An alternative is to use `signInWithRedirect`. In that case the browser will navigate away from your app
 and you have to use `getRedirectResult` to check for authentication results during app startup.
+
 </TabItem>
 </Tabs>
 
@@ -370,7 +375,7 @@ Future<UserCredential> signInWithTwitter() async {
 <TabItem value="web">
 
 On the web, the Twitter SDK provides support for automatically handling the authentication flow using the
-Twitter application details provided on the Firebase console.  Ensure that the callback URL in the Firebase console is added
+Twitter application details provided on the Firebase console. Ensure that the callback URL in the Firebase console is added
 as a callback URL in your Twitter application on their developer console.
 
 For example:
@@ -400,7 +405,6 @@ Future<UserCredential> signInWithTwitter() async {
 Ensure that you have setup an OAuth App from your [GitHub Developer Settings](https://github.com/settings/developers) and
 that the "GitHub" sign-in provider is enabled on the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers)
 with the Client ID and Secret are set, with the callback URL set in the GitHub app.
-
 
 <Tabs
   defaultValue="native"
@@ -448,7 +452,7 @@ Future<UserCredential> signInWithGitHub() async {
 <TabItem value="web">
 
 On the web, the GitHub SDK provides support for automatically handling the authentication flow using the
-GitHub application details provided on the Firebase console.  Ensure that the callback URL in the Firebase console is added
+GitHub application details provided on the Firebase console. Ensure that the callback URL in the Firebase console is added
 as a callback URL in your GitHub application on the developer console.
 
 For example:
