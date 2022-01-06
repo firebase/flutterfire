@@ -265,7 +265,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
   if (![desktopLink isEqual:[NSNull null]]) {
     NSString *uri = [NSString
-        stringWithFormat:@"%@/%@/%@", [components.url absoluteString], @"&ofl=", desktopLink];
+        stringWithFormat:@"%@%@%@", [components.url absoluteString], @"&ofl=", desktopLink];
     return uri;
   } else {
     return [components.url absoluteString];
