@@ -54,7 +54,7 @@ jobs:
             "flutter pub get"
 
   format:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v2.3.4
@@ -78,11 +78,6 @@ jobs:
         run: |
           melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" --dir-exists="ios" -- \
             find . -maxdepth 3 -name "*.h" -o -name "*.m" -print0 \| xargs -0 clang-format -i --style=Google --verbose
-          ./.github/workflows/scripts/validate-formatting.sh
-      - name: "Swift"
-        if: ${{ success() || failure() }}
-        run: |
-          swiftformat .
           ./.github/workflows/scripts/validate-formatting.sh
       - name: "Java"
         if: ${{ success() || failure() }}

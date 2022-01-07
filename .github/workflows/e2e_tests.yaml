@@ -89,7 +89,7 @@ jobs:
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ios-v2
-          max-size: 500M
+          max-size: 700M
       - uses: actions/cache@v2
         name: Pods Cache
         id: pods-cache
@@ -137,6 +137,11 @@ jobs:
           FLUTTER_DRIVE_EXIT_CODE=$?
           xcrun simctl shutdown "$SIMULATOR"
           exit $FLUTTER_DRIVE_EXIT_CODE
+      - name: "Swift Format Check"
+        if: ${{ success() || failure() }}
+        run: |
+          swiftformat .
+          ./.github/workflows/scripts/validate-formatting.sh
 
   macos:
     runs-on: macos-latest
@@ -153,7 +158,7 @@ jobs:
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-macos-v2
-          max-size: 500M
+          max-size: 700M
       - uses: actions/cache@v2
         name: Pods Cache
         id: pods-cache
