@@ -362,7 +362,8 @@ FirebaseAuth.instance.sendSignInLinkToEmail(
 
 Firebase Authentication uses Firebase Dynamic Links to send the email link to a mobile device. For sign-in completion via mobile application, the application has to be configured to detect the incoming application link, parse the underlying deep link and then complete the sign-in.
 
-Follow the setup process for Firebase Dynamic Links on Flutter in this [guide](https://pub.dev/packages/firebase_dynamic_links).
+Follow the setup process for Firebase Dynamic Links on Flutter in this [guide](https://firebase.flutter.dev/docs/dynamic-links/overview) and ensure you have
+correctly integrated Dynamic Links for [Android](https://firebase.flutter.dev/docs/dynamic-links/android-integration) and [Apple](https://firebase.flutter.dev/docs/dynamic-links/apple-integration) devices.
 
 After you received the link, verify that it is meant for email link authentication and complete the sign in.
 
