@@ -108,7 +108,7 @@ Packages with dependency updates only:
 
 #### `firebase_dynamic_links_platform_interface` - `v0.2.0+4`
 
- - **FIX**: PendingDynamicLinkData.asString() prints out instance type with mapped values. (#7727).
+ - **FIX**: `PendingDynamicLinkData.asString()` prints out instance type with mapped values. (#7727).
 
 #### `firebase_in_app_messaging` - `v0.6.0+6`
 
@@ -119,7 +119,6 @@ Packages with dependency updates only:
 #### `firebase_messaging` - `v11.2.5`
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
- - **DOCS**: Provide fallback for `messageId` field for web as JS SDK does not have. (#7234).
 
 #### `firebase_performance` - `v0.8.0+4`
 
@@ -136,15 +135,15 @@ Packages with dependency updates only:
 #### `flutterfire_ui` - `v0.3.1`
 
  - **FIX**: fix `ResponsivePage` overflow issue (#7792).
- - **FIX**: export DifferentSignInMethodsFound auth state and make sure to add it to the list of provided actions (#7789).
- - **FIX**: validate email with the library instead of the RegExp (#7772).
- - **FIX**: not working onTap in OAuthProviderButtonWidget (#7641).
- - **FIX**: pass auth down to LoginView (#7645).
- - **FEAT**: add Spanish localization support (#7716).
- - **FEAT**: add French localization support (#7797).
- - **FEAT**: add Arabic localization support (#7771).
+ - **FIX**: export `DifferentSignInMethodsFound` auth state and make sure to add it to the list of provided actions (#7789).
+ - **FIX**: validate email with the library instead of the `RegExp` (#7772).
+ - **FIX**: not working `onTap` in `OAuthProviderButtonWidget` (#7641).
+ - **FIX**: pass auth down to `LoginView` (#7645).
+ - **FEAT**: add `Spanish` localization support (#7716).
+ - **FEAT**: add `French` localization support (#7797).
+ - **FEAT**: add `Arabic` localization support (#7771).
  - **DOCS**: update repository and homepage url (#7781).
- - **DOCS**: add missing providerConfigs in example (#7724).
+ - **DOCS**: add missing `providerConfigs` in example (#7724).
 
 
 ## 2021-12-16
