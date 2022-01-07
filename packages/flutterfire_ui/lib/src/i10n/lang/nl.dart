@@ -187,7 +187,7 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyingPhoneNumberViewTitle = 'Vul code van SMS in',
     this.unknownError = 'Er is een onbekende fout opgetreden',
     this.smsAutoresolutionFailedError =
-    'Automatisch verifiëren van de SMS code is niet gelukt. Voer de code handmatig in.',
+        'Automatisch verifiëren van de SMS code is niet gelukt. Voer de code handmatig in.',
     this.smsCodeSentText = 'SMS code verstuurd',
     this.sendingSMSCodeText = 'SMS code versturen...',
     this.verifyingSMSCodeText = 'SMS code verifiëren...',
@@ -197,9 +197,9 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.userNotFoundErrorText = 'Account bestaat niet',
     this.emailTakenErrorText = 'Een account met dit e-mailadres bestaat al',
     this.accessDisabledErrorText =
-    'Toegang tot dit account is tijdelijk geblokkeerd',
+        'Toegang tot dit account is tijdelijk geblokkeerd',
     this.wrongOrNoPasswordErrorText =
-    'Het wachtwoord is fout of de gebruiker heeft geen wachtwoord',
+        'Het wachtwoord is fout of de gebruiker heeft geen wachtwoord',
     this.signInText = 'Inloggen',
     this.registerText = 'Registreren',
     this.registerHintText = 'Heb je nog geen account?',
@@ -213,15 +213,17 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.deleteAccount = 'Account verwijderen',
     this.passwordIsRequiredErrorText = 'Wachtwoord is verplicht',
     this.confirmPasswordIsRequiredErrorText = 'Bevestig wachtwoord',
-    this.confirmPasswordDoesNotMatchErrorText = 'Wachtwoorden komen niet overeen',
+    this.confirmPasswordDoesNotMatchErrorText =
+        'Wachtwoorden komen niet overeen',
     this.confirmPasswordInputLabel = 'Bevestig wachtwoord',
     this.forgotPasswordButtonLabel = 'Wachtwoord vergeten?',
     this.forgotPasswordViewTitle = 'Wachtwoord vergeten',
     this.resetPasswordButtonLabel = 'Wachtwoord herstellen',
     this.verifyItsYouText = 'Verifieër dat jij het bent',
     this.differentMethodsSignInTitleText =
-    'Gebruik één van de volgende methodes om in te loggen',
-    this.findProviderForEmailTitleText = 'Voer uw e-mailadres in om verder te gaan',
+        'Gebruik één van de volgende methodes om in te loggen',
+    this.findProviderForEmailTitleText =
+        'Voer uw e-mailadres in om verder te gaan',
     this.continueText = 'Verder',
     this.countryCode = 'Landcode',
     this.codeRequiredErrorText = 'Landcode is verplicht',
@@ -232,13 +234,13 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = 'Vul e-mailadres en wachtwoord in',
     this.goBackButtonLabel = 'Terug',
     this.passwordResetEmailSentText =
-    'We hebben je een e-mail met een link gestuurd om je wachtwoord te herstellen. Controleer je e-mail.',
+        'We hebben je een e-mail met een link gestuurd om je wachtwoord te herstellen. Controleer je e-mail.',
     this.forgotPasswordHintText =
-    'Vul je e-mailadres in en we sturen je een e-mail om je wachtwoord te herstellen',
+        'Vul je e-mailadres in en we sturen je een e-mail om je wachtwoord te herstellen',
     this.emailLinkSignInButtonLabel = 'Inloggen met een magic link',
     this.signInWithEmailLinkViewTitleText = 'Inloggen met een magic link',
     this.signInWithEmailLinkSentText =
-    'We hebben een e-mail met een magic link gestuurd. Controleer je e-mail en klik op de link om in te loggen',
+        'We hebben een e-mail met een magic link gestuurd. Controleer je e-mail en klik op de link om in te loggen',
     this.sendLinkButtonLabel = 'Stuur magic link',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
