@@ -75,7 +75,7 @@ Future<void> injectEventChannelResponse(
   String channelName,
   Map<String, dynamic> event,
 ) async {
-  await ServicesBinding.instance!.defaultBinaryMessenger.handlePlatformMessage(
+  await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger.handlePlatformMessage(
     channelName,
     MethodChannelFirebaseDynamicLinks.channel.codec
         .encodeSuccessEnvelope(event),
@@ -91,3 +91,11 @@ Future<void> testExceptionHandling(
     anyOf([completes, throwsA(isA<FirebaseException>())]),
   );
 }
+
+/// This allows a value of type T or T? to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become non-nullable can still be used
+/// with `!` and `?` on the stable branch.
+// TODO(ianh): Remove this once the relevant APIs have shipped to stable.
+// See https://github.com/flutter/flutter/issues/64830
+T? _ambiguate<T>(T? value) => value;

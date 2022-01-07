@@ -78,7 +78,7 @@ void handleDocumentSnapshotsEventChannel(
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance!.defaultBinaryMessenger
+        await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -109,7 +109,7 @@ void handleQuerySnapshotsEventChannel(final String id, List<MethodCall> log) {
     log.add(methodCall);
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance!.defaultBinaryMessenger
+        await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope(
@@ -139,7 +139,7 @@ void handleSnapshotsInSyncEventChannel(final String id) {
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance!.defaultBinaryMessenger
+        await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
             .handlePlatformMessage(
                 name, codec.encodeSuccessEnvelope({}), (_) {});
         break;
@@ -162,7 +162,7 @@ void handleTransactionEventChannel(
       .setMockMethodCallHandler((MethodCall methodCall) async {
     switch (methodCall.method) {
       case 'listen':
-        await ServicesBinding.instance!.defaultBinaryMessenger
+        await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
@@ -172,7 +172,7 @@ void handleTransactionEventChannel(
         );
 
         if (throwException!) {
-          await ServicesBinding.instance!.defaultBinaryMessenger
+          await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
               .handlePlatformMessage(
             name,
             codec.encodeSuccessEnvelope({
@@ -184,7 +184,7 @@ void handleTransactionEventChannel(
             (_) {},
           );
         }
-        await ServicesBinding.instance!.defaultBinaryMessenger
+        await _ambiguate(ServicesBinding.instance)!.defaultBinaryMessenger
             .handlePlatformMessage(
           name,
           codec.encodeSuccessEnvelope({
@@ -200,3 +200,11 @@ void handleTransactionEventChannel(
     }
   });
 }
+
+/// This allows a value of type T or T? to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become non-nullable can still be used
+/// with `!` and `?` on the stable branch.
+// TODO(ianh): Remove this once the relevant APIs have shipped to stable.
+// See https://github.com/flutter/flutter/issues/64830
+T? _ambiguate<T>(T? value) => value;
