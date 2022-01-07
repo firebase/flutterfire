@@ -61,6 +61,7 @@
   { "name": "Egypt", "countryCode": "20", "isoCode": "EG" },
   { "name": "Spain", "countryCode": "34", "isoCode": "ES" },
   { "name": "Ethiopia", "countryCode": "251", "isoCode": "ET" },
+  { "name": "Estonia", "countryCode": "372", "isoCode": "EE" },
   { "name": "Finland", "countryCode": "358", "isoCode": "FI" },
   { "name": "Fiji", "countryCode": "679", "isoCode": "FJ" },
   { "name": "Falkland Islands", "countryCode": "500", "isoCode": "FK" },
