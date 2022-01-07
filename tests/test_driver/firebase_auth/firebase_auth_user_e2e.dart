@@ -160,7 +160,7 @@ void setupTests() {
                   fail('Should not have auto resolved');
                 },
                 verificationFailed: (FirebaseException e) {
-                  fail('Should not have errored');
+                  fail('Should not have errored: $e');
                 },
                 codeSent: (String verificationId, int? resetToken) {
                   completer.complete(verificationId);

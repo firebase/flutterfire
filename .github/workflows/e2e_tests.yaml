@@ -29,9 +29,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
-        name: Install Node.js 14
+        name: Install Node.js 16
         with:
-          node-version: "14"
+          node-version: "16"
       - uses: actions/setup-java@v2
         with:
           distribution: "temurin"
@@ -82,14 +82,14 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
-        name: Install Node.js 14
+        name: Install Node.js 16
         with:
-          node-version: "14"
+          node-version: "16"
       - uses: hendrikmuhs/ccache-action@v1
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-ios-v2
-          max-size: 500M
+          max-size: 700M
       - uses: actions/cache@v2
         name: Pods Cache
         id: pods-cache
@@ -137,6 +137,11 @@ jobs:
           FLUTTER_DRIVE_EXIT_CODE=$?
           xcrun simctl shutdown "$SIMULATOR"
           exit $FLUTTER_DRIVE_EXIT_CODE
+      - name: "Swift Format Check"
+        if: ${{ success() || failure() }}
+        run: |
+          swiftformat .
+          ./.github/workflows/scripts/validate-formatting.sh
 
   macos:
     runs-on: macos-latest
@@ -146,14 +151,14 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
-        name: Install Node.js 14
+        name: Install Node.js 16
         with:
-          node-version: "14"
+          node-version: "16"
       - uses: hendrikmuhs/ccache-action@v1
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-macos-v2
-          max-size: 500M
+          max-size: 700M
       - uses: actions/cache@v2
         name: Pods Cache
         id: pods-cache
@@ -200,9 +205,9 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v2
-        name: Install Node.js 14
+        name: Install Node.js 16
         with:
-          node-version: "14"
+          node-version: "16"
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"

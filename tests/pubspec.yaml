@@ -66,11 +66,10 @@ dependencies:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  # TODO ios crash due to ios sdk calling [FIRApp configure]
-  # firebase_in_app_messaging:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  # firebase_in_app_messaging_platform_interface:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
@@ -164,11 +163,10 @@ dependency_overrides:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  # TODO ios crash due to ios sdk calling [FIRApp configure]
-  # firebase_in_app_messaging:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  # firebase_in_app_messaging_platform_interface:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
@@ -202,7 +200,7 @@ dependency_overrides:
     path: ../packages/firebase_storage/firebase_storage_web
 
 dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.3
+  drive: ^1.0.0-1.0.nullsafety.4
   flutter_driver:
     sdk: flutter
   flutter_test:
