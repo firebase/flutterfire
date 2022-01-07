@@ -2,7 +2,7 @@ name: firebase_crashlytics
 description:
   Flutter plugin for Firebase Crashlytics. It reports uncaught errors to the
   Firebase console.
-version: 2.4.4
+version: 2.4.5
 homepage: https://firebase.flutter.dev/docs/crashlytics/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_crashlytics/firebase_crashlytics
 
@@ -16,7 +16,7 @@ environment:
 dependencies:
   firebase_core: ^1.10.0
   firebase_core_platform_interface: ^4.2.3
-  firebase_crashlytics_platform_interface: ^3.1.11
+  firebase_crashlytics_platform_interface: ^3.1.12
   flutter:
     sdk: flutter
   stack_trace: ^1.10.0

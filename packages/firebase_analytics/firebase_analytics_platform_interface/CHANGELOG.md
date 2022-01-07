@@ -1,3 +1,7 @@
+## 3.0.4
+
+ - Update a dependency to the latest release.
+
 ## 3.0.3
 
  - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
