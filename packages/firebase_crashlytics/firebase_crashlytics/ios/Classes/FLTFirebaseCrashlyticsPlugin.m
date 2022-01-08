@@ -4,6 +4,7 @@
 
 #import "FLTFirebaseCrashlyticsPlugin.h"
 #import "Crashlytics_Platform.h"
+#import "ExceptionModel_Platform.h"
 
 #import <Firebase/Firebase.h>
 
@@ -160,12 +161,13 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     NSTimeInterval timeInterval = [NSDate date].timeIntervalSince1970;
     [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
                                           forKey:@"com.firebase.crashlytics.flutter.fatal"];
-#if TARGET_OS_OSX
-    // macOS platform does not support analytics
-#else
-    id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager analytics];
-    [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval toAnalytics:analytics];
-#endif
+    //#if TARGET_OS_OSX
+    //    // macOS platform does not support analytics
+    //#else
+    //    id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager
+    //    analytics]; [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval
+    //    toAnalytics:analytics];
+    //#endif
   }
 
   // Log additional custom value to match Android.
@@ -176,6 +178,8 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
                                                                     reason:reason];
 
   exception.stackTrace = frames;
+  exception.onDemand = YES;
+  exception.isFatal = fatal;
   [[FIRCrashlytics crashlytics] recordExceptionModel:exception];
   result.success(nil);
 }
