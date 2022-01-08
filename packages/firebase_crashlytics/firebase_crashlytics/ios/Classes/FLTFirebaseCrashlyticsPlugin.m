@@ -161,13 +161,6 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
     NSTimeInterval timeInterval = [NSDate date].timeIntervalSince1970;
     [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
                                           forKey:@"com.firebase.crashlytics.flutter.fatal"];
-    //#if TARGET_OS_OSX
-    //    // macOS platform does not support analytics
-    //#else
-    //    id<FIRAnalyticsInterop> analytics = [[FIRCrashlytics crashlytics].analyticsManager
-    //    analytics]; [FIRCLSAnalyticsManager logCrashWithTimeStamp:timeInterval
-    //    toAnalytics:analytics];
-    //#endif
   }
 
   // Log additional custom value to match Android.
