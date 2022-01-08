@@ -140,7 +140,7 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       information: flutterErrorDetails.informationCollector == null
           ? []
           : flutterErrorDetails.informationCollector!(),
-      printDetails: false
+      printDetails: false,
     );
   }
 
