@@ -63,7 +63,7 @@ jobs:
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
         uses: reactivecircus/android-emulator-runner@v2.21.0
-        timeout-minutes: 15
+        timeout-minutes: 30
         with:
           api-level: 30
           arch: x86_64
