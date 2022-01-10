@@ -76,11 +76,10 @@ dependencies:
     path: ../packages/firebase_messaging/firebase_messaging_platform_interface
   firebase_messaging_web:
     path: ../packages/firebase_messaging/firebase_messaging_web
-  # TODO does not compile for macOS
-  # firebase_ml_model_downloader:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  # firebase_ml_model_downloader_platform_interface:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
   # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
   # firebase_performance:
@@ -173,11 +172,10 @@ dependency_overrides:
     path: ../packages/firebase_messaging/firebase_messaging_platform_interface
   firebase_messaging_web:
     path: ../packages/firebase_messaging/firebase_messaging_web
-  # TODO does not compile for macOS
-  # firebase_ml_model_downloader:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  # firebase_ml_model_downloader_platform_interface:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
   # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
   # firebase_performance:
