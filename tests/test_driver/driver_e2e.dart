@@ -11,6 +11,8 @@ import 'firebase_app_installations/firebase_app_installations_e2e.dart'
     as firebase_app_installations;
 import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e.dart'
     as firebase_in_app_messaging;
+import 'firebase_remote_config/firebase_remote_config_e2e.dart'
+    as firebase_remote_config;
 
 void setupTests() {
   // Core first.
@@ -19,6 +21,7 @@ void setupTests() {
   firebase_auth.setupTests();
   cloud_functions.setupTests();
   firebase_analytics.setupTests();
+  firebase_remote_config.setupTests();
   firebase_in_app_messaging.setupTests();
   firebase_app_installations.setupTests();
 }
