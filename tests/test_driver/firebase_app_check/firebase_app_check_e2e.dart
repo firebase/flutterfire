@@ -34,8 +34,9 @@ void setupTests() {
           final token = await FirebaseAppCheck.instance.getToken(true);
           expect(token, isA<String?>());
         },
-        // TODO why is this iOS only?
-        skip: defaultTargetPlatform == TargetPlatform.iOS,
+        // TODO why is this Android/Web only?
+        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS,
       );
 
       test(
