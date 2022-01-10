@@ -30,14 +30,20 @@ void setupTests() {
 
       test('fetch', () async {
         final mark = DateTime.now();
-        expect(FirebaseRemoteConfig.instance.lastFetchTime.isBefore(mark), true);
+        expect(
+          FirebaseRemoteConfig.instance.lastFetchTime.isBefore(mark),
+          true,
+        );
         await FirebaseRemoteConfig.instance.fetchAndActivate();
         expect(
           FirebaseRemoteConfig.instance.lastFetchStatus,
           RemoteConfigFetchStatus.success,
         );
         expect(FirebaseRemoteConfig.instance.lastFetchTime.isAfter(mark), true);
-        expect(FirebaseRemoteConfig.instance.getString('string'), 'flutterfire');
+        expect(
+          FirebaseRemoteConfig.instance.getString('string'),
+          'flutterfire',
+        );
         expect(FirebaseRemoteConfig.instance.getBool('bool'), isTrue);
         expect(FirebaseRemoteConfig.instance.getInt('int'), 123);
         expect(FirebaseRemoteConfig.instance.getDouble('double'), 123.456);
@@ -46,7 +52,10 @@ void setupTests() {
           ValueSource.valueRemote,
         );
 
-        expect(FirebaseRemoteConfig.instance.getString('hello'), 'default hello');
+        expect(
+          FirebaseRemoteConfig.instance.getString('hello'),
+          'default hello',
+        );
         expect(
           FirebaseRemoteConfig.instance.getValue('hello').source,
           ValueSource.valueDefault,
