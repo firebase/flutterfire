@@ -1,10 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
-
+import 'package:drive/drive.dart';
 import 'firebase_database_e2e.dart';
 
-void runDatabaseTests() {
+void setupDatabaseTests() {
   group('FirebaseDatabase.ref()', () {
-    setUp(() async {
+    setUpAll(() async {
       await database.ref('tests/flutterfire').set(0);
     });
 
@@ -48,23 +47,25 @@ void runDatabaseTests() {
 
   group('FirebaseDatabase.refFromURL()', () {
     test('correctly returns a ref for database root', () async {
-      final ref = database
-          .refFromURL('https://react-native-firebase-testing.firebaseio.com');
+      final ref = database.refFromURL(
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+      );
       expect(ref.key, isNull);
 
-      final refWithTrailingSlash = database
-          .refFromURL('https://react-native-firebase-testing.firebaseio.com/');
+      final refWithTrailingSlash = database.refFromURL(
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app/',
+      );
       expect(refWithTrailingSlash.key, isNull);
     });
 
     test('correctly returns a ref for any database path', () async {
       final ref = database.refFromURL(
-        'https://react-native-firebase-testing.firebaseio.com/foo',
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app/foo',
       );
       expect(ref.key, 'foo');
 
       final refWithNestedPath = database.refFromURL(
-        'https://react-native-firebase-testing.firebaseio.com/foo/bar',
+        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app/foo/bar',
       );
       expect(refWithNestedPath.parent?.key, 'foo');
       expect(refWithNestedPath.key, 'bar');

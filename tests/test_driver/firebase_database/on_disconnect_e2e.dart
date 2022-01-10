@@ -1,11 +1,10 @@
 // Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+import 'package:drive/drive.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:test/test.dart';
 
-void runOnDisconnectTests() {
+void setupOnDisconnectTests() {
   group('OnDisconnect', () {
     late FirebaseDatabase database;
     late DatabaseReference ref;
