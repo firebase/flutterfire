@@ -6,15 +6,16 @@ part of firebase_remote_config;
 
 /// The entry point for accessing Remote Config.
 ///
-/// You can get an instance by calling [RemoteConfig.instance]. Note
-/// [RemoteConfig.instance] is async.
+/// You can get an instance by calling [FirebaseRemoteConfig.instance]. Note
+/// [FirebaseRemoteConfig.instance] is async.
 // ignore: prefer_mixin
-class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
-  RemoteConfig._({required this.app})
+class FirebaseRemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
+  FirebaseRemoteConfig._({required this.app})
       : super(app.name, 'plugins.flutter.io/firebase_remote_config');
 
   // Cached instances of [FirebaseRemoteConfig].
-  static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
+  static final Map<String, FirebaseRemoteConfig>
+      _firebaseRemoteConfigInstances = {};
 
   /// Returns the underlying delegate implementation.
   ///
@@ -29,14 +30,14 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
   final FirebaseApp app;
 
   /// Returns an instance using the default [FirebaseApp].
-  static RemoteConfig get instance {
-    return RemoteConfig.instanceFor(app: Firebase.app());
+  static FirebaseRemoteConfig get instance {
+    return FirebaseRemoteConfig.instanceFor(app: Firebase.app());
   }
 
   /// Returns an instance using the specified [FirebaseApp].
-  static RemoteConfig instanceFor({required FirebaseApp app}) {
+  static FirebaseRemoteConfig instanceFor({required FirebaseApp app}) {
     return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
-      return RemoteConfig._(app: app);
+      return FirebaseRemoteConfig._(app: app);
     });
   }
 
@@ -145,5 +146,30 @@ class RemoteConfig extends FirebasePluginPlatform with ChangeNotifier {
         "If you're trying to pass a json object – convert it to string beforehand",
       );
     }
+  }
+}
+
+@Deprecated('Use FirebaseRemoteConfig instead.')
+class RemoteConfig extends FirebaseRemoteConfig {
+  @Deprecated('Use FirebaseRemoteConfig instead.')
+
+  /// The [FirebaseApp] this instance was initialized with.
+  RemoteConfig._({required FirebaseApp app}) : super._(app: app);
+
+  // Cached instances of [RemoteConfig].
+  static final Map<String, RemoteConfig> _firebaseRemoteConfigInstances = {};
+
+  /// Returns an instance using the default [FirebaseApp].
+  @Deprecated('Use FirebaseRemoteConfig.instance instead.')
+  static RemoteConfig get instance {
+    return RemoteConfig.instanceFor(app: Firebase.app());
+  }
+
+  /// Returns an instance using the specified [FirebaseApp].
+  @Deprecated('Use FirebaseRemoteConfig.instanceFor instead.')
+  static RemoteConfig instanceFor({required FirebaseApp app}) {
+    return _firebaseRemoteConfigInstances.putIfAbsent(app.name, () {
+      return RemoteConfig._(app: app);
+    });
   }
 }

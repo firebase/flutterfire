@@ -16,85 +16,85 @@ void setupTests() {
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
-        await RemoteConfig.instance.setConfigSettings(
+        await FirebaseRemoteConfig.instance.setConfigSettings(
           RemoteConfigSettings(
             fetchTimeout: const Duration(seconds: 8),
             minimumFetchInterval: Duration.zero,
           ),
         );
-        await RemoteConfig.instance.setDefaults(<String, dynamic>{
+        await FirebaseRemoteConfig.instance.setDefaults(<String, dynamic>{
           'hello': 'default hello',
         });
-        await RemoteConfig.instance.ensureInitialized();
+        await FirebaseRemoteConfig.instance.ensureInitialized();
       });
 
       test('fetch', () async {
         final mark = DateTime.now();
-        expect(RemoteConfig.instance.lastFetchTime.isBefore(mark), true);
-        await RemoteConfig.instance.fetchAndActivate();
+        expect(FirebaseRemoteConfig.instance.lastFetchTime.isBefore(mark), true);
+        await FirebaseRemoteConfig.instance.fetchAndActivate();
         expect(
-          RemoteConfig.instance.lastFetchStatus,
+          FirebaseRemoteConfig.instance.lastFetchStatus,
           RemoteConfigFetchStatus.success,
         );
-        expect(RemoteConfig.instance.lastFetchTime.isAfter(mark), true);
-        expect(RemoteConfig.instance.getString('string'), 'flutterfire');
-        expect(RemoteConfig.instance.getBool('bool'), isTrue);
-        expect(RemoteConfig.instance.getInt('int'), 123);
-        expect(RemoteConfig.instance.getDouble('double'), 123.456);
+        expect(FirebaseRemoteConfig.instance.lastFetchTime.isAfter(mark), true);
+        expect(FirebaseRemoteConfig.instance.getString('string'), 'flutterfire');
+        expect(FirebaseRemoteConfig.instance.getBool('bool'), isTrue);
+        expect(FirebaseRemoteConfig.instance.getInt('int'), 123);
+        expect(FirebaseRemoteConfig.instance.getDouble('double'), 123.456);
         expect(
-          RemoteConfig.instance.getValue('string').source,
+          FirebaseRemoteConfig.instance.getValue('string').source,
           ValueSource.valueRemote,
         );
 
-        expect(RemoteConfig.instance.getString('hello'), 'default hello');
+        expect(FirebaseRemoteConfig.instance.getString('hello'), 'default hello');
         expect(
-          RemoteConfig.instance.getValue('hello').source,
+          FirebaseRemoteConfig.instance.getValue('hello').source,
           ValueSource.valueDefault,
         );
 
-        expect(RemoteConfig.instance.getInt('nonexisting'), 0);
+        expect(FirebaseRemoteConfig.instance.getInt('nonexisting'), 0);
 
         expect(
-          RemoteConfig.instance.getValue('nonexisting').source,
+          FirebaseRemoteConfig.instance.getValue('nonexisting').source,
           ValueSource.valueStatic,
         );
       });
 
       test('settings', () async {
         expect(
-          RemoteConfig.instance.settings.fetchTimeout,
+          FirebaseRemoteConfig.instance.settings.fetchTimeout,
           const Duration(seconds: 8),
         );
         expect(
-          RemoteConfig.instance.settings.minimumFetchInterval,
+          FirebaseRemoteConfig.instance.settings.minimumFetchInterval,
           Duration.zero,
         );
-        await RemoteConfig.instance.setConfigSettings(
+        await FirebaseRemoteConfig.instance.setConfigSettings(
           RemoteConfigSettings(
             fetchTimeout: Duration.zero,
             minimumFetchInterval: const Duration(seconds: 88),
           ),
         );
         expect(
-          RemoteConfig.instance.settings.fetchTimeout,
+          FirebaseRemoteConfig.instance.settings.fetchTimeout,
           const Duration(seconds: 60),
         );
         expect(
-          RemoteConfig.instance.settings.minimumFetchInterval,
+          FirebaseRemoteConfig.instance.settings.minimumFetchInterval,
           const Duration(seconds: 88),
         );
-        await RemoteConfig.instance.setConfigSettings(
+        await FirebaseRemoteConfig.instance.setConfigSettings(
           RemoteConfigSettings(
             fetchTimeout: const Duration(seconds: 10),
             minimumFetchInterval: Duration.zero,
           ),
         );
         expect(
-          RemoteConfig.instance.settings.fetchTimeout,
+          FirebaseRemoteConfig.instance.settings.fetchTimeout,
           const Duration(seconds: 10),
         );
         expect(
-          RemoteConfig.instance.settings.minimumFetchInterval,
+          FirebaseRemoteConfig.instance.settings.minimumFetchInterval,
           Duration.zero,
         );
       });
