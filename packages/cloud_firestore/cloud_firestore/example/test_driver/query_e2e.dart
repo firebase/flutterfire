@@ -973,7 +973,7 @@ void runQueryTests() {
 
         expect(
           () => collection.where('foo'),
-          throwsA(isA<FirebaseException>()),
+          throwsA(isA<AssertionError>()),
         );
       });
 

@@ -599,6 +599,21 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
     List<Object?>? whereNotIn,
     bool? isNull,
   }) {
+    assert(
+      isEqualTo != null ||
+          isNotEqualTo != null ||
+          isLessThan != null ||
+          isLessThanOrEqualTo != null ||
+          isGreaterThan != null ||
+          isGreaterThanOrEqualTo != null ||
+          arrayContains != null ||
+          arrayContainsAny != null ||
+          whereIn != null ||
+          whereNotIn != null ||
+          isNull != null,
+      'The operator `where` must be used with at least one filter.',
+    );
+
     _assertValidFieldType(field);
 
     const ListEquality<dynamic> equality = ListEquality<dynamic>();
