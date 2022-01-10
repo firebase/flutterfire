@@ -6,13 +6,14 @@ import 'package:drive/drive.dart' as drive;
 import 'cloud_functions/cloud_functions_e2e.dart' as cloud_functions;
 import 'firebase_auth/firebase_auth_e2e.dart' as firebase_auth;
 import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
+import 'firebase_crashlytics/firebase_crashlytics_e2e.dart'
+    as firebase_crashlytics;
 import 'firebase_analytics/firebase_analytics_e2e.dart' as firebase_analytics;
 import 'firebase_app_installations/firebase_app_installations_e2e.dart'
     as firebase_app_installations;
 import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e.dart'
     as firebase_in_app_messaging;
-import 'firebase_messaging/firebase_messaging_e2e.dart'
-    as firebase_messaging;
+import 'firebase_messaging/firebase_messaging_e2e.dart' as firebase_messaging;
 import 'firebase_remote_config/firebase_remote_config_e2e.dart'
     as firebase_remote_config;
 
@@ -24,6 +25,7 @@ void setupTests() {
   cloud_functions.setupTests();
   firebase_messaging.setupTests();
   firebase_analytics.setupTests();
+  firebase_crashlytics.setupTests();
   firebase_remote_config.setupTests();
   firebase_in_app_messaging.setupTests();
   firebase_app_installations.setupTests();
