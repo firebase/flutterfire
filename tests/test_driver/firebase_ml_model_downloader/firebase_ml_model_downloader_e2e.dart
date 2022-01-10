@@ -22,13 +22,20 @@ void setupTests() {
       });
 
       group('getModel', () {
-        test('should return successfully', () async {
-          await expectLater(
-            FirebaseModelDownloader.instance
-                .getModel(testModelName, FirebaseModelDownloadType.latestModel),
-            completes,
-          );
-        });
+        test(
+          'should return successfully',
+          () async {
+            await expectLater(
+              FirebaseModelDownloader.instance.getModel(
+                testModelName,
+                FirebaseModelDownloadType.latestModel,
+              ),
+              completes,
+            );
+          },
+          retry: 2,
+          timeout: const Timeout(Duration(seconds: 15)),
+        );
       });
 
       group('listDownloadedModels', () {

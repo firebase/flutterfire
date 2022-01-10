@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:drive/drive.dart';
 
 import 'firebase_database_e2e.dart';
 
 const MAX_CACHE_SIZE = 100 * 1024 * 1024;
 const MIN_CACHE_SIZE = 1042 * 1024;
 
-void runConfigurationTests() {
+void setupConfigurationTests() {
   group('FirebaseDatabase configuration', () {
     test(
       'setPersistenceCacheSizeBytes Integer',

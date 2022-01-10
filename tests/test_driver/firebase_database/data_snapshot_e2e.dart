@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:drive/drive.dart';
 
-void runDataSnapshotTests() {
+void setupDataSnapshotTests() {
   group('DataSnapshot', () {
     late DatabaseReference ref;
 
@@ -17,69 +17,67 @@ void runDataSnapshotTests() {
       expect(s.key, 'tests');
     });
 
-    group('value', () {
-      test('it returns a string value', () async {
-        await ref.set('foo');
-        final s = await ref.get();
-        expect(s.value, 'foo');
-      });
+    test('it returns a string value', () async {
+      await ref.set('foo');
+      final s = await ref.get();
+      expect(s.value, 'foo');
+    });
 
-      test('it returns a number value', () async {
-        await ref.set(123);
-        final s = await ref.get();
-        expect(s.value, 123);
-      });
+    test('it returns a number value', () async {
+      await ref.set(123);
+      final s = await ref.get();
+      expect(s.value, 123);
+    });
 
-      test('it returns a bool value', () async {
-        await ref.set(false);
-        final s = await ref.get();
-        expect(s.value, false);
-      });
+    test('it returns a bool value', () async {
+      await ref.set(false);
+      final s = await ref.get();
+      expect(s.value, false);
+    });
 
-      test('it returns a null value', () async {
-        await ref.set(null);
-        final s = await ref.get();
-        expect(s.value, isNull);
-      });
+    test('it returns a null value', () async {
+      await ref.set(null);
+      final s = await ref.get();
+      expect(s.value, isNull);
+    });
 
-      test('it returns a List value', () async {
-        final data = [
+    test('it returns a List value', () async {
+      final data = [
+        'a',
+        2,
+        true,
+        ['foo'],
+        {
+          0: 'hello',
+          1: 'foo',
+        }
+      ];
+      await ref.set(data);
+      final s = await ref.get();
+      expect(
+        s.value,
+        equals([
           'a',
           2,
           true,
           ['foo'],
-          {
-            0: 'hello',
-            1: 'foo',
-          }
-        ];
-        await ref.set(data);
-        final s = await ref.get();
-        expect(
-          s.value,
-          equals([
-            'a',
-            2,
-            true,
-            ['foo'],
-            ['hello', 'foo']
-          ]),
-        );
-      });
+          ['hello', 'foo']
+        ]),
+      );
+    });
 
-      test('it returns a Map value', () async {
-        final data = {'foo': 'bar'};
-        await ref.set(data);
-        final s = await ref.get();
-        expect(s.value, equals(data));
-      });
+    test('it returns a Map value', () async {
+      final data = {'foo': 'bar'};
+      await ref.set(data);
+      final s = await ref.get();
+      expect(s.value, equals(data));
+    });
 
-      test('non-string Map keys are converted to strings', () async {
-        final data = {1: 'foo', 2: 'bar', 'foo': 'bar'};
-        await ref.set(data);
-        final s = await ref.get();
-        expect(s.value, equals({'1': 'foo', '2': 'bar', 'foo': 'bar'}));
-      });
+    test('non-string Map keys are converted to strings', () async {
+      final data = {1: 'foo', 2: 'bar', 'foo': 'bar'};
+      await ref.set(data);
+      final s = await ref.get();
+      expect(s.value, equals({'1': 'foo', '2': 'bar', 'foo': 'bar'}));
     });
 
     test('setWithPriority returns the correct priority', () async {
