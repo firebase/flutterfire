@@ -11,9 +11,8 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   flutter:
     sdk: flutter
-  flutter_signin_button: ^2.0.0
-# Removed google_sign_in plugin temporarily until CI is fixed
-#  google_sign_in: ^5.1.0
+  flutter_signin_button: ^2.0.0 
+  google_sign_in: ^5.1.0
 
 dependency_overrides:
   firebase_auth:
