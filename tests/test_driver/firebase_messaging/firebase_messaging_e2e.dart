@@ -148,7 +148,9 @@ void setupTests() {
           'generate a new token after deleting',
           () async {
             final token1 = await messaging.getToken();
+            await Future.delayed(const Duration(seconds: 3));
             await messaging.deleteToken();
+            await Future.delayed(const Duration(seconds: 3));
             final token2 = await messaging.getToken();
             expect(token1, isA<String>());
             expect(token2, isA<String>());
