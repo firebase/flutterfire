@@ -967,6 +967,16 @@ void runQueryTests() {
      */
 
     group('Query.where()', () {
+      test('throws if where is used with no parameter', () async {
+        CollectionReference<Map<String, dynamic>> collection =
+            await initializeTest('where()');
+
+        expect(
+          () => collection.where('foo'),
+          throwsA(isA<FirebaseException>()),
+        );
+      });
+
       test('returns documents when querying for properties that are not null',
           () async {
         CollectionReference<Map<String, dynamic>> collection =
