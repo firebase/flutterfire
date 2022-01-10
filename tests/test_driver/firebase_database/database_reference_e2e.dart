@@ -1,18 +1,16 @@
 import 'dart:math';
-
+import 'package:drive/drive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import 'firebase_database_e2e.dart';
 
-void runDatabaseReferenceTests() {
+void setupDatabaseReferenceTests() {
   group('DatabaseReference', () {
     late DatabaseReference ref;
 
     setUp(() async {
       ref = database.ref('tests');
-
       await ref.remove();
     });
 
