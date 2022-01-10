@@ -14,6 +14,8 @@ import 'firebase_app_installations/firebase_app_installations_e2e.dart'
 import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e.dart'
     as firebase_in_app_messaging;
 import 'firebase_messaging/firebase_messaging_e2e.dart' as firebase_messaging;
+import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e.dart'
+    as firebase_ml_model_downloader;
 import 'firebase_remote_config/firebase_remote_config_e2e.dart'
     as firebase_remote_config;
 
@@ -29,6 +31,7 @@ void setupTests() {
   firebase_remote_config.setupTests();
   firebase_in_app_messaging.setupTests();
   firebase_app_installations.setupTests();
+  firebase_ml_model_downloader.setupTests();
 }
 
 void main() => drive.main(setupTests);
