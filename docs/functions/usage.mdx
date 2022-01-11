@@ -50,6 +50,33 @@ Future<void> getFruit() async {
 }
 ```
 
+### Calling Endpoints with Parameters
+
+Let's have a look at calling Cloud Functions with additional parameters:
+
+```javascript title="Deployed Function"
+exports.writeMessage = functions.https.onCall(async (data, context) => {
+  // Grab the text parameter.
+  const original = data.text;
+  //Returns the text received
+  return `Successfully received: ${original}`;
+});
+```
+
+Within Flutter, the function can be called, and the results accessed:
+
+```dart
+import 'package:cloud_functions/cloud_functions.dart';
+
+Future<void> writeMessage(String message) async {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('writeMessage');
+    final resp = await callable.call(<String, dynamic>{
+      'text': 'A message sent from a client device',
+    });
+    print("result: ${resp.data}");
+  }
+```
+
 ### Specifying regions
 
 If you wish to specify a region for a Cloud Function that runs in any region other than `us-central1`, you can do this

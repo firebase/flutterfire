@@ -20,6 +20,20 @@ Once installed, the `flutterfire` command will be globally available.
 
 ## Usage
 
+:::note
+Some plugins or platforms do not fully support Dart-only Firebase initialization **yet**, if you need to use the plugins then the [manual installation](./manual-installation.mdx) steps should be followed first. 
+
+The following table shows the current status of these plugins (plugins not shown in this table are fully supported via Dart-only Firebase initialization):
+:::
+| Plugin | iOS | Android | Web | macOS |
+| --------- | --- | ------- | --- | ----- |
+| Analytics | ✔ | ❌ | ✔ | ✔ |
+| Crashlytics | ❌ | ❌ | N/A | ❌ |
+| Dynamic Links | ❌ | ✔ | N/A | N/A |
+| Performance Monitoring | ✔ | ❌ | ❌ | N/A |
+
+In addition, [`google_sign_in` plugin](./auth/social#google) which is used by `firebase_auth` also requires manual installation.
+
 ### Generating Firebase Options
 
 FlutterFire can now be initialized from Dart on all platforms using `Firebase.initializeApp`, however

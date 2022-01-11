@@ -1,8 +1,8 @@
 name: flutterfire_ui
 description: UI library built on top of firebase services
-version: 0.3.0
-repository: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
+version: 0.3.1
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
 
 false_secrets:
  - example/**
@@ -12,14 +12,15 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^3.1.5
+  cloud_firestore: ^3.1.6
   collection: ^1.15.0
   crypto: ^3.0.1
   desktop_webview_auth: ^0.0.2
-  firebase_auth: ^3.3.4
+  email_validator: ^2.0.1
+  firebase_auth: ^3.3.5
   firebase_core: ^1.10.2
-  firebase_database: ^9.0.4
-  firebase_dynamic_links: ^4.0.3
+  firebase_database: ^9.0.5
+  firebase_dynamic_links: ^4.0.4
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^3.5.7
