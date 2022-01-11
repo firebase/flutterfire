@@ -15,10 +15,11 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+
 import java.util.Map;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
+public class FirebaseInAppMessagingPlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
 
   @Override
@@ -40,31 +41,31 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
   public void onMethodCall(MethodCall call, Result result) {
     switch (call.method) {
       case "FirebaseInAppMessaging#triggerEvent":
-      {
-        String eventName = call.argument("eventName");
-        FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
-        result.success(null);
-        break;
-      }
+        {
+          String eventName = call.argument("eventName");
+          FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
+          result.success(null);
+          break;
+        }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
-      {
-        Boolean suppress = (Boolean) call.argument("suppress");
-        FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
-        result.success(null);
-        break;
-      }
+        {
+          Boolean suppress = (Boolean) call.argument("suppress");
+          FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
+          result.success(null);
+          break;
+        }
       case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
-      {
-        Boolean enabled = (Boolean) call.argument("enabled");
-        FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled);
-        result.success(null);
-        break;
-      }
+        {
+          Boolean enabled = (Boolean) call.argument("enabled");
+          FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled);
+          result.success(null);
+          break;
+        }
       default:
-      {
-        result.notImplemented();
-        break;
-      }
+        {
+          result.notImplemented();
+          break;
+        }
     }
   }
 
