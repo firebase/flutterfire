@@ -272,6 +272,7 @@ abstract class OAuthProviderButtonWidget extends StatelessWidget {
       action: action,
       auth: auth,
       size: size ?? 19,
+      onTap: onTap,
     );
   }
 }
