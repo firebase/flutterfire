@@ -1,8 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_example/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'auth.dart';
 import 'profile.dart';
@@ -11,11 +10,10 @@ import 'profile.dart';
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  if (kIsWeb) {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.web);
-  } else {
-    await Firebase.initializeApp();
-  }
+
+  // We're using the manual installation since Google sign in plugin doesn't yet support Dart initialization.
+  // See related issue: https://github.com/flutter/flutter/issues/96391
+  await Firebase.initializeApp();
 
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
