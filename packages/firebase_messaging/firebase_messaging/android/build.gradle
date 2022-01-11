@@ -35,13 +35,13 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
-  compileSdkVersion 29
+  compileSdkVersion 31
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
   defaultConfig {
-    minSdkVersion 16
+    minSdkVersion 19
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
   lintOptions {

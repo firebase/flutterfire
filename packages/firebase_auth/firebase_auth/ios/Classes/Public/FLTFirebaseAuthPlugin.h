@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+#import <TargetConditionals.h>
+
 #import <Firebase/Firebase.h>
 #if TARGET_OS_OSX
 #import <FlutterMacOS/FlutterMacOS.h>

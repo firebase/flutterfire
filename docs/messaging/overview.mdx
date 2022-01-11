@@ -15,79 +15,16 @@ a payload of up to 4 KB to a client app.
 
 ## Installation
 
-<Tabs
-groupId="legacy-or-nullsafe"
-defaultValue="legacy"
-values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-]}
->
-<TabItem value="legacy">
-</TabItem>
-<TabItem value="null-safe">
+### 1. Make sure to initialize Firebase
 
-Ensure you're using the Flutter `stable` channel:
+[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
 
-```bash
-$ flutter channel stable
-```
+### 2. Add dependency
 
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
+On the root of your Flutter project, run the following command to install the plugin:
 
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_analytics/firebase_analytics.dart';
-```
-
-</TabItem>
-</Tabs>
-
-### 1. Add dependency
-
-Add the [`firebase_messaging`](https://pub.dev/packages/firebase_messaging) dependency to your projects `pubspec.yaml` file:
-
-<Tabs
-  groupId="legacy-or-nullsafe"
-  defaultValue="legacy"
-  values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-  ]}
->
-<TabItem value="legacy">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_messaging: "^{{ plugins.firebase_messaging }}"
-```
-
-</TabItem>
-<TabItem value="null-safe">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_messaging: "^{{ plugins.firebase_messaging_ns }}"
-```
-
-</TabItem>
-</Tabs>
-
-### 2. Download dependency
-
-```
-$ flutter pub get
+```bash {5}
+flutter pub add firebase_messaging
 ```
 
 ### 3. Android Integration
@@ -131,33 +68,19 @@ Which is usually reflected in the application's `AndroidManifest.xml`. E.g.:
 ```
 
 > **Note:** Not calling `FlutterFirebaseMessagingBackgroundService.setPluginRegistrant` will result in an exception being
-thrown when a message eventually comes through.
+> thrown when a message eventually comes through.
 
 ### 4. Apple Integration
 
 iOS & macOS require additional configuration before you can start receiving messages through Firebase.
 Read the integration documentation on how to [setup iOS or macOS with Firebase Cloud Messaging](messaging/apple-integration.mdx).
 
-### 5. (Web Only) Add the SDK
-
-If using FlutterFire on the web, add the `firebase-messaging` JavaScript SDK to your index.html file:
-
-```html {5} title="web/index.html"
-<html>
-  ...
-  <body>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-messaging.js"></script>
-  </body>
-</html>
-```
-
-### 6. Rebuild your app
+### 5. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
 ```
 
 ## Next Steps

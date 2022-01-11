@@ -1,3 +1,23 @@
+## 4.2.3
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 4.2.2
+
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+
+## 4.2.1
+
+ - **FIX**: loosen duplicate app detection checks to allow unset options not to cause a duplicate app exception (#7499).
+
+## 4.2.0
+
+ - **FEAT**: auto inject Firebase scripts (#7358).
+
+## 4.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 4.0.1
 
  - **FIX**: Fix FirebaseOptions hashCode (#3263).

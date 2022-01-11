@@ -3,116 +3,45 @@ title: Google Analytics for Firebase
 sidebar_label: Overview
 ---
 
-:::caution
-This is a beta FlutterFire plugin and therefore is not yet production quality.
-:::
-
-##  What does it do?
+## What does it do?
 
 Google Analytics is a free app measurement solution that provides insight on app usage and user engagement.
 Analytics reports help you understand clearly how your users behave, which enables you to make informed decisions regarding app marketing and performance optimizations.
 
-<YouTube id="8iZpH7O6zXo"/>
+<YouTube id="8iZpH7O6zXo" />
 
 ## Installation
 
-<Tabs
-groupId="legacy-or-nullsafe"
-defaultValue="legacy"
-values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-]}
->
-<TabItem value="legacy">
-</TabItem>
-<TabItem value="null-safe">
+### 1. Make sure to initialize Firebase
 
-Ensure you're using the Flutter `stable` channel:
+[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
 
-```bash
-$ flutter channel stable
+### 2. Add dependency
+
+On the root of your Flutter project, run the following command to install the plugin:
+
+```bash {5}
+flutter pub add firebase_analytics
 ```
 
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
-
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_analytics/firebase_analytics.dart';
-```
-</TabItem>
-</Tabs>
-
-### 1. Add dependency
-
-<Tabs
-  groupId="legacy-or-nullsafe"
-  defaultValue="legacy"
-  values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-  ]}
->
-<TabItem value="legacy">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_analytics: "^{{ plugins.firebase_analytics }}"
-```
-
-</TabItem>
-<TabItem value="null-safe">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_analytics: "^{{ plugins.firebase_analytics_ns }}"
-```
-
-</TabItem>
-</Tabs>
-
-### 2. Download dependency
-
-```
-$ flutter pub get
-```
-
-### 3. (Web Only) Add the SDK
-
-If using FlutterFire on the web, add the `firebase-analytics` JavaScript SDK to your `index.html` file:
-
-```html {5} title="web/index.html"
-<html>
-  ...
-  <body>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/{{ web.firebase_cdn }}/firebase-analytics.js"></script>
-  </body>
-</html>
-```
-### 4. Rebuild your app
+### 3. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
+```
+
+### 4. (optional) Apple [App Tracking Transparency](https://developer.apple.com/documentation/apptrackingtransparency)
+
+If you wish to use Firebase Analytics without IDFA collection capability, open your `/{ios|macos}/Podfile` and add the following global variable to the top of the file:
+
+```ruby
+$FirebaseAnalyticsWithoutAdIdSupport = true
 ```
 
 ## Next Steps
 
-Once installed, you're ready to start using Firebase Analytics in your Flutter Project.
+Once installed, you're ready to start using Analytics in your Flutter Project.
 
-> Additional documentation will be available once the Firebase Analytics plugin update lands as part of the [FlutterFire roadmap](https://github.com/FirebaseExtended/flutterfire/issues/2582).
-
-<!-- View the [Usage documentation](usage.mdx) to get started. -->
+View the [Usage documentation](usage.mdx) to get started.

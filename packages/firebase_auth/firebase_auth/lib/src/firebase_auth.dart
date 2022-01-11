@@ -368,7 +368,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// On web platforms, if `null` is provided as the [languageCode] the Firebase
   /// project default language will be used. On native platforms, the device
   /// language will be used.
-  Future<void> setLanguageCode(String languageCode) {
+  Future<void> setLanguageCode(String? languageCode) {
     return _delegate.setLanguageCode(languageCode);
   }
 
@@ -579,7 +579,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
-  /// reCAPTCHA widget apperance and behaviour.
+  /// reCAPTCHA widget apperance and behavior.
   ///
   /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
   /// with the users SMS verification code to complete the authentication flow.

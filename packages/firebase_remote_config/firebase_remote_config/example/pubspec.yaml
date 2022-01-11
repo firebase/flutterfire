@@ -25,14 +25,8 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_web
   firebase_remote_config_platform_interface:
     path: ../../firebase_remote_config_platform_interface
-
-dev_dependencies:
-  drive: 0.1.0
-  flutter_driver:
-    sdk: flutter
-  flutter_test:
-    sdk: flutter
-  test: any
+  firebase_remote_config_web:
+    path: ../../firebase_remote_config_web
 
 flutter:
   uses-material-design: true

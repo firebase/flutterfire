@@ -1,3 +1,51 @@
+## 3.3.6
+
+ - Update a dependency to the latest release.
+
+## 3.3.5
+
+ - Update a dependency to the latest release.
+
+## 3.3.4
+
+ - Update a dependency to the latest release.
+
+## 3.3.3
+
+ - Update a dependency to the latest release.
+
+## 3.3.2
+
+ - Update a dependency to the latest release.
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
+## 3.3.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+
+## 3.2.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
+## 3.1.3
+
+ - Update a dependency to the latest release.
+
+## 3.1.2
+
+ - **FIX**: null-safety migration issue for web types (#7137).
+
+## 3.1.1
+
+ - **FIX**: allow setLanguage to accept null (#7050).
+
 ## 3.1.0
 
  - **FEAT**: Add support for `secret` on `OAuthCredential` on web (#6830).

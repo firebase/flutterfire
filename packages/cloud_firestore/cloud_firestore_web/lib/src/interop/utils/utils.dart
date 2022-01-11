@@ -9,7 +9,6 @@ import 'package:js/js.dart';
 import 'package:js/js_util.dart' as util;
 
 import '../firestore.dart';
-import '../firestore_interop.dart' hide FieldValue;
 
 /// Returns Dart representation from JS Object.
 dynamic dartify(Object? jsObject) {

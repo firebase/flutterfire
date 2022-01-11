@@ -1,3 +1,35 @@
+## 1.0.4
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+
+## 1.0.3
+
+ - Update a dependency to the latest release.
+
+## 1.0.2
+
+ - Update a dependency to the latest release.
+
+## 1.0.1
+
+ - **DOCS**: Fix typos and remove unused imports (#7504).
+
+## 1.0.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+ - **FEAT**: Add initial platform support for Web.
+ - Bump "firebase_remote_config" to stable versioning `0.x.x` -> `x.x.x`.
+
+## 0.11.0+2
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7158).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 0.11.0+1
+
+ - Update a dependency to the latest release.
+
 ## 0.11.0
 
 > Note: This release has breaking changes.

@@ -5,13 +5,13 @@ sidebar_label: Usage
 
 ## Getting started
 
-Enable Firebase Crashytlics in the Firebase console.
+Enable Firebase Crashlytics in the Firebase console.
 
 <Image src="enable-firebase-crashlytics.png" alt="Enable in the console" />
 
 Until an error has been reported, you will see this screen.
 
-<Image src="crashlytics-init.png" alt="Crashytlics init screen" />
+<Image src="crashlytics-init.png" alt="Crashlytics init screen" />
 
 To start using Firebase Crashlytics within your project, import it at the top of your project files:
 
@@ -77,7 +77,7 @@ FirebaseCrashlytics.instance.crash();
 Your app should exit immediately after calling this method. After opening your app again after the crash
 Firebase Crashlytics will upload the crash report to the Firebase Console.
 
-The error will be show on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
+The error will be shown on the Firebase Crashlytics dashboard as an instance of `FirebaseCrashlyticsTestCrash`, with a message of
 `This is a test crash caused by calling .crash() in Dart.`
 
 ## Crash types

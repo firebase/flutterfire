@@ -48,7 +48,7 @@ class _CodecUtility {
   }
 
   static dynamic valueEncode(dynamic value) {
-    if (value is _JsonDocumentReference) {
+    if (value is DocumentReference) {
       return value._delegate;
     } else if (value is List) {
       return replaceValueWithDelegatesInArray(value);

@@ -1,3 +1,32 @@
+## 1.5.3
+
+ - Update a dependency to the latest release.
+
+## 1.5.2
+
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+
+## 1.5.1
+
+ - Update a dependency to the latest release.
+
+## 1.5.0
+
+ - **FEAT**: initial Firebase Installations release (#7377).
+
+## 1.4.0
+
+ - **FEAT**: bump Firebase JS SDK to `8.10.0` (#7460).
+
+## 1.3.0
+
+ - **FEAT**: automatically inject Firebase JS SDKs (#7359).
+ - **FEAT**: auto inject Firebase scripts (#7358).
+
+## 1.2.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
 ## 1.1.0
 
  - **FEAT**: detect the version of the Firebase JS SDK that is in use and warn if the version is incompatible with FlutterFire.

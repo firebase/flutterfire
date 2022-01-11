@@ -6,116 +6,136 @@ part of firebase_database_web;
 
 /// An implementation of [QueryPlatform] which proxies calls to js objects
 class QueryWeb extends QueryPlatform {
-  final database_interop.Database _firebaseDatabase;
-  final database_interop.Query _firebaseQuery;
+  final DatabasePlatform _database;
+  final database_interop.Query _queryDelegate;
 
   QueryWeb(
-    this._firebaseDatabase,
-    DatabasePlatform databasePlatform,
-    List<String> pathComponents,
-    this._firebaseQuery,
-  ) : super(database: databasePlatform, pathComponents: pathComponents);
+    this._database,
+    this._queryDelegate,
+  ) : super(database: _database);
 
-  @override
-  DatabaseReferencePlatform reference() =>
-      DatabaseReferenceWeb(_firebaseDatabase, database, pathComponents);
+  database_interop.Query _getQueryDelegateInstance(QueryModifiers modifiers) {
+    database_interop.Query instance = _queryDelegate;
 
-  @override
-  String get path => pathComponents.join('/');
+    modifiers.toIterable().forEach((modifier) {
+      if (modifier is LimitModifier) {
+        if (modifier.name == 'limitToFirst') {
+          instance = instance.limitToFirst(modifier.value);
+        }
+        if (modifier.name == 'limitToLast') {
+          instance = instance.limitToLast(modifier.value);
+        }
+      }
 
-  @override
-  Future<DataSnapshotPlatform> get() async {
-    final snapshot = await _firebaseQuery.get();
-    return fromWebSnapshotToPlatformSnapShot(snapshot);
+      if (modifier is StartCursorModifier) {
+        if (modifier.name == 'startAt') {
+          instance = instance.startAt(modifier.value, modifier.key);
+        }
+        if (modifier.name == 'startAfter') {
+          instance = instance.startAfter(modifier.value, modifier.key);
+        }
+      }
+
+      if (modifier is EndCursorModifier) {
+        if (modifier.name == 'endAt') {
+          instance = instance.endAt(modifier.value, modifier.key);
+        }
+        if (modifier.name == 'endBefore') {
+          instance = instance.endBefore(modifier.value, modifier.key);
+        }
+      }
+
+      if (modifier is OrderModifier) {
+        if (modifier.name == 'orderByChild') {
+          instance = instance.orderByChild(modifier.path!);
+        }
+        if (modifier.name == 'orderByKey') {
+          instance = instance.orderByKey();
+        }
+        if (modifier.name == 'orderByValue') {
+          instance = instance.orderByValue();
+        }
+        if (modifier.name == 'orderByPriority') {
+          instance = instance.orderByPriority();
+        }
+      }
+    });
+
+    return instance;
   }
 
   @override
-  Future<DataSnapshotPlatform> once() async {
-    return fromWebSnapshotToPlatformSnapShot(
-      (await _firebaseQuery.once("value")).snapshot,
-    );
+  String get path {
+    final refPath = Uri.parse(_queryDelegate.ref.toString()).path;
+    return refPath.isEmpty ? '/' : refPath;
   }
 
   @override
-  QueryPlatform startAt(dynamic value, {String? key}) {
-    return _withQuery(_firebaseQuery.startAt(value, key));
+  DatabaseReferencePlatform get ref =>
+      DatabaseReferenceWeb(_database, _queryDelegate.ref);
+
+  @override
+  Future<DataSnapshotPlatform> get(QueryModifiers modifiers) async {
+    try {
+      final result = await _getQueryDelegateInstance(modifiers).get();
+      return webSnapshotToPlatformSnapshot(ref, result);
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
-  QueryPlatform endAt(value, {String? key}) {
-    return _withQuery(_firebaseQuery.endAt(value, key));
-  }
-
-  @override
-  QueryPlatform equalTo(value, {String? key}) {
-    return _withQuery(_firebaseQuery.equalTo(value, key));
-  }
-
-  @override
-  QueryPlatform limitToFirst(int limit) {
-    return _withQuery(_firebaseQuery.limitToFirst(limit));
-  }
-
-  @override
-  QueryPlatform limitToLast(int limit) {
-    return _withQuery(_firebaseQuery.limitToLast(limit));
-  }
-
-  @override
-  QueryPlatform orderByChild(String key) {
-    return _withQuery(_firebaseQuery.orderByChild(key));
-  }
-
-  @override
-  QueryPlatform orderByKey() {
-    return _withQuery(_firebaseQuery.orderByKey());
-  }
-
-  @override
-  QueryPlatform orderByPriority() {
-    return _withQuery(_firebaseQuery.orderByPriority());
-  }
-
-  @override
-  QueryPlatform orderByValue() {
-    return _withQuery(_firebaseQuery.orderByValue());
-  }
-
-  @override
-  Future<void> keepSynced(bool value) async {
+  Future<void> keepSynced(QueryModifiers modifiers, bool value) async {
     throw UnsupportedError('keepSynced() is not supported on web');
   }
 
   @override
-  Stream<EventPlatform> observe(EventType eventType) {
+  Stream<DatabaseEventPlatform> observe(
+      QueryModifiers modifiers, DatabaseEventType eventType) {
+    database_interop.Query instance = _getQueryDelegateInstance(modifiers);
+
     switch (eventType) {
-      case EventType.childAdded:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildAdded);
-      case EventType.childChanged:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildChanged);
-      case EventType.childMoved:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildMoved);
-      case EventType.childRemoved:
-        return _webStreamToPlatformStream(_firebaseQuery.onChildRemoved);
-      case EventType.value:
-        return _webStreamToPlatformStream(_firebaseQuery.onValue);
+      case DatabaseEventType.childAdded:
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onChildAdded,
+        );
+      case DatabaseEventType.childChanged:
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onChildChanged,
+        );
+      case DatabaseEventType.childMoved:
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onChildMoved,
+        );
+      case DatabaseEventType.childRemoved:
+        return _webStreamToPlatformStream(
+          eventType,
+          instance.onChildRemoved,
+        );
+      case DatabaseEventType.value:
+        return _webStreamToPlatformStream(eventType, instance.onValue);
       default:
         throw Exception("Invalid event type: $eventType");
     }
   }
 
-  Stream<EventPlatform> _webStreamToPlatformStream(
-      Stream<database_interop.QueryEvent> stream) {
-    return stream.map((database_interop.QueryEvent event) =>
-        fromWebEventToPlatformEvent(event));
-  }
-
-  QueryPlatform _withQuery(newQuery) {
-    return QueryWeb(
-      _firebaseDatabase,
-      database,
-      pathComponents,
-      newQuery,
-    );
+  Stream<DatabaseEventPlatform> _webStreamToPlatformStream(
+    DatabaseEventType eventType,
+    Stream<database_interop.QueryEvent> stream,
+  ) {
+    return stream
+        .map(
+      (database_interop.QueryEvent event) => webEventToPlatformEvent(
+        ref,
+        eventType,
+        event,
+      ),
+    )
+        .handleError((e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    });
   }
 }

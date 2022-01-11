@@ -22,8 +22,7 @@
     "@types/lodash.get": "^4.4.6",
     "@types/react": "^17.0.5",
     "@types/react-router-dom": "^5.1.7",
-    "axios": "^0.21.1",
-    "sass": "^1.32.13",
+    "axios": "^0.21.2",
     "classnames": "^2.3.1",
     "compare-versions": "^3.6.0",
     "docusaurus-plugin-sass": "^0.1.14",
@@ -31,8 +30,9 @@
     "lodash.get": "^4.4.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-medium-image-zoom": "^4.3.1",
     "react-router-dom": "^5.2.0",
-    "react-medium-image-zoom": "^4.3.1"
+    "sass": "^1.32.13"
   },
   "browserslist": {
     "production": [
@@ -54,7 +54,7 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.23.2",
     "prettier": "^2.3.0",
-    "typescript": "^4.2.4",
-    "spellchecker-cli": "^4.4.0"
+    "spellchecker-cli": "^4.4.0",
+    "typescript": "^4.2.4"
   }
 }

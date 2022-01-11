@@ -1,6 +1,7 @@
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+#import <TargetConditionals.h>
 
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
@@ -212,8 +213,15 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      NSString *url = URL.absoluteString;
+
+      if ([url rangeOfString:@":443"].location != NSNotFound) {
+        NSRange replaceRange = [url rangeOfString:@":443"];
+        url = [url stringByReplacingCharactersInRange:replaceRange withString:@""];
+      }
+
       result.success(@{
-        @"downloadURL" : URL.absoluteString,
+        @"downloadURL" : url,
       });
     }
   }];

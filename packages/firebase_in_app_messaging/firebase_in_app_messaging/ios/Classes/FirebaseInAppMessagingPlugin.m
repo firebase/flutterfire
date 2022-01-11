@@ -1,0 +1,40 @@
+// Copyright 2019 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+#import "FirebaseInAppMessagingPlugin.h"
+
+#import <Firebase/Firebase.h>
+
+@implementation FirebaseInAppMessagingPlugin
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  FlutterMethodChannel *channel =
+      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_in_app_messaging"
+                                  binaryMessenger:[registrar messenger]];
+  FirebaseInAppMessagingPlugin *instance = [[FirebaseInAppMessagingPlugin alloc] init];
+  [registrar addMethodCallDelegate:instance channel:channel];
+}
+
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+  if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
+    NSString *eventName = call.arguments[@"eventName"];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    [fiam triggerEvent:eventName];
+    result(nil);
+  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
+    NSNumber *suppress = [NSNumber numberWithBool:call.arguments[@"suppress"]];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    fiam.messageDisplaySuppressed = [suppress boolValue];
+    result(nil);
+  } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
+                 isEqualToString:call.method]) {
+    NSNumber *enabled = [NSNumber numberWithBool:call.arguments[@"enabled"]];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    fiam.automaticDataCollectionEnabled = [enabled boolValue];
+    result(nil);
+  } else {
+    result(FlutterMethodNotImplemented);
+  }
+}
+
+@end

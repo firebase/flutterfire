@@ -8,12 +8,9 @@ import 'dart:io' show Platform;
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../firebase_auth_platform_interface.dart';
-import '../firebase_auth_exception.dart';
-import '../platform_interface/platform_interface_user_credential.dart';
 import 'method_channel_user.dart';
 import 'method_channel_user_credential.dart';
 import 'utils/exception.dart';
@@ -346,7 +343,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setLanguageCode(String languageCode) async {
+  Future<void> setLanguageCode(String? languageCode) async {
     try {
       Map<String, dynamic> data =
           (await channel.invokeMapMethod<String, dynamic>(

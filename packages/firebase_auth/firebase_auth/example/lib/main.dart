@@ -1,23 +1,20 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2020 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_builder.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/firebase_config.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import './register_page.dart';
 import './signin_page.dart';
 
-// Requires that the Firebase Auth emulator is running locally
-// e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   runApp(AuthExampleApp());
 }

@@ -1,3 +1,51 @@
+## 3.1.6
+
+ - Update a dependency to the latest release.
+
+## 3.1.5
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
+## 3.1.4
+
+ - Update a dependency to the latest release.
+
+## 3.1.3
+
+ - **DOCS**: update firestore dartpad example.
+
+## 3.1.2
+
+ - Update a dependency to the latest release.
+
+## 3.1.1
+
+ - **REFACTOR**: migrate remaining examples & e2e tests to null-safety (#7393).
+ - **FIX**: suppress Java unchecked cast lint warning in Android plugin (#7431).
+
+## 3.1.0
+
+ - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+
+## 3.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: update Android `minSdk` version to 19 as this is required by Firebase Android SDK `29.0.0` (#7298).
+
+## 2.5.4
+
+ - **REFACTOR**: remove deprecated Flutter Android v1 Embedding usages, including in example app (#7147).
+ - **STYLE**: macOS & iOS; explicitly include header that defines `TARGET_OS_OSX` (#7116).
+
+## 2.5.3
+
+ - **FIX**: value encoding fails when using `DocumentReference` & `withConverter` (#7020).
+ - **FIX**: propagate query index link  to firebase console for user (#7087).
+ - **FIX**: fixed a bug where `withConverter.endBeforeDocument` incorrectly behaved as `endAtDocument`.
+ - **FIX**: an issue where `Query.==` throws when using `withConverter` (#6997).
+ - **CHORE**: update gradle version across packages (#7054).
+
 ## 2.5.2
 
  - **REVERT**: Firestore cache snapshot connections with underlying native listener (#6819) (#6974).

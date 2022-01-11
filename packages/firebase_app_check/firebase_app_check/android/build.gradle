@@ -35,7 +35,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
-  compileSdkVersion 30
+  compileSdkVersion 31
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -51,7 +51,8 @@ android {
     api firebaseCoreProject
     implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
     // TODO: Since App Check is a beta SDK it's not available in the Firebase Android BoM so we need to specify an exact version here.
-    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta01'
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
+    implementation 'com.google.firebase:firebase-appcheck-debug:16.0.0-beta04'
     implementation 'androidx.annotation:annotation:1.1.0'
   }
 }

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 #import "FLTFirebaseAppCheckPlugin.h"
+#import "FLTTokenRefreshStreamHandler.h"
 
 #import <Firebase/Firebase.h>
 
@@ -13,44 +14,76 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 @interface FLTFirebaseAppCheckPlugin ()
 @end
 
-@implementation FLTFirebaseAppCheckPlugin
+@implementation FLTFirebaseAppCheckPlugin {
+  NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
+  NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+  NSObject<FlutterBinaryMessenger> *_binaryMessenger;
+}
 
 #pragma mark - FlutterPlugin
 
-// Returns a singleton instance of the Firebase Functions plugin.
-+ (instancetype)sharedInstance {
-  static dispatch_once_t onceToken;
-  static FLTFirebaseAppCheckPlugin *instance;
-
-  dispatch_once(&onceToken, ^{
-    instance = [[FLTFirebaseAppCheckPlugin alloc] init];
-    // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
-  });
-
-  return instance;
+- (instancetype)init:(NSObject<FlutterBinaryMessenger> *)messenger {
+  self = [super init];
+  if (self) {
+    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
+    _binaryMessenger = messenger;
+    _eventChannels = [NSMutableDictionary dictionary];
+    _streamHandlers = [NSMutableDictionary dictionary];
+  }
+  return self;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseAppCheckChannelName
                                   binaryMessenger:[registrar messenger]];
-  FLTFirebaseAppCheckPlugin *instance = [FLTFirebaseAppCheckPlugin sharedInstance];
+  FLTFirebaseAppCheckPlugin *instance =
+      [[FLTFirebaseAppCheckPlugin alloc] init:registrar.messenger];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  // Only a single method implemented.
-  if (![@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
-    flutterResult(FlutterMethodNotImplemented);
-    return;
+- (void)cleanupWithCompletion:(void (^)(void))completion {
+  for (FlutterEventChannel *channel in self->_eventChannels.allValues) {
+    [channel setStreamHandler:nil];
   }
+  [self->_eventChannels removeAllObjects];
+  for (NSObject<FlutterStreamHandler> *handler in self->_streamHandlers.allValues) {
+    [handler onCancelWithArguments:nil];
+  }
+  [self->_streamHandlers removeAllObjects];
 
+  if (completion != nil) completion();
+}
+
+- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+  [self cleanupWithCompletion:nil];
+}
+
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
   FLTFirebaseMethodCallErrorBlock errorBlock = ^(
       NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
       NSError *_Nullable error) {
     NSMutableDictionary *errorDetails = [NSMutableDictionary dictionary];
-    NSString *errorCode = [NSString stringWithFormat:@"%ld", error.code];
+    NSString *errorCode;
+
+    switch (error.code) {
+      case FIRAppCheckErrorCodeServerUnreachable:
+        errorCode = @"server-unreachable";
+        break;
+      case FIRAppCheckErrorCodeInvalidConfiguration:
+        errorCode = @"invalid-configuration";
+        break;
+      case FIRAppCheckErrorCodeKeychain:
+        errorCode = @"code-keychain";
+        break;
+      case FIRAppCheckErrorCodeUnsupported:
+        errorCode = @"code-unsupported";
+        break;
+      case FIRAppCheckErrorCodeUnknown:
+      default:
+        errorCode = @"unknown";
+    }
+
     NSString *errorMessage = error.localizedDescription;
     errorDetails[@"code"] = errorCode;
     errorDetails[@"message"] = errorMessage;
@@ -59,10 +92,21 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
-  [self activate:call.arguments withMethodCallResult:methodCallResult];
+
+  if ([@"FirebaseAppCheck#activate" isEqualToString:call.method]) {
+    [self activate:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FirebaseAppCheck#getToken" isEqualToString:call.method]) {
+    [self getToken:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FirebaseAppCheck#setTokenAutoRefreshEnabled" isEqualToString:call.method]) {
+    [self setTokenAutoRefreshEnabled:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"FirebaseAppCheck#registerTokenListener" isEqualToString:call.method]) {
+    [self registerTokenListener:call.arguments withMethodCallResult:methodCallResult];
+  } else {
+    flutterResult(FlutterMethodNotImplemented);
+  }
 }
 
-#pragma mark - Firebase Functions API
+#pragma mark - Firebase App Check API
 
 - (void)activate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   // TODO the App Check Firebase iOS SDK doesn't allow us to set a provider
@@ -80,10 +124,52 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
   result.success(nil);
 }
 
+- (void)registerTokenListener:(id)arguments
+         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *appName = arguments[@"appName"];
+  NSString *name =
+      [NSString stringWithFormat:@"%@/token/%@", kFLTFirebaseAppCheckChannelName, appName];
+
+  FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
+                                                           binaryMessenger:_binaryMessenger];
+
+  FLTTokenRefreshStreamHandler *handler = [[FLTTokenRefreshStreamHandler alloc] init];
+  [channel setStreamHandler:handler];
+
+  [_eventChannels setObject:channel forKey:name];
+  [_streamHandlers setObject:handler forKey:name];
+  result.success(name);
+}
+
+- (void)getToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
+  bool forceRefresh = arguments[@"forceRefresh"];
+
+  [appCheck tokenForcingRefresh:forceRefresh
+                     completion:^(FIRAppCheckToken *_Nullable token, NSError *_Nullable error) {
+                       if (error != nil) {
+                         result.error(nil, nil, nil, error);
+                       }
+
+                       NSMutableDictionary *response = [NSMutableDictionary dictionary];
+
+                       response[@"token"] = token.token;
+                       result.success(response);
+                     }];
+}
+
+- (void)setTokenAutoRefreshEnabled:(id)arguments
+              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRAppCheck *appCheck = [self getFIRAppCheckFromArguments:arguments];
+  bool isTokenAutoRefreshEnabled = arguments[@"isTokenAutoRefreshEnabled"];
+  appCheck.isTokenAutoRefreshEnabled = isTokenAutoRefreshEnabled;
+  result.success(nil);
+}
+
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  completion();
+  [self cleanupWithCompletion:completion];
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
@@ -100,6 +186,16 @@ NSString *const kFLTFirebaseAppCheckChannelName = @"plugins.flutter.io/firebase_
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFLTFirebaseAppCheckChannelName;
+}
+
+#pragma mark - Utilities
+
+- (FIRAppCheck *_Nullable)getFIRAppCheckFromArguments:(NSDictionary *)arguments {
+  NSString *appNameDart = arguments[@"appName"];
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  FIRAppCheck *appCheck = [FIRAppCheck appCheckWithApp:app];
+
+  return appCheck;
 }
 
 @end

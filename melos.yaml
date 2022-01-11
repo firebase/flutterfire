@@ -1,20 +1,23 @@
 name: FlutterFire
+repository: https://github.com/FirebaseExtended/flutterfire
 
 packages:
   - packages/**
+  - "tests/*"
 
-ignore:
-  # TODO Excluded - pending rewrite to use latest SDKs.
-  - firebase_ml_custom
-  - firebase_ml_custom_example
-  # TODO Deprecated - excluded pending removal.
-  - firebase_ml_vision
-  - firebase_ml_vision_example
+command:
+  version:
+    # Generate commit links in package changelogs.
+    linkToCommits: true
+    # Only allow versioning to happen on main branch.
+    branch: master
+    # Additionally build a changelog at the root of the workspace.
+    workspaceChangelog: true
 
 scripts:
   lint:all:
     run: melos run analyze && melos run format
-    description: Run all static analysis checks
+    description: Run all static analysis checks.
 
   analyze:
     run: |
@@ -33,16 +36,22 @@ scripts:
        - Requires Node.js and NPM installed.
 
   format:
-    run: dart pub global run flutter_plugin_tools format
+    run: |
+      dart pub global run flutter_plugin_tools format && \
+      swiftformat .
     description: |
       Build a specific example app for Android.
        - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
        - Requires `clang-format` (can be installed via Brew on macOS).
+       - Requires `swiftformat` (can be installed via Brew on macOS).
 
   build:all:
     run: |
-      melos run build:example_ios_pub --no-select && melos run build:example_android_pub --no-select && melos run build:example_macos --no-select && melos bootstrap
-    description: Build all example apps
+      melos run build:example_ios_pub --no-select && \
+      melos run build:example_android_pub --no-select && \
+      melos run build:example_macos --no-select && \
+      melos bootstrap
+    description: Build all example apps.
 
   build:example_android:
     run: |
@@ -96,16 +105,18 @@ scripts:
         "flutter build macos --no-pub"
     description: |
       Build a specific example app for macOS.
-       - Requires `flutter channel stable`.
-       - Requires `flutter config --enable-macos-desktop` set.
     select-package:
       dir-exists:
         - macos
       scope: "*example*"
 
   test:all:
-    run: melos run test --no-select && melos run test:mobile_e2e --no-select
-    description: Run all tests available on stable channel
+    run: |
+      melos run test --no-select && \
+      melos run test:web --no-select && \
+      melos run test:e2e --no-select
+    description: |
+      Run all tests available.
 
   test:
     run: |
@@ -117,6 +128,7 @@ scripts:
         - test
       ignore:
         - "*web*"
+        - "*odm*"
         - "*example*"
 
   test:web:
@@ -129,65 +141,82 @@ scripts:
         - test
       scope: "*web*"
 
-  test:mobile_e2e:
+  test:e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart"
     description: |
-      Run all Android or iOS test driver e2e tests in a specific example app.
-       - Requires an Android emulator or iOS simulator.
+      Run all e2e tests.
     select-package:
       dir-exists:
         - test_driver
-      scope: "*example*"
-      ignore:
-        - "*firebase_ml_vision*"
-        - "*firebase_admob*"
+      scope: "*tests*"
 
-  test:web_e2e:
+  clean:deep:
+    run: git clean -x -d -f -q
+    description: Clean things very deeply, can be used to establish "pristine checkout" status.
+
+  qualitycheck:
     run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
-    description: |
-      Run all Web test driver e2e tests in a specific example app.
-       - Requires `flutter channel master` (or beta).
-       - Requires `flutter config --enable-web` set.
-       - Requires chromedriver running on port 4444.
-    select-package:
-      dir-exists:
-        - web
-        - test_driver
-      scope: "*example*"
+      melos run clean:deep && \
+      melos clean && \
+      melos bootstrap && \
+      melos run lint:all && \
+      melos run build:all && \
+      melos run test:all
+    description: Run all targets generally expected in CI for a full local quality check.
 
-  test:macos_e2e:
+  odm:test:
     run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
-    description: |
-      Run all MacOS test driver e2e tests in a specific example app.
-       - Requires `flutter channel master`.
-       - Requires `flutter config --enable-macos-desktop` set.
+      melos run odm:test:dart &&
+      melos run odm:test:flutter
+    description: Run all tests for the ODM.
+
+  odm:test:dart:
+    run: |
+      melos exec -- \
+        "dart test"
+    description: Run Dart tests for the ODM.
     select-package:
-      dir-exists:
-        - macos
-        - test_driver
-      scope: "*example*"
+      dir-exists: "test"
+      depends-on: "test"
+      scope: "*odm*"
 
-  # Clean things very deeply, can be used to establish "pristine checkout" status
-  clean:deep: >
-    git clean -x -d -f -q
+  odm:test:flutter:
+    run: |
+      melos exec -- \
+        "flutter test"
+    description: Run Flutter tests for the ODM.
+    select-package:
+      dir-exists: "test"
+      no-depends-on: "test"
+      scope: "*odm*"
 
-  # Additional cleanup lifecycle script, executed when `melos clean` is ran.
+  odm:example_build_runner:build:
+    run: |
+      melos exec -- \
+        "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run a build_runner build in the ODM example app.
+    select-package:
+      scope: "*odm_example*"
+
+  odm:generator_test_build_runner:build:
+    run: |
+      melos exec -c 1 -- \
+        "dart pub get && flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run a build_runner build generator test.
+    select-package:
+      scope:
+        - "*odm_generator_integration*"
+
+  odm:example_build_runner:watch:
+    run: |
+      melos exec -c 5 -- \
+        "flutter pub run build_runner watch --delete-conflicting-outputs"
+    description: Run build_runner watch in the ODM example app.
+    select-package:
+      scope: "*odm_example*"
+
+  # Additional cleanup lifecycle script, executed when `melos clean` is run.
   postclean: >
     melos exec -c 6 -- "flutter clean"
-
-  # Run all targets generally expected in CI for a full local quality check
-  qualitycheck: >
-    melos run clean:deep && melos clean && melos bootstrap && melos run lint:all && melos run build:all && melos run test:all
-
-dev_dependencies:
-  pedantic: 1.8.0
-
-environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
