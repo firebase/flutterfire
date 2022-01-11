@@ -50,9 +50,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Returns the current [User] if they are currently signed-in, or `null` if
   /// not.
   ///
-  /// You should not use this getter to determine the users current state,
-  /// instead use [authStateChanges], [idTokenChanges] or [userChanges] to
-  /// subscribe to updates.
+  /// This getter only provides a snapshot of user state. Applictions that need
+  /// to react to changes in user state should instead use [authStateChanges],
+  /// [idTokenChanges] or [userChanges] to subscribe to updates.
   User? get currentUser {
     if (_delegate.currentUser != null) {
       return User._(this, _delegate.currentUser!);
