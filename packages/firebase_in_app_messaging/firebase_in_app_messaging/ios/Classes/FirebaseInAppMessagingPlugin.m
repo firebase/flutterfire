@@ -5,6 +5,7 @@
 #import "FirebaseInAppMessagingPlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePluginRegistry.h>
 
 NSString *const kFLTFirebaseInAppMessagingChannelName =
     @"plugins.flutter.io/firebase_in_app_messaging";
@@ -15,6 +16,7 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseInAppMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
   FirebaseInAppMessagingPlugin *instance = [[FirebaseInAppMessagingPlugin alloc] init];
+  [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
