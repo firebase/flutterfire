@@ -16,7 +16,22 @@ fi
 
 # Run NPM install if node modules does not exist.
 if [[ ! -d "functions/node_modules" ]]; then
-  cd functions && npm i && cd ..
+  cd functions
+  if npm i; then
+    echo "✅ NPM install successful."
+  else
+    if [[ -z "${CI}" ]]; then
+      echo "❌ NPM install failed."
+      exit 1
+    else
+      # TODO temporary workaround for GitHub Actions CI issue:
+      # npm ERR! Your cache folder contains root-owned files, due to a bug in
+      # npm ERR! previous versions of npm which has since been addressed.
+      sudo chown -R 501:20 "/Users/runner/.npm" || exit 1
+      npm i || exit 1
+    fi
+  fi
+  cd ..
 fi
 
 export STORAGE_EMULATOR_DEBUG=true
@@ -40,9 +55,15 @@ while [ $RETRIES -le $MAX_RETRIES ]; do
     while [ $CHECKATTEMPTS -le $MAX_CHECKATTEMPTS ]; do
       sleep $CHECKATTEMPTS_WAIT
       if curl --output /dev/null --silent --fail http://localhost:8080; then
+        # Check again since it can exit before the emulator is ready.
         sleep 15
-        echo "Firebase Emulator Suite is online!"
-        exit 0;
+        if curl --output /dev/null --silent --fail http://localhost:8080; then
+          echo "Firebase Emulator Suite is online!"
+          exit 0
+        else
+          echo "❌ Firebase Emulator exited after startup."
+          exit 1
+        fi
       fi
       echo "Waiting for Firebase Emulator Suite to come online, check $CHECKATTEMPTS of $MAX_CHECKATTEMPTS..."
       ((CHECKATTEMPTS = CHECKATTEMPTS + 1))

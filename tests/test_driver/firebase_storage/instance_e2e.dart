@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:drive/drive.dart';
 
+import '../firebase_default_options.dart';
 import 'test_utils.dart';
 
-void runInstanceTests() {
+void setupInstanceTests() {
   group('$FirebaseStorage', () {
     late FirebaseStorage storage;
     late FirebaseApp secondaryApp;
@@ -12,17 +13,10 @@ void runInstanceTests() {
 
     setUpAll(() async {
       await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-          authDomain: 'react-native-firebase-testing.firebaseapp.com',
-          databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-          projectId: 'react-native-firebase-testing',
-          storageBucket: 'react-native-firebase-testing.appspot.com',
-          messagingSenderId: '448618578101',
-          appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
-          measurementId: 'G-0N1G9FLDZE',
-        ),
+        options: DefaultFirebaseOptions.currentPlatform,
       );
+      await FirebaseStorage.instance
+          .useStorageEmulator(testEmulatorHost, testEmulatorPort);
       storage = FirebaseStorage.instance;
       secondaryApp = await testInitializeSecondaryApp();
     });
@@ -51,8 +45,10 @@ void runInstanceTests() {
         );
         fail('should have thrown an error');
       } on FirebaseException catch (e) {
-        expect(e.message,
-            "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.");
+        expect(
+          e.message,
+          "No storage bucket could be found for the app 'testapp-no-bucket'. Ensure you have set the [storageBucket] on [FirebaseOptions] whilst initializing the secondary Firebase app.",
+        );
       }
     });
 
@@ -83,74 +79,78 @@ void runInstanceTests() {
 
       test('accepts a https url from google cloud', () async {
         const url =
-            'https://storage.googleapis.com/react-native-firebase-testing.appspot.com/pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241';
+            'https://storage.googleapis.com/flutterfire-e2e-tests.appspot.com/pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
         expect(
-            ref.fullPath, 'pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
+          ref.fullPath,
+          'pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241',
+        );
       });
 
       test('accepts a https url', () async {
         const url =
-            'https://firebasestorage.googleapis.com/v0/b/react-native-firebase-testing.appspot.com/o/1mbTestFile.gif?alt=media';
+            'https://firebasestorage.googleapis.com/v0/b/flutterfire-e2e-tests.appspot.com/o/1mbTestFile.gif?alt=media';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '1mbTestFile.gif');
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
       test('accepts a https url with a deep path', () async {
         const url =
-            'https://firebasestorage.googleapis.com/v0/b/react-native-firebase-testing.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
+            'https://firebasestorage.googleapis.com/v0/b/flutterfire-e2e-tests.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '1mbTestFile.gif');
         expect(ref.fullPath, 'nested/path/segments/1mbTestFile.gif');
       });
 
       test('accepts a https url with special characters', () async {
         const url =
-            'https://firebasestorage.googleapis.com/v0/b/react-native-firebase-testing.appspot.com/o/foo+bar/file with  spaces.png?alt=media';
+            'https://firebasestorage.googleapis.com/v0/b/flutterfire-e2e-tests.appspot.com/o/foo+bar/file with  spaces.png?alt=media';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, 'file with  spaces.png');
         expect(ref.fullPath, 'foo+bar/file with  spaces.png');
       });
 
       test('accepts a https encoded url', () async {
         const url =
-            'https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Freact-native-firebase-testing.appspot.com%2Fo%2F1mbTestFile.gif%3Falt%3Dmedia';
+            'https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fflutterfire-e2e-tests.appspot.com%2Fo%2F1mbTestFile.gif%3Falt%3Dmedia';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '1mbTestFile.gif');
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
       test('accepts a Storage emulator url', () {
         const url =
-            'http://localhost:9199/v0/b/react-native-firebase-testing.appspot.com/o/1mbTestFile.gif?alt=media';
+            'http://localhost:9199/v0/b/flutterfire-e2e-tests.appspot.com/o/1mbTestFile.gif?alt=media';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '1mbTestFile.gif');
         expect(ref.fullPath, '1mbTestFile.gif');
       });
 
       test('accepts a https url including port number', () {
         const url =
-            'https://firebasestorage.googleapis.com:433/v0/b/react-native-firebase-testing.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
+            'https://firebasestorage.googleapis.com:433/v0/b/flutterfire-e2e-tests.appspot.com/o/nested/path/segments/1mbTestFile.gif?alt=media';
         Reference ref = storage.refFromURL(url);
-        expect(ref.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(ref.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(ref.name, '1mbTestFile.gif');
         expect(ref.fullPath, 'nested/path/segments/1mbTestFile.gif');
 
         const googleUrl =
-            'https://storage.googleapis.com/react-native-firebase-testing.appspot.com/pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241';
+            'https://storage.googleapis.com/flutterfire-e2e-tests.appspot.com/pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241';
         Reference refGoogle = storage.refFromURL(googleUrl);
-        expect(refGoogle.bucket, 'react-native-firebase-testing.appspot.com');
+        expect(refGoogle.bucket, 'flutterfire-e2e-tests.appspot.com');
         expect(refGoogle.name, '4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
-        expect(refGoogle.fullPath,
-            'pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241');
+        expect(
+          refGoogle.fullPath,
+          'pdf/4lqA70lYwfRgH1krOevw6mLMgPs2_162613790513241',
+        );
       });
 
       test('throws an error if https url could not be parsed', () async {
@@ -164,7 +164,8 @@ void runInstanceTests() {
               (p0) => p0.message,
               'assertion message',
               contains(
-                  "url could not be parsed, ensure it's a valid storage url"),
+                "url could not be parsed, ensure it's a valid storage url",
+              ),
             ),
           ),
         );
@@ -212,26 +213,36 @@ void runInstanceTests() {
     group('setMaxUploadRetryTime', () {
       test('should set', () async {
         expect(
-            storage.maxUploadRetryTime, const Duration(milliseconds: 600000));
+          storage.maxUploadRetryTime,
+          const Duration(milliseconds: 600000),
+        );
         storage.setMaxUploadRetryTime(const Duration(milliseconds: 120000));
         expect(
-            storage.maxUploadRetryTime, const Duration(milliseconds: 120000));
+          storage.maxUploadRetryTime,
+          const Duration(milliseconds: 120000),
+        );
       });
     });
 
     group('setMaxDownloadRetryTime', () {
       test('should set', () async {
         expect(
-            storage.maxDownloadRetryTime, const Duration(milliseconds: 600000));
+          storage.maxDownloadRetryTime,
+          const Duration(milliseconds: 600000),
+        );
         storage.setMaxDownloadRetryTime(const Duration(milliseconds: 120000));
         expect(
-            storage.maxDownloadRetryTime, const Duration(milliseconds: 120000));
+          storage.maxDownloadRetryTime,
+          const Duration(milliseconds: 120000),
+        );
       });
     });
 
     test('toString', () {
-      expect(storage.toString(),
-          'FirebaseStorage(app: [DEFAULT], bucket: react-native-firebase-testing.appspot.com)');
+      expect(
+        storage.toString(),
+        'FirebaseStorage(app: [DEFAULT], bucket: flutterfire-e2e-tests.appspot.com)',
+      );
     });
   });
 }
