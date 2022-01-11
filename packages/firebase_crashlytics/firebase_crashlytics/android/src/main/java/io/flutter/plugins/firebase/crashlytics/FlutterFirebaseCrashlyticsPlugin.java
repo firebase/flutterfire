@@ -336,9 +336,10 @@ public class FlutterFirebaseCrashlyticsPlugin
         () ->
             new HashMap<String, Object>() {
               {
-                put(
-                    Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
-                    isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
+                if (firebaseApp.getName().equals("[DEFAULT]"))
+                  put(
+                      Constants.IS_CRASHLYTICS_COLLECTION_ENABLED,
+                      isCrashlyticsCollectionEnabled(FirebaseApp.getInstance()));
               }
             });
   }

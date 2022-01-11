@@ -19,6 +19,7 @@ void main() {
         'bodyLocKey': 'bodyLocKey',
         'android': {},
         'apple': {},
+        'web': {},
       };
 
       RemoteNotification notification =
@@ -32,6 +33,7 @@ void main() {
       expect(notification.bodyLocKey, mockNotificationMap['bodyLocKey']);
       expect(notification.android, isA<AndroidNotification>());
       expect(notification.apple, isA<AppleNotification>());
+      expect(notification.web, isA<WebNotification>());
     });
 
     test(
@@ -44,6 +46,7 @@ void main() {
         'bodyLocKey': null,
         'android': null,
         'apple': null,
+        'web': null,
       };
       RemoteNotification notification =
           RemoteNotification.fromMap(mockNullNotificationMap);
@@ -56,6 +59,7 @@ void main() {
       expect(notification.bodyLocKey, mockNullNotificationMap['bodyLocKey']);
       expect(notification.android, null);
       expect(notification.apple, null);
+      expect(notification.web, null);
     });
 
     test(
@@ -70,11 +74,13 @@ void main() {
         'bodyLocKey': 'bodyLocKey',
         'android': {},
         'apple': {},
+        'web': {},
       };
 
       RemoteNotification notification = RemoteNotification(
           android: const AndroidNotification(),
           apple: const AppleNotification(),
+          web: const WebNotification(),
           title: mockNotificationMap['title'],
           titleLocArgs: mockNotificationMap['titleLocArgs'],
           titleLocKey: mockNotificationMap['titleLocKey'],
@@ -90,6 +96,7 @@ void main() {
       expect(notification.bodyLocKey, mockNotificationMap['bodyLocKey']);
       expect(notification.android, isA<AndroidNotification>());
       expect(notification.apple, isA<AppleNotification>());
+      expect(notification.web, isA<WebNotification>());
     });
 
     test(
@@ -105,6 +112,7 @@ void main() {
       expect(notification.bodyLocKey, null);
       expect(notification.android, null);
       expect(notification.apple, null);
+      expect(notification.web, null);
     });
   });
 
@@ -236,6 +244,35 @@ void main() {
       expect(iosSound.critical, false);
       expect(iosSound.name, null);
       expect(iosSound.volume, 0);
+    });
+  });
+
+  group('WebNotification', () {
+    test('Provide every type of argument', () {
+      Map<String, dynamic>? mockWebNotificationMap = {
+        'analyticsLabel': 'analyticsLabel',
+        'image': 'imageLink',
+        'link': 'httpLink',
+      };
+
+      final WebNotification notification = WebNotification(
+        analyticsLabel: mockWebNotificationMap['analyticsLabel'],
+        image: mockWebNotificationMap['image'],
+        link: mockWebNotificationMap['link'],
+      );
+
+      expect(notification.analyticsLabel,
+          mockWebNotificationMap['analyticsLabel']);
+      expect(notification.image, mockWebNotificationMap['image']);
+      expect(notification.link, mockWebNotificationMap['link']);
+    });
+
+    test('Provide no argument', () {
+      const WebNotification notification = WebNotification();
+
+      expect(notification.analyticsLabel, null);
+      expect(notification.image, null);
+      expect(notification.link, null);
     });
   });
 }

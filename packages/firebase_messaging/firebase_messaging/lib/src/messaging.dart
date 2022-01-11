@@ -232,7 +232,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
   ///
   /// By default, on Apple devices notification messages are only shown when
   /// the application is in the background or terminated. Calling this method
-  /// updates these options to allow customizing notification presentation behaviour whilst
+  /// updates these options to allow customizing notification presentation behavior whilst
   /// the application is in the foreground.
   ///
   /// Important: The requested permissions and those set by the user take priority

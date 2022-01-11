@@ -166,7 +166,7 @@ public class FlutterFirebaseAnalyticsPlugin
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          final String id = (String) Objects.requireNonNull(arguments.get(Constants.USER_ID));
+          final String id = (String) arguments.get(Constants.USER_ID);
           analytics.setUserId(id);
           return null;
         });
@@ -199,7 +199,7 @@ public class FlutterFirebaseAnalyticsPlugin
         cachedThreadPool,
         () -> {
           final String name = (String) Objects.requireNonNull(arguments.get(Constants.NAME));
-          final String value = (String) Objects.requireNonNull(arguments.get(Constants.VALUE));
+          final String value = (String) arguments.get(Constants.VALUE);
           analytics.setUserProperty(name, value);
           return null;
         });

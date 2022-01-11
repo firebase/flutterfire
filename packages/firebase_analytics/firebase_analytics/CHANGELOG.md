@@ -1,16 +1,29 @@
-## 9.0.0-dev.3
+## 9.0.5
 
- - **FEAT**: add macOS support (#7313).
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/FirebaseExtended/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
+ - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/FirebaseExtended/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
+ - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/FirebaseExtended/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
 
-## 9.0.0-dev.2
+## 9.0.4
 
- - **FEAT**: support initializing default `FirebaseApp` instances from Dart (#6549).
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
-## 9.0.0-dev.1
+## 9.0.3
+
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
+
+## 9.0.2
 
  - Update a dependency to the latest release.
 
-## 9.0.0-dev.0
+## 9.0.1
+
+ - **FIX**: use `jsify()` with event parameters for `logEvent()` so they are sent (#7509).
+
+## 9.0.0
 
 > Note: This release has breaking changes.
 

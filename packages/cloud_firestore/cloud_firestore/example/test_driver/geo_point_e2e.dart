@@ -2,16 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runGeoPointTests() {
   group('$GeoPoint', () {
-    FirebaseFirestore /*?*/ firestore;
+    late FirebaseFirestore /*?*/ firestore;
 
     setUpAll(() async {
       firestore = FirebaseFirestore.instance;
@@ -33,7 +29,7 @@ void runGeoPointTests() {
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
 
-      GeoPoint geopoint = snapshot.data()['foo'];
+      GeoPoint geopoint = snapshot.data()!['foo'];
       expect(geopoint, isA<GeoPoint>());
       expect(geopoint.latitude, equals(10));
       expect(geopoint.longitude, equals(-10));
@@ -49,7 +45,7 @@ void runGeoPointTests() {
 
       DocumentSnapshot<Map<String, dynamic>> snapshot = await doc.get();
 
-      GeoPoint geopoint = snapshot.data()['foo'];
+      GeoPoint geopoint = snapshot.data()!['foo'];
       expect(geopoint, isA<GeoPoint>());
       expect(geopoint.latitude, equals(-10));
       expect(geopoint.longitude, equals(10));

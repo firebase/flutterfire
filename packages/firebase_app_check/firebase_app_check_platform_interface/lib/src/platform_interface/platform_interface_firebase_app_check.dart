@@ -3,9 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:firebase_app_check_platform_interface/firebase_app_check_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+
 import '../method_channel/method_channel_firebase_app_check.dart';
 
 abstract class FirebaseAppCheckPlatform extends PlatformInterface {
@@ -14,9 +16,9 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
 
   /// Create an instance using [app] using the existing implementation
   factory FirebaseAppCheckPlatform.instanceFor({required FirebaseApp app}) {
-    // Only the default app is supported on App Check.
-    assert(app.name == defaultFirebaseAppName);
-    return FirebaseAppCheckPlatform.instance.setInitialValues();
+    return FirebaseAppCheckPlatform.instance
+        .delegateFor(app: app)
+        .setInitialValues();
   }
 
   /// The [FirebaseApp] this instance was initialized with.
@@ -42,7 +44,7 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// It will always default to [FirebaseAppCheckPlatform]
   /// if no other implementation was provided.
   static FirebaseAppCheckPlatform get instance {
-    return _instance ??= MethodChannelFirebaseAppCheck(app: Firebase.app());
+    return _instance ??= MethodChannelFirebaseAppCheck.instance;
   }
 
   /// Sets the [FirebaseAppCheckPlatform.instance]
@@ -58,6 +60,33 @@ abstract class FirebaseAppCheckPlatform extends PlatformInterface {
   /// [the Firebase Documentation](https://firebase.google.com/docs/app-check/web?authuser=0).
   Future<void> activate({String? webRecaptchaSiteKey}) {
     throw UnimplementedError('activate() is not implemented');
+  }
+
+  /// Get the current App Check token. Attaches to the most recent in-flight
+  /// request if one is present. Returns null if no token is present and no
+  /// token requests are in-flight.
+  ///
+  /// If `forceRefresh` is true, will always try to fetch a fresh token. If
+  /// false, will use a cached token if found in storage.
+  Future<String?> getToken(bool forceRefresh) async {
+    throw UnimplementedError('getToken() is not implemented');
+  }
+
+  /// If true, the SDK automatically refreshes App Check tokens as needed.
+  Future<void> setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) {
+    throw UnimplementedError('setTokenAutoRefreshEnabled() is not implemented');
+  }
+
+  /// Registers a listener to changes in the token state.
+  Stream<String?> get onTokenChange {
+    throw UnimplementedError('tokenChanges() is not implemented');
+  }
+
+  /// Enables delegates to create new instances of themselves if a none default
+  /// [FirebaseApp] instance is required by the user.
+  @protected
+  FirebaseAppCheckPlatform delegateFor({required FirebaseApp app}) {
+    throw UnimplementedError('delegateFor() is not implemented');
   }
 
   /// Sets any initial values on the instance.

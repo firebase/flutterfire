@@ -35,33 +35,16 @@ FirebaseException noDefaultAppInitialization() {
   );
 }
 
-/// Throws a consistent platform specific error message if the user attempts to
+/// Throws a consistent error message if the user attempts to
 /// initializes core without it being available on the underlying platform.
 FirebaseException coreNotInitialized() {
-  String message;
+  String message = '''
+Firebase has not been correctly initialized.
 
-  if (kIsWeb) {
-    message = '''
-Firebase has not been correctly initialized. Have you added the Firebase import scripts to your index.html file? 
-    
-View the Web Installation documentation for more information: https://firebase.flutter.dev/docs/installation/web
+Usually this means you've attempted to use a Firebase service before calling `Firebase.initializeApp`.
+
+View the documentation for more information: https://firebase.flutter.dev/docs/overview#initialization
     ''';
-  } else if (defaultTargetPlatform == TargetPlatform.android) {
-    message = '''
-Firebase has not been correctly initialized. Have you added the "google-services.json" file to the project? 
-    
-View the Android Installation documentation for more information: https://firebase.flutter.dev/docs/installation/android
-''';
-  } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-    message = '''
-Firebase has not been correctly initialized. Have you added the "GoogleService-Info.plist" file to the project? 
-    
-View the iOS Installation documentation for more information: https://firebase.flutter.dev/docs/installation/ios
-''';
-  } else {
-    message = 'Firebase has not been initialized. '
-        'Please check the documentation for your platform.';
-  }
 
   return FirebaseException(
       plugin: 'core', code: 'not-initialized', message: message);

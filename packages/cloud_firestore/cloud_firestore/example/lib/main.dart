@@ -2,27 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore_example/movie.dart';
+import 'package:cloud_firestore_example/firebase_config.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Requires that a Firestore emulator is running locally.
 /// See https://firebase.flutter.dev/docs/firestore/usage#emulator-usage
-bool USE_FIRESTORE_EMULATOR = false;
+bool shouldUseFirestoreEmulator = false;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-      appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-    ),
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
 
-  if (USE_FIRESTORE_EMULATOR) {
+  if (shouldUseFirestoreEmulator) {
     FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   }
   runApp(FirestoreExampleApp());
@@ -43,7 +36,7 @@ enum MovieQuery {
   year,
   likesAsc,
   likesDesc,
-  score,
+  rated,
   sciFi,
   fantasy,
 }
@@ -65,8 +58,8 @@ extension on Query<Movie> {
       case MovieQuery.year:
         return orderBy('year', descending: true);
 
-      case MovieQuery.score:
-        return orderBy('score', descending: true);
+      case MovieQuery.rated:
+        return orderBy('rated', descending: true);
     }
   }
 }
@@ -132,8 +125,8 @@ class _FilmListState extends State<FilmList> {
                   child: Text('Sort by Year'),
                 ),
                 const PopupMenuItem(
-                  value: MovieQuery.score,
-                  child: Text('Sort by Score'),
+                  value: MovieQuery.rated,
+                  child: Text('Sort by Rated'),
                 ),
                 const PopupMenuItem(
                   value: MovieQuery.likesAsc,
@@ -218,9 +211,7 @@ class _MovieItem extends StatelessWidget {
   Widget get poster {
     return SizedBox(
       width: 100,
-      child: Center(
-        child: Image.network(movie.poster),
-      ),
+      child: Image.network(movie.poster),
     );
   }
 
@@ -255,7 +246,8 @@ class _MovieItem extends StatelessWidget {
   Widget get metadata {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 8),
@@ -299,6 +291,7 @@ class _MovieItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 4, top: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           poster,
           Flexible(child: details),
@@ -394,5 +387,49 @@ class _LikesState extends State<Likes> {
         Text('$_likes likes'),
       ],
     );
+  }
+}
+
+@immutable
+class Movie {
+  Movie({
+    required this.genre,
+    required this.likes,
+    required this.poster,
+    required this.rated,
+    required this.runtime,
+    required this.title,
+    required this.year,
+  });
+
+  Movie.fromJson(Map<String, Object?> json)
+      : this(
+          genre: (json['genre']! as List).cast<String>(),
+          likes: json['likes']! as int,
+          poster: json['poster']! as String,
+          rated: json['rated']! as String,
+          runtime: json['runtime']! as String,
+          title: json['title']! as String,
+          year: json['year']! as int,
+        );
+
+  final String poster;
+  final int likes;
+  final String title;
+  final int year;
+  final String runtime;
+  final String rated;
+  final List<String> genre;
+
+  Map<String, Object?> toJson() {
+    return {
+      'genre': genre,
+      'likes': likes,
+      'poster': poster,
+      'rated': rated,
+      'runtime': runtime,
+      'title': title,
+      'year': year,
+    };
   }
 }

@@ -3,7 +3,7 @@ title: Crashlytics
 sidebar_label: Overview
 ---
 
-##  What does it do?
+## What does it do?
 
 Crashlytics helps you to collect analytics and details about crashes and errors that occur in your app. It does this through three aspects:
 
@@ -11,92 +11,22 @@ Crashlytics helps you to collect analytics and details about crashes and errors 
 - **Crash reports**: Every crash is automatically turned into a crash report and sent when the application next opens.
 - **Stack traces**: Even when an error is caught and your app recovers, the Dart stack trace can still be sent.
 
-<YouTube id="k_mdNRZzd30"/>
+<YouTube id="k_mdNRZzd30" />
 
 ## Installation
 
-<Tabs
-groupId="legacy-or-nullsafe"
-defaultValue="legacy"
-values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-]}
->
-<TabItem value="legacy">
-</TabItem>
-<TabItem value="null-safe">
-
-Ensure you're using the Flutter `stable` channel:
-
-```bash
-$ flutter channel stable
-```
-
-If your app is mixing legacy and null-safe packages, use the `--no-sound-null-safety` flag:
-```bash
-$ flutter run --no-sound-null-safety
-```
-
-For legacy package imports, place the following ignore comment to hide Dart analyzer warnings:
-
-```dart
-// ignore: import_of_legacy_library_into_null_safe
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-```
-
-</TabItem>
-</Tabs>
-
 ### 1. Add dependency
 
-Add the [`firebase_crashlytics`](https://pub.dev/packages/firebase_crashlytics) dependency to your projects `pubspec.yaml` file:
+On the root of your Flutter project, run the following command to install the plugin:
 
-<Tabs
-  groupId="legacy-or-nullsafe"
-  defaultValue="legacy"
-  values={[
-    { label: "Legacy", value: "legacy" },
-    { label: "Null safety", value: "null-safe" },
-  ]}
->
-<TabItem value="legacy">
-
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core }}"
-  firebase_crashlytics: "^{{ plugins.firebase_crashlytics }}"
+```bash {5}
+flutter pub add firebase_crashlytics
 ```
 
-</TabItem>
-<TabItem value="null-safe">
+### 2. (optional) Platform integration
 
-```yaml {5} title="pubspec.yaml"
-dependencies:
-  flutter:
-    sdk: flutter
-  firebase_core: "^{{ plugins.firebase_core_ns }}"
-  firebase_crashlytics: "^{{ plugins.firebase_crashlytics_ns }}"
-```
-
-</TabItem>
-</Tabs>
-
-### 2. Download dependency
-
-```
-$ flutter pub get
-```
-
-### 3. Platform integration
-
-If you are migrating from a previous version of Crashlytics that used Fabric, please follow these
-guides and remove any legacy Fabric integration steps from your project:
-
- - [Android](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=android).
- - [iOS/macOS](https://firebase.google.com/docs/crashlytics/upgrade-sdk?platform=ios).
+Dart-only Firebase initialization currently only supports reporting Dart exceptions. To report native Android & iOS exception
+please follow the Android platform Setup section from the [manual installation guide](../manual-installation.mdx) and the steps below.
 
 #### a. Android
 
@@ -130,18 +60,23 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 #### b. iOS
 
-1. From Xcode select `Runner` from the project navigation.
-2. Select the `Build Phases` tab, then click `+ > New Run Script Phase`.
-3. Add `${PODS_ROOT}/FirebaseCrashlytics/run` to the `Type a script...` text box.
-4. Optionally you can also provide your app's built `Info.plist` location to the build phase's Input Files field:
-For example: `$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)`
+1. From Xcode, select Runner from the project navigation.
+2. Select the Build Phases tab, then click + > New Run Script Phase.
+3. Add the following to the Type a script... text box underneath the Shell property:
 
-### 4. Rebuild your app
+```bash
+$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai <googleAppId>
+$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai <googleAppId>
+```
+
+Retrieve your `<googleAppId>` from your generated `DefaultFirebaseOptions` file (`appId`) or from the Firebase Console -> Project Settings -> Your apps.
+
+### 3. Rebuild your app
 
 Once complete, rebuild your Flutter application:
 
 ```bash
-$ flutter run
+flutter run
 ```
 
 ## Next steps

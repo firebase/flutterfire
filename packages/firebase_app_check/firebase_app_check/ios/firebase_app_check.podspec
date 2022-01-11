@@ -33,7 +33,10 @@ Pod::Spec.new do |s|
 
   # Firebase dependencies
   s.dependency 'firebase_core'
-  s.dependency 'Firebase/AppCheck', firebase_sdk_version
+  s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
+  # TODO(salakar): Directly depend on AppCheck podspec to avoid issues with subspec:
+  # https://github.com/firebase/firebase-ios-sdk/pull/9187 (pending acceptance & merge)
+  s.dependency 'FirebaseAppCheck', "~> #{firebase_sdk_version}-beta"
 
   s.static_framework = true
   s.pod_target_xcconfig = {

@@ -92,7 +92,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 
 - (void)setUserId:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *userId = arguments[kFLTFirebaseAnalyticsUserId];
-  [FIRAnalytics setUserID:userId];
+  [FIRAnalytics setUserID:[userId isKindOfClass:[NSNull class]] ? nil : userId];
 
   result.success(nil);
 }
@@ -100,7 +100,8 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 - (void)setUserProperty:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *name = arguments[kFLTFirebaseAnalyticsName];
   NSString *value = arguments[kFLTFirebaseAnalyticsValue];
-  [FIRAnalytics setUserPropertyString:value forName:name];
+  [FIRAnalytics setUserPropertyString:[value isKindOfClass:[NSNull class]] ? nil : value
+                              forName:name];
   result.success(nil);
 }
 

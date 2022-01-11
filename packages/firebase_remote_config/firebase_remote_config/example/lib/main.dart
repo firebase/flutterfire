@@ -14,9 +14,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
       title: 'Remote Config Example',
-      home: FutureBuilder<RemoteConfig>(
+      home: FutureBuilder<FirebaseRemoteConfig>(
         future: setupRemoteConfig(),
-        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<FirebaseRemoteConfig> snapshot) {
           return snapshot.hasData
               ? WelcomeWidget(remoteConfig: snapshot.requireData)
               : Container();
@@ -29,7 +30,7 @@ class WelcomeWidget extends AnimatedWidget {
     required this.remoteConfig,
   }) : super(listenable: remoteConfig);
 
-  final RemoteConfig remoteConfig;
+  final FirebaseRemoteConfig remoteConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -76,17 +77,19 @@ class WelcomeWidget extends AnimatedWidget {
   }
 }
 
-Future<RemoteConfig> setupRemoteConfig() async {
+Future<FirebaseRemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp(
-      options: const FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-  ));
-  final RemoteConfig remoteConfig = RemoteConfig.instance;
+    options: const FirebaseOptions(
+        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        projectId: 'react-native-firebase-testing',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+        messagingSenderId: '448618578101',
+        appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
+        measurementId: 'G-0N1G9FLDZE'),
+  );
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
     fetchTimeout: const Duration(seconds: 10),
     minimumFetchInterval: const Duration(hours: 1),

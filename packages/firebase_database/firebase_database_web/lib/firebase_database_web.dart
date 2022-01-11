@@ -5,16 +5,29 @@
 library firebase_database_web;
 
 import 'dart:async';
+import 'dart:js_util' as util;
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/interop/database.dart' as database_interop;
 
+part './src/data_snapshot_web.dart';
+
+part './src/database_event_web.dart';
+
 part './src/database_reference_web.dart';
+
 part './src/ondisconnect_web.dart';
+
 part './src/query_web.dart';
+
+part './src/transaction_result_web.dart';
+
+part './src/utils/exception.dart';
+
 part './src/utils/snapshot_utils.dart';
 
 /// Web implementation for [DatabasePlatform]
@@ -34,6 +47,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
+    FirebaseCoreWeb.registerService('database');
     DatabasePlatform.instance = FirebaseDatabaseWeb();
   }
 
@@ -43,15 +57,14 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
       : super(app: app, databaseURL: databaseURL);
 
   @override
-  DatabasePlatform withApp(FirebaseApp? app, String? databaseURL) =>
-      FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
+  DatabasePlatform delegateFor(
+      {required FirebaseApp app, String? databaseURL}) {
+    return FirebaseDatabaseWeb(app: app, databaseURL: databaseURL);
+  }
 
   @override
-  String? appName() => app?.name;
-
-  @override
-  DatabaseReferencePlatform reference() {
-    return DatabaseReferenceWeb(_delegate, this, <String>[]);
+  DatabaseReferencePlatform ref([String? path]) {
+    return DatabaseReferenceWeb(this, _delegate.ref(path));
   }
 
   /// This is not supported on web. However,
@@ -64,33 +77,59 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   /// On the web, real-time database offline mode work in Tunnel mode not with airplane mode.
   /// check the https://stackoverflow.com/a/32530269/3452078
   @override
-  Future<bool> setPersistenceEnabled(bool enabled) async {
+  void setPersistenceEnabled(bool enabled) {
     throw UnsupportedError("setPersistenceEnabled() is not supported for web");
   }
 
   @override
-  Future<bool> setPersistenceCacheSizeBytes(int cacheSize) async {
+  void setPersistenceCacheSizeBytes(int cacheSize) {
     throw UnsupportedError(
         "setPersistenceCacheSizeBytes() is not supported for web");
   }
 
   @override
-  Future<void> setLoggingEnabled(bool enabled) async {
+  void setLoggingEnabled(bool enabled) {
     database_interop.enableLogging(enabled);
   }
 
   @override
   Future<void> goOnline() async {
-    _delegate.goOnline();
+    try {
+      _delegate.goOnline();
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
   Future<void> goOffline() async {
-    _delegate.goOffline();
+    try {
+      _delegate.goOffline();
+    } catch (e, s) {
+      throw convertFirebaseDatabaseException(e, s);
+    }
   }
 
   @override
   Future<void> purgeOutstandingWrites() async {
     throw UnsupportedError("purgeOutstandingWrites() is not supported for web");
+  }
+
+  @override
+  void useDatabaseEmulator(String host, int port) {
+    try {
+      _delegate.useDatabaseEmulator(host, port);
+    } catch (e) {
+      FirebaseException exception = convertFirebaseDatabaseException(e);
+
+      // Hot reload keeps state, so ignore if this is thrown.
+      if (exception.message != null &&
+          exception.message!.contains(
+              'Cannot call useEmulator() after instance has already been initialized')) {
+        return;
+      }
+
+      throw exception;
+    }
   }
 }

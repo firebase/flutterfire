@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -20,4 +19,4 @@ export 'package:firebase_remote_config_platform_interface/firebase_remote_config
         RemoteConfigFetchStatus,
         RemoteConfigValue;
 
-part 'src/remote_config.dart';
+part 'src/firebase_remote_config.dart';
