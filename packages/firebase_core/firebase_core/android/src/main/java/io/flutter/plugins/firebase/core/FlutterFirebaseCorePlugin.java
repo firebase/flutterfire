@@ -6,6 +6,7 @@ package io.flutter.plugins.firebase.core;
 import static io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThreadPool;
 
 import android.content.Context;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -138,7 +139,14 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
                   .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
                   .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
                   .build();
-
+          // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
+          //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
+          //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+          try {
+            Looper.prepare();
+          } catch (Exception e) {
+            // do nothing
+          }
           FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, name);
           return Tasks.await(firebaseAppToMap(firebaseApp));
         });

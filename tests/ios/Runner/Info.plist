@@ -48,5 +48,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-406099696497-ios-acd9c8e17b5e620e3574d0</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
