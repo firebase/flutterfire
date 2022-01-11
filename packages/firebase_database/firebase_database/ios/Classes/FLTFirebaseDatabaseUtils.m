@@ -20,10 +20,7 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
 
 + (FIRDatabase *)databaseFromArguments:(id)arguments {
   NSString *appName = arguments[@"appName"] == nil ? @"[DEFAULT]" : arguments[@"appName"];
-  NSString *databaseURL =
-      arguments[@"databaseURL"] == [NSNull null] || arguments[@"databaseURL"] == nil
-          ? @""
-          : arguments[@"databaseURL"];
+  NSString *databaseURL = arguments[@"databaseURL"] == nil ? @"" : arguments[@"databaseURL"];
   NSString *instanceKey = [appName stringByAppendingString:databaseURL];
   if (cachedDatabaseInstances == nil) {
     cachedDatabaseInstances = [[NSMutableDictionary alloc] init];
