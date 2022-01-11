@@ -199,7 +199,7 @@ public class FlutterFirebaseAnalyticsPlugin
         cachedThreadPool,
         () -> {
           final String name = (String) Objects.requireNonNull(arguments.get(Constants.NAME));
-          final String value = (String) Objects.requireNonNull(arguments.get(Constants.VALUE));
+          final String value = (String) arguments.get(Constants.VALUE);
           analytics.setUserProperty(name, value);
           return null;
         });

@@ -63,7 +63,7 @@ void main() {
       test('toString', () {
         expect(
           pendingDynamicLinkData.toString(),
-          equals('$PendingDynamicLinkData(${pendingDynamicLinkData.asMap})'),
+          equals('$PendingDynamicLinkData(${pendingDynamicLinkData.asMap()})'),
         );
       });
     });
