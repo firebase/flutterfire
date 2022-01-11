@@ -57,9 +57,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
     try {
       await MethodChannelDatabase.channel.invokeMethod<void>(
         'OnDisconnect#cancel',
-        database.getChannelArguments({
-          'path': ref.path
-        }),
+        database.getChannelArguments({'path': ref.path}),
       );
     } catch (e, s) {
       throw convertPlatformException(e, s);
