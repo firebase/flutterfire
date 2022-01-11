@@ -34,7 +34,7 @@ void setupTests() {
             );
           },
           retry: 2,
-          timeout: const Timeout(Duration(seconds: 15)),
+          timeout: const Timeout(Duration(seconds: 45)),
         );
       });
 
