@@ -193,13 +193,22 @@ class _AuthGateState extends State<AuthGate> {
                           .map(
                             (button) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: SignInButton(
-                                  button,
-                                  onPressed: () => authButtons[button]!(),
-                                ),
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 200),
+                                child: isLoading
+                                    ? Container(
+                                        color: Colors.grey[200],
+                                        height: 50,
+                                        width: double.infinity,
+                                      )
+                                    : SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: SignInButton(
+                                          button,
+                                          onPressed: authButtons[button]!,
+                                        ),
+                                      ),
                               ),
                             ),
                           )
