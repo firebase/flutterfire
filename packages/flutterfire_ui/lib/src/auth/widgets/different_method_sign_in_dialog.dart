@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
 
 class DifferentMethodSignInDialog extends StatelessWidget {
@@ -34,7 +33,7 @@ class DifferentMethodSignInDialog extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Title(text: l.differentMethodsSignInTitlText),
+                Title(text: l.differentMethodsSignInTitleText),
                 const SizedBox(height: 32),
                 DifferentMethodSignInView(
                   auth: auth,

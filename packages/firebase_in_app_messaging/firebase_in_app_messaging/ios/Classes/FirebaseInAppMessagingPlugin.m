@@ -18,16 +18,26 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
+- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+  if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
+    NSString *eventName = call.arguments[@"eventName"];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    [fiam triggerEvent:eventName];
+    result(nil);
+  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
+    NSNumber *suppress = [NSNumber numberWithBool:call.arguments[@"suppress"]];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    fiam.messageDisplaySuppressed = [suppress boolValue];
+    result(nil);
+  } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
+                 isEqualToString:call.method]) {
+    NSNumber *enabled = [NSNumber numberWithBool:call.arguments[@"enabled"]];
+    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
+    fiam.automaticDataCollectionEnabled = [enabled boolValue];
+    result(nil);
+  } else {
+    result(FlutterMethodNotImplemented);
   }
-  return self;
 }
 
 #pragma mark - FLTFirebasePlugin
@@ -52,26 +62,5 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
   return kFLTFirebaseInAppMessagingChannelName;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
-    NSString *eventName = call.arguments[@"eventName"];
-    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    [fiam triggerEvent:eventName];
-    result(nil);
-  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
-    NSNumber *suppress = [NSNumber numberWithBool:call.arguments[@"suppress"]];
-    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    fiam.messageDisplaySuppressed = [suppress boolValue];
-    result(nil);
-  } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
-                 isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:call.arguments[@"enabled"]];
-    FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
-    fiam.automaticDataCollectionEnabled = [enabled boolValue];
-    result(nil);
-  } else {
-    result(FlutterMethodNotImplemented);
-  }
-}
 
 @end

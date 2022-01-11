@@ -18,26 +18,14 @@ import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.Map;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin
-    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
-  private final FirebaseInAppMessaging instance;
+public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
-
-  private static MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
-    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
-    return channel;
-  }
-
-  public FirebaseInAppMessagingPlugin() {
-    instance = FirebaseInAppMessaging.getInstance();
-  }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     BinaryMessenger binaryMessenger = binding.getBinaryMessenger();
-    channel = setup(binaryMessenger);
+    channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
   }
 
   @Override
@@ -52,31 +40,31 @@ public class FirebaseInAppMessagingPlugin
   public void onMethodCall(MethodCall call, Result result) {
     switch (call.method) {
       case "FirebaseInAppMessaging#triggerEvent":
-        {
-          String eventName = call.argument("eventName");
-          instance.triggerEvent(eventName);
-          result.success(null);
-          break;
-        }
+      {
+        String eventName = call.argument("eventName");
+        FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
+        result.success(null);
+        break;
+      }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
-        {
-          Boolean suppress = (Boolean) call.argument("suppress");
-          instance.setMessagesSuppressed(suppress);
-          result.success(null);
-          break;
-        }
+      {
+        Boolean suppress = (Boolean) call.argument("suppress");
+        FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
+        result.success(null);
+        break;
+      }
       case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
-        {
-          Boolean enabled = (Boolean) call.argument("enabled");
-          instance.setAutomaticDataCollectionEnabled(enabled);
-          result.success(null);
-          break;
-        }
+      {
+        Boolean enabled = (Boolean) call.argument("enabled");
+        FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled);
+        result.success(null);
+        break;
+      }
       default:
-        {
-          result.notImplemented();
-          break;
-        }
+      {
+        result.notImplemented();
+        break;
+      }
     }
   }
 

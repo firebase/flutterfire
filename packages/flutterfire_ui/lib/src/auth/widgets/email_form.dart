@@ -40,6 +40,7 @@ class EmailForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthFlowBuilder<EmailFlowController>(
+      auth: auth,
       action: action,
       config: config,
       child: _SignInFormContent(

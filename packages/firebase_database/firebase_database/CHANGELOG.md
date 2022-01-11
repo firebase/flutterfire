@@ -1,3 +1,12 @@
+## 9.0.5
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+
+## 9.0.4
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **FIX**: remove trailing `/` from `databaseUrl` if present. (#7601). ([abe4c2c7](https://github.com/FirebaseExtended/flutterfire/commit/abe4c2c7e3c9828ffc508d3be5da576e79eb3e73))
+
 ## 9.0.3
 
  - **FIX**: downgrade the Android min SDK to 19 (#7533). ([c657adec](https://github.com/FirebaseExtended/flutterfire/commit/c657adeca078a83ad7157eba91179f3e3ddb5001))

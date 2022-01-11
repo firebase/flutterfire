@@ -96,7 +96,7 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String verifyItsYouText;
   @override
-  final String differentMethodsSignInTitlText;
+  final String differentMethodsSignInTitleText;
   @override
   final String findProviderForEmailTitleText;
   @override
@@ -185,7 +185,7 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyPhoneNumberButtonText = 'Next',
     this.verifyCodeButtonText = 'Verify',
     this.verifyingPhoneNumberViewTitle = 'Enter code from SMS',
-    this.unknownError = 'An unknown error occured',
+    this.unknownError = 'An unknown error occurred',
     this.smsAutoresolutionFailedError =
         'Failed to resolve SMS code automatically. Please enter your code manually',
     this.smsCodeSentText = 'SMS code sent',
@@ -219,8 +219,8 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.forgotPasswordViewTitle = 'Forgot password',
     this.resetPasswordButtonLabel = 'Reset password',
     this.verifyItsYouText = "Verify it's you",
-    this.differentMethodsSignInTitlText =
-        'Use one of the follwing methods to sign in',
+    this.differentMethodsSignInTitleText =
+        'Use one of the following methods to sign in',
     this.findProviderForEmailTitleText = 'Enter your email to continue',
     this.continueText = 'Continue',
     this.countryCode = 'Code',
