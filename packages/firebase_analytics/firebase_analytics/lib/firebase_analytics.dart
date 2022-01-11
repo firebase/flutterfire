@@ -4,7 +4,6 @@
 
 library firebase_analytics;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -16,4 +15,3 @@ export 'package:firebase_analytics_platform_interface/firebase_analytics_platfor
     show AnalyticsEventItem, AnalyticsCallOptions;
 
 part 'src/firebase_analytics.dart';
-part 'src/observer.dart';
