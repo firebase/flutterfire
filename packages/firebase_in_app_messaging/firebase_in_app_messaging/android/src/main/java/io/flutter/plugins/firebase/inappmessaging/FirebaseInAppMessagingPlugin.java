@@ -15,11 +15,11 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-
 import java.util.Map;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
+public class FirebaseInAppMessagingPlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
 
   @Override

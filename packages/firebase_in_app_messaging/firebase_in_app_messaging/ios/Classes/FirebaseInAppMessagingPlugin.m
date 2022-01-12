@@ -64,5 +64,4 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
   return kFLTFirebaseInAppMessagingChannelName;
 }
 
-
 @end
