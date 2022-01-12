@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -42,12 +44,15 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     });
 
+    log(user.toString());
+
     super.initState();
   }
 
   @override
   void dispose() {
     controller.removeListener(_onNameChanged);
+
     super.dispose();
   }
 
@@ -102,26 +107,31 @@ class _ProfilePageState extends State<ProfilePage> {
                             user.photoURL ?? placeholderImage,
                           ),
                         ),
-                        // TODO once storage is supported
-                        // Positioned.directional(
-                        //   textDirection: Directionality.of(context),
-                        //   end: 0,
-                        //   bottom: 0,
-                        //   child: Material(
-                        //     clipBehavior: Clip.antiAlias,
-                        //     color: Theme.of(context).colorScheme.secondary,
-                        //     borderRadius: BorderRadius.circular(40),
-                        //     child: InkWell(
-                        //       onTap: () {},
-                        //       radius: 50,
-                        //       child: const SizedBox(
-                        //         width: 35,
-                        //         height: 35,
-                        //         child: Icon(Icons.edit),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
+                        Positioned.directional(
+                          textDirection: Directionality.of(context),
+                          end: 0,
+                          bottom: 0,
+                          child: Material(
+                            clipBehavior: Clip.antiAlias,
+                            color: Theme.of(context).colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(40),
+                            child: InkWell(
+                              onTap: () async {
+                                final photoURL = await getPhotoURLFromUser();
+
+                                if (photoURL != null) {
+                                  await user.updatePhotoURL(photoURL);
+                                }
+                              },
+                              radius: 50,
+                              child: const SizedBox(
+                                width: 35,
+                                height: 35,
+                                child: Icon(Icons.edit),
+                              ),
+                            ),
+                          ),
+                        )
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -184,6 +194,48 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Future<String?> getPhotoURLFromUser() async {
+    String? photoURL;
+
+    // Update the UI - wait for the user to enter the SMS code
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('New image Url:'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Update'),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                photoURL = null;
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+          content: Container(
+            padding: const EdgeInsets.all(20),
+            child: TextField(
+              onChanged: (value) {
+                photoURL = value;
+              },
+              textAlign: TextAlign.center,
+              autofocus: true,
+            ),
+          ),
+        );
+      },
+    );
+
+    return photoURL;
   }
 
   /// Example code for sign out.

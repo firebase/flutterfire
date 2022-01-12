@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_example/github.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -524,11 +525,6 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  /// To get your `clientId` and `clientSecret`, visit https://github.com/settings/developers
-  /// and create a new OAuth application, for Home Page URL use `https://react-native-firebase-testing.firebaseapp.com`,
-  /// for Authorization callback URL use `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
-  ///
-  /// After you register your app, place the `clientId` and `clientSecret` bellow.
   Future<void> _signInWithGitHub() async {
     setIsLoading();
 
@@ -542,10 +538,9 @@ class _AuthGateState extends State<AuthGate> {
       } else {
         // Create a GitHubSignIn instance
         final GitHubSignIn gitHubSignIn = GitHubSignIn(
-          clientId: 'YOUR_CLIENT_ID',
-          clientSecret: 'YOUR_CLIENT_SECRET',
-          redirectUrl:
-              'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
+          clientId: GitHubConfig['CLIENT_ID']!,
+          clientSecret: GitHubConfig['CLIENT_SECRET']!,
+          redirectUrl: GitHubConfig['REDIRECT_URL']!,
         );
 
         // Trigger the sign-in flow
