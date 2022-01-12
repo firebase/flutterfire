@@ -6,6 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -510,7 +511,20 @@ class _AuthGateState extends State<AuthGate> {
   Future<void> _signInWithFacebook() async {
     setIsLoading();
 
-    try {} on FirebaseAuthException catch (e) {
+    try {
+      // Trigger the sign-in flow
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      if (loginResult.accessToken != null) {
+        // Create a credential from the access token
+        final facebookAuthCredential =
+            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+        // Once signed in, return the UserCredential
+        await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
+      }
+    } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';
       });
@@ -543,8 +557,8 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  /// Apple sign in was added to iOS and macOS, but it's possible to setup
-  /// on Android and Web by following the instructions in the plugins README.
+  /// Apple sign in is added to iOS and macOS, but it's possible to setup
+  /// on Android and Web by following the instructions on the plugins README.
   Future<void> _signInWithApple() async {
     setIsLoading();
 
