@@ -8,6 +8,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  print('REMOVE ME');
   runApp(const MyApp());
 }
 

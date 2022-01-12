@@ -28,7 +28,10 @@ jobs:
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Run Analyze"
-        run: melos run analyze
+        uses: invertase/github-action-dart-analyzer@v1
+        with:
+          fatal-infos: true
+          fatal-warnings: true
       - name: "Pub Check"
         run: |
           melos exec -c 1 --no-private --ignore="*example*" -- \
