@@ -1,8 +1,8 @@
-# firebase_auth_example
+# Firebase Auth Example
 
 [![pub package](https://img.shields.io/pub/v/firebase_auth.svg)](https://pub.dev/packages/firebase_auth)
 
-Demonstrates how to use the firebase_auth plugin.
+Demonstrates how to use the `firebase_auth` plugin and enable multiple auth providers.
 
 ## Phone Auth
 
@@ -20,12 +20,12 @@ Demonstrates how to use the firebase_auth plugin.
 ## Google Sign-In
 
 1. Enable Google authentication in the [Firebase console](https://console.firebase.google.com/u/0/project/_/authentication/providers).
-1. For Android, add your app's package name and SHA-1 fingerprint to the [Settings page](https://console.firebase.google.com/project/_/settings/general) of the Firebase console. Refer to [Authenticating Your Client]('https://developers.google.com/android/guides/client-auth') for details on how to get your app's SHA-1 fingerprint.
-1. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file (same step for `Phone Auth` above).
-1. Select `Google` under `Social Authentication` and click the `Sign In With Google` button.
-1. Signed in user's details are displayed in the UI.
+2. For Android, add your app's package name and SHA-1 fingerprint to the [Settings page](https://console.firebase.google.com/project/_/settings/general) of the Firebase console. Refer to [Authenticating Your Client]('https://developers.google.com/android/guides/client-auth') for details on how to get your app's SHA-1 fingerprint.
+3. For iOS set the `URL Schemes` to the `REVERSE_CLIENT_ID` from the `GoogleServices-Info.plist` file (same step for `Phone Auth` above).
+4. Select `Google` under `Social Authentication` and click the `Sign In With Google` button.
+5. Signed in user's details are displayed in the UI.
 
-## Running on Web
+### Running on Web
 
 Make sure you run the example app on port 5000, since `localhost:5000` is
 whitelisted for Google authentication. To do so, run:
@@ -34,7 +34,16 @@ whitelisted for Google authentication. To do so, run:
 flutter run -d web-server --web-port 5000
 ```
 
+## GitHub Sign-In
+To get your `clientId` and `clientSecret`: 
+1. Visit https://github.com/settings/developers.
+2. Create a new OAuth application.
+3. Set **Home Page URL** to `https://react-native-firebase-testing.firebaseapp.com`.
+4. Set **Authorization callback URL** to `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
+5. After you register your app, add the `clientId` and `clientSecret` to the example app in `lib/github.dart`.
+
+
 ## Getting Started
 
-For help getting started with Flutter, view our online
+For help getting started with Flutter, view the online
 [documentation](http://flutter.io/).
