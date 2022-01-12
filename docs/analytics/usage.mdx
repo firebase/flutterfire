@@ -200,3 +200,50 @@ Please note that this API is android only.
 await FirebaseAnalytics.instance
   setSessionTimeoutDuration(const Duration(minutes: 1))
 ```
+
+
+## Debug analytics events
+
+Generally, events logged by your app are batched together over the period of approximately one hour and uploaded together.
+This approach conserves the battery on end users’ devices and reduces network data usage. However, for the purposes of
+validating your analytics implementation (and, in order to view your analytics in the DebugView report), you can enable
+Debug mode on your development device to upload events with a minimal delay. For further information, please read the
+[official Firebase debug documentation](https://firebase.google.com/docs/analytics/debugview).
+
+### Android
+
+To enable Analytics Debug mode on an Android device, execute the following command in your terminal:
+
+```bash
+// Package name is typically your `applicationId` which you can find in your android/app/build.gradle file.
+adb shell setprop debug.firebase.analytics.app <PACKAGE NAME>
+```
+
+This behavior persists until you explicitly disable Debug mode by executing the following command:
+
+```bash
+adb shell setprop debug.firebase.analytics.app .none.
+```
+
+### iOS
+
+To enable Analytics Debug mode on your development device, specify the following command line argument in Xcode :
+
+```bash
+-FIRDebugEnabled
+```
+
+This behavior persists until you explicitly disable Debug mode by specifying the following command line argument :
+
+```bash
+-FIRDebugDisabled
+```
+
+### Web
+
+To enable Analytics Debug mode in your browser, it is recommended you install [the Google Analytics Debugger Chrome](https://chrome.google.com/webstore/detail/google-analytics-debugger/jnkmfdileelhofjcijamephohjechhna) extension.
+
+Once installed, enable the extension and refresh the page. From that point on, the extension will log events in your app in debug mode.
+
+You can view events logged in the DebugView in the Firebase console.
+
