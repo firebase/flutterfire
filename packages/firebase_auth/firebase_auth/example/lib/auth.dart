@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -86,14 +87,22 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-
-    authButtons = {
-      if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
-      if (Platform.isIOS || Platform.isMacOS) Buttons.Apple: _signInWithApple,
-      if (!Platform.isMacOS) Buttons.FacebookNew: _signInWithFacebook,
-      if (!Platform.isMacOS) Buttons.Twitter: _signInWithTwitter,
-      if (!Platform.isMacOS) Buttons.GitHub: _signInWithGitHub,
-    };
+    if (kIsWeb) {
+      authButtons = {
+        Buttons.Google: _signInWithGoogle,
+        Buttons.FacebookNew: _signInWithFacebook,
+        Buttons.Twitter: _signInWithTwitter,
+        Buttons.GitHub: _signInWithGitHub,
+      };
+    } else {
+      authButtons = {
+        if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
+        if (Platform.isIOS || Platform.isMacOS) Buttons.Apple: _signInWithApple,
+        if (!Platform.isMacOS) Buttons.FacebookNew: _signInWithFacebook,
+        if (!Platform.isMacOS) Buttons.Twitter: _signInWithTwitter,
+        if (!Platform.isMacOS) Buttons.GitHub: _signInWithGitHub,
+      };
+    }
   }
 
   @override
@@ -192,9 +201,18 @@ class _AuthGateState extends State<AuthGate> {
                                   : Text(mode.label),
                             ),
                           ),
-                          TextButton(
-                            onPressed: _resetPassword,
-                            child: const Text('Forgot password?'),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: _resetPassword,
+                                child: const Text('Forgot password?'),
+                              ),
+                              TextButton(
+                                onPressed: _resetPassword,
+                                child: const Text('Send me a sign-in link'),
+                              ),
+                            ],
                           ),
                           ...authButtons.keys
                               .map(
@@ -519,6 +537,18 @@ class _AuthGateState extends State<AuthGate> {
     setIsLoading();
 
     try {
+      if (kIsWeb) {
+        // Create a new provider
+        FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+
+        facebookProvider.addScope('email');
+        facebookProvider.setCustomParameters({
+          'display': 'popup',
+        });
+
+        // Once signed in, return the UserCredential
+        await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+      }
       // Trigger the sign-in flow
       final LoginResult loginResult = await FacebookAuth.instance.login();
 
@@ -554,30 +584,41 @@ class _AuthGateState extends State<AuthGate> {
 
   /// To get your `clientId` and `clientSecret`, visit https://github.com/settings/developers
   /// and create a new OAuth application, for Home Page URL use `https://react-native-firebase-testing.firebaseapp.com`,
-  /// for Authorization callback URL use `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler/`.
+  /// for Authorization callback URL use `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
   ///
   /// After you register your app, place the `clientId` and `clientSecret` bellow.
   Future<void> _signInWithGitHub() async {
     setIsLoading();
 
     try {
-      // Create a GitHubSignIn instance
-      final GitHubSignIn gitHubSignIn = GitHubSignIn(
-        clientId: 'YOUR_CLIENT_ID',
-        clientSecret: 'YOUR_CLIENT_SECRET',
-        redirectUrl:
-            'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler/',
-      );
-
-      // Trigger the sign-in flow
-      final result = await gitHubSignIn.signIn(context);
-      if (result.token != null) {
-        // Create a credential from the access token
-        final githubAuthCredential =
-            GithubAuthProvider.credential(result.token!);
+      if (kIsWeb) {
+        // Create a new provider
+        GithubAuthProvider githubProvider = GithubAuthProvider();
 
         // Once signed in, return the UserCredential
-        await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
+        await FirebaseAuth.instance.signInWithPopup(githubProvider);
+      } else {
+        // Create a GitHubSignIn instance
+        final GitHubSignIn gitHubSignIn = GitHubSignIn(
+          clientId: 'YOUR_CLIENT_ID',
+          clientSecret: 'YOUR_CLIENT_SECRET',
+          redirectUrl:
+              'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
+        );
+
+        // Trigger the sign-in flow
+        final result = await gitHubSignIn.signIn(context);
+
+        final token = result.token;
+
+        if (token != null) {
+          // Create a credential from the access token
+          final githubAuthCredential = GithubAuthProvider.credential(token);
+
+          // Once signed in, return the UserCredential
+          await FirebaseAuth.instance
+              .signInWithCredential(githubAuthCredential);
+        }
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
