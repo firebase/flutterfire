@@ -196,18 +196,9 @@ class _AuthGateState extends State<AuthGate> {
                                   : Text(mode.label),
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              TextButton(
-                                onPressed: _resetPassword,
-                                child: const Text('Forgot password?'),
-                              ),
-                              TextButton(
-                                onPressed: _emailLink,
-                                child: const Text('Send me a sign-in link'),
-                              ),
-                            ],
+                          TextButton(
+                            onPressed: _resetPassword,
+                            child: const Text('Forgot password?'),
                           ),
                           ...authButtons.keys
                               .map(
@@ -392,39 +383,6 @@ class _AuthGateState extends State<AuthGate> {
           );
         } else {
           await _phoneAuth();
-        }
-      } on FirebaseAuthException catch (e) {
-        setState(() {
-          error = '${e.message}';
-        });
-      } catch (e) {
-        setState(() {
-          error = '$e';
-        });
-      } finally {
-        setIsLoading();
-      }
-    }
-  }
-
-  Future<void> _emailLink() async {
-    if (emailController.text.isNotEmpty) {
-      setIsLoading();
-
-      try {
-        if (mode == AuthMode.login) {
-          await _auth.sendSignInLinkToEmail(
-            email: emailController.text,
-            actionCodeSettings: ActionCodeSettings(
-              url:
-                  'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
-              handleCodeInApp: true,
-              androidPackageName: 'io.flutter.plugins.firebaseauthexample',
-              iOSBundleId: 'io.flutter.plugins.firebase.auth',
-              androidInstallApp: true,
-              androidMinimumVersion: '0.1.0',
-            ),
-          );
         }
       } on FirebaseAuthException catch (e) {
         setState(() {
