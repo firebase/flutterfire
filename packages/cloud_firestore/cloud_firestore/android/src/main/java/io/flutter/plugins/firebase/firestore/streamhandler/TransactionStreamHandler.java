@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
-import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
@@ -19,7 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class TransactionStreamHandler implements OnTransactionResultListener, StreamHandler {
 
@@ -28,13 +28,9 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
     void onStarted(Transaction transaction);
   }
 
-  final AtomicReference<Activity> activityRef;
   final OnTransactionStartedListener onTransactionStartedListener;
 
-  public TransactionStreamHandler(
-      AtomicReference<Activity> activityRef,
-      OnTransactionStartedListener onTransactionStartedListener) {
-    this.activityRef = activityRef;
+  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener) {
     this.onTransactionStartedListener = onTransactionStartedListener;
   }
 
@@ -68,7 +64,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               Map<String, Object> attemptMap = new HashMap<>();
               attemptMap.put("appName", firestore.getApp().getName());
 
-              activityRef.get().runOnUiThread(() -> events.success(attemptMap));
+              new Handler(Looper.getMainLooper()).post(() -> events.success(attemptMap));
 
               try {
                 if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
@@ -148,10 +144,12 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               } else if (task.getResult() != null) {
                 map.put("complete", true);
               }
-              if (activityRef.get() != null) {
-                activityRef.get().runOnUiThread(() -> events.success(map));
-                activityRef.get().runOnUiThread(events::endOfStream);
-              }
+              new Handler(Looper.getMainLooper())
+                  .post(
+                      () -> {
+                        events.success(map);
+                        events.endOfStream();
+                      });
             });
   }
 
