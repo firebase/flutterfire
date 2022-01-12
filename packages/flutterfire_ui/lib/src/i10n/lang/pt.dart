@@ -193,7 +193,7 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyingSMSCodeText = 'Verificando o código SMS...',
     this.enterSMSCodeText = 'Digite o código SMS',
     this.emailIsRequiredErrorText = 'O e-mail é obrigatório',
-    this.isNotAValidEmailErrorText = 'Forneça um e-mail válido',
+    this.isNotAValidEmailErrorText = 'Digite um e-mail válido',
     this.userNotFoundErrorText = 'Conta não existe',
     this.emailTakenErrorText = 'Já existe uma conta com esse e-mail',
     this.accessDisabledErrorText =
@@ -216,7 +216,7 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
     this.confirmPasswordDoesNotMatchErrorText = 'As senhas não coincidem',
     this.confirmPasswordInputLabel = 'Confirmar senha',
     this.forgotPasswordButtonLabel = 'Esqueceu a senha?',
-    this.forgotPasswordViewTitle = 'Esqueceu a senha',
+    this.forgotPasswordViewTitle = 'Esqueci minha senha',
     this.resetPasswordButtonLabel = 'Redefinir senha',
     this.verifyItsYouText = 'Verifique se é você',
     this.differentMethodsSignInTitleText =
@@ -229,12 +229,12 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
     this.chooseACountry = 'Escolha um país',
     this.enableMoreSignInMethods = 'Ative mais métodos de login',
     this.signInMethods = 'Métodos de login',
-    this.provideEmail = 'Forneça seu e-mail e senha',
+    this.provideEmail = 'Digite seu e-mail e senha',
     this.goBackButtonLabel = 'Voltar',
     this.passwordResetEmailSentText =
         'Enviamos um e-mail para você com um link para redefinir sua senha. Por favor, verifique seu e-mail.',
     this.forgotPasswordHintText =
-        'Forneça seu e-mail e enviaremos um link para redefinir sua senha',
+        'Digite seu e-mail e nós lhe enviaremos um link para redefinir sua senha',
     this.emailLinkSignInButtonLabel = 'Faça login com o link mágico',
     this.signInWithEmailLinkViewTitleText = 'Faça login com o link mágico',
     this.signInWithEmailLinkSentText =
@@ -252,8 +252,8 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
     this.updateLabel = 'atualizar',
     this.northInitialLabel = 'N',
     this.southInitialLabel = 'S',
-    this.westInitialLabel = 'W',
-    this.eastInitialLabel = 'E',
+    this.westInitialLabel = 'O',
+    this.eastInitialLabel = 'L',
     this.timestampLabel = 'carimbo do tempo',
     this.longitudeLabel = 'longitude',
     this.latitudeLabel = 'latitude',
