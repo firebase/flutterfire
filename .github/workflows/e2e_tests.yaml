@@ -25,9 +25,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -55,13 +53,13 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config --no-enable-web --no-enable-ios --no-enable-macos-desktop
           sudo npm i -g firebase-tools
-      - name: "Build Example"
+      - name: "Build Application"
         working-directory: tests
         run: |
           flutter build apk --debug --target=./test_driver/driver_e2e.dart --dart-define=CI=true --no-android-gradle-daemon
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive Example"
+      - name: "E2E Tests"
         uses: reactivecircus/android-emulator-runner@v2.21.0
         timeout-minutes: 30
         with:
@@ -78,9 +76,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -109,7 +105,7 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-      - name: "Build Example"
+      - name: "Build Application"
         working-directory: tests
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -122,7 +118,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive Example"
+      - name: "E2E Tests"
         working-directory: tests
         run: |
           # Boot simulator and wait for System app to be ready.
@@ -147,9 +143,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -179,7 +173,7 @@ jobs:
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
           sudo npm i -g firebase-tools
-      - name: "Build MacOS Example"
+      - name: "Build Application"
         working-directory: tests
         run: |
           export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
@@ -192,7 +186,7 @@ jobs:
           ccache -s
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive MacOS Example"
+      - name: "E2E Tests"
         working-directory: tests
         run: |
           flutter drive -d macos --target=./test_driver/driver_e2e.dart --dart-define=CI=true
@@ -201,9 +195,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2.3.4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
@@ -223,7 +215,7 @@ jobs:
           restore-keys: firebase-emulators-v1
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
-      - name: "Drive Example"
+      - name: "E2E Tests"
         working-directory: tests
         run: |
           chromedriver --port=4444 &
