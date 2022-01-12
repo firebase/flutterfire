@@ -36,6 +36,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
 
   final Semaphore semaphore = new Semaphore(0);
   final Map<String, Object> response = new HashMap<>();
+  final Handler mainLooper = new Handler(Looper.getMainLooper());
 
   @Override
   public void onListen(Object arguments, EventSink events) {
@@ -64,7 +65,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               Map<String, Object> attemptMap = new HashMap<>();
               attemptMap.put("appName", firestore.getApp().getName());
 
-              new Handler(Looper.getMainLooper()).post(() -> events.success(attemptMap));
+              mainLooper.post(() -> events.success(attemptMap));
 
               try {
                 if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
@@ -144,12 +145,12 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               } else if (task.getResult() != null) {
                 map.put("complete", true);
               }
-              new Handler(Looper.getMainLooper())
-                  .post(
-                      () -> {
-                        events.success(map);
-                        events.endOfStream();
-                      });
+
+              mainLooper.post(
+                  () -> {
+                    events.success(map);
+                    events.endOfStream();
+                  });
             });
   }
 
