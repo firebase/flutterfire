@@ -29,7 +29,7 @@ CHECKATTEMPTS_WAIT=1
 RETRIES=1
 while [ $RETRIES -le $MAX_RETRIES ]; do
 
-  if [[ -n "${IS_CI}" ]]; then
+  if [[ -z "${CI}" ]]; then
     echo "Starting Firebase Emulator Suite in foreground."
     $EMU_START_COMMAND
     exit 0
@@ -40,6 +40,7 @@ while [ $RETRIES -le $MAX_RETRIES ]; do
     while [ $CHECKATTEMPTS -le $MAX_CHECKATTEMPTS ]; do
       sleep $CHECKATTEMPTS_WAIT
       if curl --output /dev/null --silent --fail http://localhost:8080; then
+        sleep 15
         echo "Firebase Emulator Suite is online!"
         exit 0;
       fi
