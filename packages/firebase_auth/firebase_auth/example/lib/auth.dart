@@ -7,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -90,16 +89,12 @@ class _AuthGateState extends State<AuthGate> {
     if (kIsWeb) {
       authButtons = {
         Buttons.Google: _signInWithGoogle,
-        Buttons.FacebookNew: _signInWithFacebook,
-        Buttons.Twitter: _signInWithTwitter,
         Buttons.GitHub: _signInWithGitHub,
       };
     } else {
       authButtons = {
         if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
         if (Platform.isIOS || Platform.isMacOS) Buttons.Apple: _signInWithApple,
-        if (!Platform.isMacOS) Buttons.FacebookNew: _signInWithFacebook,
-        if (!Platform.isMacOS) Buttons.Twitter: _signInWithTwitter,
         if (!Platform.isMacOS) Buttons.GitHub: _signInWithGitHub,
       };
     }
@@ -209,7 +204,7 @@ class _AuthGateState extends State<AuthGate> {
                                 child: const Text('Forgot password?'),
                               ),
                               TextButton(
-                                onPressed: _resetPassword,
+                                onPressed: _emailLink,
                                 child: const Text('Send me a sign-in link'),
                               ),
                             ],
@@ -354,7 +349,7 @@ class _AuthGateState extends State<AuthGate> {
 
     if (email != null) {
       try {
-        await FirebaseAuth.instance.sendPasswordResetEmail(email: email!);
+        await _auth.sendPasswordResetEmail(email: email!);
         ScaffoldSnackbar.of(context).show('Password reset email is sent');
       } catch (e) {
         ScaffoldSnackbar.of(context).show('Error resetting');
@@ -366,7 +361,7 @@ class _AuthGateState extends State<AuthGate> {
     setIsLoading();
 
     try {
-      await FirebaseAuth.instance.signInAnonymously();
+      await _auth.signInAnonymously();
     } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';
@@ -412,6 +407,39 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  Future<void> _emailLink() async {
+    if (emailController.text.isNotEmpty) {
+      setIsLoading();
+
+      try {
+        if (mode == AuthMode.login) {
+          await _auth.sendSignInLinkToEmail(
+            email: emailController.text,
+            actionCodeSettings: ActionCodeSettings(
+              url:
+                  'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler',
+              handleCodeInApp: true,
+              androidPackageName: 'io.flutter.plugins.firebaseauthexample',
+              iOSBundleId: 'io.flutter.plugins.firebase.auth',
+              androidInstallApp: true,
+              androidMinimumVersion: '0.1.0',
+            ),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        setState(() {
+          error = '${e.message}';
+        });
+      } catch (e) {
+        setState(() {
+          error = '$e';
+        });
+      } finally {
+        setIsLoading();
+      }
+    }
+  }
+
   Future<void> _phoneAuth() async {
     if (mode != AuthMode.phone) {
       setState(() {
@@ -419,7 +447,7 @@ class _AuthGateState extends State<AuthGate> {
       });
     } else {
       try {
-        await FirebaseAuth.instance.verifyPhoneNumber(
+        await _auth.verifyPhoneNumber(
           phoneNumber: phoneController.text,
           verificationCompleted: (_) {},
           verificationFailed: (e) {
@@ -480,7 +508,7 @@ class _AuthGateState extends State<AuthGate> {
 
             try {
               // Sign the user in (or link) with the credential
-              await FirebaseAuth.instance.signInWithCredential(credential);
+              await _auth.signInWithCredential(credential);
             } on FirebaseAuthException catch (e) {
               setState(() {
                 error = e.message ?? '';
@@ -533,55 +561,6 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  Future<void> _signInWithFacebook() async {
-    setIsLoading();
-
-    try {
-      if (kIsWeb) {
-        // Create a new provider
-        FacebookAuthProvider facebookProvider = FacebookAuthProvider();
-
-        facebookProvider.addScope('email');
-        facebookProvider.setCustomParameters({
-          'display': 'popup',
-        });
-
-        // Once signed in, return the UserCredential
-        await FirebaseAuth.instance.signInWithPopup(facebookProvider);
-      }
-      // Trigger the sign-in flow
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-
-      if (loginResult.accessToken != null) {
-        // Create a credential from the access token
-        final facebookAuthCredential =
-            FacebookAuthProvider.credential(loginResult.accessToken!.token);
-
-        // Once signed in, return the UserCredential
-        await FirebaseAuth.instance
-            .signInWithCredential(facebookAuthCredential);
-      }
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
-    }
-  }
-
-  Future<void> _signInWithTwitter() async {
-    setIsLoading();
-
-    try {} on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
-    } finally {
-      setIsLoading();
-    }
-  }
-
   /// To get your `clientId` and `clientSecret`, visit https://github.com/settings/developers
   /// and create a new OAuth application, for Home Page URL use `https://react-native-firebase-testing.firebaseapp.com`,
   /// for Authorization callback URL use `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
@@ -596,7 +575,7 @@ class _AuthGateState extends State<AuthGate> {
         GithubAuthProvider githubProvider = GithubAuthProvider();
 
         // Once signed in, return the UserCredential
-        await FirebaseAuth.instance.signInWithPopup(githubProvider);
+        await _auth.signInWithPopup(githubProvider);
       } else {
         // Create a GitHubSignIn instance
         final GitHubSignIn gitHubSignIn = GitHubSignIn(
@@ -616,8 +595,7 @@ class _AuthGateState extends State<AuthGate> {
           final githubAuthCredential = GithubAuthProvider.credential(token);
 
           // Once signed in, return the UserCredential
-          await FirebaseAuth.instance
-              .signInWithCredential(githubAuthCredential);
+          await _auth.signInWithCredential(githubAuthCredential);
         }
       }
     } on FirebaseAuthException catch (e) {
@@ -659,7 +637,7 @@ class _AuthGateState extends State<AuthGate> {
 
       // Sign in the user with Firebase. If the nonce we generated earlier does
       // not match the nonce in `appleCredential.identityToken`, sign in will fail.
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      await _auth.signInWithCredential(oauthCredential);
     } on FirebaseAuthException catch (e) {
       setState(() {
         error = '${e.message}';

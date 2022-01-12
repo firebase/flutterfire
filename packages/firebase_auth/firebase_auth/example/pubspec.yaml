@@ -12,7 +12,6 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^4.0.0
   flutter_signin_button: ^2.0.0 
   github_sign_in: ^0.0.5-dev.4
   google_sign_in: ^5.1.0
