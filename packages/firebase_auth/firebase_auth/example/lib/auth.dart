@@ -398,6 +398,48 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
+  Future<String?> getSmsCodeFromUser() async {
+    String? smsCode;
+
+    // Update the UI - wait for the user to enter the SMS code
+    await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('SMS code:'),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Sign in'),
+            ),
+            OutlinedButton(
+              onPressed: () {
+                smsCode = null;
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+          content: Container(
+            padding: const EdgeInsets.all(20),
+            child: TextField(
+              onChanged: (value) {
+                smsCode = value;
+              },
+              textAlign: TextAlign.center,
+              autofocus: true,
+            ),
+          ),
+        );
+      },
+    );
+
+    return smsCode;
+  }
+
   Future<void> _phoneAuth() async {
     if (mode != AuthMode.phone) {
       setState(() {
@@ -405,88 +447,56 @@ class _AuthGateState extends State<AuthGate> {
       });
     } else {
       try {
-        await _auth.verifyPhoneNumber(
-          phoneNumber: phoneController.text,
-          verificationCompleted: (_) {},
-          verificationFailed: (e) {
-            setState(() {
-              error = '${e.message}';
-            });
-            setIsLoading();
-          },
-          codeSent: (String verificationId, int? resendToken) async {
-            String? smsCode;
+        if (kIsWeb) {
+          final confirmationResult =
+              await _auth.signInWithPhoneNumber(phoneController.text);
+          final smsCode = await getSmsCodeFromUser();
 
-            // Update the UI - wait for the user to enter the SMS code
-            await showDialog<String>(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('SMS code:'),
-                  actions: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Sign in'),
-                    ),
-                    OutlinedButton(
-                      onPressed: () {
-                        smsCode = null;
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ],
-                  content: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: TextField(
-                      onChanged: (value) {
-                        smsCode = value;
-                      },
-                      textAlign: TextAlign.center,
-                      autofocus: true,
-                    ),
-                  ),
-                );
-              },
-            );
-
-            if (smsCode == null) {
-              setIsLoading();
-              return;
-            }
-
-            // Create a PhoneAuthCredential with the code
-            final credential = PhoneAuthProvider.credential(
-              verificationId: verificationId,
-              smsCode: smsCode!,
-            );
-
-            try {
-              // Sign the user in (or link) with the credential
-              await _auth.signInWithCredential(credential);
-            } on FirebaseAuthException catch (e) {
+          if (smsCode != null) {
+            await confirmationResult.confirm(smsCode);
+          }
+        } else {
+          await _auth.verifyPhoneNumber(
+            phoneNumber: phoneController.text,
+            verificationCompleted: (_) {},
+            verificationFailed: (e) {
               setState(() {
-                error = e.message ?? '';
+                error = '${e.message}';
               });
-            }
-            setIsLoading();
-          },
-          codeAutoRetrievalTimeout: (e) {
-            setState(() {
-              error = e;
-            });
-            setIsLoading();
-          },
-        );
-      } catch (e) {
-        setIsLoading();
+            },
+            codeSent: (String verificationId, int? resendToken) async {
+              final smsCode = await getSmsCodeFromUser();
 
+              if (smsCode != null) {
+                // Create a PhoneAuthCredential with the code
+                final credential = PhoneAuthProvider.credential(
+                  verificationId: verificationId,
+                  smsCode: smsCode,
+                );
+
+                try {
+                  // Sign the user in (or link) with the credential
+                  await _auth.signInWithCredential(credential);
+                } on FirebaseAuthException catch (e) {
+                  setState(() {
+                    error = e.message ?? '';
+                  });
+                }
+              }
+            },
+            codeAutoRetrievalTimeout: (e) {
+              setState(() {
+                error = e;
+              });
+            },
+          );
+        }
+      } catch (e) {
         setState(() {
           error = '$e';
         });
+      } finally {
+        setIsLoading();
       }
     }
   }
