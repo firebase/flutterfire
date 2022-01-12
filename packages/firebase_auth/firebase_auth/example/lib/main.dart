@@ -56,20 +56,18 @@ class AuthExampleApp extends StatelessWidget {
                     ),
                   ),
                 ),
-                Flexible(
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 400),
-                      child: StreamBuilder<User?>(
-                        stream: FirebaseAuth.instance.authStateChanges(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return const ProfilePage();
-                          }
-                          return const AuthGate();
-                        },
-                      ),
-                    ),
+                SizedBox(
+                  width: constraines.maxWidth >= 1200
+                      ? constraines.maxWidth / 2
+                      : constraines.maxWidth,
+                  child: StreamBuilder<User?>(
+                    stream: FirebaseAuth.instance.authStateChanges(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return const ProfilePage();
+                      }
+                      return const AuthGate();
+                    },
                   ),
                 ),
               ],
