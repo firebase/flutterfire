@@ -5,6 +5,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
@@ -23,9 +24,16 @@ Exception convertPlatformException(Object exception) {
 /// which can be converted into user friendly exceptions.
 FirebaseException platformExceptionToFirebaseException(
     PlatformException platformException) {
-  Map<String, String>? details = platformException.details != null
+  Map<String, String>? details;
+  try {
+    details = platformException.details != null
       ? Map<String, String>.from(platformException.details)
       : null;
+  } on Error catch (error) {
+    final _logger = Logger('FirebaseMessagingExceptionUtil');
+    _logger.severe(
+      'Failed to parse PlatformException details', error, error.stackTrace);
+  }
 
   String code = 'unknown';
   String? message = platformException.message;
