@@ -1,5 +1,5 @@
-import 'package:flutterfire_ui/src/i10n/lang/hi.dart';
 import 'lang/en.dart';
+import 'lang/hi.dart';
 
 abstract class FlutterFireUILocalizationLabels {
   const FlutterFireUILocalizationLabels();
