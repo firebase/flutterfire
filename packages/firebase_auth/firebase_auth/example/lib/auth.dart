@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:twitter_login/twitter_login.dart';
 
 typedef OAuthSignIn = void Function();
 
@@ -87,11 +88,13 @@ class _AuthGateState extends State<AuthGate> {
       authButtons = {
         Buttons.Google: _signInWithGoogle,
         Buttons.GitHub: _signInWithGitHub,
+        Buttons.Twitter: _signInWithTwitter,
       };
     } else {
       authButtons = {
         if (!Platform.isMacOS) Buttons.Google: _signInWithGoogle,
         if (!Platform.isMacOS) Buttons.GitHub: _signInWithGitHub,
+        if (!Platform.isMacOS) Buttons.Twitter: _signInWithTwitter,
       };
     }
   }
@@ -515,6 +518,46 @@ class _AuthGateState extends State<AuthGate> {
 
         // Once signed in, return the UserCredential
         await _auth.signInWithCredential(credential);
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        error = '${e.message}';
+      });
+    } finally {
+      setIsLoading();
+    }
+  }
+
+  Future<void> _signInWithTwitter() async {
+    setIsLoading();
+    try {
+      if (kIsWeb) {
+        // Create a new provider
+        TwitterAuthProvider twitterProvider = TwitterAuthProvider();
+
+        // Once signed in, return the UserCredential
+        await FirebaseAuth.instance.signInWithPopup(twitterProvider);
+      } else {
+        // Create a TwitterLogin instance
+        final twitterLogin = TwitterLogin(
+          apiKey: TwitterConfig['API_KEY']!,
+          apiSecretKey: TwitterConfig['API_SECRET_KEY']!,
+          redirectURI: TwitterConfig['REDIRECT_URL']!,
+        );
+
+        // Trigger the sign-in flow
+        final authResult = await twitterLogin.login();
+
+        if (authResult.status == TwitterLoginStatus.loggedIn) {
+          // Create a credential from the access token
+          final twitterAuthCredential = TwitterAuthProvider.credential(
+            accessToken: authResult.authToken!,
+            secret: authResult.authTokenSecret!,
+          );
+
+          // Once signed in, return the UserCredential
+          await _auth.signInWithCredential(twitterAuthCredential);
+        }
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

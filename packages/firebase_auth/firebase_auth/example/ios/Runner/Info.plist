@@ -62,6 +62,15 @@
 			<array>
 				<string>com.googleusercontent.apps.448618578101-njjco1vvj6077e84ofgcmve4ti73ukq0</string>
 			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string></string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<!-- Registered Callback URLs in TwitterApp -->
+				<string>flutterfireauth</string>
+			</array>
 		</dict>
 	</array>
 </dict>
