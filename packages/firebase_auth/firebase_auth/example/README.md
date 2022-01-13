@@ -40,7 +40,7 @@ To get your `clientId` and `clientSecret`:
 2. Create a new OAuth application.
 3. Set **Home Page URL** to `https://react-native-firebase-testing.firebaseapp.com`.
 4. Set **Authorization callback URL** to `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
-5. After you register your app, add the `clientId` and `clientSecret` to the example app in `lib/github.dart`.
+5. After you register your app, add the `clientId` and `clientSecret` to the example app config in [`lib/config.dart`](./lib/config.dart).
 
 
 ## Getting Started
