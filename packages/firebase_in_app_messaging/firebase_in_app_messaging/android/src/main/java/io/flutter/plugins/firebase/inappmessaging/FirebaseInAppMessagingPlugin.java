@@ -14,24 +14,13 @@ import io.flutter.plugin.common.MethodChannel.Result;
 
 /** FirebaseInAppMessagingPlugin */
 public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
-  private final FirebaseInAppMessaging instance;
   private MethodChannel channel;
-
-  private static MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
-    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
-    return channel;
-  }
-
-  public FirebaseInAppMessagingPlugin() {
-    instance = FirebaseInAppMessaging.getInstance();
-  }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     BinaryMessenger binaryMessenger = binding.getBinaryMessenger();
-    channel = setup(binaryMessenger);
+    channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
   }
 
   @Override
@@ -48,21 +37,21 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
       case "FirebaseInAppMessaging#triggerEvent":
         {
           String eventName = call.argument("eventName");
-          instance.triggerEvent(eventName);
+          FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
           Boolean suppress = (Boolean) call.argument("suppress");
-          instance.setMessagesSuppressed(suppress);
+          FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
         {
           Boolean enabled = (Boolean) call.argument("enabled");
-          instance.setAutomaticDataCollectionEnabled(enabled);
+          FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled);
           result.success(null);
           break;
         }

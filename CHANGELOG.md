@@ -3,6 +3,149 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-01-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`cloud_functions` - `v3.2.5`](#cloud_functions---v325)
+- [`firebase_analytics` - `v9.0.5`](#firebase_analytics---v905)
+- [`firebase_app_check` - `v0.0.6+4`](#firebase_app_check---v0064)
+- [`firebase_app_installations` - `v0.1.0+5`](#firebase_app_installations---v0105)
+- [`firebase_auth` - `v3.3.5`](#firebase_auth---v335)
+- [`firebase_core` - `v1.11.0`](#firebase_core---v1110)
+- [`firebase_crashlytics` - `v2.4.5`](#firebase_crashlytics---v245)
+- [`firebase_database` - `v9.0.5`](#firebase_database---v905)
+- [`firebase_dynamic_links_platform_interface` - `v0.2.0+4`](#firebase_dynamic_links_platform_interface---v0204)
+- [`firebase_in_app_messaging` - `v0.6.0+6`](#firebase_in_app_messaging---v0606)
+- [`firebase_messaging` - `v11.2.5`](#firebase_messaging---v1125)
+- [`firebase_performance` - `v0.8.0+4`](#firebase_performance---v0804)
+- [`firebase_remote_config` - `v1.0.4`](#firebase_remote_config---v104)
+- [`firebase_storage` - `v10.2.5`](#firebase_storage---v1025)
+- [`flutterfire_ui` - `v0.3.1`](#flutterfire_ui---v031)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_in_app_messaging_platform_interface` - `v0.2.0+6`
+- `firebase_crashlytics_platform_interface` - `v3.1.12`
+- `firebase_auth_web` - `v3.3.6`
+- `firebase_auth_platform_interface` - `v6.1.10`
+- `firebase_remote_config_platform_interface` - `v1.0.4`
+- `firebase_database_platform_interface` - `v0.2.0+4`
+- `firebase_remote_config_web` - `v1.0.4`
+- `firebase_dynamic_links` - `v4.0.4`
+- `firebase_database_web` - `v0.2.0+4`
+- `cloud_firestore_web` - `v2.6.6`
+- `cloud_firestore_platform_interface` - `v5.4.11`
+- `firebase_app_installations_web` - `v0.1.0+5`
+- `cloud_firestore` - `v3.1.6`
+- `firebase_messaging_platform_interface` - `v3.1.5`
+- `firebase_app_installations_platform_interface` - `v0.1.0+5`
+- `firebase_messaging_web` - `v2.2.6`
+- `firebase_analytics_platform_interface` - `v3.0.4`
+- `firebase_analytics_web` - `v0.4.0+5`
+- `firebase_ml_model_downloader_platform_interface` - `v0.1.0+5`
+- `firebase_ml_model_downloader` - `v0.1.0+5`
+- `firebase_app_check_platform_interface` - `v0.0.3+4`
+- `firebase_app_check_web` - `v0.0.5+4`
+- `cloud_functions_web` - `v4.2.6`
+- `firebase_storage_web` - `v3.2.6`
+- `cloud_functions_platform_interface` - `v5.0.20`
+- `firebase_storage_platform_interface` - `v4.0.12`
+- `firebase_performance_web` - `v0.1.0+4`
+- `firebase_performance_platform_interface` - `v0.1.0+4`
+- `cloud_firestore_odm` - `v1.0.0-dev.6`
+- `cloud_firestore_odm_generator` - `v1.0.0-dev.6`
+
+---
+
+#### `cloud_functions` - `v3.2.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_analytics` - `v9.0.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+ - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810).
+ - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735).
+ - **DOCS**: example app initialization and docs support status (#7745).
+
+#### `firebase_app_check` - `v0.0.6+4`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_app_installations` - `v0.1.0+5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_auth` - `v3.3.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_core` - `v1.11.0`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+ - **FIX**: bump Firebase Android SDK version to `29.0.3` (from `29.0.0`).
+ - **FIX**: workaround an SDK issue on Android where calling `initializeApp` when having `In App Messaging` installed causes a crash.
+ - **FEAT**: bump Firebase iOS SDK version to `8.10.0`. (#7775).
+
+#### `firebase_crashlytics` - `v2.4.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_database` - `v9.0.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.0+4`
+
+ - **FIX**: `PendingDynamicLinkData.asString()` prints out instance type with mapped values. (#7727).
+
+#### `firebase_in_app_messaging` - `v0.6.0+6`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+ - **FIX**: lazily get the default `FirebaseInAppMessaging` instance on Android to allow for Firebase initialization via Dart only.
+ - **FIX**: issue where Dart only initialization did not function correctly on iOS.
+
+#### `firebase_messaging` - `v11.2.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_performance` - `v0.8.0+4`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_remote_config` - `v1.0.4`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `firebase_storage` - `v10.2.5`
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726).
+
+#### `flutterfire_ui` - `v0.3.1`
+
+ - **FIX**: fix `ResponsivePage` overflow issue (#7792).
+ - **FIX**: export `DifferentSignInMethodsFound` auth state and make sure to add it to the list of provided actions (#7789).
+ - **FIX**: validate email with the library instead of the `RegExp` (#7772).
+ - **FIX**: not working `onTap` in `OAuthProviderButtonWidget` (#7641).
+ - **FIX**: pass auth down to `LoginView` (#7645).
+ - **FEAT**: add `Spanish` localization support (#7716).
+ - **FEAT**: add `French` localization support (#7797).
+ - **FEAT**: add `Arabic` localization support (#7771).
+ - **DOCS**: update repository and homepage url (#7781).
+ - **DOCS**: add missing `providerConfigs` in example (#7724).
+
+
 ## 2021-12-16
 
 ### Changes

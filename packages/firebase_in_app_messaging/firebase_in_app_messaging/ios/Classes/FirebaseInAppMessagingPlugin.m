@@ -15,18 +15,6 @@
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    if (![FIRApp appNamed:@"__FIRAPP_DEFAULT"]) {
-      NSLog(@"Configuring the default Firebase app...");
-      [FIRApp configure];
-      NSLog(@"Configured the default Firebase app %@.", [FIRApp defaultApp].name);
-    }
-  }
-  return self;
-}
-
 - (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
   if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
     NSString *eventName = call.arguments[@"eventName"];
