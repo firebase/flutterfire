@@ -116,8 +116,6 @@ class _SignInFormContentState extends State<_SignInFormContent> {
     final l = FlutterFireUILocalizations.labelsOf(context);
     const spacer = SizedBox(height: 16);
 
-    final signingUp = widget.action == AuthAction.signUp;
-
     final children = [
       if (widget.email == null) ...[
         EmailInput(
@@ -131,7 +129,6 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         spacer,
       ],
       PasswordInput(
-        newPassword: signingUp,
         focusNode: passwordFocusNode,
         controller: passwordCtrl,
         onSubmit: _submit,
@@ -163,7 +160,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           widget.action == AuthAction.link) ...[
         const SizedBox(height: 8),
         PasswordInput(
-          newPassword: signingUp,
+          autofillHints: const [AutofillHints.newPassword],
           focusNode: confirmPasswordFocusNode,
           controller: confirmPasswordCtrl,
           onSubmit: _submit,
