@@ -250,10 +250,10 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
     this.valueLabel = 'nilai',
     this.cancelLabel = 'batalkan',
     this.updateLabel = 'perbarui',
-    this.northInitialLabel = 'U',
-    this.southInitialLabel = 'S',
-    this.westInitialLabel = 'W',
-    this.eastInitialLabel = 'E',
+    this.northInitialLabel = 'U', // utara
+    this.southInitialLabel = 'S', // selatan
+    this.westInitialLabel = 'B', // barat
+    this.eastInitialLabel = 'T', // timur
     this.timestampLabel = 'waktu',
     this.longitudeLabel = 'garis bujur',
     this.latitudeLabel = 'garis lintang',
