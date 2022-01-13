@@ -109,15 +109,17 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
     if (newRoute != null && routeFilter(newRoute)) {
-      _sendScreenView(newRoute!);
+      _sendScreenView(newRoute);
     }
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    if (previousRoute != null && routeFilter(previousRoute) && routeFilter(route)) {
-      _sendScreenView(previousRoute!);
+    if (previousRoute != null &&
+        routeFilter(previousRoute) &&
+        routeFilter(route)) {
+      _sendScreenView(previousRoute);
     }
   }
 }
