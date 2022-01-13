@@ -79,7 +79,7 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   final RouteFilter routeFilter;
   final void Function(PlatformException error)? _onError;
 
-  void _sendScreenView(ModalRoute<dynamic> route) {
+  void _sendScreenView(Route<dynamic> route) {
     final String? screenName = nameExtractor(route.settings);
     if (screenName != null) {
       analytics.setCurrentScreen(screenName: screenName).catchError(
@@ -107,16 +107,16 @@ class FirebaseAnalyticsObserver extends RouteObserver<ModalRoute<dynamic>> {
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    if (routeFilter(newRoute)) {
-      _sendScreenView(newRoute);
+    if (newRoute != null && routeFilter(newRoute)) {
+      _sendScreenView(newRoute!);
     }
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     super.didPop(route, previousRoute);
-    if (routeFilter(previousRoute) && routeFilter(route)) {
-      _sendScreenView(previousRoute);
+    if (previousRoute != null && routeFilter(previousRoute) && routeFilter(route)) {
+      _sendScreenView(previousRoute!);
     }
   }
 }
