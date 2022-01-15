@@ -89,13 +89,13 @@ FirebaseModelDownloadConditions conditions = FirebaseModelDownloadConditions(
   // Download whilst connected to cellular data
   iosAllowsCellularAccess: true,
   // Allow downloading in the background
-  iosAllowsBackgroundDownloading: false,
+  iosAllowsBackgroundDownloading: true,
   // Only download whilst charging
-  androidChargingRequired: false,
+  androidChargingRequired: true,
   // Only download whilst on Wifi
-  androidWifiRequired: false,
+  androidWifiRequired: true,
   // Only download whilst the device is idle
-  androidDeviceIdleRequired: false,
+  androidDeviceIdleRequired: true,
 );
 
 FirebaseCustomModel model = await FirebaseModelDownloader.instance.getModel('myModel', FirebaseModelDownloadType.latestModel, conditions);
