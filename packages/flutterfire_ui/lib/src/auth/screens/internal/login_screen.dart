@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 
 import '../../widgets/internal/universal_scaffold.dart';
 
@@ -20,6 +21,7 @@ class LoginScreen extends StatelessWidget {
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
+  final SignInScreenTheme? signInScreenTheme;
 
   const LoginScreen({
     Key? key,
@@ -36,6 +38,7 @@ class LoginScreen extends StatelessWidget {
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -54,6 +57,7 @@ class LoginScreen extends StatelessWidget {
           showAuthActionSwitch: showAuthActionSwitch,
           subtitleBuilder: subtitleBuilder,
           footerBuilder: footerBuilder,
+          signInScreenTheme: signInScreenTheme,
         ),
       ),
     );
@@ -64,6 +68,7 @@ class LoginScreen extends StatelessWidget {
       headerBuilder: headerBuilder,
       headerMaxExtent: headerMaxExtent,
       sideBuilder: sideBuilder,
+      signInScreenTheme: signInScreenTheme,
       child: loginContent,
     );
 

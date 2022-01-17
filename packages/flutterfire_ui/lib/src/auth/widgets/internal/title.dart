@@ -5,7 +5,8 @@ import 'platform_widget.dart';
 
 class Title extends PlatformWidget {
   final String text;
-  const Title({Key? key, required this.text}) : super(key: key);
+  final Color? color;
+  const Title({Key? key, required this.text, this.color}) : super(key: key);
 
   @override
   Widget buildCupertino(BuildContext context) {
@@ -19,7 +20,7 @@ class Title extends PlatformWidget {
   Widget buildMaterial(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.headline5,
+      style: Theme.of(context).textTheme.headline5?.copyWith(color: color),
     );
   }
 }

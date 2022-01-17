@@ -27,6 +27,7 @@ class EmailForm extends StatelessWidget {
   final EmailProviderConfiguration? config;
   final EmailSubmitCallback? onSubmit;
   final String? email;
+  final SignInScreenTheme? signInScreenTheme;
 
   const EmailForm({
     Key? key,
@@ -35,6 +36,7 @@ class EmailForm extends StatelessWidget {
     this.config,
     this.onSubmit,
     this.email,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -48,6 +50,7 @@ class EmailForm extends StatelessWidget {
         action: action,
         onSubmit: onSubmit,
         email: email,
+        signInScreenTheme: signInScreenTheme,
       ),
     );
   }
@@ -58,6 +61,7 @@ class _SignInFormContent extends StatefulWidget {
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
   final String? email;
+  final SignInScreenTheme? signInScreenTheme;
 
   const _SignInFormContent({
     Key? key,
@@ -65,6 +69,7 @@ class _SignInFormContent extends StatefulWidget {
     this.onSubmit,
     this.action,
     this.email,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -125,6 +130,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
             formKey.currentState?.validate();
             FocusScope.of(context).requestFocus(passwordFocusNode);
           },
+          signInScreenTheme: widget.signInScreenTheme,
         ),
         spacer,
       ],
@@ -133,6 +139,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         controller: passwordCtrl,
         onSubmit: _submit,
         label: l.passwordInputLabel,
+        signInScreenTheme: widget.signInScreenTheme,
       ),
       if (widget.action == AuthAction.signIn) ...[
         const SizedBox(height: 8),
@@ -153,6 +160,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
                 );
               }
             },
+            signInScreenTheme: widget.signInScreenTheme,
           ),
         ),
       ],

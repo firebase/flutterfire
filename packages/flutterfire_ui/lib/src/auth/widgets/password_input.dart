@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 
 import '../validators.dart';
 import 'internal/universal_text_form_field.dart';
@@ -10,6 +11,7 @@ class PasswordInput extends StatelessWidget {
   final void Function(String value) onSubmit;
   final String label;
   final String? Function(String? value)? validator;
+  final SignInScreenTheme? signInScreenTheme;
 
   const PasswordInput({
     Key? key,
@@ -18,6 +20,7 @@ class PasswordInput extends StatelessWidget {
     required this.onSubmit,
     required this.label,
     this.validator,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -33,6 +36,7 @@ class PasswordInput extends StatelessWidget {
       validator: validator ?? NotEmpty(l.passwordIsRequiredErrorText).validate,
       onSubmitted: (v) => onSubmit(v!),
       placeholder: label,
+      signInScreenTheme: signInScreenTheme,
     );
   }
 }

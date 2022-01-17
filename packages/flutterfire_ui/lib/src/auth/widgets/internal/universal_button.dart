@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 
 import 'platform_widget.dart';
 
@@ -14,6 +15,7 @@ class UniversalButton extends PlatformWidget {
   final IconData? icon;
   final TextDirection? direction;
   final ButtonVariant variant;
+  final SignInScreenTheme? signInScreenTheme;
 
   const UniversalButton({
     Key? key,
@@ -22,6 +24,7 @@ class UniversalButton extends PlatformWidget {
     this.icon,
     this.direction,
     this.variant = ButtonVariant.filled,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -30,7 +33,7 @@ class UniversalButton extends PlatformWidget {
       textDirection: direction,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(text),
+        Text(text, style: TextStyle(color: signInScreenTheme?.textColor),),
         if (icon != null) ...[const SizedBox(width: 8), Icon(icon, size: 20)],
       ],
     );
@@ -51,7 +54,7 @@ class UniversalButton extends PlatformWidget {
 
   @override
   Widget buildMaterial(BuildContext context) {
-    final child = Text(text);
+    final child = Text(text, style: TextStyle(color: signInScreenTheme?.textColor),);
 
     if (icon != null) {
       if (variant == ButtonVariant.text) {

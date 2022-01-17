@@ -24,7 +24,7 @@ class LoginView extends StatefulWidget {
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? footerBuilder;
   final AuthViewContentBuilder? subtitleBuilder;
-
+  final SignInScreenTheme? signInScreenTheme;
   final List<ProviderConfiguration> providerConfigs;
 
   const LoginView({
@@ -38,6 +38,7 @@ class LoginView extends StatefulWidget {
     this.showAuthActionSwitch,
     this.footerBuilder,
     this.subtitleBuilder,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -128,16 +129,16 @@ class LoginViewState extends State<LoginView> {
 
     if (isCupertino) {
       final theme = CupertinoTheme.of(context);
-      registerTextColor = theme.primaryColor;
-      hintStyle = theme.textTheme.textStyle.copyWith(fontSize: 12);
+      registerTextColor = widget.signInScreenTheme?.textColor ?? theme.primaryColor;
+      hintStyle = theme.textTheme.textStyle.copyWith(fontSize: 12, color: widget.signInScreenTheme?.textColor);
     } else {
       final theme = Theme.of(context);
-      hintStyle = Theme.of(context).textTheme.caption;
-      registerTextColor = theme.colorScheme.primary;
+      hintStyle = Theme.of(context).textTheme.caption?.copyWith(color: widget.signInScreenTheme?.textColor);
+      registerTextColor = widget.signInScreenTheme?.textColor ?? theme.colorScheme.primary;
     }
 
     return [
-      Title(text: title),
+      Title(text: title, color: widget.signInScreenTheme?.textColor),
       const SizedBox(height: 16),
       if (widget.subtitleBuilder != null)
         widget.subtitleBuilder!(
@@ -198,6 +199,7 @@ class LoginViewState extends State<LoginView> {
                   action: _action,
                   config: config,
                   email: widget.email,
+                  signInScreenTheme: widget.signInScreenTheme,
                 )
               ] else if (config is PhoneProviderConfiguration) ...[
                 const SizedBox(height: 8),

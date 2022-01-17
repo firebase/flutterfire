@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 
 import 'internal/login_screen.dart';
 
@@ -25,6 +26,7 @@ class SignInScreen extends StatelessWidget {
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
   final List<FlutterFireUIAction> actions;
+  final SignInScreenTheme? signInScreenTheme;
 
   const SignInScreen({
     Key? key,
@@ -41,6 +43,7 @@ class SignInScreen extends StatelessWidget {
     this.footerBuilder,
     this.loginViewKey,
     this.actions = const [],
+    this.signInScreenTheme
   }) : super(key: key);
 
   Future<void> _signInWithDifferentProvider(
@@ -88,6 +91,7 @@ class SignInScreen extends StatelessWidget {
         showAuthActionSwitch: showAuthActionSwitch,
         subtitleBuilder: subtitleBuilder,
         footerBuilder: footerBuilder,
+        signInScreenTheme: signInScreenTheme,
       ),
     );
   }

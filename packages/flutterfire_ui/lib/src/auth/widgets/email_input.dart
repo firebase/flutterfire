@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 import '../widgets/internal/universal_text_form_field.dart';
 
 import '../validators.dart';
@@ -11,6 +12,7 @@ class EmailInput extends StatelessWidget {
   final TextEditingController controller;
   final String? initialValue;
   final void Function(String value) onSubmitted;
+  final SignInScreenTheme? signInScreenTheme;
 
   const EmailInput({
     Key? key,
@@ -19,6 +21,7 @@ class EmailInput extends StatelessWidget {
     this.focusNode,
     this.autofocus,
     this.initialValue,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -37,6 +40,7 @@ class EmailInput extends StatelessWidget {
         EmailValidator(l.isNotAValidEmailErrorText),
       ]),
       onSubmitted: (v) => onSubmitted(v!),
+      signInScreenTheme: signInScreenTheme,
     );
   }
 }

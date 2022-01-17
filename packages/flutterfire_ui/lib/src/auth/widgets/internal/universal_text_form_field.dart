@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 import 'platform_widget.dart';
 
 class UniversalTextFormField extends PlatformWidget {
@@ -16,6 +17,7 @@ class UniversalTextFormField extends PlatformWidget {
   final bool? enableSuggestions;
   final bool? autocorrect;
   final Widget? prefix;
+  final SignInScreenTheme? signInScreenTheme;
 
   const UniversalTextFormField({
     Key? key,
@@ -31,16 +33,17 @@ class UniversalTextFormField extends PlatformWidget {
     this.focusNode,
     this.enableSuggestions,
     this.autocorrect,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
   Widget buildCupertino(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(bottom: 8),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: CupertinoColors.inactiveGray,
+            color: signInScreenTheme?.textColor ?? CupertinoColors.inactiveGray,
           ),
         ),
       ),
@@ -66,9 +69,13 @@ class UniversalTextFormField extends PlatformWidget {
       autofocus: autofocus ?? false,
       focusNode: focusNode,
       controller: controller,
+      cursorColor: signInScreenTheme?.textColor,
+      style: TextStyle(color: signInScreenTheme?.textColor),
       decoration: InputDecoration(
-        labelText: placeholder,
-        prefix: prefix,
+          labelText: placeholder,
+          labelStyle: TextStyle(
+              color: signInScreenTheme?.textColor ?? Color(0xFF000000)),
+          prefix: prefix,
       ),
       validator: validator,
       onFieldSubmitted: onSubmitted,

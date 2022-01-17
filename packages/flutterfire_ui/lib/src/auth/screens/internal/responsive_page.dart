@@ -1,4 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
+// import 'package:flutter/widgets.dart';
 
 import '../../widgets/internal/keyboard_appearence_listener.dart';
 
@@ -58,6 +60,7 @@ class ResponsivePage extends StatefulWidget {
   final double? breakpoint;
   final int? contentFlex;
   final double? maxWidth;
+  final SignInScreenTheme? signInScreenTheme;
 
   const ResponsivePage({
     Key? key,
@@ -69,6 +72,7 @@ class ResponsivePage extends StatefulWidget {
     this.breakpoint,
     this.contentFlex,
     this.maxWidth,
+    this.signInScreenTheme,
   }) : super(key: key);
 
   @override
@@ -94,83 +98,87 @@ class _ResponsivePageState extends State<ResponsivePage> {
   Widget build(BuildContext context) {
     final breakpoint = widget.breakpoint ?? 800;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.biggest.width > breakpoint) {
-          return Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: widget.maxWidth ?? constraints.biggest.width,
-              ),
-              child: Row(
-                textDirection: widget.desktopLayoutDirection,
-                children: <Widget>[
-                  if (widget.sideBuilder != null)
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          return widget.sideBuilder!(context, constraints);
-                        },
+    return Container(
+      color: widget.signInScreenTheme?.backgroundColor,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          if (constraints.biggest.width > breakpoint) {
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: widget.maxWidth ?? constraints.biggest.width,
+                ),
+                child: Row(
+                  textDirection: widget.desktopLayoutDirection,
+                  children: <Widget>[
+                    if (widget.sideBuilder != null)
+                      Expanded(
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return widget.sideBuilder!(context, constraints);
+                          },
+                        ),
                       ),
-                    ),
-                  Expanded(
-                    flex: widget.contentFlex ?? 1,
-                    child: Center(
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          Center(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: breakpoint),
-                              child: IntrinsicHeight(
-                                child: widget.child,
+                    Expanded(
+                      flex: widget.contentFlex ?? 1,
+                      child: Center(
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: [
+                            Center(
+                              child: ConstrainedBox(
+                                constraints:
+                                    BoxConstraints(maxWidth: breakpoint),
+                                child: IntrinsicHeight(
+                                  child: widget.child,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
+                    )
+                  ],
+                ),
+              ),
+            );
+          } else if (widget.headerBuilder != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: KeyboardAppearenceListener(
+                listener: _onKeyboardPositionChanged,
+                child: CustomScrollView(
+                  controller: ctrl,
+                  slivers: [
+                    if (widget.headerBuilder != null)
+                      SliverPersistentHeader(
+                        delegate: LoginImageSliverDelegate(
+                          maxExtent: widget.headerMaxExtent ??
+                              defaultHeaderImageHeight,
+                          builder: widget.headerBuilder!,
+                        ),
+                      ),
+                    SliverList(
+                      delegate: SliverChildListDelegate.fixed(
+                        [widget.child],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          } else {
+            return Center(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  widget.child,
                 ],
               ),
-            ),
-          );
-        } else if (widget.headerBuilder != null) {
-          return Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: KeyboardAppearenceListener(
-              listener: _onKeyboardPositionChanged,
-              child: CustomScrollView(
-                controller: ctrl,
-                slivers: [
-                  if (widget.headerBuilder != null)
-                    SliverPersistentHeader(
-                      delegate: LoginImageSliverDelegate(
-                        maxExtent:
-                            widget.headerMaxExtent ?? defaultHeaderImageHeight,
-                        builder: widget.headerBuilder!,
-                      ),
-                    ),
-                  SliverList(
-                    delegate: SliverChildListDelegate.fixed(
-                      [widget.child],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        } else {
-          return Center(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                widget.child,
-              ],
-            ),
-          );
-        }
-      },
+            );
+          }
+        },
+      ),
     );
   }
 }
