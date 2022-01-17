@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/src/auth/theme/sign_in_screen_theme.dart';
 
 import 'internal/login_screen.dart';
 
