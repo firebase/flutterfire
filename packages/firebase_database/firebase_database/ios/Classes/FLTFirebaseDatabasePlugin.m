@@ -357,16 +357,15 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
   _listenerCount = _listenerCount + 1;
   NSString *eventChannelName =
-  [NSString stringWithFormat:@"%@#%i", eventChannelNamePrefix, _listenerCount];
+      [NSString stringWithFormat:@"%@#%i", eventChannelNamePrefix, _listenerCount];
 
   FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
                                                                 binaryMessenger:_binaryMessenger];
   FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
-      [[FLTFirebaseDatabaseObserveStreamHandler alloc]
-          initWithFIRDatabaseQuery:databaseQuery
-                 andOnDisposeBlock:^() {
-                   [eventChannel setStreamHandler:nil];
-                 }];
+      [[FLTFirebaseDatabaseObserveStreamHandler alloc] initWithFIRDatabaseQuery:databaseQuery
+                                                              andOnDisposeBlock:^() {
+                                                                [eventChannel setStreamHandler:nil];
+                                                              }];
   [eventChannel setStreamHandler:streamHandler];
   _streamHandlers[eventChannelName] = streamHandler;
   result.success(eventChannelName);
