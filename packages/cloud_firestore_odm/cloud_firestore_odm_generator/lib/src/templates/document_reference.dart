@@ -77,6 +77,8 @@ class _\$${data.documentReferenceName}
   }
 
   String _updatePrototype(CollectionData data) {
+    if (data.queryableFields.isEmpty) return '';
+
     final parameters = [
       for (final field in data.queryableFields)
         '${field.type.getDisplayString(withNullability: true)} ${field.name},'
@@ -86,6 +88,8 @@ class _\$${data.documentReferenceName}
   }
 
   String _update(CollectionData data) {
+    if (data.queryableFields.isEmpty) return '';
+
     final parameters = [
       for (final field in data.queryableFields)
         'Object? ${field.name} = _sentinel,'

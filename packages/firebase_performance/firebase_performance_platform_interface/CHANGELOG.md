@@ -1,3 +1,12 @@
+## 0.1.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+3
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **FIX**: `HttpMetric` send only non-null values on `stop()` (#7593). ([16ec31e4](https://github.com/FirebaseExtended/flutterfire/commit/16ec31e4720935c80e70b76e10de7a263622cc15))
+
 ## 0.1.0+2
 
  - Update a dependency to the latest release.
