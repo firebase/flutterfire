@@ -1,4 +1,4 @@
-group 'com.example.firebase_in_app_messaging'
+group 'io.flutter.plugins.firebase.inappmessaging'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -36,7 +36,10 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 
 android {
     compileSdkVersion 31
-
+    compileOptions {
+      sourceCompatibility JavaVersion.VERSION_1_8
+      targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         minSdkVersion 16
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -48,9 +51,8 @@ android {
       api firebaseCoreProject
       implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
       implementation 'com.google.firebase:firebase-inappmessaging-display'
+      implementation 'androidx.annotation:annotation:1.1.0'
     }
 }
 
-dependencies {
-    implementation 'androidx.annotation:annotation:1.1.0'
-}
+apply from: file("./user-agent.gradle")
