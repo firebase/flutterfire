@@ -34,8 +34,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
 
   s.pod_target_xcconfig = {
-    # TODO(Salakar): Enable once plugin refactored to support.
-    # 'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fiam\\\"",
+    'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-fiam\\\"",
     'DEFINES_MODULE' => 'YES'
   }
 end
