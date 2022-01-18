@@ -53,6 +53,8 @@ class FirestoreExampleApp extends StatelessWidget {
             },
           );
         }
+
+        return null;
       },
       home: const FilmList(),
     );

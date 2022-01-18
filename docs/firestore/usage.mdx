@@ -840,3 +840,81 @@ query snapshot by calling the `namedQueryGet()` API:
 QuerySnapshot<Map<String, Object?>>  snapshot = await FirebaseFirestore.instance.namedQueryGet('sports-teams', options: const GetOptions(source: Source.cache));
 
 ```
+
+## Distributed Counters
+
+To support more frequent counter updates, create a distributed counter. Each counter is a document with a subcollection of `shards`,
+and the value of the counter is the sum of the value of the `shards`.
+
+Write throughput increases linearly with the number of `shards`, so a distributed counter with 10 `shards` can handle 10x as many writes as a traditional counter.
+
+:::note
+An alternative solution is to use **Firebase extensions**, 
+please refer to [the Ditributed Counters extension and how to set it up here](https://firebase.google.com/products/extensions/firebase-firestore-counter).
+:::
+
+A distributed counter collection would look like this:
+```dart
+// counters/${ID}
+class Counter {
+  final int numShards;
+
+  Counter(this.numShards);
+}
+
+// counters/${ID}/shards/${NUM}
+class Shard {
+  final int count;
+
+  Shard(this.count);
+}
+```
+The following code initializes a distributed counter:
+```dart
+Future<void> createCounter(DocumentReference ref, int numShards) async {
+  WriteBatch batch = FirebaseFirestore.instance.batch();
+
+  // Initialize the counter document
+  batch.set(ref, {'numShards': numShards});
+
+  // Initialize each shard with count=0
+  for (var i = 0; i < numShards; i++) {
+    final shardRef = ref.collection('shards').doc(i.toString());
+    batch.set(shardRef, {'count': 0});
+  }
+
+  // Commit the write batch
+  await batch.commit();
+}
+```
+To increment the counter, choose a random shard and increment the `count`:
+```dart
+Future<void> incrementCounter(DocumentReference ref, int numShards) async {
+  // Select a shard of the counter at random
+
+  final shardId = Random().nextInt(numShards).toString();
+  final shardRef = ref.collection('shards').doc(shardId);
+
+  // Update count
+  await shardRef.update({'count': FieldValue.increment(1)});
+}
+```
+To get the total count, query for all shards and sum their `count` fields:
+```dart
+Future<int> getCount(DocumentReference ref) async {
+  // Sum the count of each shard in the subcollection
+  final shards = await ref.collection('shards').get();
+
+  int totalCount = 0;
+
+  shards.docs.forEach(
+    (doc) {
+      totalCount += doc.data()['count'] as int;
+    },
+  );
+
+  return totalCount;
+}
+```
+
+Refer to [the official documentation on distributed counters](https://firebase.google.com/docs/firestore/solutions/counters) for more details.
