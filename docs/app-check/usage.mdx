@@ -247,7 +247,7 @@ Ensure you have [App Check for Functions enabled](https://firebase.google.com/do
 exports.yourCallableFunction = functions.https.onCall((data, context) => {
   // context.app will be undefined if the request doesn't include a valid
   // App Check token.
-  // 
+ 
   if (context.app == undefined) {
     throw new functions.https.HttpsError(
         'failed-precondition',
