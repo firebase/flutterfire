@@ -227,7 +227,7 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText =
         'Entrez votre adresse email pour continuer',
     this.continueText = 'Continuer',
-    this.countryCode = 'Prefisso internazionale',
+    this.countryCode = 'Code',
     this.codeRequiredErrorText = 'Un code de pays est requis',
     this.invalidCountryCode = 'Code pays invalide',
     this.chooseACountry = 'Choisissez un pays',
