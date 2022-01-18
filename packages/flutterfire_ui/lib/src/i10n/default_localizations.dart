@@ -1,9 +1,10 @@
 import 'package:flutterfire_ui/src/i10n/lang/es.dart';
 
-import 'lang/en.dart';
 import '../i10n/lang/ar.dart';
-import 'lang/tr.dart';
+import 'lang/en.dart';
 import 'lang/fr.dart';
+import 'lang/pt.dart';
+import 'lang/tr.dart';
 
 abstract class FlutterFireUILocalizationLabels {
   const FlutterFireUILocalizationLabels();
@@ -103,6 +104,7 @@ const localizations = <String, FlutterFireUILocalizationLabels>{
   'ar': ArLocalizations(),
   'tr': TrLocalizations(),
   'fr': FrLocalizations(),
+  'pt': PtLocalizations(),
 };
 
 class DefaultLocalizations extends EnLocalizations {

@@ -238,3 +238,39 @@ After you register the token, Firebase backend services will accept it as valid.
 Because this token allows access to your Firebase resources without a valid device, it is crucial that you keep it private.
 Don't commit it to a public repository, and if a registered token is ever compromised, revoke it immediately in the
 Firebase console.
+
+## App Check for Functions
+
+Ensure you have [App Check for Functions enabled](https://firebase.google.com/docs/app-check/cloud-functions), and check the context for the App Check token:
+
+```
+exports.yourCallableFunction = functions.https.onCall((data, context) => {
+  // context.app will be undefined if the request doesn't include a valid
+  // App Check token.
+ 
+  if (context.app == undefined) {
+    throw new functions.https.HttpsError(
+        'failed-precondition',
+        'The function must be called from an App Check verified app.')
+  }
+
+  // Your function logic follows.
+});
+
+```
+
+You may also use the [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) to test your Cloud Function. You simply have to add another conditional check (i.e. `!process.env.FUNCTIONS_EMULATOR`) to stop errors from throwing whilst testing:
+
+```
+exports.yourCallableFunction = functions.https.onCall((data, context) => {
+  // context.app will be undefined if the request doesn't include a valid
+  // App Check token.
+ 
+  if (context.app == undefined && !process.env.FUNCTIONS_EMULATOR) {
+    throw new functions.https.HttpsError(
+        'failed-precondition',
+        'The function must be called from an App Check verified app.')
+  }
+  // Your function logic follows.
+});
+```

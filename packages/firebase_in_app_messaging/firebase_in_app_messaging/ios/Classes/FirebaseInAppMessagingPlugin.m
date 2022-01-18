@@ -5,13 +5,18 @@
 #import "FirebaseInAppMessagingPlugin.h"
 
 #import <Firebase/Firebase.h>
+#import <firebase_core/FLTFirebasePluginRegistry.h>
+
+NSString *const kFLTFirebaseInAppMessagingChannelName =
+    @"plugins.flutter.io/firebase_in_app_messaging";
 
 @implementation FirebaseInAppMessagingPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_in_app_messaging"
+      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseInAppMessagingChannelName
                                   binaryMessenger:[registrar messenger]];
   FirebaseInAppMessagingPlugin *instance = [[FirebaseInAppMessagingPlugin alloc] init];
+  [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -35,6 +40,28 @@
   } else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+#pragma mark - FLTFirebasePlugin
+
+- (void)didReinitializeFirebaseCore:(void (^)(void))completion {
+  if (completion != nil) completion();
+}
+
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {
+  return @{};
+}
+
+- (NSString *_Nonnull)firebaseLibraryName {
+  return LIBRARY_NAME;
+}
+
+- (NSString *_Nonnull)firebaseLibraryVersion {
+  return LIBRARY_VERSION;
+}
+
+- (NSString *_Nonnull)flutterChannelName {
+  return kFLTFirebaseInAppMessagingChannelName;
 }
 
 @end
