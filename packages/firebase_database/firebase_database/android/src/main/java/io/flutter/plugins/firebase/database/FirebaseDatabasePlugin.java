@@ -27,7 +27,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,6 @@ public class FirebaseDatabasePlugin
   protected static final HashMap<String, FirebaseDatabase> databaseInstanceCache = new HashMap<>();
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
   private int listenerCount = 0;
-  private final ArrayList<String> queryListeners = new ArrayList<>();
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
@@ -275,9 +273,6 @@ public class FirebaseDatabasePlugin
           final String eventChannelNamePrefix =
               (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
           final String eventChannelName = eventChannelNamePrefix + "#" + listenerCount++;
-          synchronized (queryListeners) {
-            queryListeners.add(eventChannelName);
-          }
 
           final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
           final EventStreamHandler streamHandler =
@@ -285,9 +280,6 @@ public class FirebaseDatabasePlugin
                   query,
                   () -> {
                     eventChannel.setStreamHandler(null);
-                    synchronized (queryListeners) {
-                      queryListeners.remove(eventChannelName);
-                    }
                   });
 
           eventChannel.setStreamHandler(streamHandler);
@@ -470,9 +462,6 @@ public class FirebaseDatabasePlugin
 
   private void cleanup() {
     removeEventStreamHandlers();
-    synchronized (queryListeners) {
-      queryListeners.clear();
-    }
     databaseInstanceCache.clear();
   }
 
