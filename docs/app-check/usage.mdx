@@ -265,7 +265,7 @@ You may also use the [Firebase Local Emulator Suite](https://firebase.google.com
 exports.yourCallableFunction = functions.https.onCall((data, context) => {
   // context.app will be undefined if the request doesn't include a valid
   // App Check token.
-  // 
+ 
   if (context.app == undefined && !process.env.FUNCTIONS_EMULATOR) {
     throw new functions.https.HttpsError(
         'failed-precondition',
