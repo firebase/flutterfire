@@ -133,8 +133,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
-        String uri = buildLink(call.arguments());
-        methodCallTask = buildShortLink(uri, call.arguments());
+        methodCallTask = buildShortLink(call.arguments());
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -161,23 +160,20 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   private String buildLink(Map<String, Object> arguments) {
     DynamicLink.Builder urlBuilder = setupParameters(arguments);
-    String desktopLink = (String) arguments.get("desktopLink");
 
-    if (desktopLink != null) {
-      return urlBuilder.buildDynamicLink().getUri().toString() + "&ofl=" + desktopLink;
-    }
     return urlBuilder.buildDynamicLink().getUri().toString();
   }
 
-  private Task<Map<String, Object>> buildShortLink(
-      String url, @Nullable Map<String, Object> arguments) {
+  private Task<Map<String, Object>> buildShortLink(@Nullable Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
-          FirebaseDynamicLinks dynamicLinks = getDynamicLinkInstance(arguments);
-          DynamicLink.Builder builder = dynamicLinks.createDynamicLink();
-          Uri uri = Uri.parse(url);
-          builder.setLongLink(uri);
+          DynamicLink.Builder urlBuilder = setupParameters(arguments);
+          String longDynamicLink = (String) arguments.get("longDynamicLink");
+
+          if (longDynamicLink != null) {
+            urlBuilder.setLongLink(Uri.parse(longDynamicLink));
+          }
 
           Integer suffix = 1;
           Integer shortDynamicLinkPathLength = (Integer) arguments.get("shortLinkType");
@@ -197,7 +193,7 @@ public class FlutterFirebaseDynamicLinksPlugin
           Map<String, Object> result = new HashMap<>();
           ShortDynamicLink shortLink;
 
-          shortLink = Tasks.await(builder.buildShortDynamicLink(suffix));
+          shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
 
           List<String> warnings = new ArrayList<>();
 
