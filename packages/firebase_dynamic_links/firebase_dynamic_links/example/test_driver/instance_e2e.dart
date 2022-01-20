@@ -34,7 +34,8 @@ void runInstanceTests() {
         const String link = 'https://invertase.io';
         const String oflLink = 'https://ofl-link.com';
         final Uri dynamicLink = Uri.parse(
-            'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink');
+          'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink',
+        );
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
@@ -96,7 +97,8 @@ void runInstanceTests() {
         const String link = 'https://invertase.io';
         const String oflLink = 'https://ofl-link.com';
         final Uri dynamicLink = Uri.parse(
-            'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink');
+          'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink',
+        );
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
           link: Uri.parse(link),
