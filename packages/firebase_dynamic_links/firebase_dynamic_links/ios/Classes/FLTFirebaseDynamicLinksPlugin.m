@@ -153,32 +153,54 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 #pragma mark - Firebase Dynamic Links API
 
 - (void)buildLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *uri = [self generateUrl:arguments];
-
-  result.success(uri);
+  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+  result.success([components.url absoluteString]);
 }
 
 - (void)buildShortLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
-  NSURL *url = [NSURL URLWithString:[self generateUrl:arguments]];
-  [FIRDynamicLinkComponents
-      shortenURL:url
-         options:options
-      completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                   NSError *_Nullable error) {
-        if (error != nil) {
-          result.error(nil, nil, nil, error);
-        } else {
-          if (warnings == nil) {
-            warnings = [NSMutableArray array];
-          }
+  NSString *longDynamicLink = arguments[@"longDynamicLink"];
 
-          result.success(@{
-            kUrl : [shortURL absoluteString],
-            @"warnings" : warnings,
-          });
-        }
-      }];
+  if (longDynamicLink != nil) {
+    NSURL *url = [NSURL URLWithString:longDynamicLink];
+    [FIRDynamicLinkComponents
+        shortenURL:url
+           options:options
+        completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                     NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
+
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
+          }
+        }];
+  } else {
+    FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+    components.options = options;
+    [components
+        shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                                NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
+
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
+          }
+        }];
+  }
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
@@ -258,19 +280,6 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 #pragma mark - Utilities
-
-- (NSString *)generateUrl:(id)arguments {
-  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
-  NSString *desktopLink = arguments[@"desktopLink"];
-
-  if (![desktopLink isEqual:[NSNull null]]) {
-    NSString *uri = [NSString
-        stringWithFormat:@"%@%@%@", [components.url absoluteString], @"&ofl=", desktopLink];
-    return uri;
-  } else {
-    return [components.url absoluteString];
-  }
-}
 
 - (void)checkForDynamicLink:(NSURL *)url {
   FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
