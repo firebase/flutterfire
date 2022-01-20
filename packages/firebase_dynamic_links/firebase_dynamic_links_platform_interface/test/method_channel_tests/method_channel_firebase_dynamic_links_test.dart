@@ -136,26 +136,26 @@ void main() {
     });
 
     group('getInitialLink()', () {
-      // test('link can be parsed', () async {
-      //   final PendingDynamicLinkData? data =
-      //       await dynamicLinks.getInitialLink();
-      //
-      //   expect(data!.link, Uri.parse('https://google.com'));
-      //
-      //   expect(data.android!.clickTimestamp, 1234567);
-      //   expect(data.android!.minimumVersion, 12);
-      //
-      //   expect(data.ios!.minimumVersion, 'Version 12');
-      //
-      //   expect(logger, <Matcher>[
-      //     isMethodCall(
-      //       'FirebaseDynamicLinks#getInitialLink',
-      //       arguments: {
-      //         'appName': '[DEFAULT]',
-      //       },
-      //     )
-      //   ]);
-      // });
+      test('link can be parsed', () async {
+        final PendingDynamicLinkData? data =
+            await dynamicLinks.getInitialLink();
+
+        expect(data!.link, Uri.parse('https://google.com'));
+
+        expect(data.android!.clickTimestamp, 1234567);
+        expect(data.android!.minimumVersion, 12);
+
+        expect(data.ios!.minimumVersion, 'Version 12');
+
+        expect(logger, <Matcher>[
+          isMethodCall(
+            'FirebaseDynamicLinks#getInitialLink',
+            arguments: {
+              'appName': '[DEFAULT]',
+            },
+          )
+        ]);
+      });
 
       // Both iOS FIRDynamicLink.url and android PendingDynamicLinkData.getUrl()
       // might return null link. In such a case we want to ignore the deep-link.
