@@ -32,12 +32,14 @@ void runInstanceTests() {
             'com.google.FirebaseCppDynamicLinksTestApp.dev';
         const String urlHost = 'reactnativefirebase.page.link';
         const String link = 'https://invertase.io';
-        final Uri desktopLink = Uri.parse('https://desktop-link.org/');
+        const String oflLink = 'https://ofl-link.com';
+        final Uri dynamicLink = Uri.parse(
+            'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink');
 
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
           link: Uri.parse(link),
-          desktopLink: desktopLink,
+          longDynamicLink: dynamicLink,
           androidParameters: const AndroidParameters(
             packageName: androidPackageName,
             minimumVersion: 1,
@@ -50,10 +52,6 @@ void runInstanceTests() {
 
         final Uri uri = await dynamicLinks.buildLink(parameters);
 
-        expect(
-          uri.queryParameters['ofl'],
-          desktopLink.toString(),
-        );
         // androidParameters.minimumVersion
         expect(
           uri.queryParameters['amv'],
@@ -96,12 +94,13 @@ void runInstanceTests() {
             'io.flutter.plugins.firebase.dynamiclinksexample';
         const String urlHost = 'reactnativefirebase.page.link';
         const String link = 'https://invertase.io';
-        final Uri desktopLink = Uri.parse('https://desktop-link.org/');
-
+        const String oflLink = 'https://ofl-link.com';
+        final Uri dynamicLink = Uri.parse(
+            'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink');
         final DynamicLinkParameters parameters = DynamicLinkParameters(
           uriPrefix: 'https://$urlHost',
           link: Uri.parse(link),
-          desktopLink: desktopLink,
+          longDynamicLink: dynamicLink,
           androidParameters: const AndroidParameters(
             packageName: androidPackageName,
             minimumVersion: 1,

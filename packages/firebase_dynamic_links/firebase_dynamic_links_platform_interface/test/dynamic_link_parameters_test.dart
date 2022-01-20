@@ -48,13 +48,15 @@ void main() {
 
   String uriPrefix = 'https://';
 
-  Uri desktopLink = Uri.parse('https://desktop-link.org/');
+  const String oflLink = 'https://ofl-link.com';
+  final longDynamicLink = Uri.parse(
+      'https://reactnativefirebase.page.link?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink');
 
   group('$DynamicLinkParameters', () {
     DynamicLinkParameters dynamicLinkParams = DynamicLinkParameters(
       uriPrefix: uriPrefix,
       link: link,
-      desktopLink: desktopLink,
+      longDynamicLink: longDynamicLink,
       androidParameters: androidParams,
       googleAnalyticsParameters: googleParams,
       iosParameters: iosParams,
@@ -76,7 +78,7 @@ void main() {
         );
         expect(dynamicLinkParams.navigationInfoParameters, navigation);
         expect(dynamicLinkParams.socialMetaTagParameters, social);
-        expect(dynamicLinkParams.desktopLink, desktopLink);
+        expect(dynamicLinkParams.longDynamicLink, longDynamicLink);
       });
     });
     group('asMap', () {
@@ -97,7 +99,8 @@ void main() {
           dynamicLinkParams.androidParameters?.packageName,
         );
         expect(result['uriPrefix'], dynamicLinkParams.uriPrefix);
-        expect(result['desktopLink'], dynamicLinkParams.desktopLink.toString());
+        expect(result['longDynamicLink'],
+            dynamicLinkParams.longDynamicLink.toString());
         expect(
           result['googleAnalyticsParameters']['campaign'],
           dynamicLinkParams.googleAnalyticsParameters?.campaign,

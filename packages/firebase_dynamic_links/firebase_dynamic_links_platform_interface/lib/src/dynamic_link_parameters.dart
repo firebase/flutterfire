@@ -10,7 +10,7 @@ class DynamicLinkParameters {
   DynamicLinkParameters({
     required this.link,
     required this.uriPrefix,
-    this.desktopLink,
+    this.longDynamicLink,
     this.androidParameters,
     this.iosParameters,
     this.googleAnalyticsParameters,
@@ -53,18 +53,17 @@ class DynamicLinkParameters {
   /// Social Meta Tag parameters for a generated Dynamic Link URL.
   final SocialMetaTagParameters? socialMetaTagParameters;
 
-  /// The link to open on platforms beside Android and iOS. This is useful to specify a
-  /// different behavior on desktop, like displaying a full web page of the app content/payload
-  /// (as specified by param link) with another dynamic link to install the app.
-  /// Identified as the "ofl" property in the dynamic link query string.
-  final Uri? desktopLink;
+  /// Set the long Dynamic Link when building a short link. This allows the user to append additional query strings
+  /// that would otherwise not be possible (e.g. "ofl" parameter).
+  final Uri? longDynamicLink;
 
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() {
     return <String, dynamic>{
       'uriPrefix': uriPrefix,
       'link': link.toString(),
-      'desktopLink': desktopLink.toString(),
+      if (longDynamicLink != null)
+        'longDynamicLink': longDynamicLink.toString(),
       if (androidParameters != null)
         'androidParameters': androidParameters?.asMap(),
       if (googleAnalyticsParameters != null)
