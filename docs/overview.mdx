@@ -71,6 +71,13 @@ is backwards compatible with [manual-installation](./manual-installation.mdx).
 
 ### Using the CLI
 
+The FlutterFire CLI depends on the [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine. 
+If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command : 
+```bash
+npm install -g firebase-tools
+```
+**Learn more about the Firebase CLI in the [documentation](https://firebase.google.com/docs/cli)**.
+
 To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class.
 The method accepts your Firebase project application configuration, which can be obtained for all supported platforms by using the FlutterFire CLI:
 
@@ -85,7 +92,7 @@ flutterfire configure
 Once configured, a `firebase_options.dart` file will be generated for you containing all the options
 required for initialization.
 
-**Learn more about the CLI in the [documentation](./cli.mdx)**.
+**Learn more about the FlutterFire CLI in the [documentation](./cli.mdx)**.
 
 ### Initialization
 
