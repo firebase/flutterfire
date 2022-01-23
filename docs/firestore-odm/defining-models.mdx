@@ -85,7 +85,7 @@ class User {
     required this.email,
   }) {
     // Apply the validator
-    $assertUser(this);
+    _$assertUser(this);
   }
 
   final String name;
@@ -146,7 +146,7 @@ class User {
     required this.email,
   }) {
     // Apply the validator
-    $assertUser(this);
+    _$assertUser(this);
   }
 
   final String name;
@@ -181,5 +181,5 @@ If you are looking to define a model as a reference on a Subcollection, read the
 ## Next Steps
 
 Some of the code on this page is created via code generation
-(e.g. `$assertUser`, `UserCollectionReference`) - you can learn more about
+(e.g. `_$assertUser`, `UserCollectionReference`) - you can learn more about
 how to generate this code via the [Code Generation](./code-generation) documentation!
