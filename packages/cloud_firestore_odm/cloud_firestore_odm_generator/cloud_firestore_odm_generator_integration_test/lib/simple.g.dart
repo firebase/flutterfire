@@ -18,6 +18,301 @@ const _sentinel = _Sentinel();
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class SplitFileModelCollectionReference
+    implements
+        SplitFileModelQuery,
+        FirestoreCollectionReference<SplitFileModelQuerySnapshot> {
+  factory SplitFileModelCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$SplitFileModelCollectionReference;
+
+  static SplitFileModel fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return SplitFileModel.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    SplitFileModel value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  SplitFileModelDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<SplitFileModelDocumentReference> add(SplitFileModel value);
+}
+
+class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
+    implements SplitFileModelCollectionReference {
+  factory _$SplitFileModelCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$SplitFileModelCollectionReference._(
+      firestore.collection('split-file').withConverter(
+            fromFirestore: SplitFileModelCollectionReference.fromFirestore,
+            toFirestore: SplitFileModelCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$SplitFileModelCollectionReference._(
+    CollectionReference<SplitFileModel> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<SplitFileModel> get reference =>
+      super.reference as CollectionReference<SplitFileModel>;
+
+  @override
+  SplitFileModelDocumentReference doc([String? id]) {
+    return SplitFileModelDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<SplitFileModelDocumentReference> add(SplitFileModel value) {
+    return reference
+        .add(value)
+        .then((ref) => SplitFileModelDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$SplitFileModelCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class SplitFileModelDocumentReference
+    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot> {
+  factory SplitFileModelDocumentReference(
+          DocumentReference<SplitFileModel> reference) =
+      _$SplitFileModelDocumentReference;
+
+  DocumentReference<SplitFileModel> get reference;
+
+  /// A reference to the [SplitFileModelCollectionReference] containing this document.
+  SplitFileModelCollectionReference get parent {
+    return _$SplitFileModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<SplitFileModelDocumentSnapshot> snapshots();
+
+  @override
+  Future<SplitFileModelDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> set(SplitFileModel value);
+}
+
+class _$SplitFileModelDocumentReference
+    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot>
+    implements SplitFileModelDocumentReference {
+  _$SplitFileModelDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<SplitFileModel> reference;
+
+  /// A reference to the [SplitFileModelCollectionReference] containing this document.
+  SplitFileModelCollectionReference get parent {
+    return _$SplitFileModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<SplitFileModelDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return SplitFileModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<SplitFileModelDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return SplitFileModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> set(SplitFileModel value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SplitFileModelDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class SplitFileModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+  SplitFileModelDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<SplitFileModel> snapshot;
+
+  @override
+  SplitFileModelDocumentReference get reference {
+    return SplitFileModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final SplitFileModel? data;
+}
+
+abstract class SplitFileModelQuery
+    implements QueryReference<SplitFileModelQuerySnapshot> {
+  @override
+  SplitFileModelQuery limit(int limit);
+
+  @override
+  SplitFileModelQuery limitToLast(int limit);
+}
+
+class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
+    implements SplitFileModelQuery {
+  _$SplitFileModelQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<SplitFileModel> reference;
+
+  SplitFileModelQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<SplitFileModel> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return SplitFileModelQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<SplitFileModelDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: SplitFileModelDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return SplitFileModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<SplitFileModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<SplitFileModelQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  SplitFileModelQuery limit(int limit) {
+    return _$SplitFileModelQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  SplitFileModelQuery limitToLast(int limit) {
+    return _$SplitFileModelQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$SplitFileModelQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class SplitFileModelQuerySnapshot
+    extends FirestoreQuerySnapshot<SplitFileModelQueryDocumentSnapshot> {
+  SplitFileModelQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<SplitFileModel> snapshot;
+
+  @override
+  final List<SplitFileModelQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<SplitFileModelDocumentSnapshot>>
+      docChanges;
+}
+
+class SplitFileModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+    implements SplitFileModelDocumentSnapshot {
+  SplitFileModelQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<SplitFileModel> snapshot;
+
+  @override
+  SplitFileModelDocumentReference get reference {
+    return SplitFileModelDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final SplitFileModel data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class EmptyModelCollectionReference
     implements
         EmptyModelQuery,
