@@ -217,10 +217,19 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       );
     }
 
+    // TODO(rrousselGit) handle parts
+    // Whether the model class and the reference variable are defined in the same file
+    // This is important because json_serializable generates private code for
+    // decoding a Model class.
+    final modelAndReferenceInTheSameLibrary =
+        collectionTargetElement.librarySource.fullName ==
+            annotatedElement.librarySource!.fullName;
+
     final fromJson = collectionTargetElement.constructors.firstWhereOrNull(
       (ctor) => ctor.name == 'fromJson',
     );
-    if (!hasJsonSerializable && fromJson == null) {
+    if ((!hasJsonSerializable || !modelAndReferenceInTheSameLibrary) &&
+        fromJson == null) {
       throw InvalidGenerationSourceError(
         'Used @Collection with the class ${collectionTargetElement.name}, but '
         'the class has no `fromJson` constructor.',

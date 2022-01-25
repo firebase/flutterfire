@@ -27,11 +27,5 @@ dependency_overrides:
   firebase_crashlytics_platform_interface:
     path: ../../firebase_crashlytics_platform_interface
 
-dev_dependencies:
-  drive: 1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
-  test: any
-
 flutter:
   uses-material-design: true

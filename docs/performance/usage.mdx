@@ -19,6 +19,11 @@ FirebasePerformance performance = FirebasePerformance.instance;
 
 By default, this allows you to interact with Performance Monitoring using the default Firebase App.
 
+:::caution Automatic Tracing
+Automatic screen rendering performance monitoring is not possible for individual Flutter screens. A single view controller encapsulates your
+entire Flutter application natively so the underlying native Firebase SDK is not aware of screen transitions.
+:::
+
 ## Automatic Tracing
 
 When installed, Android & iOS will automatically report metrics such as application start time, network requests and other useful data.

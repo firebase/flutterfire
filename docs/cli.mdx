@@ -20,6 +20,24 @@ Once installed, the `flutterfire` command will be globally available.
 
 ## Usage
 
+:::note
+Some plugins do not fully support Dart-only Firebase initialization, if you need to use these plugins then the [manual installation](./manual-installation.mdx) steps are recommended.
+:::
+
+The following table shows the current plugins with Dart-only Firebase initialization issues (**_plugins not shown here are fully supported_**):
+
+|                 Plugin |                               iOS                               |                             Android                             | Web |                              macOS                              |
+| ---------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-: | :-------------------------------------------------------------: |
+|              Analytics |                                ✔                                |                              **?**                              |  ✔  |                                ✔                                |
+|            Crashlytics | [**?**](./crashlytics/overview#2-optional-platform-integration) | [**?**](./crashlytics/overview#2-optional-platform-integration) | N/A | [**?**](./crashlytics/overview#2-optional-platform-integration) |
+| Performance Monitoring |                                ✔                                |                               ❌                                |  ✔  |                               N/A                               |
+
+- **?** Indicates your app will build and run but plugin behaviour may be different.
+- ❌ Indicates your app will crash on startup without manual Google services PLIST/JSON file setup.
+- ✔ Indicates no known issues.
+
+Additionally, if you use the [`google_sign_in` provider](./auth/social#google) for Authentication in `firebase_auth` then this also requires the Google services JSON [manual installation](./manual-installation.mdx) setup on Android.
+
 ### Generating Firebase Options
 
 FlutterFire can now be initialized from Dart on all platforms using `Firebase.initializeApp`, however

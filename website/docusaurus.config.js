@@ -9,13 +9,6 @@ module.exports = {
   organizationName: 'FirebaseExtended',
   projectName: 'flutterfire',
   themeConfig: {
-    // announcementBar: {
-    //   id: 'flutterfire-google-io-2021',
-    //   content:
-    //     '📣 &nbsp;&nbsp; <a rel="noopener" href="https://invertase.io/blog/flutterfire-news-google-io-2021"><b>Read about what\'s new in the FlutterFire Google I/O 2021 updates.</b></a> &nbsp;&nbsp; 📣',
-    //   backgroundColor: '#13B9FD',
-    //   textColor: '#fff',
-    // },
     algolia: {
       apiKey: '61eba190d4380f3db4e11d21b70e7608',
       indexName: 'flutterfire',
@@ -42,9 +35,8 @@ module.exports = {
       },
       items: [
         {
-          to: 'docs/overview',
-          activeBasePath: 'docs',
-          label: 'Docs',
+          href: 'https://dartpad.dev/?id=d57c6c898dabb8c6fb41018588b8cf73',
+          label: 'DartPad',
           position: 'right',
         },
         {

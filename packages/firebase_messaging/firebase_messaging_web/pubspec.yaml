@@ -2,7 +2,7 @@ name: firebase_messaging_web
 description: The web implementation of firebase_messaging
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging_web
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging_web
-version: 2.2.5
+version: 2.2.6
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -11,7 +11,7 @@ environment:
 dependencies:
   firebase_core: ^1.10.0
   firebase_core_web: ^1.5.3
-  firebase_messaging_platform_interface: ^3.1.4
+  firebase_messaging_platform_interface: ^3.1.5
   flutter:
     sdk: flutter
   flutter_web_plugins:
