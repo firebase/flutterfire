@@ -1,6 +1,6 @@
 name: firebase_in_app_messaging
 description: Flutter plugin for Firebase In-App Messaging.
-version: 0.6.0+5
+version: 0.6.0+6
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_in_app_messaging
 
@@ -14,7 +14,7 @@ environment:
 dependencies:
   firebase_core: ^1.10.0
   firebase_core_platform_interface: ^4.2.3
-  firebase_in_app_messaging_platform_interface: ^0.2.0+5
+  firebase_in_app_messaging_platform_interface: ^0.2.0+6
   flutter:
     sdk: flutter
   meta: ^1.3.0

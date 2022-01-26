@@ -1,3 +1,9 @@
+## 0.6.0+6
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: lazily get the default `FirebaseInAppMessaging` instance on Android to allow for Firebase initialization via Dart only. ([88cfa0c8](https://github.com/FirebaseExtended/flutterfire/commit/88cfa0c81543f639eb14c75a0d655806d9683bbf))
+ - **FIX**: issue where Dart only initialization did not function correctly on iOS. ([5c6feb72](https://github.com/FirebaseExtended/flutterfire/commit/5c6feb72c446cbe9632ff4ad6b963b63d92aec76))
+
 ## 0.6.0+5
 
  - Update a dependency to the latest release.

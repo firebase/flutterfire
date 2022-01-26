@@ -358,7 +358,7 @@ Future<UserCredential> signInWithTwitter() async {
   );
 
   // Trigger the sign-in flow
-  final authResult = twitterLogin.login();
+  final authResult = await twitterLogin.login();
 
   // Create a credential from the access token
   final twitterAuthCredential = TwitterAuthProvider.credential(

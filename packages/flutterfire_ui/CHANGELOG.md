@@ -1,3 +1,16 @@
+## 0.3.1
+
+ - **FIX**: fix `ResponsivePage` overflow issue (#7792). ([4c633737](https://github.com/FirebaseExtended/flutterfire/commit/4c633737926f114ef32a409a1b0df6e262ba4816))
+ - **FIX**: export DifferentSignInMethodsFound auth state and make sure to add it to the list of provided actions (#7789). ([0ebc382f](https://github.com/FirebaseExtended/flutterfire/commit/0ebc382f18039660d0d5a52c596155a58e201820))
+ - **FIX**: validate email with the library instead of the RegExp (#7772). ([b271b7fc](https://github.com/FirebaseExtended/flutterfire/commit/b271b7fc8aa648d436041d0c6092a7de4b7f48d0))
+ - **FIX**: not working onTap in OAuthProviderButtonWidget (#7641). ([d3b81eab](https://github.com/FirebaseExtended/flutterfire/commit/d3b81eabf9a2a9d10133a44d23a48997c776764f))
+ - **FIX**: pass auth down to LoginView (#7645). ([e8926702](https://github.com/FirebaseExtended/flutterfire/commit/e8926702674cc41e019b3f5277683446b4106a31))
+ - **FEAT**: add Spanish localization support (#7716). ([4e8931c8](https://github.com/FirebaseExtended/flutterfire/commit/4e8931c8b68290f3f9f16fceb5d345f34d4183b6))
+ - **FEAT**: add French localization support (#7797). ([a1837a28](https://github.com/FirebaseExtended/flutterfire/commit/a1837a283d16d1e0d15a1f43ae2ead2b93470e64))
+ - **FEAT**: add Arabic localization support (#7771). ([9e2959ec](https://github.com/FirebaseExtended/flutterfire/commit/9e2959ec04710b97a7f9d910a9ecd9c3aa879e13))
+ - **DOCS**: update repository and homepage url (#7781). ([5034d699](https://github.com/FirebaseExtended/flutterfire/commit/5034d69926cb5da2a7da1a690021f92762188d03))
+ - **DOCS**: add missing providerConfigs in example (#7724). ([8649f83d](https://github.com/FirebaseExtended/flutterfire/commit/8649f83dd38e8bce95fffd66870747ee0f70776f))
+
 ## 0.3.0
 
 > Note: This release has breaking changes.

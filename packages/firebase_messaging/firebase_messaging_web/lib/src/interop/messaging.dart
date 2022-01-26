@@ -36,9 +36,7 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
 
   /// To forcibly stop a registration token from being used, delete it by calling this method.
   /// Calling this method will stop the periodic data transmission to the FCM backend.
-  void deleteToken() {
-    jsObject.deleteToken();
-  }
+  Future<void> deleteToken() => handleThenable(jsObject.deleteToken());
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
