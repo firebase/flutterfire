@@ -61,7 +61,7 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-:::Tip
+:::tip
 
 If you're using FlutterFire in an existing application, you can safely remove any manual native installation
 steps (such as the `google-services.json` or `GoogleService-Info.plist` files). Dart-only initialization
@@ -71,10 +71,8 @@ is backwards compatible with [manual-installation](./manual-installation.mdx).
 
 ### Using the CLI
 
-:::Important
-
+:::important
 The FlutterFire CLI depends on the [Firebase CLI] (https://firebase.google.com/docs/cli). If you haven't installed it yet, you can learn more in the [documentation]. 
-
 :::
 
 To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class.
