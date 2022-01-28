@@ -61,7 +61,7 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-:::tip
+:::Tip
 
 If you're using FlutterFire in an existing application, you can safely remove any manual native installation
 steps (such as the `google-services.json` or `GoogleService-Info.plist` files). Dart-only initialization
@@ -69,14 +69,13 @@ is backwards compatible with [manual-installation](./manual-installation.mdx).
 
 :::
 
-### Using the FlutterFire CLI
+### Using the CLI
 
-The FlutterFire CLI depends on the [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine. 
-You will also need [node.js](https://www.nodejs.org/) on your machine to Install the Firebase CLI via npm by running the following command: 
+:::Important
 
-```bash
-npm install -g firebase-tools
-**Learn more about the Firebase CLI in the [documentation](https://firebase.google.com/docs/cli)**.
+The FlutterFire CLI depends on the [Firebase CLI] (https://firebase.google.com/docs/cli). If you haven't installed it yet, you can learn more in the [documentation]. 
+
+:::
 
 To initialize FlutterFire, call the [`initializeApp`](!firebase_core.Firebase.initializeApp) method on the [`Firebase`](!firebase_core.Firebase) class.
 The method accepts your Firebase project application configuration, which can be obtained for all supported platforms by using the FlutterFire CLI:
@@ -92,7 +91,7 @@ flutterfire configure
 Once configured, a `firebase_options.dart` file will be generated for you containing all the options
 required for initialization.
 
-**Learn more about the FlutterFire CLI in the [documentation](./cli.mdx)**.
+**Learn more about the CLI in the [documentation](./cli.mdx)**.
 
 ### Initialization
 
