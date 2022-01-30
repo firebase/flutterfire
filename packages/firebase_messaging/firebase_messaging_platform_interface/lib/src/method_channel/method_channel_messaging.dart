@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -45,11 +46,10 @@ void _firebaseMessagingCallbackDispatcher() {
         final RemoteMessage remoteMessage = RemoteMessage.fromMap(messageMap);
         await closure(remoteMessage);
       } catch (e) {
-        // ignore: avoid_print
-        print(
-            'FlutterFire Messaging: An error occurred in your background messaging handler:');
-        // ignore: avoid_print
-        print(e);
+        log(
+          'FlutterFire Messaging: An error occurred in your background messaging handler:',
+          error: e,
+        );
       }
     } else {
       throw UnimplementedError('${call.method} has not been implemented');
