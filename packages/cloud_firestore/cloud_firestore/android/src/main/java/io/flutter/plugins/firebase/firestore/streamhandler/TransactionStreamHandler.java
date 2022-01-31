@@ -1,6 +1,7 @@
 package io.flutter.plugins.firebase.firestore.streamhandler;
 
-import android.app.Activity;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.Nullable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
@@ -19,7 +20,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class TransactionStreamHandler implements OnTransactionResultListener, StreamHandler {
 
@@ -28,18 +28,15 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
     void onStarted(Transaction transaction);
   }
 
-  final AtomicReference<Activity> activityRef;
   final OnTransactionStartedListener onTransactionStartedListener;
 
-  public TransactionStreamHandler(
-      AtomicReference<Activity> activityRef,
-      OnTransactionStartedListener onTransactionStartedListener) {
-    this.activityRef = activityRef;
+  public TransactionStreamHandler(OnTransactionStartedListener onTransactionStartedListener) {
     this.onTransactionStartedListener = onTransactionStartedListener;
   }
 
   final Semaphore semaphore = new Semaphore(0);
   final Map<String, Object> response = new HashMap<>();
+  final Handler mainLooper = new Handler(Looper.getMainLooper());
 
   @Override
   public void onListen(Object arguments, EventSink events) {
@@ -68,7 +65,7 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
               Map<String, Object> attemptMap = new HashMap<>();
               attemptMap.put("appName", firestore.getApp().getName());
 
-              activityRef.get().runOnUiThread(() -> events.success(attemptMap));
+              mainLooper.post(() -> events.success(attemptMap));
 
               try {
                 if (!semaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS)) {
@@ -149,8 +146,11 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
                 map.put("complete", true);
               }
 
-              activityRef.get().runOnUiThread(() -> events.success(map));
-              activityRef.get().runOnUiThread(events::endOfStream);
+              mainLooper.post(
+                  () -> {
+                    events.success(map);
+                    events.endOfStream();
+                  });
             });
   }
 

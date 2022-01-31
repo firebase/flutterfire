@@ -168,7 +168,6 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-
   const EsLocalizations({
     this.emailInputLabel = 'Correo electrónico',
     this.passwordInputLabel = 'Contraseña',
