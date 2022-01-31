@@ -262,6 +262,7 @@ there are some breaking changes.
         - All errors are now returned as a `FirebaseAuthException`, allowing you to access the code & message associated
           with the error.
         - In addition, it is now possible to access the `email` and `credential` properties on exceptions if they exist.
+        - **BREAKING**: Error codes previously in the format `ERROR_WRONG_PASSWORD` are now in the format `wrong-password`.
 
 - **`FirebaseAuth`**
 

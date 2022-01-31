@@ -2,7 +2,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 String libraryVersionName = "UNKNOWN"
-String libraryName = "flutter-fire-rc"
+String libraryName = "flutter-fire-installations"
 File pubspec = new File(project.projectDir.parentFile,  'pubspec.yaml')
 
 if (pubspec.exists()) {

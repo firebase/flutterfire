@@ -168,7 +168,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-  const EnLocalizations({
+  const HiLocalizations({
     this.emailInputLabel = 'ईमेल',
     this.passwordInputLabel = 'पासवर्ड',
     this.signInActionText = 'साइन इन करें',
@@ -194,7 +194,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.enterSMSCodeText = 'एसएमएस कोड दर्ज करें',
     this.emailIsRequiredErrorText = 'ईमेल की जरूरत है',
     this.isNotAValidEmailErrorText = 'एक वैध ईमेल प्रदान करें',
-    this.userNotFoundErrorText = "ईमेल अकाउंट मौजूद नहीं है",
+    this.userNotFoundErrorText = 'ईमेल अकाउंट मौजूद नहीं है',
     this.emailTakenErrorText = 'ऐसे ईमेल वाला अकाउंट पहले से मौजूद है',
     this.accessDisabledErrorText =
         'इस ईमेल अकाउंट तक पहुंच अस्थायी रूप से अक्षम कर दी गई है',
@@ -202,7 +202,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
         'पासवर्ड अमान्य है या उपयोगकर्ता के पास पासवर्ड नहीं है',
     this.signInText = 'साइन इन करें',
     this.registerText = 'रजिस्टर करें',
-    this.registerHintText = "अकाउंट नहीं है?",
+    this.registerHintText = 'अकाउंट नहीं है?',
     this.signInHintText = 'क्या आपके पास पहले से एक अकाउंट मौजूद है?',
     this.signOutButtonText = 'साइन आउट',
     this.phoneInputLabel = 'फ़ोन नंबर',
@@ -218,7 +218,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.forgotPasswordButtonLabel = 'पासवर्ड भूल गए?',
     this.forgotPasswordViewTitle = 'पासवर्ड भूल गए',
     this.resetPasswordButtonLabel = 'पासवर्ड रीसेट',
-    this.verifyItsYouText = "सत्यापित करें कि यह आप हैं",
+    this.verifyItsYouText = 'सत्यापित करें कि यह आप हैं',
     this.differentMethodsSignInTitleText =
         'साइन इन करने के लिए निम्न विधियों में से एक का उपयोग करें',
     this.findProviderForEmailTitleText = 'आगे बढ़ने के लिए अपना ईमेल दर्ज करें',
@@ -232,13 +232,13 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = 'अपना ईमेल और पासवर्ड प्रदान करें',
     this.goBackButtonLabel = 'वापस जाएं',
     this.passwordResetEmailSentText =
-        "हमने आपको आपका पासवर्ड रीसेट करने के लिए एक लिंक के साथ एक ईमेल भेजा है। कृपया अपनी ईमेल देखें।",
+        'हमने आपको आपका पासवर्ड रीसेट करने के लिए एक लिंक के साथ एक ईमेल भेजा है। कृपया अपनी ईमेल देखें।',
     this.forgotPasswordHintText =
         'अपना ईमेल प्रदान करें और हम आपको आपका पासवर्ड रीसेट करने के लिए एक लिंक भेजेंगे',
     this.emailLinkSignInButtonLabel = 'मैजिक लिंक के साथ साइन इन करें',
     this.signInWithEmailLinkViewTitleText = 'मैजिक लिंक के साथ साइन इन करें',
     this.signInWithEmailLinkSentText =
-        "हमने आपको एक जादुई लिंक के साथ एक ईमेल भेजा है। अपना ईमेल जांचें और साइन इन करने के लिए लिंक का अनुसरण करें",
+        'हमने आपको एक जादुई लिंक के साथ एक ईमेल भेजा है। अपना ईमेल जांचें और साइन इन करने के लिए लिंक का अनुसरण करें',
     this.sendLinkButtonLabel = 'मैजिक लिंक भेजें',
     this.arrayLabel = 'सरणी',
     this.booleanLabel = 'बूलियन',
