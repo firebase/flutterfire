@@ -1,3 +1,7 @@
+## 0.3.2
+
+ - **FEAT**: add Portuguese localization support (#7830). ([5152692f](https://github.com/FirebaseExtended/flutterfire/commit/5152692f22fe61a95e9dd19eb3bdf87547760d72))
+
 ## 0.3.1
 
  - **FIX**: fix `ResponsivePage` overflow issue (#7792). ([4c633737](https://github.com/FirebaseExtended/flutterfire/commit/4c633737926f114ef32a409a1b0df6e262ba4816))

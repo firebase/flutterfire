@@ -1,3 +1,7 @@
+## 1.12.0
+
+ - **FEAT**: bump Firebase iOS SDK to `8.11.0` & Android SDK to `29.0.4` (#7942). ([c23adf08](https://github.com/FirebaseExtended/flutterfire/commit/c23adf0853466941d0afb174dd425a43b44ce501))
+
 ## 1.11.0
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
