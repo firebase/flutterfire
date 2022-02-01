@@ -160,6 +160,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
           widget.action == AuthAction.link) ...[
         const SizedBox(height: 8),
         PasswordInput(
+          autofillHints: const [AutofillHints.newPassword],
           focusNode: confirmPasswordFocusNode,
           controller: confirmPasswordCtrl,
           onSubmit: _submit,
@@ -204,12 +205,14 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       ),
     ];
 
-    return Form(
-      key: formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: children,
+    return AutofillGroup(
+      child: Form(
+        key: formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
       ),
     );
   }

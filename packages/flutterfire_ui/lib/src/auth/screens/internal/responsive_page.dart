@@ -151,17 +151,11 @@ class _ResponsivePageState extends State<ResponsivePage> {
                         builder: widget.headerBuilder!,
                       ),
                     ),
-                  SliverFillViewport(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        return Container(
-                          alignment: Alignment.topCenter,
-                          child: widget.child,
-                        );
-                      },
-                      childCount: 1,
+                  SliverList(
+                    delegate: SliverChildListDelegate.fixed(
+                      [widget.child],
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

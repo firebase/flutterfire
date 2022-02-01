@@ -27,7 +27,7 @@ dependencies:
     path: ../packages/firebase_analytics/firebase_analytics_platform_interface
   firebase_analytics_web:
     path: ../packages/firebase_analytics/firebase_analytics_web
-  # TODO ios issue: Specs satisfying the `Firebase/AppCheck (= 8.9.0)` dependency were found, but they required a higher minimum deployment target
+  # TODO RTDB emulator breaks just by including App Check
   # firebase_app_check:
   #   path: ../packages/firebase_app_check/firebase_app_check
   # firebase_app_check_platform_interface:
@@ -66,22 +66,20 @@ dependencies:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  # TODO ios crash due to ios sdk calling [FIRApp configure]
-  # firebase_in_app_messaging:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  # firebase_in_app_messaging_platform_interface:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
     path: ../packages/firebase_messaging/firebase_messaging_platform_interface
   firebase_messaging_web:
     path: ../packages/firebase_messaging/firebase_messaging_web
-  # TODO does not compile for macOS
-  # firebase_ml_model_downloader:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  # firebase_ml_model_downloader_platform_interface:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
   # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
   # firebase_performance:
@@ -125,7 +123,6 @@ dependency_overrides:
     path: ../packages/firebase_analytics/firebase_analytics_platform_interface
   firebase_analytics_web:
     path: ../packages/firebase_analytics/firebase_analytics_web
-  # TODO ios issue: Specs satisfying the `Firebase/AppCheck (= 8.9.0)` dependency were found, but they required a higher minimum deployment target
   # firebase_app_check:
   #   path: ../packages/firebase_app_check/firebase_app_check
   # firebase_app_check_platform_interface:
@@ -164,22 +161,20 @@ dependency_overrides:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  # TODO ios crash due to ios sdk calling [FIRApp configure]
-  # firebase_in_app_messaging:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  # firebase_in_app_messaging_platform_interface:
-  #   path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
     path: ../packages/firebase_messaging/firebase_messaging_platform_interface
   firebase_messaging_web:
     path: ../packages/firebase_messaging/firebase_messaging_web
-  # TODO does not compile for macOS
-  # firebase_ml_model_downloader:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
-  # firebase_ml_model_downloader_platform_interface:
-  #   path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
   # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
   # firebase_performance:
@@ -202,7 +197,7 @@ dependency_overrides:
     path: ../packages/firebase_storage/firebase_storage_web
 
 dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.3
+  drive: ^1.0.0-1.0.nullsafety.5
   flutter_driver:
     sdk: flutter
   flutter_test:

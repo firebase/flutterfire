@@ -224,7 +224,7 @@ With the Google provider configuration added, our sign in screen will now includ
   style={{ maxHeight: 700 }}
 />
 
-Just like Email/Password sign in, a successfully Google sign-in will trigger the authentication listener allowing the user access to the application.
+Just like Email/Password sign in, a successful Google sign-in will trigger the authentication listener allowing the user access to the application.
 
 ## Customizing the UI
 
@@ -402,7 +402,7 @@ return RegisterScreen(
 
 ### Forgot Password
 
-A screen which allows the user enter their email address to send a password reset email.
+A screen which allows the user to enter their email address to send a password reset email.
 
 ```dart
 return ForgotPasswordScreen(
@@ -471,9 +471,7 @@ return ProfileScreen(
     TwitterProviderConfiguration(
       clientId: '...',
     ),
-    AppleProviderConfiguration(
-      clientId: '...',
-    ),
+    AppleProviderConfiguration(),
   ],
   avatarSize: 24,
 );

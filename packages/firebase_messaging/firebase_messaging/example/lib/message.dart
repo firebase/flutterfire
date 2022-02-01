@@ -40,7 +40,7 @@ class MessageView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(message.messageId!),
+        title: Text(message.messageId ?? 'N/A'),
       ),
       body: SingleChildScrollView(
           child: Padding(

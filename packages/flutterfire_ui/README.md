@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/sign-in': (context) {
           return SignInScreen(
+            providerConfigs: providerConfigs,
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacementNamed(context, '/profile');

@@ -33,6 +33,6 @@ class PendingDynamicLinkData {
 
   @override
   String toString() {
-    return '$PendingDynamicLinkData($asMap)';
+    return '$PendingDynamicLinkData(${asMap()})';
   }
 }

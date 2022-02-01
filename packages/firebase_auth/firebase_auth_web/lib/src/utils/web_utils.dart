@@ -97,10 +97,20 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
 
   Map<String, dynamic> actionCodeSettingsMap = actionCodeSettings.asMap();
 
-  auth_interop.ActionCodeSettings webActionCodeSettings =
-      auth_interop.ActionCodeSettings(
-          url: actionCodeSettings.url,
-          handleCodeInApp: actionCodeSettings.handleCodeInApp);
+  auth_interop.ActionCodeSettings webActionCodeSettings;
+
+  if (actionCodeSettings.dynamicLinkDomain != null) {
+    webActionCodeSettings = auth_interop.ActionCodeSettings(
+      url: actionCodeSettings.url,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp,
+      dynamicLinkDomain: actionCodeSettings.dynamicLinkDomain,
+    );
+  } else {
+    webActionCodeSettings = auth_interop.ActionCodeSettings(
+      url: actionCodeSettings.url,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp,
+    );
+  }
 
   if (actionCodeSettingsMap['android'] != null) {
     webActionCodeSettings.android = auth_interop.AndroidSettings(

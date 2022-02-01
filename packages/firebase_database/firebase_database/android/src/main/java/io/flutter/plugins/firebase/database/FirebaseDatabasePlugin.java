@@ -36,7 +36,7 @@ public class FirebaseDatabasePlugin
     implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   protected static final HashMap<String, FirebaseDatabase> databaseInstanceCache = new HashMap<>();
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_database";
-  private final Map<String, Integer> queryListenersCount = new HashMap<>();
+  private int listenerCount = 0;
   private final Map<EventChannel, StreamHandler> streamHandlers = new HashMap<>();
   private MethodChannel methodChannel;
   private BinaryMessenger messenger;
@@ -272,28 +272,14 @@ public class FirebaseDatabasePlugin
           final Query query = getQuery(arguments);
           final String eventChannelNamePrefix =
               (String) arguments.get(Constants.EVENT_CHANNEL_NAME_PREFIX);
+          final String eventChannelName = eventChannelNamePrefix + "#" + listenerCount++;
 
-          int newListenersCount;
-          synchronized (queryListenersCount) {
-            Integer currentListenersCount = queryListenersCount.get(eventChannelNamePrefix);
-            newListenersCount = currentListenersCount == null ? 1 : currentListenersCount + 1;
-            queryListenersCount.put(eventChannelNamePrefix, newListenersCount);
-          }
-
-          final String eventChannelName = eventChannelNamePrefix + "#" + newListenersCount;
           final EventChannel eventChannel = new EventChannel(messenger, eventChannelName);
           final EventStreamHandler streamHandler =
               new EventStreamHandler(
                   query,
                   () -> {
                     eventChannel.setStreamHandler(null);
-                    synchronized (queryListenersCount) {
-                      Integer currentListenersCount =
-                          queryListenersCount.get(eventChannelNamePrefix);
-                      queryListenersCount.put(
-                          eventChannelNamePrefix,
-                          currentListenersCount == null ? 0 : currentListenersCount - 1);
-                    }
                   });
 
           eventChannel.setStreamHandler(streamHandler);
@@ -476,9 +462,6 @@ public class FirebaseDatabasePlugin
 
   private void cleanup() {
     removeEventStreamHandlers();
-    synchronized (queryListenersCount) {
-      queryListenersCount.clear();
-    }
     databaseInstanceCache.clear();
   }
 

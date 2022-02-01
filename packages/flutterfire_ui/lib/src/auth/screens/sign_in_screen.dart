@@ -3,8 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
-import '../auth_state.dart';
-
 import 'internal/login_screen.dart';
 
 /// A screen displaying a fully styled Sign In flow for Authentication.
@@ -26,7 +24,7 @@ class SignInScreen extends StatelessWidget {
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
-  final List<FlutterFireUIAction>? actions;
+  final List<FlutterFireUIAction> actions;
 
   const SignInScreen({
     Key? key,
@@ -42,7 +40,7 @@ class SignInScreen extends StatelessWidget {
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
-    this.actions,
+    this.actions = const [],
   }) : super(key: key);
 
   Future<void> _signInWithDifferentProvider(
@@ -64,12 +62,18 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defaultActions = [
-      AuthStateChangeAction(_signInWithDifferentProvider)
+    final handlesDifferentSignInMethod = actions
+        .whereType<AuthStateChangeAction<DifferentSignInMethodsFound>>()
+        .isNotEmpty;
+
+    final _actions = [
+      ...actions,
+      if (!handlesDifferentSignInMethod)
+        AuthStateChangeAction(_signInWithDifferentProvider)
     ];
 
     return FlutterFireUIActions(
-      actions: actions ?? defaultActions,
+      actions: _actions,
       child: LoginScreen(
         loginViewKey: loginViewKey,
         action: AuthAction.signIn,

@@ -54,7 +54,7 @@ overhead for data the user might never see.
 FlutterFire UI for Realtime Database provides a convenient way to implement infinite scrolling
 using the Realtime Database database with the `FirebaseDatabaseListView` widget.
 
-At a minimum the widget accepts a Realtime Database query and an item builder. As the user scrolls
+At a minimum, the widget accepts a Realtime Database query and an item builder. As the user scrolls
 down (or across) your list, more data will be automatically fetched from the database (whilst
 respecting query conditions such as ordering).
 
@@ -117,7 +117,7 @@ In many cases, the `FirebaseDatabaseListView` widget is enough to render simple 
 However, you may have specific requirements which require more control over the widget's behavior
 (such as using a [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html)).
 
-The `FirebaseDatabaseQueryBuilder` provides the building blocks for advanced configuration as the expense of
+The `FirebaseDatabaseQueryBuilder` provides the building blocks for advanced configuration at the expense of
 requiring more boilerplate code. The widget does not provide any underlying list implementation, instead
 you are expected to provide this yourself.
 
@@ -134,7 +134,7 @@ FirebaseDatabaseQueryBuilder(
 );
 ```
 
-The main differences to note here is that the `builder` property returns a `FirebaseQueryBuilderSnapshot`, rather
+The main difference to note here is that the `builder` property returns a `FirebaseQueryBuilderSnapshot`, rather
 than an individual document. The builder returns the current state of the entire query, such as whether
 data is loading, an error has occurred and the documents.
 
@@ -158,7 +158,7 @@ FirebaseDatabaseQueryBuilder(
 );
 ```
 
-Next we now need to return a list-view based implementation for our application to display the data. For example,
+Next, we now need to return a list-view based implementation for our application to display the data. For example,
 to display a grid of users, we can use the [`GridView`](https://api.flutter.dev/flutter/widgets/GridView-class.html) widget:
 
 ```dart

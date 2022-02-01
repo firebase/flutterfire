@@ -39,4 +39,6 @@ Pod::Spec.new do |s|
     'GCC_PREPROCESSOR_DEFINITIONS' => "LIBRARY_VERSION=\\@\\\"#{library_version}\\\" LIBRARY_NAME=\\@\\\"flutter-fire-cls\\\"",
     'DEFINES_MODULE' => 'YES'
   }
+  s.user_target_xcconfig = { 'DEBUG_INFORMATION_FORMAT' => 'dwarf-with-dsym' }
+  
 end

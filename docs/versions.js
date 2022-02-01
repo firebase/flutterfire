@@ -39,7 +39,7 @@ export default {
     google_services: "4.3.8", // com.google.gms:google-services
   },
   web: {
-    firebase_cdn: "8.6.1", // https://firebase.google.com/support/release-notes/js
+    firebase_cdn: "8.10.0", // https://firebase.google.com/support/release-notes/js
   },
   external: {
     google_sign_in: "^4.5.1",
