@@ -8,5 +8,5 @@ packages/* @ehesp @salakar @kroikie @rrousselGit @russellwheatley
 website/* @ehesp
 docs/* @ehesp @salakar @kroikie
 .github/ @salakar @kroikie
-packages/ui/* @lesnitsky
+packages/flutterfire_ui* @lesnitsky
 docs/ui/* @lesnitsky
