@@ -13,6 +13,7 @@ class EmailLinkSignInScreen extends StatelessWidget {
   final double? headerMaxExtent;
   final SideBuilder? sideBuilder;
   final TextDirection? desktoplayoutDirection;
+  final double breakpoint;
 
   const EmailLinkSignInScreen({
     Key? key,
@@ -23,6 +24,7 @@ class EmailLinkSignInScreen extends StatelessWidget {
     this.headerMaxExtent,
     this.sideBuilder,
     this.desktoplayoutDirection,
+    this.breakpoint = 500,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class EmailLinkSignInScreen extends StatelessWidget {
       actions: actions ?? const [],
       child: UniversalScaffold(
         body: ResponsivePage(
-          breakpoint: 400,
+          breakpoint: breakpoint,
           headerBuilder: headerBuilder,
           headerMaxExtent: headerMaxExtent,
           maxWidth: 1200,

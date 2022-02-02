@@ -55,7 +55,7 @@ class ResponsivePage extends StatefulWidget {
   final SideBuilder? sideBuilder;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
-  final double? breakpoint;
+  final double breakpoint;
   final int? contentFlex;
   final double? maxWidth;
 
@@ -66,7 +66,7 @@ class ResponsivePage extends StatefulWidget {
     this.sideBuilder,
     this.headerBuilder,
     this.headerMaxExtent,
-    this.breakpoint,
+    this.breakpoint = 800,
     this.contentFlex,
     this.maxWidth,
   }) : super(key: key);
@@ -92,7 +92,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
 
   @override
   Widget build(BuildContext context) {
-    final breakpoint = widget.breakpoint ?? 800;
+    final breakpoint = widget.breakpoint;
 
     return LayoutBuilder(
       builder: (context, constraints) {
