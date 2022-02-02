@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:typed_data';
+
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:drive/drive.dart';
@@ -83,6 +85,24 @@ void setupTests() {
         });
         expect(result.data, equals(data.deepList));
       });
+
+      test('accepts raw data as arguments', () async {
+        HttpsCallableResult result = await callable({
+          'type': 'rawData',
+          'list': Uint8List(100),
+          'int': Int32List(39),
+          'long': Int64List(45),
+          'float': Float32List(23),
+          'double': Float64List(1001),
+        });
+        final data = result.data;
+        expect(data['list'], isA<List>());
+        expect(data['int'], isA<List>());
+        expect(data['long'], isA<List>());
+        expect(data['float'], isA<List>());
+        expect(data['double'], isA<List>());
+      });
+
 
       test(
         '[HttpsCallableResult.data] should return Map<String, dynamic> type for returned objects',

@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.functions;
 
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -21,7 +22,9 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -62,6 +65,50 @@ public class FlutterFirebaseFunctionsPlugin
     return FirebaseFunctions.getInstance(app, region);
   }
 
+  private static Map<String, Object> updateParameters(Map<String, Object> parameters) {
+
+    if (parameters == null) {
+      return null;
+    }
+
+    for (Map.Entry<String, Object> entry : parameters.entrySet()) {
+      Object value = entry.getValue();
+      if (value instanceof byte[]) {
+        final List<Byte> list = new ArrayList<>();
+        for (byte b : (byte[]) value) {
+          list.add(b);
+        }
+        parameters.put(entry.getKey(), list);
+      } else if (value instanceof int[]) {
+        final List<Integer> list = new ArrayList<Integer>();
+        for (int i : (int[]) value) {
+          list.add(i);
+        }
+        parameters.put(entry.getKey(), list);
+      } else if (value instanceof long[]) {
+        final List<Long> list = new ArrayList<Long>();
+        for (long l : (long[]) value) {
+          list.add(l);
+        }
+        parameters.put(entry.getKey(), list);
+      } else if (value instanceof double[]) {
+        final List<Double> list = new ArrayList<Double>();
+        for (double d : (double[]) value) {
+          list.add(d);
+        }
+        parameters.put(entry.getKey(), list);
+      } else if (value instanceof float[]) {
+        final List<Float> list = new ArrayList<Float>();
+        for (float f : (float[]) value) {
+          list.add(f);
+        }
+        parameters.put(entry.getKey(), list);
+      }
+    }
+
+    return parameters;
+  }
+
   private Task<Object> httpsFunctionCall(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -73,12 +120,13 @@ public class FlutterFirebaseFunctionsPlugin
           Integer timeout = (Integer) arguments.get("timeout");
           Object parameters = arguments.get("parameters");
 
-          if (origin != null) {
-            // TODO(helenaford): Placeholder logic for useEmulator when available
-            // Uri originUri = Uri.parse(origin);
-            // firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
+          if (parameters instanceof Map) {
+            parameters = updateParameters((Map<String, Object>) arguments.get("parameters"));
+          }
 
-            firebaseFunctions.useFunctionsEmulator(origin);
+          if (origin != null) {
+            Uri originUri = Uri.parse(origin);
+            firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
           }
 
           HttpsCallableReference httpsCallableReference =
