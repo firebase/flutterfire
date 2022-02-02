@@ -173,7 +173,11 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   exception.stackTrace = frames;
   exception.onDemand = YES;
   exception.isFatal = fatal;
-  [[FIRCrashlytics crashlytics] recordOnDemandExceptionModel:exception];
+  if (fatal) {
+    [[FIRCrashlytics crashlytics] recordOnDemandExceptionModel:exception];
+  } else {
+    [[FIRCrashlytics crashlytics] recordExceptionModel:exception];
+  }
   result.success(nil);
 }
 
