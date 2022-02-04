@@ -1,3 +1,7 @@
+## 9.1.0
+
+ - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/FirebaseExtended/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))
+
 ## 9.0.5
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))

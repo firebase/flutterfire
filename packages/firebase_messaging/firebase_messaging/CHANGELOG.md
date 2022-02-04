@@ -1,3 +1,7 @@
+## 11.2.6
+
+ - **FIX**: Set APNS token if user initializes Firebase app from Flutter. (#7610). ([dc4c2c1d](https://github.com/FirebaseExtended/flutterfire/commit/dc4c2c1d249abf214c8ec7d835af18c86d64b2f5))
+
 ## 11.2.5
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
