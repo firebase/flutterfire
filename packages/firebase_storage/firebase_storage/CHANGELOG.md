@@ -1,3 +1,7 @@
+## 10.2.6
+
+ - Update a dependency to the latest release.
+
 ## 10.2.5
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))

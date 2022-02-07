@@ -27,13 +27,13 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
     [fiam triggerEvent:eventName];
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
-    NSNumber *suppress = [NSNumber numberWithBool:call.arguments[@"suppress"]];
+    NSNumber *suppress = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"suppress"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.messageDisplaySuppressed = [suppress boolValue];
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
                  isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:call.arguments[@"enabled"]];
+    NSNumber *enabled = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"enabled"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.automaticDataCollectionEnabled = [enabled boolValue];
     result(nil);

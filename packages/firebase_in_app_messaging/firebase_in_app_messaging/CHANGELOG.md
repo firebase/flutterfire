@@ -1,3 +1,8 @@
+## 0.6.0+7
+
+ - **FIX**: issue where Boolean value was always `true` for `setMessagesSuppressed ()` & `setAutomaticDataCollectionEnabled()` on iOS. (#7954). ([e397add5](https://github.com/FirebaseExtended/flutterfire/commit/e397add52fc30d08bccad000237962ca3c903e49))
+ - **FIX**: setup missing Firebase internal SDK headers (#7513). ([4c9d84cd](https://github.com/FirebaseExtended/flutterfire/commit/4c9d84cdc3f491c7d9c1421e7651742e5c2ccc1e))
+
 ## 0.6.0+6
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
