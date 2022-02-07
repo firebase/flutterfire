@@ -143,6 +143,22 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
       printDetails: false,
     );
   }
+  
+  /// Submits a Crashlytics report of a fatal error caught by the Flutter framework.
+  Future<void> recordFlutterFatalError(FlutterErrorDetails flutterErrorDetails) {
+    FlutterError.presentError(flutterErrorDetails);
+ 
+    return recordError(
+      flutterErrorDetails.exceptionAsString(),
+      flutterErrorDetails.stack,
+      reason: flutterErrorDetails.context,
+      information: flutterErrorDetails.informationCollector == null
+          ? []
+          : flutterErrorDetails.informationCollector!(),
+      printDetails: false,
+      fatal: true,
+    );
+  }
 
   /// Logs a message that's included in the next fatal or non-fatal report.
   ///
