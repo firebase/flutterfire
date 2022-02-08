@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:typed_data';
 
 import '../../cloud_functions_platform_interface.dart';
 import 'method_channel_firebase_functions.dart';
@@ -19,6 +20,43 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
 
   @override
   Future<dynamic> call([Object? parameters]) async {
+    Object? updatedParameters;
+    if (parameters is Map) {
+      Map update = {};
+
+      parameters.forEach((key, value) {
+        if (value is Uint8List ||
+            value is Int32List ||
+            value is Int64List ||
+            value is Float32List ||
+            value is Float64List) {
+          update[key] = value.toList();
+        } else {
+          update[key] = value;
+        }
+      });
+
+      updatedParameters = update;
+    } else if (parameters is List) {
+      List update = [];
+
+      parameters.forEach((value) {
+        if (value is Uint8List ||
+            value is Int32List ||
+            value is Int64List ||
+            value is Float32List ||
+            value is Float64List) {
+          update.add(value.toList());
+        } else {
+          update.add(value);
+        }
+      });
+
+      updatedParameters = update;
+    } else {
+      updatedParameters = parameters;
+    }
+
     try {
       Object? result = await MethodChannelFirebaseFunctions.channel
           .invokeMethod('FirebaseFunctions#call', <String, dynamic>{
@@ -27,7 +65,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         'origin': origin,
         'region': functions.region,
         'timeout': options.timeout.inMilliseconds,
-        'parameters': parameters,
+        'parameters': updatedParameters,
       });
 
       if (result is Map) {
