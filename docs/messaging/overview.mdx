@@ -73,7 +73,7 @@ Which is usually reflected in the application's `AndroidManifest.xml`. E.g.:
 ### 4. Apple Integration
 
 :::caution
-Warning: Firebase Messaging plugin will not work if you disable method swizzling. Please remove or set to `true` the `FirebaseAppDelegateProxyEnabled` in your Info.plist file.
+Firebase Messaging plugin will not work if you disable method swizzling. Please remove or set to `true` the `FirebaseAppDelegateProxyEnabled` in your Info.plist file if it exists.
 :::
 
 iOS & macOS require additional configuration before you can start receiving messages through Firebase.
