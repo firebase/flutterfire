@@ -22,22 +22,16 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class FlutterFirebaseFunctionsPlugin
-    implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler {
+  implements FlutterPlugin, FlutterFirebasePlugin, MethodCallHandler {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
   private MethodChannel channel;
-
-  private FlutterFirebaseFunctionsPlugin(MethodChannel channel) {
-    this.channel = channel;
-  }
 
   /**
    * Default Constructor.
@@ -65,80 +59,32 @@ public class FlutterFirebaseFunctionsPlugin
     return FirebaseFunctions.getInstance(app, region);
   }
 
-  private static Map<String, Object> updateParameters(Map<String, Object> parameters) {
-
-    if (parameters == null) {
-      return null;
-    }
-
-    for (Map.Entry<String, Object> entry : parameters.entrySet()) {
-      Object value = entry.getValue();
-      if (value instanceof byte[]) {
-        final List<Byte> list = new ArrayList<>();
-        for (byte b : (byte[]) value) {
-          list.add(b);
-        }
-        parameters.put(entry.getKey(), list);
-      } else if (value instanceof int[]) {
-        final List<Integer> list = new ArrayList<Integer>();
-        for (int i : (int[]) value) {
-          list.add(i);
-        }
-        parameters.put(entry.getKey(), list);
-      } else if (value instanceof long[]) {
-        final List<Long> list = new ArrayList<Long>();
-        for (long l : (long[]) value) {
-          list.add(l);
-        }
-        parameters.put(entry.getKey(), list);
-      } else if (value instanceof double[]) {
-        final List<Double> list = new ArrayList<Double>();
-        for (double d : (double[]) value) {
-          list.add(d);
-        }
-        parameters.put(entry.getKey(), list);
-      } else if (value instanceof float[]) {
-        final List<Float> list = new ArrayList<Float>();
-        for (float f : (float[]) value) {
-          list.add(f);
-        }
-        parameters.put(entry.getKey(), list);
-      }
-    }
-
-    return parameters;
-  }
-
   private Task<Object> httpsFunctionCall(Map<String, Object> arguments) {
     return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          FirebaseFunctions firebaseFunctions = getFunctions(arguments);
+      cachedThreadPool,
+      () -> {
+        FirebaseFunctions firebaseFunctions = getFunctions(arguments);
 
-          String functionName = (String) Objects.requireNonNull(arguments.get("functionName"));
-          String origin = (String) arguments.get("origin");
-          Integer timeout = (Integer) arguments.get("timeout");
-          Object parameters = arguments.get("parameters");
+        String functionName = (String) Objects.requireNonNull(arguments.get("functionName"));
+        String origin = (String) arguments.get("origin");
+        Integer timeout = (Integer) arguments.get("timeout");
+        Object parameters = arguments.get("parameters");
 
-          if (parameters instanceof Map) {
-            parameters = updateParameters((Map<String, Object>) arguments.get("parameters"));
-          }
+        if (origin != null) {
+          Uri originUri = Uri.parse(origin);
+          firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
+        }
 
-          if (origin != null) {
-            Uri originUri = Uri.parse(origin);
-            firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
-          }
+        HttpsCallableReference httpsCallableReference =
+          firebaseFunctions.getHttpsCallable(functionName);
 
-          HttpsCallableReference httpsCallableReference =
-              firebaseFunctions.getHttpsCallable(functionName);
+        if (timeout != null) {
+          httpsCallableReference.setTimeout(timeout.longValue(), TimeUnit.MILLISECONDS);
+        }
 
-          if (timeout != null) {
-            httpsCallableReference.setTimeout(timeout.longValue(), TimeUnit.MILLISECONDS);
-          }
-
-          HttpsCallableResult result = Tasks.await(httpsCallableReference.call(parameters));
-          return result.getData();
-        });
+        HttpsCallableResult result = Tasks.await(httpsCallableReference.call(parameters));
+        return result.getData();
+      });
   }
 
   @Override
@@ -149,18 +95,18 @@ public class FlutterFirebaseFunctionsPlugin
     }
 
     httpsFunctionCall(call.arguments())
-        .addOnCompleteListener(
-            task -> {
-              if (task.isSuccessful()) {
-                result.success(task.getResult());
-              } else {
-                Exception exception = task.getException();
-                result.error(
-                    "firebase_functions",
-                    exception != null ? exception.getMessage() : null,
-                    getExceptionDetails(exception));
-              }
-            });
+      .addOnCompleteListener(
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(task.getResult());
+          } else {
+            Exception exception = task.getException();
+            result.error(
+              "firebase_functions",
+              exception != null ? exception.getMessage() : null,
+              getExceptionDetails(exception));
+          }
+        });
   }
 
   private Map<String, Object> getExceptionDetails(@Nullable Exception exception) {
@@ -176,19 +122,19 @@ public class FlutterFirebaseFunctionsPlugin
 
     if (exception.getCause() instanceof FirebaseFunctionsException) {
       FirebaseFunctionsException functionsException =
-          (FirebaseFunctionsException) exception.getCause();
+        (FirebaseFunctionsException) exception.getCause();
       code = functionsException.getCode().name();
       message = functionsException.getMessage();
       additionalData = functionsException.getDetails();
 
       if (functionsException.getCause() instanceof IOException
-          && "Canceled".equals(functionsException.getCause().getMessage())) {
+        && "Canceled".equals(functionsException.getCause().getMessage())) {
         // return DEADLINE_EXCEEDED for IOException cancel errors, to match iOS & Web
         code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
       } else if (functionsException.getCause() instanceof InterruptedIOException
-          // return DEADLINE_EXCEEDED for InterruptedIOException errors, to match iOS & Web
-          && "timeout".equals(functionsException.getCause().getMessage())) {
+        // return DEADLINE_EXCEEDED for InterruptedIOException errors, to match iOS & Web
+        && "timeout".equals(functionsException.getCause().getMessage())) {
         code = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
         message = FirebaseFunctionsException.Code.DEADLINE_EXCEEDED.name();
       } else if (functionsException.getCause() instanceof IOException) {
