@@ -1,6 +1,6 @@
 ## 4.0.14
 
-Update storage metadata code documentation and add relevant documentation links.
+ - Update storage metadata code documentation and add relevant documentation links.
 
 ## 4.0.13
 

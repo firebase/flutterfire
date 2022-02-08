@@ -1,6 +1,6 @@
 ## 2.5.1
 
-Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+ - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
 
 ## 2.5.0
 

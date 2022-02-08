@@ -33,9 +33,11 @@ Packages with dependency updates only:
 
 #### `firebase_storage_platform_interface` - `v4.0.14`
 
+ - **DOCS**: Update storage metadata code documentation and add relevant documentation links.
 
 #### `firebase_crashlytics` - `v2.5.1`
 
+ - **FIX**: Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
 
 #### `cloud_functions` - `v3.2.7`
 
