@@ -13,10 +13,10 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 @implementation FLTFirebaseDatabasePlugin {
   // Used by FlutterStreamHandlers.
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
-  NSMutableDictionary<NSString *, NSNumber *> *_listenerCounts;
   NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
   // Used by transactions.
   FlutterMethodChannel *_channel;
+  int _listenerCount;
 }
 
 #pragma mark - FlutterPlugin
@@ -27,8 +27,8 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   if (self) {
     _channel = channel;
     _binaryMessenger = messenger;
-    _listenerCounts = [NSMutableDictionary dictionary];
     _streamHandlers = [NSMutableDictionary dictionary];
+    _listenerCount = 0;
   }
   return self;
 }
@@ -355,31 +355,17 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 - (void)queryObserve:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDatabaseQuery *databaseQuery = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
   NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
-  int newListenersCount;
-  @synchronized(_listenerCounts) {
-    NSNumber *currentListenersCount = _listenerCounts[eventChannelNamePrefix];
-    newListenersCount = currentListenersCount == nil ? 1 : [currentListenersCount intValue] + 1;
-    _listenerCounts[eventChannelNamePrefix] = @(newListenersCount);
-  }
+  _listenerCount = _listenerCount + 1;
   NSString *eventChannelName =
-      [NSString stringWithFormat:@"%@#%d", eventChannelNamePrefix, newListenersCount];
+      [NSString stringWithFormat:@"%@#%i", eventChannelNamePrefix, _listenerCount];
 
   FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
                                                                 binaryMessenger:_binaryMessenger];
-  __weak FLTFirebaseDatabasePlugin *weakSelf = self;
   FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
-      [[FLTFirebaseDatabaseObserveStreamHandler alloc]
-          initWithFIRDatabaseQuery:databaseQuery
-                 andOnDisposeBlock:^() {
-                   __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
-                   [eventChannel setStreamHandler:nil];
-                   @synchronized(strongSelf->_listenerCounts) {
-                     NSNumber *currentListenersCount =
-                         strongSelf->_listenerCounts[eventChannelNamePrefix];
-                     strongSelf->_listenerCounts[eventChannelNamePrefix] =
-                         @(currentListenersCount == nil ? 0 : [currentListenersCount intValue] - 1);
-                   }
-                 }];
+      [[FLTFirebaseDatabaseObserveStreamHandler alloc] initWithFIRDatabaseQuery:databaseQuery
+                                                              andOnDisposeBlock:^() {
+                                                                [eventChannel setStreamHandler:nil];
+                                                              }];
   [eventChannel setStreamHandler:streamHandler];
   _streamHandlers[eventChannelName] = streamHandler;
   result.success(eventChannelName);

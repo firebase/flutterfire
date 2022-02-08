@@ -20,6 +20,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
+  NSData *_apnsToken;
   NSDictionary *_initialNotification;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
@@ -103,6 +104,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+
+  [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
     methodCallResult.success([self copyInitialNotification]);
@@ -374,6 +377,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #endif
+  if ([FIRMessaging messaging] == nil) {
+    _apnsToken = deviceToken;
+  }
 #ifdef DEBUG
   [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
@@ -945,6 +951,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   return message;
+}
+
+- (void)ensureAPNSTokenSetting {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+
+  if (messaging.APNSToken == nil && _apnsToken != nil) {
+#ifdef DEBUG
+    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
+#else
+    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
+#endif
+
+    _apnsToken = nil;
+  }
 }
 
 - (nullable NSDictionary *)copyInitialNotification {

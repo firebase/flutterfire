@@ -23,9 +23,9 @@ class SMSCodeInputScreen extends StatelessWidget {
   final SideBuilder? sideBuilder;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
-  final double? breakpoint;
   final int? contentFlex;
   final double? maxWidth;
+  final double breakpoint;
 
   const SMSCodeInputScreen({
     Key? key,
@@ -37,7 +37,7 @@ class SMSCodeInputScreen extends StatelessWidget {
     this.sideBuilder,
     this.headerBuilder,
     this.headerMaxExtent,
-    this.breakpoint,
+    this.breakpoint = 500,
     this.contentFlex,
     this.maxWidth,
   }) : super(key: key);
@@ -61,7 +61,7 @@ class SMSCodeInputScreen extends StatelessWidget {
         child: UniversalScaffold(
           body: Center(
             child: ResponsivePage(
-              breakpoint: 400,
+              breakpoint: breakpoint,
               maxWidth: maxWidth,
               desktopLayoutDirection: desktopLayoutDirection,
               sideBuilder: sideBuilder,

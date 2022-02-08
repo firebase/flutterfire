@@ -10,6 +10,7 @@ class PasswordInput extends StatelessWidget {
   final void Function(String value) onSubmit;
   final String label;
   final String? Function(String? value)? validator;
+  final Iterable<String> autofillHints;
 
   const PasswordInput({
     Key? key,
@@ -17,6 +18,7 @@ class PasswordInput extends StatelessWidget {
     required this.controller,
     required this.onSubmit,
     required this.label,
+    this.autofillHints = const [AutofillHints.password],
     this.validator,
   }) : super(key: key);
 
@@ -25,6 +27,7 @@ class PasswordInput extends StatelessWidget {
     final l = FlutterFireUILocalizations.labelsOf(context);
 
     return UniversalTextFormField(
+      autofillHints: autofillHints,
       focusNode: focusNode,
       controller: controller,
       obscureText: true,

@@ -4,6 +4,9 @@
 
 package io.flutter.plugins.firebase.inappmessaging;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -11,9 +14,12 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.Map;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
+public class FirebaseInAppMessagingPlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
 
   @Override
@@ -61,5 +67,15 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
           break;
         }
     }
+  }
+
+  @Override
+  public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
+    return Tasks.call(() -> null);
+  }
+
+  @Override
+  public Task<Void> didReinitializeFirebaseCore() {
+    return Tasks.call(() -> null);
   }
 }
