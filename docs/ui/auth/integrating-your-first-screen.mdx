@@ -134,8 +134,6 @@ return StreamBuilder<User?>(
 );
 ```
 
-If the user is signed in, you can retrieve that data with `FirebaseAuth.instance.currentUser`. 
-
 At a minimum, screens require a list of providers (via the `providerConfigs` property).
 Providers are means of authentication, such as Email/Password or Google OAuth. At the moment, our `SignInScreen` has no providers
 configured so, the screen will look empty:
