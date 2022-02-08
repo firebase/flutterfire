@@ -220,6 +220,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
             child: Padding(
               padding: const EdgeInsets.only(top: 30),
               child: UniversalTextFormField(
+                autofillHints: const [AutofillHints.oneTimeCode],
                 autofocus: true,
                 focusNode: focusNode,
                 controller: controller,
