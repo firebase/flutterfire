@@ -30,6 +30,8 @@ class EmailSignUpDialog extends StatelessWidget {
               if (newState is CredentialLinked) {
                 Navigator.of(context).pop();
               }
+
+              return null;
             },
             child: Padding(
               padding: const EdgeInsets.all(16),

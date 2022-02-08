@@ -15,7 +15,7 @@ typedef FirestoreQueryBuilderSnapshotBuilder<T> = Widget Function(
 
 /// {@template firebase_ui.firestore_query_builder}
 /// Listens to a query and paginates the result in a way that is compatible with
-/// infinie scroll views, such as [ListView] or [GridView].
+/// infinite scroll views, such as [ListView] or [GridView].
 ///
 /// [FirestoreQueryBuilder] will subscribe to the query and obtain the first
 /// [pageSize] items (10 by default). Then as the UI needs to render more items,
