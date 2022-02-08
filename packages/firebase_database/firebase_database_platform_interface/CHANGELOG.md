@@ -1,3 +1,11 @@
+## 0.2.0+5
+
+ - **FIX**: Fixed transaction bug by removing duplicate arguments when they are already set as defaults. (#7839). ([df6568c2](https://github.com/FirebaseExtended/flutterfire/commit/df6568c2f5f58f1c93abebca4df477114ed7a68e))
+
+## 0.2.0+4
+
+ - Update a dependency to the latest release.
+
 ## 0.2.0+3
 
  - Update a dependency to the latest release.

@@ -1,3 +1,13 @@
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: deprecated `RemoteConfig` in favour of `FirebaseRemoteConfig` to align Firebase services naming with other plugins. ([99b932be](https://github.com/FirebaseExtended/flutterfire/commit/99b932bea6d604d500bb29841ad59177165dee60))
+
+## 1.0.4
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+
 ## 1.0.3
 
  - Update a dependency to the latest release.

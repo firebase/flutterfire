@@ -17,7 +17,7 @@ MockFirebaseRemoteConfig mockRemoteConfigPlatform = MockFirebaseRemoteConfig();
 void main() {
   setupFirebaseRemoteConfigMocks();
 
-  late RemoteConfig remoteConfig;
+  late FirebaseRemoteConfig remoteConfig;
   late DateTime mockLastFetchTime;
   late RemoteConfigFetchStatus mockLastFetchStatus;
   late RemoteConfigSettings mockRemoteConfigSettings;
@@ -25,12 +25,12 @@ void main() {
   late Map<String, dynamic> mockDefaultParameters;
   late RemoteConfigValue mockRemoteConfigValue;
 
-  group('$RemoteConfig', () {
+  group('FirebaseRemoteConfig', () {
     FirebaseRemoteConfigPlatform.instance = mockRemoteConfigPlatform;
 
     setUpAll(() async {
       await Firebase.initializeApp();
-      remoteConfig = RemoteConfig.instance;
+      remoteConfig = FirebaseRemoteConfig.instance;
 
       mockLastFetchTime = DateTime(2020);
       mockLastFetchStatus = RemoteConfigFetchStatus.noFetchYet;
@@ -105,9 +105,9 @@ void main() {
     });
 
     test('doubleInstance', () async {
-      final List<RemoteConfig> remoteConfigs = <RemoteConfig>[
-        RemoteConfig.instance,
-        RemoteConfig.instance,
+      final List<FirebaseRemoteConfig> remoteConfigs = <FirebaseRemoteConfig>[
+        FirebaseRemoteConfig.instance,
+        FirebaseRemoteConfig.instance,
       ];
       expect(remoteConfigs[0], remoteConfigs[1]);
     });

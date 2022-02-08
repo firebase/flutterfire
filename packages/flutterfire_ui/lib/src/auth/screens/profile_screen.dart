@@ -93,6 +93,7 @@ class AvailableProvidersRow extends StatelessWidget {
                     if (newState is CredentialLinked) {
                       onProviderLinked();
                     }
+                    return null;
                   },
                   child: OAuthProviderIconButton(
                     providerConfig: config,
