@@ -1,3 +1,7 @@
+## 2.5.1
+
+Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
 ## 2.5.0
 
  - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872). ([d5d7e26a](https://github.com/FirebaseExtended/flutterfire/commit/d5d7e26a4828963f375b656c6e1a397d26aac980))
