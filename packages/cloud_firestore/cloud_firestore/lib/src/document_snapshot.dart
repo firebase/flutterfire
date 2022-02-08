@@ -5,13 +5,13 @@
 part of cloud_firestore;
 
 typedef FromFirestore<T> = T Function(
-  DocumentSnapshot<Map<String, dynamic>> snapshot,
+  DocumentSnapshot<Map<String, dynamic>> snapshot,[
   SnapshotOptions? options,
-);
+]);
 typedef ToFirestore<T> = Map<String, Object?> Function(
-  T value,
+  T value[,
   SetOptions? options,
-);
+]);
 
 /// Options that configure how data is retrieved from a DocumentSnapshot
 /// (e.g. the desired behavior for server timestamps that have not yet been set to their final value).
