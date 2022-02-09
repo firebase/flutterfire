@@ -28,12 +28,6 @@ dependency_overrides:
   firebase_storage_web:
     path: ../../firebase_storage_web
 
-dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.1
-  flutter_driver:
-    sdk: flutter
-  test: any
-
 flutter:
   uses-material-design: true
   assets:

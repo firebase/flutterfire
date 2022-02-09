@@ -3,6 +3,199 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-02-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`firebase_storage_platform_interface` - `v4.0.14`](#firebase_storage_platform_interface---v4014)
+- [`firebase_crashlytics` - `v2.5.1`](#firebase_crashlytics---v251)
+- [`cloud_functions` - `v3.2.7`](#cloud_functions---v327)
+- [`flutterfire_ui` - `v0.3.3`](#flutterfire_ui---v033)
+- [`firebase_storage` - `v10.2.7`](#firebase_storage---v1027)
+- [`firebase_storage_web` - `v3.2.8`](#firebase_storage_web---v328)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_storage` - `v10.2.7`
+- `firebase_storage_web` - `v3.2.8`
+
+---
+
+#### `firebase_storage_platform_interface` - `v4.0.14`
+
+ - **DOCS**: Update storage metadata code documentation and add relevant documentation links.
+
+#### `firebase_crashlytics` - `v2.5.1`
+
+ - **FIX**: Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+#### `cloud_functions` - `v3.2.7`
+
+ - **REFACTOR**: remove deprecated Android API usages (#7986).
+
+#### `flutterfire_ui` - `v0.3.3`
+
+ - **FIX**: prompt user to select google account on web (#8007).
+ - **FIX**: bump flutter_facebook_auth version (#8031).
+ - **FIX**: make breakpoints of all screens configurable (#7996).
+ - **FEAT**: add Dutch localization support (#7782).
+ - **FEAT**: add autofillhints (#7668).
+ - **DOCS**: Fixes "infinite" typo (#8039).
+
+#### `firebase_storage` - `v10.2.7`
+
+
+#### `firebase_storage_web` - `v3.2.8`
+
+
+
+## 2022-01-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- [`firebase_remote_config` - `v2.0.0`](#firebase_remote_config---v200)
+
+Packages with other changes:
+
+- [`cloud_firestore` - `v3.1.7`](#cloud_firestore---v317)
+- [`cloud_firestore_odm_generator` - `v1.0.0-dev.7`](#cloud_firestore_odm_generator---v100-dev7)
+- [`firebase_analytics` - `v9.1.0`](#firebase_analytics---v910)
+- [`firebase_app_check` - `v0.0.6+5`](#firebase_app_check---v0065)
+- [`firebase_app_installations` - `v0.1.0+6`](#firebase_app_installations---v0106)
+- [`firebase_auth_web` - `v3.3.7`](#firebase_auth_web---v337)
+- [`firebase_core` - `v1.12.0`](#firebase_core---v1120)
+- [`firebase_core_platform_interface` - `v4.2.4`](#firebase_core_platform_interface---v424)
+- [`firebase_crashlytics` - `v2.5.0`](#firebase_crashlytics---v250)
+- [`firebase_database` - `v9.0.6`](#firebase_database---v906)
+- [`firebase_database_platform_interface` - `v0.2.0+5`](#firebase_database_platform_interface---v0205)
+- [`firebase_in_app_messaging` - `v0.6.0+7`](#firebase_in_app_messaging---v0607)
+- [`firebase_messaging` - `v11.2.6`](#firebase_messaging---v1126)
+- [`firebase_messaging_web` - `v2.2.7`](#firebase_messaging_web---v227)
+- [`firebase_ml_model_downloader` - `v0.1.0+6`](#firebase_ml_model_downloader---v0106)
+- [`flutterfire_ui` - `v0.3.2`](#flutterfire_ui---v032)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `cloud_firestore_odm` - `v1.0.0-dev.7`
+- `firebase_auth` - `v3.3.6`
+- `firebase_in_app_messaging_platform_interface` - `v0.2.0+7`
+- `firebase_crashlytics_platform_interface` - `v3.1.13`
+- `firebase_database_web` - `v0.2.0+5`
+- `firebase_auth_platform_interface` - `v6.1.11`
+- `firebase_remote_config_web` - `v1.0.5`
+- `firebase_remote_config_platform_interface` - `v1.0.5`
+- `firebase_dynamic_links` - `v4.0.5`
+- `firebase_dynamic_links_platform_interface` - `v0.2.0+5`
+- `cloud_firestore_web` - `v2.6.7`
+- `cloud_firestore_platform_interface` - `v5.4.12`
+- `firebase_messaging_platform_interface` - `v3.1.6`
+- `firebase_analytics_platform_interface` - `v3.0.5`
+- `firebase_app_installations_web` - `v0.1.0+6`
+- `firebase_app_installations_platform_interface` - `v0.1.0+6`
+- `firebase_analytics_web` - `v0.4.0+6`
+- `firebase_ml_model_downloader_platform_interface` - `v0.1.0+6`
+- `firebase_app_check_platform_interface` - `v0.0.3+5`
+- `firebase_app_check_web` - `v0.0.5+5`
+- `cloud_functions_platform_interface` - `v5.0.21`
+- `firebase_storage_web` - `v3.2.7`
+- `cloud_functions_web` - `v4.2.7`
+- `cloud_functions` - `v3.2.6`
+- `firebase_storage_platform_interface` - `v4.0.13`
+- `firebase_storage` - `v10.2.6`
+- `firebase_performance_web` - `v0.1.0+5`
+- `firebase_performance_platform_interface` - `v0.1.0+5`
+- `firebase_performance` - `v0.8.0+5`
+- `firebase_core_web` - `v1.5.4`
+
+---
+
+#### `firebase_remote_config` - `v2.0.0`
+
+ - **BREAKING** **REFACTOR**: deprecated `RemoteConfig` in favour of `FirebaseRemoteConfig` to align Firebase services naming with other plugins.
+
+#### `cloud_firestore` - `v3.1.7`
+
+ - **FIX**: Fix Android Firestore transaction crash when running in background caused by `null` `Activity`. (#7627).
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.7`
+
+ - **FEAT**: Added error handling for when the Firestore reference and the Model class are defined in two separate files. (#7885).
+
+#### `firebase_analytics` - `v9.1.0`
+
+ - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711).
+
+#### `firebase_app_check` - `v0.0.6+5`
+
+ - **FIX**: workaround iOS build issue when targetting platforms < iOS 11.
+
+#### `firebase_app_installations` - `v0.1.0+6`
+
+ - **FIX**: setup missing Firebase internal SDK headers (#7513).
+
+#### `firebase_auth_web` - `v3.3.7`
+
+ - **FIX**: Add support for`dynamicLinkDomain` property to `ActionCodeSetting` for web. (#7683).
+
+#### `firebase_core` - `v1.12.0`
+
+ - **FEAT**: bump Firebase iOS SDK to `8.11.0` & Android SDK to `29.0.4` (#7942).
+
+#### `firebase_core_platform_interface` - `v4.2.4`
+
+ - **FIX**: allow secondary Firebase App initialization without duplicate app error on hot restart (#7953).
+ - **FIX**: Fix `FirebaseException` error code bug by making default value: "unknown". (#6897).
+
+#### `firebase_crashlytics` - `v2.5.0`
+
+ - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872).
+
+#### `firebase_database` - `v9.0.6`
+
+ - **FIX**: Fix `MissingPluginException` caused by malformed EventChannel name. (#7859).
+
+#### `firebase_database_platform_interface` - `v0.2.0+5`
+
+ - **FIX**: Fixed transaction bug by removing duplicate arguments when they are already set as defaults. (#7839).
+
+#### `firebase_in_app_messaging` - `v0.6.0+7`
+
+ - **FIX**: issue where Boolean value was always `true` for `setMessagesSuppressed ()` & `setAutomaticDataCollectionEnabled()` on iOS. (#7954).
+ - **FIX**: setup missing Firebase internal SDK headers (#7513).
+
+#### `firebase_messaging` - `v11.2.6`
+
+ - **FIX**: Set APNS token if user initializes Firebase app from Flutter. (#7610).
+
+#### `firebase_messaging_web` - `v2.2.7`
+
+ - **FIX**: Make Web `deleteToken()` API a Future so it resolves only when completed. (#7687).
+
+#### `firebase_ml_model_downloader` - `v0.1.0+6`
+
+ - **FIX**: fixed an issue where macOS builds failed due to bug with missing pod subspec in Firebase SDK (added a workaround until issue fixed upstream).
+
+#### `flutterfire_ui` - `v0.3.2`
+
+ - **FEAT**: add Portuguese localization support (#7830).
+
+
 ## 2022-01-07
 
 ### Changes

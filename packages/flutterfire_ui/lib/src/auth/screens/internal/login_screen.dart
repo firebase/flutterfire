@@ -20,6 +20,7 @@ class LoginScreen extends StatelessWidget {
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
+  final double breakpoint;
 
   const LoginScreen({
     Key? key,
@@ -36,6 +37,7 @@ class LoginScreen extends StatelessWidget {
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
+    this.breakpoint = 800,
   }) : super(key: key);
 
   @override
@@ -59,7 +61,7 @@ class LoginScreen extends StatelessWidget {
     );
 
     final body = ResponsivePage(
-      breakpoint: 800,
+      breakpoint: breakpoint,
       desktopLayoutDirection: desktopLayoutDirection,
       headerBuilder: headerBuilder,
       headerMaxExtent: headerMaxExtent,

@@ -375,97 +375,125 @@ void setupQueryTests() {
     });
 
     group('onChildAdded', () {
-      test('emits an event when a child is added', () async {
-        expect(
-          ref.onChildAdded,
-          emitsInOrder([
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.value, 'value', 'foo')
-                .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.value, 'value', 'bar')
-                .having((e) => e.type, 'type', DatabaseEventType.childAdded),
-          ]),
-        );
+      test(
+        'emits an event when a child is added',
+        () async {
+          expect(
+            ref.onChildAdded,
+            emitsInOrder([
+              isA<DatabaseEvent>()
+                  .having((s) => s.snapshot.value, 'value', 'foo')
+                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
+              isA<DatabaseEvent>()
+                  .having((s) => s.snapshot.value, 'value', 'bar')
+                  .having((e) => e.type, 'type', DatabaseEventType.childAdded),
+            ]),
+          );
 
-        await ref.child('foo').set('foo');
-        await ref.child('bar').set('bar');
-      });
+          await ref.child('foo').set('foo');
+          await ref.child('bar').set('bar');
+        },
+        retry: 2,
+      );
     });
 
     group('onChildRemoved', () {
-      test('emits an event when a child is removed', () async {
-        await ref.child('foo').set('foo');
-        await ref.child('bar').set('bar');
+      test(
+        'emits an event when a child is removed',
+        () async {
+          await ref.child('foo').set('foo');
+          await ref.child('bar').set('bar');
 
-        expect(
-          ref.onChildRemoved,
-          emitsInOrder([
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.value, 'value', 'bar')
-                .having((e) => e.type, 'type', DatabaseEventType.childRemoved),
-          ]),
-        );
-        // Give time for listen to be registered on native.
-        // TODO is there a better way to do this?
-        await Future.delayed(const Duration(seconds: 1));
-        await ref.child('bar').remove();
-      });
+          expect(
+            ref.onChildRemoved,
+            emitsInOrder([
+              isA<DatabaseEvent>()
+                  .having((s) => s.snapshot.value, 'value', 'bar')
+                  .having(
+                    (e) => e.type,
+                    'type',
+                    DatabaseEventType.childRemoved,
+                  ),
+            ]),
+          );
+          // Give time for listen to be registered on native.
+          // TODO is there a better way to do this?
+          await Future.delayed(const Duration(seconds: 1));
+          await ref.child('bar').remove();
+        },
+        retry: 2,
+      );
     });
 
     group('onChildChanged', () {
-      test('emits an event when a child is changed', () async {
-        await ref.child('foo').set('foo');
-        await ref.child('bar').set('bar');
+      test(
+        'emits an event when a child is changed',
+        () async {
+          await ref.child('foo').set('foo');
+          await ref.child('bar').set('bar');
 
-        expect(
-          ref.onChildChanged,
-          emitsInOrder([
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.key, 'key', 'bar')
-                .having((s) => s.snapshot.value, 'value', 'baz')
-                .having((e) => e.type, 'type', DatabaseEventType.childChanged),
-            isA<DatabaseEvent>()
-                .having((s) => s.snapshot.key, 'key', 'foo')
-                .having((s) => s.snapshot.value, 'value', 'bar')
-                .having((e) => e.type, 'type', DatabaseEventType.childChanged),
-          ]),
-        );
-        // Give time for listen to be registered on native.
-        // TODO is there a better way to do this?
-        await Future.delayed(const Duration(seconds: 1));
-        await ref.child('bar').set('baz');
-        await ref.child('foo').set('bar');
-      });
+          expect(
+            ref.onChildChanged,
+            emitsInOrder([
+              isA<DatabaseEvent>()
+                  .having((s) => s.snapshot.key, 'key', 'bar')
+                  .having((s) => s.snapshot.value, 'value', 'baz')
+                  .having(
+                    (e) => e.type,
+                    'type',
+                    DatabaseEventType.childChanged,
+                  ),
+              isA<DatabaseEvent>()
+                  .having((s) => s.snapshot.key, 'key', 'foo')
+                  .having((s) => s.snapshot.value, 'value', 'bar')
+                  .having(
+                    (e) => e.type,
+                    'type',
+                    DatabaseEventType.childChanged,
+                  ),
+            ]),
+          );
+          // Give time for listen to be registered on native.
+          // TODO is there a better way to do this?
+          await Future.delayed(const Duration(seconds: 1));
+          await ref.child('bar').set('baz');
+          await ref.child('foo').set('bar');
+        },
+        retry: 2,
+      );
     });
 
     group('onChildMoved', () {
-      test('emits an event when a child is moved', () async {
-        await ref.set({
-          'alex': {'nuggets': 60},
-          'rob': {'nuggets': 56},
-          'vassili': {'nuggets': 55.5},
-          'tony': {'nuggets': 52},
-          'greg': {'nuggets': 52},
-        });
+      test(
+        'emits an event when a child is moved',
+        () async {
+          await ref.set({
+            'alex': {'nuggets': 60},
+            'rob': {'nuggets': 56},
+            'vassili': {'nuggets': 55.5},
+            'tony': {'nuggets': 52},
+            'greg': {'nuggets': 52},
+          });
 
-        expect(
-          ref.orderByChild('nuggets').onChildMoved,
-          emitsInOrder([
-            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-              'nuggets': 57
-            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-            isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
-              'nuggets': 61
-            }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
-          ]),
-        );
-        // Give time for listen to be registered on native.
-        // TODO is there a better way to do this?
-        await Future.delayed(const Duration(seconds: 1));
-        await ref.child('greg/nuggets').set(57);
-        await ref.child('rob/nuggets').set(61);
-      });
+          expect(
+            ref.orderByChild('nuggets').onChildMoved,
+            emitsInOrder([
+              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+                'nuggets': 57
+              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
+              isA<DatabaseEvent>().having((s) => s.snapshot.value, 'value', {
+                'nuggets': 61
+              }).having((e) => e.type, 'type', DatabaseEventType.childMoved),
+            ]),
+          );
+          // Give time for listen to be registered on native.
+          // TODO is there a better way to do this?
+          await Future.delayed(const Duration(seconds: 1));
+          await ref.child('greg/nuggets').set(57);
+          await ref.child('rob/nuggets').set(61);
+        },
+        retry: 2,
+      );
     });
   });
 }

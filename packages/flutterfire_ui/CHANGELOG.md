@@ -1,3 +1,16 @@
+## 0.3.3
+
+- **FIX**: prompt user to select google account on web (#8007). ([b3db0213](https://github.com/FirebaseExtended/flutterfire/commit/b3db0213ae949435f74d8193cfb5c8a65ed7f601))
+- **FIX**: bump flutter_facebook_auth version (#8031). ([82c1fe11](https://github.com/FirebaseExtended/flutterfire/commit/82c1fe111d00b499e9587d235e4499b03cfe17bd))
+- **FIX**: make breakpoints of all screens configurable (#7996). ([6557740c](https://github.com/FirebaseExtended/flutterfire/commit/6557740cf68dbd79da7bd03c65f92479c3ff435b))
+- **FEAT**: add Dutch localization support (#7782). ([751104b6](https://github.com/FirebaseExtended/flutterfire/commit/751104b6ec282592e209ee57f130aae68a752ba5))
+- **FEAT**: add autofillhints (#7668). ([dd94e935](https://github.com/FirebaseExtended/flutterfire/commit/dd94e935828d2de873a08eb26801541ca68f0696))
+- **DOCS**: Fixes "infinite" typo (#8039). ([c2cf325d](https://github.com/FirebaseExtended/flutterfire/commit/c2cf325dfd52194c68b70d17a91bb9e1158840b6))
+
+## 0.3.2
+
+ - **FEAT**: add Portuguese localization support (#7830). ([5152692f](https://github.com/FirebaseExtended/flutterfire/commit/5152692f22fe61a95e9dd19eb3bdf87547760d72))
+
 ## 0.3.1
 
  - **FIX**: fix `ResponsivePage` overflow issue (#7792). ([4c633737](https://github.com/FirebaseExtended/flutterfire/commit/4c633737926f114ef32a409a1b0df6e262ba4816))

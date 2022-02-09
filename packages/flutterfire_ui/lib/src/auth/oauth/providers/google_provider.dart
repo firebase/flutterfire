@@ -13,11 +13,18 @@ import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
 
+const _firebaseAuthProviderParameters = {
+  'prompt': 'select_account',
+};
+
 class GoogleProviderImpl extends OAuthProvider {
   String clientId;
   String redirectUri;
 
   final _provider = GoogleSignIn();
+
+  @override
+  final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
 
   @override
   late final desktopSignInArgs = GoogleSignInArgs(
@@ -28,7 +35,9 @@ class GoogleProviderImpl extends OAuthProvider {
   GoogleProviderImpl({
     required this.clientId,
     required this.redirectUri,
-  });
+  }) {
+    firebaseAuthProvider.setCustomParameters(_firebaseAuthProviderParameters);
+  }
 
   @override
   Future<OAuthCredential> signIn() async {
@@ -52,9 +61,6 @@ class GoogleProviderImpl extends OAuthProvider {
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return GoogleAuthProvider.credential(accessToken: result.accessToken);
   }
-
-  @override
-  GoogleAuthProvider get firebaseAuthProvider => GoogleAuthProvider();
 }
 
 class GoogleProviderConfiguration extends OAuthProviderConfiguration {
