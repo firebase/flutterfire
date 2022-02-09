@@ -112,4 +112,5 @@ module.exports = [
   'dartpad',
   'customizable',
   'ui',
+  'npm',
 ];
