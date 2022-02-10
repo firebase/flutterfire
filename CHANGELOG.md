@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-02-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+- There are no breaking changes in this release.
+
+Packages with other changes:
+
+- [`firebase_storage_platform_interface` - `v4.0.14`](#firebase_storage_platform_interface---v4014)
+- [`firebase_crashlytics` - `v2.5.1`](#firebase_crashlytics---v251)
+- [`cloud_functions` - `v3.2.7`](#cloud_functions---v327)
+- [`flutterfire_ui` - `v0.3.3`](#flutterfire_ui---v033)
+- [`firebase_storage` - `v10.2.7`](#firebase_storage---v1027)
+- [`firebase_storage_web` - `v3.2.8`](#firebase_storage_web---v328)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+- `firebase_storage` - `v10.2.7`
+- `firebase_storage_web` - `v3.2.8`
+
+---
+
+#### `firebase_storage_platform_interface` - `v4.0.14`
+
+ - **DOCS**: Update storage metadata code documentation and add relevant documentation links.
+
+#### `firebase_crashlytics` - `v2.5.1`
+
+ - **FIX**: Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+#### `cloud_functions` - `v3.2.7`
+
+ - **REFACTOR**: remove deprecated Android API usages (#7986).
+
+#### `flutterfire_ui` - `v0.3.3`
+
+ - **FIX**: prompt user to select google account on web (#8007).
+ - **FIX**: bump flutter_facebook_auth version (#8031).
+ - **FIX**: make breakpoints of all screens configurable (#7996).
+ - **FEAT**: add Dutch localization support (#7782).
+ - **FEAT**: add autofillhints (#7668).
+ - **DOCS**: Fixes "infinite" typo (#8039).
+
+#### `firebase_storage` - `v10.2.7`
+
+
+#### `firebase_storage_web` - `v3.2.8`
+
+
+
 ## 2022-01-27
 
 ### Changes
