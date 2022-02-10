@@ -32,7 +32,44 @@ class HttpsCallable {
   /// the user is also automatically included.
   Future<HttpsCallableResult<T>> call<T>([dynamic parameters]) async {
     assert(_debugIsValidParameterType(parameters));
-    return HttpsCallableResult<T>._(await delegate.call(parameters));
+
+    Object? updatedParameters;
+    if (parameters is Map) {
+      Map update = {};
+
+      parameters.forEach((key, value) {
+        if (value is Uint8List ||
+            value is Int32List ||
+            value is Int64List ||
+            value is Float32List ||
+            value is Float64List) {
+          update[key] = value.toList();
+        } else {
+          update[key] = value;
+        }
+      });
+
+      updatedParameters = update;
+    } else if (parameters is List) {
+      List update = [];
+
+      parameters.forEach((value) {
+        if (value is Uint8List ||
+            value is Int32List ||
+            value is Int64List ||
+            value is Float32List ||
+            value is Float64List) {
+          update.add(value.toList());
+        } else {
+          update.add(value);
+        }
+      });
+
+      updatedParameters = update;
+    } else {
+      updatedParameters = parameters;
+    }
+    return HttpsCallableResult<T>._(await delegate.call(updatedParameters));
   }
 }
 

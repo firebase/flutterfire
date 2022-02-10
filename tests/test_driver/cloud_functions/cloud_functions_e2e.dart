@@ -7,6 +7,7 @@ import 'dart:typed_data';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:drive/drive.dart';
+import 'package:flutter/foundation.dart';
 
 import '../firebase_default_options.dart';
 
@@ -101,7 +102,7 @@ void setupTests() {
         expect(data['long'], isA<List>());
         expect(data['float'], isA<List>());
         expect(data['double'], isA<List>());
-      });
+      }, skip: kIsWeb);
 
 
       test(
