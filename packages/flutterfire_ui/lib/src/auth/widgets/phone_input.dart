@@ -86,6 +86,8 @@ class PhoneInput extends StatefulWidget {
     if (state.formKey.currentState!.validate()) {
       return state.phoneNumber;
     }
+
+    return null;
   }
 
   const PhoneInput({

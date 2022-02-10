@@ -28,6 +28,7 @@ class UniversalEmailSignInScreen extends StatelessWidget {
         if (newState is SignedIn) {
           Navigator.of(context).pop();
         }
+        return null;
       },
     );
   }
