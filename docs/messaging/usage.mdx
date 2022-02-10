@@ -221,7 +221,7 @@ There are a few things to keep in mind about your background message handler:
 2. It must be a top-level function (e.g. not a class method which requires initialization).
 
 ```dart
-// We recommend initializing the app globally so it can be shared with your background message handler
+// We recommend initializing the app from the top-level so it can be shared with your background message handler
 // See this issue for further details: https://github.com/FirebaseExtended/flutterfire/issues/6087
 final initApp = Firebase.initializeApp();
 
