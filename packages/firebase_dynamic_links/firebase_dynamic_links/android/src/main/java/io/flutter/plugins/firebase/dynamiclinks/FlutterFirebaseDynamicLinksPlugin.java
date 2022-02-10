@@ -218,11 +218,15 @@ public class FlutterFirebaseDynamicLinksPlugin
             pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
           } else {
             // If there's no activity or initial Intent, then there's no initial dynamic link.
-            if (activity.get() == null || activity.get().getIntent() == null) {
+            if (activity.get() == null
+                || activity.get().getIntent() == null
+                || activity.get().getIntent().getBooleanExtra("flutterfire-used-link", false)) {
               return null;
             }
             pendingDynamicLink =
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
+
+            activity.get().getIntent().putExtra("flutterfire-used-link", true);
           }
 
           return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);

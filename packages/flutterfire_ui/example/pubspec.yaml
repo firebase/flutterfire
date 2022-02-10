@@ -30,7 +30,7 @@ dependencies:
   firebase_dynamic_links: ^4.0.5
   flutter:
     sdk: flutter
-  flutter_facebook_auth: '^3.5.0'
+  flutter_facebook_auth: ^4.0.1
   flutter_svg: ^1.0.0
   flutterfire_ui:
     path: ../

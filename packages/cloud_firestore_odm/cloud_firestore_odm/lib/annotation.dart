@@ -30,7 +30,7 @@ export 'src/validator.dart' show Min, Validator, Max;
 /// content:
 ///
 /// ```dart
-/// @Collection<Person>('/persons')
+/// @Collection<Person>('persons')
 /// final personsRef = PersonCollectionReference();
 /// ```
 ///
@@ -61,7 +61,7 @@ export 'src/validator.dart' show Min, Validator, Max;
 /// Assuming we have:
 ///
 /// ```dart
-/// @Collection<Person>('/persons')
+/// @Collection<Person>('persons')
 /// final personsRef = PersonCollectionReference();
 /// ```
 ///
@@ -84,8 +84,8 @@ export 'src/validator.dart' show Min, Validator, Max;
 /// for defining sub-collections:
 ///
 /// ```dart
-/// @Collection<Person>('/persons')
-/// @Collection<Friend>('/persons/*/friends', name: 'friends') // defines a sub-collection "friends"
+/// @Collection<Person>('persons')
+/// @Collection<Friend>('persons/*/friends', name: 'friends') // defines a sub-collection "friends"
 /// final personsRef = PersonCollectionReference();
 /// ```
 ///
