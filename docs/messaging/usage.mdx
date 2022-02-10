@@ -38,7 +38,7 @@ Common use-cases for using messages could be:
 
 > To learn about how to send messages to devices from your own server setup, view the [Server Integration](server-integration.mdx) documentation.
 
-Depending on a devices state, incoming messages are handled differently. To understand these scenarios & how to integrate FCM into your own application, it is first
+Depending on a device's state, incoming messages are handled differently. To understand these scenarios & how to integrate FCM into your own application, it is first
 important to establish the various states a device can be in:
 
 | State          | Description                                                                                                                                                                                                                                                  |
@@ -57,7 +57,7 @@ There are a few preconditions which must be met before the application can recei
 
 ### Requesting permission (Apple & Web)
 
-On iOS, macOS & web, before FCM payloads can be received on your device, you must first ask the users permission. Android applications are not required
+On iOS, macOS & web, before FCM payloads can be received on your device, you must first ask the user's permission. Android applications are not required
 to request permission.
 
 The `firebase_messaging` package provides a simple API for requesting permission via the [`requestPermission`](!firebase_messaging.FirebaseMessaging.requestPermission) method.
@@ -66,7 +66,7 @@ messaging containing notification payloads can trigger a sound or read out messa
 the method requests sensible default permissions. The reference API provides full documentation on what each permission is for.
 
 To get started, call the method from your application (on iOS a native modal will be displayed, on web
-the browsers native API flow will be triggered):
+the browser's native API flow will be triggered):
 
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -85,9 +85,9 @@ print('User granted permission: ${settings.authorizationStatus}');
 ```
 
 The [`NotificationSettings`](!cloud_messaging_platform_interface.NotificationSettings) class returned from
-the request details information regarding the users decision.
+the request details information regarding the user's decision.
 
-The `authorizationStatus` property can return a value which can be used to determine the users overall decision:
+The `authorizationStatus` property can return a value which can be used to determine the user's overall decision:
 
 - `authorized`: The user granted permission.
 - `denied`: The user denied permission.
@@ -149,7 +149,7 @@ A message payload can be viewed as one of three types:
 2. Data only message: Also known as a "silent message", this payload contains custom key/value pairs within the `data` property which can be used how you see fit. These messages are considered "low priority" (more on this later).
 3. Notification & Data messages: Payloads with both `notification` and `data` properties.
 
-Based on your applications current state, incoming payloads require different implementations to handle them:
+Based on your application's current state, incoming payloads require different implementations to handle them:
 
 |                         | Foreground  | Background                              | Terminated                              |
 | ----------------------- | ----------- | --------------------------------------- | --------------------------------------- |
@@ -184,12 +184,12 @@ FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 The stream contains a [`RemoteMessage`](!cloud_messaging_platform_interface.RemoteMessage), detailing
 various information about the payload, such as where it was from, the unique ID, sent time, whether it contained
 a notification & more. Since the message was retrieved whilst your application is in the foreground, you can directly access your Flutter
-applications state & context.
+application's state & context.
 
 #### Foreground & Notification messages
 
 Notification messages which arrive whilst the application is in the foreground will not display a visible notification by default, on both
-Android & iOS. It is however possible to override this behavior:
+Android & iOS. It is, however, possible to override this behavior:
 
 - On Android, you must create a "High Priority" notification channel.
 - On iOS, you can update the presentation options for the application.
@@ -236,10 +236,10 @@ void main() {
 ```
 
 Since the handler runs in its own isolate outside your applications context, it is not possible to update
-application state or execute any UI impacting logic. You can however perform logic such as HTTP requests, IO operations
-(updating local storage), communicate with other plugins etc.
+application state or execute any UI impacting logic. You can, however, perform logic such as HTTP requests, perform IO operations
+(e.g. updating local storage), communicate with other plugins etc.
 
-It is also recommended to complete your logic as soon as possible. Running long intensive tasks impacts device performance
+It is also recommended to complete your logic as soon as possible. Running long, intensive tasks impacts device performance
 and may cause the OS to terminate the process. If tasks run for longer than 30 seconds, the device may automatically kill the process.
 
 </TabItem>
@@ -301,7 +301,7 @@ Next, the worker must be registered. Within the entry file, **after** the `main.
   </script>
 ```
 
-Next restart your Flutter application, the worker will be registered and any background messages will be handled via this file.
+Next restart your Flutter application. The worker will be registered and any background messages will be handled via this file.
 
 </TabItem>
 </Tabs>
@@ -317,7 +317,7 @@ To learn about how to handle user interaction with a notification, view the [Not
 #### Debugging & Hot Reload
 
 FlutterFirebase Messaging does now support debugging and hot reloading for background isolates, but only if your main isolate is also being debugged,
-e.g. run your application in debug and then background it by switching apps so it's no longer in the foreground.
+(e.g. run your application in debug and then background it by switching apps so it's no longer in the foreground).
 
 For viewing additional logs on iOS, the "console.app" application on your Mac also displays
 system logs for your iOS device, including those from Flutter.
@@ -327,11 +327,11 @@ system logs for your iOS device, including those from Flutter.
 As mentioned above, data only messages are classed as "low priority". Devices can throttle and ignore these messages if your
 application is in the background, terminated, or a variety of other conditions such as low battery or currently high CPU usage.
 
-You should not rely on data only messages to be delivered, they should only be used to
-support your applications non-critical functionality, e.g. pre-fetching data so the next time the user opens your app the
+You should not rely on data only messages to be delivered. They should only be used to
+support your application's non-critical functionality, e.g. pre-fetching data so the next time the user opens your app the
 data is ready to be displayed and if the message never gets delivered then your app still functions and fetches data on open.
 
-To help improve delivery, you can bump the priority of messages. Note; this does still not guarantee delivery.
+To help improve delivery, you can bump the priority of messages. Note: this still does not guarantee delivery.
 
 For example, if using the `firebase-admin` NodeJS SDK package to send notifications via your server, add additional properties to the
 message payload:
@@ -372,7 +372,7 @@ admin.messaging().send({
 This configuration provides the best chance that your data-only message will be delivered to the device. You can read full
 descriptions on the use of the properties on the [official Firebase documentation](https://firebase.google.com/docs/reference/admin/node/TokenMessage).
 
-Apple has very strict undisclosed polices on data only messages, and are very frequently ignored. For example sending too many in a certain time period
+Apple has very strict undisclosed polices on data only messages, which are very frequently ignored. For example, sending too many in a certain time period
 will cause the device to block messages, or if CPU consumption is high they will also be blocked.
 
 For Android, you can view Logcat logs which will give a descriptive message on why a notification was not delivered. On Apple platforms the
@@ -384,13 +384,13 @@ Topics are a mechanism which allow a device to subscribe and unsubscribe from na
 Rather than sending a message to a specific device by FCM token, you can instead send a message to a topic and any devices
 subscribed to that topic will receive the message.
 
-Topics allow you to simplify FCM server integration as you do not need to keep a store of device tokens. There are however some things to keep in mind about topics:
+Topics allow you to simplify FCM server integration as you do not need to keep a store of device tokens. There are, however, some things to keep in mind about topics:
 
 - Messages sent to topics should not contain sensitive or private information. Do not create a topic for a specific user to subscribe to.
 - Topic messaging supports unlimited subscriptions for each topic.
 - One app instance can be subscribed to no more than 2000 topics.
 - The frequency of new subscriptions is rate-limited per project. If you send too many subscription requests in a short period of time, FCM servers will respond with a 429 RESOURCE_EXHAUSTED ("quota exceeded") response. Retry with an exponential backoff.
-- A server integration can send a single message to multiple topics at once. This however is limited to 5 topics.
+- A server integration can send a single message to multiple topics at once. This, however, is limited to 5 topics.
 
 To learn more about how to send messages to devices subscribed to topics, view the [Send messages to topics](server-integration#send-messages-to-topics) documentation.
 
