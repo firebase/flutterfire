@@ -1,3 +1,7 @@
+## 0.3.4
+
+ - **FEAT**: Add Italian localization language support. (#7823). ([c3a1a839](https://github.com/FirebaseExtended/flutterfire/commit/c3a1a839a3963a75cc17e931a3eee6e091df40ac))
+
 ## 0.3.3
 
 - **FIX**: prompt user to select google account on web (#8007). ([b3db0213](https://github.com/FirebaseExtended/flutterfire/commit/b3db0213ae949435f74d8193cfb5c8a65ed7f601))
