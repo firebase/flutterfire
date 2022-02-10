@@ -18,6 +18,11 @@ import 'message_list.dart';
 import 'permissions.dart';
 import 'token_monitor.dart';
 
+/// In light of https://github.com/FirebaseExtended/flutterfire/issues/6087,
+/// we make the initialized app global so app instance can be shared with the background message handler.
+final initApp =
+    Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+
 /// Define a top-level named handler which background/terminated messages will
 /// call.
 ///
@@ -25,7 +30,7 @@ import 'token_monitor.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
+  await initApp;
   print('Handling a background message ${message.messageId}');
 }
 
@@ -37,14 +42,7 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-      appId: '1:448618578101:ios:0b11ed8263232715ac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-    ),
-  );
+  await initApp;
 
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

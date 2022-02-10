@@ -221,16 +221,23 @@ There are a few things to keep in mind about your background message handler:
 2. It must be a top-level function (e.g. not a class method which requires initialization).
 
 ```dart
+// We recommend initializing the app globally so it can be shared with your background message handler
+// See this issue for further details: https://github.com/FirebaseExtended/flutterfire/issues/6087
+final initApp = Firebase.initializeApp();
+
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+  // make sure you await `initApp` before using other Firebase services.
+  await initApp;
 
   print("Handling a background message: ${message.messageId}");
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initApp;
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(MyApp());
 }
 ```
