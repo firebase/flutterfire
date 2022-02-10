@@ -13,6 +13,7 @@ module.exports = [
   '.dex',
   'ai',
   'acs',
+  'adb',
   'alloc',
   'analytics',
   'applinks',
@@ -83,6 +84,7 @@ module.exports = [
   'safelist',
   'scalable',
   'sdk',
+  'setprop',
   'src',
   'timeframe',
   'twittersdk',
@@ -110,4 +112,5 @@ module.exports = [
   'dartpad',
   'customizable',
   'ui',
+  'npm',
 ];

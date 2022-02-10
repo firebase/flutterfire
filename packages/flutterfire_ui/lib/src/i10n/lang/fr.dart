@@ -168,7 +168,7 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-  const EnLocalizations({
+  const FrLocalizations({
     this.emailInputLabel = 'Email',
     this.passwordInputLabel = 'Mot de passe',
     this.signInActionText = 'Connexion',
@@ -185,7 +185,7 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyPhoneNumberButtonText = 'Suivant',
     this.verifyCodeButtonText = 'Vérifier',
     this.verifyingPhoneNumberViewTitle = 'Entrez le code reçu par sms',
-    this.unknownError = 'Une erreur inconnue s\'est produite',
+    this.unknownError = "Une erreur inconnue s'est produite",
     this.smsAutoresolutionFailedError =
         'Impossible de retrouver le code automatiquement. Veuillez entrer votre code manuellement',
     this.smsCodeSentText = 'Code envoyé par SMS',
@@ -197,31 +197,35 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.userNotFoundErrorText = "Le compte n'existe pas",
     this.emailTakenErrorText = 'Un compte existe déjà avec cette adresse email',
     this.accessDisabledErrorText =
-        'L\'accés à ce compte a été temporairement verrouillé',
+        "L'accés à ce compte a été temporairement verrouillé",
     this.wrongOrNoPasswordErrorText =
-        'Le mot de passe est invalide ou l\'utilisateur n\'a pas de mot de passe',
+        "Le mot de passe est invalide ou l'utilisateur n'a pas de mot de passe",
     this.signInText = 'Connexion',
     this.registerText = 'Inscription',
     this.registerHintText = "Vous n'avez pas de compte ?",
     this.signInHintText = 'Vous avez déjà un compte ?',
     this.signOutButtonText = 'Déconnexion',
     this.phoneInputLabel = 'Numéro de téléphone',
-    this.phoneNumberInvalidErrorText = 'Le numéro de téléphone n\'est pas valide',
+    this.phoneNumberInvalidErrorText =
+        "Le numéro de téléphone n'est pas valide",
     this.phoneNumberIsRequiredErrorText = 'Un numéro de téléphone est requis',
     this.profile = 'Profil',
     this.name = 'Nom',
     this.deleteAccount = 'Supprimer le compte',
     this.passwordIsRequiredErrorText = 'Un mot de passe est requis',
-    this.confirmPasswordIsRequiredErrorText = 'Veuillez confirmer votre mot de passe',
-    this.confirmPasswordDoesNotMatchErrorText = 'Les mots de passe ne se correspondent pas',
+    this.confirmPasswordIsRequiredErrorText =
+        'Veuillez confirmer votre mot de passe',
+    this.confirmPasswordDoesNotMatchErrorText =
+        'Les mots de passe ne se correspondent pas',
     this.confirmPasswordInputLabel = 'Confirmez votre mot de passe',
     this.forgotPasswordButtonLabel = 'Mot de passe oublié ?',
     this.forgotPasswordViewTitle = 'Mot de passe oublié',
     this.resetPasswordButtonLabel = 'Réinitialiser votre mot de passe',
-    this.verifyItsYouText = "Vérifiez votre identité",
+    this.verifyItsYouText = 'Vérifiez votre identité',
     this.differentMethodsSignInTitleText =
         'Utilisez une des méthodes suivantes pour vous connecter',
-    this.findProviderForEmailTitleText = 'Entrez votre adresse email pour continuer',
+    this.findProviderForEmailTitleText =
+        'Entrez votre adresse email pour continuer',
     this.continueText = 'Continuer',
     this.countryCode = 'Code',
     this.codeRequiredErrorText = 'Un code de pays est requis',
@@ -232,13 +236,14 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = 'Fournissez votre adresse email et votre mot de passe',
     this.goBackButtonLabel = 'Retour',
     this.passwordResetEmailSentText =
-        "Nous vous avons envoyé un email avec un lien pour réinitialiser votre mot de passe. Veuillez vérifier vos emails.",
+        'Nous vous avons envoyé un email avec un lien pour réinitialiser votre mot de passe. Veuillez vérifier vos emails.',
     this.forgotPasswordHintText =
         'Fournissez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe',
     this.emailLinkSignInButtonLabel = 'Connectez-vous avec le lien magique',
-    this.signInWithEmailLinkViewTitleText = 'Connectez-vous avec le lien magique',
+    this.signInWithEmailLinkViewTitleText =
+        'Connectez-vous avec le lien magique',
     this.signInWithEmailLinkSentText =
-        "Nous vous avons envoyé un email avec un lien magique. Vérifiez vos emails et clickez sur le lien pour vous connecter",
+        'Nous vous avons envoyé un email avec un lien magique. Vérifiez vos emails et clickez sur le lien pour vous connecter',
     this.sendLinkButtonLabel = 'Envoyer un lien magique',
     this.arrayLabel = 'liste',
     this.booleanLabel = 'booléen',

@@ -1,3 +1,11 @@
+## 2.2.7
+
+ - **FIX**: Make Web `deleteToken()` API a Future so it resolves only when completed. (#7687). ([cf59bd38](https://github.com/FirebaseExtended/flutterfire/commit/cf59bd380a495a0390d8c14a63498ba1600f9f12))
+
+## 2.2.6
+
+ - Update a dependency to the latest release.
+
 ## 2.2.5
 
  - Update a dependency to the latest release.

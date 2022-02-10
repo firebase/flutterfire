@@ -22,6 +22,7 @@ class RegisterScreen extends StatelessWidget {
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
+  final double breakpoint;
 
   const RegisterScreen({
     Key? key,
@@ -36,6 +37,7 @@ class RegisterScreen extends StatelessWidget {
     this.showAuthActionSwitch,
     this.subtitleBuilder,
     this.footerBuilder,
+    this.breakpoint = 800,
   }) : super(key: key);
 
   @override

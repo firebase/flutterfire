@@ -36,14 +36,14 @@ flutter run
 
 Currently, the Firestore iOS SDK depends on some 500k lines of mostly C++ code which can take upwards of 5 minutes to build in Xcode. To reduce build times significantly, you can use a pre-compiled version by adding 1 line to your `ios/Podfile` inside your Flutter project;
 
-`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.10.0'`
+`pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.11.0'` 
 
 Add this line inside your target 'Runner' do block in your Podfile, e.g.:
 
 ```
 # ...
 target 'Runner' do
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.10.0'
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '8.11.0'
 # ...
 end
 ```

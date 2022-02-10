@@ -7,7 +7,7 @@ import '../stories_lib/story.dart';
 
 class SignInScreenStory extends StoryWidget {
   const SignInScreenStory({Key? key})
-      : super(key: key, category: 'Screens', title: 'SignInSceen');
+      : super(key: key, category: 'Screens', title: 'SignInScreen');
 
   @override
   Widget build(StoryElement context) {

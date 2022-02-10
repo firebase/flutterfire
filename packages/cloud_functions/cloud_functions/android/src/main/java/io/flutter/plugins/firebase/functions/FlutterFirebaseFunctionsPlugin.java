@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.firebase.functions;
 
+import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
@@ -31,10 +32,6 @@ public class FlutterFirebaseFunctionsPlugin
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_functions";
   private MethodChannel channel;
-
-  private FlutterFirebaseFunctionsPlugin(MethodChannel channel) {
-    this.channel = channel;
-  }
 
   /**
    * Default Constructor.
@@ -74,11 +71,8 @@ public class FlutterFirebaseFunctionsPlugin
           Object parameters = arguments.get("parameters");
 
           if (origin != null) {
-            // TODO(helenaford): Placeholder logic for useEmulator when available
-            // Uri originUri = Uri.parse(origin);
-            // firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
-
-            firebaseFunctions.useFunctionsEmulator(origin);
+            Uri originUri = Uri.parse(origin);
+            firebaseFunctions.useEmulator(originUri.getHost(), originUri.getPort());
           }
 
           HttpsCallableReference httpsCallableReference =

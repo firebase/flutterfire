@@ -1,3 +1,8 @@
+## 4.2.4
+
+ - **FIX**: allow secondary Firebase App initialization without duplicate app error on hot restart (#7953). ([f4a2c2e6](https://github.com/FirebaseExtended/flutterfire/commit/f4a2c2e63e4dd4f888583110cc65ec84dec14dd7))
+ - **FIX**: Fix `FirebaseException` error code bug by making default value: "unknown". (#6897). ([48fed37c](https://github.com/FirebaseExtended/flutterfire/commit/48fed37c8e09b4c1c70f97488215fd39ff2f0616))
+
 ## 4.2.3
 
  - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
