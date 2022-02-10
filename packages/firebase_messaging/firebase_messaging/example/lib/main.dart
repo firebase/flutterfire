@@ -19,7 +19,7 @@ import 'permissions.dart';
 import 'token_monitor.dart';
 
 /// In light of https://github.com/FirebaseExtended/flutterfire/issues/6087,
-/// we make the initialized app global so app instance can be shared with the background message handler.
+/// we make the initialized Firebase app global so it can be shared with the background message handler & the app.
 final initApp =
     Firebase.initializeApp(options: DefaultFirebaseConfig.platformOptions);
 
