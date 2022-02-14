@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,9 +12,24 @@ import 'profile.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // We're using the manual installation since Google sign in plugin doesn't yet support Dart initialization.
+  // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
   // See related issue: https://github.com/flutter/flutter/issues/96391
-  await Firebase.initializeApp();
+  if (!kIsWeb) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
+        appId: '1:448618578101:web:0b650370bb29e29cac3efc',
+        messagingSenderId: '448618578101',
+        projectId: 'react-native-firebase-testing',
+        authDomain: 'react-native-firebase-testing.firebaseapp.com',
+        databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+        storageBucket: 'react-native-firebase-testing.appspot.com',
+        measurementId: 'G-F79DJ0VFGS',
+      ),
+    );
+  }
 
   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
