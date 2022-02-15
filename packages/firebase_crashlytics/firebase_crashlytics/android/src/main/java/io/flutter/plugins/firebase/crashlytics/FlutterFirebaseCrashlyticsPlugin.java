@@ -1,9 +1,9 @@
 // Copyright 2019 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+ 
 package io.flutter.plugins.firebase.crashlytics;
-
+ 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -126,21 +126,6 @@ public class FlutterFirebaseCrashlyticsPlugin
             exception = new FlutterError(dartExceptionMessage);
           }
 
-          if (fatal) {
-            AnalyticsConnector connector = FirebaseApp.getInstance().get(AnalyticsConnector.class);
-            CrashlyticsOriginAnalyticsEventLogger analyticsEventLogger =
-                new CrashlyticsOriginAnalyticsEventLogger(connector);
-
-            Bundle params = new Bundle();
-            long unixTime = System.currentTimeMillis() / 1000;
-
-            params.putInt(Constants.FATAL, 1);
-            params.putLong(Constants.TIMESTAMP, unixTime);
-
-            crashlytics.setCustomKey(Constants.CRASH_EVENT_KEY, unixTime);
-            analyticsEventLogger.logEvent(Constants.FIREBASE_APPLICATION_EXCEPTION, params);
-          }
-
           crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage);
 
           final List<StackTraceElement> elements = new ArrayList<>();
@@ -162,7 +147,11 @@ public class FlutterFirebaseCrashlyticsPlugin
             crashlytics.log(information);
           }
 
-          crashlytics.recordException(exception);
+          if (fatal) {
+            crashlytics.recordFatalException(exception);
+          } else {
+            crashlytics.recordException(exception);
+          }
           return null;
         });
   }
