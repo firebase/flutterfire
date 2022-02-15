@@ -3,6 +3,114 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-02-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.8`](#cloud_firestore_odm---v100-dev8)
+ - [`cloud_firestore_platform_interface` - `v5.4.13`](#cloud_firestore_platform_interface---v5413)
+ - [`firebase_auth` - `v3.3.7`](#firebase_auth---v337)
+ - [`firebase_dynamic_links` - `v4.0.6`](#firebase_dynamic_links---v406)
+ - [`flutterfire_ui` - `v0.3.4`](#flutterfire_ui---v034)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.8`](#cloud_firestore_odm_generator---v100-dev8)
+ - [`cloud_firestore` - `v3.1.8`](#cloud_firestore---v318)
+ - [`cloud_firestore_web` - `v2.6.8`](#cloud_firestore_web---v268)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.8`
+ - `cloud_firestore` - `v3.1.8`
+ - `cloud_firestore_web` - `v2.6.8`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.8`
+
+ - **DOCS**: Update code snippets by removing incorrect forward slash for `@Collection` annotations. (#8044). ([292f20c6](https://github.com/FirebaseExtended/flutterfire/commit/292f20c61c0a479e5effcbf45a07f7fb782ba23e))
+
+#### `cloud_firestore_platform_interface` - `v5.4.13`
+
+ - **FIX**: Export enum `LoadBundleTaskState` from Platform Interface package. (#8027). ([7fa461e4](https://github.com/FirebaseExtended/flutterfire/commit/7fa461e4476db3ac255877db93b6ccf493d0e1cf))
+
+#### `firebase_auth` - `v3.3.7`
+
+ - **DOCS**: Update documentation for `currentUser` property to make expectations clearer. (#7843). ([59bb47c2](https://github.com/FirebaseExtended/flutterfire/commit/59bb47c2490fbd641a1fcc26f2f888e8f4f02671))
+
+#### `firebase_dynamic_links` - `v4.0.6`
+
+ - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/FirebaseExtended/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
+
+#### `flutterfire_ui` - `v0.3.4`
+
+ - **FEAT**: Add Italian localization language support. (#7823). ([c3a1a839](https://github.com/FirebaseExtended/flutterfire/commit/c3a1a839a3963a75cc17e931a3eee6e091df40ac))
+
+
+## 2022-02-08
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_storage_platform_interface` - `v4.0.14`](#firebase_storage_platform_interface---v4014)
+ - [`firebase_crashlytics` - `v2.5.1`](#firebase_crashlytics---v251)
+ - [`cloud_functions` - `v3.2.7`](#cloud_functions---v327)
+ - [`flutterfire_ui` - `v0.3.3`](#flutterfire_ui---v033)
+ - [`firebase_storage` - `v10.2.7`](#firebase_storage---v1027)
+ - [`firebase_storage_web` - `v3.2.8`](#firebase_storage_web---v328)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_storage` - `v10.2.7`
+ - `firebase_storage_web` - `v3.2.8`
+
+---
+
+#### `firebase_storage_platform_interface` - `v4.0.14`
+
+ - **DOCS**: Update storage metadata code documentation and add relevant documentation links.
+
+#### `firebase_crashlytics` - `v2.5.1`
+
+ - **FIX**: Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+#### `cloud_functions` - `v3.2.7`
+
+ - **REFACTOR**: remove deprecated Android API usages (#7986).
+
+#### `flutterfire_ui` - `v0.3.3`
+
+ - **FIX**: prompt user to select google account on web (#8007).
+ - **FIX**: bump flutter_facebook_auth version (#8031).
+ - **FIX**: make breakpoints of all screens configurable (#7996).
+ - **FEAT**: add Dutch localization support (#7782).
+ - **FEAT**: add autofillhints (#7668).
+ - **DOCS**: Fixes "infinite" typo (#8039).
+
+#### `firebase_storage` - `v10.2.7`
+
+
+#### `firebase_storage_web` - `v3.2.8`
+
+
+
 ## 2022-01-27
 
 ### Changes

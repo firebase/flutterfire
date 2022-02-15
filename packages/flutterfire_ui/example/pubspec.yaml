@@ -21,16 +21,16 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  cloud_firestore: ^3.1.7
+  cloud_firestore: ^3.1.8
   crypto: ^3.0.1
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.6
+  firebase_auth: ^3.3.7
   firebase_core: ^1.10.3
   firebase_database: ^9.0.6
-  firebase_dynamic_links: ^4.0.5
+  firebase_dynamic_links: ^4.0.6
   flutter:
     sdk: flutter
-  flutter_facebook_auth: '^3.5.0'
+  flutter_facebook_auth: ^4.0.1
   flutter_svg: ^1.0.0
   flutterfire_ui:
     path: ../
