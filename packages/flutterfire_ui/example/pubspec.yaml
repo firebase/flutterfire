@@ -34,6 +34,7 @@ dependencies:
   flutter_svg: ^1.0.0
   flutterfire_ui:
     path: ../
+  go_router: ^3.0.1
 
 dev_dependencies:
   drive: ^1.0.0-1.0.nullsafety.1
