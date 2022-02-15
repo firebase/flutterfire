@@ -25,6 +25,7 @@ class SignInScreen extends StatelessWidget {
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
   final List<FlutterFireUIAction> actions;
+  final double breakpoint;
 
   const SignInScreen({
     Key? key,
@@ -41,6 +42,7 @@ class SignInScreen extends StatelessWidget {
     this.footerBuilder,
     this.loginViewKey,
     this.actions = const [],
+    this.breakpoint = 800,
   }) : super(key: key);
 
   Future<void> _signInWithDifferentProvider(
@@ -88,6 +90,7 @@ class SignInScreen extends StatelessWidget {
         showAuthActionSwitch: showAuthActionSwitch,
         subtitleBuilder: subtitleBuilder,
         footerBuilder: footerBuilder,
+        breakpoint: breakpoint,
       ),
     );
   }

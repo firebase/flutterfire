@@ -125,7 +125,17 @@ class MethodChannelFirebase extends FirebasePlatform {
 
     // Check whether the app has already been initialized
     if (appInstances.containsKey(name)) {
-      throw duplicateApp(name);
+      final existingApp = appInstances[name]!;
+      if (options!.apiKey != existingApp.options.apiKey ||
+          (options.databaseURL != null &&
+              options.databaseURL != existingApp.options.databaseURL) ||
+          (options.storageBucket != null &&
+              options.storageBucket != existingApp.options.storageBucket)) {
+        // Options are different; throw.
+        throw duplicateApp(name);
+      } else {
+        return existingApp;
+      }
     }
 
     _initializeFirebaseAppFromMap((await channel.invokeMapMethod(

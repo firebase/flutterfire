@@ -1,3 +1,11 @@
+## 5.4.13
+
+ - **FIX**: Export enum `LoadBundleTaskState` from Platform Interface package. (#8027). ([7fa461e4](https://github.com/FirebaseExtended/flutterfire/commit/7fa461e4476db3ac255877db93b6ccf493d0e1cf))
+
+## 5.4.12
+
+ - Update a dependency to the latest release.
+
 ## 5.4.11
 
  - Update a dependency to the latest release.

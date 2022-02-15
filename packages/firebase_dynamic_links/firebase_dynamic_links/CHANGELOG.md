@@ -1,3 +1,11 @@
+## 4.0.6
+
+ - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/FirebaseExtended/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
+
+## 4.0.5
+
+ - Update a dependency to the latest release.
+
 ## 4.0.4
 
  - Update a dependency to the latest release.
