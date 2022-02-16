@@ -51,6 +51,15 @@ you don't need to add any code to enable them.
     FirebaseAnalytics analytics = FirebaseAnalytics.instance;
     ```
 
+### (Optional) Disable IDFA tracking
+
+To use Firebase Analytics without IDFA collection capability, open
+`/ios/Podfile` or `/macos/Podfile` and add the following global variable to the
+top of the file:
+
+```ruby
+$FirebaseAnalyticsWithoutAdIdSupport = true
+```
 
 ### (Optional) Disable Apple ad network attribution registration
 
