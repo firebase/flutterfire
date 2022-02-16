@@ -169,7 +169,7 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
   final String referenceLabel;
 
   const TrLocalizations({
-    this.emailInputLabel = 'Email',
+    this.emailInputLabel = 'E-mail',
     this.passwordInputLabel = 'Şifre',
     this.signInActionText = 'Giriş yap',
     this.registerActionText = 'Kayıt ol',
@@ -187,13 +187,13 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyingPhoneNumberViewTitle = 'SMS ile gelen kodu girin',
     this.unknownError = 'Bilinmeyen bir hata meydana geldi',
     this.smsAutoresolutionFailedError =
-        'SMS kodu otomatik olarak çözülemedi. Lütfen kodu manuel olarak girin',
+        'SMS kodu otomatik olarak eklenemedi. Lütfen kodu manuel olarak girin',
     this.smsCodeSentText = 'SMS kodu gönderildi',
     this.sendingSMSCodeText = 'SMS kodu gönderiliyor...',
     this.verifyingSMSCodeText = 'SMS kodu doğrulanıyor...',
     this.enterSMSCodeText = 'SMS kodunu girin',
-    this.emailIsRequiredErrorText = 'Email gerekli',
-    this.isNotAValidEmailErrorText = 'Geçerli bir email girin',
+    this.emailIsRequiredErrorText = 'E-mail gerekli',
+    this.isNotAValidEmailErrorText = 'Geçerli bir e-mail adresi girin',
     this.userNotFoundErrorText = 'Hesap bulunamadı',
     this.emailTakenErrorText = 'Bu email ile bir hesap mevcut',
     this.accessDisabledErrorText =
@@ -202,7 +202,7 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
         'Şifre geçersiz veya kullanıcının bir şifresi yok',
     this.signInText = 'Giriş yap',
     this.registerText = 'Kayıt ol',
-    this.registerHintText = 'Bir hesabın yok mu?',
+    this.registerHintText = 'Hesabın yok mu?',
     this.signInHintText = 'Zaten bir hesabın var mı?',
     this.signOutButtonText = 'Çıkış yap',
     this.phoneInputLabel = 'Telefon numarası',
@@ -214,7 +214,7 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordIsRequiredErrorText = 'Şifre gerekli',
     this.confirmPasswordIsRequiredErrorText = 'Şifrenizi onaylayın',
     this.confirmPasswordDoesNotMatchErrorText = 'Şifreler uyuşmadı',
-    this.confirmPasswordInputLabel = 'Şifreyi onayla',
+    this.confirmPasswordInputLabel = 'Şifreni onayla',
     this.forgotPasswordButtonLabel = 'Şifrenizi mi unuttunuz?',
     this.forgotPasswordViewTitle = 'Şifremi unuttum',
     this.resetPasswordButtonLabel = 'Şifreyi sıfırla',
@@ -233,14 +233,14 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = 'Email ve şifrenizi girin',
     this.goBackButtonLabel = 'Geri git',
     this.passwordResetEmailSentText =
-        'Şifrenizi sıfırlamak için bir linki size email ile gönderdik. Lütfen emailinizi kontrol edin.',
+        'Şifrenizi sıfırlamak için size email ile bir link gönderdik. Lütfen emailinizi kontrol edin.',
     this.forgotPasswordHintText =
-        'Emailinizi verin ve size şifrenizi sıfırlamanız için bir bağlantı gönderelim',
-    this.emailLinkSignInButtonLabel = 'Sihirli link ile giriş yap',
-    this.signInWithEmailLinkViewTitleText = 'Sihirli link ile giriş yap',
+        'E-mail adresinizi verin ve size şifrenizi sıfırlamanız için bir bağlantı gönderelim',
+    this.emailLinkSignInButtonLabel = 'Sihirli bağlantı ile giriş yap',
+    this.signInWithEmailLinkViewTitleText = 'Sihirli bağlantı ile giriş yap',
     this.signInWithEmailLinkSentText =
         'Sana sihirli bir link ile bir email gönderdik. Emailinizi kontrol edin ve oturum açmak için bağlantıyı takip edin',
-    this.sendLinkButtonLabel = 'Sihirli link gönder',
+    this.sendLinkButtonLabel = 'Sihirli bağlantı gönder',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',
