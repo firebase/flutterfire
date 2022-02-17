@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.google.firebase</groupId>
+  <artifactId>firebase-crashlytics-ktx</artifactId>
+  <version>18.2.9-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20220217180154</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>18.2.9-SNAPSHOT</value>
+        <updated>20220217180154</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>aar</extension>
+        <value>18.2.9-SNAPSHOT</value>
+        <updated>20220217180154</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>18.2.9-SNAPSHOT</value>
+        <updated>20220217180154</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

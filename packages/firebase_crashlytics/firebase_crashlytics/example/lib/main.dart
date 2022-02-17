@@ -21,15 +21,7 @@ const _kTestingCrashlytics = true;
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: const FirebaseOptions(
-        apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-        appId: '1:448618578101:ios:2bc5c1fe2ec336f8ac3efc',
-        messagingSenderId: '448618578101',
-        authDomain: 'react-native-firebase-testing.firebaseapp.com',
-        projectId: 'react-native-firebase-testing',
-      ),
-    );
+    await Firebase.initializeApp();
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(MyApp());
   }, (error, stackTrace) {
@@ -55,11 +47,9 @@ class _MyAppState extends State<MyApp> {
 
   // Define an async function to initialize FlutterFire
   Future<void> _initializeFlutterFire() async {
-    // Wait for Firebase to initialize
-
     if (_kTestingCrashlytics) {
       // Force enable crashlytics collection enabled if we're testing it.
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     } else {
       // Else only enable it in non-debug builds.
       // You could additionally extend this to allow users to opt-in.
@@ -106,7 +96,7 @@ class _MyAppState extends State<MyApp> {
                               .showSnackBar(const SnackBar(
                             content: Text(
                                 'Custom Key "example: flutterfire" has been set \n'
-                                'Key will appear in Firebase Console once app has crashed and reopened'),
+                                'Key will appear in Firebase Console once an error has been reported.'),
                             duration: Duration(seconds: 5),
                           ));
                         },
@@ -120,7 +110,7 @@ class _MyAppState extends State<MyApp> {
                               .showSnackBar(const SnackBar(
                             content: Text(
                                 'The message "This is a log example" has been logged \n'
-                                'Message will appear in Firebase Console once app has crashed and reopened'),
+                                'Message will appear in Firebase Console once an error has been reported.'),
                             duration: Duration(seconds: 5),
                           ));
                         },
@@ -148,8 +138,8 @@ class _MyAppState extends State<MyApp> {
                         onPressed: () {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
-                            content: Text('Thrown error has been caught \n'
-                                'Please crash and reopen to send data to Crashlytics'),
+                            content: Text(
+                                'Thrown error has been caught and sent to Crashlytics.'),
                             duration: Duration(seconds: 5),
                           ));
 
@@ -164,8 +154,7 @@ class _MyAppState extends State<MyApp> {
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             content: Text(
-                                'Uncaught Exception that is handled by second parameter of runZonedGuarded \n'
-                                'Please crash and reopen to send data to Crashlytics'),
+                                'Uncaught Exception that is handled by second parameter of runZonedGuarded.'),
                             duration: Duration(seconds: 5),
                           ));
 
@@ -187,8 +176,7 @@ class _MyAppState extends State<MyApp> {
                           try {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text('Recorded Error  \n'
-                                  'Please crash and reopen to send data to Crashlytics'),
+                              content: Text('Recorded Error'),
                               duration: Duration(seconds: 5),
                             ));
                             throw Error();
@@ -207,8 +195,7 @@ class _MyAppState extends State<MyApp> {
                           try {
                             ScaffoldMessenger.of(context)
                                 .showSnackBar(const SnackBar(
-                              content: Text('Recorded Error  \n'
-                                  'Please crash and reopen to send data to Crashlytics'),
+                              content: Text('Recorded Error'),
                               duration: Duration(seconds: 5),
                             ));
                             throw Error();

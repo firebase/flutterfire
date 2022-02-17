@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.google.firebase</groupId>
+  <artifactId>firebase-crashlytics</artifactId>
+  <versioning>
+    <latest>18.2.9-SNAPSHOT</latest>
+    <versions>
+      <version>18.2.9-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20220217180154</lastUpdated>
+  </versioning>
+</metadata>
