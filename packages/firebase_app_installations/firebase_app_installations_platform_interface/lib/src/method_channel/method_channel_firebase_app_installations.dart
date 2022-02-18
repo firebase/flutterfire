@@ -23,25 +23,39 @@ class MethodChannelFirebaseAppInstallations
     'plugins.flutter.io/firebase_app_installations',
   );
 
-  static final Map<String, Stream<String>> _idTokenChangesListeners =
-      <String, Stream<String>>{};
+  static final Map<String, StreamController<String>> _idTokenChangesListeners =
+      <String, StreamController<String>>{};
 
   /// Creates a new [MethodChannelFirebaseAppInstallations] instance with an [app].
   MethodChannelFirebaseAppInstallations({required FirebaseApp app})
       : super(app) {
-    _idTokenChangesListeners[app.name] = Stream.fromFuture(
-      channel.invokeMethod<String>(
-        'FirebaseInstallations#registerIdChangeListener',
-        {'appName': app.name},
-      ),
-    )
-        .asyncExpand<Object?>((channelName) {
-          final events = EventChannel(channelName!, channel.codec);
-          return events.receiveBroadcastStream();
-        })
-        .map((arguments) => (arguments as Map)['token'] as String)
-        .handleError(convertPlatformException)
-        .asBroadcastStream();
+    _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
+
+    channel.invokeMethod<String>(
+        'FirebaseInstallations#registerIdChangeListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName!, channel.codec);
+      events.receiveBroadcastStream().listen((arguments) {
+        _handleIdChangedListener(app.name, arguments);
+      }, onError: (error, stackTrace) {
+        _handleIdChangedError(app.name, error, stackTrace);
+      });
+    });
+  }
+  void _handleIdChangedError(String appName, Object error,
+      [StackTrace? stackTrace]) {
+    final StreamController<String> controller =
+        _idTokenChangesListeners[appName]!;
+    controller.addError(convertPlatformException(error), stackTrace);
+  }
+
+  /// Handle any incoming events from Event Channel and forward on to the user.
+  void _handleIdChangedListener(
+      String appName, Map<dynamic, dynamic> arguments) {
+    final StreamController<String> controller =
+        _idTokenChangesListeners[appName]!;
+    controller.add(arguments['token']);
   }
 
   /// Internal stub class initializer.
@@ -94,5 +108,7 @@ class MethodChannelFirebaseAppInstallations
   }
 
   @override
-  Stream<String> get onIdChange => _idTokenChangesListeners[app!.name]!;
+  Stream<String> get onIdChange {
+    return _idTokenChangesListeners[app!.name]!.stream;
+  }
 }
