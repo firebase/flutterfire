@@ -1,17 +1,19 @@
 ## Firebase Crashlytics for Flutter EAP
 
-This is a preview release adding support for Firebase Crashlytics on demand reporting in Flutter. This will allow you to 
+This is a preview release adding support for Firebase Crashlytics on demand reporting in Flutter. This will allow you to
 report fatal errors to the Firebase Crashlytics backend without the need to restart your application.
 
 ### Installation
 
-To get started, add the preview version of the `firebase_crashlytics` Flutter plugin to your projects `pubspec.yaml` dependencies:
+To get started, you can follow the standard documentation for [getting started with FlutterFire](https://firebase.flutter.dev/docs/overview) and [getting started with Firebase Crashlytics in Flutter](https://firebase.flutter.dev/docs/crashlytics/overview), however you should use the preview version of the `firebase_crashlytics` Flutter plugin instead - by adding it to your projects `pubspec.yaml` dependencies as a git dependency:
 
 ```yaml
 # ...
 dependencies:
+  firebase_core: ^1.12.0
+  # Add 'firebase_crashlytics' from git:
   firebase_crashlytics:
-    git: 
+    git:
       url: https://github.com/FirebaseExtended/flutterfire.git
       ref: crashlytics-eap
       path: packages/firebase_crashlytics/firebase_crashlytics
@@ -38,4 +40,4 @@ end
 # ...
 ```
 
-Since Flutter projects usually generate the Podfile for you, you may need to add it to `git` so your changes are preserved.
+Since Flutter usually generates the Podfile for you, you may need to explicitly add it to `git` so your changes are preserved.
