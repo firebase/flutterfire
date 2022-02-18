@@ -17,7 +17,9 @@ const _firebaseAuthProviderParameters = {
   'prompt': 'select_account',
 };
 
-class GoogleProviderImpl extends OAuthProvider {
+abstract class GoogleProvider extends OAuthProvider {}
+
+class GoogleProviderImpl extends GoogleProvider {
   String clientId;
   String redirectUri;
 
@@ -58,12 +60,19 @@ class GoogleProviderImpl extends OAuthProvider {
   }
 
   @override
+  Future<void> signOut() async {
+    await _provider.signOut();
+    await super.signOut();
+  }
+
+  @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return GoogleAuthProvider.credential(accessToken: result.accessToken);
   }
 }
 
-class GoogleProviderConfiguration extends OAuthProviderConfiguration {
+class GoogleProviderConfiguration
+    extends OAuthProviderConfiguration<GoogleProvider> {
   final String clientId;
   final String? redirectUri;
 
@@ -81,7 +90,7 @@ class GoogleProviderConfiguration extends OAuthProviderConfiguration {
   String get providerId => GOOGLE_PROVIDER_ID;
 
   @override
-  OAuthProvider createProvider() {
+  GoogleProvider createProvider() {
     return _provider;
   }
 

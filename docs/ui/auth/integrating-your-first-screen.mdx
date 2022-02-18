@@ -492,6 +492,65 @@ return ProfileScreen(
   style={{ maxHeight: 700 }}
 />
 
+## Configuring auth providers globally
+
+Instead of passing a list of providers to each screen, you can provide a list of provider configurations to the `FlutterFireUIAuth.configureProviders`:
+
+```dart
+Future<void> main() async {
+  // Firebase app should be initialized before calling configureProviders
+  await Firebase.initializeApp();
+
+  FlutterFireUIAuth.configureProviders([
+    const EmailProviderConfiguration(),
+    const PhoneProviderConfiguration(),
+    const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+    const AppleProviderConfiguration(),
+    const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+    const TwitterProviderConfiguration(
+      apiKey: TWITTER_API_KEY,
+      apiSecretKey: TWITTER_API_SECRET_KEY,
+      redirectUri: TWITTER_REDIRECT_URI,
+    ),
+  ]);
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
+
+    return MaterialApp(
+      initialRoute: auth.currentUser == null ? '/' : '/profile',
+      routes: {
+        '/': (context) {
+          return SignInScreen(
+            // no providerConfigs property - global configuration will be used instead
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }),
+            ],
+          );
+        },
+        '/profile': (context) {
+          return ProfileScreen(
+            // no providerConfigs property here as well
+            actions: [
+              SignedOutAction((context) {
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+            ],
+          );
+        },
+      },
+    );
+  }
+}
+```
+
 ## Next Steps
 
 With your first screen integrated, you can now start adding more providers and integrating more screens!

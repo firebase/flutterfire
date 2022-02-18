@@ -1,5 +1,53 @@
 import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/widgets.dart';
+
+@immutable
+class ProviderKey {
+  final FirebaseAuth auth;
+  final Type providerType;
+
+  ProviderKey(this.auth, this.providerType);
+
+  @override
+  int get hashCode => hashValues(auth, providerType);
+
+  @override
+  bool operator ==(Object other) {
+    return hashCode == other.hashCode;
+  }
+}
+
+abstract class OAuthProviders {
+  static final _providers = <ProviderKey, OAuthProvider>{};
+
+  static void register(FirebaseAuth? auth, OAuthProvider provider) {
+    final _auth = auth ?? FirebaseAuth.instance;
+    final key = ProviderKey(_auth, provider.runtimeType);
+
+    _providers[key] = provider;
+  }
+
+  static OAuthProvider? resolve(FirebaseAuth? auth, Type providerType) {
+    final _auth = auth ?? FirebaseAuth.instance;
+    final key = ProviderKey(_auth, providerType);
+    return _providers[key];
+  }
+
+  static Iterable<OAuthProvider> providersFor(FirebaseAuth auth) sync* {
+    for (final k in _providers.keys) {
+      if (k.auth == auth) {
+        yield _providers[k]!;
+      }
+    }
+  }
+
+  static Future<void> signOut([FirebaseAuth? auth]) async {
+    final _auth = auth ?? FirebaseAuth.instance;
+    final futures = providersFor(_auth).map((e) => e.signOut());
+    await Future.wait(futures);
+  }
+}
 
 abstract class OAuthProvider {
   Future<OAuthCredential> signIn();
@@ -19,9 +67,7 @@ abstract class OAuthProvider {
     return credential;
   }
 
-  Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
-  }
+  Future<void> signOut() async {}
 }
 
 extension OAuthHelpers on User {
