@@ -216,7 +216,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.confirmPasswordDoesNotMatchErrorText = 'パスワードが一致しません',
     this.confirmPasswordInputLabel = 'パスワードの確認',
     this.forgotPasswordButtonLabel = 'パスワードを忘れた方はこちら',
-    this.forgotPasswordViewTitle = 'パスワードを忘れた',
+    this.forgotPasswordViewTitle = 'パスワードを忘れた場合',
     this.resetPasswordButtonLabel = 'パスワードをリセット',
     this.verifyItsYouText = '本人確認をします',
     this.differentMethodsSignInTitleText =
