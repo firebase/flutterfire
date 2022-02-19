@@ -1,0 +1,35 @@
+require 'xcodeproj'
+
+if(ARGV.length < 2) 
+    abort("Not enough arguments provided. Please pass at least a project directory and project name.")
+end
+
+current_dir = ARGV[0]
+project_name = ARGV[1]
+
+project_path = File.join(current_dir, project_name)
+puts(project_path)
+unless (File.exist?(project_path)) 
+    abort("Project at #{project_path} does not exist. Please incorporate Crashlytics upload symbols manually.\n");
+end
+
+# Default to Flutter arguments if no other upload-symbols inputs are provided.
+if(ARGV.length == 3)
+    upload_symbols_args = ARGV[2]
+else
+    upload_symbols_args = "--flutter-project \"$PROJECT_DIR/firebase_app_id_file.txt"
+end
+
+project = Xcodeproj::Project.open(project_path)
+project.targets.each do |target|
+    if (target.name == "Runner") 
+        phase = target.shell_script_build_phases().find {|item| item.name == "[firebase_crashlytics] Crashlytics Upload Symbols"}
+        if (phase.nil?)
+            phase = target.new_shell_script_build_phase("[firebase_crashlytics] Crashlytics Upload Symbols")
+            phase.shell_script = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" #{upload_symbols_args}\""
+            phase.input_paths = ["\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\"", "$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)"]
+            project.save()
+        end
+    end
+end
+
