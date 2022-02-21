@@ -39,3 +39,5 @@ flutter:
         pluginClass: FLTFirebaseRemoteConfigPlugin
       macos:
         pluginClass: FLTFirebaseRemoteConfigPlugin
+      web:
+        default_package: firebase_remote_config_web
