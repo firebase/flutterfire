@@ -58,7 +58,7 @@ class TwitterProviderImpl extends OAuthProvider {
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return TwitterAuthProvider.credential(
-      accessToken: result.accessToken,
+      accessToken: result.accessToken!,
       secret: result.tokenSecret!,
     );
   }
