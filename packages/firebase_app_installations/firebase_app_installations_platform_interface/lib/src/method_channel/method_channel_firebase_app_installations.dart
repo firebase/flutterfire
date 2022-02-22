@@ -62,7 +62,7 @@ class MethodChannelFirebaseAppInstallations
         'appName': app!.name,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -76,7 +76,7 @@ class MethodChannelFirebaseAppInstallations
 
       return id!;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -89,7 +89,7 @@ class MethodChannelFirebaseAppInstallations
 
       return id!;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
