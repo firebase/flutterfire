@@ -98,12 +98,12 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    final observerId = Stream.fromFuture(
+    final observerIdStream = Stream.fromFuture(
       MethodChannelFirebaseFirestore.channel
           .invokeMethod<String>('DocumentReference#snapshots'),
     );
 
-    return observerId
+    return observerIdStream
         .asyncExpand((observerId) {
           final channel =
               MethodChannelFirebaseFirestore.documentSnapshotChannel(

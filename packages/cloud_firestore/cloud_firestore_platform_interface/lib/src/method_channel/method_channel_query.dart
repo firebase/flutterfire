@@ -131,12 +131,12 @@ class MethodChannelQuery extends QueryPlatform {
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    final observerId = Stream.fromFuture(
+    final observerIdStream = Stream.fromFuture(
       MethodChannelFirebaseFirestore.channel
           .invokeMethod<String>('Query#snapshots'),
     );
 
-    return observerId
+    return observerIdStream
         .asyncExpand((observerId) {
           final channel =
               MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!);

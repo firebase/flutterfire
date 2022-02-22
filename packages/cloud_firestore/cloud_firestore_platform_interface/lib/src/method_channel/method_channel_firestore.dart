@@ -184,12 +184,12 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
 
   @override
   Stream<void> snapshotsInSync() {
-    final observerId = Stream.fromFuture(
+    final observerIdStream = Stream.fromFuture(
       MethodChannelFirebaseFirestore.channel
           .invokeMethod<String>('SnapshotsInSync#setup'),
     );
 
-    return observerId
+    return observerIdStream
         .asyncExpand((observerId) {
           final channel = MethodChannelFirebaseFirestore.snapshotsInSyncChannel(
               observerId!);
