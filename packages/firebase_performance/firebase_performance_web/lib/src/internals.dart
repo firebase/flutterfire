@@ -10,7 +10,7 @@ import 'package:firebase_core/src/internals.dart' as internals;
 
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
-Future<R> guard<R>(R Function() cb) async {
+Future<R> convertWebExceptions<R>(R Function() cb) async {
   return internals.guard(
     cb,
     plugin: 'firebase_performance',

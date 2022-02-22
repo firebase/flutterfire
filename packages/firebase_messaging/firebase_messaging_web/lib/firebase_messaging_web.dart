@@ -96,7 +96,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       return;
     }
 
-    return guard(_delegate.deleteToken);
+    return convertWebExceptions(_delegate.deleteToken);
   }
 
   @override
@@ -113,7 +113,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
       return null;
     }
 
-    return guard(
+    return convertWebExceptions(
       () => _delegate.getToken(vapidKey: vapidKey),
     );
   }
@@ -142,7 +142,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     bool provisional = false,
     bool sound = true,
   }) {
-    return guard(() async {
+    return convertWebExceptions(() async {
       String status = await WindowNotification.requestPermission();
       return utils.getNotificationSettings(status);
     });
