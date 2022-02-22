@@ -131,36 +131,26 @@ class MethodChannelQuery extends QueryPlatform {
   Stream<QuerySnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    // It's fine to let the StreamController be garbage collected once all the
-    // subscribers have cancelled; this analyzer warning is safe to ignore.
-    late StreamController<QuerySnapshotPlatform>
-        controller; // ignore: close_sinks
-
-    StreamSubscription<dynamic>? snapshotStream;
-    controller = StreamController<QuerySnapshotPlatform>.broadcast(
-      onListen: () async {
-        final observerId = await MethodChannelFirebaseFirestore.channel
-            .invokeMethod<String>('Query#snapshots');
-
-        snapshotStream =
-            MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!)
-                .receiveBroadcastStream(
-          <String, dynamic>{
-            'query': this,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).listen((snapshot) {
-          controller.add(MethodChannelQuerySnapshot(firestore, snapshot));
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
-      },
-      onCancel: () {
-        snapshotStream?.cancel();
-      },
+    final observerIdStream = Stream.fromFuture(
+      MethodChannelFirebaseFirestore.channel
+          .invokeMethod<String>('Query#snapshots'),
     );
 
-    return controller.stream;
+    return observerIdStream
+        .asyncExpand((observerId) {
+          final channel =
+              MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!);
+
+          return channel.receiveBroadcastStream(
+            <String, dynamic>{
+              'query': this,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          );
+        })
+        .map((snapshot) => MethodChannelQuerySnapshot(firestore, snapshot))
+        .handleError(convertPlatformException)
+        .asBroadcastStream();
   }
 
   @override
