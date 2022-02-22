@@ -141,8 +141,12 @@ class MethodChannelQuery extends QueryPlatform {
           final channel =
               MethodChannelFirebaseFirestore.querySnapshotChannel(observerId!);
 
-          return channel
-              .receiveBroadcastStream(<String, dynamic>{'firestore': this});
+          return channel.receiveBroadcastStream(
+            <String, dynamic>{
+              'query': this,
+              'includeMetadataChanges': includeMetadataChanges,
+            },
+          );
         })
         .map((snapshot) => MethodChannelQuerySnapshot(firestore, snapshot))
         .handleError(convertPlatformException)
