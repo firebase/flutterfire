@@ -49,7 +49,7 @@ class FacebookProviderImpl extends OAuthProvider {
 
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
-    return FacebookAuthProvider.credential(result.accessToken);
+    return FacebookAuthProvider.credential(result.accessToken!);
   }
 
   @override
