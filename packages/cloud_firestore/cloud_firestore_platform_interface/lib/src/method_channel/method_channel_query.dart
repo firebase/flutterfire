@@ -106,8 +106,8 @@ class MethodChannelQuery extends QueryPlatform {
       );
 
       return MethodChannelQuerySnapshot(firestore, data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      throw convertPlatformException(e, stack);
     }
   }
 

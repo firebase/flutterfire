@@ -40,8 +40,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           },
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -56,8 +56,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           'data': data,
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -77,8 +77,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       );
 
       return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -89,8 +89,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         'DocumentReference#delete',
         <String, dynamic>{'firestore': firestore, 'reference': this},
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 

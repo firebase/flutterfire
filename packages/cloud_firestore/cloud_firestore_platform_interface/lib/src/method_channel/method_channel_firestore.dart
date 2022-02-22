@@ -107,16 +107,20 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
         FirebaseFirestorePlatform.instance,
         data!,
       );
-    } catch (e) {
+    } catch (e, stack) {
       if (e.toString().contains('Named query has not been found')) {
-        throw FirebaseException(
+        Error.throwWithStackTrace(
+          FirebaseException(
             plugin: 'cloud_firestore',
             code: 'non-existent-named-query',
-            message:
-                'Named query has not been found. Please check it has been loaded properly via loadBundle().');
+            message: 'Named query has not been found. '
+                'Please check it has been loaded properly via loadBundle().',
+          ),
+          stack,
+        );
       }
 
-      throw convertPlatformException(e);
+      convertPlatformException(e, stack);
     }
   }
 
@@ -130,8 +134,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#clearPersistence', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -160,8 +164,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#disableNetwork', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -177,8 +181,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           .invokeMethod<void>('Firestore#enableNetwork', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -295,8 +299,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
       await channel.invokeMethod<void>('Firestore#terminate', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -307,8 +311,8 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
           'Firestore#waitForPendingWrites', <String, dynamic>{
         'firestore': this,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }
