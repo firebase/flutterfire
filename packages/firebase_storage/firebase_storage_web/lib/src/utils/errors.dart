@@ -17,7 +17,7 @@ Map<String, String?> _errorCodeToMessage = {
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
 R guard<R>(R Function() cb) {
-  return internals.guard(
+  return internals.guardWebExceptions(
     cb,
     plugin: 'firebase_storage',
     codeParser: (code) => code.split('/').last,
