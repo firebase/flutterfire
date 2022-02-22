@@ -59,7 +59,10 @@ class GoogleProviderImpl extends OAuthProvider {
 
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
-    return GoogleAuthProvider.credential(accessToken: result.accessToken);
+    return GoogleAuthProvider.credential(
+      idToken: result.idToken,
+      accessToken: result.accessToken,
+    );
   }
 }
 
