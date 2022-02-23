@@ -9,6 +9,9 @@ class QueryTemplate extends Template<CollectionData> {
     return '''
 abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${data.querySnapshotName}> {
   @override
+  Query<${data.type}> get reference;
+
+  @override
   ${data.queryReferenceInterfaceName} limit(int limit);
 
   @override

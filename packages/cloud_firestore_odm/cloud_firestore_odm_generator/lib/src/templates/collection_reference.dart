@@ -28,6 +28,9 @@ abstract class ${data.collectionReferenceInterfaceName}
     return ${data.toJson('value')};
   }
 
+  @override
+  CollectionReference<${data.type}> get reference;
+
 ${_parentProperty(data, abstract: true)}
 
   @override
