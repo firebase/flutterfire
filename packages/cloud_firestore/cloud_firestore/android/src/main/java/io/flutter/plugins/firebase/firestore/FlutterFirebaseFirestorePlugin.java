@@ -393,7 +393,7 @@ public class FlutterFirebaseFirestorePlugin
         final String transactionId = UUID.randomUUID().toString().toLowerCase(Locale.US);
         final TransactionStreamHandler handler =
             new TransactionStreamHandler(
-                transaction -> transactions.put(transactionId, transaction));
+                activity, transaction -> transactions.put(transactionId, transaction));
 
         registerEventChannel(METHOD_CHANNEL_NAME + "/transaction", transactionId, handler);
         transactionHandlers.put(transactionId, handler);
