@@ -7,8 +7,8 @@ of FlutterFire across all supported platforms.
 
 ## Installation
 
-The FlutterFire CLI depends on the underlying [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine. 
-If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command : 
+The FlutterFire CLI depends on the underlying [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine.
+If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command :
 
 ```bash
 npm install -g firebase-tools
@@ -45,6 +45,12 @@ The following table shows the current plugins with Dart-only Firebase initializa
 Additionally, if you use the [`google_sign_in` provider](./auth/social#google) for Authentication in `firebase_auth` then this also requires [manual installation](./manual-installation.mdx). There is an open issue to move `google_sign_in` to Dart initialization which you can [track here](https://github.com/flutter/flutter/issues/96391).
 
 ### Generating Firebase Options
+
+:::note
+If you initialize your application from Dart, you will likely receive warnings from the native SDKs indicating no app has been configured or
+you don't have the relevant config file (i.e. `GoogleService-Info.plist` or `google-services.json`). You can safely ignore these warnings if
+you're initializing from Dart.
+:::
 
 FlutterFire can now be initialized from Dart on all platforms using `Firebase.initializeApp`, however
 the options for different platforms can vary. The FlutterFire CLI can help, by generating a file
