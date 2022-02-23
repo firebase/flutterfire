@@ -5,7 +5,7 @@ repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
 
 false_secrets:
- - example/**
+  - example/**
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -15,7 +15,7 @@ dependencies:
   cloud_firestore: ^3.1.8
   collection: ^1.15.0
   crypto: ^3.0.1
-  desktop_webview_auth: ^0.0.2
+  desktop_webview_auth: ^0.0.4
   email_validator: ^2.0.1
   firebase_auth: ^3.3.7
   firebase_core: ^1.10.2
@@ -46,7 +46,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/countries.json
-
 # To add assets to your package, add an assets section, like this:
 # assets:
 #   - images/a_dot_burr.jpeg

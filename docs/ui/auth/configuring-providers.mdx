@@ -210,14 +210,14 @@ You can get the `apiKey` and `apiSecretKey` from the Firebase Console or [twitte
 Providing the `apiSecretKey` directly is not advised if you are building for the web. Instead, you can use "dart-define" to ensure that
 the value is omitted from web builds:
 
-```dart
-apiSecretKey: String.fromEnvironment('TWITTER_SECRET', ''),
+```bash
+flutter run --dart-define TWITTER_SECRET=<your-twitter-api-secret-key>
 ```
 
 When building the app on platforms other than the web, the `TWITTER_SECRET` environment variable can be defined using:
 
-```bash
-flutter run --dart-define TWITTER_SECRET=<your-twitter-api-secret-key>
+```dart
+apiSecretKey: String.fromEnvironment('TWITTER_SECRET', ''),
 ```
 
 :::
