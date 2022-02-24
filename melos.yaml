@@ -152,6 +152,17 @@ scripts:
         - test_driver
       scope: "*tests*"
 
+  test:e2e:web:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart -d chrome"
+    description: |
+      Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
+    select-package:
+      dir-exists:
+        - test_driver
+      scope: "*tests*"
+
   clean:deep:
     run: git clean -x -d -f -q
     description: Clean things very deeply, can be used to establish "pristine checkout" status.
