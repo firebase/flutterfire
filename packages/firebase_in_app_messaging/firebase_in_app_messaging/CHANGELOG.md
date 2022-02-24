@@ -1,3 +1,7 @@
+## 0.6.0+8
+
+ - Update a dependency to the latest release.
+
 ## 0.6.0+7
 
  - **FIX**: issue where Boolean value was always `true` for `setMessagesSuppressed ()` & `setAutomaticDataCollectionEnabled()` on iOS. (#7954). ([e397add5](https://github.com/FirebaseExtended/flutterfire/commit/e397add52fc30d08bccad000237962ca3c903e49))

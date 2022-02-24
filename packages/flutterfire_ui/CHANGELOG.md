@@ -1,3 +1,13 @@
+## 0.3.5
+
+ - **FIX**: Upgrade `desktop_webview_auth` - v`0.0.5` (#8164). ([123fa6b1](https://github.com/FirebaseExtended/flutterfire/commit/123fa6b132183a4d6886c8be0595104752724532))
+ - **FIX**: Upgrade `desktop_webview_auth` package causing a problem on macOS. (#8151). ([da4a1c5e](https://github.com/FirebaseExtended/flutterfire/commit/da4a1c5e074cb5af71983a3ae49c4838402b726f))
+ - **FEAT**: Add support for configuring authentication providers globally (additionally fixes #7801) (#8120). ([ebde7d27](https://github.com/FirebaseExtended/flutterfire/commit/ebde7d27938d7a36a67973df4b33c21bbd7dea1a))
+ - **FEAT**: Add Hindi localization language support (#7778). ([b584ce0f](https://github.com/FirebaseExtended/flutterfire/commit/b584ce0f254dcb195f9a31f279fb3871d01182c1))
+ - **FEAT**: Add Turkish language localization support. (#7790). ([c47f6075](https://github.com/FirebaseExtended/flutterfire/commit/c47f60757ccbfcee1eaa5d7ed6ee01258f3b9d4f))
+ - **FEAT**: Add Bahasa Indonesia localization language support (#7709). ([be0eb27f](https://github.com/FirebaseExtended/flutterfire/commit/be0eb27f4f4d85a4e4a2468768c166a701325a8c))
+ - **FEAT**: Enhance the oauth provider button widget by showing error text underneath. (#8032). ([2b47f5a1](https://github.com/FirebaseExtended/flutterfire/commit/2b47f5a12747e3437dfc42d331684e798372beaf))
+
 ## 0.3.4
 
  - **FEAT**: Add Italian localization language support. (#7823). ([c3a1a839](https://github.com/FirebaseExtended/flutterfire/commit/c3a1a839a3963a75cc17e931a3eee6e091df40ac))

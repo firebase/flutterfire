@@ -1,3 +1,7 @@
+## 1.13.0
+
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+
 ## 1.12.0
 
  - **FEAT**: bump Firebase iOS SDK to `8.11.0` & Android SDK to `29.0.4` (#7942). ([c23adf08](https://github.com/FirebaseExtended/flutterfire/commit/c23adf0853466941d0afb174dd425a43b44ce501))

@@ -1,3 +1,7 @@
+## 0.0.4
+
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+
 ## 0.0.3+5
 
  - Update a dependency to the latest release.

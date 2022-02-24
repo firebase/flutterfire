@@ -1,3 +1,7 @@
+## 9.0.7
+
+ - Update a dependency to the latest release.
+
 ## 9.0.6
 
  - **FIX**: Fix `MissingPluginException` caused by malformed EventChannel name. (#7859). ([b69be414](https://github.com/FirebaseExtended/flutterfire/commit/b69be414d46afa047d44d96bb46878e48db594d8))

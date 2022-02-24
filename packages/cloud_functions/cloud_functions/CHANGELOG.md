@@ -1,3 +1,7 @@
+## 3.2.8
+
+ - Update a dependency to the latest release.
+
 ## 3.2.7
 
 - **REFACTOR**: remove deprecated Android API usages (#7986). ([232e5f89](https://github.com/FirebaseExtended/flutterfire/commit/232e5f8972df8ef22bfb76ce8cf1e631d823a1b5))

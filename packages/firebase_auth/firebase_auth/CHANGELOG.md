@@ -1,3 +1,7 @@
+## 3.3.8
+
+ - Update a dependency to the latest release.
+
 ## 3.3.7
 
  - **DOCS**: Update documentation for `currentUser` property to make expectations clearer. (#7843). ([59bb47c2](https://github.com/FirebaseExtended/flutterfire/commit/59bb47c2490fbd641a1fcc26f2f888e8f4f02671))

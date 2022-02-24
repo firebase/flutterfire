@@ -1,3 +1,7 @@
+## 2.5.2
+
+ - Update a dependency to the latest release.
+
 ## 2.5.1
 
  - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`

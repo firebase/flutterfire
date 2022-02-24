@@ -1,3 +1,7 @@
+## 2.0.1
+
+ - **FIX**: add missing `default_package` entry for web in `pubspec.yaml` (#8139). ([5e6b570f](https://github.com/FirebaseExtended/flutterfire/commit/5e6b570f8445b0bd2eac8b112a2a6b35ff69b7b6))
+
 ## 2.0.0
 
 > Note: This release has breaking changes.

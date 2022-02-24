@@ -1,3 +1,7 @@
+## 1.6.0
+
+ - **FEAT**: Bump Firebase Web SDK version to 8.10.1 (CVE-2022-0235) for security patch purposes. (#8162). ([7624f777](https://github.com/FirebaseExtended/flutterfire/commit/7624f7779f4a49f2353f3f593b31be9139197028))
+
 ## 1.5.4
 
  - Update a dependency to the latest release.

@@ -1,3 +1,7 @@
+## 0.2.1
+
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+
 ## 0.2.0+5
 
  - **FIX**: Fixed transaction bug by removing duplicate arguments when they are already set as defaults. (#7839). ([df6568c2](https://github.com/FirebaseExtended/flutterfire/commit/df6568c2f5f58f1c93abebca4df477114ed7a68e))

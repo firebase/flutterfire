@@ -2,7 +2,7 @@ name: firebase_core_web
 description: The web implementation of firebase_core
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core_web
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core_web
-version: 1.5.4
+version: 1.6.0
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

@@ -1,3 +1,7 @@
+## 0.8.0+6
+
+ - **FIX**: Fix firebase_performance not recording response payload size on Android. (#8154). ([46d8bc0f](https://github.com/FirebaseExtended/flutterfire/commit/46d8bc0f205f24b1e160333ddb76200543f48c89))
+
 ## 0.8.0+5
 
  - Update a dependency to the latest release.

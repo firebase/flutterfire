@@ -1,3 +1,7 @@
+## 0.0.6+6
+
+ - Update a dependency to the latest release.
+
 ## 0.0.6+5
 
  - **FIX**: workaround iOS build issue when targetting platforms < iOS 11. ([c78e0b79](https://github.com/FirebaseExtended/flutterfire/commit/c78e0b79bde479e78c558d3df92988c130280e81))
