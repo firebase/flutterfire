@@ -26,7 +26,7 @@ void main() {
       expect(
         () => convertPlatformException(platformException, StackTrace.empty),
         throwsA(
-          isA<FirebaseAuthException>().having((e) => e.code, 'code', 'UNKNOWN'),
+          isA<FirebaseAuthException>().having((e) => e.code, 'code', 'unknown'),
         ),
       );
     });
