@@ -23,25 +23,28 @@ class MethodChannelFirebaseAppInstallations
     'plugins.flutter.io/firebase_app_installations',
   );
 
-  static final Map<String, Stream<String>> _idTokenChangesListeners =
-      <String, Stream<String>>{};
+  static final Map<String, StreamController<String>> _idTokenChangesListeners =
+      <String, StreamController<String>>{};
 
   /// Creates a new [MethodChannelFirebaseAppInstallations] instance with an [app].
   MethodChannelFirebaseAppInstallations({required FirebaseApp app})
       : super(app) {
-    _idTokenChangesListeners[app.name] = Stream.fromFuture(
-      channel.invokeMethod<String>(
-        'FirebaseInstallations#registerIdChangeListener',
-        {'appName': app.name},
-      ),
-    )
-        .asyncExpand<Object?>((channelName) {
-          final events = EventChannel(channelName!, channel.codec);
-          return events.receiveBroadcastStream();
-        })
-        .map((arguments) => (arguments as Map)['token'] as String)
-        .handleError(convertPlatformException)
-        .asBroadcastStream();
+    final controller = _idTokenChangesListeners[app.name] =
+        StreamController<String>.broadcast();
+
+    channel.invokeMethod<String>(
+        'FirebaseInstallations#registerIdChangeListener', {
+      'appName': app.name,
+    }).then((channelName) {
+      final events = EventChannel(channelName!, channel.codec);
+      events
+          .receiveBroadcastStream()
+          .handleError(convertPlatformException)
+          .listen(
+            (Object? arguments) => controller.add((arguments as Map)['token']),
+            onError: controller.addError,
+          );
+    });
   }
 
   /// Internal stub class initializer.
@@ -94,5 +97,7 @@ class MethodChannelFirebaseAppInstallations
   }
 
   @override
-  Stream<String> get onIdChange => _idTokenChangesListeners[app!.name]!;
+  Stream<String> get onIdChange {
+    return _idTokenChangesListeners[app!.name]!.stream;
+  }
 }

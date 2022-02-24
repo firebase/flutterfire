@@ -98,36 +98,46 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
   Stream<DocumentSnapshotPlatform> snapshots({
     bool includeMetadataChanges = false,
   }) {
-    final observerIdStream = Stream.fromFuture(
-      MethodChannelFirebaseFirestore.channel
-          .invokeMethod<String>('DocumentReference#snapshots'),
+    // It's fine to let the StreamController be garbage collected once all the
+    // subscribers have cancelled; this analyzer warning is safe to ignore.
+    late StreamController<DocumentSnapshotPlatform>
+        controller; // ignore: close_sinks
+
+    StreamSubscription<dynamic>? snapshotStream;
+    controller = StreamController<DocumentSnapshotPlatform>.broadcast(
+      onListen: () async {
+        final observerId = await MethodChannelFirebaseFirestore.channel
+            .invokeMethod<String>('DocumentReference#snapshots');
+        snapshotStream =
+            MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
+                .receiveBroadcastStream(
+                  <String, dynamic>{
+                    'reference': this,
+                    'includeMetadataChanges': includeMetadataChanges,
+                  },
+                )
+                .handleError(convertPlatformException)
+                .listen(
+                  (snapshot) {
+                    controller.add(
+                      DocumentSnapshotPlatform(
+                        firestore,
+                        snapshot['path'],
+                        <String, dynamic>{
+                          'data': snapshot['data'],
+                          'metadata': snapshot['metadata'],
+                        },
+                      ),
+                    );
+                  },
+                  onError: controller.addError,
+                );
+      },
+      onCancel: () {
+        snapshotStream?.cancel();
+      },
     );
 
-    return observerIdStream
-        .asyncExpand((observerId) {
-          final channel =
-              MethodChannelFirebaseFirestore.documentSnapshotChannel(
-            observerId!,
-          );
-
-          return channel.receiveBroadcastStream(
-            <String, dynamic>{
-              'reference': this,
-              'includeMetadataChanges': includeMetadataChanges,
-            },
-          );
-        })
-        .map(
-          (snapshot) => DocumentSnapshotPlatform(
-            firestore,
-            snapshot['path'],
-            <String, dynamic>{
-              'data': snapshot['data'],
-              'metadata': snapshot['metadata'],
-            },
-          ),
-        )
-        .handleError(convertPlatformException)
-        .asBroadcastStream();
+    return controller.stream;
   }
 }
