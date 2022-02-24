@@ -113,7 +113,11 @@ module.exports = {
     ],
     "Realtime Database": [
       "database/overview",
-      "database/usage",
+      "database/start",
+      "database/structure-data",
+      "database/read-and-write",
+      "database/lists-of-data",
+      "database/offline-capabilities",
       toReferenceAPI("firebase_database"),
       toGithubExample("firebase_database"),
     ],

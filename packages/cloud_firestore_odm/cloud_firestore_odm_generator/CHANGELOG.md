@@ -1,3 +1,7 @@
+## 1.0.0-dev.8
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.7
 
  - **FEAT**: Added error handling for when the Firestore reference and the Model class are defined in two separate files. (#7885). ([43cb91c9](https://github.com/FirebaseExtended/flutterfire/commit/43cb91c9f22c7b61d7170305b9007c5beccfbdae))
