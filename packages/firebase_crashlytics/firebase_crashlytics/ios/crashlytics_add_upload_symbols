@@ -1,25 +1,59 @@
 require 'xcodeproj'
+require 'optparse'
 
-if(ARGV.length < 2) 
-    abort("Not enough arguments provided. Please pass at least a project directory and project name.")
+# Dictionary to hold command line arguments
+options_dict = {}
+options_dict[:flutter_project] = false
+options_dict[:additional_options] = ""
+
+# Parse command line arguments into options_dict
+OptionParser.new do |options|
+    options.banner = "Adds the Crashlytics upload-symbols tool to an Xcode target's build phase. Usage:  crashlytics_upload_symbols [options]"
+
+    options.on("-p", "--projectDirectory=DIRECTORY", String, "Directory of the Xcode project") do |dir|
+        options_dict[:project_dir] = dir
+    end
+
+    options.on("-n", "--projectName=NAME", String, "Name of the Xcode project (ex: Runner.xcodeproj)") do |name|
+        options_dict[:project_name] = name
+    end
+
+    options.on("-o", "--additionalOptions=OPTIONS", String, "Additional arguments to pass to upload-symbols (quote if multiple args)") do |opts|
+        options_dict[:additional_options] = opts
+    end
+
+    options.on("-f", "--flutter", "Use flutter firebase_app_id_file.json") do |fl|
+        options_dict[:flutter_project] = true
+    end
+end.parse!
+
+# Minimum required arguments are a project directory and project name
+unless (options_dict[:project_dir] and options_dict[:project_name])
+    abort("Must provide a project directory and project name.\n")
 end
 
-current_dir = ARGV[0]
-project_name = ARGV[1]
+# Path to the Xcode project to modify
+project_path = File.join(options_dict[:project_dir], options_dict[:project_name])
 
-project_path = File.join(current_dir, project_name)
-puts(project_path)
 unless (File.exist?(project_path)) 
-    abort("Project at #{project_path} does not exist. Please incorporate Crashlytics upload symbols manually.\n");
+   abort("Project at #{project_path} does not exist. Please check paths or incorporate Crashlytics upload symbols manually.\n");
 end
 
-# Default to Flutter arguments if no other upload-symbols inputs are provided.
-if(ARGV.length == 3)
-    upload_symbols_args = ARGV[2]
+# If this is a Flutter project, upload-symbols will use the firebaes_app_id_file.json to get the app's ID. If this file doesn't exist, upload-symbols may not be
+# able to upload symbols correctly. 
+if(options_dict[:flutter_project])
+    unless File.exist?("#{options_dict[:project_dir]}/firebase_app_id_file.json")
+        puts("Warning: firebase_app_id_file.json file does not exist. This may cause issues in upload-symbols.")
+    end
+end
+
+if(options_dict[:flutter_project])
+    upload_symbols_args = "--flutter-project \"$PROJECT_DIR/firebase_app_id_file.json\" #{options_dict[:additional_options]}"
 else
-    upload_symbols_args = "--flutter-project \"$PROJECT_DIR/firebase_app_id_file.txt"
+    upload_symbols_args = options_dict[:additional_options]
 end
 
+# Actually open and modify the project
 project = Xcodeproj::Project.open(project_path)
 project.targets.each do |target|
     if (target.name == "Runner") 

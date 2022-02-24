@@ -7,7 +7,7 @@ library_version = pubspec['version'].gsub('+', '-')
 current_dir = Dir.pwd
 calling_dir = File.dirname(__FILE__)
 project_dir = calling_dir.slice(0..(calling_dir.index('/.symlinks')))
-system("ruby #{current_dir}/crashlytics_add_upload_symbols #{project_dir} Runner.xcodeproj")
+system("ruby #{current_dir}/crashlytics_add_upload_symbols -f -p #{project_dir} -n Runner.xcodeproj")
 
 if defined?($FirebaseSDKVersion)
   Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version '#{$FirebaseSDKVersion}'"
