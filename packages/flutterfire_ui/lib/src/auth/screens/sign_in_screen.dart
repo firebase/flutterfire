@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
 import 'internal/login_screen.dart';
+import 'internal/multi_provider_screen.dart';
 
 /// A screen displaying a fully styled Sign In flow for Authentication.
 ///
@@ -11,9 +12,7 @@ import 'internal/login_screen.dart';
 /// {@subCategory type:screen}
 /// {@subCategory description:A screen displaying a fully styled Sign In flow for Authentication.}
 /// {@subCategory img:https://place-hold.it/400x150}
-class SignInScreen extends StatelessWidget {
-  final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+class SignInScreen extends MultiProviderScreen {
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
   final SideBuilder? sideBuilder;
@@ -29,8 +28,8 @@ class SignInScreen extends StatelessWidget {
 
   const SignInScreen({
     Key? key,
-    required this.providerConfigs,
-    this.auth,
+    List<ProviderConfiguration>? providerConfigs,
+    FirebaseAuth? auth,
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
@@ -43,7 +42,7 @@ class SignInScreen extends StatelessWidget {
     this.loginViewKey,
     this.actions = const [],
     this.breakpoint = 800,
-  }) : super(key: key);
+  }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<void> _signInWithDifferentProvider(
     BuildContext context,
@@ -58,8 +57,8 @@ class SignInScreen extends StatelessWidget {
         Navigator.of(context).pop();
       },
     );
-    final _auth = auth ?? FirebaseAuth.instance;
-    await _auth.currentUser!.linkWithCredential(state.credential!);
+
+    await auth.currentUser!.linkWithCredential(state.credential!);
   }
 
   @override
