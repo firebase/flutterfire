@@ -91,6 +91,7 @@ class MethodChannelFirebase extends FirebasePlatform {
           },
         ))!);
         defaultApp = appInstances[defaultFirebaseAppName];
+        // ignore: avoid_print
         print('Initialized app from Dart application code.');
       }
 
