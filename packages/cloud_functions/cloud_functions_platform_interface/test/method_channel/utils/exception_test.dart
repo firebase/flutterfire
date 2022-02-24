@@ -17,8 +17,10 @@ void main() {
     test('should throw any exception', () async {
       AssertionError assertionError = AssertionError();
 
-      expect(() => convertPlatformException(assertionError),
-          throwsA(isA<AssertionError>()));
+      expect(
+        () => convertPlatformException(assertionError, StackTrace.empty),
+        throwsA(isA<AssertionError>()),
+      );
     });
 
     test(
@@ -30,11 +32,14 @@ void main() {
       );
 
       expect(
-          convertPlatformException(platformException),
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
           isA<FirebaseFunctionsException>()
               .having((e) => e.code, 'code', 'unknown')
               .having((e) => e.message, 'message', testMessage)
-              .having((e) => e.details, 'details', isNull));
+              .having((e) => e.details, 'details', isNull),
+        ),
+      );
     });
 
     test('should override code and message if provided to additional details',
@@ -46,11 +51,14 @@ void main() {
           details: {'code': code, 'message': testMessage});
 
       expect(
-          convertPlatformException(platformException),
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
           isA<FirebaseFunctionsException>()
               .having((e) => e.code, 'code', code)
               .having((e) => e.message, 'message', testMessage)
-              .having((e) => e.details, 'details', isNull));
+              .having((e) => e.details, 'details', isNull),
+        ),
+      );
     });
 
     test('should provide additionalData as details', () async {
@@ -60,7 +68,8 @@ void main() {
           details: {'additionalData': testAdditionalData});
 
       expect(
-          convertPlatformException(platformException),
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
           isA<FirebaseFunctionsException>()
               .having((e) => e.code, 'code', 'unknown')
               .having((e) => e.message, 'message', testMessage)
@@ -68,7 +77,9 @@ void main() {
                   (e) => e.details,
                   'details',
                   isA<Map<String, dynamic>>()
-                      .having((e) => e['foo'], 'additionalData', 'bar')));
+                      .having((e) => e['foo'], 'additionalData', 'bar')),
+        ),
+      );
     });
   });
 }

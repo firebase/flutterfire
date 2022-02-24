@@ -89,7 +89,7 @@ abstract class MethodChannelTask extends TaskPlatform {
 
   Object? _exception;
 
-  StackTrace? _stackTrace;
+  late StackTrace _stackTrace;
 
   bool _didComplete = false;
 
@@ -147,8 +147,8 @@ abstract class MethodChannelTask extends TaskPlatform {
             Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
-    } catch (e) {
-      return catchFuturePlatformException<bool>(e);
+    } catch (e, stack) {
+      return catchFuturePlatformException<bool>(e, stack);
     }
   }
 
@@ -170,8 +170,8 @@ abstract class MethodChannelTask extends TaskPlatform {
             Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
-    } catch (e) {
-      return catchFuturePlatformException<bool>(e);
+    } catch (e, stack) {
+      return catchFuturePlatformException<bool>(e, stack);
     }
   }
 
@@ -193,8 +193,8 @@ abstract class MethodChannelTask extends TaskPlatform {
             Map<String, dynamic>.from(data['snapshot']));
       }
       return success;
-    } catch (e) {
-      return catchFuturePlatformException<bool>(e);
+    } catch (e, stack) {
+      return catchFuturePlatformException<bool>(e, stack);
     }
   }
 }

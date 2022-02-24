@@ -57,7 +57,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
       );
       return isPerformanceCollectionEnabled!;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -69,7 +69,7 @@ class MethodChannelFirebasePerformance extends FirebasePerformancePlatform {
         <String, Object?>{'handle': _handle, 'enable': enabled},
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

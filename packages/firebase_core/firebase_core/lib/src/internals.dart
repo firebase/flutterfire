@@ -88,38 +88,47 @@ R guardWebExceptions<R>(
 
     if (value is Future) {
       return value.catchError(
-        (err) => throw _mapException(
-          err,
-          plugin: plugin,
-          codeParser: codeParser,
-          messageParser: messageParser,
+        (err, stack) => Error.throwWithStackTrace(
+          _mapException(
+            err,
+            plugin: plugin,
+            codeParser: codeParser,
+            messageParser: messageParser,
+          ),
+          stack,
         ),
         test: _testException,
       ) as R;
     } else if (value is Stream) {
       return value.handleError(
-        (err) => throw _mapException(
-          err,
-          plugin: plugin,
-          codeParser: codeParser,
-          messageParser: messageParser,
+        (err, stack) => Error.throwWithStackTrace(
+          _mapException(
+            err,
+            plugin: plugin,
+            codeParser: codeParser,
+            messageParser: messageParser,
+          ),
+          stack,
         ),
         test: _testException,
       ) as R;
     }
 
     return value;
-  } catch (error) {
+  } catch (error, stack) {
     if (!_testException(error)) {
       // Make sure to preserve the stacktrace
       rethrow;
     }
 
-    throw _mapException(
-      error,
-      plugin: plugin,
-      codeParser: codeParser,
-      messageParser: messageParser,
+    Error.throwWithStackTrace(
+      _mapException(
+        error,
+        plugin: plugin,
+        codeParser: codeParser,
+        messageParser: messageParser,
+      ),
+      stack,
     );
   }
 }

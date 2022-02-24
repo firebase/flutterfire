@@ -34,8 +34,8 @@ class MethodChannelReference extends ReferencePlatform {
         'port': storage.emulatorPort,
         'path': fullPath,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -56,8 +56,8 @@ class MethodChannelReference extends ReferencePlatform {
       });
 
       return data!['downloadURL'];
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -78,8 +78,8 @@ class MethodChannelReference extends ReferencePlatform {
       });
 
       return FullMetadata(data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -108,8 +108,8 @@ class MethodChannelReference extends ReferencePlatform {
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -134,8 +134,8 @@ class MethodChannelReference extends ReferencePlatform {
         items: List.from(data['items']),
         prefixes: List.from(data['prefixes']),
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -154,8 +154,8 @@ class MethodChannelReference extends ReferencePlatform {
         'path': fullPath,
         'maxSize': maxSize,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -209,8 +209,8 @@ class MethodChannelReference extends ReferencePlatform {
       });
 
       return FullMetadata(data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 

@@ -1,4 +1,3 @@
-// ignore_for_file: require_trailing_commas
 // A library that mimicks package:firebase_core_web/firebase_core_web_interop.dart
 // for platforms that do not target dart2js
 

@@ -13,25 +13,22 @@ void main() {
     test('should throw any exception', () async {
       AssertionError assertionError = AssertionError();
 
-      try {
-        throw convertPlatformException(assertionError);
-      } on FirebaseException catch (_) {
-        fail('should have thrown the original exception');
-      } catch (_) {
-        return;
-      }
+      expect(
+        () => convertPlatformException(assertionError, StackTrace.empty),
+        throwsA(assertionError),
+      );
     });
 
     test('should catch a [PlatformException] and throw a [FirebaseException]',
         () async {
       PlatformException platformException = PlatformException(code: 'UNKNOWN');
-      try {
-        throw convertPlatformException(platformException);
-      } on FirebaseException catch (_) {
-        return;
-      } catch (_) {
-        fail('should have thrown an FirebaseCrashlyticsException');
-      }
+
+      expect(
+        () => convertPlatformException(platformException, StackTrace.empty),
+        throwsA(
+          isA<FirebaseException>().having((e) => e.code, 'code', 'unknown'),
+        ),
+      );
     });
   });
 }
