@@ -36,40 +36,29 @@ class HttpsCallable {
     Object? updatedParameters;
     if (parameters is Map) {
       Map update = {};
-
       parameters.forEach((key, value) {
-        if (value is Uint8List ||
-            value is Int32List ||
-            value is Int64List ||
-            value is Float32List ||
-            value is Float64List) {
-          update[key] = value.toList();
-        } else {
-          update[key] = value;
-        }
+        update[key] = _updateRawData(value);
       });
-
       updatedParameters = update;
     } else if (parameters is List) {
-      List update = [];
-
-      parameters.forEach((value) {
-        if (value is Uint8List ||
-            value is Int32List ||
-            value is Int64List ||
-            value is Float32List ||
-            value is Float64List) {
-          update.add(value.toList());
-        } else {
-          update.add(value);
-        }
-      });
-
+      List update = parameters.map(_updateRawData).toList();
       updatedParameters = update;
     } else {
-      updatedParameters = parameters;
+      updatedParameters = _updateRawData(parameters);
     }
     return HttpsCallableResult<T>._(await delegate.call(updatedParameters));
+  }
+}
+
+dynamic _updateRawData(dynamic value) {
+  if (value is Uint8List ||
+      value is Int32List ||
+      value is Int64List ||
+      value is Float32List ||
+      value is Float64List) {
+    return value.toList();
+  } else {
+    return value;
   }
 }
 
