@@ -186,8 +186,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyCodeButtonText = '認証',
     this.verifyingPhoneNumberViewTitle = 'SMSで届いた認証コードを入力',
     this.unknownError = '不明なエラーが発生しました',
-    this.smsAutoresolutionFailedError =
-        'SMSコードの自動認証に失敗しました。コードを手動で入力してください。',
+    this.smsAutoresolutionFailedError = 'SMSコードの自動認証に失敗しました。コードを手動で入力してください。',
     this.smsCodeSentText = 'SMSコードの送信',
     this.sendingSMSCodeText = 'SMSコードを送信中...',
     this.verifyingSMSCodeText = 'SMSコードを認証中...',
@@ -196,10 +195,8 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.isNotAValidEmailErrorText = 'メールアドレスの形式が正しくありません',
     this.userNotFoundErrorText = 'アカウントが存在しません',
     this.emailTakenErrorText = 'このメールアドレスはすでに使用されています',
-    this.accessDisabledErrorText =
-       'このアカウントへのアクセスは一時的に停止されています',
-    this.wrongOrNoPasswordErrorText =
-        'パスワードが無効である、またはユーザーがパスワードを持っていません',
+    this.accessDisabledErrorText = 'このアカウントへのアクセスは一時的に停止されています',
+    this.wrongOrNoPasswordErrorText = 'パスワードが無効である、またはユーザーがパスワードを持っていません',
     this.signInText = 'サインイン',
     this.registerText = '新規登録',
     this.registerHintText = 'アカウントをお持ちでない方',
@@ -219,8 +216,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.forgotPasswordViewTitle = 'パスワードを忘れた場合',
     this.resetPasswordButtonLabel = 'パスワードをリセット',
     this.verifyItsYouText = '本人確認をします',
-    this.differentMethodsSignInTitleText =
-        '以下のいずれかの方法でサインインしてください',
+    this.differentMethodsSignInTitleText = '以下のいずれかの方法でサインインしてください',
     this.findProviderForEmailTitleText = 'Eメールを入力して次へ',
     this.continueText = '続ける',
     this.countryCode = '国番号',
@@ -233,8 +229,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.goBackButtonLabel = '戻る',
     this.passwordResetEmailSentText =
         'パスワードをリセットするためのリンクを記載したメールを送信しました。メールをご確認ください。',
-    this.forgotPasswordHintText =
-        'パスワードをリセットするためのリンクを送信します',
+    this.forgotPasswordHintText = 'パスワードをリセットするためのリンクを送信します',
     this.emailLinkSignInButtonLabel = 'マジックリンクでサインイン',
     this.signInWithEmailLinkViewTitleText = 'マジックリンクでサインイン',
     this.signInWithEmailLinkSentText =
