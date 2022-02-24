@@ -77,7 +77,7 @@ Object _mapException(
 
 /// Will return a [FirebaseException] from a thrown web error.
 /// Any other errors will be propagated as normal.
-R guard<R>(
+R guardWebExceptions<R>(
   R Function() cb, {
   required String plugin,
   required String Function(String) codeParser,
