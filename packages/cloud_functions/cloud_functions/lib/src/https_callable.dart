@@ -37,20 +37,20 @@ class HttpsCallable {
     if (parameters is Map) {
       Map update = {};
       parameters.forEach((key, value) {
-        update[key] = _updateRawData(value);
+        update[key] = _updateRawDataToList(value);
       });
       updatedParameters = update;
     } else if (parameters is List) {
-      List update = parameters.map(_updateRawData).toList();
+      List update = parameters.map(_updateRawDataToList).toList();
       updatedParameters = update;
     } else {
-      updatedParameters = _updateRawData(parameters);
+      updatedParameters = _updateRawDataToList(parameters);
     }
     return HttpsCallableResult<T>._(await delegate.call(updatedParameters));
   }
 }
 
-dynamic _updateRawData(dynamic value) {
+dynamic _updateRawDataToList(dynamic value) {
   if (value is Uint8List ||
       value is Int32List ||
       value is Int64List ||
