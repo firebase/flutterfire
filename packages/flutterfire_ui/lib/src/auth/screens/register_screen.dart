@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
 import 'internal/login_screen.dart';
+import 'internal/multi_provider_screen.dart';
 
 /// A screen displaying a fully styled Registration flow for Authentication.
 ///
@@ -10,9 +11,7 @@ import 'internal/login_screen.dart';
 /// {@subCategory type:screen}
 /// {@subCategory description:A screen displaying a fully styled Registration flow for Authentication.}
 /// {@subCategory img:https://place-hold.it/400x150}
-class RegisterScreen extends StatelessWidget {
-  final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+class RegisterScreen extends MultiProviderScreen {
   final double? headerMaxExtent;
   final HeaderBuilder? headerBuilder;
   final SideBuilder? sideBuilder;
@@ -26,8 +25,8 @@ class RegisterScreen extends StatelessWidget {
 
   const RegisterScreen({
     Key? key,
-    required this.providerConfigs,
-    this.auth,
+    FirebaseAuth? auth,
+    List<ProviderConfiguration>? providerConfigs,
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
@@ -38,7 +37,7 @@ class RegisterScreen extends StatelessWidget {
     this.subtitleBuilder,
     this.footerBuilder,
     this.breakpoint = 800,
-  }) : super(key: key);
+  }) : super(key: key, auth: auth, providerConfigs: providerConfigs);
 
   @override
   Widget build(BuildContext context) {
