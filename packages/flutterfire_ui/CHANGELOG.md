@@ -1,3 +1,7 @@
+## 0.3.5+1
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
 ## 0.3.5
 
  - **FIX**: Upgrade `desktop_webview_auth` - v`0.0.5` (#8164). ([123fa6b1](https://github.com/FirebaseExtended/flutterfire/commit/123fa6b132183a4d6886c8be0595104752724532))

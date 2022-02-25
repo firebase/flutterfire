@@ -1,3 +1,7 @@
+## 9.1.2
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
 ## 9.1.1
 
  - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/FirebaseExtended/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
