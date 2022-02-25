@@ -2,7 +2,7 @@ name: cloud_functions_example
 description: Demonstrates how to use the cloud_functions plugin.
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
   flutter: '>=1.12.13+hotfix.4'
 
 dependencies:

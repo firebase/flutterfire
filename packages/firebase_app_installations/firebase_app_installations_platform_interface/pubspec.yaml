@@ -5,7 +5,7 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_platform_interface
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
