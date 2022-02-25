@@ -8,5 +8,6 @@ class LoadBundleTask {
   final LoadBundleTaskPlatform _delegate;
 
   late final Stream<LoadBundleTaskSnapshot> stream =
+      // ignore: unnecessary_lambdas, false positive, event is dynamic
       _delegate.stream.map((event) => LoadBundleTaskSnapshot._(event));
 }

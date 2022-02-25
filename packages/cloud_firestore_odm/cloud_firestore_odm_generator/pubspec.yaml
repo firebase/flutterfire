@@ -5,7 +5,7 @@ repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages
 version: 1.0.0-dev.9
 
 environment:
-  sdk: ">=2.14.0-0.0.dev <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   analyzer: ^2.0.0

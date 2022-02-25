@@ -14,7 +14,7 @@ class FakeCollectionReference<Value>
   Future<FakeQuerySnapshot<Value>> get([GetOptions? options]) async {
     return FakeQuerySnapshot<Value>(
       valueListenable.value
-          .map((e) => FakeFirestoreQueryDocumentSnapshot(e))
+          .map(FakeFirestoreQueryDocumentSnapshot.new)
           .toList(),
     );
   }
@@ -30,7 +30,7 @@ class FakeCollectionReference<Value>
       controller.add(
         FakeQuerySnapshot<Value>(
           valueListenable.value
-              .map((e) => FakeFirestoreQueryDocumentSnapshot(e))
+              .map(FakeFirestoreQueryDocumentSnapshot.new)
               .toList(),
         ),
       );
