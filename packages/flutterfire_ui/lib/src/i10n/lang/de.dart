@@ -193,7 +193,7 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyingSMSCodeText = 'SMS-Code überprüfen...',
     this.enterSMSCodeText = 'SMS-Code eingeben',
     this.emailIsRequiredErrorText = 'E-Mail ist erforderlich',
-    this.isNotAValidEmailErrorText = 'Provide a valid email',
+    this.isNotAValidEmailErrorText = 'Geben Sie eine gültige E-Mail an',
     this.userNotFoundErrorText = 'Das Konto existiert nicht',
     this.emailTakenErrorText = 'Konto mit dieser E-Mail existiert bereits',
     this.accessDisabledErrorText =
@@ -225,7 +225,7 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText =
         'Geben Sie Ihre E-Mail-Adresse ein, um fortzufahren',
     this.continueText = 'Weiter',
-    this.countryCode = 'Code',
+    this.countryCode = 'Ländercode',
     this.codeRequiredErrorText = 'Ländercode ist erforderlich',
     this.invalidCountryCode = 'Ungültiger Code',
     this.chooseACountry = 'Wählen Sie ein Land',
