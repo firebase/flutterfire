@@ -59,6 +59,7 @@ NSString *const kErrMsgInvalidCredential =
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+  NSData *_apnsToken;
 }
 
 #pragma mark - FlutterPlugin
@@ -155,6 +156,8 @@ NSString *const kErrMsgInvalidCredential =
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:successBlock andErrorBlock:errorBlock];
 
+  [self ensureAPNSTokenSetting];
+
   if ([@"Auth#registerIdTokenListener" isEqualToString:call.method]) {
     [self registerIdTokenListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#registerAuthStateListener" isEqualToString:call.method]) {
@@ -242,7 +245,7 @@ NSString *const kErrMsgInvalidCredential =
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeUnknown];
+  _apnsToken = deviceToken;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
@@ -1289,6 +1292,13 @@ NSString *const kErrMsgInvalidCredential =
   // native does not provide refresh tokens
   userData[@"refreshToken"] = @"";
   return userData;
+}
+
+- (void)ensureAPNSTokenSetting {
+  if ([FIRAuth auth].APNSToken == nil && _apnsToken != nil) {
+    [[FIRAuth auth] setAPNSToken:_apnsToken type:FIRAuthAPNSTokenTypeUnknown];
+    _apnsToken = nil;
+  }
 }
 
 @end
