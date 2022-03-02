@@ -29,10 +29,6 @@ jobs:
         run: melos bootstrap
       - name: "Run Analyze"
         run: melos run analyze
-      - name: "Pub Check"
-        run: |
-          melos exec -c 1 --no-private --ignore="*example*" -- \
-            pub publish --dry-run
 
   pub_get_check:
     timeout-minutes: 30
