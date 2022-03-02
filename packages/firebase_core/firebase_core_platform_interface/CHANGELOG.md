@@ -1,3 +1,7 @@
+## 4.2.5
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
 ## 4.2.4
 
  - **FIX**: allow secondary Firebase App initialization without duplicate app error on hot restart (#7953). ([f4a2c2e6](https://github.com/FirebaseExtended/flutterfire/commit/f4a2c2e63e4dd4f888583110cc65ec84dec14dd7))

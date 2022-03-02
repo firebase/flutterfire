@@ -80,7 +80,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       );
       _hasStarted = true;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -104,7 +104,7 @@ class MethodChannelHttpMetric extends HttpMetricPlatform {
       );
       _hasStopped = true;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

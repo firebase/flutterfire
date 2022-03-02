@@ -1,6 +1,6 @@
 name: firebase_ml_model_downloader
 description: A Flutter plugin allowing you to use Firebase Ml Model Downloader.
-version: 0.1.0+6
+version: 0.1.0+8
 homepage: https://firebase.flutter.dev/docs/ml/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_ml_model_downloader/firebase_ml_model_downloader
 
@@ -8,13 +8,13 @@ false_secrets:
   - example/**
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
   flutter: '>=1.20.0'
 
 dependencies:
   firebase_core: ^1.10.0
-  firebase_core_platform_interface: ^4.2.4
-  firebase_ml_model_downloader_platform_interface: ^0.1.0+6
+  firebase_core_platform_interface: ^4.2.5
+  firebase_ml_model_downloader_platform_interface: ^0.1.1+1
   flutter:
     sdk: flutter
 

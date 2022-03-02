@@ -63,7 +63,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> clearPersistence() {
-    return guard(_delegate.clearPersistence);
+    return convertWebExceptions(_delegate.clearPersistence);
   }
 
   @override
@@ -80,7 +80,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> disableNetwork() {
-    return guard(_delegate.disableNetwork);
+    return convertWebExceptions(_delegate.disableNetwork);
   }
 
   @override
@@ -89,7 +89,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   @override
   Future<void> enableNetwork() {
-    return guard(_delegate.enableNetwork);
+    return convertWebExceptions(_delegate.enableNetwork);
   }
 
   @override
@@ -100,7 +100,7 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30)}) async {
-    await guard(() {
+    await convertWebExceptions(() {
       return _delegate.runTransaction((transaction) async {
         return transactionHandler(
             TransactionWeb(this, _delegate, transaction!));
@@ -149,20 +149,21 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
           firestore_interop.PersistenceSettings(
               synchronizeTabs: settings.synchronizeTabs);
 
-      return guard(() => _delegate.enablePersistence(interopSettings));
+      return convertWebExceptions(
+          () => _delegate.enablePersistence(interopSettings));
     }
 
-    return guard(_delegate.enablePersistence);
+    return convertWebExceptions(_delegate.enablePersistence);
   }
 
   @override
   Future<void> terminate() {
-    return guard(_delegate.terminate);
+    return convertWebExceptions(_delegate.terminate);
   }
 
   @override
   Future<void> waitForPendingWrites() {
-    return guard(_delegate.waitForPendingWrites);
+    return convertWebExceptions(_delegate.waitForPendingWrites);
   }
 
   @override

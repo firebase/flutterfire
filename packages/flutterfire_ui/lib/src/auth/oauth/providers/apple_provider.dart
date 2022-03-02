@@ -31,7 +31,9 @@ String sha256ofString(String input) {
   return digest.toString();
 }
 
-class AppleProviderImpl extends OAuthProvider {
+abstract class AppleProvider extends OAuthProvider {}
+
+class AppleProviderImpl extends AppleProvider {
   @override
   Future<fba.OAuthCredential> signIn() async {
     final rawNonce = generateNonce();
@@ -72,11 +74,12 @@ class AppleProviderImpl extends OAuthProvider {
   dynamic get firebaseAuthProvider => null;
 }
 
-class AppleProviderConfiguration extends OAuthProviderConfiguration {
+class AppleProviderConfiguration
+    extends OAuthProviderConfiguration<AppleProvider> {
   const AppleProviderConfiguration();
 
   @override
-  OAuthProvider createProvider() {
+  AppleProvider createProvider() {
     return AppleProviderImpl();
   }
 

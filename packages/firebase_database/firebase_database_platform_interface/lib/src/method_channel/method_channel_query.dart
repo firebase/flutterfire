@@ -62,7 +62,7 @@ class MethodChannelQuery extends QueryPlatform {
               MethodChannelDatabaseEvent(ref, Map<String, dynamic>.from(event)),
         )
         .handleError(
-          (e, s) => throw convertPlatformException(e, s),
+          convertPlatformException,
           test: (err) => err is PlatformException,
         );
   }
@@ -83,7 +83,7 @@ class MethodChannelQuery extends QueryPlatform {
         Map<String, dynamic>.from(result!['snapshot']),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -110,7 +110,7 @@ class MethodChannelQuery extends QueryPlatform {
         ),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

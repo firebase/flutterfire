@@ -4,20 +4,20 @@ description:
   re-releasing.
 homepage: https://firebase.flutter.dev/docs/remote-config/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config
-version: 2.0.0
+version: 2.0.2
 
 false_secrets:
   - example/**
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
   firebase_core: ^1.10.0
-  firebase_core_platform_interface: ^4.2.4
-  firebase_remote_config_platform_interface: ^1.0.5
-  firebase_remote_config_web: ^1.0.5
+  firebase_core_platform_interface: ^4.2.5
+  firebase_remote_config_platform_interface: ^1.1.1
+  firebase_remote_config_web: ^1.0.7
   flutter:
     sdk: flutter
 
@@ -39,3 +39,5 @@ flutter:
         pluginClass: FLTFirebaseRemoteConfigPlugin
       macos:
         pluginClass: FLTFirebaseRemoteConfigPlugin
+      web:
+        default_package: firebase_remote_config_web

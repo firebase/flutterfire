@@ -1,3 +1,11 @@
+## 11.2.8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 11.2.7
+
+ - **FIX**: Stream new token via onTokenRefresh when getToken invoked for iOS. (#8166). ([28b396b8](https://github.com/FirebaseExtended/flutterfire/commit/28b396b84e019a5247e70d0abeb1ba24bdff4bcb))
+
 ## 11.2.6
 
  - **FIX**: Set APNS token if user initializes Firebase app from Flutter. (#7610). ([dc4c2c1d](https://github.com/FirebaseExtended/flutterfire/commit/dc4c2c1d249abf214c8ec7d835af18c86d64b2f5))

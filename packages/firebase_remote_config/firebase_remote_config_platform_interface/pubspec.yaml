@@ -4,10 +4,10 @@ homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/f
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_platform_interface
 # NOTE: We strongly prefer non-breaking changes, even at the expense of a
 # less-clean API. See https://flutter.dev/go/platform-interface-breaking-changes
-version: 1.0.5
+version: 1.1.1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.9.1+hotfix.5"
 
 dependencies:
@@ -18,7 +18,7 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.2.4
+  firebase_core_platform_interface: ^4.2.5
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0

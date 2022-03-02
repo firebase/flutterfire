@@ -1,3 +1,11 @@
+## 1.6.1
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 1.6.0
+
+ - **FEAT**: Bump Firebase Web SDK version to 8.10.1 (CVE-2022-0235) for security patch purposes. (#8162). ([7624f777](https://github.com/FirebaseExtended/flutterfire/commit/7624f7779f4a49f2353f3f593b31be9139197028))
+
 ## 1.5.4
 
  - Update a dependency to the latest release.

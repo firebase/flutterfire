@@ -1,3 +1,11 @@
+## 0.8.0+7
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 0.8.0+6
+
+ - **FIX**: Fix firebase_performance not recording response payload size on Android. (#8154). ([46d8bc0f](https://github.com/FirebaseExtended/flutterfire/commit/46d8bc0f205f24b1e160333ddb76200543f48c89))
+
 ## 0.8.0+5
 
  - Update a dependency to the latest release.

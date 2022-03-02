@@ -10,8 +10,11 @@ import '../widgets/internal/oauth_provider_button_style.dart';
 
 import '../flows/oauth_flow.dart';
 
-abstract class OAuthProviderConfiguration extends ProviderConfiguration {
+abstract class OAuthProviderConfiguration<T extends OAuthProvider>
+    extends ProviderConfiguration {
   const OAuthProviderConfiguration();
+
+  Type get providerType => T;
 
   String get defaultRedirectUri =>
       'https://${Firebase.apps.first.options.projectId}.firebaseapp.com/__/auth/handler';
@@ -27,7 +30,7 @@ abstract class OAuthProviderConfiguration extends ProviderConfiguration {
     );
   }
 
-  OAuthProvider createProvider();
+  T createProvider();
 
   String getLabel(FlutterFireUILocalizationLabels labels);
 }
