@@ -15,7 +15,7 @@ environment:
 dependencies:
   firebase_app_installations_platform_interface: ^0.1.1+1
   firebase_app_installations_web: ^0.1.0+8
-  firebase_core: ^1.10.0
+  firebase_core: 1.13.1
   firebase_core_platform_interface: ^4.2.5
   flutter:
     sdk: flutter

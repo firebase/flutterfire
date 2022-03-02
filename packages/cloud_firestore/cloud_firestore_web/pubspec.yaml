@@ -12,7 +12,7 @@ environment:
 dependencies:
   cloud_firestore_platform_interface: ^5.5.1
   collection: ^1.0.0
-  firebase_core: ^1.10.0
+  firebase_core: 1.13.1
   firebase_core_web: ^1.6.1
   flutter:
     sdk: flutter
