@@ -183,7 +183,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if ([[GULAppDelegateSwizzler sharedApplication].delegate
           respondsToSelector:messaging_didReceiveRegistrationTokenSelector]) {
     void (*usersDidReceiveRegistrationTokenIMP)(id, SEL, FIRMessaging *, NSString *) =
-        (typeof(usersDidReceiveRegistrationTokenIMP)) & objc_msgSend;
+        (typeof(usersDidReceiveRegistrationTokenIMP))&objc_msgSend;
     usersDidReceiveRegistrationTokenIMP([GULAppDelegateSwizzler sharedApplication].delegate,
                                         messaging_didReceiveRegistrationTokenSelector, messaging,
                                         fcmToken);
