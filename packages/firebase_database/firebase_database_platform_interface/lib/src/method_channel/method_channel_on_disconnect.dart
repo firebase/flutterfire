@@ -27,7 +27,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -45,7 +45,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         ),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -60,7 +60,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         database.getChannelArguments({'path': ref.path}),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -75,7 +75,7 @@ class MethodChannelOnDisconnect extends OnDisconnectPlatform {
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

@@ -379,14 +379,13 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Logs the standard `add_to_wishlist` event.
+  /// Logs the standard `ad_impression` event.
   ///
-  /// This event signifies that an item was added to a wishlist. Use this event
-  /// to identify popular gift items in your app. Note: If you supply the
-  /// [value] parameter, you must also supply the [currency] parameter so that
+  /// This event signifies when a user sees an ad impression. Note: If you supply
+  /// the [value] parameter, you must also supply the [currency] parameter so that
   /// revenue metrics can be computed accurately.
   ///
-  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#ADD_TO_WISHLIST
+  /// See: https://firebase.google.com/docs/reference/android/com/google/firebase/analytics/FirebaseAnalytics.Event.html#AD_IMPRESSION
   Future<void> logAdImpression({
     String? adPlatform,
     String? adSource,

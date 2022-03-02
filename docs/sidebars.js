@@ -14,6 +14,14 @@ function toGithubExample(plugin) {
   };
 }
 
+function toFirebase(title, path) {
+  return {
+    type: 'link',
+    label: title,
+    href: `https://firebase.google.com${path}`,
+  };
+}
+
 module.exports = {
   main: {
     'Getting Started': [
@@ -34,7 +42,36 @@ module.exports = {
     ],
     Analytics: [
       'analytics/overview',
-      'analytics/usage',
+      'analytics/get-started',
+      'analytics/events',
+      'analytics/user-properties',
+      toFirebase(
+        "Debug Events",
+        "/docs/analytics/debugview"
+      ),
+      'analytics/screenviews',
+      'analytics/userid',
+      'analytics/measure-ecommerce',
+      toFirebase(
+        "Measure Ad Revenue",
+        "/docs/analytics/measure-ad-revenue"
+      ),
+      toFirebase(
+        "Use in a WebView",
+        "/docs/analytics/webview"
+      ),
+      toFirebase(
+        "Extend with Cloud Functions",
+        "/docs/analytics/extend-with-functions"
+      ),
+      toFirebase(
+        "Configure Data Collection and Usage",
+        "/docs/analytics/configure-data-collection"
+      ),
+      toFirebase(
+        "Error Codes",
+        "/docs/analytics/errors"
+      ),
       toReferenceAPI('firebase_analytics'),
       toGithubExample('firebase_analytics'),
     ],

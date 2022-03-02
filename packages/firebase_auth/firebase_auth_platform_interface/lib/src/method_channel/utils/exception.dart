@@ -9,13 +9,15 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseAuthException]
 /// if it was intentionally caught on the native platform.
-Object convertPlatformException(Object exception) {
+Never convertPlatformException(Object exception, StackTrace stackTrace) {
   if (exception is! PlatformException) {
-    // TODO(rrousselGit): Is this dead code?
-    return exception;
+    Error.throwWithStackTrace(exception, stackTrace);
   }
 
-  return platformExceptionToFirebaseAuthException(exception);
+  Error.throwWithStackTrace(
+    platformExceptionToFirebaseAuthException(exception),
+    stackTrace,
+  );
 }
 
 /// Converts a [PlatformException] into a [FirebaseAuthException].

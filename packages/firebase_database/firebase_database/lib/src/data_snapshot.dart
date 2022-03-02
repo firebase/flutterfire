@@ -37,6 +37,5 @@ class DataSnapshot {
   DataSnapshot child(String path) => DataSnapshot._(_delegate.child(path));
 
   /// An iterator for snapshots of the child nodes in this snapshot.
-  Iterable<DataSnapshot> get children =>
-      _delegate.children.map((e) => DataSnapshot._(e));
+  Iterable<DataSnapshot> get children => _delegate.children.map(DataSnapshot._);
 }

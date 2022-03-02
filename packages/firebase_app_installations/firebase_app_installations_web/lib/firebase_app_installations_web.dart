@@ -52,21 +52,21 @@ class FirebaseAppInstallationsWeb extends FirebaseAppInstallationsPlatform {
 
   @override
   Future<void> delete() async {
-    return guard(() => _delegate.delete());
+    return convertWebExceptions(() => _delegate.delete());
   }
 
   @override
   Future<String> getId() async {
-    return guard(() => _delegate.getId());
+    return convertWebExceptions(() => _delegate.getId());
   }
 
   @override
   Future<String> getToken(bool forceRefresh) async {
-    return guard(() => _delegate.getToken(forceRefresh));
+    return convertWebExceptions(() => _delegate.getToken(forceRefresh));
   }
 
   @override
   Stream<String> get onIdChange {
-    return guard(() => _delegate.onIdChange);
+    return convertWebExceptions(() => _delegate.onIdChange);
   }
 }

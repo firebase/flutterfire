@@ -539,6 +539,7 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
   /// Objects in this directory. You can call [getMetadata()] and
   /// [getDownloadUrl()] on them.
   List<StorageReference> get items => jsObject.items
+      // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
 
@@ -552,6 +553,7 @@ class ListResult extends JsObjectWrapper<storage_interop.ListResultJsImpl> {
   /// if a bucket has two objects '/a/b/1' and '/a/b/2', [list('/a')] will
   /// return '/a/b' as a prefix.
   List<StorageReference> get prefixes => jsObject.prefixes
+      // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) => StorageReference._fromJsObject(data))
       .toList();
 

@@ -1,3 +1,11 @@
+## 2.2.9
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.2.8
+
+ - Update a dependency to the latest release.
+
 ## 2.2.7
 
  - **FIX**: Make Web `deleteToken()` API a Future so it resolves only when completed. (#7687). ([cf59bd38](https://github.com/FirebaseExtended/flutterfire/commit/cf59bd380a495a0390d8c14a63498ba1600f9f12))

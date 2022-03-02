@@ -42,7 +42,7 @@ class MethodChannelTrace extends TracePlatform {
       );
       _hasStarted = true;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -61,7 +61,7 @@ class MethodChannelTrace extends TracePlatform {
       );
       _hasStopped = true;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

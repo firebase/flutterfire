@@ -56,7 +56,7 @@ class FlutterHttpMetric implements MethodChannel.MethodCallHandler {
       httpMetric.setResponseContentType(responseContentType);
     }
     if (responsePayloadSize != null) {
-      httpMetric.setRequestPayloadSize(responsePayloadSize);
+      httpMetric.setResponsePayloadSize(responsePayloadSize);
     }
 
     for (String key : attributes.keySet()) {
