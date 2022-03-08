@@ -1,3 +1,19 @@
+## 3.2.9
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 3.2.8
+
+ - Update a dependency to the latest release.
+
+## 3.2.7
+
+- **REFACTOR**: remove deprecated Android API usages (#7986). ([232e5f89](https://github.com/FirebaseExtended/flutterfire/commit/232e5f8972df8ef22bfb76ce8cf1e631d823a1b5))
+
+## 3.2.6
+
+ - Update a dependency to the latest release.
+
 ## 3.2.5
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))

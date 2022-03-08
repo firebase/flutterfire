@@ -36,7 +36,7 @@ class MethodChannelHttpsCallable extends HttpsCallablePlatform {
         return result;
       }
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

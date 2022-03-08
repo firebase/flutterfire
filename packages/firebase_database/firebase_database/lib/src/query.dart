@@ -52,28 +52,24 @@ class Query {
   }
 
   /// Fires when children are added.
-  Stream<DatabaseEvent> get onChildAdded => _queryDelegate
-      .onChildAdded(_modifiers)
-      .map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildAdded =>
+      _queryDelegate.onChildAdded(_modifiers).map(DatabaseEvent._);
 
   /// Fires when children are removed. `previousChildKey` is null.
-  Stream<DatabaseEvent> get onChildRemoved => _queryDelegate
-      .onChildRemoved(_modifiers)
-      .map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildRemoved =>
+      _queryDelegate.onChildRemoved(_modifiers).map(DatabaseEvent._);
 
   /// Fires when children are changed.
-  Stream<DatabaseEvent> get onChildChanged => _queryDelegate
-      .onChildChanged(_modifiers)
-      .map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildChanged =>
+      _queryDelegate.onChildChanged(_modifiers).map(DatabaseEvent._);
 
   /// Fires when children are moved.
-  Stream<DatabaseEvent> get onChildMoved => _queryDelegate
-      .onChildMoved(_modifiers)
-      .map((item) => DatabaseEvent._(item));
+  Stream<DatabaseEvent> get onChildMoved =>
+      _queryDelegate.onChildMoved(_modifiers).map(DatabaseEvent._);
 
   /// Fires when the data at this location is updated. `previousChildKey` is null.
   Stream<DatabaseEvent> get onValue =>
-      _queryDelegate.onValue(_modifiers).map((item) => DatabaseEvent._(item));
+      _queryDelegate.onValue(_modifiers).map(DatabaseEvent._);
 
   /// Create a query constrained to only return child nodes with a value greater
   /// than or equal to the given value, using the given orderBy directive or

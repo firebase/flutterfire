@@ -12,7 +12,9 @@ import '../../oauth/provider_resolvers.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class FacebookProviderImpl extends OAuthProvider {
+abstract class FacebookProvider extends OAuthProvider {}
+
+class FacebookProviderImpl extends FacebookProvider {
   final _provider = FacebookAuth.instance;
   final String clientId;
   final String redirectUri;
@@ -48,15 +50,21 @@ class FacebookProviderImpl extends OAuthProvider {
   }
 
   @override
+  Future<void> signOut() async {
+    await _provider.logOut();
+  }
+
+  @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
-    return FacebookAuthProvider.credential(result.accessToken);
+    return FacebookAuthProvider.credential(result.accessToken!);
   }
 
   @override
   FacebookAuthProvider get firebaseAuthProvider => FacebookAuthProvider();
 }
 
-class FacebookProviderConfiguration extends OAuthProviderConfiguration {
+class FacebookProviderConfiguration
+    extends OAuthProviderConfiguration<FacebookProvider> {
   final String clientId;
   final String? redirectUri;
 
@@ -65,7 +73,7 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
     this.redirectUri,
   });
 
-  OAuthProvider get _provider => FacebookProviderImpl(
+  FacebookProvider get _provider => FacebookProviderImpl(
         clientId: clientId,
         redirectUri: redirectUri ?? defaultRedirectUri,
       );
@@ -74,7 +82,7 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
   String get providerId => FACEBOOK_PROVIDER_ID;
 
   @override
-  OAuthProvider createProvider() {
+  FacebookProvider createProvider() {
     return _provider;
   }
 

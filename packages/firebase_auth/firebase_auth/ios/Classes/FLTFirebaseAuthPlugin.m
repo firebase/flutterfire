@@ -1252,12 +1252,6 @@ NSString *const kErrMsgInvalidCredential =
   NSMutableDictionary *userData = [[self getNSDictionaryFromUserInfo:user] mutableCopy];
   NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
 
-  // This code is necessary to avoid an iOS issue where when unlinking the `password` provider
-  // the previous email still remains on the currentUser.
-  if ([user.providerData count] == 0) {
-    userData[@"email"] = [NSNull null];
-  }
-
   // metadata.creationTimestamp as milliseconds
   long creationDate = (long)([user.metadata.creationDate timeIntervalSince1970] * 1000);
   metadata[@"creationTime"] = @(creationDate);

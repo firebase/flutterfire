@@ -1,3 +1,17 @@
+## 2.0.2
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.0.1
+
+ - **FIX**: add missing `default_package` entry for web in `pubspec.yaml` (#8139). ([5e6b570f](https://github.com/FirebaseExtended/flutterfire/commit/5e6b570f8445b0bd2eac8b112a2a6b35ff69b7b6))
+
+## 2.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **REFACTOR**: deprecated `RemoteConfig` in favour of `FirebaseRemoteConfig` to align Firebase services naming with other plugins. ([99b932be](https://github.com/FirebaseExtended/flutterfire/commit/99b932bea6d604d500bb29841ad59177165dee60))
+
 ## 1.0.4
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))

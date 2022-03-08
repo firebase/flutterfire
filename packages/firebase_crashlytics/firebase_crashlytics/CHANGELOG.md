@@ -1,3 +1,19 @@
+## 2.5.3
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.5.2
+
+ - Update a dependency to the latest release.
+
+## 2.5.1
+
+ - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+## 2.5.0
+
+ - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872). ([d5d7e26a](https://github.com/FirebaseExtended/flutterfire/commit/d5d7e26a4828963f375b656c6e1a397d26aac980))
+
 ## 2.4.5
 
  - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))

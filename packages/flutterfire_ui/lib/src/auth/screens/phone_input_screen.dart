@@ -26,6 +26,7 @@ class PhoneInputScreen extends StatelessWidget {
   final double? headerMaxExtent;
   final SideBuilder? sideBuilder;
   final TextDirection? desktopLayoutDirection;
+  final double breakpoint;
 
   const PhoneInputScreen({
     Key? key,
@@ -38,6 +39,7 @@ class PhoneInputScreen extends StatelessWidget {
     this.headerMaxExtent,
     this.sideBuilder,
     this.desktopLayoutDirection,
+    this.breakpoint = 500,
   }) : super(key: key);
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
@@ -68,7 +70,7 @@ class PhoneInputScreen extends StatelessWidget {
           sideBuilder: sideBuilder,
           headerBuilder: headerBuilder,
           headerMaxExtent: headerMaxExtent,
-          breakpoint: 400,
+          breakpoint: breakpoint,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(

@@ -29,7 +29,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> set(Map<String, dynamic> data, [SetOptions? options]) {
-    return guard(
+    return convertWebExceptions(
       () => _delegate.set(
         EncodeUtility.encodeMapData(data)!,
         convertSetOptions(options),
@@ -39,13 +39,15 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> update(Map<String, dynamic> data) {
-    return guard(() => _delegate.update(EncodeUtility.encodeMapData(data)!));
+    return convertWebExceptions(
+        () => _delegate.update(EncodeUtility.encodeMapData(data)!));
   }
 
   @override
   Future<DocumentSnapshotPlatform> get(
       [GetOptions options = const GetOptions()]) async {
-    firestore_interop.DocumentSnapshot documentSnapshot = await guard(
+    firestore_interop.DocumentSnapshot documentSnapshot =
+        await convertWebExceptions(
       () => _delegate.get(convertGetOptions(options)),
     );
 
@@ -54,7 +56,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
 
   @override
   Future<void> delete() {
-    return guard(_delegate.delete);
+    return convertWebExceptions(_delegate.delete);
   }
 
   @override
@@ -67,7 +69,7 @@ class DocumentReferenceWeb extends DocumentReferencePlatform {
       querySnapshots = _delegate.onMetadataChangesSnapshot;
     }
 
-    return guard(
+    return convertWebExceptions(
       () => querySnapshots.map((webSnapshot) {
         return convertWebDocumentSnapshot(firestore, webSnapshot);
       }),

@@ -1,3 +1,34 @@
+## 0.3.5+1
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 0.3.5
+
+ - **FIX**: Upgrade `desktop_webview_auth` - v`0.0.5` (#8164). ([123fa6b1](https://github.com/FirebaseExtended/flutterfire/commit/123fa6b132183a4d6886c8be0595104752724532))
+ - **FIX**: Upgrade `desktop_webview_auth` package causing a problem on macOS. (#8151). ([da4a1c5e](https://github.com/FirebaseExtended/flutterfire/commit/da4a1c5e074cb5af71983a3ae49c4838402b726f))
+ - **FEAT**: Add support for configuring authentication providers globally (additionally fixes #7801) (#8120). ([ebde7d27](https://github.com/FirebaseExtended/flutterfire/commit/ebde7d27938d7a36a67973df4b33c21bbd7dea1a))
+ - **FEAT**: Add Hindi localization language support (#7778). ([b584ce0f](https://github.com/FirebaseExtended/flutterfire/commit/b584ce0f254dcb195f9a31f279fb3871d01182c1))
+ - **FEAT**: Add Turkish language localization support. (#7790). ([c47f6075](https://github.com/FirebaseExtended/flutterfire/commit/c47f60757ccbfcee1eaa5d7ed6ee01258f3b9d4f))
+ - **FEAT**: Add Bahasa Indonesia localization language support (#7709). ([be0eb27f](https://github.com/FirebaseExtended/flutterfire/commit/be0eb27f4f4d85a4e4a2468768c166a701325a8c))
+ - **FEAT**: Enhance the oauth provider button widget by showing error text underneath. (#8032). ([2b47f5a1](https://github.com/FirebaseExtended/flutterfire/commit/2b47f5a12747e3437dfc42d331684e798372beaf))
+
+## 0.3.4
+
+ - **FEAT**: Add Italian localization language support. (#7823). ([c3a1a839](https://github.com/FirebaseExtended/flutterfire/commit/c3a1a839a3963a75cc17e931a3eee6e091df40ac))
+
+## 0.3.3
+
+- **FIX**: prompt user to select google account on web (#8007). ([b3db0213](https://github.com/FirebaseExtended/flutterfire/commit/b3db0213ae949435f74d8193cfb5c8a65ed7f601))
+- **FIX**: bump flutter_facebook_auth version (#8031). ([82c1fe11](https://github.com/FirebaseExtended/flutterfire/commit/82c1fe111d00b499e9587d235e4499b03cfe17bd))
+- **FIX**: make breakpoints of all screens configurable (#7996). ([6557740c](https://github.com/FirebaseExtended/flutterfire/commit/6557740cf68dbd79da7bd03c65f92479c3ff435b))
+- **FEAT**: add Dutch localization support (#7782). ([751104b6](https://github.com/FirebaseExtended/flutterfire/commit/751104b6ec282592e209ee57f130aae68a752ba5))
+- **FEAT**: add autofillhints (#7668). ([dd94e935](https://github.com/FirebaseExtended/flutterfire/commit/dd94e935828d2de873a08eb26801541ca68f0696))
+- **DOCS**: Fixes "infinite" typo (#8039). ([c2cf325d](https://github.com/FirebaseExtended/flutterfire/commit/c2cf325dfd52194c68b70d17a91bb9e1158840b6))
+
+## 0.3.2
+
+ - **FEAT**: add Portuguese localization support (#7830). ([5152692f](https://github.com/FirebaseExtended/flutterfire/commit/5152692f22fe61a95e9dd19eb3bdf87547760d72))
+
 ## 0.3.1
 
  - **FIX**: fix `ResponsivePage` overflow issue (#7792). ([4c633737](https://github.com/FirebaseExtended/flutterfire/commit/4c633737926f114ef32a409a1b0df6e262ba4816))
