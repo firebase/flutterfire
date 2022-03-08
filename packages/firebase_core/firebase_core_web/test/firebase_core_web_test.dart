@@ -97,7 +97,7 @@ void main() {
           'options': options,
         });
       });
-      
+
       final FirebaseApp app = await Firebase.initializeApp(
         name: 'foo',
         options: const FirebaseOptions(
