@@ -5,7 +5,7 @@
 
 // ignore_for_file: public_member_api_docs, non_constant_identifier_names
 
-@JS('firebase')
+@JS('firebase_core')
 library firebase_interop.core;
 
 import 'package:js/js.dart';
@@ -13,7 +13,7 @@ import 'package:js/js.dart';
 import 'app_interop.dart';
 
 @JS()
-external List<AppJsImpl> get apps;
+external List<AppJsImpl> getApps();
 
 /// The current SDK version.
 ///
@@ -25,7 +25,10 @@ external String get SDK_VERSION;
 external AppJsImpl initializeApp(FirebaseOptions options, [String? name]);
 
 @JS()
-external AppJsImpl app([String? name]);
+external AppJsImpl getApp([String? name]);
+
+@JS()
+external Future<void> deleteApp(AppJsImpl app);
 
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.

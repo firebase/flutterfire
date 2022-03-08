@@ -30,12 +30,6 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebasePlatform.instance = FirebaseCoreWeb();
   }
 
-  /// Returns whether `requirejs` is within the global context (usually the
-  /// case in development).
-  bool get _isRequireJsDefined {
-    return context['require'] != null;
-  }
-
   /// Returns the Firebase JS SDK Version to use.
   ///
   /// You can override the supported version by attaching a version string to
@@ -75,22 +69,35 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
   /// Injects a `script` with a `src` dynamically into the head of the current
   /// document.
-  Future<void> _injectSrcScript(String src) async {
+  Future<void> _injectSrcScript(String src, String windowVar) async {
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
-    script.src = src;
-    script.async = true;
+    script.text = '''
+      window.ff_trigger_$windowVar = async (callback) => {
+        callback(await import("$src"));
+      };
+    ''';
+
     assert(document.head != null);
     document.head!.append(script);
-    await script.onLoad.first;
+    Completer completer = Completer();
+
+    context.callMethod('ff_trigger_$windowVar', [
+      (module) {
+        context[windowVar] = module;
+        completer.complete();
+      }
+    ]);
+
+    await completer.future;
   }
 
   /// Initializes the Firebase JS SDKs by injecting them into the `head` of the
-  /// document when Firebase is initalized.
+  /// document when Firebase is initialized.
   Future<void> _initializeCore() async {
     // If Firebase is already available, core has already been initialized
     // (or the user has added the scripts to their html file).
-    if (context['firebase'] != null) {
+    if (context['firebase_core'] != null) {
       return;
     }
 
@@ -100,6 +107,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     // This must be loaded first!
     await _injectSrcScript(
       'https://www.gstatic.com/firebasejs/$version/firebase-app.js',
+      'firebase_core',
     );
 
     await Future.wait(
@@ -110,77 +118,10 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
         return _injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
+          'firebase_${service.name}',
         );
       }),
     );
-  }
-
-  /// In development (or manually added), requirejs is added to the window.
-  ///
-  /// The Firebase JS SDKs define their modules via requirejs (if it exists),
-  /// otherwise they attach to the window. This code loads Firebase from
-  /// requirejs manually attaches it to the window.
-  Future<void> _initializeCoreRequireJs() async {
-    // If Firebase is already available, core has already been initialized
-    // (or the user has added the scripts to their html file).
-    if (context['firebase'] != null) {
-      return;
-    }
-
-    String version = _firebaseSDKVersion;
-    List<String> ignored = _ignoredServiceScripts;
-
-    // In dev, requirejs is loaded in
-    JsObject require = JsObject.fromBrowserObject(context['require']);
-    require.callMethod('config', [
-      JsObject.jsify({
-        'paths': {
-          '@firebase/app':
-              'https://www.gstatic.com/firebasejs/$version/firebase-app',
-          '@firebase/analytics':
-              'https://www.gstatic.com/firebasejs/$version/firebase-analytics',
-          '@firebase/app-check':
-              'https://www.gstatic.com/firebasejs/$version/firebase-app-check',
-          '@firebase/auth':
-              'https://www.gstatic.com/firebasejs/$version/firebase-auth',
-          '@firebase/firestore':
-              'https://www.gstatic.com/firebasejs/$version/firebase-firestore',
-          '@firebase/functions':
-              'https://www.gstatic.com/firebasejs/$version/firebase-functions',
-          '@firebase/messaging':
-              'https://www.gstatic.com/firebasejs/$version/firebase-messaging',
-          '@firebase/storage':
-              'https://www.gstatic.com/firebasejs/$version/firebase-storage',
-          '@firebase/database':
-              'https://www.gstatic.com/firebasejs/$version/firebase-database',
-          '@firebase/remote-config':
-              'https://www.gstatic.com/firebasejs/$version/firebase-remote-config',
-          '@firebase/performance':
-              'https://www.gstatic.com/firebasejs/$version/firebase-performance',
-          '@firebase/installations':
-              'https://www.gstatic.com/firebasejs/$version/firebase-installations',
-        },
-      })
-    ]);
-
-    Completer completer = Completer();
-
-    List<String> services = ['@firebase/app'];
-    _services.values.forEach((service) {
-      if (!ignored.contains(service.name)) {
-        services.add('@firebase/${service.name}');
-      }
-    });
-
-    context.callMethod('require', [
-      JsObject.jsify(services),
-      (app) {
-        context['firebase'] = app;
-        completer.complete();
-      }
-    ]);
-
-    await completer.future;
   }
 
   /// Returns all created [FirebaseAppPlatform] instances.
@@ -199,11 +140,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String? name,
     FirebaseOptions? options,
   }) async {
-    if (!_isRequireJsDefined) {
-      await _initializeCore();
-    } else {
-      await _initializeCoreRequireJs();
-    }
+    await _initializeCore();
 
     try {
       firebase.SDK_VERSION;
