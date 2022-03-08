@@ -53,8 +53,8 @@ class DynamicLinkParameters {
   /// Social Meta Tag parameters for a generated Dynamic Link URL.
   final SocialMetaTagParameters? socialMetaTagParameters;
 
-  /// Set the long Dynamic Link when building a short link. This allows the user to append additional query strings
-  /// that would otherwise not be possible (e.g. "ofl" parameter).
+  /// Set the long Dynamic Link when building a short link (i.e. using `buildShortLink()` API). This allows the user to append
+  /// additional query strings that would otherwise not be possible (e.g. "ofl" parameter). This will not work if using buildLink() API.
   final Uri? longDynamicLink;
 
   /// Returns the current instance as a [Map].
