@@ -32,7 +32,7 @@ class App extends core_interop.JsObjectWrapper<AppJsImpl> {
   }
 
   /// Deletes the app and frees resources of all App's services.
-  Future delete() => core_interop.handleThenable(jsObject.delete());
+  Future delete() => core_interop.deleteApp(jsObject);
 
   /// Returns [Database] service.
   Database database(String? databaseURL) =>
