@@ -104,6 +104,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       link: Uri.parse(link),
       android: androidData,
       ios: iosData,
+      utmParameters: linkData['utmParameters'],
     );
   }
 
