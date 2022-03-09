@@ -3,7 +3,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import '../../widgets/internal/universal_scaffold.dart';
-import '../../configs/provider_configuration.dart';
 
 import 'responsive_page.dart';
 
@@ -21,6 +20,7 @@ class LoginScreen extends StatelessWidget {
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
+  final double breakpoint;
 
   const LoginScreen({
     Key? key,
@@ -37,6 +37,7 @@ class LoginScreen extends StatelessWidget {
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
+    this.breakpoint = 800,
   }) : super(key: key);
 
   @override
@@ -48,6 +49,7 @@ class LoginScreen extends StatelessWidget {
         child: LoginView(
           key: loginViewKey,
           action: action,
+          auth: auth,
           providerConfigs: providerConfigs,
           oauthButtonVariant: oauthButtonVariant,
           email: email,
@@ -59,7 +61,7 @@ class LoginScreen extends StatelessWidget {
     );
 
     final body = ResponsivePage(
-      breakpoint: 800,
+      breakpoint: breakpoint,
       desktopLayoutDirection: desktopLayoutDirection,
       headerBuilder: headerBuilder,
       headerMaxExtent: headerMaxExtent,

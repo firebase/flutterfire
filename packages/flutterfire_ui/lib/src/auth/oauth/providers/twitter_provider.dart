@@ -12,7 +12,9 @@ import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class TwitterProviderImpl extends OAuthProvider {
+abstract class TwitterProvider extends OAuthProvider {}
+
+class TwitterProviderImpl extends TwitterProvider {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
@@ -58,7 +60,7 @@ class TwitterProviderImpl extends OAuthProvider {
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return TwitterAuthProvider.credential(
-      accessToken: result.accessToken,
+      accessToken: result.accessToken!,
       secret: result.tokenSecret!,
     );
   }
@@ -67,12 +69,13 @@ class TwitterProviderImpl extends OAuthProvider {
   TwitterAuthProvider get firebaseAuthProvider => TwitterAuthProvider();
 }
 
-class TwitterProviderConfiguration extends OAuthProviderConfiguration {
+class TwitterProviderConfiguration
+    extends OAuthProviderConfiguration<TwitterProvider> {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
 
-  OAuthProvider get _provider => TwitterProviderImpl(
+  TwitterProvider get _provider => TwitterProviderImpl(
         apiKey: apiKey,
         apiSecretKey: apiSecretKey,
         redirectUri: redirectUri,
@@ -88,7 +91,7 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   String get providerId => TWITTER_PROVIDER_ID;
 
   @override
-  OAuthProvider createProvider() {
+  TwitterProvider createProvider() {
     return _provider;
   }
 

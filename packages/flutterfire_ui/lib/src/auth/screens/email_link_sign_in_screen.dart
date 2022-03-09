@@ -2,28 +2,30 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import 'internal/provider_screen.dart';
 import 'internal/responsive_page.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
-class EmailLinkSignInScreen extends StatelessWidget {
-  final FirebaseAuth? auth;
-  final EmailLinkProviderConfiguration config;
+class EmailLinkSignInScreen
+    extends ProviderScreen<EmailLinkProviderConfiguration> {
   final List<FlutterFireUIAction>? actions;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
   final SideBuilder? sideBuilder;
   final TextDirection? desktoplayoutDirection;
+  final double breakpoint;
 
   const EmailLinkSignInScreen({
     Key? key,
-    this.auth,
+    FirebaseAuth? auth,
     this.actions,
-    required this.config,
+    EmailLinkProviderConfiguration? config,
     this.headerBuilder,
     this.headerMaxExtent,
     this.sideBuilder,
     this.desktoplayoutDirection,
-  }) : super(key: key);
+    this.breakpoint = 500,
+  }) : super(key: key, auth: auth, config: config);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class EmailLinkSignInScreen extends StatelessWidget {
       actions: actions ?? const [],
       child: UniversalScaffold(
         body: ResponsivePage(
-          breakpoint: 400,
+          breakpoint: breakpoint,
           headerBuilder: headerBuilder,
           headerMaxExtent: headerMaxExtent,
           maxWidth: 1200,

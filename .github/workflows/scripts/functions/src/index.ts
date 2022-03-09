@@ -131,7 +131,7 @@ export const testFunctionDefaultRegion = functions.https.onCall((data) => {
     throw new functions.https.HttpsError(
       'invalid-argument',
       'Input and Output types did not match.',
-      e.message
+      (e as any).message
     );
   }
 

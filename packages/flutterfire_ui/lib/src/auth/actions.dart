@@ -80,6 +80,8 @@ class FlutterfireUIAuthActionsElement extends InheritedElement {
             action.invoke(this, newState);
           }
         }
+
+        return null;
       },
       child: super.build(),
     );

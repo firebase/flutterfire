@@ -4,6 +4,9 @@
 
 package io.flutter.plugins.firebase.inappmessaging;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.inappmessaging.FirebaseInAppMessaging;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -11,27 +14,19 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+import java.util.Map;
 
 /** FirebaseInAppMessagingPlugin */
-public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHandler {
-  private final FirebaseInAppMessaging instance;
+public class FirebaseInAppMessagingPlugin
+    implements FlutterFirebasePlugin, FlutterPlugin, MethodCallHandler {
   private MethodChannel channel;
-
-  private static MethodChannel setup(BinaryMessenger binaryMessenger) {
-    final MethodChannel channel =
-        new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
-    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
-    return channel;
-  }
-
-  public FirebaseInAppMessagingPlugin() {
-    instance = FirebaseInAppMessaging.getInstance();
-  }
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
     BinaryMessenger binaryMessenger = binding.getBinaryMessenger();
-    channel = setup(binaryMessenger);
+    channel = new MethodChannel(binaryMessenger, "plugins.flutter.io/firebase_in_app_messaging");
+    channel.setMethodCallHandler(new FirebaseInAppMessagingPlugin());
   }
 
   @Override
@@ -48,21 +43,21 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
       case "FirebaseInAppMessaging#triggerEvent":
         {
           String eventName = call.argument("eventName");
-          instance.triggerEvent(eventName);
+          FirebaseInAppMessaging.getInstance().triggerEvent(eventName);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setMessagesSuppressed":
         {
           Boolean suppress = (Boolean) call.argument("suppress");
-          instance.setMessagesSuppressed(suppress);
+          FirebaseInAppMessaging.getInstance().setMessagesSuppressed(suppress);
           result.success(null);
           break;
         }
       case "FirebaseInAppMessaging#setAutomaticDataCollectionEnabled":
         {
           Boolean enabled = (Boolean) call.argument("enabled");
-          instance.setAutomaticDataCollectionEnabled(enabled);
+          FirebaseInAppMessaging.getInstance().setAutomaticDataCollectionEnabled(enabled);
           result.success(null);
           break;
         }
@@ -72,5 +67,15 @@ public class FirebaseInAppMessagingPlugin implements FlutterPlugin, MethodCallHa
           break;
         }
     }
+  }
+
+  @Override
+  public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
+    return Tasks.call(() -> null);
+  }
+
+  @Override
+  public Task<Void> didReinitializeFirebaseCore() {
+    return Tasks.call(() -> null);
   }
 }

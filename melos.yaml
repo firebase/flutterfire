@@ -3,6 +3,7 @@ repository: https://github.com/FirebaseExtended/flutterfire
 
 packages:
   - packages/**
+  - "tests/*"
 
 command:
   version:
@@ -35,11 +36,14 @@ scripts:
        - Requires Node.js and NPM installed.
 
   format:
-    run: dart pub global run flutter_plugin_tools format
+    run: |
+      dart pub global run flutter_plugin_tools format && \
+      swiftformat .
     description: |
       Build a specific example app for Android.
        - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
        - Requires `clang-format` (can be installed via Brew on macOS).
+       - Requires `swiftformat` (can be installed via Brew on macOS).
 
   build:all:
     run: |
@@ -110,12 +114,9 @@ scripts:
     run: |
       melos run test --no-select && \
       melos run test:web --no-select && \
-      melos run test:web_e2e --no-select && \
-      melos run test:mobile_e2e --no-select
+      melos run test:e2e --no-select
     description: |
       Run all tests available.
-       - Requires chromedriver running on port 4444.
-       - Requires an Android emulator or iOS simulator to be already running.
 
   test:
     run: |
@@ -140,42 +141,27 @@ scripts:
         - test
       scope: "*web*"
 
-  test:mobile_e2e:
+  test:e2e:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart"
     description: |
-      Run all Android or iOS test driver e2e tests in a specific example app.
-       - Requires an Android emulator or iOS simulator to be already running.
+      Run all e2e tests.
     select-package:
       dir-exists:
         - test_driver
-      scope: "*example*"
+      scope: "*tests*"
 
-  test:web_e2e:
+  test:e2e:web:
     run: |
       melos exec -c 1 --fail-fast -- \
-        "flutter drive --device-id=web-server --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
+        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart -d chrome"
     description: |
-      Run all Web test driver e2e tests in a specific example app.
-       - Requires chromedriver running on port 4444.
+      Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
     select-package:
       dir-exists:
-        - web
         - test_driver
-      scope: "*example*"
-
-  test:macos_e2e:
-    run: |
-      melos exec -c 1 --fail-fast -- \
-        "flutter drive -d macos --no-pub --target=./test_driver/MELOS_PARENT_PACKAGE_NAME_e2e.dart"
-    description: |
-      Run all MacOS test driver e2e tests in a specific example app.
-    select-package:
-      dir-exists:
-        - macos
-        - test_driver
-      scope: "*example*"
+      scope: "*tests*"
 
   clean:deep:
     run: git clean -x -d -f -q

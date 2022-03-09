@@ -44,7 +44,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     Map<String, Object?>? parameters,
     AnalyticsCallOptions? callOptions,
   }) async {
-    return guard(() {
+    return convertWebExceptions(() {
       return _delegate.logEvent(
         name: name,
         parameters: parameters ?? {},
@@ -63,7 +63,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setAnalyticsCollectionEnabled(bool enabled) async {
-    return guard(() {
+    return convertWebExceptions(() {
       return _delegate.setAnalyticsCollectionEnabled(enabled: enabled);
     });
   }
@@ -73,7 +73,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? id,
     AnalyticsCallOptions? callOptions,
   }) async {
-    return guard(() {
+    return convertWebExceptions(() {
       return _delegate.setUserId(
         id: id,
         callOptions: callOptions,
@@ -87,7 +87,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     String? screenClassOverride,
     AnalyticsCallOptions? callOptions,
   }) async {
-    return guard(() {
+    return convertWebExceptions(() {
       return _delegate.setCurrentScreen(
         screenName: screenName,
         callOptions: callOptions,
@@ -106,7 +106,7 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
     required String? value,
     AnalyticsCallOptions? callOptions,
   }) async {
-    return guard(() {
+    return convertWebExceptions(() {
       return _delegate.setUserProperty(
         name: name,
         value: value,

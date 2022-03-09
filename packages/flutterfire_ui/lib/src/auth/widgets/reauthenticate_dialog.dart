@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import '../configs/provider_configuration.dart';
 import '../widgets/internal/title.dart';
 
 class ReauthenticateDialog extends StatelessWidget {

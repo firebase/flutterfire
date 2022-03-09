@@ -29,33 +29,22 @@ class MethodChannelFirebaseAppInstallations
   /// Creates a new [MethodChannelFirebaseAppInstallations] instance with an [app].
   MethodChannelFirebaseAppInstallations({required FirebaseApp app})
       : super(app) {
-    _idTokenChangesListeners[app.name] = StreamController<String>.broadcast();
+    final controller = _idTokenChangesListeners[app.name] =
+        StreamController<String>.broadcast();
 
     channel.invokeMethod<String>(
         'FirebaseInstallations#registerIdChangeListener', {
       'appName': app.name,
     }).then((channelName) {
       final events = EventChannel(channelName!, channel.codec);
-      events.receiveBroadcastStream().listen((arguments) {
-        _handleIdChangedListener(app.name, arguments);
-      }, onError: (error, stackTrace) {
-        _handleIdChangedError(app.name, error, stackTrace);
-      });
+      events
+          .receiveBroadcastStream()
+          .handleError(convertPlatformException)
+          .listen(
+            (Object? arguments) => controller.add((arguments as Map)['token']),
+            onError: controller.addError,
+          );
     });
-  }
-  void _handleIdChangedError(String appName, Object error,
-      [StackTrace? stackTrace]) {
-    final StreamController<String> controller =
-        _idTokenChangesListeners[appName]!;
-    controller.addError(convertPlatformException(error), stackTrace);
-  }
-
-  /// Handle any incoming events from Event Channel and forward on to the user.
-  void _handleIdChangedListener(
-      String appName, Map<dynamic, dynamic> arguments) {
-    final StreamController<String> controller =
-        _idTokenChangesListeners[appName]!;
-    controller.add(arguments['token']);
   }
 
   /// Internal stub class initializer.
@@ -76,7 +65,7 @@ class MethodChannelFirebaseAppInstallations
         'appName': app!.name,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -90,7 +79,7 @@ class MethodChannelFirebaseAppInstallations
 
       return id!;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -103,7 +92,7 @@ class MethodChannelFirebaseAppInstallations
 
       return id!;
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

@@ -1,3 +1,29 @@
+## 2.5.3
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.5.2
+
+ - Update a dependency to the latest release.
+
+## 2.5.1
+
+ - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
+## 2.5.0
+
+ - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872). ([d5d7e26a](https://github.com/FirebaseExtended/flutterfire/commit/d5d7e26a4828963f375b656c6e1a397d26aac980))
+
+## 2.4.5
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+
+## 2.4.4
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **FIX**: set build id as not required, to allow Dart default app initialization (#7594). ([c15fdda3](https://github.com/FirebaseExtended/flutterfire/commit/c15fdda33b447ddd0c8e066e9c9ec7cabf9cd6fd))
+ - **FIX**: Return app constants for default app only on `Android`. (#7592). ([b803c425](https://github.com/FirebaseExtended/flutterfire/commit/b803c425b420acae155fea93a62ab9b3de4556a5))
+
 ## 2.4.3
 
  - Update a dependency to the latest release.

@@ -57,7 +57,7 @@ class MethodChannelFirebaseModelDownloader
 
       return _resultToFirebaseCustomModel(result!);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -71,7 +71,7 @@ class MethodChannelFirebaseModelDownloader
 
       return result!.map(_resultToFirebaseCustomModel).toList(growable: false);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -84,7 +84,7 @@ class MethodChannelFirebaseModelDownloader
         'modelName': modelName,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 

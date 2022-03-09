@@ -30,7 +30,7 @@ class TransactionWeb extends TransactionPlatform {
 
   @override
   Future<DocumentSnapshotPlatform> get(String documentPath) {
-    return guard(
+    return convertWebExceptions(
       () async {
         final webDocumentSnapshot = await _webTransactionDelegate
             .get(_webFirestoreDelegate.doc(documentPath));

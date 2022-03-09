@@ -1,0 +1,222 @@
+name: e2e
+
+on:
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "website/**"
+      - "**/example/**"
+      - "**/flutterfire_ui/**"
+      - "**/cloud_firestore_odm/**"
+      - "**.md"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "docs/**"
+      - "website/**"
+      - "**/example/**"
+      - "**/flutterfire_ui/**"
+      - "**/cloud_firestore_odm/**"
+      - "**.md"
+
+jobs:
+  android:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        name: Install Node.js 16
+        with:
+          node-version: "16"
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: "11"
+      - uses: actions/cache@v2
+        name: Gradle Cache
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-v1-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-v1
+      - name: Firebase Emulator Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v1-${{ github.run_id }}
+          restore-keys: firebase-emulators-v1
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --no-enable-web --no-enable-ios --no-enable-macos-desktop
+          sudo npm i -g firebase-tools
+      - name: "Build Application"
+        working-directory: tests
+        run: |
+          flutter build apk --debug --target=./test_driver/driver_e2e.dart --dart-define=CI=true --no-android-gradle-daemon
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: "E2E Tests"
+        uses: reactivecircus/android-emulator-runner@v2.21.0
+        timeout-minutes: 30
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          profile: Nexus 5X
+          working-directory: tests
+          script: |
+            sleep 15
+            flutter drive --target=./test_driver/driver_e2e.dart --dart-define=CI=true
+
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        name: Install Node.js 16
+        with:
+          node-version: "16"
+      - uses: hendrikmuhs/ccache-action@v1
+        name: Xcode Compile Cache
+        with:
+          key: ${{ runner.os }}-ios-v2
+          max-size: 700M
+      - uses: actions/cache@v2
+        name: Pods Cache
+        id: pods-cache
+        with:
+          path: tests/ios/Pods
+          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/ios/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-ios-pods-v1
+      - name: Firebase Emulator Cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v1-${{ github.run_id }}
+          restore-keys: firebase-emulators-v1
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          sudo npm i -g firebase-tools
+      - name: "Build Application"
+        working-directory: tests
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build ios --no-codesign --simulator --debug --target=./test_driver/driver_e2e.dart --dart-define=CI=true
+          ccache -s
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: "E2E Tests"
+        working-directory: tests
+        run: |
+          # Boot simulator and wait for System app to be ready.
+          SIMULATOR="iPhone 11"
+          xcrun simctl bootstatus "$SIMULATOR" -b
+          xcrun simctl logverbose "$SIMULATOR" enable
+          # Sleep to allow simulator to settle.
+          sleep 15
+          # Uncomment following line to have simulator logs printed out for debugging purposes.
+          # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
+          flutter drive -d "$SIMULATOR" --target=./test_driver/driver_e2e.dart --dart-define=CI=true
+          FLUTTER_DRIVE_EXIT_CODE=$?
+          xcrun simctl shutdown "$SIMULATOR"
+          exit $FLUTTER_DRIVE_EXIT_CODE
+      - name: "Swift Format Check"
+        if: ${{ success() || failure() }}
+        run: |
+          swiftformat .
+          ./.github/workflows/scripts/validate-formatting.sh
+
+  macos:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        name: Install Node.js 16
+        with:
+          node-version: "16"
+      - uses: hendrikmuhs/ccache-action@v1
+        name: Xcode Compile Cache
+        with:
+          key: ${{ runner.os }}-macos-v2
+          max-size: 700M
+      - uses: actions/cache@v2
+        name: Pods Cache
+        id: pods-cache
+        with:
+          path: tests/macos/Pods
+          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-macos-pods-v1
+      - name: Cache Firebase Emulator
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v1-${{ github.run_id }}
+          restore-keys: firebase-emulators-v1
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-macos-desktop
+          sudo npm i -g firebase-tools
+      - name: "Build Application"
+        working-directory: tests
+        run: |
+          export PATH="/usr/lib/ccache:/usr/local/opt/ccache/libexec:$PATH"
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+          ccache -s
+          flutter build macos --debug --target=./test_driver/driver_e2e.dart --device-id=macos --dart-define=CI=true
+          ccache -s
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: "E2E Tests"
+        working-directory: tests
+        run: |
+          flutter drive -d macos --target=./test_driver/driver_e2e.dart --dart-define=CI=true
+
+  web:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        name: Install Node.js 16
+        with:
+          node-version: "16"
+      - name: "Install Flutter"
+        run: ./.github/workflows/scripts/install-flutter.sh stable
+      - name: "Install Tools"
+        run: |
+          ./.github/workflows/scripts/install-tools.sh
+          flutter config --enable-web
+          sudo npm i -g firebase-tools
+      - name: Cache Firebase Emulator
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-v1-${{ github.run_id }}
+          restore-keys: firebase-emulators-v1
+      - name: Start Firebase Emulator
+        run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
+      - name: "E2E Tests"
+        working-directory: tests
+        run: |
+          chromedriver --port=4444 &
+          flutter drive --verbose-system-logs --device-id=web-server --target=./test_driver/driver_e2e.dart --dart-define=CI=true

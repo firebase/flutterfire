@@ -1,3 +1,27 @@
+## 4.0.8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 4.0.7
+
+ - Update a dependency to the latest release.
+
+## 4.0.6
+
+ - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/FirebaseExtended/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
+
+## 4.0.5
+
+ - Update a dependency to the latest release.
+
+## 4.0.4
+
+ - Update a dependency to the latest release.
+
+## 4.0.3
+
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+
 ## 4.0.2
 
  - Update a dependency to the latest release.

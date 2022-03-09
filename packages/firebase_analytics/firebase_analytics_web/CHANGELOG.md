@@ -1,3 +1,23 @@
+## 0.4.0+8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 0.4.0+7
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+6
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+5
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+4
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+3
 
  - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))

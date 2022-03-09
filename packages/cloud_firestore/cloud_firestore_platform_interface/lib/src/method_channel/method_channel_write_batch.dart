@@ -48,8 +48,8 @@ class MethodChannelWriteBatch extends WriteBatchPlatform {
         'firestore': _firestore,
         'writes': _writes,
       });
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 

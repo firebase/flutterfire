@@ -1,0 +1,207 @@
+# ignore_for_file sort_pub_dependencies
+name: tests
+description: A an app for FlutterFire testing (e2e).
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  cloud_firestore:
+    path: ../packages/cloud_firestore/cloud_firestore
+  cloud_firestore_platform_interface:
+    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../packages/cloud_firestore/cloud_firestore_web
+  cloud_functions:
+    path: ../packages/cloud_functions/cloud_functions
+  cloud_functions_platform_interface:
+    path: ../packages/cloud_functions/cloud_functions_platform_interface
+  cloud_functions_web:
+    path: ../packages/cloud_functions/cloud_functions_web
+  collection: ^1.15.0
+  firebase_analytics:
+    path: ../packages/firebase_analytics/firebase_analytics
+  firebase_analytics_platform_interface:
+    path: ../packages/firebase_analytics/firebase_analytics_platform_interface
+  firebase_analytics_web:
+    path: ../packages/firebase_analytics/firebase_analytics_web
+  # TODO RTDB emulator breaks just by including App Check
+  # firebase_app_check:
+  #   path: ../packages/firebase_app_check/firebase_app_check
+  # firebase_app_check_platform_interface:
+  #   path: ../packages/firebase_app_check/firebase_app_check_platform_interface
+  # firebase_app_check_web:
+  #   path: ../packages/firebase_app_check/firebase_app_check_web
+  firebase_app_installations:
+    path: ../packages/firebase_app_installations/firebase_app_installations
+  firebase_app_installations_platform_interface:
+    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
+  firebase_app_installations_web:
+    path: ../packages/firebase_app_installations/firebase_app_installations_web
+  firebase_auth:
+    path: ../packages/firebase_auth/firebase_auth
+  firebase_auth_platform_interface:
+    path: ../packages/firebase_auth/firebase_auth_platform_interface
+  firebase_auth_web:
+    path: ../packages/firebase_auth/firebase_auth_web
+  firebase_core:
+    path: ../packages/firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../packages/firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../packages/firebase_core/firebase_core_web
+  firebase_crashlytics:
+    path: ../packages/firebase_crashlytics/firebase_crashlytics
+  firebase_crashlytics_platform_interface:
+    path: ../packages/firebase_crashlytics/firebase_crashlytics_platform_interface
+  firebase_database:
+    path: ../packages/firebase_database/firebase_database
+  firebase_database_platform_interface:
+    path: ../packages/firebase_database/firebase_database_platform_interface
+  firebase_database_web:
+    path: ../packages/firebase_database/firebase_database_web
+  firebase_dynamic_links:
+    path: ../packages/firebase_dynamic_links/firebase_dynamic_links
+  firebase_dynamic_links_platform_interface:
+    path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_messaging:
+    path: ../packages/firebase_messaging/firebase_messaging
+  firebase_messaging_platform_interface:
+    path: ../packages/firebase_messaging/firebase_messaging_platform_interface
+  firebase_messaging_web:
+    path: ../packages/firebase_messaging/firebase_messaging_web
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+
+  # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
+  # firebase_performance:
+  #   path: ../packages/firebase_performance/firebase_performance
+  # firebase_performance_platform_interface:
+  #   path: ../packages/firebase_performance/firebase_performance_platform_interface
+  # firebase_performance_web:
+  #   path: ../packages/firebase_performance/firebase_performance_web
+  firebase_remote_config:
+    path: ../packages/firebase_remote_config/firebase_remote_config
+  firebase_remote_config_platform_interface:
+    path: ../packages/firebase_remote_config/firebase_remote_config_platform_interface
+  firebase_remote_config_web:
+    path: ../packages/firebase_remote_config/firebase_remote_config_web
+  firebase_storage:
+    path: ../packages/firebase_storage/firebase_storage
+  firebase_storage_platform_interface:
+    path: ../packages/firebase_storage/firebase_storage_platform_interface
+  firebase_storage_web:
+    path: ../packages/firebase_storage/firebase_storage_web
+  flutter:
+    sdk: flutter
+  http: ^0.13.4
+
+dependency_overrides:
+  cloud_firestore:
+    path: ../packages/cloud_firestore/cloud_firestore
+  cloud_firestore_platform_interface:
+    path: ../packages/cloud_firestore/cloud_firestore_platform_interface
+  cloud_firestore_web:
+    path: ../packages/cloud_firestore/cloud_firestore_web
+  cloud_functions:
+    path: ../packages/cloud_functions/cloud_functions
+  cloud_functions_platform_interface:
+    path: ../packages/cloud_functions/cloud_functions_platform_interface
+  cloud_functions_web:
+    path: ../packages/cloud_functions/cloud_functions_web
+  firebase_analytics:
+    path: ../packages/firebase_analytics/firebase_analytics
+  firebase_analytics_platform_interface:
+    path: ../packages/firebase_analytics/firebase_analytics_platform_interface
+  firebase_analytics_web:
+    path: ../packages/firebase_analytics/firebase_analytics_web
+  # firebase_app_check:
+  #   path: ../packages/firebase_app_check/firebase_app_check
+  # firebase_app_check_platform_interface:
+  #   path: ../packages/firebase_app_check/firebase_app_check_platform_interface
+  # firebase_app_check_web:
+  #   path: ../packages/firebase_app_check/firebase_app_check_web
+  firebase_app_installations:
+    path: ../packages/firebase_app_installations/firebase_app_installations
+  firebase_app_installations_platform_interface:
+    path: ../packages/firebase_app_installations/firebase_app_installations_platform_interface
+  firebase_app_installations_web:
+    path: ../packages/firebase_app_installations/firebase_app_installations_web
+  firebase_auth:
+    path: ../packages/firebase_auth/firebase_auth
+  firebase_auth_platform_interface:
+    path: ../packages/firebase_auth/firebase_auth_platform_interface
+  firebase_auth_web:
+    path: ../packages/firebase_auth/firebase_auth_web
+  firebase_core:
+    path: ../packages/firebase_core/firebase_core
+  firebase_core_platform_interface:
+    path: ../packages/firebase_core/firebase_core_platform_interface
+  firebase_core_web:
+    path: ../packages/firebase_core/firebase_core_web
+  firebase_crashlytics:
+    path: ../packages/firebase_crashlytics/firebase_crashlytics
+  firebase_crashlytics_platform_interface:
+    path: ../packages/firebase_crashlytics/firebase_crashlytics_platform_interface
+  firebase_database:
+    path: ../packages/firebase_database/firebase_database
+  firebase_database_platform_interface:
+    path: ../packages/firebase_database/firebase_database_platform_interface
+  firebase_database_web:
+    path: ../packages/firebase_database/firebase_database_web
+  firebase_dynamic_links:
+    path: ../packages/firebase_dynamic_links/firebase_dynamic_links
+  firebase_dynamic_links_platform_interface:
+    path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
+  firebase_in_app_messaging:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  firebase_in_app_messaging_platform_interface:
+    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  firebase_messaging:
+    path: ../packages/firebase_messaging/firebase_messaging
+  firebase_messaging_platform_interface:
+    path: ../packages/firebase_messaging/firebase_messaging_platform_interface
+  firebase_messaging_web:
+    path: ../packages/firebase_messaging/firebase_messaging_web
+  firebase_ml_model_downloader:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader
+  firebase_ml_model_downloader_platform_interface:
+    path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
+
+  # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
+  # firebase_performance:
+  #   path: ../packages/firebase_performance/firebase_performance
+  # firebase_performance_platform_interface:
+  #   path: ../packages/firebase_performance/firebase_performance_platform_interface
+  # firebase_performance_web:
+  #   path: ../packages/firebase_performance/firebase_performance_web
+  firebase_remote_config:
+    path: ../packages/firebase_remote_config/firebase_remote_config
+  firebase_remote_config_platform_interface:
+    path: ../packages/firebase_remote_config/firebase_remote_config_platform_interface
+  firebase_remote_config_web:
+    path: ../packages/firebase_remote_config/firebase_remote_config_web
+  firebase_storage:
+    path: ../packages/firebase_storage/firebase_storage
+  firebase_storage_platform_interface:
+    path: ../packages/firebase_storage/firebase_storage_platform_interface
+  firebase_storage_web:
+    path: ../packages/firebase_storage/firebase_storage_web
+
+dev_dependencies:
+  drive: ^1.0.0-1.0.nullsafety.5
+  flutter_driver:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

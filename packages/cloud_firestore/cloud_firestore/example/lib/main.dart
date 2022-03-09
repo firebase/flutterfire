@@ -36,7 +36,7 @@ enum MovieQuery {
   year,
   likesAsc,
   likesDesc,
-  score,
+  rated,
   sciFi,
   fantasy,
 }
@@ -58,8 +58,8 @@ extension on Query<Movie> {
       case MovieQuery.year:
         return orderBy('year', descending: true);
 
-      case MovieQuery.score:
-        return orderBy('score', descending: true);
+      case MovieQuery.rated:
+        return orderBy('rated', descending: true);
     }
   }
 }
@@ -125,8 +125,8 @@ class _FilmListState extends State<FilmList> {
                   child: Text('Sort by Year'),
                 ),
                 const PopupMenuItem(
-                  value: MovieQuery.score,
-                  child: Text('Sort by Score'),
+                  value: MovieQuery.rated,
+                  child: Text('Sort by Rated'),
                 ),
                 const PopupMenuItem(
                   value: MovieQuery.likesAsc,

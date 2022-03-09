@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:email_validator/email_validator.dart' as e;
 
 abstract class Validator {
   final String errorText;
@@ -42,15 +43,13 @@ class NotEmpty extends Validator {
   }
 }
 
-final _emailRegexp = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
-
 class EmailValidator extends Validator {
   EmailValidator(String errorText) : super(errorText, []);
 
   @override
   String? validate(String? value) {
     if (value == null) return errorText;
-    return _emailRegexp.hasMatch(value) ? null : errorText;
+    return e.EmailValidator.validate(value) ? null : errorText;
   }
 }
 

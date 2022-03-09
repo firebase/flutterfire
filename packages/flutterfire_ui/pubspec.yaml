@@ -1,28 +1,29 @@
 name: flutterfire_ui
 description: UI library built on top of firebase services
-version: 0.2.0+2
-repository: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/%40invertase/ui/packages
+version: 0.3.5+1
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
 
 false_secrets:
- - example/**
+  - example/**
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.16.0 <3.0.0'
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^3.1.4
+  cloud_firestore: ^3.1.10
   collection: ^1.15.0
   crypto: ^3.0.1
-  desktop_webview_auth: ^0.0.2
-  firebase_auth: ^3.3.3
+  desktop_webview_auth: ^0.0.5
+  email_validator: ^2.0.1
+  firebase_auth: ^3.3.9
   firebase_core: ^1.10.2
-  firebase_database: ^9.0.3
-  firebase_dynamic_links: ^4.0.2
+  firebase_database: ^9.0.8
+  firebase_dynamic_links: ^4.0.8
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^3.5.7
+  flutter_facebook_auth: ^4.0.1
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^1.0.0
@@ -45,7 +46,6 @@ flutter:
   assets:
     - assets/icons/
     - assets/countries.json
-
 # To add assets to your package, add an assets section, like this:
 # assets:
 #   - images/a_dot_burr.jpeg

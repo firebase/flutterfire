@@ -43,7 +43,7 @@ class MethodChannelFirebaseInAppMessaging
         'eventName': eventName,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -56,7 +56,7 @@ class MethodChannelFirebaseInAppMessaging
         'suppress': suppress,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -70,7 +70,7 @@ class MethodChannelFirebaseInAppMessaging
             'enabled': enabled,
           });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }
