@@ -77,7 +77,7 @@ public class FlutterFirebaseAuthPluginException extends Exception {
 
   static FlutterFirebaseAuthPluginException alreadyLinkedProvider() {
     return new FlutterFirebaseAuthPluginException(
-      "PROVIDER_ALREADY_LINKED", "User has already been linked to the given provider.");
+        "PROVIDER_ALREADY_LINKED", "User has already been linked to the given provider.");
   }
 
   public String getCode() {

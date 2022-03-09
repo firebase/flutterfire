@@ -813,7 +813,8 @@ public class FlutterFirebaseAuthPlugin
           } catch (Exception exception) {
             String message = exception.getMessage();
 
-            if(message != null && message.contains("User has already been linked to the given provider.")) {
+            if (message != null
+                && message.contains("User has already been linked to the given provider.")) {
               throw FlutterFirebaseAuthPluginException.alreadyLinkedProvider();
             }
 
