@@ -11,7 +11,8 @@ class PendingDynamicLinkData {
       {required this.link,
       this.android,
       this.ios,
-      this.utmParameters = const {}},
+      this.utmParameters = const {},
+      }
   );
 
   /// Provides Android specific data from received dynamic link.
