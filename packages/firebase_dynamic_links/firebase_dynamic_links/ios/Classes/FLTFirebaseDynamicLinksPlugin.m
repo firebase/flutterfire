@@ -24,6 +24,7 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
     if (dynamicLink.minimumAppVersion) {
       iosData[@"minimumVersion"] = dynamicLink.minimumAppVersion;
     }
+    dictionary[@"utmParameters"] = dynamicLink.utmParametersDictionary;
     dictionary[@"ios"] = iosData;
     return dictionary;
   } else {
