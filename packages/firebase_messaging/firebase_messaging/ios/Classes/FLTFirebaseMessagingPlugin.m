@@ -194,6 +194,14 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
+  NSDictionary *remoteNotification =
+      notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+  if (remoteNotification != nil) {
+    // If remoteNotification exists, it is the notification that opened the app.
+    _initialNotification =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+  }
+
 #if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
   // registrar Flutter implementation.
@@ -333,9 +341,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-    @synchronized(self) {
-      _initialNotification = notificationDict;
-    }
   }
 
   // Forward on to any other delegates.
