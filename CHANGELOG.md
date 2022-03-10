@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`firebase_messaging` - `v11.2.10`](#firebase_messaging---v11210)
+
+---
+
+#### `firebase_messaging` - `v11.2.10`
+
+ - **FIX**: Update notification key to `NSApplicationLaunchUserNotificationKey` for macOS. (#8251). ([46b54ccd](https://github.com/FirebaseExtended/flutterfire/commit/46b54ccd4aee61654e36396b86ed373939569d00))
+
+
+## 2022-03-10
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`cloud_functions` - `v3.2.10`](#cloud_functions---v3210)
  - [`firebase_auth` - `v3.3.10`](#firebase_auth---v3310)
  - [`firebase_dynamic_links` - `v4.1.0`](#firebase_dynamic_links---v410)

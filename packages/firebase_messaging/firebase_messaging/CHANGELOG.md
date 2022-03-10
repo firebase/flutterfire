@@ -1,3 +1,7 @@
+## 11.2.10
+
+ - **FIX**: Update notification key to `NSApplicationLaunchUserNotificationKey` for macOS. (#8251). ([46b54ccd](https://github.com/FirebaseExtended/flutterfire/commit/46b54ccd4aee61654e36396b86ed373939569d00))
+
 ## 11.2.9
 
  - **FIX**: `getInitialMessage` returns notification once & only if pressed for `iOS`. (#7634). ([85739b4c](https://github.com/FirebaseExtended/flutterfire/commit/85739b4cc2f75c6f7017de0e69160fa07477eb1e))
