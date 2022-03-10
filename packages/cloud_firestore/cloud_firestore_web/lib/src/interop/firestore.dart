@@ -6,6 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js' as js;
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';
@@ -357,24 +358,31 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   Query endAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(
-          _wrapPaginatingFunctionCall('endAt', snapshot, fieldValues));
+      Query.fromJsObject(_wrapPaginatingFunctionCall(
+          firestore_interop.endAt, snapshot, fieldValues));
 
   Query endBefore({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(
-          _wrapPaginatingFunctionCall('endBefore', snapshot, fieldValues));
+      Query.fromJsObject(_wrapPaginatingFunctionCall(
+          firestore_interop.endBefore, snapshot, fieldValues));
 
   Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) {
-    var jsObjectGet =
-        (options != null) ? jsObject.get(options) : jsObject.get();
-    return handleThenable<firestore_interop.QuerySnapshotJsImpl>(jsObjectGet)
-        .then(QuerySnapshot.getInstance);
+    if (options == null || options.source == 'default') {
+      return handleThenable(firestore_interop.getDocs(jsObject))
+          .then(QuerySnapshot.getInstance);
+    } else if (options.source == 'server') {
+      return handleThenable(firestore_interop.getDocsFromServer(jsObject))
+          .then(QuerySnapshot.getInstance);
+    } else {
+      return handleThenable(firestore_interop.getDocsFromCache(jsObject))
+          .then(QuerySnapshot.getInstance);
+    }
   }
 
-  Query limit(num limit) => Query.fromJsObject(jsObject.limit(limit));
+  Query limit(num limit) => Query.fromJsObject(
+      firestore_interop.query(jsObject, firestore_interop.limit(limit)));
 
-  Query limitToLast(num limit) =>
-      Query.fromJsObject(jsObject.limitToLast(limit));
+  Query limitToLast(num limit) => Query.fromJsObject(
+      firestore_interop.query(jsObject, firestore_interop.limitToLast(limit)));
 
   late final Stream<QuerySnapshot> onSnapshot =
       _createSnapshotStream(false).stream;
@@ -398,8 +406,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
         includeMetadataChanges: includeMetadataChanges);
 
     void startListen() {
-      onSnapshotUnsubscribe =
-          jsObject.onSnapshot(options, nextWrapper, errorWrapper);
+      onSnapshotUnsubscribe = firestore_interop.onSnapshot(
+          jsObject, options, nextWrapper, errorWrapper);
     }
 
     void stopListen() {
@@ -416,29 +424,31 @@ class Query<T extends firestore_interop.QueryJsImpl>
   Query orderBy(/*String|FieldPath*/ dynamic fieldPath,
       [String? /*'desc'|'asc'*/ directionStr]) {
     var jsObjectOrderBy = (directionStr != null)
-        ? jsObject.orderBy(fieldPath, directionStr)
-        : jsObject.orderBy(fieldPath);
-    return Query.fromJsObject(jsObjectOrderBy);
+        ? firestore_interop.orderBy(fieldPath, directionStr)
+        : firestore_interop.orderBy(fieldPath);
+
+    return Query.fromJsObject(
+        firestore_interop.query(jsObject, jsObjectOrderBy));
   }
 
   Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(
-          _wrapPaginatingFunctionCall('startAfter', snapshot, fieldValues));
+      Query.fromJsObject(_wrapPaginatingFunctionCall(
+          firestore_interop.startAfter, snapshot, fieldValues));
 
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(
-          _wrapPaginatingFunctionCall('startAt', snapshot, fieldValues));
+      Query.fromJsObject(_wrapPaginatingFunctionCall(
+          firestore_interop.startAt, snapshot, fieldValues));
 
-  Query where(/*String|FieldPath*/ dynamic fieldPath,
-          String /*'<'|'<='|'=='|'>='|'>'*/ opStr, dynamic value) =>
-      Query.fromJsObject(jsObject.where(fieldPath, opStr, jsify(value)));
+  Query where(dynamic fieldPath, String opStr, dynamic value) =>
+      Query.fromJsObject(firestore_interop.query(
+          jsObject, firestore_interop.where(fieldPath, opStr, jsify(value))));
 
   /// Calls js paginating [method] with [DocumentSnapshot] or List of
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
   S? _wrapPaginatingFunctionCall<S>(
-      String method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
+      Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
@@ -447,7 +457,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
     var args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
-    return callMethod(jsObject, method, args);
+    return js.context.callMethod(method, args);
   }
 }
 
@@ -650,8 +660,7 @@ abstract class _Updatable {
 
 class _FieldValueDelete implements FieldValue {
   @override
-  firestore_interop.FieldValue _jsify() =>
-      firestore_interop.FieldValue.delete();
+  firestore_interop.FieldValue _jsify() => firestore_interop.deleteField();
 
   @override
   String toString() => 'FieldValue.delete()';

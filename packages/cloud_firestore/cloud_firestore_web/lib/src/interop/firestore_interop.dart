@@ -24,13 +24,10 @@ external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
 );
 
 @JS()
-// TODO arrayRemove
+external FieldValue arrayRemove(dynamic elements);
 
 @JS()
-// TODO arrayRemove
-
-@JS()
-// TODO arrayUnion
+external FieldValue arrayUnion(dynamic elements);
 
 @JS()
 external PromiseJsImpl<void> clearIndexedDbPersistence(
@@ -62,7 +59,7 @@ external PromiseJsImpl<void> deleteDoc(
 );
 
 @JS()
-// TODO deleteField
+external FieldValue deleteField();
 
 @JS()
 external PromiseJsImpl<void> disableNetwork(FirestoreJsImpl firestore);
@@ -91,11 +88,14 @@ external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
 
 @JS()
-// TODO endAt
+external QueryConstraintJsImpl endBefore(
+  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
+);
 
 @JS()
-// TODO endBefore
-
+external QueryConstraintJsImpl endAt(
+  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
+);
 @JS()
 external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
@@ -112,22 +112,28 @@ external PromiseJsImpl<DocumentSnapshotJsImpl> getDocFromServer(
 );
 
 @JS()
-// TODO getDocs
+external PromiseJsImpl<QuerySnapshotJsImpl> getDocs(
+  QueryJsImpl query,
+);
 
 @JS()
-// TODO getDocsFromCache
+external PromiseJsImpl<QuerySnapshotJsImpl> getDocsFromCache(
+  QueryJsImpl query,
+);
 
 @JS()
-// TODO getDocsFromServer
+external PromiseJsImpl<QuerySnapshotJsImpl> getDocsFromServer(
+  QueryJsImpl query,
+);
 
 @JS()
 external FieldValue increment(num n);
 
 @JS()
-// TODO limit
+external QueryConstraintJsImpl limit(num limit);
 
 @JS()
-// TODO limitToLast
+external QueryConstraintJsImpl limitToLast(num limit);
 
 @JS()
 external LoadBundleTaskJsImpl loadBundle(
@@ -154,10 +160,16 @@ external void Function() onSnapshotsInSync(
     FirestoreJsImpl firestore, dynamic observer);
 
 @JS()
-// TODO orderBy
+external QueryConstraintJsImpl orderBy(
+  dynamic fieldPath, [
+  String? direction,
+]);
 
 @JS()
-// TODO query
+external QueryJsImpl query(
+  QueryJsImpl query,
+  QueryConstraintJsImpl queryConstraint,
+);
 
 @JS()
 external bool queryEqual(QueryJsImpl left, QueryJsImpl right);
@@ -191,10 +203,14 @@ external bool snapshotEqual(
 );
 
 @JS()
-// TODO startAfter
+external QueryConstraintJsImpl startAfter(
+  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
+);
 
 @JS()
-// TODO startAt
+external QueryConstraintJsImpl startAt(
+  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
+);
 
 @JS()
 external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
@@ -209,7 +225,11 @@ external PromiseJsImpl<void> updateDoc(
 external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
 
 @JS()
-// TODO where
+external QueryConstraintJsImpl where(
+  dynamic fieldPath,
+  String opStr,
+  dynamic value,
+);
 
 @JS()
 external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
@@ -346,6 +366,11 @@ abstract class DocumentReferenceJsImpl {
 //   ]);
 }
 
+@JS('QueryConstraint')
+abstract class QueryConstraintJsImpl {
+  external String get type;
+}
+
 @JS('LoadBundleTask')
 abstract class LoadBundleTaskJsImpl {
   external void Function() onProgress(
@@ -391,12 +416,6 @@ abstract class DocumentSnapshotJsImpl {
 @JS()
 @anonymous
 abstract class FieldValue {
-  /// Returns a sentinel for use with [update()] to mark a field for deletion.
-  external static FieldValue delete();
-
-  /// Returns a sentinel used with [set()] or [update()] to include a
-  /// server-generated timestamp in the written data.
-
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
   external bool isEqual(Object other);
 }
@@ -409,39 +428,6 @@ external dynamic get fieldValues;
 abstract class QueryJsImpl {
   external FirestoreJsImpl get firestore;
   external String get type;
-
-  // external QueryJsImpl endAt(
-  //     /*DocumentSnapshot|List<dynamic>*/
-  //     dynamic snapshotOrFieldValues);
-
-  // external QueryJsImpl endBefore(
-  //     /*DocumentSnapshot|List<dynamic>*/
-  //     dynamic snapshotOrFieldValues);
-
-  // external PromiseJsImpl<QuerySnapshotJsImpl> get([GetOptions? options]);
-
-  // external QueryJsImpl limit(num? limit);
-
-  // external QueryJsImpl limitToLast(num? limit);
-
-  // external void Function() onSnapshot(
-  //     SnapshotListenOptions options,
-  //     void Function(QuerySnapshotJsImpl) onNext,
-  //     Func1<FirebaseError, dynamic> onError);
-
-  // external QueryJsImpl orderBy(/*String|FieldPath*/ dynamic fieldPath,
-  //     [String? /*'desc'|'asc'*/ directionStr]);
-
-  // external QueryJsImpl startAfter(
-  //     /*DocumentSnapshot|List<dynamic>*/
-  //     dynamic snapshotOrFieldValues);
-
-  // external QueryJsImpl startAt(
-  //     /*DocumentSnapshot|List<dynamic>*/
-  //     dynamic snapshotOrFieldValues);
-
-  // external QueryJsImpl where(/*String|FieldPath*/ dynamic fieldPath,
-  //     String /*'<'|'<='|'=='|'>='|'>'*/ opStr, dynamic value);
 }
 
 @JS('QuerySnapshot')
@@ -450,6 +436,7 @@ abstract class QuerySnapshotJsImpl {
   external bool get empty;
   external SnapshotMetadata get metadata;
   external num get size;
+  external QueryJsImpl get query;
 
   external List<DocumentChangeJsImpl> docChanges(
       [SnapshotListenOptions? options]);
@@ -458,20 +445,6 @@ abstract class QuerySnapshotJsImpl {
     void Function(DocumentSnapshotJsImpl) callback, [
     dynamic thisArg,
   ]);
-
-  // external set docs(List<DocumentSnapshotJsImpl> v);
-
-  // external set empty(bool v);
-
-  // external set metadata(SnapshotMetadata v);
-
-  // external QueryJsImpl get query;
-
-  // external set query(QueryJsImpl v);
-
-  // external set size(num v);
-
-  // external bool isEqual(QuerySnapshotJsImpl other);
 }
 
 @JS('Transaction')
