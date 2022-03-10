@@ -105,7 +105,7 @@ class EncodeUtility {
               'Firestore web FieldPath only supports 10 levels deep field paths');
       }
     } else if (value == FieldPath.documentId) {
-      return firestore_interop.FieldPath.documentId();
+      return firestore_interop.documentId();
     } else if (value is Timestamp) {
       return value.toDate();
     } else if (value is GeoPoint) {

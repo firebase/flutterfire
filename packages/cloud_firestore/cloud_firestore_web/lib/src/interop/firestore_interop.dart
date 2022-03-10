@@ -5,7 +5,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-@JS('firebase.firestore')
+@JS('firebase_firestore')
 library firebase_interop.firestore;
 
 import './firestore.dart';
@@ -14,69 +14,219 @@ import 'dart:typed_data' show Uint8List;
 
 import 'package:js/js.dart';
 
-/// Sets the verbosity of Cloud Firestore logs.
-///
-/// Parameter [logLevel] is the verbosity you set for activity and error
-/// logging.
-///
-/// Can be any of the following values:
-/// * 'debug' for the most verbose logging level, primarily for debugging.
-/// * 'error' to log errors only.
-/// * 'silent' to turn off logging.
+@JS()
+external FirestoreJsImpl getFirestore([AppJsImpl? app]);
+
+@JS()
+external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
+  CollectionReferenceJsImpl reference,
+  dynamic data,
+);
+
+@JS()
+// TODO arrayRemove
+
+@JS()
+// TODO arrayRemove
+
+@JS()
+// TODO arrayUnion
+
+@JS()
+external PromiseJsImpl<void> clearIndexedDbPersistence(
+  FirestoreJsImpl firestore,
+);
+
+@JS()
+external CollectionReferenceJsImpl collection(
+  FirestoreJsImpl firestore,
+  String collectionPath,
+);
+
+@JS()
+external QueryJsImpl collectionGroup(
+  FirestoreJsImpl firestore,
+  String collectionId,
+);
+
+@JS()
+external void connectFirestoreEmulator(
+  FirestoreJsImpl firestore,
+  String host,
+  int port,
+);
+
+@JS()
+external PromiseJsImpl<void> deleteDoc(
+  DocumentReferenceJsImpl reference,
+);
+
+@JS()
+// TODO deleteField
+
+@JS()
+external PromiseJsImpl<void> disableNetwork(FirestoreJsImpl firestore);
+
+@JS()
+external DocumentReferenceJsImpl doc(
+  dynamic reference, // Firestore | CollectionReference
+  [
+  String documentPath,
+]);
+
+@JS()
+external FieldPath documentId();
+
+@JS()
+external PromiseJsImpl<void> enableIndexedDbPersistence(
+  FirestoreJsImpl firestore, [
+  PersistenceSettings? settings,
+]);
+
+@JS()
+external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
+    FirestoreJsImpl firestore);
+
+@JS()
+external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
+
+@JS()
+// TODO endAt
+
+@JS()
+// TODO endBefore
+
+@JS()
+external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
+  DocumentReferenceJsImpl reference,
+);
+
+@JS()
+external PromiseJsImpl<DocumentSnapshotJsImpl> getDocFromCache(
+  DocumentReferenceJsImpl reference,
+);
+
+@JS()
+external PromiseJsImpl<DocumentSnapshotJsImpl> getDocFromServer(
+  DocumentReferenceJsImpl reference,
+);
+
+@JS()
+// TODO getDocs
+
+@JS()
+// TODO getDocsFromCache
+
+@JS()
+// TODO getDocsFromServer
+
+@JS()
+external FieldValue increment(num n);
+
+@JS()
+// TODO limit
+
+@JS()
+// TODO limitToLast
+
+@JS()
+external LoadBundleTaskJsImpl loadBundle(
+  FirestoreJsImpl firestore,
+  Uint8List bundle,
+);
+
+@JS()
+external PromiseJsImpl<QueryJsImpl?> namedQuery(
+  FirestoreJsImpl firestore,
+  String name,
+);
+
+@JS()
+external void Function() onSnapshot(
+  dynamic reference, // DocumentReference | Query
+  dynamic optionsOrObserverOrOnNext,
+  dynamic observerOrOnNextOrOnError, [
+  Func1<FirebaseError, dynamic>? onError,
+]);
+
+@JS()
+external void Function() onSnapshotsInSync(
+    FirestoreJsImpl firestore, dynamic observer);
+
+@JS()
+// TODO orderBy
+
+@JS()
+// TODO query
+
+@JS()
+external bool queryEqual(QueryJsImpl left, QueryJsImpl right);
+
+@JS()
+// TODO refEqual
+
+@JS()
+external PromiseJsImpl<void> runTransaction(
+  FirestoreJsImpl firestore,
+  Func1<TransactionJsImpl, PromiseJsImpl> updateFunction,
+);
+
+@JS()
+external FieldValue serverTimestamp();
+
+@JS()
+external PromiseJsImpl<void> setDoc(
+  DocumentReferenceJsImpl reference,
+  dynamic data, [
+  SetOptions? options,
+]);
+
 @JS()
 external void setLogLevel(String logLevel);
+
+@JS()
+external bool snapshotEqual(
+  dynamic /* DocumentSnapshot | QuerySnapshot */ left,
+  dynamic /* DocumentSnapshot | QuerySnapshot */ right,
+);
+
+@JS()
+// TODO startAfter
+
+@JS()
+// TODO startAt
+
+@JS()
+external PromiseJsImpl<void> terminate(FirestoreJsImpl firestore);
+
+@JS()
+external PromiseJsImpl<void> updateDoc(
+  DocumentReferenceJsImpl reference,
+  dynamic data,
+);
+
+@JS()
+external PromiseJsImpl<void> waitForPendingWrites(FirestoreJsImpl firestore);
+
+@JS()
+// TODO where
+
+@JS()
+external WriteBatchJsImpl writeBatch(FirestoreJsImpl firestore);
 
 @JS('Firestore')
 abstract class FirestoreJsImpl {
   external AppJsImpl get app;
+  external String get type;
 
-  external set app(AppJsImpl a);
+// TODO how?
+//   external void settings(Settings settings);
 
-  external WriteBatchJsImpl batch();
-
-  external CollectionReferenceJsImpl collection(String collectionPath);
-
-  external QueryJsImpl collectionGroup(String collectionId);
-
-  external DocumentReferenceJsImpl doc(String documentPath);
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> enablePersistence(
-      [PersistenceSettings? settings]);
-
-  external void Function() onSnapshotsInSync(dynamic observer);
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> clearPersistence();
-
-  external PromiseJsImpl<void> runTransaction(
-      Func1<TransactionJsImpl, PromiseJsImpl> updateFunction);
-
-  external void settings(Settings settings);
-
-  external void useEmulator(String host, int port);
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> disableNetwork();
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> enableNetwork();
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> terminate();
-
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> waitForPendingWrites();
-
-  external LoadBundleTaskJsImpl loadBundle(Uint8List bundle);
-
-  external PromiseJsImpl<QueryJsImpl?> namedQuery(String name);
 }
 
 @JS('WriteBatch')
 abstract class WriteBatchJsImpl {
-// ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> commit();
+  external PromiseJsImpl<void> commit();
 
   external WriteBatchJsImpl delete(DocumentReferenceJsImpl documentRef);
 
@@ -91,45 +241,19 @@ abstract class WriteBatchJsImpl {
 @JS('CollectionReference')
 class CollectionReferenceJsImpl extends QueryJsImpl {
   external String get id;
-
-  external set id(String v);
-
   external DocumentReferenceJsImpl get parent;
-
-  external set parent(DocumentReferenceJsImpl d);
-
   external String get path;
-
-  external set path(String v);
-
-  external factory CollectionReferenceJsImpl();
-
-  external PromiseJsImpl<DocumentReferenceJsImpl> add(dynamic data);
-
-  external DocumentReferenceJsImpl doc([String? documentPath]);
-
-  external bool isEqual(CollectionReferenceJsImpl other);
 }
 
 @anonymous
 @JS()
 class PersistenceSettings {
   external bool get synchronizeTabs;
-
   external factory PersistenceSettings({bool? synchronizeTabs});
 }
 
-/// A [FieldPath] refers to a field in a document.
-/// The path may consist of a single field name (referring to a top-level field
-/// in the document), or a list of field names (referring to a nested field in
-/// the document).
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.FieldPath>.
 @JS()
 class FieldPath {
-  /// Creates a [FieldPath] from the provided field names. If more than one
-  /// field name is provided, the path will point to a nested field in a
-  /// document.
   external factory FieldPath(String fieldName0,
       [String? fieldName1,
       String? fieldName2,
@@ -141,28 +265,14 @@ class FieldPath {
       String? fieldName8,
       String? fieldName9]);
 
-  /// Returns a special sentinel FieldPath to refer to the ID of a document.
-  /// It can be used in queries to sort or filter by the document ID.
-  external static FieldPath documentId();
-
-  /// Returns `true` if this [FieldPath] is equal to the [other].
   external bool isEqual(Object other);
 }
 
 @JS('GeoPoint')
 external GeoPointJsImpl get GeoPointConstructor;
 
-/// An immutable object representing a geo point in Cloud Firestore.
-/// The geo point is represented as latitude/longitude pair.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.firestore.GeoPoint>.
 @JS('GeoPoint')
 class GeoPointJsImpl {
-  /// Creates a new immutable [GeoPoint] object with the provided [latitude] and
-  /// [longitude] values.
-  ///
-  /// [latitude] values are in the range of -90 to 90.
-  /// [longitude] values are in the range of -180 to 180.
   external factory GeoPointJsImpl(num latitude, num longitude);
 
   /// The latitude of this GeoPoint instance.
@@ -219,39 +329,21 @@ external DocumentReferenceJsImpl get DocumentReferenceJsConstructor;
 @JS('DocumentReference')
 abstract class DocumentReferenceJsImpl {
   external FirestoreJsImpl get firestore;
-
-  external set firestore(FirestoreJsImpl f);
-
   external String get id;
-
-  external set id(String s);
-
   external CollectionReferenceJsImpl get parent;
-
-  external set parent(CollectionReferenceJsImpl c);
-
   external String get path;
+//   external CollectionReferenceJsImpl collection(String collectionPath);
 
-  external set path(String v);
+// //ignore: prefer_void_to_null
+//   external PromiseJsImpl<Null> delete();
 
-  external CollectionReferenceJsImpl collection(String collectionPath);
+//   external PromiseJsImpl<DocumentSnapshotJsImpl> get([GetOptions? options]);
 
-//ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> delete();
-
-  external PromiseJsImpl<DocumentSnapshotJsImpl> get([GetOptions? options]);
-
-  external void Function() onSnapshot(
-    dynamic optionsOrObserverOrOnNext,
-    dynamic observerOrOnNextOrOnError, [
-    Func1<FirebaseError, dynamic>? onError,
-  ]);
-
-//ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> set(dynamic data, [SetOptions? options]);
-
-//ignore: prefer_void_to_null
-  external PromiseJsImpl<Null> update(dynamic dataOrFieldsAndValues);
+//   external void Function() onSnapshot(
+//     dynamic optionsOrObserverOrOnNext,
+//     dynamic observerOrOnNextOrOnError, [
+//     Func1<FirebaseError, dynamic>? onError,
+//   ]);
 }
 
 @JS('LoadBundleTask')
@@ -282,29 +374,14 @@ abstract class LoadBundleTaskProgressJsImpl {
 
 @JS('DocumentSnapshot')
 abstract class DocumentSnapshotJsImpl {
-  external bool get exists;
-
-  external set exists(bool v);
-
   external String get id;
-
-  external set id(String v);
-
   external SnapshotMetadata get metadata;
-
-  external set metadata(SnapshotMetadata v);
-
   external DocumentReferenceJsImpl get ref;
 
-  external set ref(DocumentReferenceJsImpl v);
-
   external dynamic data();
-
+  external bool exists();
   external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
-
-  /// Returns [true] if this [DocumentSnapshotJsImpl] is equal to the provided
-  /// one.
-  external bool isEqual(DocumentSnapshotJsImpl other);
+  // external bool isEqual(DocumentSnapshotJsImpl other);
 }
 
 /// Sentinel values that can be used when writing document fields with
@@ -319,9 +396,6 @@ abstract class FieldValue {
 
   /// Returns a sentinel used with [set()] or [update()] to include a
   /// server-generated timestamp in the written data.
-  external static FieldValue serverTimestamp();
-
-  external static FieldValue increment(num n);
 
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
   external bool isEqual(Object other);
@@ -334,76 +408,70 @@ external dynamic get fieldValues;
 @JS('Query')
 abstract class QueryJsImpl {
   external FirestoreJsImpl get firestore;
+  external String get type;
 
-  external set firestore(FirestoreJsImpl f);
+  // external QueryJsImpl endAt(
+  //     /*DocumentSnapshot|List<dynamic>*/
+  //     dynamic snapshotOrFieldValues);
 
-  external QueryJsImpl endAt(
-      /*DocumentSnapshot|List<dynamic>*/
-      dynamic snapshotOrFieldValues);
+  // external QueryJsImpl endBefore(
+  //     /*DocumentSnapshot|List<dynamic>*/
+  //     dynamic snapshotOrFieldValues);
 
-  external QueryJsImpl endBefore(
-      /*DocumentSnapshot|List<dynamic>*/
-      dynamic snapshotOrFieldValues);
+  // external PromiseJsImpl<QuerySnapshotJsImpl> get([GetOptions? options]);
 
-  external PromiseJsImpl<QuerySnapshotJsImpl> get([GetOptions? options]);
+  // external QueryJsImpl limit(num? limit);
 
-  external QueryJsImpl limit(num? limit);
+  // external QueryJsImpl limitToLast(num? limit);
 
-  external QueryJsImpl limitToLast(num? limit);
+  // external void Function() onSnapshot(
+  //     SnapshotListenOptions options,
+  //     void Function(QuerySnapshotJsImpl) onNext,
+  //     Func1<FirebaseError, dynamic> onError);
 
-  external void Function() onSnapshot(
-      SnapshotListenOptions options,
-      void Function(QuerySnapshotJsImpl) onNext,
-      Func1<FirebaseError, dynamic> onError);
+  // external QueryJsImpl orderBy(/*String|FieldPath*/ dynamic fieldPath,
+  //     [String? /*'desc'|'asc'*/ directionStr]);
 
-  external QueryJsImpl orderBy(/*String|FieldPath*/ dynamic fieldPath,
-      [String? /*'desc'|'asc'*/ directionStr]);
+  // external QueryJsImpl startAfter(
+  //     /*DocumentSnapshot|List<dynamic>*/
+  //     dynamic snapshotOrFieldValues);
 
-  external QueryJsImpl startAfter(
-      /*DocumentSnapshot|List<dynamic>*/
-      dynamic snapshotOrFieldValues);
+  // external QueryJsImpl startAt(
+  //     /*DocumentSnapshot|List<dynamic>*/
+  //     dynamic snapshotOrFieldValues);
 
-  external QueryJsImpl startAt(
-      /*DocumentSnapshot|List<dynamic>*/
-      dynamic snapshotOrFieldValues);
-
-  external QueryJsImpl where(/*String|FieldPath*/ dynamic fieldPath,
-      String /*'<'|'<='|'=='|'>='|'>'*/ opStr, dynamic value);
+  // external QueryJsImpl where(/*String|FieldPath*/ dynamic fieldPath,
+  //     String /*'<'|'<='|'=='|'>='|'>'*/ opStr, dynamic value);
 }
 
 @JS('QuerySnapshot')
 abstract class QuerySnapshotJsImpl {
-  //ignore: todo
-  // TODO: [SnapshotListenOptions] not currently used.
-  external List<DocumentChangeJsImpl> docChanges(
-      [SnapshotListenOptions? options]);
-
   external List<DocumentSnapshotJsImpl> get docs;
-
-  external set docs(List<DocumentSnapshotJsImpl> v);
-
   external bool get empty;
-
-  external set empty(bool v);
-
   external SnapshotMetadata get metadata;
-
-  external set metadata(SnapshotMetadata v);
-
-  external QueryJsImpl get query;
-
-  external set query(QueryJsImpl v);
-
   external num get size;
 
-  external set size(num v);
+  external List<DocumentChangeJsImpl> docChanges(
+      [SnapshotListenOptions? options]);
 
   external void forEach(
     void Function(DocumentSnapshotJsImpl) callback, [
     dynamic thisArg,
   ]);
 
-  external bool isEqual(QuerySnapshotJsImpl other);
+  // external set docs(List<DocumentSnapshotJsImpl> v);
+
+  // external set empty(bool v);
+
+  // external set metadata(SnapshotMetadata v);
+
+  // external QueryJsImpl get query;
+
+  // external set query(QueryJsImpl v);
+
+  // external set size(num v);
+
+  // external bool isEqual(QuerySnapshotJsImpl other);
 }
 
 @JS('Transaction')
