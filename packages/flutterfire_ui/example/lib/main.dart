@@ -10,9 +10,35 @@ import 'init.dart'
 import 'config.dart';
 import 'decorations.dart';
 
+final emailLinkProviderConfig = EmailLinkProviderConfiguration(
+  actionCodeSettings: ActionCodeSettings(
+    url: 'https://reactnativefirebase.page.link',
+    handleCodeInApp: true,
+    androidMinimumVersion: '12',
+    androidPackageName:
+        'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
+    iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
+  ),
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
+
+  FlutterFireUIAuth.configureProviders([
+    const EmailProviderConfiguration(),
+    emailLinkProviderConfig,
+    const PhoneProviderConfiguration(),
+    const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+    const AppleProviderConfiguration(),
+    const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+    const TwitterProviderConfiguration(
+      apiKey: TWITTER_API_KEY,
+      apiSecretKey: TWITTER_API_SECRET_KEY,
+      redirectUri: TWITTER_REDIRECT_URI,
+    ),
+  ]);
+
   runApp(FirebaseAuthUIExample());
 }
 
@@ -25,31 +51,6 @@ class LabelOverrides extends DefaultLocalizations {
   @override
   String get emailInputLabel => 'Enter your email';
 }
-
-final emailLinkProviderConfig = EmailLinkProviderConfiguration(
-  actionCodeSettings: ActionCodeSettings(
-    url: 'https://reactnativefirebase.page.link',
-    handleCodeInApp: true,
-    androidMinimumVersion: '12',
-    androidPackageName:
-        'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
-    iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
-  ),
-);
-
-final providerConfigs = [
-  const EmailProviderConfiguration(),
-  emailLinkProviderConfig,
-  const PhoneProviderConfiguration(),
-  const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-  const AppleProviderConfiguration(),
-  const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-  const TwitterProviderConfiguration(
-    apiKey: TWITTER_API_KEY,
-    apiSecretKey: TWITTER_API_SECRET_KEY,
-    redirectUri: TWITTER_REDIRECT_URI,
-  ),
-];
 
 class FirebaseAuthUIExample extends StatelessWidget {
   @override
@@ -111,7 +112,6 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 ),
               );
             },
-            providerConfigs: providerConfigs,
           );
         },
         '/phone': (context) {
@@ -150,7 +150,6 @@ class FirebaseAuthUIExample extends StatelessWidget {
         },
         '/profile': (context) {
           return ProfileScreen(
-            providerConfigs: providerConfigs,
             actions: [
               SignedOutAction((context) {
                 Navigator.pushReplacementNamed(context, '/');

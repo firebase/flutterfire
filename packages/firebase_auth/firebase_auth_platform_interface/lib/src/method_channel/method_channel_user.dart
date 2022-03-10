@@ -32,8 +32,8 @@ class MethodChannelUser extends UserPlatform {
         'User#delete',
         _withChannelDefaults({}),
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -51,8 +51,8 @@ class MethodChannelUser extends UserPlatform {
               )))!;
 
       return data['token'];
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -69,8 +69,8 @@ class MethodChannelUser extends UserPlatform {
       ))!;
 
       return IdTokenResult(data);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -93,8 +93,8 @@ class MethodChannelUser extends UserPlatform {
 
       auth.currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -117,8 +117,8 @@ class MethodChannelUser extends UserPlatform {
 
       auth.currentUser = userCredential.user;
       return userCredential;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -132,8 +132,8 @@ class MethodChannelUser extends UserPlatform {
       MethodChannelUser user = MethodChannelUser(auth, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -146,8 +146,8 @@ class MethodChannelUser extends UserPlatform {
           'User#sendEmailVerification',
           _withChannelDefaults(
               {'actionCodeSettings': actionCodeSettings?.asMap()}));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -171,8 +171,8 @@ class MethodChannelUser extends UserPlatform {
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
       return user!;
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -191,8 +191,8 @@ class MethodChannelUser extends UserPlatform {
       MethodChannelUser user = MethodChannelUser(auth, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -211,8 +211,8 @@ class MethodChannelUser extends UserPlatform {
       MethodChannelUser user = MethodChannelUser(auth, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -231,8 +231,8 @@ class MethodChannelUser extends UserPlatform {
       MethodChannelUser user = MethodChannelUser(auth, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -251,8 +251,8 @@ class MethodChannelUser extends UserPlatform {
       MethodChannelUser user = MethodChannelUser(auth, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -270,8 +270,8 @@ class MethodChannelUser extends UserPlatform {
               'actionCodeSettings': actionCodeSettings?.asMap(),
             },
           ));
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 }

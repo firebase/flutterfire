@@ -14,12 +14,12 @@ class TraceWeb extends TracePlatform {
 
   @override
   Future<void> start() async {
-    await guard(traceDelegate.start);
+    await convertWebExceptions(traceDelegate.start);
   }
 
   @override
   Future<void> stop() async {
-    await guard(traceDelegate.stop);
+    await convertWebExceptions(traceDelegate.stop);
   }
 
   @override

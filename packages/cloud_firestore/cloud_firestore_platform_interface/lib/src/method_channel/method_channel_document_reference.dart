@@ -40,8 +40,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           },
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -56,8 +56,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
           'data': data,
         },
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -77,8 +77,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
       );
 
       return DocumentSnapshotPlatform(firestore, _pointer.path, data!);
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -89,8 +89,8 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         'DocumentReference#delete',
         <String, dynamic>{'firestore': firestore, 'reference': this},
       );
-    } catch (e) {
-      throw convertPlatformException(e);
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
     }
   }
 
@@ -111,24 +111,27 @@ class MethodChannelDocumentReference extends DocumentReferencePlatform {
         snapshotStream =
             MethodChannelFirebaseFirestore.documentSnapshotChannel(observerId!)
                 .receiveBroadcastStream(
-          <String, dynamic>{
-            'reference': this,
-            'includeMetadataChanges': includeMetadataChanges,
-          },
-        ).listen((snapshot) {
-          controller.add(
-            DocumentSnapshotPlatform(
-              firestore,
-              snapshot['path'],
-              <String, dynamic>{
-                'data': snapshot['data'],
-                'metadata': snapshot['metadata'],
-              },
-            ),
-          );
-        }, onError: (error, stack) {
-          controller.addError(convertPlatformException(error), stack);
-        });
+                  <String, dynamic>{
+                    'reference': this,
+                    'includeMetadataChanges': includeMetadataChanges,
+                  },
+                )
+                .handleError(convertPlatformException)
+                .listen(
+                  (snapshot) {
+                    controller.add(
+                      DocumentSnapshotPlatform(
+                        firestore,
+                        snapshot['path'],
+                        <String, dynamic>{
+                          'data': snapshot['data'],
+                          'metadata': snapshot['metadata'],
+                        },
+                      ),
+                    );
+                  },
+                  onError: controller.addError,
+                );
       },
       onCancel: () {
         snapshotStream?.cancel();

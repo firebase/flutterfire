@@ -29,8 +29,13 @@ void setupTests() {
       group('buildLink', () {
         test('build dynamic links', () async {
           FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+          const String oflLink = 'https://ofl-link.com';
+          final Uri dynamicLink = Uri.parse(
+            'https://$urlHost/?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink',
+          );
           final DynamicLinkParameters parameters = DynamicLinkParameters(
             uriPrefix: 'https://$urlHost',
+            longDynamicLink: dynamicLink,
             link: Uri.parse(link),
             androidParameters: const AndroidParameters(
               packageName: androidPackageName,
@@ -80,8 +85,13 @@ void setupTests() {
       group('buildShortLink', () {
         test('build short dynamic links', () async {
           FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+          const String oflLink = 'https://ofl-link.com';
+          final Uri dynamicLink = Uri.parse(
+            'https://$urlHost?amv=0&apn=io.flutter.plugins.firebase.dynamiclinksexample&ibi=io.invertase.testing&imv=0&link=https%3A%2F%2Ftest-app%2Fhelloworld&ofl=$oflLink',
+          );
           final DynamicLinkParameters parameters = DynamicLinkParameters(
             uriPrefix: 'https://$urlHost',
+            longDynamicLink: dynamicLink,
             link: Uri.parse(link),
             androidParameters: const AndroidParameters(
               packageName: androidPackageName,

@@ -22,7 +22,12 @@ class OAuthFlow extends AuthFlow implements OAuthController {
 
   @override
   Future<void> signInWithProvider(TargetPlatform platform) async {
-    final provider = config.createProvider();
+    OAuthProvider? provider = OAuthProviders.resolve(auth, config.providerType);
+
+    if (provider == null) {
+      provider = config.createProvider();
+      OAuthProviders.register(auth, provider);
+    }
 
     try {
       value = const SigningIn();
