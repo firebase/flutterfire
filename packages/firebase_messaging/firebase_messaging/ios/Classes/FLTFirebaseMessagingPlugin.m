@@ -196,7 +196,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   // Setup UIApplicationDelegate.
 #if TARGET_OS_OSX
   NSDictionary *remoteNotification =
-      notification.userInfo[NSApplicationLaunchRemoteNotificationKey];
+      notification.userInfo[NSApplicationLaunchUserNotificationKey];
 #else
   NSDictionary *remoteNotification =
       notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
