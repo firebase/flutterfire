@@ -194,8 +194,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
+#if TARGET_OS_OSX
+  NSDictionary *remoteNotification =
+      notification.userInfo[NSApplicationLaunchUserNotificationKey];
+#else
   NSDictionary *remoteNotification =
       notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+#endif
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
