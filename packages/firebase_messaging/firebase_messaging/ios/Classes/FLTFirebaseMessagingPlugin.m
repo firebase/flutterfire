@@ -194,8 +194,12 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
+#if TARGET_OS_OSX
+  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+#else
   NSDictionary *remoteNotification =
       notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+#endif
   if (remoteNotification != nil) {
     // If remoteNotification exists, it is the notification that opened the app.
     _initialNotification =
@@ -298,11 +302,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
 
-    // Don't send an event if contentAvailable is true - application:didReceiveRemoteNotification
-    // will send the event for us, we don't want to duplicate them.
-    if (!notificationDict[@"contentAvailable"]) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
-    }
+    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
   // Forward on to any other delegates amd allow them to control presentation behavior.
@@ -485,7 +485,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       completionHandler(UIBackgroundFetchResultNoData);
     }
 

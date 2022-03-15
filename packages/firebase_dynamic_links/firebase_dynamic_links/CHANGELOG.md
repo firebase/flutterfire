@@ -1,3 +1,8 @@
+## 4.1.0
+
+ - **FIX**: pass through `utmParameters` on `iOS` and make property on `PendingDynamicLinkData`. (#8232). ([32d06e79](https://github.com/FirebaseExtended/flutterfire/commit/32d06e793b4fc1bc1dad9b9071f94b28c5d477ca))
+ - **FEAT**: add additional `longDynamicLink` parameter for creating a short Dynamic Link enabling additional parameters to be appended such as "ofl". (#7796). ([433a08ea](https://github.com/FirebaseExtended/flutterfire/commit/433a08eaacfaabb109a0185a5e494d87f9334d75))
+
 ## 4.0.8
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
