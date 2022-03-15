@@ -1289,6 +1289,7 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 - (void)ensureAPNSTokenSetting {
+#if !TARGET_OS_OSX
   FIRApp *defaultApp = [FIRApp defaultApp];
   if (defaultApp) {
     if ([FIRAuth auth].APNSToken == nil && _apnsToken != nil) {
@@ -1296,6 +1297,7 @@ NSString *const kErrMsgInvalidCredential =
       _apnsToken = nil;
     }
   }
+#endif
 }
 
 @end
