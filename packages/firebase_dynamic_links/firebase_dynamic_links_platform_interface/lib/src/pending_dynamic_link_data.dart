@@ -7,13 +7,12 @@ import 'pending_dynamic_link_data_ios.dart';
 
 /// Provides data from received dynamic link.
 class PendingDynamicLinkData {
-  const PendingDynamicLinkData(
-      {required this.link,
-      this.android,
-      this.ios,
-      this.utmParameters = const {},
-      }
-  );
+  const PendingDynamicLinkData({
+    required this.link,
+    this.android,
+    this.ios,
+    this.utmParameters = const {},
+  });
 
   /// Provides Android specific data from received dynamic link.
   ///
