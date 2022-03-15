@@ -1295,9 +1295,12 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 - (void)ensureAPNSTokenSetting {
-  if ([FIRAuth auth].APNSToken == nil && _apnsToken != nil) {
-    [[FIRAuth auth] setAPNSToken:_apnsToken type:FIRAuthAPNSTokenTypeUnknown];
-    _apnsToken = nil;
+  FIRApp *defaultApp = [FIRApp defaultApp];
+  if (defaultApp) {
+    if ([FIRAuth auth].APNSToken == nil && _apnsToken != nil) {
+      [[FIRAuth auth] setAPNSToken:_apnsToken type:FIRAuthAPNSTokenTypeUnknown];
+      _apnsToken = nil;
+    }
   }
 }
 
