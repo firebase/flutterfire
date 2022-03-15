@@ -184,7 +184,17 @@ module.exports = {
     ],
     'In-App Messaging': [
       'in-app-messaging/overview',
-      'in-app-messaging/usage',
+      'in-app-messaging/get-started',
+      toFirebase(
+        "Explore use cases",
+        "/docs/in-app-messaging/explore-use-cases",
+      ),
+      toFirebase(
+        "Compose a campaign",
+        "/docs/in-app-messaging/compose-campaign",
+      ),
+      'in-app-messaging/modify-message-behavior',
+      'in-app-messaging/customize-messages',
       toReferenceAPI('firebase_in_app_messaging'),
       toGithubExample('firebase_in_app_messaging'),
     ],
