@@ -61,6 +61,10 @@ export const testFunctionDefaultRegion = functions.https.onCall((data) => {
     return 'array';
   }
 
+  if(data.type === 'rawData') {
+    return data;
+  }
+
   const sampleData: {
     [key: string]: any;
   } = {
