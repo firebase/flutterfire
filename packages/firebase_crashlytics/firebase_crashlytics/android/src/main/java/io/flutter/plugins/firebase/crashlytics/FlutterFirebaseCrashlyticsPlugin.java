@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -145,7 +146,7 @@ public class FlutterFirebaseCrashlyticsPlugin
           }
 
           if (fatal) {
-            crashlytics.recordFatalException(exception);
+            FlutterFirebaseCrashlyticsInternal.recordFatalException(exception);
           } else {
             crashlytics.recordException(exception);
           }

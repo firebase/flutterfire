@@ -55,7 +55,7 @@ android {
 
 dependencies {
   // TODO remove once EAP SDK published
-  implementation 'com.google.firebase:firebase-crashlytics:18.2.9-SNAPSHOT'
+  implementation 'com.google.firebase:firebase-crashlytics:18.2.10-SNAPSHOT'
 
   // TODO re-add once EAP SDK published
   // implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
