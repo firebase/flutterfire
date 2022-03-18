@@ -77,6 +77,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   List<UserInfo> get providerData => jsObject.providerData
       // explicitly typing the param as dynamic to work-around
       // https://github.com/dart-lang/sdk/issues/33537
+      // ignore: unnecessary_lambdas, false positive, data is dynamic
       .map((dynamic data) =>
           UserInfo<auth_interop.UserInfoJsImpl>._fromJsObject(data))
       .toList();
@@ -118,7 +119,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<UserCredential> linkWithCredential(
           auth_interop.OAuthCredential? credential) =>
       handleThenable(jsObject.linkWithCredential(credential))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Links the user account with the given [phoneNumber] in E.164 format
   /// (e.g. +16505550101) and [applicationVerifier].
@@ -126,14 +127,14 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.linkWithPhoneNumber(
               phoneNumber, applicationVerifier.jsObject))
-          .then((c) => ConfirmationResult.fromJsObject(c));
+          .then(ConfirmationResult.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if linking is successful.
   Future<UserCredential> linkWithPopup(AuthProvider provider) =>
       handleThenable(jsObject.linkWithPopup(provider.jsObject))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Links the authenticated [provider] to the user account using
   /// a full-page redirect flow.
@@ -147,7 +148,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
   Future<UserCredential> reauthenticateWithCredential(
           auth_interop.OAuthCredential credential) =>
       handleThenable(jsObject.reauthenticateWithCredential(credential))
-          .then((o) => UserCredential.fromJsObject(o));
+          .then(UserCredential.fromJsObject);
 
   /// Re-authenticates a user using a fresh credential.
   /// Use before operations such as [updatePassword] that require tokens
@@ -158,14 +159,14 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.reauthenticateWithPhoneNumber(
               phoneNumber, applicationVerifier.jsObject))
-          .then((c) => ConfirmationResult.fromJsObject(c));
+          .then(ConfirmationResult.fromJsObject);
 
   /// Reauthenticates a user with the specified provider using
   /// a pop-up based OAuth flow.
   /// It returns the [UserCredential] information if reauthentication is successful.
   Future<UserCredential> reauthenticateWithPopup(AuthProvider provider) =>
       handleThenable(jsObject.reauthenticateWithPopup(provider.jsObject))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Reauthenticates a user with the specified OAuth [provider] using
   /// a full-page redirect flow.
@@ -233,8 +234,7 @@ class User extends UserInfo<auth_interop.UserJsImpl> {
         ? jsObject.getIdTokenResult()
         : jsObject.getIdTokenResult(forceRefresh);
 
-    return handleThenable(promise)
-        .then((object) => IdTokenResult._fromJsObject(object));
+    return handleThenable(promise).then(IdTokenResult._fromJsObject);
   }
 
   /// Returns a JSON-serializable representation of this object.
@@ -456,7 +456,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// email/link.
   Future<List<String>> fetchSignInMethodsForEmail(String email) =>
       handleThenable(jsObject.fetchSignInMethodsForEmail(email))
-          .then((list) => List<String>.from(list));
+          .then(List<String>.from);
 
   /// Checks if an incoming link is a sign-in with email link.
   bool isSignInWithEmailLink(String emailLink) =>
@@ -469,7 +469,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// operation was called.
   Future<UserCredential> getRedirectResult() =>
       handleThenable(jsObject.getRedirectResult())
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Sends a sign-in email link to the user with the specified email.
   ///
@@ -534,7 +534,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<UserCredential> signInWithCredential(
           auth_interop.OAuthCredential credential) =>
       handleThenable(jsObject.signInWithCredential(credential))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in as an anonymous user.
   //
@@ -543,7 +543,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   // returned.
   Future<UserCredential> signInAnonymously() =>
       handleThenable(jsObject.signInAnonymously())
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a custom token.
   ///
@@ -554,7 +554,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// the Firebase Auth service.
   Future<UserCredential> signInWithCustomToken(String token) =>
       handleThenable(jsObject.signInWithCustomToken(token))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Signs in a user asynchronously using a custom [token] and returns any
   /// additional user info data or credentials.
@@ -569,7 +569,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// the Firebase Auth service.
   Future<UserCredential> signInAndRetrieveDataWithCustomToken(String token) =>
       handleThenable(jsObject.signInAndRetrieveDataWithCustomToken(token))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using an email and password.
   ///
@@ -582,12 +582,12 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   Future<UserCredential> signInWithEmailAndPassword(
           String email, String password) =>
       handleThenable(jsObject.signInWithEmailAndPassword(email, password))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Signs in using [email] and [emailLink] link.
   Future<UserCredential> signInWithEmailLink(String email, String emailLink) =>
       handleThenable(jsObject.signInWithEmailLink(email, emailLink))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Asynchronously signs in using a phone number in E.164 format
   /// (e.g. +16505550101).
@@ -603,14 +603,14 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
           String phoneNumber, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.signInWithPhoneNumber(
               phoneNumber, applicationVerifier.jsObject))
-          .then((c) => ConfirmationResult.fromJsObject(c));
+          .then(ConfirmationResult.fromJsObject);
 
   /// Signs in using a popup-based OAuth authentication flow with the
   /// given [provider].
   /// Returns [UserCredential] if successful, or an error object if unsuccessful.
   Future<UserCredential> signInWithPopup(AuthProvider provider) =>
       handleThenable(jsObject.signInWithPopup(provider.jsObject))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 
   /// Signs in using a full-page redirect flow with the given [provider].
   Future signInWithRedirect(AuthProvider provider) =>
@@ -1009,7 +1009,7 @@ class ConfirmationResult
   /// the code that was sent to the user's mobile device.
   Future<UserCredential> confirm(String verificationCode) =>
       handleThenable(jsObject.confirm(verificationCode))
-          .then((u) => UserCredential.fromJsObject(u));
+          .then(UserCredential.fromJsObject);
 }
 
 /// A structure containing a [User], an [OAuthCredential] and [operationType].

@@ -1,3 +1,23 @@
+## 11.2.11
+
+ - **FIX**: Ensure `onMessage` callback is consistently called on `iOS` platform. (#8202). ([54f5555e](https://github.com/FirebaseExtended/flutterfire/commit/54f5555edbedc553df30d7e32747e3b305fbe643))
+
+## 11.2.10
+
+ - **FIX**: Update notification key to `NSApplicationLaunchUserNotificationKey` for macOS. (#8251). ([46b54ccd](https://github.com/FirebaseExtended/flutterfire/commit/46b54ccd4aee61654e36396b86ed373939569d00))
+
+## 11.2.9
+
+ - **FIX**: `getInitialMessage` returns notification once & only if pressed for `iOS`. (#7634). ([85739b4c](https://github.com/FirebaseExtended/flutterfire/commit/85739b4cc2f75c6f7017de0e69160fa07477eb1e))
+
+## 11.2.8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 11.2.7
+
+ - **FIX**: Stream new token via onTokenRefresh when getToken invoked for iOS. (#8166). ([28b396b8](https://github.com/FirebaseExtended/flutterfire/commit/28b396b84e019a5247e70d0abeb1ba24bdff4bcb))
+
 ## 11.2.6
 
  - **FIX**: Set APNS token if user initializes Firebase app from Flutter. (#7610). ([dc4c2c1d](https://github.com/FirebaseExtended/flutterfire/commit/dc4c2c1d249abf214c8ec7d835af18c86d64b2f5))

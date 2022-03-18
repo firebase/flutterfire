@@ -1,3 +1,15 @@
+## 3.2.10
+
+ - **FIX**: Allow raw data arguments to be passed as data to Cloud Function for `Android` & `iOS`. (#7994). ([8288b811](https://github.com/FirebaseExtended/flutterfire/commit/8288b811f2b82df263a092428905960960e537c6))
+
+## 3.2.9
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 3.2.8
+
+ - Update a dependency to the latest release.
+
 ## 3.2.7
 
 - **REFACTOR**: remove deprecated Android API usages (#7986). ([232e5f89](https://github.com/FirebaseExtended/flutterfire/commit/232e5f8972df8ef22bfb76ce8cf1e631d823a1b5))

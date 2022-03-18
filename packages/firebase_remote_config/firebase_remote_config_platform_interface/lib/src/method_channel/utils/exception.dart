@@ -4,14 +4,13 @@ import 'package:flutter/services.dart';
 
 /// Catches a [PlatformException] and converts it into a [FirebaseException] if
 /// it was intentionally caught on the native platform.
-Exception convertPlatformException(Object exception, [StackTrace? stackTrace]) {
+Never convertPlatformException(Object exception, StackTrace stackTrace) {
   if (exception is! Exception || exception is! PlatformException) {
-    // ignore: only_throw_errors
-    throw exception;
+    Error.throwWithStackTrace(exception, stackTrace);
   }
 
-  return platformExceptionToFirebaseException(
-    exception,
+  Error.throwWithStackTrace(
+    platformExceptionToFirebaseException(exception, stackTrace),
     stackTrace,
   );
 }

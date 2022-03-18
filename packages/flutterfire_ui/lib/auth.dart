@@ -91,3 +91,68 @@ export 'src/auth/configs/phone_provider_configuration.dart';
 export 'src/auth/configs/oauth_provider_configuration.dart';
 export 'src/auth/configs/email_link_provider_configuration.dart';
 export 'src/auth/configs/provider_configuration.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutterfire_ui/src/auth/actions.dart';
+import 'package:flutterfire_ui/src/auth/configs/oauth_provider_configuration.dart';
+import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
+
+import 'auth.dart' show ProviderConfiguration;
+
+class FlutterFireUIAuth {
+  static final _configs = <FirebaseApp, List<ProviderConfiguration>>{};
+  static final _configuredApps = <FirebaseApp, bool>{};
+
+  static List<ProviderConfiguration> configsFor(FirebaseApp app) {
+    return _configs[app] ?? [];
+  }
+
+  static bool isAppConfigured(FirebaseApp app) {
+    return _configs.containsKey(app);
+  }
+
+  static void configureProviders(
+    List<ProviderConfiguration> configs, {
+    FirebaseApp? app,
+  }) {
+    if (Firebase.apps.isEmpty) {
+      throw Exception(
+        'You must call Firebase.initializeApp() '
+        'before calling configureProviders()',
+      );
+    }
+
+    final _app = app ?? Firebase.app();
+
+    if (_configuredApps[_app] ?? false) {
+      throw Exception(
+        'You can only configure providers once '
+        'for each Firebase App',
+      );
+    }
+
+    _configs[_app] = configs;
+
+    configs.whereType<OAuthProviderConfiguration>().forEach((element) {
+      final provider = element.createProvider();
+      final auth = FirebaseAuth.instanceFor(app: _app);
+      OAuthProviders.register(auth, provider);
+    });
+  }
+
+  static Future<void> signOut({
+    BuildContext? context,
+    FirebaseAuth? auth,
+  }) async {
+    final _auth = auth ?? FirebaseAuth.instance;
+    await OAuthProviders.signOut(_auth);
+    await _auth.signOut();
+
+    if (context != null) {
+      final action = FlutterFireUIAction.ofType<SignedOutAction>(context);
+      action?.callback(context);
+    }
+  }
+}

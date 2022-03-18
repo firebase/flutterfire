@@ -1,3 +1,11 @@
+## 0.0.6+7
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 0.0.6+6
+
+ - Update a dependency to the latest release.
+
 ## 0.0.6+5
 
  - **FIX**: workaround iOS build issue when targetting platforms < iOS 11. ([c78e0b79](https://github.com/FirebaseExtended/flutterfire/commit/c78e0b79bde479e78c558d3df92988c130280e81))

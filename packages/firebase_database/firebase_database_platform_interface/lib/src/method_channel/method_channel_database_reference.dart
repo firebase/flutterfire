@@ -83,7 +83,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -99,7 +99,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -114,7 +114,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -129,7 +129,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         }),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -173,7 +173,7 @@ class MethodChannelDatabaseReference extends MethodChannelQuery
         Map.from(result!['snapshot']),
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     } finally {
       handlers.remove(key);
       handlerErrors.remove(key);
