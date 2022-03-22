@@ -59,6 +59,7 @@ NSString *const kErrMsgInvalidCredential =
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
+  NSData *_apnsToken;
 }
 
 #pragma mark - FlutterPlugin
@@ -155,6 +156,8 @@ NSString *const kErrMsgInvalidCredential =
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:successBlock andErrorBlock:errorBlock];
 
+  [self ensureAPNSTokenSetting];
+
   if ([@"Auth#registerIdTokenListener" isEqualToString:call.method]) {
     [self registerIdTokenListener:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#registerAuthStateListener" isEqualToString:call.method]) {
@@ -242,7 +245,7 @@ NSString *const kErrMsgInvalidCredential =
 
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-  [[FIRAuth auth] setAPNSToken:deviceToken type:FIRAuthAPNSTokenTypeUnknown];
+  _apnsToken = deviceToken;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary *)options {
@@ -1252,12 +1255,6 @@ NSString *const kErrMsgInvalidCredential =
   NSMutableDictionary *userData = [[self getNSDictionaryFromUserInfo:user] mutableCopy];
   NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
 
-  // This code is necessary to avoid an iOS issue where when unlinking the `password` provider
-  // the previous email still remains on the currentUser.
-  if ([user.providerData count] == 0) {
-    userData[@"email"] = [NSNull null];
-  }
-
   // metadata.creationTimestamp as milliseconds
   long creationDate = (long)([user.metadata.creationDate timeIntervalSince1970] * 1000);
   metadata[@"creationTime"] = @(creationDate);
@@ -1289,6 +1286,18 @@ NSString *const kErrMsgInvalidCredential =
   // native does not provide refresh tokens
   userData[@"refreshToken"] = @"";
   return userData;
+}
+
+- (void)ensureAPNSTokenSetting {
+#if !TARGET_OS_OSX
+  FIRApp *defaultApp = [FIRApp defaultApp];
+  if (defaultApp) {
+    if ([FIRAuth auth].APNSToken == nil && _apnsToken != nil) {
+      [[FIRAuth auth] setAPNSToken:_apnsToken type:FIRAuthAPNSTokenTypeUnknown];
+      _apnsToken = nil;
+    }
+  }
+#endif
 }
 
 @end

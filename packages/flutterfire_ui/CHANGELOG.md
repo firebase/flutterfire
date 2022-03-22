@@ -1,3 +1,11 @@
+## 0.3.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.6
+
+ - **FEAT**: Add German localization language support (#8195). ([9976d9d6](https://github.com/FirebaseExtended/flutterfire/commit/9976d9d66b870143227b08af068da3bc2efc5411))
+
 ## 0.3.5+1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
