@@ -1,3 +1,7 @@
+## 0.3.6+1
+
+ - Update a dependency to the latest release.
+
 ## 0.3.6
 
  - **FEAT**: Add German localization language support (#8195). ([9976d9d6](https://github.com/FirebaseExtended/flutterfire/commit/9976d9d66b870143227b08af068da3bc2efc5411))
