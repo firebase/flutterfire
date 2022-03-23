@@ -165,9 +165,28 @@ module.exports = {
     ],
     'Dynamic Links': [
       "dynamic-links/overview",
-      "dynamic-links/android-integration",
-      "dynamic-links/apple-integration",
-      "dynamic-links/usage",
+      toFirebase(
+        "Create Links",
+        "/docs/dynamic-links/create-links"
+      ),
+      "dynamic-links/create",
+      "dynamic-links/receive",
+      toFirebase(
+        "Use a Custom Domain",
+        "/docs/dynamic-links/custom-domains"
+      ),
+      toFirebase(
+        "View Analytics Data",
+        "/docs/dynamic-links/analytics"
+      ),
+      toFirebase(
+        "Debug Links",
+        "/docs/dynamic-links/debug"
+      ),
+      toFirebase(
+        "Link Previews & Social Metadata",
+        "/docs/dynamic-links/link-previews"
+      ),
       toReferenceAPI("firebase_dynamic_links"),
       toGithubExample("firebase_dynamic_links"),
     ],
