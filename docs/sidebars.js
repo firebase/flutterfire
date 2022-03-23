@@ -254,7 +254,7 @@ module.exports = {
     ],
     "Remote Config": [
       "remote-config/overview",
-      "remote-config/usage",
+      "remote-config/get-started",
       toReferenceAPI("firebase_remote_config"),
       toGithubExample("firebase_remote_config"),
     ],
