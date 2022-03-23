@@ -77,7 +77,13 @@ module.exports = {
     ],
     'App Check': [
       'app-check/overview',
-      'app-check/usage',
+      'app-check/default-providers',
+      'app-check/debug-provider',
+      toFirebase(
+        'Enable Cloud Functions',
+        '/docs/app-check/cloud-functions',
+      ),
+      'app-check/custom-resource',
       toReferenceAPI('firebase_app_check'),
       toGithubExample('firebase_app_check'),
     ],
