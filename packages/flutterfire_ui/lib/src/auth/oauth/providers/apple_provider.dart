@@ -72,6 +72,11 @@ class AppleProviderImpl extends AppleProvider {
 
   @override
   dynamic get firebaseAuthProvider => null;
+
+  @override
+  Future<void> logOutProvider() {
+    return SynchronousFuture(null);
+  }
 }
 
 class AppleProviderConfiguration

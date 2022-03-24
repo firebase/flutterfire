@@ -13,17 +13,19 @@ import '../../widgets/internal/oauth_provider_button_style.dart';
 import '../oauth_providers.dart';
 import '../provider_resolvers.dart';
 
+import 'sign_out_mixin.dart' if (dart.library.html) 'sign_out_mixin_web.dart';
+
 const _firebaseAuthProviderParameters = {
   'prompt': 'select_account',
 };
 
 abstract class GoogleProvider extends OAuthProvider {}
 
-class GoogleProviderImpl extends GoogleProvider {
+class GoogleProviderImpl extends GoogleProvider with SignOutMixin {
   String clientId;
   String redirectUri;
 
-  final _provider = GoogleSignIn();
+  late final provider = GoogleSignIn(clientId: clientId);
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
@@ -43,7 +45,7 @@ class GoogleProviderImpl extends GoogleProvider {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final user = await _provider.signIn();
+    final user = await provider.signIn();
 
     if (user == null) {
       throw AuthCancelledException();
@@ -60,17 +62,16 @@ class GoogleProviderImpl extends GoogleProvider {
   }
 
   @override
-  Future<void> signOut() async {
-    await _provider.signOut();
-    await super.signOut();
-  }
-
-  @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return GoogleAuthProvider.credential(
       idToken: result.idToken,
       accessToken: result.accessToken,
     );
+  }
+
+  @override
+  Future<void> logOutProvider() async {
+    await provider.signOut();
   }
 }
 
