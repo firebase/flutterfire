@@ -1,17 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException, User;
+    show ActionCodeSettings, FirebaseAuth, FirebaseAuthException, User;
 import 'package:flutter/cupertino.dart' hide Title;
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_icon_button.dart';
+import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 
+import '../email_verification.dart';
 import '../widgets/internal/universal_button.dart';
 
 import 'internal/multi_provider_screen.dart';
 
 import '../widgets/internal/rebuild_scope.dart';
 import '../widgets/internal/subtitle.dart';
+import '../widgets/internal/universal_icon_button.dart';
 
 class AvailableProvidersRow extends StatefulWidget {
   final FirebaseAuth? auth;
@@ -315,6 +317,127 @@ class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
   }
 }
 
+class EmailVerificationBadge extends StatefulWidget {
+  final FirebaseAuth auth;
+  final ActionCodeSettings? actionCodeSettings;
+  const EmailVerificationBadge({
+    Key? key,
+    required this.auth,
+    this.actionCodeSettings,
+  }) : super(key: key);
+
+  @override
+  State<EmailVerificationBadge> createState() => _EmailVerificationBadgeState();
+}
+
+class _EmailVerificationBadgeState extends State<EmailVerificationBadge> {
+  late final service = EmailVerificationService(widget.auth)
+    ..addListener(() {
+      setState(() {});
+    })
+    ..reload();
+
+  EmailVerificationState get state => service.state;
+
+  User get user {
+    return widget.auth.currentUser!;
+  }
+
+  TargetPlatform get platform {
+    return Theme.of(context).platform;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (state == EmailVerificationState.dismissed ||
+        state == EmailVerificationState.unresolved ||
+        state == EmailVerificationState.verified) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.yellow,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Subtitle(
+                    text: state == EmailVerificationState.sent ||
+                            state == EmailVerificationState.pending
+                        ? 'Verification email sent'
+                        : 'Email is not verified',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  if (state == EmailVerificationState.pending) ...[
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Please check your email and click the link to verify your email address.',
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (state == EmailVerificationState.pending)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                LoadingIndicator(size: 16, borderWidth: 0.5),
+                SizedBox(width: 16),
+                Text('Waiting for email verification'),
+              ],
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (state != EmailVerificationState.sent &&
+                    state != EmailVerificationState.sending)
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    color: Theme.of(context).colorScheme.error,
+                    text: 'Dismiss',
+                    onPressed: () {
+                      setState(service.dismiss);
+                    },
+                  ),
+                if (state != EmailVerificationState.sent)
+                  LoadingButton(
+                    isLoading: state == EmailVerificationState.sending,
+                    label: 'Send verification email',
+                    onTap: () {
+                      service.sendVerificationEmail(
+                        platform,
+                        widget.actionCodeSettings,
+                      );
+                    },
+                  )
+                else
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    text: 'Ok',
+                    onPressed: () {
+                      setState(service.dismiss);
+                    },
+                  )
+              ],
+            )
+        ],
+      ),
+    );
+  }
+}
+
 class ProfileScreen extends MultiProviderScreen {
   final List<Widget> children;
   final Color? avatarPlaceholderColor;
@@ -323,6 +446,7 @@ class ProfileScreen extends MultiProviderScreen {
   final List<FlutterFireUIAction>? actions;
   final AppBar? appBar;
   final CupertinoNavigationBar? cupertinoNavigationBar;
+  final ActionCodeSettings? actionCodeSettings;
 
   const ProfileScreen({
     Key? key,
@@ -335,6 +459,7 @@ class ProfileScreen extends MultiProviderScreen {
     this.actions,
     this.appBar,
     this.cupertinoNavigationBar,
+    this.actionCodeSettings,
   }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
@@ -361,7 +486,10 @@ class ProfileScreen extends MultiProviderScreen {
   @override
   Widget build(BuildContext context) {
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
-    final scopeKey = RebuildScopeKey();
+    final providersScopeKey = RebuildScopeKey();
+    final emailVerificationScopeKey = RebuildScopeKey();
+
+    final user = auth.currentUser!;
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -374,8 +502,22 @@ class ProfileScreen extends MultiProviderScreen {
             size: avatarSize,
           ),
         ),
-        const SizedBox(height: 16),
         Align(child: EditableUserDisplayName(auth: auth)),
+        if (!user.emailVerified) ...[
+          RebuildScope(
+            builder: (context) {
+              if (user.emailVerified) {
+                return const SizedBox.shrink();
+              }
+
+              return EmailVerificationBadge(
+                auth: auth,
+                actionCodeSettings: actionCodeSettings,
+              );
+            },
+            scopeKey: emailVerificationScopeKey,
+          ),
+        ],
         RebuildScope(
           builder: (context) {
             final user = auth.currentUser!;
@@ -390,11 +532,11 @@ class ProfileScreen extends MultiProviderScreen {
               child: LinkedProvidersRow(
                 auth: auth,
                 providerConfigs: linkedProviders,
-                onProviderUnlinked: scopeKey.rebuild,
+                onProviderUnlinked: providersScopeKey.rebuild,
               ),
             );
           },
-          scopeKey: scopeKey,
+          scopeKey: providersScopeKey,
         ),
         RebuildScope(
           builder: (context) {
@@ -410,11 +552,11 @@ class ProfileScreen extends MultiProviderScreen {
               child: AvailableProvidersRow(
                 auth: auth,
                 providerConfigs: availableProviders,
-                onProviderLinked: scopeKey.rebuild,
+                onProviderLinked: providersScopeKey.rebuild,
               ),
             );
           },
-          scopeKey: scopeKey,
+          scopeKey: providersScopeKey,
         ),
         ...children,
         const SizedBox(height: 16),
@@ -454,12 +596,16 @@ class ProfileScreen extends MultiProviderScreen {
     if (isCupertino) {
       child = CupertinoPageScaffold(
         navigationBar: cupertinoNavigationBar,
-        child: child,
+        child: SafeArea(
+          child: SingleChildScrollView(child: child),
+        ),
       );
     } else {
       child = Scaffold(
         appBar: appBar,
-        body: body,
+        body: SafeArea(
+          child: SingleChildScrollView(child: body),
+        ),
       );
     }
 

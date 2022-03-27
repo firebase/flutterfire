@@ -4,7 +4,13 @@ import 'platform_widget.dart';
 
 class Subtitle extends PlatformWidget {
   final String text;
-  const Subtitle({Key? key, required this.text}) : super(key: key);
+  final FontWeight? fontWeight;
+
+  const Subtitle({
+    Key? key,
+    required this.text,
+    this.fontWeight,
+  }) : super(key: key);
 
   @override
   Widget buildCupertino(BuildContext context) {
@@ -18,7 +24,10 @@ class Subtitle extends PlatformWidget {
   Widget buildMaterial(BuildContext context) {
     return Text(
       text,
-      style: Theme.of(context).textTheme.subtitle1,
+      style: Theme.of(context)
+          .textTheme
+          .subtitle1!
+          .copyWith(fontWeight: fontWeight),
     );
   }
 }
