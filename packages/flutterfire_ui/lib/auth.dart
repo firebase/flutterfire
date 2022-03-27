@@ -76,7 +76,7 @@ export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
 export 'src/auth/screens/sign_in_screen.dart';
 export 'src/auth/screens/register_screen.dart';
-export 'src/auth/screens/profile_screen.dart';
+export 'src/auth/screens/profile_screen.dart' show ProfileScreen;
 export 'src/auth/screens/forgot_password_screen.dart';
 export 'src/auth/screens/universal_email_sign_in_screen.dart';
 export 'src/auth/screens/email_link_sign_in_screen.dart';
