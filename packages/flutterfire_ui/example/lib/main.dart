@@ -57,6 +57,13 @@ class FirebaseAuthUIExample extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = FirebaseAuth.instance;
 
+    final buttonStyle = ButtonStyle(
+      padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+
     return MaterialApp(
       theme: ThemeData(
         brightness: Brightness.light,
@@ -64,7 +71,11 @@ class FirebaseAuthUIExample extends StatelessWidget {
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+        textButtonTheme: TextButtonThemeData(style: buttonStyle),
+        outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       ),
+      // theme: const CupertinoThemeData(brightness: Brightness.light),
       initialRoute: auth.currentUser == null ? '/' : '/profile',
       routes: {
         '/': (context) {
