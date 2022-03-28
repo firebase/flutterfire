@@ -13,7 +13,7 @@ App Check helps protect your backend resources (such as Cloud Storage) from
 abuse (such as billing fraud or phishing).
 
 With App Check, devices running your app will use an app identity attestation
-provider to certify it is indeed your authentic app, and may also check that it’s
+provider to certify it is indeed your authentic app, and may also check that it's
 running on an authentic, untampered device. This certification is attached to every
 request your app makes to your Firebase backend resources.
 
@@ -27,30 +27,8 @@ with a CDN.
 
 <YouTube id="Fjj4fmr2t04" />
 
-## Installation
-
-### 1. Make sure to initialize Firebase
-
-[Follow this guide](../overview.mdx) to install `firebase_core` and initialize Firebase if you haven't already.
-
-### 2. Add dependency
-
-On the root of your Flutter project, run the following command to install the plugin:
-
-```bash
-flutter pub add firebase_app_check
-```
-
-### 3. Rebuild your app
-
-Once complete, rebuild your Flutter application:
-
-```bash
-flutter run
-```
-
 ## Next Steps
 
-Once installed, you're ready to start using App Check in your Flutter Project.
-
-View the [Usage documentation](usage.mdx) to get started.
+- [Enable App Check in a Flutter app](default-providers)
+- [Debugging apps that use App Check](debug-provider)
+- [Protect non-Firebase resources](custom-resource)
