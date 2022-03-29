@@ -6,7 +6,6 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 
-import '../email_verification.dart';
 import '../widgets/internal/universal_button.dart';
 
 import 'internal/multi_provider_screen.dart';
