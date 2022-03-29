@@ -344,11 +344,11 @@ abstract class ActionCodeInfo {
 abstract class UserMetadata {
   /// The date the user was created, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String get creationTime;
+  external String? get creationTime;
 
   /// The date the user last signed in, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String get lastSignInTime;
+  external String? get lastSignInTime;
 }
 
 /// A structure for [User]'s user profile.

@@ -94,7 +94,7 @@ abstract class Query<T extends Object?> {
   /// calls.
   ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   Query<T> orderBy(Object field, {bool descending = false});
@@ -432,7 +432,7 @@ class _JsonQuery implements Query<Map<String, dynamic>> {
   /// calls.
   ///
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   @override

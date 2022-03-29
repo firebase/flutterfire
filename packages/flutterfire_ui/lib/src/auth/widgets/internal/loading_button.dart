@@ -56,15 +56,19 @@ class LoadingButton extends StatelessWidget {
         );
       }
 
-      return CupertinoTheme(
-        data: CupertinoTheme.of(context).copyWith(
-          primaryColor: color ?? CupertinoColors.activeBlue,
-        ),
-        child: CupertinoButton.filled(
-          onPressed: onTap,
-          child: child,
-        ),
+      final button = CupertinoButton.filled(
+        onPressed: onTap,
+        child: child,
       );
+
+      return color != null
+          ? CupertinoTheme(
+              data: CupertinoTheme.of(context).copyWith(
+                primaryColor: color,
+              ),
+              child: button,
+            )
+          : button;
     }
 
     if (icon != null) {

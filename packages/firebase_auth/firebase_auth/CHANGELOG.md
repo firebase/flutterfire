@@ -1,3 +1,7 @@
+## 3.3.11
+
+ - **FIX**: Update APN token once auth plugin has been initialized on `iOS`. (#8201). ([ab6239dd](https://github.com/FirebaseExtended/flutterfire/commit/ab6239ddf5cb14211b76bced04ec52203919a57a))
+
 ## 3.3.10
 
  - **FIX**: return correct error code for linkWithCredential `provider-already-linked` on Android (#8245). ([ae090719](https://github.com/FirebaseExtended/flutterfire/commit/ae090719ebbb0873cf227f76004feeae9a7d0580))

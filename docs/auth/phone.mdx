@@ -31,7 +31,7 @@ please see [Testing](#testing).
 
 ## Usage
 
-FlutterFire provides two individual ways to sign a user in with their phone number. Native (e.g. Android & iOS) platforms provide
+The Firebase Authentication SDK for Flutter provides two individual ways to sign a user in with their phone number. Native (e.g. Android & iOS) platforms provide
 different functionality to validating a phone number than the web, therefore two methods exist for each platform exclusively:
 
 - **Native Platform**: [`verifyPhoneNumber`](!firebase_auth.FirebaseAuth.verifyPhoneNumber).
@@ -160,7 +160,7 @@ On web platforms, users can sign-in by confirming they have access to a phone by
 For added security and spam prevention, users are requested to prove they are human by completing a [Google reCAPTCHA](https://www.google.com/recaptcha/about/)
 widget. Once confirmed, the SMS code will be sent.
 
-FlutterFire will manage the reCAPTCHA widget out of the box by default, however provides control over how it is displayed and configured if required.
+The Firebase Authentication SDK for Flutter will manage the reCAPTCHA widget out of the box by default, however provides control over how it is displayed and configured if required.
 To get started, call the `signInWithPhoneNumber` method with the phone number.
 
 ```dart

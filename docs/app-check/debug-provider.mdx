@@ -1,93 +1,16 @@
 ---
-title: App Check
-sidebar_label: Usage
+title: Use App Check with the debug provider
+sidebar_label: Debugging
 ---
-
-Once installed, you can access the [`firebase_app_check`](!firebase_app_check) plugin by importing
-it in your Dart code:
-
-```dart
-import 'package:firebase_app_check/firebase_app_check.dart';
-```
-
-To create a new Firebase App Check instance, call the instance getter on `FirebaseAppCheck`:
-
-```dart
-FirebaseAppCheck appCheck = FirebaseAppCheck.instance;
-```
-
-By default, this allows you to interact with Firebase App Check using the default Firebase App used whilst installing FlutterFire on your platform. If however you'd like to use a secondary Firebase App, use the `instanceFor` method:
-
-```dart
-FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
-FirebaseAppCheck appCheck = FirebaseAppCheck.instanceFor(app: secondaryApp);
-```
-
-## Activate the default provider
-
-To activate the default App Check attestation provider you must call activate before any usages of your Firebase
-services such as Storage, but after calling `Firebase.initializeApp()`;
-
-```dart {10} title="lib/main.dart"
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-
-// Import the firebase_app_check plugin
-import 'package:firebase_app_check/firebase_app_check.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-  );
-  runApp(App());
-}
-```
-
-## Getting the current token
-
-To get the current token associated with App Check, call the `getToken` method:
-
-```dart
-String? token = await FirebaseAppCheck.instance.getToken();
-print(token);
-```
-
-Optionally, you can force the token to refresh when fetching:
-
-```dart
-String? token = await FirebaseAppCheck.instance.getToken(true);
-```
-
-## Listen to token changes
-
-To subscribe to App Check token changes, listen to the `onTokenChange` `Stream`:
-
-```dart
-FirebaseAppCheck.instance.onTokenChange.listen((token) {
-  print(token);
-});
-```
-
-## Automatic refreshing
-
-To enable the SDK to automatically refresh the App Check token when required, call the `setTokenAutoRefreshEnabled` method:
-
-```dart
-await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
-```
-
-## Debugging
-
-:::caution
-Warning: The debug provider allows access to your Firebase resources from unverified devices. Don't use the debug provider in production builds of your app, and don't share your debug builds with untrusted parties.
-:::
 
 If, after you have registered your app for App Check, and you want to run your app in an environment that
 App Check would normally not classify as valid, such as a simulator during development, or from a continuous
 integration (CI) environment, you can create a debug build of your app that uses the App Check debug provider instead
 of a real attestation provider.
+
+:::caution
+Warning: The debug provider allows access to your Firebase resources from unverified devices. Don't use the debug provider in production builds of your app, and don't share your debug builds with untrusted parties.
+:::
 
 For now the debug provider does not currently have a Dart API; you'll need to apply the changes for your platforms as
 shown below:
