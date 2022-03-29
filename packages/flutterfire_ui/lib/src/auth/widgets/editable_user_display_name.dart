@@ -4,6 +4,8 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart';
 
+import 'internal/subtitle.dart';
+
 class EditableUserDisplayName extends StatefulWidget {
   final FirebaseAuth? auth;
 
@@ -78,12 +80,15 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
     }
 
     if (!_editing) {
-      return IntrinsicWidth(
-        child: Row(
-          children: [
-            Text(displayName ?? 'Unknown'),
-            iconButton,
-          ],
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5.5),
+        child: IntrinsicWidth(
+          child: Row(
+            children: [
+              Subtitle(text: displayName ?? 'Unknown'),
+              iconButton,
+            ],
+          ),
         ),
       );
     }
@@ -91,11 +96,14 @@ class _EditableUserDisplayNameState extends State<EditableUserDisplayName> {
     late Widget textField;
 
     if (isCupertino) {
-      textField = CupertinoTextField(
-        autofocus: true,
-        controller: ctrl,
-        placeholder: l.name,
-        onSubmitted: (_) => _finishEditing(),
+      textField = Padding(
+        padding: const EdgeInsets.symmetric(vertical: 17.5),
+        child: CupertinoTextField(
+          autofocus: true,
+          controller: ctrl,
+          placeholder: l.name,
+          onSubmitted: (_) => _finishEditing(),
+        ),
       );
     } else {
       textField = TextField(
