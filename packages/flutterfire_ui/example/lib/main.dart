@@ -88,7 +88,6 @@ class FirebaseAuthUIExample extends StatelessWidget {
         textButtonTheme: TextButtonThemeData(style: buttonStyle),
         outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       ),
-      // theme: const CupertinoThemeData(brightness: Brightness.light),
       initialRoute: initialRoute,
       routes: {
         '/': (context) {
