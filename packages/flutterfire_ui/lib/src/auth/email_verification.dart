@@ -51,7 +51,7 @@ class EmailVerificationService extends ValueNotifier<EmailVerificationState> {
     } on Exception catch (e) {
       error = e;
       value = EmailVerificationState.failed;
-      return nulll;
+      return;
     }
 
     if (_isMobile(platform)) {
