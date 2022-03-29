@@ -1,10 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import '../widgets/internal/loading_button.dart';
-import 'package:flutter/material.dart';
+import '../widgets/internal/universal_button.dart';
 
 typedef DeleteFailedCallback = void Function(Exception exception);
 typedef SignInRequiredCallback = Future<bool> Function();
@@ -13,12 +14,14 @@ class DeleteAccountButton extends StatefulWidget {
   final FirebaseAuth? auth;
   final SignInRequiredCallback? onSignInRequired;
   final DeleteFailedCallback? onDeleteFailed;
+  final ButtonVariant? variant;
 
   const DeleteAccountButton({
     Key? key,
     this.auth,
     this.onSignInRequired,
     this.onDeleteFailed,
+    this.variant,
   }) : super(key: key);
 
   @override
@@ -67,6 +70,7 @@ class _DeleteAccountButtonState extends State<DeleteAccountButton> {
       icon: isCupertino ? CupertinoIcons.delete : Icons.delete,
       label: l.deleteAccount,
       onTap: _deleteAccount,
+      variant: widget.variant,
     );
   }
 }
