@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class LoadingIndicator extends StatelessWidget {
+import './auth/widgets/internal/platform_widget.dart';
+
+class LoadingIndicator extends PlatformWidget {
   final double size;
   final double borderWidth;
   final Color? color;
@@ -14,25 +16,28 @@ class LoadingIndicator extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    late Widget indicator;
-
-    if (CupertinoUserInterfaceLevel.maybeOf(context) != null) {
-      indicator = const CupertinoActivityIndicator();
-    } else {
-      final _color = color ?? Theme.of(context).colorScheme.secondary;
-      indicator = CircularProgressIndicator(
-        strokeWidth: borderWidth * 2,
-        valueColor: AlwaysStoppedAnimation<Color>(_color),
-      );
-    }
-
+  Widget? buildWrapper(BuildContext context, Widget child) {
     return Center(
       child: SizedBox(
         width: size,
         height: size,
-        child: indicator,
+        child: child,
       ),
+    );
+  }
+
+  @override
+  Widget buildCupertino(BuildContext context) {
+    return const CupertinoActivityIndicator();
+  }
+
+  @override
+  Widget buildMaterial(BuildContext context) {
+    final _color = color ?? Theme.of(context).colorScheme.secondary;
+
+    return CircularProgressIndicator(
+      strokeWidth: borderWidth * 2,
+      valueColor: AlwaysStoppedAnimation<Color>(_color),
     );
   }
 }

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-03-15
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v3.3.11`](#firebase_auth---v3311)
+ - [`firebase_dynamic_links_platform_interface` - `v0.2.2+1`](#firebase_dynamic_links_platform_interface---v0221)
+ - [`firebase_messaging` - `v11.2.11`](#firebase_messaging---v11211)
+ - [`flutterfire_ui` - `v0.3.6+1`](#flutterfire_ui---v0361)
+ - [`firebase_dynamic_links` - `v4.1.1`](#firebase_dynamic_links---v411)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.3.6+1`
+ - `firebase_dynamic_links` - `v4.1.1`
+
+---
+
+#### `firebase_auth` - `v3.3.11`
+
+ - **FIX**: Update APN token once auth plugin has been initialized on `iOS`. (#8201). ([ab6239dd](https://github.com/FirebaseExtended/flutterfire/commit/ab6239ddf5cb14211b76bced04ec52203919a57a))
+
+#### `firebase_dynamic_links_platform_interface` - `v0.2.2+1`
+
+ - **FIX**: Properly type cast utmParameters coming from native side. (#8280). ([22bbd807](https://github.com/FirebaseExtended/flutterfire/commit/22bbd807d2b3c3f9d9cc8ba817ccb4da931ae887))
+
+#### `firebase_messaging` - `v11.2.11`
+
+ - **FIX**: Ensure `onMessage` callback is consistently called on `iOS` platform. (#8202). ([54f5555e](https://github.com/FirebaseExtended/flutterfire/commit/54f5555edbedc553df30d7e32747e3b305fbe643))
+
+
 ## 2022-03-10
 
 ### Changes

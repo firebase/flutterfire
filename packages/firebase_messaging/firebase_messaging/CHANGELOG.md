@@ -1,3 +1,7 @@
+## 11.2.11
+
+ - **FIX**: Ensure `onMessage` callback is consistently called on `iOS` platform. (#8202). ([54f5555e](https://github.com/FirebaseExtended/flutterfire/commit/54f5555edbedc553df30d7e32747e3b305fbe643))
+
 ## 11.2.10
 
  - **FIX**: Update notification key to `NSApplicationLaunchUserNotificationKey` for macOS. (#8251). ([46b54ccd](https://github.com/FirebaseExtended/flutterfire/commit/46b54ccd4aee61654e36396b86ed373939569d00))
