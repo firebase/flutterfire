@@ -19,6 +19,7 @@ class SignInScreen extends MultiProviderScreen {
   final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
+  final bool? resizeToAvoidBottomInset;
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
@@ -35,6 +36,7 @@ class SignInScreen extends MultiProviderScreen {
     this.sideBuilder,
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
+    this.resizeToAvoidBottomInset = false,
     this.showAuthActionSwitch,
     this.email,
     this.subtitleBuilder,
@@ -80,6 +82,7 @@ class SignInScreen extends MultiProviderScreen {
         action: AuthAction.signIn,
         providerConfigs: providerConfigs,
         auth: auth,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         headerMaxExtent: headerMaxExtent,
         headerBuilder: headerBuilder,
         sideBuilder: sideBuilder,
