@@ -48,11 +48,12 @@ class StorageExampleApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Storage Example App',
-        theme: ThemeData.dark(),
-        home: Scaffold(
-          body: TaskManager(),
-        ));
+      title: 'Storage Example App',
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        body: TaskManager(),
+      ),
+    );
   }
 }
 
@@ -73,9 +74,11 @@ class _TaskManager extends State<TaskManager> {
   /// The user selects a file, and the task is added to the list.
   Future<UploadTask?> uploadFile(XFile? file) async {
     if (file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('No file was selected'),
-      ));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No file was selected'),
+        ),
+      );
 
       return null;
     }
@@ -89,8 +92,9 @@ class _TaskManager extends State<TaskManager> {
         .child('/some-image.jpg');
 
     final metadata = SettableMetadata(
-        contentType: 'image/jpeg',
-        customMetadata: {'picked-file-path': file.path});
+      contentType: 'image/jpeg',
+      customMetadata: {'picked-file-path': file.path},
+    );
 
     if (kIsWeb) {
       uploadTask = ref.putData(await file.readAsBytes(), metadata);
@@ -113,10 +117,13 @@ class _TaskManager extends State<TaskManager> {
         .child('/put-string-example.txt');
 
     // Start upload of putString
-    return ref.putString(putStringText,
-        metadata: SettableMetadata(
-            contentLanguage: 'en',
-            customMetadata: <String, String>{'example': 'putString'}));
+    return ref.putString(
+      putStringText,
+      metadata: SettableMetadata(
+        contentLanguage: 'en',
+        customMetadata: <String, String>{'example': 'putString'},
+      ),
+    );
   }
 
   /// Handles the user pressing the PopupMenuItem item.
@@ -160,9 +167,11 @@ class _TaskManager extends State<TaskManager> {
   Future<void> _downloadLink(Reference ref) async {
     final link = await ref.getDownloadURL();
 
-    await Clipboard.setData(ClipboardData(
-      text: link,
-    ));
+    await Clipboard.setData(
+      ClipboardData(
+        text: link,
+      ),
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -202,18 +211,21 @@ class _TaskManager extends State<TaskManager> {
             icon: const Icon(Icons.add),
             itemBuilder: (context) => [
               const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Upload string'),
-                  value: UploadType.string),
+                // ignore: sort_child_properties_last
+                child: Text('Upload string'),
+                value: UploadType.string,
+              ),
               const PopupMenuItem(
-                  // ignore: sort_child_properties_last
-                  child: Text('Upload local file'),
-                  value: UploadType.file),
+                // ignore: sort_child_properties_last
+                child: Text('Upload local file'),
+                value: UploadType.file,
+              ),
               if (_uploadTasks.isNotEmpty)
                 const PopupMenuItem(
-                    // ignore: sort_child_properties_last
-                    child: Text('Clear list'),
-                    value: UploadType.clear)
+                  // ignore: sort_child_properties_last
+                  child: Text('Clear list'),
+                  value: UploadType.clear,
+                )
             ],
           )
         ],
