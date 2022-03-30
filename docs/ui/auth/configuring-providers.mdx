@@ -99,7 +99,7 @@ RegisterScreen(
 )
 ```
 
-The registration screen will now render a button which when pressed will trigger the phone number verification process.
+The registration screen will now render a button which, when pressed, will trigger the phone number verification process.
 
 ## Google
 
@@ -131,6 +131,12 @@ RegisterScreen(
 A themed Google OAuth button will now be rendered, and when pressed will trigger the authentication flow for Google.
 The configuration requires the `clientId` property (which can be found in the Firebase Console) to be set for seamless cross-platform support.
 
+<Image
+  src="ui/ui-google-provider-client-id.png"
+  alt="Google app client id"
+  caption={false}
+/>
+
 ## Facebook
 
 To support Facebook as a provider, first install the [`flutter_facebook_auth`](https://pub.dev/packages/flutter_facebook_auth)
@@ -159,6 +165,12 @@ RegisterScreen(
 
 A themed Facebook OAuth button will now be rendered, and when pressed will trigger the authentication flow for Facebook.
 The configuration requires the `clientId` property (which can be found in the Firebase Console) to be set for seamless cross-platform support.
+
+<Image
+  src="ui/ui-facebook-client-id.png"
+  alt="Facebook client id"
+  caption={false}
+/>
 
 ## Twitter
 
@@ -189,19 +201,23 @@ RegisterScreen(
 
 A themed Twitter OAuth button will now be rendered, and when pressed will trigger the authentication flow for Twitter.
 
+You can get the `apiKey` and `apiSecretKey` from the Firebase Console or [twitter developer portal](https://developer.twitter.com/en/portal/projects-and-apps).
+
+<Image src="ui/ui-twitter-app-id.png" alt="Twitter app id" caption={false} />
+
 :::caution
 
 Providing the `apiSecretKey` directly is not advised if you are building for the web. Instead, you can use "dart-define" to ensure that
 the value is omitted from web builds:
 
-```dart
-apiSecretKey: String.fromEnvironment('TWITTER_SECRET', ''),
+```bash
+flutter run --dart-define TWITTER_SECRET=<your-twitter-api-secret-key>
 ```
 
 When building the app on platforms other than the web, the `TWITTER_SECRET` environment variable can be defined using:
 
-```bash
-flutter run --dart-define TWITTER_SECRET=<your-twitter-api-secret-key>
+```dart
+apiSecretKey: String.fromEnvironment('TWITTER_SECRET', ''),
 ```
 
 :::

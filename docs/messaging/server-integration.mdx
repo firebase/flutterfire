@@ -51,17 +51,22 @@ class Application extends StatefulWidget {
 class _Application extends State<Application> {
   String _token;
 
-  @override
-  void initState() async {
-    super.initState();
+  Future<void> setupToken() async {
     // Get the token each time the application loads
-    String token = await FirebaseMessaging.instance.getToken();
+    String? token = await FirebaseMessaging.instance.getToken();
 
     // Save the initial token to the database
-    await saveTokenToDatabase(token);
+    await saveTokenToDatabase(token!);
 
     // Any time the token refreshes, store this in the database too.
     FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    
+    setupToken();
   }
 
   @override

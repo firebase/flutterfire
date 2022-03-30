@@ -25,16 +25,14 @@ class Firebase {
 
   /// Returns a list of all [FirebaseApp] instances that have been created.
   static List<FirebaseApp> get apps {
-    return _delegate.apps
-        .map((app) => FirebaseApp._(app))
-        .toList(growable: false);
+    return _delegate.apps.map(FirebaseApp._).toList(growable: false);
   }
 
   /// Initializes a new [FirebaseApp] instance by [name] and [options] and returns
   /// the created app. This method should be called before any usage of FlutterFire plugins.
   ///
-  /// The default app instance cannot be initialized here and should be created
-  /// using the platform Firebase integration.
+  /// The default app instance can be initialized here simply by passing no "name" as an argument
+  /// in both Dart & manual initialization flows.
   static Future<FirebaseApp> initializeApp({
     String? name,
     FirebaseOptions? options,

@@ -19,4 +19,4 @@ export 'package:firebase_remote_config_platform_interface/firebase_remote_config
         RemoteConfigFetchStatus,
         RemoteConfigValue;
 
-part 'src/remote_config.dart';
+part 'src/firebase_remote_config.dart';

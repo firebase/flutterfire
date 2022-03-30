@@ -1,3 +1,22 @@
+## 9.1.2
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 9.1.1
+
+ - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/FirebaseExtended/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
+
+## 9.1.0
+
+ - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/FirebaseExtended/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))
+
+## 9.0.5
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/FirebaseExtended/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
+ - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/FirebaseExtended/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
+ - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/FirebaseExtended/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
+
 ## 9.0.4
 
  - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))

@@ -10,7 +10,6 @@
 
 import FirebaseCore
 import FirebaseMLModelDownloader
-import UIKit
 
 import firebase_core
 
@@ -78,7 +77,7 @@ public class FirebaseModelDownloaderPluginSwift: FLTFirebasePlugin, FlutterPlugi
                                                   andOptionalNSError: nil))
     }
 
-    var result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
+    let result = FLTFirebaseMethodCallResult.create(success: result, andErrorBlock: errorBlock)
     if call.method == "FirebaseModelDownloader#getModel" {
       getModel(arguments: call.arguments as! [String: Any], result: result)
     }

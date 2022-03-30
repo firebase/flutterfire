@@ -4,6 +4,9 @@ import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 
+import 'internal/multi_provider_screen.dart';
+
+import '../widgets/internal/rebuild_scope.dart';
 import '../widgets/internal/subtitle.dart';
 
 class AvailableProvidersRow extends StatelessWidget {
@@ -93,6 +96,7 @@ class AvailableProvidersRow extends StatelessWidget {
                     if (newState is CredentialLinked) {
                       onProviderLinked();
                     }
+                    return null;
                   },
                   child: OAuthProviderIconButton(
                     providerConfig: config,
@@ -140,10 +144,8 @@ class LinkedProvidersRow extends StatelessWidget {
   }
 }
 
-class ProfileScreen extends StatefulWidget {
-  final List<ProviderConfiguration> providerConfigs;
+class ProfileScreen extends MultiProviderScreen {
   final List<Widget> children;
-  final FirebaseAuth? auth;
   final Color? avatarPlaceholderColor;
   final ShapeBorder? avatarShape;
   final double? avatarSize;
@@ -151,32 +153,20 @@ class ProfileScreen extends StatefulWidget {
 
   const ProfileScreen({
     Key? key,
-    required this.providerConfigs,
-    this.auth,
+    FirebaseAuth? auth,
+    List<ProviderConfiguration>? providerConfigs,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
     this.children = const [],
     this.actions,
-  }) : super(key: key);
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  Future<void> _logout(BuildContext context) async {
-    await (widget.auth ?? FirebaseAuth.instance).signOut();
-    final action = FlutterFireUIAction.ofType<SignedOutAction>(context);
-
-    action?.callback(context);
-  }
+  }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
     return showReauthenticateDialog(
       context: context,
-      providerConfigs: widget.providerConfigs,
-      auth: widget.auth,
+      providerConfigs: providerConfigs,
+      auth: auth,
       onSignedIn: () => Navigator.of(context).pop(true),
     );
   }
@@ -186,50 +176,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
     final platform = Theme.of(context).platform;
-    final _auth = widget.auth ?? FirebaseAuth.instance;
-    final _user = _auth.currentUser!;
-
-    final linkedProviders = widget.providerConfigs
-        .where((config) => _user.isProviderLinked(config.providerId))
-        .toList();
-
-    final availableProviders = widget.providerConfigs
-        .where((config) => !_user.isProviderLinked(config.providerId))
-        .where((config) => config.isSupportedPlatform(platform))
-        .toList();
+    final scopeKey = RebuildScopeKey();
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Align(
           child: UserAvatar(
-            auth: widget.auth,
-            placeholderColor: widget.avatarPlaceholderColor,
-            shape: widget.avatarShape,
-            size: widget.avatarSize,
+            auth: auth,
+            placeholderColor: avatarPlaceholderColor,
+            shape: avatarShape,
+            size: avatarSize,
           ),
         ),
         const SizedBox(height: 16),
-        Align(child: EditableUserDisplayName(auth: widget.auth)),
-        if (linkedProviders.isNotEmpty) ...[
-          const SizedBox(height: 32),
-          LinkedProvidersRow(
-            auth: widget.auth,
-            providerConfigs: linkedProviders,
-          ),
-        ],
-        if (availableProviders.isNotEmpty) ...[
-          const SizedBox(height: 32),
-          AvailableProvidersRow(
-            auth: widget.auth,
-            providerConfigs: availableProviders,
-            onProviderLinked: () => setState(() {}),
-          ),
-        ],
-        ...widget.children,
+        Align(child: EditableUserDisplayName(auth: auth)),
+        RebuildScope(
+          builder: (context) {
+            final user = auth.currentUser!;
+
+            final linkedProviders = providerConfigs
+                .where(
+                  (config) => user.isProviderLinked(config.providerId),
+                )
+                .toList();
+
+            if (linkedProviders.isNotEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 32),
+                child: LinkedProvidersRow(
+                  auth: auth,
+                  providerConfigs: linkedProviders,
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+          scopeKey: scopeKey,
+        ),
+        RebuildScope(
+          builder: (context) {
+            final availableProviders = providerConfigs
+                .where(
+                  (config) =>
+                      !auth.currentUser!.isProviderLinked(config.providerId),
+                )
+                .where((config) => config.isSupportedPlatform(platform))
+                .toList();
+
+            if (availableProviders.isNotEmpty) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 32),
+                child: AvailableProvidersRow(
+                  auth: auth,
+                  providerConfigs: availableProviders,
+                  onProviderLinked: scopeKey.rebuild,
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+          scopeKey: scopeKey,
+        ),
+        ...children,
         const SizedBox(height: 16),
         DeleteAccountButton(
-          auth: widget.auth,
+          auth: auth,
           onSignInRequired: () {
             return _reauthenticate(context);
           },
@@ -256,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (isCupertino) {
       return FlutterFireUIActions(
-        actions: widget.actions ?? const [],
+        actions: actions ?? const [],
         child: Builder(
           builder: (context) => CupertinoPageScaffold(
             navigationBar: CupertinoNavigationBar(
@@ -264,7 +278,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               trailing: Transform.translate(
                 offset: const Offset(0, -6),
                 child: CupertinoButton(
-                  onPressed: () => _logout(context),
+                  onPressed: () => FlutterFireUIAuth.signOut(
+                    context: context,
+                    auth: auth,
+                  ),
                   child: const Icon(CupertinoIcons.arrow_right_circle),
                 ),
               ),
@@ -275,14 +292,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
     } else {
       return FlutterFireUIActions(
-        actions: widget.actions ?? const [],
+        actions: actions ?? const [],
         child: Builder(
           builder: (context) => Scaffold(
             appBar: AppBar(
               title: Text(l.profile),
               actions: [
                 IconButton(
-                  onPressed: () => _logout(context),
+                  onPressed: () => FlutterFireUIAuth.signOut(
+                    context: context,
+                    auth: auth,
+                  ),
                   icon: const Icon(
                     Icons.logout_outlined,
                   ),

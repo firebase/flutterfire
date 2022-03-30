@@ -14,6 +14,14 @@ function toGithubExample(plugin) {
   };
 }
 
+function toFirebase(title, path) {
+  return {
+    type: 'link',
+    label: title,
+    href: `https://firebase.google.com${path}`,
+  };
+}
+
 module.exports = {
   main: {
     'Getting Started': [
@@ -34,21 +42,66 @@ module.exports = {
     ],
     Analytics: [
       'analytics/overview',
-      'analytics/usage',
+      'analytics/get-started',
+      'analytics/events',
+      'analytics/user-properties',
+      toFirebase(
+        "Debug Events",
+        "/docs/analytics/debugview"
+      ),
+      'analytics/screenviews',
+      'analytics/userid',
+      'analytics/measure-ecommerce',
+      toFirebase(
+        "Measure Ad Revenue",
+        "/docs/analytics/measure-ad-revenue"
+      ),
+      toFirebase(
+        "Use in a WebView",
+        "/docs/analytics/webview"
+      ),
+      toFirebase(
+        "Extend with Cloud Functions",
+        "/docs/analytics/extend-with-functions"
+      ),
+      toFirebase(
+        "Configure Data Collection and Usage",
+        "/docs/analytics/configure-data-collection"
+      ),
+      toFirebase(
+        "Error Codes",
+        "/docs/analytics/errors"
+      ),
       toReferenceAPI('firebase_analytics'),
       toGithubExample('firebase_analytics'),
     ],
     'App Check': [
       'app-check/overview',
-      'app-check/usage',
+      'app-check/default-providers',
+      'app-check/debug-provider',
+      toFirebase(
+        'Enable Cloud Functions',
+        '/docs/app-check/cloud-functions',
+      ),
+      'app-check/custom-resource',
       toReferenceAPI('firebase_app_check'),
       toGithubExample('firebase_app_check'),
     ],
     Authentication: [
       "auth/overview",
-      "auth/usage",
+      "auth/start",
+      "auth/manage-users",
+      "auth/password-auth",
+      "auth/email-link-auth",
       "auth/social",
       "auth/phone",
+      "auth/custom-auth",
+      "auth/anonymous-auth",
+      "auth/account-linking",
+      toFirebase(
+        "Passing State in Email Actions",
+        "/docs/auth/android/passing-state-in-email-actions",
+      ),
       "auth/error-handling",
       toReferenceAPI("firebase_auth"),
       toGithubExample("firebase_auth"),
@@ -87,7 +140,14 @@ module.exports = {
     ],
     "Cloud Storage": [
       "storage/overview",
-      "storage/usage",
+      "storage/start",
+      "storage/create-reference",
+      "storage/upload-files",
+      "storage/download-files",
+      "storage/file-metadata",
+      "storage/delete-files",
+      "storage/list-files",
+      "storage/handle-errors",
       toReferenceAPI("firebase_storage"),
       toGithubExample("firebase_storage"),
     ],
@@ -105,15 +165,38 @@ module.exports = {
     ],
     'Dynamic Links': [
       "dynamic-links/overview",
-      "dynamic-links/android-integration",
-      "dynamic-links/apple-integration",
-      "dynamic-links/usage",
+      toFirebase(
+        "Create Links",
+        "/docs/dynamic-links/create-links"
+      ),
+      "dynamic-links/create",
+      "dynamic-links/receive",
+      toFirebase(
+        "Use a Custom Domain",
+        "/docs/dynamic-links/custom-domains"
+      ),
+      toFirebase(
+        "View Analytics Data",
+        "/docs/dynamic-links/analytics"
+      ),
+      toFirebase(
+        "Debug Links",
+        "/docs/dynamic-links/debug"
+      ),
+      toFirebase(
+        "Link Previews & Social Metadata",
+        "/docs/dynamic-links/link-previews"
+      ),
       toReferenceAPI("firebase_dynamic_links"),
       toGithubExample("firebase_dynamic_links"),
     ],
     "Realtime Database": [
       "database/overview",
-      "database/usage",
+      "database/start",
+      "database/structure-data",
+      "database/read-and-write",
+      "database/lists-of-data",
+      "database/offline-capabilities",
       toReferenceAPI("firebase_database"),
       toGithubExample("firebase_database"),
     ],
@@ -143,7 +226,17 @@ module.exports = {
     ],
     'In-App Messaging': [
       'in-app-messaging/overview',
-      'in-app-messaging/usage',
+      'in-app-messaging/get-started',
+      toFirebase(
+        "Explore use cases",
+        "/docs/in-app-messaging/explore-use-cases",
+      ),
+      toFirebase(
+        "Compose a campaign",
+        "/docs/in-app-messaging/compose-campaign",
+      ),
+      'in-app-messaging/modify-message-behavior',
+      'in-app-messaging/customize-messages',
       toReferenceAPI('firebase_in_app_messaging'),
       toGithubExample('firebase_in_app_messaging'),
     ],
@@ -161,7 +254,7 @@ module.exports = {
     ],
     "Remote Config": [
       "remote-config/overview",
-      "remote-config/usage",
+      "remote-config/get-started",
       toReferenceAPI("firebase_remote_config"),
       toGithubExample("firebase_remote_config"),
     ],

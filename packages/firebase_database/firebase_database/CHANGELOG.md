@@ -1,3 +1,19 @@
+## 9.0.8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 9.0.7
+
+ - Update a dependency to the latest release.
+
+## 9.0.6
+
+ - **FIX**: Fix `MissingPluginException` caused by malformed EventChannel name. (#7859). ([b69be414](https://github.com/FirebaseExtended/flutterfire/commit/b69be414d46afa047d44d96bb46878e48db594d8))
+
+## 9.0.5
+
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+
 ## 9.0.4
 
  - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))

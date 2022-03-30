@@ -118,6 +118,8 @@ Next, go ahead and return a new `SignInScreen` from the builder if the user is n
 ```dart
 return StreamBuilder<User?>(
   stream: FirebaseAuth.instance.authStateChanges(),
+  // If the user is already signed-in, use it as initial data
+  initialData: FirebaseAuth.instance.currentUser,
   builder: (context, snapshot) {
     // User is not signed in
     if (!snapshot.hasData) {
@@ -213,7 +215,13 @@ return SignInScreen(
 ```
 
 For cross-platform compatibility, some providers require a few additional properties to be added to the configuration. In this case,
-the `appId` can be copied from the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+the `clientId` can be copied from the [Firebase Console](https://console.firebase.google.com/project/_/authentication/providers).
+
+<Image
+  src="ui/ui-google-provider-client-id.png"
+  alt="Google app client id"
+  caption={false}
+/>
 
 With the Google provider configuration added, our sign in screen will now include a Google button!
 
@@ -483,6 +491,65 @@ return ProfileScreen(
   caption={false}
   style={{ maxHeight: 700 }}
 />
+
+## Configuring auth providers globally
+
+Instead of passing a list of providers to each screen, you can alternatively provide a list of provider configurations to the `FlutterFireUIAuth.configureProviders` method:
+
+```dart
+Future<void> main() async {
+  // Firebase app should be initialized before calling configureProviders
+  await Firebase.initializeApp();
+
+  FlutterFireUIAuth.configureProviders([
+    const EmailProviderConfiguration(),
+    const PhoneProviderConfiguration(),
+    const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+    const AppleProviderConfiguration(),
+    const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+    const TwitterProviderConfiguration(
+      apiKey: TWITTER_API_KEY,
+      apiSecretKey: TWITTER_API_SECRET_KEY,
+      redirectUri: TWITTER_REDIRECT_URI,
+    ),
+  ]);
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final auth = FirebaseAuth.instance;
+
+    return MaterialApp(
+      initialRoute: auth.currentUser == null ? '/' : '/profile',
+      routes: {
+        '/': (context) {
+          return SignInScreen(
+            // no providerConfigs property - global configuration will be used instead
+            actions: [
+              AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }),
+            ],
+          );
+        },
+        '/profile': (context) {
+          return ProfileScreen(
+            // no providerConfigs property here as well
+            actions: [
+              SignedOutAction((context) {
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+            ],
+          );
+        },
+      },
+    );
+  }
+}
+```
 
 ## Next Steps
 

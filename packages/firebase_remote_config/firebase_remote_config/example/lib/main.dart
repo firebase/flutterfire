@@ -14,9 +14,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MaterialApp(
       title: 'Remote Config Example',
-      home: FutureBuilder<RemoteConfig>(
+      home: FutureBuilder<FirebaseRemoteConfig>(
         future: setupRemoteConfig(),
-        builder: (BuildContext context, AsyncSnapshot<RemoteConfig> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<FirebaseRemoteConfig> snapshot) {
           return snapshot.hasData
               ? WelcomeWidget(remoteConfig: snapshot.requireData)
               : Container();
@@ -29,7 +30,7 @@ class WelcomeWidget extends AnimatedWidget {
     required this.remoteConfig,
   }) : super(listenable: remoteConfig);
 
-  final RemoteConfig remoteConfig;
+  final FirebaseRemoteConfig remoteConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +77,7 @@ class WelcomeWidget extends AnimatedWidget {
   }
 }
 
-Future<RemoteConfig> setupRemoteConfig() async {
+Future<FirebaseRemoteConfig> setupRemoteConfig() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
         apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
@@ -88,7 +89,7 @@ Future<RemoteConfig> setupRemoteConfig() async {
         appId: '1:448618578101:web:772d484dc9eb15e9ac3efc',
         measurementId: 'G-0N1G9FLDZE'),
   );
-  final RemoteConfig remoteConfig = RemoteConfig.instance;
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.setConfigSettings(RemoteConfigSettings(
     fetchTimeout: const Duration(seconds: 10),
     minimumFetchInterval: const Duration(hours: 1),

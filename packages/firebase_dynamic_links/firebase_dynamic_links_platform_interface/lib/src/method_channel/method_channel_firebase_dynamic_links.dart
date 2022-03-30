@@ -32,9 +32,13 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
           }
           break;
         case 'FirebaseDynamicLink#onLinkError':
-          Map<String, dynamic> error =
-              Map<String, dynamic>.from(call.arguments);
-          _onLinkController.addError(convertPlatformException(error));
+          try {
+            Map<String, dynamic> error =
+                Map<String, dynamic>.from(call.arguments);
+            convertPlatformException(error, StackTrace.current);
+          } catch (err, stack) {
+            _onLinkController.addError(err, stack);
+          }
           break;
         default:
           throw UnimplementedError('${call.method} has not been implemented');
@@ -100,6 +104,9 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
       link: Uri.parse(link),
       android: androidData,
       ios: iosData,
+      utmParameters: linkData['utmParameters'] == null
+          ? {}
+          : Map<String, String>.from(linkData['utmParameters']),
     );
   }
 
@@ -114,7 +121,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return _getPendingDynamicLinkDataFromMap(linkData);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -129,7 +136,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return _getPendingDynamicLinkDataFromMap(linkData);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -149,7 +156,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
 
       return Uri.parse(url!);
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -181,7 +188,7 @@ class MethodChannelFirebaseDynamicLinks extends FirebaseDynamicLinksPlatform {
             : null,
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

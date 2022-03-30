@@ -1,22 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui/src/auth/screens/internal/multi_provider_screen.dart';
 
 import '../widgets/internal/universal_page_route.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
-class UniversalEmailSignInScreen extends StatelessWidget {
-  final FirebaseAuth? auth;
+class UniversalEmailSignInScreen extends MultiProviderScreen {
   final ProvidersFoundCallback? onProvidersFound;
-  final List<ProviderConfiguration>? providerConfigs;
 
   const UniversalEmailSignInScreen({
     Key? key,
-    this.auth,
+    FirebaseAuth? auth,
+    List<ProviderConfiguration>? providerConfigs,
     this.onProvidersFound,
-    this.providerConfigs,
   })  : assert(onProvidersFound != null || providerConfigs != null),
-        super(key: key);
+        super(key: key, auth: auth, providerConfigs: providerConfigs);
 
   Widget _wrap(BuildContext context, Widget child) {
     return AuthStateListener(
@@ -28,6 +27,7 @@ class UniversalEmailSignInScreen extends StatelessWidget {
         if (newState is SignedIn) {
           Navigator.of(context).pop();
         }
+        return null;
       },
     );
   }
@@ -46,7 +46,7 @@ class UniversalEmailSignInScreen extends StatelessWidget {
           context,
           RegisterScreen(
             showAuthActionSwitch: false,
-            providerConfigs: providerConfigs!,
+            providerConfigs: providerConfigs,
             auth: auth,
             email: email,
           ),
@@ -56,7 +56,7 @@ class UniversalEmailSignInScreen extends StatelessWidget {
       final List<ProviderConfiguration> finalProviders = [];
       final providersSet = Set.from(providers);
 
-      for (final p in providerConfigs!) {
+      for (final p in providerConfigs) {
         if (providersSet.contains(p.providerId)) {
           finalProviders.add(p);
         }

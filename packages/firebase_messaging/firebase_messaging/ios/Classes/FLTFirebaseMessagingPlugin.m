@@ -20,6 +20,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 @implementation FLTFirebaseMessagingPlugin {
   FlutterMethodChannel *_channel;
   NSObject<FlutterPluginRegistrar> *_registrar;
+  NSData *_apnsToken;
   NSDictionary *_initialNotification;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
@@ -103,6 +104,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
   FLTFirebaseMethodCallResult *methodCallResult =
       [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+
+  [self ensureAPNSTokenSetting];
 
   if ([@"Messaging#getInitialMessage" isEqualToString:call.method]) {
     methodCallResult.success([self copyInitialNotification]);
@@ -191,6 +194,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
+#if TARGET_OS_OSX
+  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+#else
+  NSDictionary *remoteNotification =
+      notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+#endif
+  if (remoteNotification != nil) {
+    // If remoteNotification exists, it is the notification that opened the app.
+    _initialNotification =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+  }
+
 #if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
   // registrar Flutter implementation.
@@ -287,11 +302,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
 
-    // Don't send an event if contentAvailable is true - application:didReceiveRemoteNotification
-    // will send the event for us, we don't want to duplicate them.
-    if (!notificationDict[@"contentAvailable"]) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
-    }
+    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
   // Forward on to any other delegates amd allow them to control presentation behavior.
@@ -330,9 +341,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-    @synchronized(self) {
-      _initialNotification = notificationDict;
-    }
   }
 
   // Forward on to any other delegates.
@@ -374,6 +382,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application:(UIApplication *)application
     didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
 #endif
+  if ([FIRMessaging messaging] == nil) {
+    _apnsToken = deviceToken;
+  }
 #ifdef DEBUG
   [[FIRMessaging messaging] setAPNSToken:deviceToken type:FIRMessagingAPNSTokenTypeSandbox];
 #else
@@ -474,7 +485,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -593,10 +603,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
+
+  // Keep behaviour consistent with android platform, newly retrieved tokens are streamed via
+  // onTokenRefresh
+  bool refreshToken = messaging.FCMToken == nil ? YES : NO;
   [messaging tokenWithCompletion:^(NSString *_Nullable token, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      if (refreshToken) {
+        [self->_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:token];
+      }
+
       result.success(@{@"token" : token});
     }
   }];
@@ -945,6 +963,20 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   }
 
   return message;
+}
+
+- (void)ensureAPNSTokenSetting {
+  FIRMessaging *messaging = [FIRMessaging messaging];
+
+  if (messaging.APNSToken == nil && _apnsToken != nil) {
+#ifdef DEBUG
+    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeSandbox];
+#else
+    [[FIRMessaging messaging] setAPNSToken:_apnsToken type:FIRMessagingAPNSTokenTypeProd];
+#endif
+
+    _apnsToken = nil;
+  }
 }
 
 - (nullable NSDictionary *)copyInitialNotification {

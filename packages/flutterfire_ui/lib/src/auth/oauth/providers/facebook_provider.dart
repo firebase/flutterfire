@@ -8,12 +8,16 @@ import 'package:desktop_webview_auth/facebook.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../../widgets/internal/oauth_provider_button_style.dart';
-import '../../oauth/provider_resolvers.dart';
+import '../provider_resolvers.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class FacebookProviderImpl extends OAuthProvider {
-  final _provider = FacebookAuth.instance;
+import 'sign_out_mixin.dart' if (dart.library.html) 'sign_out_mixin_web.dart';
+
+abstract class FacebookProvider extends OAuthProvider {}
+
+class FacebookProviderImpl extends FacebookProvider with SignOutMixin {
+  final provider = FacebookAuth.instance;
   final String clientId;
   final String redirectUri;
 
@@ -30,7 +34,7 @@ class FacebookProviderImpl extends OAuthProvider {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final result = await _provider.login();
+    final result = await provider.login();
 
     switch (result.status) {
       case LoginStatus.success:
@@ -49,14 +53,20 @@ class FacebookProviderImpl extends OAuthProvider {
 
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
-    return FacebookAuthProvider.credential(result.accessToken);
+    return FacebookAuthProvider.credential(result.accessToken!);
   }
 
   @override
   FacebookAuthProvider get firebaseAuthProvider => FacebookAuthProvider();
+
+  @override
+  Future<void> logOutProvider() async {
+    await provider.logOut();
+  }
 }
 
-class FacebookProviderConfiguration extends OAuthProviderConfiguration {
+class FacebookProviderConfiguration
+    extends OAuthProviderConfiguration<FacebookProvider> {
   final String clientId;
   final String? redirectUri;
 
@@ -65,7 +75,7 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
     this.redirectUri,
   });
 
-  OAuthProvider get _provider => FacebookProviderImpl(
+  FacebookProvider get provider => FacebookProviderImpl(
         clientId: clientId,
         redirectUri: redirectUri ?? defaultRedirectUri,
       );
@@ -74,8 +84,8 @@ class FacebookProviderConfiguration extends OAuthProviderConfiguration {
   String get providerId => FACEBOOK_PROVIDER_ID;
 
   @override
-  OAuthProvider createProvider() {
-    return _provider;
+  FacebookProvider createProvider() {
+    return provider;
   }
 
   @override

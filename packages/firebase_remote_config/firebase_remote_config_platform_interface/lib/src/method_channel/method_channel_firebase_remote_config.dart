@@ -108,7 +108,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
         'appName': app.name,
       });
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -122,7 +122,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       await _updateConfigParameters();
       return configChanged!;
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -136,7 +136,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -153,7 +153,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
     } catch (exception, stackTrace) {
       // Ensure that fetch status is updated.
       await _updateConfigProperties();
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -216,7 +216,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigProperties();
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 
@@ -229,7 +229,7 @@ class MethodChannelFirebaseRemoteConfig extends FirebaseRemoteConfigPlatform {
       });
       await _updateConfigParameters();
     } catch (exception, stackTrace) {
-      throw convertPlatformException(exception, stackTrace);
+      convertPlatformException(exception, stackTrace);
     }
   }
 

@@ -806,7 +806,21 @@ public class FlutterFirebaseAuthPlugin
             throw FlutterFirebaseAuthPluginException.invalidCredential();
           }
 
-          AuthResult authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
+          AuthResult authResult;
+
+          try {
+            authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
+          } catch (Exception exception) {
+            String message = exception.getMessage();
+
+            if (message != null
+                && message.contains("User has already been linked to the given provider.")) {
+              throw FlutterFirebaseAuthPluginException.alreadyLinkedProvider();
+            }
+
+            throw exception;
+          }
+
           return parseAuthResult(authResult);
         });
   }

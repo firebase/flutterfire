@@ -133,8 +133,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
-        DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
-        methodCallTask = buildShortLink(urlBuilder, call.arguments());
+        methodCallTask = buildShortLink(call.arguments());
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -165,11 +164,17 @@ public class FlutterFirebaseDynamicLinksPlugin
     return urlBuilder.buildDynamicLink().getUri().toString();
   }
 
-  private Task<Map<String, Object>> buildShortLink(
-      DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> arguments) {
+  private Task<Map<String, Object>> buildShortLink(@Nullable Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
+          DynamicLink.Builder urlBuilder = setupParameters(arguments);
+          String longDynamicLink = (String) arguments.get("longDynamicLink");
+
+          if (longDynamicLink != null) {
+            urlBuilder.setLongLink(Uri.parse(longDynamicLink));
+          }
+
           Integer suffix = 1;
           Integer shortDynamicLinkPathLength = (Integer) arguments.get("shortLinkType");
           if (shortDynamicLinkPathLength != null) {
@@ -187,11 +192,8 @@ public class FlutterFirebaseDynamicLinksPlugin
 
           Map<String, Object> result = new HashMap<>();
           ShortDynamicLink shortLink;
-          if (suffix != null) {
-            shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
-          } else {
-            shortLink = Tasks.await(urlBuilder.buildShortDynamicLink());
-          }
+
+          shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
 
           List<String> warnings = new ArrayList<>();
 
@@ -218,11 +220,15 @@ public class FlutterFirebaseDynamicLinksPlugin
             pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
           } else {
             // If there's no activity or initial Intent, then there's no initial dynamic link.
-            if (activity.get() == null || activity.get().getIntent() == null) {
+            if (activity.get() == null
+                || activity.get().getIntent() == null
+                || activity.get().getIntent().getBooleanExtra("flutterfire-used-link", false)) {
               return null;
             }
             pendingDynamicLink =
                 Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
+
+            activity.get().getIntent().putExtra("flutterfire-used-link", true);
           }
 
           return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);

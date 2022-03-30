@@ -2,7 +2,7 @@ name: firebase_messaging_example
 description: Demonstrates how to use the firebase_messaging plugin.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
   flutter: ">=1.12.13+hotfix.5"
 
 dependencies:
@@ -30,12 +30,6 @@ dependency_overrides:
     path: ../../firebase_messaging_web
   # Override for `flutter_local_notifications`:
   plugin_platform_interface: ^2.0.0
-
-dev_dependencies:
-  drive: ^1.0.0-1.0.nullsafety.0
-  flutter_driver:
-    sdk: flutter
-  test: any
 
 flutter:
   uses-material-design: true
