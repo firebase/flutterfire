@@ -17,6 +17,7 @@ class LoginScreen extends StatelessWidget {
   final TextDirection? desktopLayoutDirection;
   final String? email;
   final bool? showAuthActionSwitch;
+  final bool? resizeToAvoidBottomInset;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
@@ -34,6 +35,7 @@ class LoginScreen extends StatelessWidget {
     this.desktopLayoutDirection = TextDirection.ltr,
     this.email,
     this.showAuthActionSwitch,
+    this.resizeToAvoidBottomInset = false,
     this.subtitleBuilder,
     this.footerBuilder,
     this.loginViewKey,
@@ -71,7 +73,7 @@ class LoginScreen extends StatelessWidget {
 
     return UniversalScaffold(
       body: body,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
 }
