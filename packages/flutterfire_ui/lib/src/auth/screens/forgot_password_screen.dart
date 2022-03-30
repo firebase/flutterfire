@@ -14,6 +14,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   final double? headerMaxExtent;
   final SideBuilder? sideBuilder;
   final TextDirection? desktopLayoutDirection;
+  final bool? resizeToAvoidBottomInset;
   final double breakpoint;
 
   const ForgotPasswordScreen({
@@ -26,6 +27,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     this.headerMaxExtent,
     this.sideBuilder,
     this.desktopLayoutDirection,
+    this.resizeToAvoidBottomInset,
     this.breakpoint = 600,
   }) : super(key: key);
 
@@ -45,6 +47,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         headerMaxExtent: headerMaxExtent,
         sideBuilder: sideBuilder,
         breakpoint: breakpoint,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         maxWidth: 1200,
         contentFlex: 1,
         child: Padding(
