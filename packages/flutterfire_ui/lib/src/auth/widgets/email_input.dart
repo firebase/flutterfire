@@ -37,7 +37,7 @@ class EmailInput extends StatelessWidget {
         NotEmpty(l.emailIsRequiredErrorText),
         EmailValidator(l.isNotAValidEmailErrorText),
       ]),
-      onSubmitted: (v) => onSubmitted(v!),
+      onSubmitted: (v) => onSubmitted(v!.trim()),
     );
   }
 }
