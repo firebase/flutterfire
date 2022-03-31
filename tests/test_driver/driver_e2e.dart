@@ -30,7 +30,7 @@ void setupTests() {
   // All other tests.
   firebase_auth.setupTests();
   cloud_functions.setupTests();
-  firebase_storage.setupTests();
+  // firebase_storage.setupTests();
   firebase_database.setupTests();
   firebase_app_check.setupTests();
   firebase_messaging.setupTests();
