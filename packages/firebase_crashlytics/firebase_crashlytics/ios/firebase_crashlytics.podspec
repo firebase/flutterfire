@@ -28,7 +28,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
 
   s.dependency 'Flutter'
   s.dependency 'firebase_core'
@@ -40,5 +40,5 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES'
   }
   s.user_target_xcconfig = { 'DEBUG_INFORMATION_FORMAT' => 'dwarf-with-dsym' }
-  
+
 end
