@@ -167,6 +167,16 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String credentialAlreadyInUseErrorText;
+  @override
+  final String verifyEmailTitleText;
+  @override
+  final String emailVerificationInstructionText;
+  @override
+  final String couldntVerifyEmailText;
+  @override
+  final String resendVerificationEmailButtonLabel;
 
   const ArLocalizations({
     this.emailInputLabel = 'البريد الإلكتروني',
@@ -240,6 +250,15 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         'لقد أرسلنا رابط تسجيل الدخول إلى بريدك الإلكتروني. تفقد صندوق رسائلك واضغط على الرابط لتسجيل الدخول',
     this.sendLinkButtonLabel = 'أرسل رابط تسجيل الدخول',
+    this.credentialAlreadyInUseErrorText =
+        'This credential is already associated with a different user account.',
+    this.verifyEmailTitleText = 'Verify your email',
+    this.emailVerificationInstructionText =
+        'A verification email has been sent to your email address. '
+            'Please check your email and click on the link to verify '
+            'your email address.',
+    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
+    this.resendVerificationEmailButtonLabel = 'Resend verification email',
     this.arrayLabel = 'مصفوفة',
     this.booleanLabel = 'قيمة منطقية',
     this.mapLabel = 'كائن',

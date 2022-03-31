@@ -84,6 +84,7 @@ abstract class FlutterFireUILocalizationLabels {
   String get signInWithEmailLinkViewTitleText;
   String get signInWithEmailLinkSentText;
   String get sendLinkButtonLabel;
+  String get verifyEmailTitleText;
 
   // DataTable components
   String get valueLabel;
@@ -105,6 +106,10 @@ abstract class FlutterFireUILocalizationLabels {
   String get latitudeLabel;
   String get geopointLabel;
   String get referenceLabel;
+  String get credentialAlreadyInUseErrorText;
+  String get emailVerificationInstructionText;
+  String get couldntVerifyEmailText;
+  String get resendVerificationEmailButtonLabel;
 }
 
 const localizations = <String, FlutterFireUILocalizationLabels>{

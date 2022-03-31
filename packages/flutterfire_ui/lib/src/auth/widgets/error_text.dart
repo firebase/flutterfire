@@ -20,8 +20,7 @@ String? localizedErrorText(
     case 'wrong-password':
       return labels.wrongOrNoPasswordErrorText;
     case 'credential-already-in-use':
-      // TODO(lesnitsky): add translation
-      return 'This credential is already associated with a different user account.';
+      return l.credentialAlreadyInUseErrorText;
 
     default:
       return null;

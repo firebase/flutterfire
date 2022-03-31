@@ -167,6 +167,16 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String credentialAlreadyInUseErrorText;
+  @override
+  final String verifyEmailTitleText;
+  @override
+  final String emailVerificationInstructionText;
+  @override
+  final String couldntVerifyEmailText;
+  @override
+  final String resendVerificationEmailButtonLabel;
 
   const HiLocalizations({
     this.emailInputLabel = 'ईमेल',
@@ -240,6 +250,15 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         'हमने आपको एक जादुई लिंक के साथ एक ईमेल भेजा है। अपना ईमेल जांचें और साइन इन करने के लिए लिंक का अनुसरण करें',
     this.sendLinkButtonLabel = 'मैजिक लिंक भेजें',
+    this.credentialAlreadyInUseErrorText =
+        'This credential is already associated with a different user account.',
+    this.verifyEmailTitleText = 'Verify your email',
+    this.emailVerificationInstructionText =
+        'A verification email has been sent to your email address. '
+            'Please check your email and click on the link to verify '
+            'your email address.',
+    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
+    this.resendVerificationEmailButtonLabel = 'Resend verification email',
     this.arrayLabel = 'सरणी',
     this.booleanLabel = 'बूलियन',
     this.mapLabel = 'मैप',
