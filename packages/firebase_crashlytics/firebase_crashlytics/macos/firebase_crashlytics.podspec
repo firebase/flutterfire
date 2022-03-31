@@ -7,6 +7,10 @@ library_version = pubspec['version'].gsub('+', '-')
 current_dir = Dir.pwd
 calling_dir = File.dirname(__FILE__)
 project_dir = calling_dir.slice(0..(calling_dir.index('/.symlinks')))
+if project_dir.include? "Flutter/ephemeral"
+  # Note: macOS CWD can be based in <macosProjectDir>/Flutter/ephemeral - so we need to go up two levels.
+  project_dir = File.expand_path(File.join(project_dir, '..', '..'))
+end
 system("ruby #{current_dir}/crashlytics_add_upload_symbols -f -p #{project_dir} -n Runner.xcodeproj")
 
 if defined?($FirebaseSDKVersion)
