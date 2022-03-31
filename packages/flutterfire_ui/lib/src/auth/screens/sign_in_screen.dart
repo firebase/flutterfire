@@ -82,7 +82,6 @@ class SignInScreen extends MultiProviderScreen {
         action: AuthAction.signIn,
         providerConfigs: providerConfigs,
         auth: auth,
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         headerMaxExtent: headerMaxExtent,
         headerBuilder: headerBuilder,
         sideBuilder: sideBuilder,
