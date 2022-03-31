@@ -113,6 +113,7 @@ class OAuthProviderButton extends StatelessWidget
   final double _padding;
   final OAuthProviderConfiguration providerConfig;
   final VoidCallback? onTap;
+  final bool overrideDefaultAction;
 
   const OAuthProviderButton({
     Key? key,
@@ -121,6 +122,7 @@ class OAuthProviderButton extends StatelessWidget
     this.auth,
     this.size = 19,
     this.onTap,
+    this.overrideDefaultAction = false,
   })  : _padding = size * 1.33 / 2,
         super(key: key);
 
@@ -188,8 +190,10 @@ class OAuthProviderButton extends StatelessWidget
                       ),
                     ),
                     onPressed: () {
-                      if (onTap != null) onTap!.call();
-                      signIn(context);
+                      onTap?.call();
+                      if (!overrideDefaultAction) {
+                        signIn(context);
+                      }
                     },
                   ),
                 ),
@@ -311,6 +315,7 @@ class OAuthProviderIconButton extends StatelessWidget
   final AuthAction? action;
   final OAuthProviderConfiguration providerConfig;
   final VoidCallback? onTap;
+  final bool overrideDefaultAction;
 
   const OAuthProviderIconButton({
     Key? key,
@@ -319,6 +324,7 @@ class OAuthProviderIconButton extends StatelessWidget
     this.auth,
     this.action,
     this.onTap,
+    this.overrideDefaultAction = false,
   }) : super(key: key);
 
   WidgetBuilder _contentBuilder(
@@ -372,8 +378,10 @@ class OAuthProviderIconButton extends StatelessWidget
                 padding: EdgeInsets.zero,
                 child: Builder(builder: _contentBuilder(borderRadius, style)),
                 onPressed: () {
-                  if (onTap != null) onTap!.call();
-                  signIn(context);
+                  onTap?.call();
+                  if (!overrideDefaultAction) {
+                    signIn(context);
+                  }
                 },
               ),
             ),
@@ -409,9 +417,9 @@ class OAuthProviderIconButton extends StatelessWidget
                   builder: (context) {
                     return InkWell(
                       onTap: () {
-                        if (onTap != null) {
-                          onTap!();
-                        } else {
+                        onTap?.call();
+
+                        if (!overrideDefaultAction) {
                           signIn(context);
                         }
                       },
