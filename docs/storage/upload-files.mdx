@@ -206,6 +206,9 @@ final file = File(filePath);
 // Create the file metadata
 final metadata = SettableMetadata(contentType: "image/jpeg");
 
+// Create a reference to the Firebase Storage bucket
+final storageRef = FirebaseStorage.instance.ref();
+
 // Upload file and metadata to the path 'images/mountains.jpg'
 final uploadTask = storageRef
     .child("images/path/to/mountains.jpg")
