@@ -9,7 +9,6 @@ import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
 import 'firebase_crashlytics/firebase_crashlytics_e2e.dart'
     as firebase_crashlytics;
 import 'firebase_database/firebase_database_e2e.dart' as firebase_database;
-import 'firebase_storage/firebase_storage_e2e.dart' as firebase_storage;
 import 'firebase_analytics/firebase_analytics_e2e.dart' as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e.dart' as firebase_app_check;
 import 'firebase_app_installations/firebase_app_installations_e2e.dart'
@@ -30,7 +29,7 @@ void setupTests() {
   // All other tests.
   firebase_auth.setupTests();
   cloud_functions.setupTests();
-  firebase_storage.setupTests();
+  // firebase_storage.setupTests();
   firebase_database.setupTests();
   firebase_app_check.setupTests();
   firebase_messaging.setupTests();
