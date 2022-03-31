@@ -20,7 +20,7 @@ String? localizedErrorText(
     case 'wrong-password':
       return labels.wrongOrNoPasswordErrorText;
     case 'credential-already-in-use':
-      return l.credentialAlreadyInUseErrorText;
+      return labels.credentialAlreadyInUseErrorText;
 
     default:
       return null;
