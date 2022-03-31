@@ -35,50 +35,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-    appId: '1:448618578101:web:0b650370bb29e29cac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    authDomain: 'react-native-firebase-testing.firebaseapp.com',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    measurementId: 'G-F79DJ0VFGS',
+    apiKey: 'AIzaSyB7wZb2tO1-Fs6GbDADUSTs2Qs3w08Hovw',
+    appId: '1:406099696497:web:87e25e51afe982cd3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    authDomain: 'flutterfire-e2e-tests.firebaseapp.com',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    measurementId: 'G-JN95N1JV2E',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCuu4tbv9CwwTudNOweMNstzZHIDBhgJxA',
-    appId: '1:448618578101:android:553625b1be8cf2efac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
+    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
+    appId: '1:406099696497:android:2751af6868a69f073574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:6640d5c29008c2a8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    androidClientId:
-        '448618578101-29lqo5a1alrq4uplsf9bl92jb84j1ee6.apps.googleusercontent.com',
-    iosClientId:
-        '448618578101-dgsgte6oqc377gdf80gbb8ovtjbagi49.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:2b153134d540c9cb3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId: '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
+    iosClientId: '406099696497-9g24of79g5uaqkdkik2n1n1lib2samf9.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.storage.example',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-    appId: '1:448618578101:ios:6640d5c29008c2a8ac3efc',
-    messagingSenderId: '448618578101',
-    projectId: 'react-native-firebase-testing',
-    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
-    storageBucket: 'react-native-firebase-testing.appspot.com',
-    androidClientId:
-        '448618578101-29lqo5a1alrq4uplsf9bl92jb84j1ee6.apps.googleusercontent.com',
-    iosClientId:
-        '448618578101-dgsgte6oqc377gdf80gbb8ovtjbagi49.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
+    appId: '1:406099696497:ios:2b153134d540c9cb3574d0',
+    messagingSenderId: '406099696497',
+    projectId: 'flutterfire-e2e-tests',
+    databaseURL: 'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
+    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    androidClientId: '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
+    iosClientId: '406099696497-9g24of79g5uaqkdkik2n1n1lib2samf9.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.storage.example',
   );
 }
