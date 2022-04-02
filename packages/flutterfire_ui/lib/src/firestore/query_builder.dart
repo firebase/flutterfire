@@ -355,6 +355,9 @@ typedef FirestoreItemBuilder<Document> = Widget Function(
 /// A type representing the function passed to [FirestoreListView] for its `loadingBuilder`.
 typedef FirestoreLoadingBuilder = Widget Function(BuildContext context);
 
+/// A type representing the function passed to [FirestoreListView] for its `emptyBuilder`.
+typedef FirestoreEmptyBuilder = Widget Function(BuildContext context);
+
 /// A type representing the function passed to [FirestoreListView] for its `errorBuilder`.
 typedef FirestoreErrorBuilder = Widget Function(
   BuildContext context,
@@ -421,6 +424,7 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
     required FirestoreItemBuilder<Document> itemBuilder,
     int pageSize = 10,
     FirestoreLoadingBuilder? loadingBuilder,
+    FirestoreEmptyBuilder? emptyBuilder,
     FirestoreErrorBuilder? errorBuilder,
     Axis scrollDirection = Axis.vertical,
     bool reverse = false,
@@ -457,6 +461,10 @@ class FirestoreListView<Document> extends FirestoreQueryBuilder<Document> {
                 snapshot.error!,
                 snapshot.stackTrace!,
               );
+            }
+            
+            if (snapshot.docs.isEmpty && emptyBuilder != null) {
+              return emptyBuilder(context);
             }
 
             return ListView.builder(
