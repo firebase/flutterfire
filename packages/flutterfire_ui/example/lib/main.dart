@@ -61,7 +61,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
       return '/';
     }
 
-    if (!auth.currentUser!.emailVerified) {
+    if (!auth.currentUser!.emailVerified && auth.currentUser!.email != null) {
       return '/verify-email';
     }
 
