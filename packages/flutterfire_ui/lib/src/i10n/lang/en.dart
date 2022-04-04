@@ -257,7 +257,7 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
         'A verification email has been sent to your email address. '
             'Please check your email and click on the link to verify '
             'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
+    this.couldntVerifyEmailText = "We couldn't verify your email address.",
     this.resendVerificationEmailButtonLabel = 'Resend verification email',
     // DataTable labels
     this.arrayLabel = 'array',
