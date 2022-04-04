@@ -246,14 +246,13 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
         'マジックリンクが記載されたメールを送信しました。メールをご確認の上、リンクからサインインしてください。',
     this.sendLinkButtonLabel = 'マジックリンクを送信',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+        '認証情報が他のアカウントと紐づいています。',
+    this.verifyEmailTitleText = 'メールアドレスの認証',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'メールアドレスに認証メールが送信されました。'
+            'メールをご確認の上、リンクをクリックし、認証を行ってください。',
+    this.couldntVerifyEmailText = "メールの認証に失敗しました 。",
+    this.resendVerificationEmailButtonLabel = '認証メールを再送する',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',
