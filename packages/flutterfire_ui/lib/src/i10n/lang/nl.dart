@@ -254,13 +254,12 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.sendLinkButtonLabel = 'Stuur magic link',
     this.credentialAlreadyInUseErrorText =
         'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+    this.verifyEmailTitleText = 'Verifieer uw e-mailadres',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'Een verificatie e-mail is naar uw e-mailadres gestuurd. '
+            'Controleer uw e-mail en klik op de link om uw e-mailadres te verifiëren.',
+    this.couldntVerifyEmailText = 'We konden uw e-mailadres niet verifiëren.',
+    this.resendVerificationEmailButtonLabel = 'Verificatie e-mail opnieuw versturen',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',
