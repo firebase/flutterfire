@@ -252,14 +252,14 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
         'Sana sihirli bir link ile bir email gönderdik. Emailinizi kontrol edin ve oturum açmak için bağlantıyı takip edin',
     this.sendLinkButtonLabel = 'Sihirli bağlantı gönder',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+        'Bu kimlik bilgisi zaten farklı bir kullanıcı hesabıyla ilişkilidir.',
+    this.verifyEmailTitleText = 'E-mail adresini doğrula',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'Doğrulama maili e-mail adresinize gönderildi. '
+            "Lütfen e-mail'inizi kontrol edin ve e-mail adresinizi "
+            'doğrulamak için bağlantıya tıklayın.',
+    this.couldntVerifyEmailText = 'E-mail adresinizi doğrulayamadık.',
+    this.resendVerificationEmailButtonLabel = 'Doğrulama mailini yeniden gönder',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',
