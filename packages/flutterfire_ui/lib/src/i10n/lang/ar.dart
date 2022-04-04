@@ -251,14 +251,13 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
         'لقد أرسلنا رابط تسجيل الدخول إلى بريدك الإلكتروني. تفقد صندوق رسائلك واضغط على الرابط لتسجيل الدخول',
     this.sendLinkButtonLabel = 'أرسل رابط تسجيل الدخول',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+        'المعلومات المدخلة مرتبطة مسبقاً بحساب مستخدم مختلف.',
+    this.verifyEmailTitleText = 'التحقق من البريد الالكتروني',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'تم إرسال رسالة تحقق إلى عنوان بريدك الالكتروني. '
+            '.يرجى تفقد صندوق بريدك والضغط على الرابط لإتمام عملية التحقق ',
+    this.couldntVerifyEmailText = 'فشلت عملية التحقق من بريدك الالكتروني. ',
+    this.resendVerificationEmailButtonLabel = 'إعادة إرسال رسالة التحقق',
     this.arrayLabel = 'مصفوفة',
     this.booleanLabel = 'قيمة منطقية',
     this.mapLabel = 'كائن',
