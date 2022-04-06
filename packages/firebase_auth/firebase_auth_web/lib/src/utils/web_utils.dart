@@ -261,10 +261,14 @@ auth_interop.OAuthCredential? convertPlatformCredential(
   }
 
   if (credential is OAuthCredential) {
-    return auth_interop.OAuthProvider(credential.providerId).credential(
-      credential.idToken,
-      credential.accessToken,
+    auth_interop.OAuthCredentialOptions credentialOptions =
+        auth_interop.OAuthCredentialOptions(
+      accessToken: credential.accessToken,
+      rawNonce: credential.rawNonce,
+      idToken: credential.idToken,
     );
+    return auth_interop.OAuthProvider(credential.providerId)
+        .credential(credentialOptions);
   }
 
   if (credential is TwitterAuthCredential) {
@@ -278,13 +282,6 @@ auth_interop.OAuthCredential? convertPlatformCredential(
     return auth_interop.PhoneAuthProvider.credential(
       credential.verificationId!,
       credential.smsCode!,
-    );
-  }
-
-  if (credential is OAuthCredential) {
-    return auth_interop.OAuthProvider(credential.providerId).credential(
-      credential.idToken,
-      credential.accessToken,
     );
   }
 
