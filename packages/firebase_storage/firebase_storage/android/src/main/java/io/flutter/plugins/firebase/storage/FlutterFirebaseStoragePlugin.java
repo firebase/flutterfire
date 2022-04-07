@@ -227,6 +227,7 @@ public class FlutterFirebaseStoragePlugin
       StorageReference reference = getReference(arguments);
       try {
         Tasks.await(reference.delete());
+        taskCompletionSource.setResult(null);
       } catch (Exception e) {
         taskCompletionSource.setException(e);
       }
@@ -366,6 +367,7 @@ public class FlutterFirebaseStoragePlugin
           handle, reference, bytes, parseMetadata(metadata));
       try {
         task.startTaskWithMethodChannel(channel);
+        taskCompletionSource.setResult(null);
       } catch (Exception e) {
         taskCompletionSource.setException(e);
       }
@@ -392,6 +394,7 @@ public class FlutterFirebaseStoragePlugin
 
       try {
         task.startTaskWithMethodChannel(channel);
+        taskCompletionSource.setResult(null);
       } catch (Exception e) {
         taskCompletionSource.setException(e);
       }
@@ -417,6 +420,7 @@ public class FlutterFirebaseStoragePlugin
 
       try {
         task.startTaskWithMethodChannel(channel);
+        taskCompletionSource.setResult(null);
       } catch (Exception e) {
         taskCompletionSource.setException(e);
       }
@@ -437,6 +441,7 @@ public class FlutterFirebaseStoragePlugin
 
       try {
         task.startTaskWithMethodChannel(channel);
+        taskCompletionSource.setResult(null);
       } catch (Exception e) {
         taskCompletionSource.setException(e);
       }

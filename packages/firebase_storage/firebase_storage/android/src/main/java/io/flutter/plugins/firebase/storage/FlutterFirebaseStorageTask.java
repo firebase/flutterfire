@@ -218,21 +218,7 @@ class FlutterFirebaseStorageTask {
   Task<Boolean> cancel() {
     TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
     FlutterFirebasePlugin.cachedThreadPool.execute(() -> {
-      synchronized (cancelSyncObject) {
-        boolean canceled = storageTask.cancel();
-        if (!canceled) {
-          taskCompletionSource.setResult(false);
-          return;
-        }
-        try {
-          cancelSyncObject.wait();
-        } catch (InterruptedException e) {
-          taskCompletionSource.setResult(false);
-          return;
-        }
-
-        taskCompletionSource.setResult(true);
-      }
+      taskCompletionSource.setResult(storageTask.cancel());
     });
 
     return taskCompletionSource.getTask();
