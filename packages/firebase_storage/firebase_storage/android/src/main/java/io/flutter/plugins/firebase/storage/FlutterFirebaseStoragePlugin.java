@@ -214,6 +214,7 @@ public class FlutterFirebaseStoragePlugin
       String host = (String) Objects.requireNonNull(arguments.get("host"));
       int port = (int) Objects.requireNonNull((arguments.get("port")));
       firebaseStorage.useEmulator(host, port);
+      taskCompletionSource.setResult(null);
     });
 
     return taskCompletionSource.getTask();
