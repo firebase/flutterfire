@@ -22,6 +22,8 @@ import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e.dart'
     as firebase_ml_model_downloader;
 import 'firebase_remote_config/firebase_remote_config_e2e.dart'
     as firebase_remote_config;
+import 'firebase_storage/firebase_storage_e2e.dart'
+    as firebase_storage;
 
 void setupTests() {
   // Core first.
@@ -29,7 +31,7 @@ void setupTests() {
   // All other tests.
   firebase_auth.setupTests();
   cloud_functions.setupTests();
-  // firebase_storage.setupTests();
+  firebase_storage.setupTests();
   firebase_database.setupTests();
   firebase_app_check.setupTests();
   firebase_messaging.setupTests();
