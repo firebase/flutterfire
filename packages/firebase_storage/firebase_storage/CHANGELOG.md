@@ -1,3 +1,7 @@
+## 10.2.11
+
+ - **FIX**: Fix `UploadTask.cancel()` so that it completes when called. (#8417). ([19ee62c3](https://github.com/FirebaseExtended/flutterfire/commit/19ee62c33f34278dac082c11bf7574785e60abb5))
+
 ## 10.2.10
 
  - Update a dependency to the latest release.

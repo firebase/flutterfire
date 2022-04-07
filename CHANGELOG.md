@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-04-07
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_analytics` - `v9.1.4`](#firebase_analytics---v914)
+ - [`firebase_auth_web` - `v3.3.11`](#firebase_auth_web---v3311)
+ - [`firebase_database_web` - `v0.2.0+9`](#firebase_database_web---v0209)
+ - [`firebase_storage` - `v10.2.11`](#firebase_storage---v10211)
+ - [`flutterfire_ui` - `v0.4.0+1`](#flutterfire_ui---v0401)
+ - [`firebase_auth` - `v3.3.13`](#firebase_auth---v3313)
+ - [`firebase_database` - `v9.0.10`](#firebase_database---v9010)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `firebase_auth` - `v3.3.13`
+ - `firebase_database` - `v9.0.10`
+
+---
+
+#### `firebase_analytics` - `v9.1.4`
+
+ - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/FirebaseExtended/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
+
+#### `firebase_auth_web` - `v3.3.11`
+
+ - **FIX**: Allow `rawNonce` to be passed through on web via the `OAuthCredential`. (#8410). ([0df32f61](https://github.com/FirebaseExtended/flutterfire/commit/0df32f6106ca41cdb95c36c7816e6487124937d4))
+
+#### `firebase_database_web` - `v0.2.0+9`
+
+ - **FIX**: Remove sync as `true` on Stream broadcast for web platform. (#8420). ([4336e047](https://github.com/FirebaseExtended/flutterfire/commit/4336e0478a927385e676b069f354bd3cc2f932ab))
+
+#### `firebase_storage` - `v10.2.11`
+
+ - **FIX**: Fix `UploadTask.cancel()` so that it completes when called. (#8417). ([19ee62c3](https://github.com/FirebaseExtended/flutterfire/commit/19ee62c33f34278dac082c11bf7574785e60abb5))
+
+#### `flutterfire_ui` - `v0.4.0+1`
+
+ - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))
+ - **FIX**: fix phone linking on web (#8395). ([b8ac0a20](https://github.com/FirebaseExtended/flutterfire/commit/b8ac0a202958864f793791877e556624f9b7c487))
+
+
 ## 2022-04-05
 
 ### Changes

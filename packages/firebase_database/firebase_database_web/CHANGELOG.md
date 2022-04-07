@@ -1,3 +1,7 @@
+## 0.2.0+9
+
+ - **FIX**: Remove sync as `true` on Stream broadcast for web platform. (#8420). ([4336e047](https://github.com/FirebaseExtended/flutterfire/commit/4336e0478a927385e676b069f354bd3cc2f932ab))
+
 ## 0.2.0+8
 
  - Update a dependency to the latest release.
