@@ -260,7 +260,10 @@ module.exports = {
     ],
     "Performance Monitoring": [
       "performance/overview",
-      "performance/usage",
+      "performance/get-started",
+      "performance/custom-code-traces",
+      "performance/custom-network-traces",
+      "performance/disable-sdk",
       toReferenceAPI("firebase_performance"),
       toGithubExample("firebase_performance"),
     ],

@@ -1,0 +1,19 @@
+---
+title: Disable Firebase Performance Monitoring
+---
+
+During app development and testing, you might find it useful to disable
+Performance Monitoring.
+
+To stop custom data collection, you can call `setPerformanceCollectionEnabled`
+as in the following example:
+
+```dart
+FirebasePerformance performance = FirebasePerformance.instance;
+
+// Custom data collection is, by default, enabled
+bool isEnabled = await performance.isPerformanceCollectionEnabled();
+
+// Set data collection to `false`
+await performance.setPerformanceCollectionEnabled(false);
+```
