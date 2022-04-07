@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2021 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -6,8 +6,11 @@ package io.flutter.plugins.firebase.storage;
 
 import android.net.Uri;
 import android.util.Base64;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.storage.FirebaseStorage;
@@ -15,6 +18,7 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageException;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -23,6 +27,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FlutterFirebaseStoragePlugin
-    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
+  implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin {
   private MethodChannel channel;
 
   static Map<String, Object> parseMetadata(StorageMetadata storageMetadata) {
@@ -108,11 +113,11 @@ public class FlutterFirebaseStoragePlugin
       storageException = new FlutterFirebaseStorageException(exception, exception.getCause());
     } else if (exception.getCause() != null && exception.getCause() instanceof StorageException) {
       storageException =
-          new FlutterFirebaseStorageException(
-              (StorageException) exception.getCause(),
-              exception.getCause().getCause() != null
-                  ? exception.getCause().getCause()
-                  : exception.getCause());
+        new FlutterFirebaseStorageException(
+          (StorageException) exception.getCause(),
+          exception.getCause().getCause() != null
+            ? exception.getCause().getCause()
+            : exception.getCause());
     }
 
     if (storageException != null) {
@@ -202,255 +207,329 @@ public class FlutterFirebaseStoragePlugin
   }
 
   private Task<Void> useEmulator(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          FirebaseStorage firebaseStorage = getStorage(arguments);
-          String host = (String) arguments.get("host");
-          int port = (int) arguments.get("port");
-          firebaseStorage.useEmulator(host, port);
-          return null;
-        });
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> {
+      FirebaseStorage firebaseStorage = getStorage(arguments);
+      String host = (String) Objects.requireNonNull(arguments.get("host"));
+      int port = (int) Objects.requireNonNull((arguments.get("port")));
+      firebaseStorage.useEmulator(host, port);
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> referenceDelete(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          return Tasks.await(reference.delete());
-        });
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      try {
+        Tasks.await(reference.delete());
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
+
   }
 
   private Task<Map<String, Object>> referenceGetDownloadURL(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          Uri downloadURL = Tasks.await(reference.getDownloadUrl());
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-          Map<String, Object> out = new HashMap<>();
-          out.put("downloadURL", downloadURL.toString());
-          return out;
-        });
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      try {
+        Uri downloadURL = Tasks.await(reference.getDownloadUrl());
+        Map<String, Object> out = new HashMap<>();
+        out.put("downloadURL", downloadURL.toString());
+        taskCompletionSource.setResult(out);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<byte[]> referenceGetData(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          Integer maxSize = (Integer) Objects.requireNonNull(arguments.get("maxSize"));
-          StorageReference reference = getReference(arguments);
-          return Tasks.await(reference.getBytes(maxSize));
-        });
+    TaskCompletionSource<byte[]> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> {
+      Integer maxSize = (Integer) Objects.requireNonNull(arguments.get("maxSize"));
+      StorageReference reference = getReference(arguments);
+      try {
+        taskCompletionSource.setResult(Tasks.await(reference.getBytes(maxSize)));
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> referenceGetMetadata(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          StorageMetadata metadata = Tasks.await(reference.getMetadata());
-          return parseMetadata(metadata);
-        });
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      try {
+        taskCompletionSource.setResult(parseMetadata(Tasks.await(reference.getMetadata())));
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> referenceList(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          Task<ListResult> task;
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> listOptions =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      Task<ListResult> task;
 
-          int maxResults = (Integer) Objects.requireNonNull(listOptions.get("maxResults"));
+      @SuppressWarnings("unchecked")
+      Map<String, Object> listOptions =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
 
-          if (listOptions.get("pageToken") != null) {
-            task =
-                reference.list(
-                    maxResults, (String) Objects.requireNonNull(listOptions.get("pageToken")));
-          } else {
-            task = reference.list(maxResults);
-          }
+      int maxResults = (Integer) Objects.requireNonNull(listOptions.get("maxResults"));
 
-          ListResult listResult = Tasks.await(task);
-          return parseListResult(listResult);
-        });
+      if (listOptions.get("pageToken") != null) {
+        task =
+          reference.list(
+            maxResults, (String) Objects.requireNonNull(listOptions.get("pageToken")));
+      } else {
+        task = reference.list(maxResults);
+      }
+
+      try {
+        taskCompletionSource.setResult(parseListResult(Tasks.await(task)));
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> referenceListAll(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          ListResult listResult = Tasks.await(reference.listAll());
-          return parseListResult(listResult);
-        });
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+
+      try {
+        taskCompletionSource.setResult(parseListResult(Tasks.await(reference.listAll())));
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> referenceUpdateMetadata(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> metadata =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("metadata"));
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
 
-          StorageMetadata updatedMetadata =
-              Tasks.await(reference.updateMetadata(parseMetadata(metadata)));
+      @SuppressWarnings("unchecked")
+      Map<String, Object> metadata =
+        (Map<String, Object>) Objects.requireNonNull(arguments.get("metadata"));
 
-          return parseMetadata(updatedMetadata);
-        });
+      try {
+        taskCompletionSource.setResult(parseMetadata(Tasks.await(reference.updateMetadata(parseMetadata(metadata)))));
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> taskPutData(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          byte[] bytes = (byte[]) Objects.requireNonNull(arguments.get("data"));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      byte[] bytes = (byte[]) Objects.requireNonNull(arguments.get("data"));
 
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadBytes(
-                  handle, reference, bytes, parseMetadata(metadata));
-          task.startTaskWithMethodChannel(channel);
-          return null;
-        });
+      @SuppressWarnings("unchecked")
+      Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
+
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.uploadBytes(
+          handle, reference, bytes, parseMetadata(metadata));
+      try {
+        task.startTaskWithMethodChannel(channel);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> taskPutString(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          String data = (String) Objects.requireNonNull(arguments.get("data"));
-          int format = (int) Objects.requireNonNull(arguments.get("format"));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      String data = (String) Objects.requireNonNull(arguments.get("data"));
+      int format = (int) Objects.requireNonNull(arguments.get("format"));
 
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadBytes(
-                  handle, reference, stringToByteData(data, format), parseMetadata(metadata));
+      @SuppressWarnings("unchecked")
+      Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
 
-          task.startTaskWithMethodChannel(channel);
-          return null;
-        });
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.uploadBytes(
+          handle, reference, stringToByteData(data, format), parseMetadata(metadata));
+
+      try {
+        task.startTaskWithMethodChannel(channel);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> taskPutFile(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          String filePath = (String) Objects.requireNonNull(arguments.get("filePath"));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      String filePath = (String) Objects.requireNonNull(arguments.get("filePath"));
 
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.uploadFile(
-                  handle, reference, Uri.fromFile(new File(filePath)), parseMetadata(metadata));
+      @SuppressWarnings("unchecked")
+      Map<String, Object> metadata = (Map<String, Object>) arguments.get("metadata");
 
-          task.startTaskWithMethodChannel(channel);
-          return null;
-        });
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.uploadFile(
+          handle, reference, Uri.fromFile(new File(filePath)), parseMetadata(metadata));
+
+      try {
+        task.startTaskWithMethodChannel(channel);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> taskWriteToFile(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          StorageReference reference = getReference(arguments);
-          String filePath = (String) Objects.requireNonNull(arguments.get("filePath"));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      StorageReference reference = getReference(arguments);
+      String filePath = (String) Objects.requireNonNull(arguments.get("filePath"));
 
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.downloadFile(handle, reference, new File(filePath));
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.downloadFile(handle, reference, new File(filePath));
 
-          task.startTaskWithMethodChannel(channel);
-          return null;
-        });
+      try {
+        task.startTaskWithMethodChannel(channel);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> taskPause(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
 
-          if (task == null) {
-            throw new Exception("Pause operation was called on a task which does not exist.");
-          }
+      if (task == null) {
+        taskCompletionSource.setException(new Exception("Pause operation was called on a task which does not exist."));
+        return;
+      }
 
-          boolean paused = Tasks.await(task.pause());
-          Map<String, Object> statusMap = new HashMap<>();
-          statusMap.put("status", paused);
-          if (paused) {
-            statusMap.put(
-                "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
-          }
-          return statusMap;
-        });
+      Map<String, Object> statusMap = new HashMap<>();
+      try {
+        boolean paused = Tasks.await(task.pause());
+        statusMap.put("status", paused);
+        if (paused) {
+          statusMap.put(
+            "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
+        }
+
+        taskCompletionSource.setResult(statusMap);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> taskResume(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
 
-          if (task == null) {
-            throw new Exception("Resume operation was called on a task which does not exist.");
-          }
+      if (task == null) {
+        taskCompletionSource.setException(new Exception("Resume operation was called on a task which does not exist."));
+        return;
+      }
 
-          boolean resumed = Tasks.await(task.resume());
-          Map<String, Object> statusMap = new HashMap<>();
-          statusMap.put("status", resumed);
-          if (resumed) {
-            statusMap.put(
-                "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
-          }
-          return statusMap;
-        });
+      try {
+        boolean resumed = Tasks.await(task.resume());
+        Map<String, Object> statusMap = new HashMap<>();
+        statusMap.put("status", resumed);
+        if (resumed) {
+          statusMap.put(
+            "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
+        }
+
+        taskCompletionSource.setResult(statusMap);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> taskCancel(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
-          FlutterFirebaseStorageTask task =
-              FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      final int handle = (int) Objects.requireNonNull(arguments.get("handle"));
+      FlutterFirebaseStorageTask task =
+        FlutterFirebaseStorageTask.getInProgressTaskForHandle(handle);
+      if (task == null) {
+        taskCompletionSource.setException(new Exception("Cancel operation was called on a task which does not exist."));
+        return;
+      }
 
-          if (task == null) {
-            throw new Exception("Cancel operation was called on a task which does not exist.");
-          }
+      try {
+        boolean canceled = Tasks.await(task.cancel());
+        Map<String, Object> statusMap = new HashMap<>();
+        statusMap.put("status", canceled);
+        if (canceled) {
+          statusMap.put(
+            "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
+        }
 
-          boolean canceled = Tasks.await(task.cancel());
-          Map<String, Object> statusMap = new HashMap<>();
-          statusMap.put("status", canceled);
-          if (canceled) {
-            statusMap.put(
-                "snapshot", FlutterFirebaseStorageTask.parseTaskSnapshot(task.getSnapshot()));
-          }
-          return statusMap;
-        });
+        taskCompletionSource.setResult(statusMap);
+      } catch (Exception e) {
+        taskCompletionSource.setException(e);
+      }
+    });
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -509,19 +588,19 @@ public class FlutterFirebaseStoragePlugin
     }
 
     methodCallTask.addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
-            Map<String, String> exceptionDetails = getExceptionDetails(exception);
+      task -> {
+        if (task.isSuccessful()) {
+          result.success(task.getResult());
+        } else {
+          Exception exception = task.getException();
+          Map<String, String> exceptionDetails = getExceptionDetails(exception);
 
-            result.error(
-                "firebase_storage",
-                exception != null ? exception.getMessage() : null,
-                exceptionDetails);
-          }
-        });
+          result.error(
+            "firebase_storage",
+            exception != null ? exception.getMessage() : null,
+            exceptionDetails);
+        }
+      });
   }
 
   private StorageMetadata parseMetadata(Map<String, Object> metadata) {
@@ -549,7 +628,7 @@ public class FlutterFirebaseStoragePlugin
     if (metadata.get("customMetadata") != null) {
       @SuppressWarnings("unchecked")
       Map<String, String> customMetadata =
-          (Map<String, String>) Objects.requireNonNull(metadata.get("customMetadata"));
+        (Map<String, String>) Objects.requireNonNull(metadata.get("customMetadata"));
       for (String key : customMetadata.keySet()) {
         builder.setCustomMetadata(key, customMetadata.get(key));
       }
@@ -581,16 +660,23 @@ public class FlutterFirebaseStoragePlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(cachedThreadPool, HashMap::new);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      HashMap<String, Object> obj = new HashMap<String, Object>();
+      taskCompletionSource.setResult(obj);
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          FlutterFirebaseStorageTask.cancelInProgressTasks();
-          return null;
-        });
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> {
+      FlutterFirebaseStorageTask.cancelInProgressTasks();
+      taskCompletionSource.setResult(null);
+    });
+
+    return taskCompletionSource.getTask();
   }
 }
