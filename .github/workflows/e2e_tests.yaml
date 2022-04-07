@@ -52,7 +52,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --no-enable-web --no-enable-ios --no-enable-macos-desktop
-          sudo npm i -g firebase-tools
+          # Pending release of the latest firebase-tools with Storage emulator fix
+          sudo npm install -g "git://github.com/firebase/firebase-tools.git#0adffd8d1ff8e47a2e3577ec34a5570d56f43913"
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -104,7 +105,8 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          sudo npm i -g firebase-tools
+          # Pending release of the latest firebase-tools with Storage emulator fix
+          sudo npm install -g "git://github.com/firebase/firebase-tools.git#0adffd8d1ff8e47a2e3577ec34a5570d56f43913"
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -172,7 +174,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-macos-desktop
-          sudo npm i -g firebase-tools
+          # Pending release of the latest firebase-tools with Storage emulator fix
+          sudo npm install -g "git://github.com/firebase/firebase-tools.git#0adffd8d1ff8e47a2e3577ec34a5570d56f43913"
       - name: "Build Application"
         working-directory: tests
         run: |
@@ -206,7 +209,8 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           flutter config --enable-web
-          sudo npm i -g firebase-tools
+          # Pending release of the latest firebase-tools with Storage emulator fix
+          sudo npm install -g "git://github.com/firebase/firebase-tools.git#0adffd8d1ff8e47a2e3577ec34a5570d56f43913"
       - name: Cache Firebase Emulator
         uses: actions/cache@v2
         with:
