@@ -279,7 +279,21 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external OAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external OAuthCredential credential([String? idToken, String? accessToken]);
+  external OAuthCredential credential(OAuthCredentialOptionsJsImpl options);
+}
+
+@JS('OAuthCredentialOptions')
+@anonymous
+class OAuthCredentialOptionsJsImpl {
+  external factory OAuthCredentialOptionsJsImpl({
+    String? accessToken,
+    String? idToken,
+    String? rawNonce,
+  });
+
+  external String? accessToken;
+  external String? idToken;
+  external String? rawNonce;
 }
 
 @JS('TwitterAuthProvider')

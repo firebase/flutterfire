@@ -262,8 +262,11 @@ auth_interop.OAuthCredential? convertPlatformCredential(
 
   if (credential is OAuthCredential) {
     return auth_interop.OAuthProvider(credential.providerId).credential(
-      credential.idToken,
-      credential.accessToken,
+      auth_interop.OAuthCredentialOptions(
+        credential.accessToken,
+        credential.idToken,
+        credential.rawNonce,
+      ),
     );
   }
 
@@ -278,13 +281,6 @@ auth_interop.OAuthCredential? convertPlatformCredential(
     return auth_interop.PhoneAuthProvider.credential(
       credential.verificationId!,
       credential.smsCode!,
-    );
-  }
-
-  if (credential is OAuthCredential) {
-    return auth_interop.OAuthProvider(credential.providerId).credential(
-      credential.idToken,
-      credential.accessToken,
     );
   }
 

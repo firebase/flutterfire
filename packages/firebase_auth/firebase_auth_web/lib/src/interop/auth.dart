@@ -833,11 +833,38 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
     );
   }
 
-  /// Creates a credential for Google.
+  /// Creates a credential for OAuth.
   /// At least one of [idToken] and [accessToken] is required.
-  auth_interop.OAuthCredential credential(
-          [String? idToken, String? accessToken]) =>
-      jsObject.credential(idToken, accessToken);
+  auth_interop.OAuthCredential credential(OAuthCredentialOptions options) =>
+      jsObject.credential(options.jsObject);
+}
+
+/// Defines the options for initializing an [auth_interop.OAuthCredential].
+/// For ID tokens with nonce claim, the raw nonce has to also be provided.
+///
+/// See: <https://firebase.google.com/docs/reference/js/firebase.auth.OAuthCredentialOptions>
+class OAuthCredentialOptions
+    extends JsObjectWrapper<auth_interop.OAuthCredentialOptionsJsImpl> {
+  /// Creates a new OAuthCredentialOptions with
+  /// the optional [accessToken], [idToken] and [rawNonce].
+  factory OAuthCredentialOptions([
+    String? accessToken,
+    String? idToken,
+    String? rawNonce,
+  ]) {
+    return OAuthCredentialOptions.fromJsObject(
+      auth_interop.OAuthCredentialOptionsJsImpl(
+        accessToken: accessToken,
+        idToken: idToken,
+        rawNonce: rawNonce,
+      ),
+    );
+  }
+
+  /// Creates a new OAuthCredentialOptions from a [jsObject].
+  OAuthCredentialOptions.fromJsObject(
+      auth_interop.OAuthCredentialOptionsJsImpl jsObject)
+      : super.fromJsObject(jsObject);
 }
 
 /// Twitter auth provider.
