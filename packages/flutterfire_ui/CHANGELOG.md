@@ -1,3 +1,8 @@
+## 0.4.0+1
+
+ - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))
+ - **FIX**: fix phone linking on web (#8395). ([b8ac0a20](https://github.com/FirebaseExtended/flutterfire/commit/b8ac0a202958864f793791877e556624f9b7c487))
+
 ## 0.4.0
 
 > Note: This release has breaking changes.
