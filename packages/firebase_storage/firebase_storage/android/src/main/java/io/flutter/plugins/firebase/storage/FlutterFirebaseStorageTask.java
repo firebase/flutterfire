@@ -7,17 +7,21 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.SparseArray;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +30,7 @@ import java.util.concurrent.Executors;
 
 class FlutterFirebaseStorageTask {
   static final SparseArray<FlutterFirebaseStorageTask> inProgressTasks = new SparseArray<>();
-  private static Executor taskExecutor = Executors.newSingleThreadExecutor();
+  private static final Executor taskExecutor = Executors.newSingleThreadExecutor();
   private final FlutterFirebaseStorageTaskType type;
   private final int handle;
   private final StorageReference reference;
@@ -40,12 +44,12 @@ class FlutterFirebaseStorageTask {
   private Boolean destroyed = false;
 
   private FlutterFirebaseStorageTask(
-      FlutterFirebaseStorageTaskType type,
-      int handle,
-      StorageReference reference,
-      @Nullable byte[] bytes,
-      @Nullable Uri fileUri,
-      @Nullable StorageMetadata metadata) {
+    FlutterFirebaseStorageTaskType type,
+    int handle,
+    StorageReference reference,
+    @Nullable byte[] bytes,
+    @Nullable Uri fileUri,
+    @Nullable StorageMetadata metadata) {
     this.type = type;
     this.handle = handle;
     this.reference = reference;
@@ -82,24 +86,24 @@ class FlutterFirebaseStorageTask {
   }
 
   public static FlutterFirebaseStorageTask uploadBytes(
-      int handle, StorageReference reference, byte[] data, @Nullable StorageMetadata metadata) {
+    int handle, StorageReference reference, byte[] data, @Nullable StorageMetadata metadata) {
     return new FlutterFirebaseStorageTask(
-        FlutterFirebaseStorageTaskType.BYTES, handle, reference, data, null, metadata);
+      FlutterFirebaseStorageTaskType.BYTES, handle, reference, data, null, metadata);
   }
 
   public static FlutterFirebaseStorageTask uploadFile(
-      int handle,
-      StorageReference reference,
-      @NonNull Uri fileUri,
-      @Nullable StorageMetadata metadata) {
+    int handle,
+    StorageReference reference,
+    @NonNull Uri fileUri,
+    @Nullable StorageMetadata metadata) {
     return new FlutterFirebaseStorageTask(
-        FlutterFirebaseStorageTaskType.FILE, handle, reference, null, fileUri, metadata);
+      FlutterFirebaseStorageTaskType.FILE, handle, reference, null, fileUri, metadata);
   }
 
   public static FlutterFirebaseStorageTask downloadFile(
-      int handle, StorageReference reference, @NonNull File file) {
+    int handle, StorageReference reference, @NonNull File file) {
     return new FlutterFirebaseStorageTask(
-        FlutterFirebaseStorageTaskType.DOWNLOAD, handle, reference, null, Uri.fromFile(file), null);
+      FlutterFirebaseStorageTaskType.DOWNLOAD, handle, reference, null, Uri.fromFile(file), null);
   }
 
   public static Map<String, Object> parseUploadTaskSnapshot(UploadTask.TaskSnapshot snapshot) {
@@ -114,7 +118,7 @@ class FlutterFirebaseStorageTask {
   }
 
   public static Map<String, Object> parseDownloadTaskSnapshot(
-      FileDownloadTask.TaskSnapshot snapshot) {
+    FileDownloadTask.TaskSnapshot snapshot) {
     Map<String, Object> out = new HashMap<>();
     out.put("path", snapshot.getStorage().getPath());
     if (snapshot.getTask().isSuccessful()) {
@@ -166,54 +170,72 @@ class FlutterFirebaseStorageTask {
   }
 
   Task<Boolean> pause() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
-        () -> {
-          synchronized (pauseSyncObject) {
-            boolean paused = storageTask.pause();
-            if (!paused) return false;
-            try {
-              pauseSyncObject.wait();
-            } catch (InterruptedException e) {
-              return false;
-            }
-            return true;
-          }
-        });
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+
+    FlutterFirebasePlugin.cachedThreadPool.execute(() -> {
+      synchronized (pauseSyncObject) {
+        boolean paused = storageTask.pause();
+        if (!paused) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+        try {
+          pauseSyncObject.wait();
+        } catch (InterruptedException e) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+        taskCompletionSource.setResult(true);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   Task<Boolean> resume() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
-        () -> {
-          synchronized (resumeSyncObject) {
-            boolean resumed = storageTask.resume();
-            if (!resumed) return false;
-            try {
-              resumeSyncObject.wait();
-            } catch (InterruptedException e) {
-              return false;
-            }
-            return true;
-          }
-        });
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+
+    FlutterFirebasePlugin.cachedThreadPool.execute(() -> {
+      synchronized (resumeSyncObject) {
+        boolean resumed = storageTask.resume();
+        if (!resumed) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+        try {
+          resumeSyncObject.wait();
+        } catch (InterruptedException e) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+        taskCompletionSource.setResult(true);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   Task<Boolean> cancel() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
-        () -> {
-          synchronized (cancelSyncObject) {
-            boolean canceled = storageTask.cancel();
-            if (!canceled) return false;
-            try {
-              cancelSyncObject.wait();
-            } catch (InterruptedException e) {
-              return false;
-            }
-            return true;
-          }
-        });
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+    FlutterFirebasePlugin.cachedThreadPool.execute(() -> {
+      synchronized (cancelSyncObject) {
+        boolean canceled = storageTask.cancel();
+        if (!canceled) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+        try {
+          cancelSyncObject.wait();
+        } catch (InterruptedException e) {
+          taskCompletionSource.setResult(false);
+          return;
+        }
+
+        taskCompletionSource.setResult(true);
+      }
+    });
+
+    return taskCompletionSource.getTask();
   }
 
   void startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
@@ -236,68 +258,68 @@ class FlutterFirebaseStorageTask {
     }
 
     storageTask.addOnProgressListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () ->
-                      channel.invokeMethod("Task#onProgress", getTaskEventMap(taskSnapshot, null)));
-          synchronized (resumeSyncObject) {
-            resumeSyncObject.notifyAll();
-          }
-        });
+      taskExecutor,
+      taskSnapshot -> {
+        if (destroyed) return;
+        new Handler(Looper.getMainLooper())
+          .post(
+            () ->
+              channel.invokeMethod("Task#onProgress", getTaskEventMap(taskSnapshot, null)));
+        synchronized (resumeSyncObject) {
+          resumeSyncObject.notifyAll();
+        }
+      });
 
     storageTask.addOnPausedListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> channel.invokeMethod("Task#onPaused", getTaskEventMap(taskSnapshot, null)));
-          synchronized (pauseSyncObject) {
-            pauseSyncObject.notifyAll();
-          }
-        });
+      taskExecutor,
+      taskSnapshot -> {
+        if (destroyed) return;
+        new Handler(Looper.getMainLooper())
+          .post(
+            () -> channel.invokeMethod("Task#onPaused", getTaskEventMap(taskSnapshot, null)));
+        synchronized (pauseSyncObject) {
+          pauseSyncObject.notifyAll();
+        }
+      });
 
     storageTask.addOnSuccessListener(
-        taskExecutor,
-        taskSnapshot -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () ->
-                      channel.invokeMethod("Task#onSuccess", getTaskEventMap(taskSnapshot, null)));
-          destroy();
-        });
+      taskExecutor,
+      taskSnapshot -> {
+        if (destroyed) return;
+        new Handler(Looper.getMainLooper())
+          .post(
+            () ->
+              channel.invokeMethod("Task#onSuccess", getTaskEventMap(taskSnapshot, null)));
+        destroy();
+      });
 
     storageTask.addOnCanceledListener(
-        taskExecutor,
-        () -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> {
-                    channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
-                    destroy();
-                  });
-        });
+      taskExecutor,
+      () -> {
+        if (destroyed) return;
+        new Handler(Looper.getMainLooper())
+          .post(
+            () -> {
+              channel.invokeMethod("Task#onCanceled", getTaskEventMap(null, null));
+              destroy();
+            });
+      });
 
     storageTask.addOnFailureListener(
-        taskExecutor,
-        exception -> {
-          if (destroyed) return;
-          new Handler(Looper.getMainLooper())
-              .post(
-                  () -> {
-                    channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
-                    destroy();
-                  });
-        });
+      taskExecutor,
+      exception -> {
+        if (destroyed) return;
+        new Handler(Looper.getMainLooper())
+          .post(
+            () -> {
+              channel.invokeMethod("Task#onFailure", getTaskEventMap(null, exception));
+              destroy();
+            });
+      });
   }
 
   private Map<String, Object> getTaskEventMap(
-      @Nullable Object snapshot, @Nullable Exception exception) {
+    @Nullable Object snapshot, @Nullable Exception exception) {
     Map<String, Object> arguments = new HashMap<>();
     arguments.put("handle", handle);
     arguments.put("appName", reference.getStorage().getApp().getName());
