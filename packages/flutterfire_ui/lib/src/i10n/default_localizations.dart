@@ -121,7 +121,7 @@ const localizations = <String, FlutterFireUILocalizationLabels>{
   'nl': NlLocalizations(),
   'id': IdLocalizations(),
   'de': DeLocalizations(),
-  'zh-CN': ZhCnLocalizations(),
+  'zh': ZhLocalizations(),
 };
 
 class DefaultLocalizations extends EnLocalizations {
