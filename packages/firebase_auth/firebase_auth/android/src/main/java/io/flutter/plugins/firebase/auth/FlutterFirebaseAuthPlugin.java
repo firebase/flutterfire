@@ -86,9 +86,9 @@ public class FlutterFirebaseAuthPlugin
 
     Map<String, Object> output = new HashMap<>();
 
-    output.put(io.flutter.plugins.firebase.auth.Constants.PROVIDER_ID, authCredential.getProvider());
-    output.put(io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD, authCredential.getSignInMethod());
-    output.put(io.flutter.plugins.firebase.auth.Constants.TOKEN, authCredentialHashCode);
+    output.put(Constants.PROVIDER_ID, authCredential.getProvider());
+    output.put(Constants.SIGN_IN_METHOD, authCredential.getSignInMethod());
+    output.put(Constants.TOKEN, authCredentialHashCode);
 
     return output;
   }
@@ -145,7 +145,7 @@ public class FlutterFirebaseAuthPlugin
     String appName = (String) Objects.requireNonNull(arguments.get(Constants.APP_NAME));
     FirebaseApp app = FirebaseApp.getInstance(appName);
     FirebaseAuth auth = FirebaseAuth.getInstance(app);
-    String tenantId = (String) arguments.get(io.flutter.plugins.firebase.auth.Constants.TENANT_ID);
+    String tenantId = (String) arguments.get(Constants.TENANT_ID);
     if (tenantId != null) {
       auth.setTenantId(tenantId);
     }
@@ -159,59 +159,59 @@ public class FlutterFirebaseAuthPlugin
   }
 
   private AuthCredential getCredential(Map<String, Object> arguments)
-      throws io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPluginException {
+      throws FlutterFirebaseAuthPluginException {
     @SuppressWarnings("unchecked")
     Map<String, Object> credentialMap =
-        (Map<String, Object>) Objects.requireNonNull(arguments.get(io.flutter.plugins.firebase.auth.Constants.CREDENTIAL));
+        (Map<String, Object>) Objects.requireNonNull(arguments.get(Constants.CREDENTIAL));
 
     // If the credential map contains a token, it means a native one has been stored
-    if (credentialMap.get(io.flutter.plugins.firebase.auth.Constants.TOKEN) != null) {
-      int token = (int) credentialMap.get(io.flutter.plugins.firebase.auth.Constants.TOKEN);
+    if (credentialMap.get(Constants.TOKEN) != null) {
+      int token = (int) credentialMap.get(Constants.TOKEN);
       AuthCredential credential = authCredentials.get(token);
 
       if (credential == null) {
-        throw io.flutter.plugins.firebase.auth.FlutterFirebaseAuthPluginException.invalidCredential();
+        throw FlutterFirebaseAuthPluginException.invalidCredential();
       }
 
       return credential;
     }
 
     String signInMethod =
-        (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD));
-    String secret = (String) credentialMap.get(io.flutter.plugins.firebase.auth.Constants.SECRET);
-    String idToken = (String) credentialMap.get(io.flutter.plugins.firebase.auth.Constants.ID_TOKEN);
-    String accessToken = (String) credentialMap.get(io.flutter.plugins.firebase.auth.Constants.ACCESS_TOKEN);
-    String rawNonce = (String) credentialMap.get(io.flutter.plugins.firebase.auth.Constants.RAW_NONCE);
+        (String) Objects.requireNonNull(credentialMap.get(Constants.SIGN_IN_METHOD));
+    String secret = (String) credentialMap.get(Constants.SECRET);
+    String idToken = (String) credentialMap.get(Constants.ID_TOKEN);
+    String accessToken = (String) credentialMap.get(Constants.ACCESS_TOKEN);
+    String rawNonce = (String) credentialMap.get(Constants.RAW_NONCE);
 
     switch (signInMethod) {
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_PASSWORD:
+      case Constants.SIGN_IN_METHOD_PASSWORD:
         return EmailAuthProvider.getCredential(
-            (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.EMAIL)),
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
             Objects.requireNonNull(secret));
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_EMAIL_LINK:
+      case Constants.SIGN_IN_METHOD_EMAIL_LINK:
         return EmailAuthProvider.getCredentialWithLink(
-            (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.EMAIL)),
-            (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.EMAIL_LINK)));
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_FACEBOOK:
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL)),
+            (String) Objects.requireNonNull(credentialMap.get(Constants.EMAIL_LINK)));
+      case Constants.SIGN_IN_METHOD_FACEBOOK:
         return FacebookAuthProvider.getCredential(Objects.requireNonNull(accessToken));
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_GOOGLE:
+      case Constants.SIGN_IN_METHOD_GOOGLE:
         return GoogleAuthProvider.getCredential(idToken, accessToken);
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_TWITTER:
+      case Constants.SIGN_IN_METHOD_TWITTER:
         return TwitterAuthProvider.getCredential(
             Objects.requireNonNull(accessToken), Objects.requireNonNull(secret));
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_GITHUB:
+      case Constants.SIGN_IN_METHOD_GITHUB:
         return GithubAuthProvider.getCredential(Objects.requireNonNull(accessToken));
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_PHONE:
+      case Constants.SIGN_IN_METHOD_PHONE:
         {
           String verificationId =
-              (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.VERIFICATION_ID));
-          String smsCode = (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.SMS_CODE));
+              (String) Objects.requireNonNull(credentialMap.get(Constants.VERIFICATION_ID));
+          String smsCode = (String) Objects.requireNonNull(credentialMap.get(Constants.SMS_CODE));
           return PhoneAuthProvider.getCredential(verificationId, smsCode);
         }
-      case io.flutter.plugins.firebase.auth.Constants.SIGN_IN_METHOD_OAUTH:
+      case Constants.SIGN_IN_METHOD_OAUTH:
         {
           String providerId =
-              (String) Objects.requireNonNull(credentialMap.get(io.flutter.plugins.firebase.auth.Constants.PROVIDER_ID));
+              (String) Objects.requireNonNull(credentialMap.get(Constants.PROVIDER_ID));
           OAuthProvider.CredentialBuilder builder = OAuthProvider.newCredentialBuilder(providerId);
           builder.setAccessToken(Objects.requireNonNull(accessToken));
           if (rawNonce == null) {
@@ -262,17 +262,17 @@ public class FlutterFirebaseAuthPlugin
 
     if (actionCodeInfo != null && operation == ActionCodeResult.VERIFY_EMAIL
         || operation == ActionCodeResult.PASSWORD_RESET) {
-      data.put(io.flutter.plugins.firebase.auth.Constants.EMAIL, actionCodeInfo.getEmail());
-      data.put(io.flutter.plugins.firebase.auth.Constants.PREVIOUS_EMAIL, null);
+      data.put(Constants.EMAIL, actionCodeInfo.getEmail());
+      data.put(Constants.PREVIOUS_EMAIL, null);
     } else if (operation == ActionCodeResult.REVERT_SECOND_FACTOR_ADDITION) {
-      data.put(io.flutter.plugins.firebase.auth.Constants.EMAIL, null);
-      data.put(io.flutter.plugins.firebase.auth.Constants.PREVIOUS_EMAIL, null);
+      data.put(Constants.EMAIL, null);
+      data.put(Constants.PREVIOUS_EMAIL, null);
     } else if (operation == ActionCodeResult.RECOVER_EMAIL
         || operation == ActionCodeResult.VERIFY_BEFORE_CHANGE_EMAIL) {
       ActionCodeEmailInfo actionCodeEmailInfo =
           (ActionCodeEmailInfo) Objects.requireNonNull(actionCodeInfo);
-      data.put(io.flutter.plugins.firebase.auth.Constants.EMAIL, actionCodeEmailInfo.getEmail());
-      data.put(io.flutter.plugins.firebase.auth.Constants.PREVIOUS_EMAIL, actionCodeEmailInfo.getPreviousEmail());
+      data.put(Constants.EMAIL, actionCodeEmailInfo.getEmail());
+      data.put(Constants.PREVIOUS_EMAIL, actionCodeEmailInfo.getPreviousEmail());
     }
 
     output.put("data", data);
@@ -283,10 +283,10 @@ public class FlutterFirebaseAuthPlugin
     Map<String, Object> output = new HashMap<>();
 
     output.put(
-        io.flutter.plugins.firebase.auth.Constants.ADDITIONAL_USER_INFO,
+        Constants.ADDITIONAL_USER_INFO,
         parseAdditionalUserInfo(authResult.getAdditionalUserInfo()));
-    output.put(io.flutter.plugins.firebase.auth.Constants.AUTH_CREDENTIAL, parseAuthCredential(authResult.getCredential()));
-    output.put(io.flutter.plugins.firebase.auth.Constants.USER, parseFirebaseUser(authResult.getUser()));
+    output.put(Constants.AUTH_CREDENTIAL, parseAuthCredential(authResult.getCredential()));
+    output.put(Constants.USER, parseFirebaseUser(authResult.getUser()));
 
     return output;
   }
@@ -298,10 +298,10 @@ public class FlutterFirebaseAuthPlugin
 
     Map<String, Object> output = new HashMap<>();
 
-    output.put(io.flutter.plugins.firebase.auth.Constants.IS_NEW_USER, additionalUserInfo.isNewUser());
-    output.put(io.flutter.plugins.firebase.auth.Constants.PROFILE, additionalUserInfo.getProfile());
-    output.put(io.flutter.plugins.firebase.auth.Constants.PROVIDER_ID, additionalUserInfo.getProviderId());
-    output.put(io.flutter.plugins.firebase.auth.Constants.USERNAME, additionalUserInfo.getUsername());
+    output.put(Constants.IS_NEW_USER, additionalUserInfo.isNewUser());
+    output.put(Constants.PROFILE, additionalUserInfo.getProfile());
+    output.put(Constants.PROVIDER_ID, additionalUserInfo.getProviderId());
+    output.put(Constants.USERNAME, additionalUserInfo.getUsername());
 
     return output;
   }
@@ -314,26 +314,26 @@ public class FlutterFirebaseAuthPlugin
     Map<String, Object> output = new HashMap<>();
     Map<String, Object> metadata = new HashMap<>();
 
-    output.put(io.flutter.plugins.firebase.auth.Constants.DISPLAY_NAME, firebaseUser.getDisplayName());
-    output.put(io.flutter.plugins.firebase.auth.Constants.EMAIL, firebaseUser.getEmail());
-    output.put(io.flutter.plugins.firebase.auth.Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
-    output.put(io.flutter.plugins.firebase.auth.Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
+    output.put(Constants.DISPLAY_NAME, firebaseUser.getDisplayName());
+    output.put(Constants.EMAIL, firebaseUser.getEmail());
+    output.put(Constants.EMAIL_VERIFIED, firebaseUser.isEmailVerified());
+    output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
 
     // TODO(Salakar): add an integration test to check for null, if possible
     // See https://github.com/FirebaseExtended/flutterfire/issues/3643
     final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
     if (userMetadata != null) {
-      metadata.put(io.flutter.plugins.firebase.auth.Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
+      metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
       metadata.put(
-          io.flutter.plugins.firebase.auth.Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
+          Constants.LAST_SIGN_IN_TIME, firebaseUser.getMetadata().getLastSignInTimestamp());
     }
-    output.put(io.flutter.plugins.firebase.auth.Constants.METADATA, metadata);
-    output.put(io.flutter.plugins.firebase.auth.Constants.PHONE_NUMBER, firebaseUser.getPhoneNumber());
-    output.put(io.flutter.plugins.firebase.auth.Constants.PHOTO_URL, parsePhotoUrl(firebaseUser.getPhotoUrl()));
-    output.put(io.flutter.plugins.firebase.auth.Constants.PROVIDER_DATA, parseUserInfoList(firebaseUser.getProviderData()));
-    output.put(io.flutter.plugins.firebase.auth.Constants.REFRESH_TOKEN, ""); // native does not provide refresh tokens
-    output.put(io.flutter.plugins.firebase.auth.Constants.UID, firebaseUser.getUid());
-    output.put(io.flutter.plugins.firebase.auth.Constants.TENANT_ID, firebaseUser.getTenantId());
+    output.put(Constants.METADATA, metadata);
+    output.put(Constants.PHONE_NUMBER, firebaseUser.getPhoneNumber());
+    output.put(Constants.PHOTO_URL, parsePhotoUrl(firebaseUser.getPhotoUrl()));
+    output.put(Constants.PROVIDER_DATA, parseUserInfoList(firebaseUser.getProviderData()));
+    output.put(Constants.REFRESH_TOKEN, ""); // native does not provide refresh tokens
+    output.put(Constants.UID, firebaseUser.getUid());
+    output.put(Constants.TENANT_ID, firebaseUser.getTenantId());
 
     return output;
   }
@@ -354,7 +354,7 @@ public class FlutterFirebaseAuthPlugin
   private static Map<String, Object> parseUserInfo(@NonNull UserInfo userInfo) {
     Map<String, Object> output = new HashMap<>();
 
-    output.put(io.flutter.plugins.firebase.auth.Constants.DISPLAY_NAME, userInfo.getDisplayName());
+    output.put(Constants.DISPLAY_NAME, userInfo.getDisplayName());
     output.put(Constants.EMAIL, userInfo.getEmail());
     output.put(Constants.PHONE_NUMBER, userInfo.getPhoneNumber());
     output.put(Constants.PHOTO_URL, parsePhotoUrl(userInfo.getPhotoUrl()));
