@@ -8,7 +8,7 @@ of FlutterFire across all supported platforms.
 ## Installation
 
 The FlutterFire CLI depends on the underlying [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine.
-If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command :
+If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command:
 
 ```bash
 npm install -g firebase-tools
@@ -35,7 +35,7 @@ The following table shows the current plugins with Dart-only Firebase initializa
 |                 Plugin |                               iOS                               |                             Android                             | Web |                              macOS                              |
 | ---------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-: | :-------------------------------------------------------------: |
 |              Analytics |                                ✔                                |                              **?**                              |  ✔  |                                ✔                                |
-|            Crashlytics | [**?**](./crashlytics/overview#2-optional-platform-integration) | [**?**](./crashlytics/overview#2-optional-platform-integration) | N/A | [**?**](./crashlytics/overview#2-optional-platform-integration) |
+|            Crashlytics |                                ✔                                | [**?**](./crashlytics/overview#2-optional-platform-integration) | N/A |                                ✔                                |
 | Performance Monitoring |                                ✔                                |                               ❌                                |  ✔  |                               N/A                               |
 
 - **?** Indicates your app will build and run but plugin behavior may be different.
@@ -106,9 +106,9 @@ The command supports the following option arguments:
 | --project         | -p    | Sets the Firebase Project ID to use. By default, the CLI will attempt to fetch the project defined in the `.firebaserc` file, or prompt you to select the project from the Firebase Console.    |
 | --account         | -e    | Sets the email address which should be used to authenticate with Firebase against. By default, this will use the primary account defined on the Firebase CLI.                                   |
 | --out             | -o    | Specifies the path & file name for the generated file. Defaults to "lib/firebase_options.dart".                                                                                                 |
-| --ios-bundle-id   | -i    | The bundle identifier of your iOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "ios" folder (if it exists).      |
-| --macos-bundle-id | -m    | The bundle identifier of your macOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "macos" folder (if it exists).  |
-| --android-app-id  | -a    | The application id of your Android app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "android" folder (if it exists). |
+| --ios-bundle-id   | -i    | The bundle identifier of your iOS app, e.g. "com.example.app". If no identifier is provided, an attempt will be made to automatically detect it from your "ios" folder (if it exists).      |
+| --macos-bundle-id | -m    | The bundle identifier of your macOS app, e.g. "com.example.app". If no identifier is provided, an attempt will be made to automatically detect it from your "macos" folder (if it exists).  |
+| --android-app-id  | -a    | The package name of your Android app, e.g. "com.example.app". If no package name is provided, an attempt will be made to automatically detect it from your "android" folder (if it exists). |
 
 ## Version
 
