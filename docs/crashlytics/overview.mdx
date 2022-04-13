@@ -26,14 +26,13 @@ flutter pub add firebase_crashlytics
 ### 2. (optional) Platform integration for Android
 
 Dart-only Firebase initialization for Android currently only supports reporting Dart exceptions. To report native Android exceptions,
-please follow the Android platform Setup section from the [manual installation guide](../manual-installation.mdx) and the steps below.
+please follow the steps below.
 
-1. Add the following classpaths to your `android/build.gradle` file.
+1. Add the following classpath to your `android/build.gradle` file.
 
 ```groovy {4} title="android/build.gradle"
 dependencies {
-  // ... other dependencies
-  classpath 'com.google.gms:google-services:4.3.5'
+  // ... other dependencies such as 'com.google.gms:google-services'
   classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
 }
 ```
@@ -52,7 +51,6 @@ dependencies {
 }
 
 // This must appear at the bottom of the file
-apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 ```
 
