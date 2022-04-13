@@ -1,3 +1,7 @@
+## 3.3.12
+
+ - Update a dependency to the latest release.
+
 ## 3.3.11
 
  - **FIX**: Allow `rawNonce` to be passed through on web via the `OAuthCredential`. (#8410). ([0df32f61](https://github.com/FirebaseExtended/flutterfire/commit/0df32f6106ca41cdb95c36c7816e6487124937d4))
