@@ -12,12 +12,8 @@ buildscript {
   }
 }
 
-def firebaseLibsDir = "${project.projectDir}/libs"
 rootProject.allprojects {
   repositories {
-    maven {
-      url firebaseLibsDir
-    }
     google()
     mavenCentral()
   }
