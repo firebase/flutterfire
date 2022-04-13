@@ -61,18 +61,11 @@ Before any of the Firebase services can be used, FlutterFire needs to be initial
 FlutterFire "bootstrapping" itself). The initialization step is asynchronous, meaning you'll need to prevent any FlutterFire
 related usage until the initialization is completed.
 
-:::tip
-
-If you're using FlutterFire in an existing application, you can use Dart-only initialization for most plugins.
-However, there are plugins that still require [manual-installation](./manual-installation.mdx) (i.e. using `google-services.json` or `GoogleService-Info.plist` files).
-Please see this [usage guide](./cli.mdx#usage) to learn what plugins need manual installation.
-:::
-
 ### Using the FlutterFire CLI
 
 :::info
 
-The FlutterFire CLI depends on the [Firebase CLI](https://firebase.google.com/docs/cli).  If you haven't installed it yet, you can learn more about Firebase CLI in the [documentation](https://firebase.google.com/docs/cli).
+The FlutterFire CLI depends on the [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't installed it yet, you can learn more about Firebase CLI in the [documentation](https://firebase.google.com/docs/cli).
 
 :::
 
@@ -88,9 +81,13 @@ flutterfire configure
 ```
 
 Once configured, a `firebase_options.dart` file will be generated for you containing all the options
-required for initialization.
+required for initialization. Additionally, if your Flutter app supports Android then the [Android Google Services Gradle plugin](https://firebase.google.com/docs/android/setup#add-config-file) will automatically be applied for you.
 
 **Learn more about the FlutterFire CLI in the [documentation](./cli.mdx)**.
+
+:::note
+If you add support for a new platform in your Flutter app (e.g. adding Android when your app previously did not support Android), or if you introduce new Firebase services into your app (e.g. adding `firebase_database`) then you should reconfigure Firebase for your application again via the CLI (`flutterfire configure`).
+:::
 
 ### Initialization
 
