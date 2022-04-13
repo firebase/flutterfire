@@ -25,54 +25,6 @@ class RemoteNotification {
 
   /// Constructs a [RemoteNotification] from a raw Map.
   factory RemoteNotification.fromMap(Map<String, dynamic> map) {
-    AndroidNotification? _android;
-    AppleNotification? _apple;
-    WebNotification? _web;
-
-    if (map['android'] != null) {
-      _android = AndroidNotification(
-        channelId: map['android']['channelId'],
-        clickAction: map['android']['clickAction'],
-        color: map['android']['color'],
-        count: map['android']['count'],
-        imageUrl: map['android']['imageUrl'],
-        link: map['android']['link'],
-        priority:
-            convertToAndroidNotificationPriority(map['android']['priority']),
-        smallIcon: map['android']['smallIcon'],
-        sound: map['android']['sound'],
-        ticker: map['android']['ticker'],
-        tag: map['android']['tag'],
-        visibility: convertToAndroidNotificationVisibility(
-            map['android']['visibility']),
-      );
-    }
-
-    if (map['apple'] != null) {
-      _apple = AppleNotification(
-        badge: map['apple']['badge'],
-        subtitle: map['apple']['subtitle'],
-        subtitleLocArgs: _toList(map['apple']['subtitleLocArgs']),
-        subtitleLocKey: map['apple']['subtitleLocKey'],
-        imageUrl: map['apple']['imageUrl'],
-        sound: map['apple']['sound'] == null
-            ? null
-            : AppleNotificationSound(
-                critical: map['apple']['sound']['critical'] ?? false,
-                name: map['apple']['sound']['name'],
-                volume: map['apple']['sound']['volume'] ?? 0,
-              ),
-      );
-    }
-
-    if (map['web'] != null) {
-      _web = WebNotification(
-        analyticsLabel: map['web']['analyticsLabel'],
-        image: map['web']['image'],
-        link: map['web']['link'],
-      );
-    }
-
     return RemoteNotification(
       title: map['title'],
       titleLocArgs: _toList(map['titleLocArgs']),
@@ -80,10 +32,32 @@ class RemoteNotification {
       body: map['body'],
       bodyLocArgs: _toList(map['bodyLocArgs']),
       bodyLocKey: map['bodyLocKey'],
-      android: _android,
-      apple: _apple,
-      web: _web,
+      android: map['android'] != null
+          ? AndroidNotification.fromMap(
+              Map<String, dynamic>.from(map['android']))
+          : null,
+      apple: map['apple'] != null
+          ? AppleNotification.fromMap(Map<String, dynamic>.from(map['apple']))
+          : null,
+      web: map['web'] != null
+          ? WebNotification.fromMap(Map<String, dynamic>.from(map['web']))
+          : null,
     );
+  }
+
+  /// Returns the [RemoteNotification] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'titleLocArgs': titleLocArgs,
+      'titleLocKey': titleLocKey,
+      'body': body,
+      'bodyLocArgs': bodyLocArgs,
+      'bodyLocKey': bodyLocKey,
+      'android': android?.toMap(),
+      'apple': apple?.toMap(),
+      'web': web?.toMap(),
+    };
   }
 
   /// Android specific notification properties.
@@ -132,6 +106,42 @@ class AndroidNotification {
       this.ticker,
       this.tag,
       this.visibility = AndroidNotificationVisibility.private});
+
+  /// Constructs an [AndroidNotification] from a raw Map.
+  factory AndroidNotification.fromMap(Map<String, dynamic> map) {
+    return AndroidNotification(
+      channelId: map['channelId'],
+      clickAction: map['clickAction'],
+      color: map['color'],
+      count: map['count'],
+      imageUrl: map['imageUrl'],
+      link: map['link'],
+      priority: convertToAndroidNotificationPriority(map['priority']),
+      smallIcon: map['smallIcon'],
+      sound: map['sound'],
+      ticker: map['ticker'],
+      tag: map['tag'],
+      visibility: convertToAndroidNotificationVisibility(map['visibility']),
+    );
+  }
+
+  /// Returns the [AndroidNotification] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'channelId': channelId,
+      'clickAction': clickAction,
+      'color': color,
+      'count': count,
+      'imageUrl': imageUrl,
+      'link': link,
+      'priority': convertAndroidNotificationPriorityToInt(priority),
+      'smallIcon': smallIcon,
+      'sound': sound,
+      'ticker': ticker,
+      'tag': tag,
+      'visibility': convertAndroidNotificationVisibilityToInt(visibility),
+    };
+  }
 
   /// The channel the notification is delivered on.
   final String? channelId;
@@ -190,6 +200,33 @@ class AppleNotification {
       this.subtitleLocArgs = const <String>[],
       this.subtitleLocKey});
 
+  /// Constructs an [AppleNotification] from a raw Map.
+  factory AppleNotification.fromMap(Map<String, dynamic> map) {
+    return AppleNotification(
+      badge: map['badge'],
+      subtitle: map['subtitle'],
+      subtitleLocArgs: _toList(map['subtitleLocArgs']),
+      subtitleLocKey: map['subtitleLocKey'],
+      imageUrl: map['imageUrl'],
+      sound: map['sound'] == null
+          ? null
+          : AppleNotificationSound.fromMap(
+              Map<String, dynamic>.from(map['sound'])),
+    );
+  }
+
+  /// Returns the [AppleNotification] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'badge': badge,
+      'subtitle': subtitle,
+      'subtitleLocArgs': subtitleLocArgs,
+      'subtitleLocKey': subtitleLocKey,
+      'imageUrl': imageUrl,
+      'sound': sound?.toMap(),
+    };
+  }
+
   /// The value which sets the application badge.
   final String? badge;
 
@@ -216,6 +253,24 @@ class AppleNotificationSound {
   // ignore: public_member_api_docs
   const AppleNotificationSound(
       {this.critical = false, this.name, this.volume = 0});
+
+  /// Constructs an [AppleNotificationSound] from a raw Map.
+  factory AppleNotificationSound.fromMap(Map<String, dynamic> map) {
+    return AppleNotificationSound(
+      critical: map['critical'] ?? false,
+      name: map['name'],
+      volume: map['volume'] ?? 0,
+    );
+  }
+
+  /// Returns the [AppleNotificationSound] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'critical': critical,
+      'name': name,
+      'volume': volume,
+    };
+  }
 
   /// Whether or not the notification sound was critical.
   final bool critical;
@@ -245,6 +300,24 @@ class WebNotification {
     this.image,
     this.link,
   });
+
+  /// Constructs a [WebNotification] from a raw Map.
+  factory WebNotification.fromMap(Map<String, dynamic> map) {
+    return WebNotification(
+      analyticsLabel: map['analyticsLabel'],
+      image: map['image'],
+      link: map['link'],
+    );
+  }
+
+  /// Returns the [WebNotification] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'analyticsLabel': analyticsLabel,
+      'image': image,
+      'link': link,
+    };
+  }
 
   /// Optional message label for custom analytics.
   final String? analyticsLabel;
