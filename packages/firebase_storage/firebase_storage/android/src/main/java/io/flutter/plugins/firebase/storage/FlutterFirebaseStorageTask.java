@@ -35,7 +35,6 @@ class FlutterFirebaseStorageTask {
   private final StorageMetadata metadata;
   private final Object pauseSyncObject = new Object();
   private final Object resumeSyncObject = new Object();
-  private final Object cancelSyncObject = new Object();
   private StorageTask<?> storageTask;
   private Boolean destroyed = false;
 
@@ -152,10 +151,6 @@ class FlutterFirebaseStorageTask {
       }
     }
 
-    synchronized (cancelSyncObject) {
-      cancelSyncObject.notifyAll();
-    }
-
     synchronized (pauseSyncObject) {
       pauseSyncObject.notifyAll();
     }
@@ -200,20 +195,7 @@ class FlutterFirebaseStorageTask {
   }
 
   Task<Boolean> cancel() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
-        () -> {
-          synchronized (cancelSyncObject) {
-            boolean canceled = storageTask.cancel();
-            if (!canceled) return false;
-            try {
-              cancelSyncObject.wait();
-            } catch (InterruptedException e) {
-              return false;
-            }
-            return true;
-          }
-        });
+    return Tasks.call(FlutterFirebasePlugin.cachedThreadPool, () -> storageTask.cancel());
   }
 
   void startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {

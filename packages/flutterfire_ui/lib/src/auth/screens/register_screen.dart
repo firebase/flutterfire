@@ -18,6 +18,7 @@ class RegisterScreen extends MultiProviderScreen {
   final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
+  final bool? resizeToAvoidBottomInset;
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
@@ -33,6 +34,7 @@ class RegisterScreen extends MultiProviderScreen {
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
     this.email,
+    this.resizeToAvoidBottomInset = false,
     this.showAuthActionSwitch,
     this.subtitleBuilder,
     this.footerBuilder,
@@ -44,6 +46,7 @@ class RegisterScreen extends MultiProviderScreen {
     return LoginScreen(
       action: AuthAction.signUp,
       providerConfigs: providerConfigs,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       auth: auth,
       headerMaxExtent: headerMaxExtent,
       headerBuilder: headerBuilder,

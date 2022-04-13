@@ -8,9 +8,12 @@ import '../widgets/internal/universal_button.dart';
 
 class SignOutButton extends StatelessWidget {
   final FirebaseAuth? auth;
+  final ButtonVariant? variant;
+
   const SignOutButton({
     Key? key,
     this.auth,
+    this.variant,
   }) : super(key: key);
 
   @override
@@ -25,6 +28,7 @@ class SignOutButton extends StatelessWidget {
         auth: auth,
       ),
       icon: isCupertino ? CupertinoIcons.arrow_right_circle : Icons.logout,
+      variant: variant,
     );
   }
 }

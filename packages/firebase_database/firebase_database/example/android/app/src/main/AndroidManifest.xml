@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.flutter.plugins.firebasedatabaseexample">
+          package="io.flutter.plugins.firebase.database.example">
 
   <application
     android:label="firebase_database_example"

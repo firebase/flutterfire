@@ -1,3 +1,11 @@
+## 3.2.12
+
+ - Update a dependency to the latest release.
+
+## 3.2.11
+
+ - Update a dependency to the latest release.
+
 ## 3.2.10
 
  - **FIX**: Allow raw data arguments to be passed as data to Cloud Function for `Android` & `iOS`. (#7994). ([8288b811](https://github.com/FirebaseExtended/flutterfire/commit/8288b811f2b82df263a092428905960960e537c6))

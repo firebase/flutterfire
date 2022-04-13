@@ -84,15 +84,15 @@ jobs:
       - uses: hendrikmuhs/ccache-action@v1
         name: Xcode Compile Cache
         with:
-          key: ${{ runner.os }}-ios-v2
+          key: ${{ runner.os }}-ios-v3
           max-size: 700M
       - uses: actions/cache@v2
         name: Pods Cache
         id: pods-cache
         with:
           path: tests/ios/Pods
-          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/ios/Podfile.lock') }}
-          restore-keys: ${{ runner.os }}-ios-pods-v1
+          key: ${{ runner.os }}-pods-v3-${{ hashFiles('tests/ios/Podfile.lock') }}
+          restore-keys: ${{ runner.os }}-ios-pods-v2
       - name: Firebase Emulator Cache
         uses: actions/cache@v2
         with:

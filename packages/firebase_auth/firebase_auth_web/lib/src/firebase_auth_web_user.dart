@@ -25,13 +25,17 @@ class UserWeb extends UserPlatform {
           'email': _webUser.email,
           'emailVerified': _webUser.emailVerified,
           'isAnonymous': _webUser.isAnonymous,
-          'metadata': <String, int>{
-            'creationTime': _dateFormat
-                .parse(_webUser.metadata.creationTime)
-                .millisecondsSinceEpoch,
-            'lastSignInTime': _dateFormat
-                .parse(_webUser.metadata.lastSignInTime)
-                .millisecondsSinceEpoch,
+          'metadata': <String, int?>{
+            'creationTime': _webUser.metadata.creationTime != null
+                ? _dateFormat
+                    .parse(_webUser.metadata.creationTime!)
+                    .millisecondsSinceEpoch
+                : null,
+            'lastSignInTime': _webUser.metadata.lastSignInTime != null
+                ? _dateFormat
+                    .parse(_webUser.metadata.lastSignInTime!)
+                    .millisecondsSinceEpoch
+                : null,
           },
           'phoneNumber': _webUser.phoneNumber,
           'photoURL': _webUser.photoURL,

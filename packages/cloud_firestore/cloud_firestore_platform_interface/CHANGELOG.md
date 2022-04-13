@@ -1,3 +1,11 @@
+## 5.5.3
+
+ - Update a dependency to the latest release.
+
+## 5.5.2
+
+ - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/FirebaseExtended/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
+
 ## 5.5.1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

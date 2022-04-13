@@ -1,3 +1,11 @@
+## 11.2.13
+
+ - Update a dependency to the latest release.
+
+## 11.2.12
+
+ - Update a dependency to the latest release.
+
 ## 11.2.11
 
  - **FIX**: Ensure `onMessage` callback is consistently called on `iOS` platform. (#8202). ([54f5555e](https://github.com/FirebaseExtended/flutterfire/commit/54f5555edbedc553df30d7e32747e3b305fbe643))

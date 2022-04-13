@@ -32,7 +32,6 @@ class PasswordInput extends StatelessWidget {
       controller: controller,
       obscureText: true,
       enableSuggestions: false,
-      autocorrect: false,
       validator: validator ?? NotEmpty(l.passwordIsRequiredErrorText).validate,
       onSubmitted: (v) => onSubmit(v!),
       placeholder: label,
