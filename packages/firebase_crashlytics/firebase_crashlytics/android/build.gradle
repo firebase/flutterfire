@@ -16,7 +16,7 @@ def firebaseLibsDir = "${project.projectDir}/libs"
 rootProject.allprojects {
   repositories {
     maven {
-     url firebaseLibsDir
+      url firebaseLibsDir
     }
     google()
     mavenCentral()
@@ -54,13 +54,8 @@ android {
 }
 
 dependencies {
-  // TODO remove once EAP SDK published
-  implementation 'com.google.firebase:firebase-crashlytics:18.2.10-SNAPSHOT'
-
-  // TODO re-add once EAP SDK published
-  // implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
-  // implementation 'com.google.firebase:firebase-crashlytics'
-
+  implementation platform("com.google.firebase:firebase-bom:${getRootProjectExtOrCoreProperty("FirebaseSDKVersion", firebaseCoreProject)}")
+  implementation 'com.google.firebase:firebase-crashlytics'
   implementation 'androidx.annotation:annotation:1.1.0'
 }
 
