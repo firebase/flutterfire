@@ -20,7 +20,7 @@ class PendingDynamicLinkDataIOS {
   /// Returns the current instance as a [Map].
   Map<String, dynamic> asMap() => <String, dynamic>{
         'minimumVersion': minimumVersion,
-        'matchType': matchType,
+        'matchType': matchType?.index,
       };
 
   @override
