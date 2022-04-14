@@ -16,9 +16,9 @@ void main() {
     clickTimestamp: clickTimestamp,
   );
   PendingDynamicLinkDataIOS iosData = PendingDynamicLinkDataIOS(
-      minimumVersion: minimumVersionIos, 
-      matchType: matchType,
-      );
+    minimumVersion: minimumVersionIos,
+    matchType: matchType,
+  );
 
   group('$PendingDynamicLinkData', () {
     PendingDynamicLinkData pendingDynamicLinkData =
