@@ -909,7 +909,8 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             Tasks.await(firebaseUser.delete());
@@ -935,7 +936,8 @@ public class FlutterFirebaseAuthPlugin
                 (Boolean) Objects.requireNonNull(arguments.get(Constants.TOKEN_ONLY));
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             GetTokenResult tokenResult = Tasks.await(firebaseUser.getIdToken(forceRefresh));
@@ -967,30 +969,31 @@ public class FlutterFirebaseAuthPlugin
             AuthCredential credential = getCredential(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             if (credential == null) {
-              throw FlutterFirebaseAuthPluginException.invalidCredential();
+              taskCompletionSource.setException(
+                  FlutterFirebaseAuthPluginException.invalidCredential());
+              return;
             }
 
             AuthResult authResult;
 
-            try {
-              authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
-            } catch (Exception exception) {
-              String message = exception.getMessage();
-
-              if (message != null
-                  && message.contains("User has already been linked to the given provider.")) {
-                throw FlutterFirebaseAuthPluginException.alreadyLinkedProvider();
-              }
-
-              throw exception;
-            }
+            authResult = Tasks.await(firebaseUser.linkWithCredential(credential));
 
             taskCompletionSource.setResult(parseAuthResult(authResult));
           } catch (Exception e) {
+            String message = e.getMessage();
+
+            if (message != null
+                && message.contains("User has already been linked to the given provider.")) {
+              taskCompletionSource.setException(
+                  FlutterFirebaseAuthPluginException.alreadyLinkedProvider());
+              return;
+            }
+
             taskCompletionSource.setException(e);
           }
         });
@@ -1009,11 +1012,14 @@ public class FlutterFirebaseAuthPlugin
             AuthCredential credential = getCredential(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             if (credential == null) {
-              throw FlutterFirebaseAuthPluginException.invalidCredential();
+              taskCompletionSource.setException(
+                  FlutterFirebaseAuthPluginException.invalidCredential());
+              return;
             }
 
             AuthResult authResult =
@@ -1036,7 +1042,8 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             // Wait for the user to reload, and send back the updated user
@@ -1126,7 +1133,8 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             String newEmail = (String) Objects.requireNonNull(arguments.get(Constants.NEW_EMAIL));
@@ -1150,7 +1158,8 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             String newPassword =
@@ -1175,14 +1184,17 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             PhoneAuthCredential phoneAuthCredential =
                 (PhoneAuthCredential) getCredential(arguments);
 
             if (phoneAuthCredential == null) {
-              throw FlutterFirebaseAuthPluginException.invalidCredential();
+              taskCompletionSource.setException(
+                  FlutterFirebaseAuthPluginException.invalidCredential());
+              return;
             }
 
             Tasks.await(firebaseUser.updatePhoneNumber(phoneAuthCredential));
@@ -1205,7 +1217,8 @@ public class FlutterFirebaseAuthPlugin
             FirebaseUser firebaseUser = getCurrentUser(arguments);
 
             if (firebaseUser == null) {
-              throw FlutterFirebaseAuthPluginException.noUser();
+              taskCompletionSource.setException(FlutterFirebaseAuthPluginException.noUser());
+              return;
             }
 
             @SuppressWarnings("unchecked")
