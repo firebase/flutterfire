@@ -496,14 +496,7 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
   public Task<Void> didReinitializeFirebaseCore() {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            taskCompletionSource.setResult(null);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
+    cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
   }
