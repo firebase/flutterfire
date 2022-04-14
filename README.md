@@ -41,6 +41,8 @@ the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
 
+**Note about contributing to Docs**: We're in the process of updating documentation for the FlutterFire SDK. Please hold your PRs for docs until May 5th.
+
 If you wish to contribute a change to any of the existing plugins in this repo, please review
 our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).

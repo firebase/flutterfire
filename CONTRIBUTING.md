@@ -6,6 +6,8 @@
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
 
+**Note about contributing to Docs**: We're in the process of updating documentation for the FlutterFire SDK. Please hold your PRs for docs until May 5th.
+
 ## 1. Things you will need
 
 - Linux, Mac OS X, or Windows.
