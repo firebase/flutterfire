@@ -11,6 +11,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'firebase_options.dart';
+
 // Toggle this to cause an async error to be thrown during initialization
 // and to test that runZonedGuarded() catches the error
 const _kShouldTestAsyncErrorOnInit = false;
@@ -21,7 +23,9 @@ const _kTestingCrashlytics = true;
 Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
     runApp(MyApp());
   }, (error, stackTrace) {
@@ -49,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   Future<void> _initializeFlutterFire() async {
     if (_kTestingCrashlytics) {
       // Force enable crashlytics collection enabled if we're testing it.
-      // await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
     } else {
       // Else only enable it in non-debug builds.
       // You could additionally extend this to allow users to opt-in.
