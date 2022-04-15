@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drive/drive.dart' as drive;
 import 'package:firebase_core/firebase_core.dart';
 
@@ -23,6 +24,7 @@ Future<void> testsMain() async {
             '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
       ),
     );
+    FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
   });
 
   collection_reference_test.main();
