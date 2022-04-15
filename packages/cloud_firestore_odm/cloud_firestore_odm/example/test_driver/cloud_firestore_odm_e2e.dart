@@ -5,11 +5,14 @@
 import 'package:drive/drive.dart' as drive;
 
 import 'collection_reference_test.dart' as collection_reference_test;
+import 'common.dart';
 import 'document_reference_test.dart' as document_reference_test;
 import 'path_test.dart' as path_test;
 import 'query_reference_test.dart' as query_reference_test;
 
-void testsMain() {
+Future<void> testsMain() async {
+  drive.setUpAll(maybeInitializeDefaultApp);
+
   collection_reference_test.main();
   document_reference_test.main();
   // TODO CI tests configuration currently not compatible with widget testing
