@@ -18,9 +18,8 @@ Future<T> initializeTest<T extends FirestoreCollectionReference<Object?>>(
 
   final snapshot = await ref.reference.get();
 
-  await Future.forEach<QueryDocumentSnapshot<Object?>>(
-    snapshot.docs,
-    (doc) => doc.reference.delete(),
+  await Future.wait<void>(
+    snapshot.docs.map((e) => e.reference.delete()),
   );
 
   return ref;
