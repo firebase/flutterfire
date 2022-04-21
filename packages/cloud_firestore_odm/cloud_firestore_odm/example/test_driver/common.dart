@@ -2,7 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,13 +12,10 @@ import 'package:mockito/mockito.dart';
 Future<T> initializeTest<T extends FirestoreCollectionReference<Object?>>(
   T ref,
 ) async {
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
-
   final snapshot = await ref.reference.get();
 
-  await Future.forEach<QueryDocumentSnapshot<Object?>>(
-    snapshot.docs,
-    (doc) => doc.reference.delete(),
+  await Future.wait<void>(
+    snapshot.docs.map((e) => e.reference.delete()),
   );
 
   return ref;

@@ -8,7 +8,7 @@ of FlutterFire across all supported platforms.
 ## Installation
 
 The FlutterFire CLI depends on the underlying [Firebase CLI](https://firebase.google.com/docs/cli). If you haven't already done so, make sure you have the Firebase CLI installed on your machine.
-If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command :
+If not, make sure you have [node.js](https://www.nodejs.org/) on your machine and Install the Firebase CLI via npm by running the following command:
 
 ```bash
 npm install -g firebase-tools
@@ -27,32 +27,11 @@ Once installed, the `flutterfire` command will be globally available.
 ## Usage
 
 :::note
-Some plugins do not fully support Dart-only Firebase initialization, if you need to use these plugins then the [manual installation](./manual-installation.mdx) steps are recommended.
-:::
-
-The following table shows the current plugins with Dart-only Firebase initialization issues (**_plugins not shown here are fully supported_**):
-
-|                 Plugin |                               iOS                               |                             Android                             | Web |                              macOS                              |
-| ---------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-: | :-------------------------------------------------------------: |
-|              Analytics |                                ✔                                |                              **?**                              |  ✔  |                                ✔                                |
-|            Crashlytics | [**?**](./crashlytics/overview#2-optional-platform-integration) | [**?**](./crashlytics/overview#2-optional-platform-integration) | N/A | [**?**](./crashlytics/overview#2-optional-platform-integration) |
-| Performance Monitoring |                                ✔                                |                               ❌                                |  ✔  |                               N/A                               |
-
-- **?** Indicates your app will build and run but plugin behavior may be different.
-- ❌ Indicates your app will crash on startup without manual Google services PLIST/JSON file setup.
-- ✔ Indicates no known issues.
-
-Additionally, if you use the [`google_sign_in` provider](./auth/social#google) for Authentication in `firebase_auth` then this also requires [manual installation](./manual-installation.mdx). There is an open issue to move `google_sign_in` to Dart initialization which you can [track here](https://github.com/flutter/flutter/issues/96391).
-
-### Generating Firebase Options
-
-:::note
-If you initialize your Firebase app from Dart, you will likely receive warnings from the native Android & iOS Firebase SDKs indicating no Firebase app has been configured or
-you don't have the relevant config file (i.e. `GoogleService-Info.plist` or `google-services.json`). You can safely ignore these warnings if
+If you initialize your Firebase app from Dart, you may receive warning logs from the native iOS Firebase SDK indicating no Firebase app has been configured (i.e. `GoogleService-Info.plist`). You can safely ignore these logs if
 you're initializing your Firebase app from Dart.
 :::
 
-FlutterFire can now be initialized from Dart on all platforms using `Firebase.initializeApp`, however
+FlutterFire can be initialized from Dart on all platforms using `Firebase.initializeApp`, however
 the options for different platforms can vary. The FlutterFire CLI can help, by generating a file
 (by default called `firebase_options.dart`) which can be used when calling the initialization method.
 
@@ -88,6 +67,10 @@ await Firebase.initializeApp(
 );
 ```
 
+:::note
+If you add support for a new platform in your Flutter app (e.g. adding Android when your app previously did not support Android), or if you introduce new Firebase services into your app (e.g. adding `firebase_database`) then you should reconfigure Firebase for your application again via the CLI (`flutterfire configure`).
+:::
+
 ## Commands
 
 ### Configure
@@ -101,14 +84,15 @@ flutterfire configure
 
 The command supports the following option arguments:
 
-| Argument          | Alias | Description                                                                                                                                                                                     |
-| ----------------- | ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| --project         | -p    | Sets the Firebase Project ID to use. By default, the CLI will attempt to fetch the project defined in the `.firebaserc` file, or prompt you to select the project from the Firebase Console.    |
-| --account         | -e    | Sets the email address which should be used to authenticate with Firebase against. By default, this will use the primary account defined on the Firebase CLI.                                   |
-| --out             | -o    | Specifies the path & file name for the generated file. Defaults to "lib/firebase_options.dart".                                                                                                 |
-| --ios-bundle-id   | -i    | The bundle identifier of your iOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "ios" folder (if it exists).      |
-| --macos-bundle-id | -m    | The bundle identifier of your macOS app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "macos" folder (if it exists).  |
-| --android-app-id  | -a    | The application id of your Android app, e.g. "com.example.app". If no identifier is provided then an attempt will be made to automatically detect it from your "android" folder (if it exists). |
+| Argument                   | Alias | Description                                                                                                                                                                                  |
+| -------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| --project                  | -p    | Sets the Firebase Project ID to use. By default, the CLI will attempt to fetch the project defined in the `.firebaserc` file, or prompt you to select the project from the Firebase Console. |
+| --account                  | -e    | Sets the email address which should be used to authenticate with Firebase against. By default, this will use the primary account defined on the Firebase CLI.                                |
+| --out                      | -o    | Specifies the path & file name for the generated file. Defaults to "lib/firebase_options.dart".                                                                                              |
+| --ios-bundle-id            | -i    | The bundle identifier of your iOS app, e.g. "com.example.app". If no identifier is provided, an attempt will be made to automatically detect it from your "ios" folder (if it exists).       |
+| --macos-bundle-id          | -m    | The bundle identifier of your macOS app, e.g. "com.example.app". If no identifier is provided, an attempt will be made to automatically detect it from your "macos" folder (if it exists).   |
+| --android-package-name     | -a    | The package name of your Android app, e.g. "com.example.app". If no package name is provided, an attempt will be made to automatically detect it from your "android" folder (if it exists).  |
+| --[no-]apply-gradle-plugin | -g    | Whether to add the Firebase Gradle plugin to your Android app's build.gradle files and create the google-services.json file in your ./android/app folder. (defaults to on)                   |
 
 ## Version
 
@@ -116,6 +100,15 @@ To view the current version of the FlutterFire CLI, run:
 
 ```bash
 flutterfire --version
+```
+
+### Updating the CLI
+
+If your CLI version is no longer the latest published version then you will be prompted to automatically update your CLI to the latest version when you run `flutterfire --version`. Alternatively
+you can manually trigger an update via the following command:
+
+```bash
+dart pub global activate flutterfire_cli
 ```
 
 ## Reporting an issue
