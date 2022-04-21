@@ -2,7 +2,7 @@ name: firebase_auth_example
 description: Demonstrates how to use the firebase_auth plugin.
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
   firebase_auth:
@@ -11,9 +11,10 @@ dependencies:
     path: ../../../firebase_core/firebase_core
   flutter:
     sdk: flutter
-  flutter_signin_button: ^2.0.0
-# Removed google_sign_in plugin temporarily until CI is fixed
-#  google_sign_in: ^5.1.0
+  flutter_signin_button: ^2.0.0 
+  github_sign_in: ^0.0.5-dev.4
+  google_sign_in: ^5.1.0
+  twitter_login: ^4.0.1
 
 dependency_overrides:
   firebase_auth:

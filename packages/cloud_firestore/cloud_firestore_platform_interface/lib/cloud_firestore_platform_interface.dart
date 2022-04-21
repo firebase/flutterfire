@@ -26,6 +26,7 @@ export 'src/platform_interface/platform_interface_load_bundle_task.dart';
 export 'src/platform_interface/platform_interface_load_bundle_task_snapshot.dart';
 export 'src/snapshot_metadata.dart';
 export 'src/source.dart';
+export 'src/load_bundle_task_state.dart';
 export 'src/timestamp.dart';
 export 'src/settings.dart';
 export 'src/get_options.dart';

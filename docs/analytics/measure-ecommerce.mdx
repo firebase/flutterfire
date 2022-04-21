@@ -1,0 +1,275 @@
+---
+title: Measure Ecommerce
+---
+
+[Ecommerce](https://support.google.com/analytics/answer/9786881)
+allows measurement of user interactions with products across your
+users' shopping experiences, including interactions such as product (item) list
+views, product list clicks, viewing product details, adding a product to a
+shopping cart, initiating the checkout process, purchases, and refunds.
+
+For details on implementing ecommerce web apps, see [Google Analytics Ecommerce](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce).
+
+## Before you begin
+
+Make sure that you’ve set up your project and can access Analytics as described
+in [Get Started with Analytics](/docs/analytics/get-started). Ecommerce
+measurement requires you to link your Firebase project to an Analytics
+account and to have the Android SDK v17.3.0 or iOS v6.20.0 and up in your app.
+
+## Implementation
+
+A typical ecommerce implementation measures any of the following actions:
+
+* [Select a product from a list](#select_product)
+* [View product details](#view_product)
+* [Add/remove a product from a shopping cart](#add_remove_product)
+* [Initiate the checkout process](#initiate_checkout)
+* [Make purchases or refunds](#make_purchase_refund)
+* [Apply promotions](#apply_promotions)
+
+At the heart of these actions are products. Products can be instrumented as an
+array of items that can be added to prescribed ecommerce events. The following
+example demonstrates how to create a collection of **items** that are referenced
+throughout this guide.
+
+```dart
+// A pair of jeggings
+final jeggings = AnalyticsEventItem(
+    itemId: "SKU_123",
+    itemName: "jeggings",
+    itemCategory: "pants",
+    itemVariant: "black",
+    itemBrand: "Google",
+    price: 9.99,
+);
+
+// A pair of boots
+final boots = AnalyticsEventItem(
+    itemId: "SKU_456",
+    itemName: "boots",
+    itemCategory: "shoes",
+    itemVariant: "brown",
+    itemBrand: "Google",
+    price: 24.99,
+);
+
+// A pair of socks
+final socks = AnalyticsEventItem(
+    itemId: "SKU_789",
+    itemName: "ankle_socks",
+    itemCategory: "socks",
+    itemVariant: "red",
+    itemBrand: "Google",
+    price: 5.99,
+);
+```
+
+### Select a product from a list {#select_product}
+
+When a user is presented with a list of results, log a `view_item_list` event
+including an `items` array parameter containing the displayed products.
+
+```dart
+await FirebaseAnalytics.instance.logViewItemList(
+    itemListId: "L001",
+    itemListName: "Related products",
+    items: [jeggings, boots, socks],
+);
+```
+
+Once a user selects a particular product from the list, log a `select_item`
+event with the chosen product in an `items` array parameter.
+
+```dart
+await FirebaseAnalytics.instance.logSelectItem(
+    itemListId: "L001",
+    itemListName: "Related products",
+    items: [jeggings],
+);
+```
+
+### View product details {#view_product}
+
+To measure how many times product details are viewed, log a `view_item` event
+whenever a user views a product's details screen.
+
+```dart
+await FirebaseAnalytics.instance.logViewItem(
+    currency: 'USD',
+    value: 9.99,
+    items: [jeggings],
+);
+```
+
+### Add or remove a product from a shopping cart {#add_remove_product}
+
+Measure a product being added to a wishlist or cart by logging an
+`add_to_wishlist` or `add_to_cart` event, respectively, with the relevant
+products in an `items` array parameter.
+
+```dart
+final jeggingsWithQuantity = AnalyticsEventItem(
+    itemId: jeggings.itemId,
+    itemName: jeggings.itemName,
+    itemCategory: jeggings.itemCategory,
+    itemVariant: jeggings.itemVariant,
+    itemBrand: jeggings.itemBrand,
+    price: jeggings.price,
+    quantity: 2,
+);
+await FirebaseAnalytics.instance.logAddToWishlist(
+    currency: 'USD',
+    value: 19.98,
+    items: [jeggingsWithQuantity],
+);
+await FirebaseAnalytics.instance.logAddToCart(
+    currency: 'USD',
+    value: 19.98,
+    items: [jeggingsWithQuantity],
+);
+```
+
+When a user subsequently views the cart, log the `view_cart` event with all
+`items` in the cart.
+
+```dart
+await FirebaseAnalytics.instance.logViewCart(
+    currency: 'USD',
+    value: 19.98,
+    items: [jeggingsWithQuantity],
+);
+```
+
+To measure when a user removes a product from a cart, log the
+`remove_from_cart` event.
+
+```dart
+final jeggingsWithQuantity = AnalyticsEventItem(
+    itemId: jeggings.itemId,
+    itemName: jeggings.itemName,
+    itemCategory: jeggings.itemCategory,
+    itemVariant: jeggings.itemVariant,
+    itemBrand: jeggings.itemBrand,
+    price: jeggings.price,
+    quantity: 1,
+);
+await FirebaseAnalytics.instance.logRemoveFromCart(
+    currency: 'USD',
+    value: 9.99,
+    items: [jeggingsWithQuantity],
+);
+```
+
+### Initiate the checkout process {#initiate_checkout}
+
+Measure the first step in a checkout process by logging a `begin_checkout` event
+with one or more `items` defined with the relevant fields. A coupon can also be
+added at this stage to the entire order by adding it to the event or applied to
+a particular item by adding it to specific elements in the `items` array.
+
+```dart
+await FirebaseAnalytics.instance.logBeginCheckout(
+    currency: 'USD',
+    value: 15.98,  // Discount applied.
+    coupon: "SUMMER_FUN",
+    items: [jeggingsWithQuantity],
+);
+```
+
+When a user proceeds to the next step in the checkout process and adds shipping
+information, log an `add_shipping_info` event. Use the parameter `shipping_tier`
+to specify the user's delivery option, such as "Ground", "Air", or "Next-day".
+
+```dart
+await FirebaseAnalytics.instance.logAddShippingInfo(
+    currency: 'USD',
+    value: 15.98,
+    coupon: "SUMMER_FUN",
+    shippingTier: "Ground",
+    items: [jeggingsWithQuantity],
+);
+```
+
+Log `add_payment_info` when a user submits their payment information. If
+applicable, include `payment_type` with this event for the chosen method of
+payment.
+
+```dart
+await FirebaseAnalytics.instance.logAddPaymentInfo(
+    currency: 'USD',
+    value: 15.98,
+    coupon: "SUMMER_FUN",
+    paymentType: "Visa",
+    items: [jeggingsWithQuantity],
+);
+```
+
+### Make a purchase or issue a refund {#make_purchase_refund}
+
+Measure a purchase by logging a `purchase` event with one or more `items`
+defined with the relevant fields.
+
+```dart
+await FirebaseAnalytics.instance.logPurchase(
+    transactionId: "12345",
+    affiliation: "Google Store",
+    currency: 'USD',
+    value: 15.98,
+    shipping: 2.00,
+    tax: 1.66,
+    coupon: "SUMMER_FUN",
+    items: [jeggingsWithQuantity],
+);
+```
+
+:::note
+The purchase event replaces `ecommerce_purchase` and is different from the
+`in_app_purchase` event, which is reported automatically.
+:::
+
+Measure refunds by logging a `refund` event with the relevant `transaction_id`
+specified and optionally (for partial refunds) one or more `items` defined with
+`item_id` and `quantity`.
+
+```dart
+await FirebaseAnalytics.instance.logRefund(
+    transactionId: "12345",
+    affiliation: "Google Store",
+    currency: 'USD',
+    value: 15.98,
+    items: [jeggingsWithQuantity],
+);
+```
+
+:::note
+The `refund` event replaces `ecommerce_refund`.
+:::
+
+### Apply promotions {#apply_promotions}
+
+Ecommerce includes support for measuring impressions and clicks of internal
+promotions, such as banners displayed to promote a sale.
+
+Promotion impressions are typically measured with the initial screen view by
+logging the `view_promotion` event with an `items` parameter to specify the
+promoted product. To indicate a user clicked on a promotion, log a
+`select_promotion` event with that product as an `item` parameter.
+
+```dart
+await FirebaseAnalytics.instance.logViewPromotion(
+    promotionId: "SUMMER_FUN",
+    promotionName: "Summer Sale",
+    creativeName: "summer2020_promo.jpg",
+    creativeSlot: "featured_app_1",
+    locationId: "HERO_BANNER",
+);
+
+await FirebaseAnalytics.instance.logSelectPromotion(
+    promotionId: "SUMMER_FUN",
+    promotionName: "Summer Sale",
+    creativeName: "summer2020_promo.jpg",
+    creativeSlot: "featured_app_1",
+    locationId: "HERO_BANNER",
+);
+```

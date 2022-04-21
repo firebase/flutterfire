@@ -2,13 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:flutterfire_ui/src/i10n/lang/es.dart';
-
-import '../i10n/lang/ar.dart';
+import 'lang/ar.dart';
 import 'lang/en.dart';
 import 'lang/fr.dart';
+import 'lang/it.dart';
+import 'lang/ja.dart';
 import 'lang/pt.dart';
 import 'lang/nl.dart';
+import 'lang/tr.dart';
+import 'lang/id.dart';
+import 'lang/hi.dart';
+import 'lang/de.dart';
+import 'lang/es.dart';
 
 abstract class FlutterFireUILocalizationLabels {
   const FlutterFireUILocalizationLabels();
@@ -104,11 +109,17 @@ abstract class FlutterFireUILocalizationLabels {
 
 const localizations = <String, FlutterFireUILocalizationLabels>{
   'en': EnLocalizations(),
+  'hi': HiLocalizations(),
   'es': EsLocalizations(),
   'ar': ArLocalizations(),
+  'tr': TrLocalizations(),
   'fr': FrLocalizations(),
+  'it': ItLocalizations(),
+  'ja': JaLocalizations(),
   'pt': PtLocalizations(),
   'nl': NlLocalizations(),
+  'id': IdLocalizations(),
+  'de': DeLocalizations(),
 };
 
 class DefaultLocalizations extends EnLocalizations {

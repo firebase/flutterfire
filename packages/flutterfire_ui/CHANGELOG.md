@@ -1,3 +1,62 @@
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+1
+
+ - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))
+ - **FIX**: fix phone linking on web (#8395). ([b8ac0a20](https://github.com/FirebaseExtended/flutterfire/commit/b8ac0a202958864f793791877e556624f9b7c487))
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **REFACTOR**: refactor platform specific widget styling (#8333). ([ecbff15c](https://github.com/FirebaseExtended/flutterfire/commit/ecbff15cf657a1d451db39bb8a5b4f3419780228))
+ - **FIX**: respect autocorrect property on `UniversalTextFormField` (#8367). ([ad942c34](https://github.com/FirebaseExtended/flutterfire/commit/ad942c349c3232f1946575fdab2b8b27e1c14215))
+ - **FIX**: trim email before submitting (#8369). ([4f9b8855](https://github.com/FirebaseExtended/flutterfire/commit/4f9b8855504d5ae85d5904f4663fa93fa871e32a))
+ - **FIX**: allow passing oauth scopes for google sign in (#8368). ([7edbf5e6](https://github.com/FirebaseExtended/flutterfire/commit/7edbf5e692499feb7b3c1b29dab67479917df21f))
+ - **FIX**: Avoid layout jumps when editing user name. (#8334). ([1937f278](https://github.com/FirebaseExtended/flutterfire/commit/1937f27817acc59dedd85a6d1e0624f49685ef5e))
+ - **FIX**: fix sign out issue on desktop and web (#8331). ([f1dae735](https://github.com/FirebaseExtended/flutterfire/commit/f1dae735483bf293c4b18a8ff7c3ab6ca3cbe6e7))
+ - **FIX**: Fix Flutter Cupertino button color bug. (#8315). ([47dc6d09](https://github.com/FirebaseExtended/flutterfire/commit/47dc6d09112db8d1398908895b387795722eaaba))
+ - **FEAT**: Allow setting `resizeToAvoidBottomInset` from LoginScreen and set as default `false` for backwards compatibility. (#8365). ([3e884f2f](https://github.com/FirebaseExtended/flutterfire/commit/3e884f2f7cb498c6dff23ff6ac2bd9a25a73034d))
+ - **FEAT**: Add Japanese localization language support. (#8110). ([c9c7f828](https://github.com/FirebaseExtended/flutterfire/commit/c9c7f8281fbfb2cd2872eb1b71fbd5e46c8002d8))
+ - **BREAKING** **FEAT**: add email verification and allow to unlink social providers from profile screen (#8358). ([89f97047](https://github.com/FirebaseExtended/flutterfire/commit/89f97047e34d5023f2c41312767f626cb662702f))
+
+## 0.3.6+1
+
+ - Update a dependency to the latest release.
+
+## 0.3.6
+
+ - **FEAT**: Add German localization language support (#8195). ([9976d9d6](https://github.com/FirebaseExtended/flutterfire/commit/9976d9d66b870143227b08af068da3bc2efc5411))
+
+## 0.3.5+1
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 0.3.5
+
+ - **FIX**: Upgrade `desktop_webview_auth` - v`0.0.5` (#8164). ([123fa6b1](https://github.com/FirebaseExtended/flutterfire/commit/123fa6b132183a4d6886c8be0595104752724532))
+ - **FIX**: Upgrade `desktop_webview_auth` package causing a problem on macOS. (#8151). ([da4a1c5e](https://github.com/FirebaseExtended/flutterfire/commit/da4a1c5e074cb5af71983a3ae49c4838402b726f))
+ - **FEAT**: Add support for configuring authentication providers globally (additionally fixes #7801) (#8120). ([ebde7d27](https://github.com/FirebaseExtended/flutterfire/commit/ebde7d27938d7a36a67973df4b33c21bbd7dea1a))
+ - **FEAT**: Add Hindi localization language support (#7778). ([b584ce0f](https://github.com/FirebaseExtended/flutterfire/commit/b584ce0f254dcb195f9a31f279fb3871d01182c1))
+ - **FEAT**: Add Turkish language localization support. (#7790). ([c47f6075](https://github.com/FirebaseExtended/flutterfire/commit/c47f60757ccbfcee1eaa5d7ed6ee01258f3b9d4f))
+ - **FEAT**: Add Bahasa Indonesia localization language support (#7709). ([be0eb27f](https://github.com/FirebaseExtended/flutterfire/commit/be0eb27f4f4d85a4e4a2468768c166a701325a8c))
+ - **FEAT**: Enhance the oauth provider button widget by showing error text underneath. (#8032). ([2b47f5a1](https://github.com/FirebaseExtended/flutterfire/commit/2b47f5a12747e3437dfc42d331684e798372beaf))
+
+## 0.3.4
+
+ - **FEAT**: Add Italian localization language support. (#7823). ([c3a1a839](https://github.com/FirebaseExtended/flutterfire/commit/c3a1a839a3963a75cc17e931a3eee6e091df40ac))
+
+## 0.3.3
+
+- **FIX**: prompt user to select google account on web (#8007). ([b3db0213](https://github.com/FirebaseExtended/flutterfire/commit/b3db0213ae949435f74d8193cfb5c8a65ed7f601))
+- **FIX**: bump flutter_facebook_auth version (#8031). ([82c1fe11](https://github.com/FirebaseExtended/flutterfire/commit/82c1fe111d00b499e9587d235e4499b03cfe17bd))
+- **FIX**: make breakpoints of all screens configurable (#7996). ([6557740c](https://github.com/FirebaseExtended/flutterfire/commit/6557740cf68dbd79da7bd03c65f92479c3ff435b))
+- **FEAT**: add Dutch localization support (#7782). ([751104b6](https://github.com/FirebaseExtended/flutterfire/commit/751104b6ec282592e209ee57f130aae68a752ba5))
+- **FEAT**: add autofillhints (#7668). ([dd94e935](https://github.com/FirebaseExtended/flutterfire/commit/dd94e935828d2de873a08eb26801541ca68f0696))
+- **DOCS**: Fixes "infinite" typo (#8039). ([c2cf325d](https://github.com/FirebaseExtended/flutterfire/commit/c2cf325dfd52194c68b70d17a91bb9e1158840b6))
+
 ## 0.3.2
 
  - **FEAT**: add Portuguese localization support (#7830). ([5152692f](https://github.com/FirebaseExtended/flutterfire/commit/5152692f22fe61a95e9dd19eb3bdf87547760d72))

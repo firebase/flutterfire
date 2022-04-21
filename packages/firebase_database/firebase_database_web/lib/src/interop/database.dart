@@ -384,7 +384,6 @@ class Query<T extends database_interop.QueryJsImpl>
     streamController = StreamController<QueryEvent>.broadcast(
       onListen: startListen,
       onCancel: stopListen,
-      sync: true,
     );
     return streamController.stream;
   }

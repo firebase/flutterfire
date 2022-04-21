@@ -195,6 +195,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
 #if TARGET_OS_OSX
+  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+#else
+  NSDictionary *remoteNotification =
+      notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+#endif
+  if (remoteNotification != nil) {
+    // If remoteNotification exists, it is the notification that opened the app.
+    _initialNotification =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+  }
+
+#if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
   // registrar Flutter implementation.
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
@@ -290,11 +302,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
 
-    // Don't send an event if contentAvailable is true - application:didReceiveRemoteNotification
-    // will send the event for us, we don't want to duplicate them.
-    if (!notificationDict[@"contentAvailable"]) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
-    }
+    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
   // Forward on to any other delegates amd allow them to control presentation behavior.
@@ -333,9 +341,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-    @synchronized(self) {
-      _initialNotification = notificationDict;
-    }
   }
 
   // Forward on to any other delegates.
@@ -480,7 +485,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -599,10 +603,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (void)messagingGetToken:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRMessaging *messaging = [FIRMessaging messaging];
+
+  // Keep behaviour consistent with android platform, newly retrieved tokens are streamed via
+  // onTokenRefresh
+  bool refreshToken = messaging.FCMToken == nil ? YES : NO;
   [messaging tokenWithCompletion:^(NSString *_Nullable token, NSError *_Nullable error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
+      if (refreshToken) {
+        [self->_channel invokeMethod:@"Messaging#onTokenRefresh" arguments:token];
+      }
+
       result.success(@{@"token" : token});
     }
   }];

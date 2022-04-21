@@ -1,12 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
+import 'package:firebase_auth/firebase_auth.dart'
+    show ActionCodeSettings, FirebaseAuth, FirebaseAuthException, User;
 import 'package:flutter/cupertino.dart' hide Title;
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
+import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 
+import '../widgets/internal/universal_button.dart';
+
+import 'internal/multi_provider_screen.dart';
+
+import '../widgets/internal/rebuild_scope.dart';
 import '../widgets/internal/subtitle.dart';
+import '../widgets/internal/universal_icon_button.dart';
 
-class AvailableProvidersRow extends StatelessWidget {
+class AvailableProvidersRow extends StatefulWidget {
   final FirebaseAuth? auth;
   final List<ProviderConfiguration> providerConfigs;
   final VoidCallback onProviderLinked;
@@ -18,16 +26,27 @@ class AvailableProvidersRow extends StatelessWidget {
     required this.onProviderLinked,
   }) : super(key: key);
 
+  @override
+  State<AvailableProvidersRow> createState() => _AvailableProvidersRowState();
+}
+
+class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
+  AuthFailed? error;
+
   Future<void> connectProvider({
     required BuildContext context,
     required ProviderConfiguration config,
   }) async {
+    setState(() {
+      error = null;
+    });
+
     switch (config.providerId) {
       case 'phone':
         await startPhoneVerification(
           context: context,
           action: AuthAction.link,
-          auth: auth,
+          auth: widget.auth,
         );
         break;
       case 'password':
@@ -38,14 +57,14 @@ class AvailableProvidersRow extends StatelessWidget {
           pageBuilder: (context, _, __) {
             return EmailSignUpDialog(
               config: config as EmailProviderConfiguration,
-              auth: auth,
+              auth: widget.auth,
               action: AuthAction.link,
             );
           },
         );
     }
 
-    await (auth ?? FirebaseAuth.instance).currentUser!.reload();
+    await (widget.auth ?? FirebaseAuth.instance).currentUser!.reload();
   }
 
   @override
@@ -53,184 +72,500 @@ class AvailableProvidersRow extends StatelessWidget {
     final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
-    final providerConfigs = this
-        .providerConfigs
+    final providerConfigs = widget.providerConfigs
         .where((config) => config is! EmailLinkProviderConfiguration)
         .toList();
+
+    Widget child = Row(
+      children: [
+        for (var config in providerConfigs)
+          if (config is! OAuthProviderConfiguration)
+            if (isCupertino)
+              CupertinoButton(
+                onPressed: () => connectProvider(
+                  context: context,
+                  config: config,
+                ).then((_) => widget.onProviderLinked()),
+                child: Icon(
+                  providerIcon(context, config.providerId),
+                ),
+              )
+            else
+              IconButton(
+                icon: Icon(
+                  providerIcon(context, config.providerId),
+                ),
+                onPressed: () => connectProvider(
+                  context: context,
+                  config: config,
+                ).then((_) => widget.onProviderLinked()),
+              )
+          else
+            AuthStateListener<OAuthController>(
+              listener: (oldState, newState, controller) {
+                if (newState is CredentialLinked) {
+                  widget.onProviderLinked();
+                } else if (newState is AuthFailed) {
+                  setState(() => error = newState);
+                }
+                return null;
+              },
+              child: OAuthProviderIconButton(
+                providerConfig: config,
+                auth: widget.auth,
+                action: AuthAction.link,
+                onTap: () {
+                  setState(() => error = null);
+                },
+              ),
+            ),
+      ],
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Subtitle(text: l.enableMoreSignInMethods),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            for (var config in providerConfigs)
-              if (config is! OAuthProviderConfiguration)
-                if (isCupertino)
-                  CupertinoButton(
-                    onPressed: () => connectProvider(
-                      context: context,
-                      config: config,
-                    ).then((_) => onProviderLinked()),
-                    child: Icon(
-                      providerIcon(context, config.providerId),
-                    ),
-                  )
-                else
-                  IconButton(
-                    icon: Icon(
-                      providerIcon(context, config.providerId),
-                    ),
-                    onPressed: () => connectProvider(
-                      context: context,
-                      config: config,
-                    ).then((_) => onProviderLinked()),
-                  )
-              else
-                AuthStateListener<OAuthController>(
-                  listener: (oldState, newState, controller) {
-                    if (newState is CredentialLinked) {
-                      onProviderLinked();
-                    }
-                    return null;
-                  },
-                  child: OAuthProviderIconButton(
-                    providerConfig: config,
-                    auth: auth,
-                    action: AuthAction.link,
-                  ),
-                ),
-          ],
-        ),
+        child,
+        if (error != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: ErrorText(exception: error!.exception),
+          ),
       ],
     );
   }
 }
 
-class LinkedProvidersRow extends StatelessWidget {
+class EditButton extends StatelessWidget {
+  final bool isEditing;
+  final VoidCallback? onPressed;
+
+  const EditButton({
+    Key? key,
+    required this.isEditing,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return UniversalIconButton(
+      materialIcon: isEditing ? Icons.check : Icons.edit,
+      cupertinoIcon: isEditing ? CupertinoIcons.check_mark : CupertinoIcons.pen,
+      color: theme.colorScheme.secondary,
+      onPressed: () {
+        onPressed?.call();
+      },
+    );
+  }
+}
+
+class LinkedProvidersRow extends StatefulWidget {
   final FirebaseAuth? auth;
   final List<ProviderConfiguration> providerConfigs;
+  final VoidCallback onProviderUnlinked;
 
   const LinkedProvidersRow({
     Key? key,
     this.auth,
     required this.providerConfigs,
+    required this.onProviderUnlinked,
   }) : super(key: key);
+
+  @override
+  State<LinkedProvidersRow> createState() => _LinkedProvidersRowState();
+}
+
+class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
+  bool isEditing = false;
+  String? unlinkingProvider;
+  FirebaseAuthException? error;
+
+  final size = 32.0;
+
+  void _toggleEdit() {
+    setState(() {
+      isEditing = !isEditing;
+      error = null;
+    });
+  }
+
+  Future<void> _unlinkProvider(BuildContext context, String providerId) async {
+    setState(() {
+      unlinkingProvider = providerId;
+      error = null;
+    });
+
+    try {
+      final user = widget.auth!.currentUser!;
+      await user.unlink(providerId);
+      await user.reload();
+
+      setState(() {
+        widget.onProviderUnlinked();
+        isEditing = false;
+      });
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        error = e;
+      });
+    } finally {
+      setState(() {
+        unlinkingProvider = null;
+      });
+    }
+  }
+
+  Widget buildProviderIcon(BuildContext context, String providerId) {
+    final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+    const animationDuration = Duration(milliseconds: 150);
+    const curve = Curves.easeOut;
+
+    void unlink() {
+      _unlinkProvider(context, providerId);
+    }
+
+    return Stack(
+      children: [
+        SizedBox(
+          width: size,
+          height: size,
+          child: unlinkingProvider == providerId
+              ? Center(
+                  child: LoadingIndicator(
+                    size: size - (size / 4),
+                    borderWidth: 1,
+                  ),
+                )
+              : Icon(providerIcon(context, providerId)),
+        ),
+        if (unlinkingProvider != providerId)
+          AnimatedOpacity(
+            duration: animationDuration,
+            opacity: isEditing ? 1 : 0,
+            curve: curve,
+            child: GestureDetector(
+              onTap: unlink,
+              child: SizedBox(
+                width: size,
+                height: size,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Transform.translate(
+                    offset: const Offset(14, -12),
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: unlink,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(
+                          isCupertino
+                              ? CupertinoIcons.minus_circle_fill
+                              : Icons.remove_circle,
+                          size: 20,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = FlutterFireUILocalizations.labelsOf(context);
+    Widget child = Row(
+      children: [
+        for (var config in widget.providerConfigs)
+          buildProviderIcon(context, config.providerId)
+      ]
+          .map((e) => [e, const SizedBox(width: 8)])
+          .expand((element) => element)
+          .toList(),
+    );
+
+    if (widget.providerConfigs.length > 1) {
+      child = Row(
+        children: [
+          Expanded(child: child),
+          const SizedBox(width: 8),
+          EditButton(
+            isEditing: isEditing,
+            onPressed: _toggleEdit,
+          ),
+        ],
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Subtitle(text: l.signInMethods),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            for (var config in providerConfigs)
-              Icon(providerIcon(context, config.providerId))
-          ]
-              .map((e) => [e, const SizedBox(width: 8)])
-              .expand((element) => element)
-              .toList(),
-        ),
+        child,
       ],
     );
   }
 }
 
-class ProfileScreen extends StatefulWidget {
-  final List<ProviderConfiguration> providerConfigs;
+class EmailVerificationBadge extends StatefulWidget {
+  final FirebaseAuth auth;
+  final ActionCodeSettings? actionCodeSettings;
+  const EmailVerificationBadge({
+    Key? key,
+    required this.auth,
+    this.actionCodeSettings,
+  }) : super(key: key);
+
+  @override
+  State<EmailVerificationBadge> createState() => _EmailVerificationBadgeState();
+}
+
+class _EmailVerificationBadgeState extends State<EmailVerificationBadge> {
+  late final service = EmailVerificationService(widget.auth)
+    ..addListener(() {
+      setState(() {});
+    })
+    ..reload();
+
+  EmailVerificationState get state => service.state;
+
+  User get user {
+    return widget.auth.currentUser!;
+  }
+
+  TargetPlatform get platform {
+    return Theme.of(context).platform;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (state == EmailVerificationState.dismissed ||
+        state == EmailVerificationState.unresolved ||
+        state == EmailVerificationState.verified) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.yellow,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Subtitle(
+                    text: state == EmailVerificationState.sent ||
+                            state == EmailVerificationState.pending
+                        ? 'Verification email sent'
+                        : 'Email is not verified',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  if (state == EmailVerificationState.pending) ...[
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Please check your email and click the link to verify your email address.',
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          if (state == EmailVerificationState.pending)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                LoadingIndicator(size: 16, borderWidth: 0.5),
+                SizedBox(width: 16),
+                Text('Waiting for email verification'),
+              ],
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (state != EmailVerificationState.sent &&
+                    state != EmailVerificationState.sending)
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    color: Theme.of(context).colorScheme.error,
+                    text: 'Dismiss',
+                    onPressed: () {
+                      setState(service.dismiss);
+                    },
+                  ),
+                if (state != EmailVerificationState.sent)
+                  LoadingButton(
+                    isLoading: state == EmailVerificationState.sending,
+                    label: 'Send verification email',
+                    onTap: () {
+                      service.sendVerificationEmail(
+                        platform,
+                        widget.actionCodeSettings,
+                      );
+                    },
+                  )
+                else
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    text: 'Ok',
+                    onPressed: () {
+                      setState(service.dismiss);
+                    },
+                  )
+              ],
+            )
+        ],
+      ),
+    );
+  }
+}
+
+class ProfileScreen extends MultiProviderScreen {
   final List<Widget> children;
-  final FirebaseAuth? auth;
   final Color? avatarPlaceholderColor;
   final ShapeBorder? avatarShape;
   final double? avatarSize;
   final List<FlutterFireUIAction>? actions;
+  final AppBar? appBar;
+  final CupertinoNavigationBar? cupertinoNavigationBar;
+  final ActionCodeSettings? actionCodeSettings;
 
   const ProfileScreen({
     Key? key,
-    required this.providerConfigs,
-    this.auth,
+    FirebaseAuth? auth,
+    List<ProviderConfiguration>? providerConfigs,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
     this.children = const [],
     this.actions,
-  }) : super(key: key);
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  Future<void> _logout(BuildContext context) async {
-    await (widget.auth ?? FirebaseAuth.instance).signOut();
-    final action = FlutterFireUIAction.ofType<SignedOutAction>(context);
-
-    action?.callback(context);
-  }
+    this.appBar,
+    this.cupertinoNavigationBar,
+    this.actionCodeSettings,
+  }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
     return showReauthenticateDialog(
       context: context,
-      providerConfigs: widget.providerConfigs,
-      auth: widget.auth,
+      providerConfigs: providerConfigs,
+      auth: auth,
       onSignedIn: () => Navigator.of(context).pop(true),
     );
   }
 
+  List<ProviderConfiguration> getLinkedProviders(User user) {
+    return providerConfigs
+        .where((config) => user.isProviderLinked(config.providerId))
+        .toList();
+  }
+
+  List<ProviderConfiguration> getAvailableProviders(User user) {
+    return providerConfigs
+        .where((config) => !user.isProviderLinked(config.providerId))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
-    final platform = Theme.of(context).platform;
-    final _auth = widget.auth ?? FirebaseAuth.instance;
-    final _user = _auth.currentUser!;
+    final providersScopeKey = RebuildScopeKey();
+    final emailVerificationScopeKey = RebuildScopeKey();
 
-    final linkedProviders = widget.providerConfigs
-        .where((config) => _user.isProviderLinked(config.providerId))
-        .toList();
-
-    final availableProviders = widget.providerConfigs
-        .where((config) => !_user.isProviderLinked(config.providerId))
-        .where((config) => config.isSupportedPlatform(platform))
-        .toList();
+    final user = auth.currentUser!;
 
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Align(
           child: UserAvatar(
-            auth: widget.auth,
-            placeholderColor: widget.avatarPlaceholderColor,
-            shape: widget.avatarShape,
-            size: widget.avatarSize,
+            auth: auth,
+            placeholderColor: avatarPlaceholderColor,
+            shape: avatarShape,
+            size: avatarSize,
           ),
         ),
-        const SizedBox(height: 16),
-        Align(child: EditableUserDisplayName(auth: widget.auth)),
-        if (linkedProviders.isNotEmpty) ...[
-          const SizedBox(height: 32),
-          LinkedProvidersRow(
-            auth: widget.auth,
-            providerConfigs: linkedProviders,
+        Align(child: EditableUserDisplayName(auth: auth)),
+        if (!user.emailVerified) ...[
+          RebuildScope(
+            builder: (context) {
+              if (user.emailVerified) {
+                return const SizedBox.shrink();
+              }
+
+              return EmailVerificationBadge(
+                auth: auth,
+                actionCodeSettings: actionCodeSettings,
+              );
+            },
+            scopeKey: emailVerificationScopeKey,
           ),
         ],
-        if (availableProviders.isNotEmpty) ...[
-          const SizedBox(height: 32),
-          AvailableProvidersRow(
-            auth: widget.auth,
-            providerConfigs: availableProviders,
-            onProviderLinked: () => setState(() {}),
-          ),
-        ],
-        ...widget.children,
+        RebuildScope(
+          builder: (context) {
+            final user = auth.currentUser!;
+            final linkedProviders = getLinkedProviders(user);
+
+            if (linkedProviders.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: LinkedProvidersRow(
+                auth: auth,
+                providerConfigs: linkedProviders,
+                onProviderUnlinked: providersScopeKey.rebuild,
+              ),
+            );
+          },
+          scopeKey: providersScopeKey,
+        ),
+        RebuildScope(
+          builder: (context) {
+            final user = auth.currentUser!;
+            final availableProviders = getAvailableProviders(user);
+
+            if (availableProviders.isEmpty) {
+              return const SizedBox.shrink();
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: AvailableProvidersRow(
+                auth: auth,
+                providerConfigs: availableProviders,
+                onProviderLinked: providersScopeKey.rebuild,
+              ),
+            );
+          },
+          scopeKey: providersScopeKey,
+        ),
+        ...children,
         const SizedBox(height: 16),
+        SignOutButton(
+          auth: auth,
+          variant: ButtonVariant.outlined,
+        ),
+        const SizedBox(height: 8),
         DeleteAccountButton(
-          auth: widget.auth,
+          auth: auth,
           onSignInRequired: () {
             return _reauthenticate(context);
           },
@@ -255,45 +590,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
+    Widget child = SafeArea(child: SingleChildScrollView(child: body));
+
     if (isCupertino) {
-      return FlutterFireUIActions(
-        actions: widget.actions ?? const [],
-        child: Builder(
-          builder: (context) => CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: Text(l.profile),
-              trailing: Transform.translate(
-                offset: const Offset(0, -6),
-                child: CupertinoButton(
-                  onPressed: () => _logout(context),
-                  child: const Icon(CupertinoIcons.arrow_right_circle),
-                ),
-              ),
-            ),
-            child: SafeArea(child: SingleChildScrollView(child: body)),
-          ),
+      child = CupertinoPageScaffold(
+        navigationBar: cupertinoNavigationBar,
+        child: SafeArea(
+          child: SingleChildScrollView(child: child),
         ),
       );
     } else {
-      return FlutterFireUIActions(
-        actions: widget.actions ?? const [],
-        child: Builder(
-          builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text(l.profile),
-              actions: [
-                IconButton(
-                  onPressed: () => _logout(context),
-                  icon: const Icon(
-                    Icons.logout_outlined,
-                  ),
-                )
-              ],
-            ),
-            body: SafeArea(child: SingleChildScrollView(child: body)),
-          ),
+      child = Scaffold(
+        appBar: appBar,
+        body: SafeArea(
+          child: SingleChildScrollView(child: body),
         ),
       );
     }
+
+    return FlutterFireUIActions(
+      actions: actions ?? const [],
+      child: child,
+    );
   }
 }

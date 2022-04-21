@@ -27,7 +27,7 @@ class OAuthProviderButtonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading = AuthState.of(context) is SigningIn;
+    final isLoading = AuthState.of(context) is SigningIn;
     late Widget content;
 
     if (isLoading) {
@@ -88,6 +88,23 @@ mixin SignInWithOAuthProviderMixin {
   }
 }
 
+class _ErrorListener extends StatelessWidget {
+  const _ErrorListener({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final state = AuthState.of(context);
+    if (state is AuthFailed) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: ErrorText(exception: state.exception),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+}
+
 class OAuthProviderButton extends StatelessWidget
     with SignInWithOAuthProviderMixin {
   final double size;
@@ -96,6 +113,7 @@ class OAuthProviderButton extends StatelessWidget
   final double _padding;
   final OAuthProviderConfiguration providerConfig;
   final VoidCallback? onTap;
+  final bool overrideDefaultAction;
 
   const OAuthProviderButton({
     Key? key,
@@ -104,6 +122,7 @@ class OAuthProviderButton extends StatelessWidget
     this.auth,
     this.size = 19,
     this.onTap,
+    this.overrideDefaultAction = false,
   })  : _padding = size * 1.33 / 2,
         super(key: key);
 
@@ -128,53 +147,60 @@ class OAuthProviderButton extends StatelessWidget
         action: action,
         auth: auth,
         config: providerConfig,
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: margin),
-          child: CupertinoTheme(
-            data: CupertinoThemeData(
-              primaryColor: style.backgroundColor,
-            ),
-            child: Builder(
-              builder: (context) => CupertinoButton.filled(
-                padding: EdgeInsets.zero,
-                borderRadius: BorderRadius.circular(borderRadius),
-                child: SizedBox(
-                  height: _height,
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(iconBorderRadius),
-                          bottomLeft: Radius.circular(iconBorderRadius),
-                        ),
-                        child: SizedBox(
-                          width: _height,
-                          height: _height,
-                          child: SvgPicture.asset(
-                            style.iconSrc,
-                            package: 'flutterfire_ui',
-                            width: size,
-                            height: size,
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: margin),
+              child: CupertinoTheme(
+                data: CupertinoThemeData(
+                  primaryColor: style.backgroundColor,
+                ),
+                child: Builder(
+                  builder: (context) => CupertinoButton.filled(
+                    padding: EdgeInsets.zero,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    child: SizedBox(
+                      height: _height,
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(iconBorderRadius),
+                              bottomLeft: Radius.circular(iconBorderRadius),
+                            ),
+                            child: SizedBox(
+                              width: _height,
+                              height: _height,
+                              child: SvgPicture.asset(
+                                style.iconSrc,
+                                package: 'flutterfire_ui',
+                                width: size,
+                                height: size,
+                              ),
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: OAuthProviderButtonContent(
+                              label: providerConfig.getLabel(l),
+                              style: style,
+                              size: size,
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: OAuthProviderButtonContent(
-                          label: providerConfig.getLabel(l),
-                          style: style,
-                          size: size,
-                        ),
-                      ),
-                    ],
+                    ),
+                    onPressed: () {
+                      onTap?.call();
+                      if (!overrideDefaultAction) {
+                        signIn(context);
+                      }
+                    },
                   ),
                 ),
-                onPressed: () {
-                  if (onTap != null) onTap!.call();
-                  signIn(context);
-                },
               ),
             ),
-          ),
+            const _ErrorListener(),
+          ],
         ),
       );
     }
@@ -183,73 +209,78 @@ class OAuthProviderButton extends StatelessWidget
       action: action,
       auth: auth,
       config: providerConfig,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: margin),
-        child: Stack(
-          children: [
-            Material(
-              elevation: 1,
-              color: style.backgroundColor,
-              borderRadius: BorderRadius.circular(borderRadius),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: style.backgroundColor),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.symmetric(vertical: margin),
+            child: Stack(
+              children: [
+                Material(
+                  elevation: 1,
+                  color: style.backgroundColor,
                   borderRadius: BorderRadius.circular(borderRadius),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(iconBorderRadius),
-                  child: SizedBox(
-                    height: _height,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: _height,
-                          height: _height,
-                          child: SvgPicture.asset(
-                            style.iconSrc,
-                            package: 'flutterfire_ui',
-                            width: size,
-                            height: size,
-                          ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: style.backgroundColor),
+                      borderRadius: BorderRadius.circular(borderRadius),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(iconBorderRadius),
+                      child: SizedBox(
+                        height: _height,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: _height,
+                              height: _height,
+                              child: SvgPicture.asset(
+                                style.iconSrc,
+                                package: 'flutterfire_ui',
+                                width: size,
+                                height: size,
+                              ),
+                            ),
+                            Expanded(
+                              child: OAuthProviderButtonContent(
+                                label: providerConfig.getLabel(l),
+                                style: style,
+                                size: size,
+                              ),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          child: OAuthProviderButtonContent(
-                            label: providerConfig.getLabel(l),
-                            style: style,
-                            size: size,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-            Positioned.fill(
-              child: OAuthProviderButtonTapHandler(
-                borderRadius: borderRadius,
-                onTap: onTap != null ? (context) => onTap!() : signIn,
-              ),
-            ),
-            Builder(
-              builder: (context) {
-                bool isLoading = AuthState.of(context) is SigningIn;
+                Positioned.fill(
+                  child: OAuthProviderButtonTapHandler(
+                    borderRadius: borderRadius,
+                    onTap: onTap != null ? (context) => onTap!() : signIn,
+                  ),
+                ),
+                Builder(
+                  builder: (context) {
+                    bool isLoading = AuthState.of(context) is SigningIn;
 
-                if (isLoading) {
-                  return Positioned.fill(
-                    child: LoadingIndicator(
-                      size: size,
-                      borderWidth: borderWidth,
-                      color: style.color,
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            )
-          ],
-        ),
+                    if (isLoading) {
+                      return Positioned.fill(
+                        child: LoadingIndicator(
+                          size: size,
+                          borderWidth: borderWidth,
+                          color: style.color,
+                        ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                )
+              ],
+            ),
+          ),
+          const _ErrorListener(),
+        ],
       ),
     );
   }
@@ -284,6 +315,7 @@ class OAuthProviderIconButton extends StatelessWidget
   final AuthAction? action;
   final OAuthProviderConfiguration providerConfig;
   final VoidCallback? onTap;
+  final bool overrideDefaultAction;
 
   const OAuthProviderIconButton({
     Key? key,
@@ -292,6 +324,7 @@ class OAuthProviderIconButton extends StatelessWidget
     this.auth,
     this.action,
     this.onTap,
+    this.overrideDefaultAction = false,
   }) : super(key: key);
 
   WidgetBuilder _contentBuilder(
@@ -345,8 +378,10 @@ class OAuthProviderIconButton extends StatelessWidget
                 padding: EdgeInsets.zero,
                 child: Builder(builder: _contentBuilder(borderRadius, style)),
                 onPressed: () {
-                  if (onTap != null) onTap!.call();
-                  signIn(context);
+                  onTap?.call();
+                  if (!overrideDefaultAction) {
+                    signIn(context);
+                  }
                 },
               ),
             ),
@@ -382,9 +417,9 @@ class OAuthProviderIconButton extends StatelessWidget
                   builder: (context) {
                     return InkWell(
                       onTap: () {
-                        if (onTap != null) {
-                          onTap!();
-                        } else {
+                        onTap?.call();
+
+                        if (!overrideDefaultAction) {
                           signIn(context);
                         }
                       },

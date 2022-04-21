@@ -27,9 +27,9 @@ jobs:
       - name: Check TS Compiles
         working-directory: ./website
         run: yarn run check:typescript
-      - name: Check Spelling & Grammar
-        working-directory: ./website
-        run: yarn run check:spelling
+      # - name: Check Spelling & Grammar
+      #   working-directory: ./website
+      #   run: yarn run check:spelling
 
   preview:
     runs-on: ubuntu-latest

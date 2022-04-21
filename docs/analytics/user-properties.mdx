@@ -1,0 +1,55 @@
+---
+title: Set user properties
+---
+
+User properties are attributes you define to describe segments of your user base,
+such as language preference or geographic location. These can be used to define
+[audiences](https://support.google.com/firebase/answer/6317509?hl=en&ref_topic=6317489)
+for your app. This guide shows you how to set user properties in your app.
+
+Analytics automatically logs some [user
+properties](https://support.google.com/firebase/answer/6317486); you don't need
+to add any code to enable them. If you need to collect additional data, you can
+set up to 25 different Analytics User Properties per project. Note that
+user property names are case-sensitive and that setting two user properties
+whose names differ only in case results in two distinct user properties being
+logged.
+
+You can't use a small set of user property names reserved by Google:
+
+<ul>
+<li><strong>Age</strong></li>
+<li><strong>Gender</strong></li>
+<li><strong>Interest</strong></li>
+</ul>
+
+## Before you begin
+
+Make sure that you've set up your project and can access Analytics as
+described in [Get Started with Analytics](get-started).
+
+## Set user properties
+
+You can set Analytics User Properties to describe the users of your app.
+You can analyze behaviors of various user segments by applying these
+properties as filters to your reports.
+
+Set a user property as follows:
+
+1. Register the property in the [** User Properties ** page](https://console.firebase.google.com/project/_/analytics/userproperty)
+   of Analytics in the Firebase console. For more information, see
+   [Set and register a user property](//support.google.com/firebase/answer/6317519?hl=en&ref_topic=6317489#create-property).
+1. Add code to set an Analytics User Property with the `setUserProperty()`
+   method.
+
+The following example
+adds a hypothetical favorite food property, which assigns the value in
+`favoriteFood` to the active user:
+
+```dart
+await FirebaseAnalytics.instance
+  .setUserProperty({
+    name: 'favorite_food',
+    value: favoriteFood,
+  });
+```

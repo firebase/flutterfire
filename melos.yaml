@@ -9,8 +9,8 @@ command:
   version:
     # Generate commit links in package changelogs.
     linkToCommits: true
-    # Only allow versioning to happen on main branch.
-    branch: master
+    # # Only allow versioning to happen on main branch.
+    # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
 
@@ -147,6 +147,17 @@ scripts:
         "flutter drive --no-pub --target=./test_driver/driver_e2e.dart"
     description: |
       Run all e2e tests.
+    select-package:
+      dir-exists:
+        - test_driver
+      scope: "*tests*"
+
+  test:e2e:web:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive --no-pub --target=./test_driver/driver_e2e.dart -d chrome"
+    description: |
+      Run all e2e tests on web platform. Please ensure you have "chromedriver" installed and running.
     select-package:
       dir-exists:
         - test_driver

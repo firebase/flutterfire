@@ -1,3 +1,27 @@
+## 2.6.2
+
+ - Update a dependency to the latest release.
+
+## 2.6.1
+
+ - **FIX**: Exit the add crashlytics upload-symbols script if the required json isn't present. ([94077929](https://github.com/FirebaseExtended/flutterfire/commit/940779290a3039181a92567fe8492a720af899e1))
+
+## 2.6.0
+
+ - **FEAT**: add automatic Crashlytics symbol uploads for iOS & macOS apps (#8157). ([c4a3eaa7](https://github.com/FirebaseExtended/flutterfire/commit/c4a3eaa7200d924f9ec71370dd3c875813804935))
+
+## 2.5.3
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 2.5.2
+
+ - Update a dependency to the latest release.
+
+## 2.5.1
+
+ - Fixed macOS project not compiling by symlinking missing header file: `Crashlytics_Platform.h`
+
 ## 2.5.0
 
  - **FEAT**: Set the dSYM file format through the Crashlytic's podspec to allow symbolicating crash reports. (#7872). ([d5d7e26a](https://github.com/FirebaseExtended/flutterfire/commit/d5d7e26a4828963f375b656c6e1a397d26aac980))

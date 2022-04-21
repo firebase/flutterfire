@@ -6,13 +6,17 @@ import 'package:flutter/foundation.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 import 'package:flutterfire_ui/auth.dart';
-import '../../oauth/provider_resolvers.dart';
+import '../provider_resolvers.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
 
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
-class TwitterProviderImpl extends OAuthProvider {
+import 'sign_out_mixin.dart' if (dart.library.html) 'sign_out_mixin_web.dart';
+
+abstract class TwitterProvider extends OAuthProvider {}
+
+class TwitterProviderImpl extends TwitterProvider with SignOutMixin {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
@@ -24,7 +28,7 @@ class TwitterProviderImpl extends OAuthProvider {
     redirectUri: redirectUri,
   );
 
-  late final _provider = TwitterLogin(
+  late final provider = TwitterLogin(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
     redirectURI: redirectUri,
@@ -38,7 +42,7 @@ class TwitterProviderImpl extends OAuthProvider {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final result = await _provider.login();
+    final result = await provider.login();
 
     switch (result.status) {
       case null:
@@ -58,21 +62,27 @@ class TwitterProviderImpl extends OAuthProvider {
   @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return TwitterAuthProvider.credential(
-      accessToken: result.accessToken,
+      accessToken: result.accessToken!,
       secret: result.tokenSecret!,
     );
   }
 
   @override
   TwitterAuthProvider get firebaseAuthProvider => TwitterAuthProvider();
+
+  @override
+  Future<void> logOutProvider() {
+    return SynchronousFuture(null);
+  }
 }
 
-class TwitterProviderConfiguration extends OAuthProviderConfiguration {
+class TwitterProviderConfiguration
+    extends OAuthProviderConfiguration<TwitterProvider> {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
 
-  OAuthProvider get _provider => TwitterProviderImpl(
+  TwitterProvider get _provider => TwitterProviderImpl(
         apiKey: apiKey,
         apiSecretKey: apiSecretKey,
         redirectUri: redirectUri,
@@ -88,7 +98,7 @@ class TwitterProviderConfiguration extends OAuthProviderConfiguration {
   String get providerId => TWITTER_PROVIDER_ID;
 
   @override
-  OAuthProvider createProvider() {
+  TwitterProvider createProvider() {
     return _provider;
   }
 

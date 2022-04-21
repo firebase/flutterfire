@@ -97,7 +97,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   void _submit([String? password]) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
-    final email = widget.email ?? emailCtrl.text;
+    final email = (widget.email ?? emailCtrl.text).trim();
 
     if (formKey.currentState!.validate()) {
       if (widget.onSubmit != null) {

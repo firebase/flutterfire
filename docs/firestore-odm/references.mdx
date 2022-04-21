@@ -98,7 +98,7 @@ class User extends StatelessWidget {
           return Text('User does not exist.');
         }
 
-        User user = documentSnapshot.data()!;
+        User user = documentSnapshot.data!;
 
         return Text('User name: ${user.name}, age ${user.age}');
       }
@@ -118,7 +118,7 @@ Models define exactly what our data schema is, therefore this allows the ODM to 
 useful type-safe methods for querying.
 
 ```dart
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class User {
   User({
     required this.name,
@@ -129,7 +129,7 @@ class User {
   final int age;
 }
 
-@Collection<User>('/users')
+@Collection<User>('users')
 final usersRef = UserCollectionReference();
 ```
 

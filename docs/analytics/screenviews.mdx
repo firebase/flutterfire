@@ -1,0 +1,49 @@
+---
+title: Track Screenviews
+---
+
+Google Analytics tracks screen transitions and attaches information
+about the current screen to events, enabling you to track metrics such as user
+engagement or user behavior per screen. Much of this data collection happens
+automatically, but you can also manually log screenviews. Manually tracking
+screens is useful if your app does not use a separate `UIViewController` or
+`Activity` for each screen you may wish to track, such as in a game.
+
+
+## Automatically track screens
+
+Analytics automatically tracks some information about screens in your
+application, such as the class name of the `UIViewController` or `Activity` that
+is currently in focus. When a screen transition occurs, Analytics logs a
+`screen_view` event that identifies the new screen. Events that occur on these
+screens are automatically tagged with the parameter `firebase_screen_class` (for
+example, `menuViewController` or `MenuActivity`) and a generated
+`firebase_screen_id`. If your app uses a distinct `UIViewController` or
+`Activity` for each screen, Analytics can automatically track every screen
+transition and generate a report of user engagement broken down by screen. If
+your app doesn't, you can still get these reports by manually logging
+`screen_view` events.
+
+## Disable screenview tracking
+
+- Automatic screenview reporting can be turned off on iOS by setting
+  `FirebaseAutomaticScreenReportingEnabled` to `NO` (Boolean) in the Info.plist.
+
+- And on Android, nest the following setting within the `<application>` tag of the
+  `AndroidManifest.xml` file:
+
+  ```xml
+  <meta-data android:name="google_analytics_automatic_screen_reporting_enabled" android:value="false" />
+  ```
+
+## Manually track screens
+
+You can manually log `screen_view` events whether or not automatic tracking is
+enabled.
+
+```dart
+await FirebaseAnalytics.instance
+  .setCurrentScreen(
+    screenName: 'Products'
+  );
+```

@@ -22,7 +22,7 @@ class WriteBatchWeb extends WriteBatchPlatform {
 
   @override
   Future<void> commit() {
-    return guard(_webWriteBatchDelegate.commit);
+    return convertWebExceptions(_webWriteBatchDelegate.commit);
   }
 
   @override

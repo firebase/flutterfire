@@ -64,13 +64,13 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({String? webRecaptchaSiteKey}) async {
-    return guard<Future<void>>(
+    return convertWebExceptions<Future<void>>(
         () async => _delegate.activate(webRecaptchaSiteKey));
   }
 
   @override
   Future<String?> getToken(bool forceRefresh) async {
-    return guard<Future<String?>>(() async {
+    return convertWebExceptions<Future<String?>>(() async {
       app_check_interop.AppCheckTokenResult result =
           await _delegate.getToken(forceRefresh);
       return result.token;
@@ -81,7 +81,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   Future<void> setTokenAutoRefreshEnabled(
     bool isTokenAutoRefreshEnabled,
   ) async {
-    return guard<Future<void>>(
+    return convertWebExceptions<Future<void>>(
       () async =>
           _delegate.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled),
     );

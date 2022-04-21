@@ -1,3 +1,23 @@
+## 9.1.5
+
+ - Update a dependency to the latest release.
+
+## 9.1.4
+
+ - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/FirebaseExtended/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
+
+## 9.1.3
+
+ - Update a dependency to the latest release.
+
+## 9.1.2
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 9.1.1
+
+ - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/FirebaseExtended/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
+
 ## 9.1.0
 
  - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/FirebaseExtended/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))

@@ -1,3 +1,32 @@
+## 4.1.3
+
+ - Update a dependency to the latest release.
+
+## 4.1.2
+
+ - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/FirebaseExtended/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
+
+## 4.1.1
+
+ - Update a dependency to the latest release.
+
+## 4.1.0
+
+ - **FIX**: pass through `utmParameters` on `iOS` and make property on `PendingDynamicLinkData`. (#8232). ([32d06e79](https://github.com/FirebaseExtended/flutterfire/commit/32d06e793b4fc1bc1dad9b9071f94b28c5d477ca))
+ - **FEAT**: add additional `longDynamicLink` parameter for creating a short Dynamic Link enabling additional parameters to be appended such as "ofl". (#7796). ([433a08ea](https://github.com/FirebaseExtended/flutterfire/commit/433a08eaacfaabb109a0185a5e494d87f9334d75))
+
+## 4.0.8
+
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+
+## 4.0.7
+
+ - Update a dependency to the latest release.
+
+## 4.0.6
+
+ - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/FirebaseExtended/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
+
 ## 4.0.5
 
  - Update a dependency to the latest release.

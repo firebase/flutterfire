@@ -50,7 +50,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         'parameters': parameters,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -70,7 +70,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         },
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -84,7 +84,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         defaultParameters,
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -98,7 +98,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         },
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -113,7 +113,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         <String, String?>{'userId': id},
       );
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -132,7 +132,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         },
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -149,7 +149,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         'value': value,
       });
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -158,7 +158,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     try {
       return channel.invokeMethod<void>('Analytics#resetAnalyticsData');
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 
@@ -172,7 +172,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
         });
       }
     } catch (e, s) {
-      throw convertPlatformException(e, s);
+      convertPlatformException(e, s);
     }
   }
 }

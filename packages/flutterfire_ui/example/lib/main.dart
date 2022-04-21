@@ -10,9 +10,36 @@ import 'init.dart'
 import 'config.dart';
 import 'decorations.dart';
 
+final actionCodeSettings = ActionCodeSettings(
+  url: 'https://reactnativefirebase.page.link',
+  handleCodeInApp: true,
+  androidMinimumVersion: '1',
+  androidPackageName:
+      'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
+  iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
+);
+final emailLinkProviderConfig = EmailLinkProviderConfiguration(
+  actionCodeSettings: actionCodeSettings,
+);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebase();
+
+  FlutterFireUIAuth.configureProviders([
+    const EmailProviderConfiguration(),
+    emailLinkProviderConfig,
+    const PhoneProviderConfiguration(),
+    const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
+    const AppleProviderConfiguration(),
+    const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
+    const TwitterProviderConfiguration(
+      apiKey: TWITTER_API_KEY,
+      apiSecretKey: TWITTER_API_SECRET_KEY,
+      redirectUri: TWITTER_REDIRECT_URI,
+    ),
+  ]);
+
   runApp(FirebaseAuthUIExample());
 }
 
@@ -26,35 +53,29 @@ class LabelOverrides extends DefaultLocalizations {
   String get emailInputLabel => 'Enter your email';
 }
 
-final emailLinkProviderConfig = EmailLinkProviderConfiguration(
-  actionCodeSettings: ActionCodeSettings(
-    url: 'https://reactnativefirebase.page.link',
-    handleCodeInApp: true,
-    androidMinimumVersion: '12',
-    androidPackageName:
-        'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
-    iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
-  ),
-);
-
-final providerConfigs = [
-  const EmailProviderConfiguration(),
-  emailLinkProviderConfig,
-  const PhoneProviderConfiguration(),
-  const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-  const AppleProviderConfiguration(),
-  const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-  const TwitterProviderConfiguration(
-    apiKey: TWITTER_API_KEY,
-    apiSecretKey: TWITTER_API_SECRET_KEY,
-    redirectUri: TWITTER_REDIRECT_URI,
-  ),
-];
-
 class FirebaseAuthUIExample extends StatelessWidget {
+  String get initialRoute {
+    final auth = FirebaseAuth.instance;
+
+    if (auth.currentUser == null) {
+      return '/';
+    }
+
+    if (!auth.currentUser!.emailVerified && auth.currentUser!.email != null) {
+      return '/verify-email';
+    }
+
+    return '/profile';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
+    final buttonStyle = ButtonStyle(
+      padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
+      shape: MaterialStateProperty.all(
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
 
     return MaterialApp(
       theme: ThemeData(
@@ -63,8 +84,11 @@ class FirebaseAuthUIExample extends StatelessWidget {
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(),
         ),
+        elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
+        textButtonTheme: TextButtonThemeData(style: buttonStyle),
+        outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
       ),
-      initialRoute: auth.currentUser == null ? '/' : '/profile',
+      initialRoute: initialRoute,
       routes: {
         '/': (context) {
           return SignInScreen(
@@ -80,7 +104,11 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 Navigator.pushNamed(context, '/phone');
               }),
               AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.pushReplacementNamed(context, '/profile');
+                if (!state.user!.emailVerified) {
+                  Navigator.pushNamed(context, '/verify-email');
+                } else {
+                  Navigator.pushReplacementNamed(context, '/profile');
+                }
               }),
               EmailLinkSignInAction((context) {
                 Navigator.pushReplacementNamed(context, '/email-link-sign-in');
@@ -111,7 +139,22 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 ),
               );
             },
-            providerConfigs: providerConfigs,
+          );
+        },
+        '/verify-email': (context) {
+          return EmailVerificationScreen(
+            headerBuilder: headerIcon(Icons.verified),
+            sideBuilder: sideIcon(Icons.verified),
+            actionCodeSettings: actionCodeSettings,
+            actions: [
+              EmailVerified(() {
+                Navigator.pushReplacementNamed(context, '/profile');
+              }),
+              Cancel((context) {
+                FlutterFireUIAuth.signOut(context: context);
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+            ],
           );
         },
         '/phone': (context) {
@@ -139,23 +182,13 @@ class FirebaseAuthUIExample extends StatelessWidget {
           return SMSCodeInputScreen(
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.of(context).pushReplacementNamed('/profile');
+                Navigator.of(context).pushReplacementNamed('/');
               })
             ],
             flowKey: arguments?['flowKey'],
             action: arguments?['action'],
             headerBuilder: headerIcon(Icons.sms_outlined),
             sideBuilder: sideIcon(Icons.sms_outlined),
-          );
-        },
-        '/profile': (context) {
-          return ProfileScreen(
-            providerConfigs: providerConfigs,
-            actions: [
-              SignedOutAction((context) {
-                Navigator.pushReplacementNamed(context, '/');
-              }),
-            ],
           );
         },
         '/forgot-password': (context) {
@@ -173,13 +206,23 @@ class FirebaseAuthUIExample extends StatelessWidget {
           return EmailLinkSignInScreen(
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.pushReplacementNamed(context, '/profile');
+                Navigator.pushReplacementNamed(context, '/');
               }),
             ],
             config: emailLinkProviderConfig,
             headerMaxExtent: 200,
             headerBuilder: headerIcon(Icons.link),
             sideBuilder: sideIcon(Icons.link),
+          );
+        },
+        '/profile': (context) {
+          return ProfileScreen(
+            actions: [
+              SignedOutAction((context) {
+                Navigator.pushReplacementNamed(context, '/');
+              }),
+            ],
+            actionCodeSettings: actionCodeSettings,
           );
         },
       },
