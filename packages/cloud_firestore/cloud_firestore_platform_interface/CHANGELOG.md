@@ -1,3 +1,7 @@
+## 5.5.3
+
+ - Update a dependency to the latest release.
+
 ## 5.5.2
 
  - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/FirebaseExtended/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))

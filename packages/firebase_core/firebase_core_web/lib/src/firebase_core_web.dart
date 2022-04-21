@@ -226,7 +226,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
             Firebase JS SDK version "$supportedFirebaseJsSdkVersion":
 
-            If you override the version manully:
+            If you override the version manually:
               change:
                 <script>window.flutterfire_web_sdk_version = '${firebase.SDK_VERSION}';</script>
               to:

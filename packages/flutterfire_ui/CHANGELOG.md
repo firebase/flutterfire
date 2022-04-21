@@ -1,3 +1,7 @@
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+1
 
  - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))
