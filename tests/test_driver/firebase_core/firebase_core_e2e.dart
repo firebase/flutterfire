@@ -6,17 +6,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 import 'package:drive/drive.dart';
+import 'package:flutter/foundation.dart';
 import '../firebase_default_options.dart';
 
 void setupTests() {
   group('firebase_core', () {
-    String testAppName = 'testApp';
+    String testAppName = '[DEFAULT]';
 
     setUpAll(() async {
-      await Firebase.initializeApp(
-        name: testAppName,
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+      await Firebase.initializeApp();
     });
 
     test('Firebase.apps', () async {
@@ -53,7 +51,9 @@ void setupTests() {
       await app.delete();
 
       expect(Firebase.apps.length, 1);
-    });
+      // TODO(russellwheatley): test randomly causes an auth sign-in failure due to duplicate accounts.
+    }, skip: TargetPlatform.android == defaultTargetPlatform,
+    );
 
     test('FirebaseApp.setAutomaticDataCollectionEnabled()', () async {
       FirebaseApp app = Firebase.app(testAppName);
