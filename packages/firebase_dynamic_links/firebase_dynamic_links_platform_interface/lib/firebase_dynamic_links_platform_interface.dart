@@ -17,3 +17,4 @@ export 'src/navigation_info_parameters.dart';
 export 'src/social_meta_tag_parameters.dart';
 export 'src/android_parameters.dart';
 export 'src/dynamic_link_parameters.dart';
+export 'src/match_type.dart';
