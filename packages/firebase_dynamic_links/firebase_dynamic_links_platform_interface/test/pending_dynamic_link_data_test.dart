@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Uri link = Uri.parse('pending-link');
   int minimumVersion = 12;
-  MatchType matchType = MatchType.highMatchType;
+  MatchType matchType = MatchType.high;
   String minimumVersionIos = 'minimum version';
   int clickTimestamp = 12345345;
   PendingDynamicLinkDataAndroid androidData = PendingDynamicLinkDataAndroid(

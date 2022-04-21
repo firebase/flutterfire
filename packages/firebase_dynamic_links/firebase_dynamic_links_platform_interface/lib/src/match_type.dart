@@ -14,7 +14,7 @@ enum MatchType {
 
   /// The match between the Dynamic Link and this device has high confidence but small possibility
   /// of error still exist.
-  highMatchType,
+  high,
 
   /// The match between the Dynamic Link and this device is exact, hence you may reveal personal
   /// information related to the Dynamic Link.
