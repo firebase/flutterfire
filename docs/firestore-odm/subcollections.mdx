@@ -14,7 +14,7 @@ The ODM provides support for subcollections via the `Collection` annotation. For
 the root collection as normal:
 
 ```dart
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class User {
  // ...
 }
@@ -27,7 +27,7 @@ Let's assume each user document contains a subcollection containing user address
 the model for an address:
 
 ```dart
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class Address {
  // ...
 }

@@ -1,3 +1,27 @@
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+1
+
+ - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))
+ - **FIX**: fix phone linking on web (#8395). ([b8ac0a20](https://github.com/FirebaseExtended/flutterfire/commit/b8ac0a202958864f793791877e556624f9b7c487))
+
+## 0.4.0
+
+> Note: This release has breaking changes.
+
+ - **REFACTOR**: refactor platform specific widget styling (#8333). ([ecbff15c](https://github.com/FirebaseExtended/flutterfire/commit/ecbff15cf657a1d451db39bb8a5b4f3419780228))
+ - **FIX**: respect autocorrect property on `UniversalTextFormField` (#8367). ([ad942c34](https://github.com/FirebaseExtended/flutterfire/commit/ad942c349c3232f1946575fdab2b8b27e1c14215))
+ - **FIX**: trim email before submitting (#8369). ([4f9b8855](https://github.com/FirebaseExtended/flutterfire/commit/4f9b8855504d5ae85d5904f4663fa93fa871e32a))
+ - **FIX**: allow passing oauth scopes for google sign in (#8368). ([7edbf5e6](https://github.com/FirebaseExtended/flutterfire/commit/7edbf5e692499feb7b3c1b29dab67479917df21f))
+ - **FIX**: Avoid layout jumps when editing user name. (#8334). ([1937f278](https://github.com/FirebaseExtended/flutterfire/commit/1937f27817acc59dedd85a6d1e0624f49685ef5e))
+ - **FIX**: fix sign out issue on desktop and web (#8331). ([f1dae735](https://github.com/FirebaseExtended/flutterfire/commit/f1dae735483bf293c4b18a8ff7c3ab6ca3cbe6e7))
+ - **FIX**: Fix Flutter Cupertino button color bug. (#8315). ([47dc6d09](https://github.com/FirebaseExtended/flutterfire/commit/47dc6d09112db8d1398908895b387795722eaaba))
+ - **FEAT**: Allow setting `resizeToAvoidBottomInset` from LoginScreen and set as default `false` for backwards compatibility. (#8365). ([3e884f2f](https://github.com/FirebaseExtended/flutterfire/commit/3e884f2f7cb498c6dff23ff6ac2bd9a25a73034d))
+ - **FEAT**: Add Japanese localization language support. (#8110). ([c9c7f828](https://github.com/FirebaseExtended/flutterfire/commit/c9c7f8281fbfb2cd2872eb1b71fbd5e46c8002d8))
+ - **BREAKING** **FEAT**: add email verification and allow to unlink social providers from profile screen (#8358). ([89f97047](https://github.com/FirebaseExtended/flutterfire/commit/89f97047e34d5023f2c41312767f626cb662702f))
+
 ## 0.3.6+1
 
  - Update a dependency to the latest release.

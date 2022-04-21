@@ -1,3 +1,11 @@
+## 0.2.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.2+1
 
  - **FIX**: Properly type cast utmParameters coming from native side. (#8280). ([22bbd807](https://github.com/FirebaseExtended/flutterfire/commit/22bbd807d2b3c3f9d9cc8ba817ccb4da931ae887))

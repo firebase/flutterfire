@@ -44,6 +44,7 @@ end
 if(options_dict[:flutter_project])
     unless File.exist?("#{options_dict[:project_dir]}/firebase_app_id_file.json")
         puts("Warning: firebase_app_id_file.json file does not exist. This may cause issues in upload-symbols. If this error is unexpected, try running flutterfire configure again.")
+        exit(0)
     end
 end
 
