@@ -54,6 +54,7 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -342,7 +343,10 @@ public class FlutterFirebaseAuthPlugin
       List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
-    for (UserInfo userInfo : userInfoList) {
+    Iterator<? extends UserInfo> iterator = userInfoList.iterator();
+
+    while (iterator.hasNext()) {
+      UserInfo userInfo = iterator.next();
       if (!FirebaseAuthProvider.PROVIDER_ID.equals(userInfo.getProviderId())) {
         output.add(parseUserInfo(userInfo));
       }

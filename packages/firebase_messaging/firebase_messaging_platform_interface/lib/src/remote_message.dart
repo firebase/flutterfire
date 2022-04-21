@@ -52,6 +52,25 @@ class RemoteMessage {
     );
   }
 
+  /// Returns the [RemoteMessage] as a raw Map.
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'senderId': senderId,
+      'category': category,
+      'collapseKey': collapseKey,
+      'contentAvailable': contentAvailable,
+      'data': data,
+      'from': from,
+      'messageId': messageId,
+      'messageType': messageType,
+      'mutableContent': mutableContent,
+      'notification': notification?.toMap(),
+      'sentTime': sentTime?.millisecondsSinceEpoch,
+      'threadId': threadId,
+      'ttl': ttl,
+    };
+  }
+
   /// The ID of the upstream sender location.
   final String? senderId;
 
