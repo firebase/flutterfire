@@ -251,14 +251,14 @@ class ItLocalizations extends FlutterFireUILocalizationLabels {
         'Ti abbiamo inviato una email con un link magico. Controlla la tua email e segui il link per accedere',
     this.sendLinkButtonLabel = 'Invia link magico',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+        'Queste credenziali sono già associate ad un altro account utente.',
+    this.verifyEmailTitleText = 'Verifica la tua email',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'Una email di verifica è stata appena inviata al tuo indirizzo email. '
+            'Controlla la tua email e clicca sul link per la verifica '
+            'del tuo indirizzo email.',
+    this.couldntVerifyEmailText = "Non possiamo verificare il tuo indirizzo email. ",
+    this.resendVerificationEmailButtonLabel = 'Reinvia email di verifica',
     this.arrayLabel = 'lista',
     this.booleanLabel = 'booleano',
     this.mapLabel = 'mappa',
