@@ -251,7 +251,7 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
         'Kami telah mengirim magic link ke surel Anda. Periksa email Anda dan ikuti tautan untuk masuk',
     this.sendLinkButtonLabel = 'Kirim magic link',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
+        'Kredensial ini telah digunakan oleh akun lain.',
     this.verifyEmailTitleText = 'Verifikasi surel Anda',
     this.emailVerificationInstructionText =
         'Surat verifikasi telah dikirimkan ke alamat surel Anda. '
