@@ -24,6 +24,23 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
     if (dynamicLink.minimumAppVersion) {
       iosData[@"minimumVersion"] = dynamicLink.minimumAppVersion;
     }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeNone) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:0];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeWeak) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:1];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeDefault) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:2];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeUnique) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:3];
+    }
+
     dictionary[@"utmParameters"] = dynamicLink.utmParametersDictionary;
     dictionary[@"ios"] = iosData;
     return dictionary;
