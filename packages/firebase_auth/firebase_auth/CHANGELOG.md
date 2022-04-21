@@ -1,3 +1,7 @@
+## 3.3.15
+
+ - **FIX**: Use iterator instead of enhanced for loop on android. (#8498). ([027c75a6](https://github.com/FirebaseExtended/flutterfire/commit/027c75a60b39a40e6a3edc12edc51487cc954503))
+
 ## 3.3.14
 
  - Update a dependency to the latest release.
