@@ -254,7 +254,7 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
         'This credential is already associated with a different user account.',
     this.verifyEmailTitleText = 'Verify your email',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
+        'Surat verifikasi telah dikirimkan ke alamat surel Anda. '
             'Silakan periksa surel Anda dan klik tautan untuk melakukan verifikasi '
             'alamat surel Anda.',
     this.couldntVerifyEmailText = "Kami tidak dapat memverifikasi alamat surel Anda. ",
