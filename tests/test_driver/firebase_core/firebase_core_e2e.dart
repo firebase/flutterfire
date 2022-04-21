@@ -14,7 +14,9 @@ void setupTests() {
     String testAppName = '[DEFAULT]';
 
     setUpAll(() async {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
     });
 
     test('Firebase.apps', () async {
