@@ -1,3 +1,7 @@
+## 1.6.2
+
+ - **DOCS**: Fix typo in "firebase_core_web.dart" documentation. ([658c1db7](https://github.com/FirebaseExtended/flutterfire/commit/658c1db71cc47b3eddec3a1f33d5d55d1a6ff98a))
+
 ## 1.6.1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

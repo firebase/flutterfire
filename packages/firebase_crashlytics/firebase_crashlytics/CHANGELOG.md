@@ -1,3 +1,7 @@
+## 2.6.2
+
+ - Update a dependency to the latest release.
+
 ## 2.6.1
 
  - **FIX**: Exit the add crashlytics upload-symbols script if the required json isn't present. ([94077929](https://github.com/FirebaseExtended/flutterfire/commit/940779290a3039181a92567fe8492a720af899e1))

@@ -1,3 +1,7 @@
+## 9.1.5
+
+ - Update a dependency to the latest release.
+
 ## 9.1.4
 
  - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/FirebaseExtended/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
