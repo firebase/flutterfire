@@ -24,6 +24,25 @@ AndroidNotificationPriority convertToAndroidNotificationPriority(
   }
 }
 
+/// Converts an [AndroidNotificationPriority] into it's [int] representation.
+int convertAndroidNotificationPriorityToInt(
+    AndroidNotificationPriority? priority) {
+  switch (priority) {
+    case AndroidNotificationPriority.minimumPriority:
+      return -2;
+    case AndroidNotificationPriority.lowPriority:
+      return -1;
+    case AndroidNotificationPriority.defaultPriority:
+      return 0;
+    case AndroidNotificationPriority.highPriority:
+      return 1;
+    case AndroidNotificationPriority.maximumPriority:
+      return 2;
+    default:
+      return 0;
+  }
+}
+
 /// Converts an [int] into it's [AndroidNotificationVisibility] representation.
 AndroidNotificationVisibility convertToAndroidNotificationVisibility(
     int? visibility) {
@@ -36,6 +55,21 @@ AndroidNotificationVisibility convertToAndroidNotificationVisibility(
       return AndroidNotificationVisibility.public;
     default:
       return AndroidNotificationVisibility.private;
+  }
+}
+
+/// Converts an [AndroidNotificationVisibility] into it's [int] representation.
+int convertAndroidNotificationVisibilityToInt(
+    AndroidNotificationVisibility? visibility) {
+  switch (visibility) {
+    case AndroidNotificationVisibility.secret:
+      return -1;
+    case AndroidNotificationVisibility.private:
+      return 0;
+    case AndroidNotificationVisibility.public:
+      return 1;
+    default:
+      return 0;
   }
 }
 

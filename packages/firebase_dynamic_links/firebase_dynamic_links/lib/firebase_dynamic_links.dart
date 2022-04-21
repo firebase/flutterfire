@@ -20,6 +20,7 @@ export 'package:firebase_dynamic_links_platform_interface/firebase_dynamic_links
         PendingDynamicLinkData,
         PendingDynamicLinkDataAndroid,
         PendingDynamicLinkDataIOS,
+        MatchType,
         ShortDynamicLink,
         ShortDynamicLinkType,
         SocialMetaTagParameters;
