@@ -253,7 +253,7 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
         'We hebben een e-mail met een magic link gestuurd. Controleer je e-mail en klik op de link om in te loggen',
     this.sendLinkButtonLabel = 'Stuur magic link',
     this.credentialAlreadyInUseErrorText =
-        'Deze inloggegevens  zijn al in gebruik voor een ander account.',
+        'Deze inloggegevens zijn al in gebruik voor een ander account.',
     this.verifyEmailTitleText = 'Verifieer uw e-mailadres',
     this.emailVerificationInstructionText =
         'Een verificatie e-mail is naar uw e-mailadres gestuurd. '
