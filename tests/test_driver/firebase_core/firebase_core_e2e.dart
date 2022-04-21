@@ -40,21 +40,24 @@ void setupTests() {
       );
     });
 
-    test('FirebaseApp.delete()', () async {
-      await Firebase.initializeApp(
-        name: 'SecondaryApp',
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
+    test(
+      'FirebaseApp.delete()',
+      () async {
+        await Firebase.initializeApp(
+          name: 'SecondaryApp',
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
 
-      expect(Firebase.apps.length, 2);
+        expect(Firebase.apps.length, 2);
 
-      FirebaseApp app = Firebase.app('SecondaryApp');
+        FirebaseApp app = Firebase.app('SecondaryApp');
 
-      await app.delete();
+        await app.delete();
 
-      expect(Firebase.apps.length, 1);
-      // TODO(russellwheatley): test randomly causes an auth sign-in failure due to duplicate accounts.
-    }, skip: TargetPlatform.android == defaultTargetPlatform,
+        expect(Firebase.apps.length, 1);
+        // TODO(russellwheatley): test randomly causes an auth sign-in failure due to duplicate accounts.
+      },
+      skip: TargetPlatform.android == defaultTargetPlatform,
     );
 
     test('FirebaseApp.setAutomaticDataCollectionEnabled()', () async {
