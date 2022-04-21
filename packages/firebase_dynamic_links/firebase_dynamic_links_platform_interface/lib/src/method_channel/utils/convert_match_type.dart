@@ -11,7 +11,7 @@ MatchType? convertMatchType(int? matchType) {
     case 1:
       return MatchType.weak;
     case 2:
-      return MatchType.defaultMatchType;
+      return MatchType.highMatchType;
     case 3:
       return MatchType.unique;
     default:

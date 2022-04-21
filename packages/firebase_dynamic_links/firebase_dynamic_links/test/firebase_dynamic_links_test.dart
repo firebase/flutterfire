@@ -88,7 +88,7 @@ void main() {
         const mockClickTimestamp = 1234567;
         const mockMinimumVersionAndroid = 12;
         const mockMinimumVersionIOS = 'ios minimum version';
-        const mockMatchTypeIOS = MatchType.defaultMatchType;
+        const mockMatchTypeIOS = MatchType.highMatchType;
         Uri mockUri = Uri.parse('mock-scheme');
 
         when(dynamicLinks.getInitialLink()).thenAnswer(
