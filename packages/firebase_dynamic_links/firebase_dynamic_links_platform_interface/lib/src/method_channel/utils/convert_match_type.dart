@@ -4,7 +4,7 @@
 
 import '../../match_type.dart';
 
-MatchType? convertMatchType(int matchType) {
+MatchType? convertMatchType(int? matchType) {
   switch (matchType) {
     case 0:
       return MatchType.none;

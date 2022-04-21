@@ -61,7 +61,7 @@ void main() {
           );
           expect(
             result['ios']['matchType'],
-            pendingDynamicLinkData.ios?.matchType,
+            pendingDynamicLinkData.ios?.matchType?.index,
           );
           expect(result['link'], pendingDynamicLinkData.link.toString());
         });
