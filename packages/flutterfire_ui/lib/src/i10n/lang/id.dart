@@ -258,7 +258,7 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
             'Please check your email and click on the link to verify '
             'your email address.',
     this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+    this.resendVerificationEmailButtonLabel = 'Kirim ulang verifikasi surel',
     this.arrayLabel = 'himpunan',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'peta',
