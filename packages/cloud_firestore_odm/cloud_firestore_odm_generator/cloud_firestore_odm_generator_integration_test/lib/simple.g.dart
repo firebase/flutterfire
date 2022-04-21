@@ -928,7 +928,7 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1327,7 +1327,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1805,7 +1805,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: false);
+    var query = reference.orderBy('nonNullable', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1847,7 +1847,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: false);
+    var query = reference.orderBy('nullable', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2314,7 +2314,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: false);
+    var query = reference.orderBy('nonNullable', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2356,7 +2356,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: false);
+    var query = reference.orderBy('nullable', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2776,7 +2776,7 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3196,7 +3196,7 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3608,7 +3608,7 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4029,7 +4029,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: false);
+    var query = reference.orderBy('value', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
