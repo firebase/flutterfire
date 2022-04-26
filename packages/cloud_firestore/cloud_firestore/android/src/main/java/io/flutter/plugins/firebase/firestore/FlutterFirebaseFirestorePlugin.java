@@ -188,9 +188,11 @@ public class FlutterFirebaseFirestorePlugin
             Transaction transaction = transactions.get(transactionId);
 
             if (transaction == null) {
-              throw new Exception(
-                  "Transaction.getDocument(): No transaction handler exists for ID: "
-                      + transactionId);
+              taskCompletionSource.setException(
+                  new Exception(
+                      "Transaction.getDocument(): No transaction handler exists for ID: "
+                          + transactionId));
+              return;
             }
 
             taskCompletionSource.setResult(transaction.get(documentReference));
@@ -284,8 +286,10 @@ public class FlutterFirebaseFirestorePlugin
             Query query = (Query) arguments.get("query");
 
             if (query == null) {
-              throw new IllegalArgumentException(
-                  "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
+              taskCompletionSource.setException(
+                  new IllegalArgumentException(
+                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+              return;
             }
 
             taskCompletionSource.setResult(Tasks.await(query.get(source)));
@@ -330,8 +334,10 @@ public class FlutterFirebaseFirestorePlugin
             Query query = Tasks.await(firestore.getNamedQuery(name));
 
             if (query == null) {
-              throw new NullPointerException(
-                  "Named query has not been found. Please check it has been loaded properly via loadBundle().");
+              taskCompletionSource.setException(
+                  new NullPointerException(
+                      "Named query has not been found. Please check it has been loaded properly via loadBundle()."));
+              return;
             }
 
             taskCompletionSource.setResult(Tasks.await(query.get(source)));
