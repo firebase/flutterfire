@@ -160,7 +160,7 @@ class _MainScreenState extends State<_MainScreen> {
                   InkWell(
                     onTap: () async {
                       if (_linkMessage != null) {
-                        await launchUrl(_linkMessage!);
+                        await launchUrl(Uri.parse(_linkMessage!));
                       }
                     },
                     onLongPress: () {

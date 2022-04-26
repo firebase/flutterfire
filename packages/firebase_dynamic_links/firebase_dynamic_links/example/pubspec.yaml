@@ -12,7 +12,7 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  url_launcher: ^6.0.2
+  url_launcher: ^6.1.0
 
 dependency_overrides:
   firebase_core:

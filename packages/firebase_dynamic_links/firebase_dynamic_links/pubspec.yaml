@@ -26,7 +26,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0
-  url_launcher: ^6.1.0
 
 flutter:
   plugin:
