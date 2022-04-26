@@ -10,7 +10,7 @@ import android.util.SparseArray;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -26,7 +26,7 @@ import java.util.concurrent.Executors;
 
 class FlutterFirebaseStorageTask {
   static final SparseArray<FlutterFirebaseStorageTask> inProgressTasks = new SparseArray<>();
-  private static Executor taskExecutor = Executors.newSingleThreadExecutor();
+  private static final Executor taskExecutor = Executors.newSingleThreadExecutor();
   private final FlutterFirebaseStorageTaskType type;
   private final int handle;
   private final StorageReference reference;
@@ -35,6 +35,7 @@ class FlutterFirebaseStorageTask {
   private final StorageMetadata metadata;
   private final Object pauseSyncObject = new Object();
   private final Object resumeSyncObject = new Object();
+  private final Object cancelSyncObject = new Object();
   private StorageTask<?> storageTask;
   private Boolean destroyed = false;
 
@@ -151,6 +152,10 @@ class FlutterFirebaseStorageTask {
       }
     }
 
+    synchronized (cancelSyncObject) {
+      cancelSyncObject.notifyAll();
+    }
+
     synchronized (pauseSyncObject) {
       pauseSyncObject.notifyAll();
     }
@@ -161,41 +166,61 @@ class FlutterFirebaseStorageTask {
   }
 
   Task<Boolean> pause() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+
+    FlutterFirebasePlugin.cachedThreadPool.execute(
         () -> {
           synchronized (pauseSyncObject) {
             boolean paused = storageTask.pause();
-            if (!paused) return false;
+            if (!paused) {
+              taskCompletionSource.setResult(false);
+              return;
+            }
             try {
               pauseSyncObject.wait();
             } catch (InterruptedException e) {
-              return false;
+              taskCompletionSource.setResult(false);
+              return;
             }
-            return true;
+            taskCompletionSource.setResult(true);
           }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   Task<Boolean> resume() {
-    return Tasks.call(
-        FlutterFirebasePlugin.cachedThreadPool,
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+
+    FlutterFirebasePlugin.cachedThreadPool.execute(
         () -> {
           synchronized (resumeSyncObject) {
             boolean resumed = storageTask.resume();
-            if (!resumed) return false;
+            if (!resumed) {
+              taskCompletionSource.setResult(false);
+              return;
+            }
             try {
               resumeSyncObject.wait();
             } catch (InterruptedException e) {
-              return false;
+              taskCompletionSource.setResult(false);
+              return;
             }
-            return true;
+            taskCompletionSource.setResult(true);
           }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   Task<Boolean> cancel() {
-    return Tasks.call(FlutterFirebasePlugin.cachedThreadPool, () -> storageTask.cancel());
+    TaskCompletionSource<Boolean> taskCompletionSource = new TaskCompletionSource<>();
+    FlutterFirebasePlugin.cachedThreadPool.execute(
+        () -> {
+          taskCompletionSource.setResult(storageTask.cancel());
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   void startTaskWithMethodChannel(@NonNull MethodChannel channel) throws Exception {
