@@ -31,10 +31,7 @@ void setupTests() {
   // All other tests.
   firebase_auth.setupTests();
   cloud_functions.setupTests();
-  if (defaultTargetPlatform == TargetPlatform.android || kIsWeb) {
-    // TODO(russellwheatley): Pending release of latest firebase-tools with Storage emulator fix.
-    firebase_storage.setupTests();
-  }
+  firebase_storage.setupTests();
   firebase_database.setupTests();
   firebase_app_check.setupTests();
   firebase_messaging.setupTests();
