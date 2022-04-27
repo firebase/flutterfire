@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-04-27
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`firebase_auth` - `v3.3.16`](#firebase_auth---v3316)
+ - [`firebase_dynamic_links` - `v4.2.1`](#firebase_dynamic_links---v421)
+ - [`firebase_messaging` - `v11.2.15`](#firebase_messaging---v11215)
+ - [`firebase_messaging_platform_interface` - `v3.3.1`](#firebase_messaging_platform_interface---v331)
+ - [`firebase_storage` - `v10.2.14`](#firebase_storage---v10214)
+ - [`flutterfire_ui` - `v0.4.0+4`](#flutterfire_ui---v0404)
+ - [`firebase_messaging_web` - `v2.2.13`](#firebase_messaging_web---v2213)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.0+4`
+ - `firebase_messaging_web` - `v2.2.13`
+
+---
+
+#### `firebase_auth` - `v3.3.16`
+
+ - **REFACTOR**: remove deprecated `Tasks.call()` API from Android. (#8452). ([3e92496b](https://github.com/FirebaseExtended/flutterfire/commit/3e92496b2783ec149258c22d3167c5388dcb1c40))
+
+#### `firebase_dynamic_links` - `v4.2.1`
+
+ - **REFACTOR**: Update deprecated API for dynamic links example app. (#8519). ([c5d288b3](https://github.com/FirebaseExtended/flutterfire/commit/c5d288b388cfd4180896ef9fc2a004c84ccbc017))
+
+#### `firebase_messaging` - `v11.2.15`
+
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8449). ([0510d113](https://github.com/FirebaseExtended/flutterfire/commit/0510d113dd279d6f55d889e522e74781d8fbb845))
+
+#### `firebase_messaging_platform_interface` - `v3.3.1`
+
+ - **FIX**: prevent isolate callback removal during split debug symbols (#8521). ([45ca7aeb](https://github.com/FirebaseExtended/flutterfire/commit/45ca7aeb50920cea0ba5784e16a5b78adac014f3))
+
+#### `firebase_storage` - `v10.2.14`
+
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8421). ([461bba5a](https://github.com/FirebaseExtended/flutterfire/commit/461bba5a510b341b3b9bd414c9412944714e9305))
+
+
 ## 2022-04-21
 
 ### Changes

@@ -1,3 +1,7 @@
+## 4.2.1
+
+ - **REFACTOR**: Update deprecated API for dynamic links example app. (#8519). ([c5d288b3](https://github.com/FirebaseExtended/flutterfire/commit/c5d288b388cfd4180896ef9fc2a004c84ccbc017))
+
 ## 4.2.0
 
  - **REFACTOR**: Remove deprecated Tasks.call() API from android. (#8450). ([fdb24c8d](https://github.com/FirebaseExtended/flutterfire/commit/fdb24c8d2cf4c51b20ffdb6c8898b7eced16aa64))
