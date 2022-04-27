@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:drive/drive.dart' as drive;
-import 'package:flutter/foundation.dart';
 import 'cloud_functions/cloud_functions_e2e.dart' as cloud_functions;
 import 'firebase_auth/firebase_auth_e2e.dart' as firebase_auth;
 import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
