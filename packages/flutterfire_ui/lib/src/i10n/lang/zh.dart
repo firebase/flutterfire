@@ -1,6 +1,6 @@
 import '../default_localizations.dart';
 
-class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
+class ZhLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String emailInputLabel;
   @override
