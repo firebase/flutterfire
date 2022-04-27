@@ -222,13 +222,13 @@ Some things to keep in mind before publishing the release:
 2) Run `git pull origin master`.
 3) Run `git pull --tags` to make sure all tags are fetched.
 4) Create new branch with the signature "release/[year]-[month]-[day]".
-4) Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
-5) Run `melos publish` to dry run and confirm all packages are publishable.
-6) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
-7) Run `git push origin master` & open pull request for review on GitHub.
-8) After successful review and merge, switch to `master` branch locally, & run `git pull --tags`.
-9) Run `melos publish --no-dry-run` to now publish to Pub.dev.
-10) Run `git push --tags` to push tags to repository.
+5) Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
+6) Run `melos publish` to dry run and confirm all packages are publishable.
+7) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
+8) Run `git push origin master` & open pull request for review on GitHub.
+9) After successful review and merge, switch to `master` branch locally, & run `git pull --tags`.
+10) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+11) Run `git push --tags` to push tags to repository.
 
 ### Graduate packages
 
