@@ -1,3 +1,7 @@
+## 11.2.15
+
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8449). ([0510d113](https://github.com/FirebaseExtended/flutterfire/commit/0510d113dd279d6f55d889e522e74781d8fbb845))
+
 ## 11.2.14
 
  - Update a dependency to the latest release.
