@@ -194,7 +194,7 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.enterSMSCodeText = '输入短信验证码',
     this.emailIsRequiredErrorText = '电子邮箱地址为必填项',
     this.isNotAValidEmailErrorText = '请输入有效的电子邮箱地址',
-    this.userNotFoundErrorText = "账户不存在",
+    this.userNotFoundErrorText = '账户不存在',
     this.emailTakenErrorText = '该邮箱已被注册',
     this.accessDisabledErrorText =
         '该账户已被暂时禁止访问',
@@ -202,7 +202,7 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
         '密码无效或改账户没有密码',
     this.signInText = '登录',
     this.registerText = '注册',
-    this.registerHintText = "没有账户？",
+    this.registerHintText = '没有账户？',
     this.signInHintText = '已有账户？',
     this.signOutButtonText = '退出登录',
     this.phoneInputLabel = '手机号',
@@ -232,13 +232,13 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.provideEmail = '输入电子邮箱和密码',
     this.goBackButtonLabel = '返回',
     this.passwordResetEmailSentText =
-        "我们向您的邮箱发送了重置密码的链接。请查看您的邮箱",
+        '我们向您的邮箱发送了重置密码的链接。请查看您的邮箱',
     this.forgotPasswordHintText =
         '输入您的邮箱以便我们为您发送重置密码的链接',
     this.emailLinkSignInButtonLabel = '使用魔法链接登录',
     this.signInWithEmailLinkViewTitleText = '使用魔法链接登录',
     this.signInWithEmailLinkSentText =
-        "我们向您的邮箱发送了魔法链接。请查看您的邮箱并点击链接登录",
+        '我们向您的邮箱发送了魔法链接。请查看您的邮箱并点击链接登录',
     this.sendLinkButtonLabel = '发送魔法链接',
     this.arrayLabel = '数组',
     this.booleanLabel = '布尔',
