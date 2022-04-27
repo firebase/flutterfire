@@ -108,7 +108,7 @@ FCM payloads.
 
 ### Web Tokens
 
-On the web, before a message can be sent to the browser you must do two things.
+On the web, before a message can be sent to the browser you must do two things:
 
 1. Create an initial handshake with Firebase by passing in the public `vapidKey` to `messaging.getToken(vapidKey: 'KEY')` method. Head over to the [Firebase Console](https://console.firebase.google.com/project/_/settings/cloudmessaging) and create a new "Web Push Certificate". A key will be
 provided, which you can provide to the method:
@@ -136,6 +136,21 @@ and registered as a `serviceWorker` as demonstrated below:
   </script>
   <!-- ...put the script at the bottom of the enclosing body tags. -->
 </body>
+```
+
+### Native Tokens
+
+We've had user reports that they cannot receive messages unless they initially call `messaging.getToken()`. Therefore, we recommend making this call before setting up
+any of your event handlers when initializing your application.
+
+```dart
+FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+String token = await messaging.getToken();
+
+FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  // handle event
+});
 ```
 
 > For a complete `firebase_messaging` web demonstration, please run our example app found [here](https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_messaging/firebase_messaging/example).
