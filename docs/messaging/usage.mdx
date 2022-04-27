@@ -146,6 +146,7 @@ any of your event handlers when initializing your application.
 ```dart
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+// Call `getToken()` before setting up `onMessage`, `onBackgroundMessage` or `onMessageOpenedApp`
 String token = await messaging.getToken();
 
 FirebaseMessaging.onMessage.listen((RemoteMessage message) {
