@@ -168,7 +168,7 @@ class ZhLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-  const EnLocalizations({
+  const ZhLocalizations({
     this.emailInputLabel = '电子邮箱',
     this.passwordInputLabel = '密码',
     this.signInActionText = '登录',
