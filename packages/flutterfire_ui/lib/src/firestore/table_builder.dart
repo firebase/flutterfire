@@ -78,8 +78,10 @@ class FirestoreDataTable<T> extends StatefulWidget {
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
         super(key: key);
 
+  /// When specified, the builder will be use to disply your own widget for the cel
   final CelBuilder? celBuilder;
 
+  ///  When specified, this will be called when selecting a cel
   final OnEditItem? onEditItem;
 
   /// The firestore query that will be displayed
