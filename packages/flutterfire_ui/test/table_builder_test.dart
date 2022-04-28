@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutterfire_ui/src/firestore/table_builder.dart';
 
-void main() async {
+Future<void> main() async {
   final instance = FakeFirebaseFirestore();
   final collection = instance.collection('persons').withConverter<Person>(
         fromFirestore: (snapshot, options) => Person.fromMap(snapshot.data()!),
