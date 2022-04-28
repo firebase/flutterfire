@@ -1,3 +1,11 @@
+## 3.3.1
+
+ - **FIX**: prevent isolate callback removal during split debug symbols (#8521). ([45ca7aeb](https://github.com/FirebaseExtended/flutterfire/commit/45ca7aeb50920cea0ba5784e16a5b78adac014f3))
+
+## 3.3.0
+
+ - **FEAT**: add `toMap()` method to `RemoteMessage` and its properties (#8453). ([047cccda](https://github.com/FirebaseExtended/flutterfire/commit/047cccda6fe8e53c77e8e1f368e5f2c5d7d297e1))
+
 ## 3.2.3
 
  - Update a dependency to the latest release.
