@@ -134,19 +134,21 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
             options = FirebaseOptions.fromResource(applicationContext);
           } else {
             options =
-              new FirebaseOptions.Builder()
-                .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
-                .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
-                .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
-                .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
-                .setProjectId(optionsMap.get(KEY_PROJECT_ID))
-                .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
-                .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
-                .build();
+                new FirebaseOptions.Builder()
+                    .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
+                    .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
+                    .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
+                    .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
+                    .setProjectId(optionsMap.get(KEY_PROJECT_ID))
+                    .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
+                    .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
+                    .build();
           }
           // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
-          //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
-          //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+          //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not
+          // called Looper.prepare()
+          //     at
+          // com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
           try {
             Looper.prepare();
           } catch (Exception e) {
