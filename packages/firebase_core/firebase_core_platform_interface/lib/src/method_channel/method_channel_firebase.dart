@@ -82,12 +82,12 @@ class MethodChannelFirebase extends FirebasePlatform {
 
       // If options are present & no default app has been setup, the user is
       // trying to initialize default from dart
-      if (defaultApp == null && options != null) {
+      if (defaultApp == null) {
         _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
           'Firebase#initializeApp',
           <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'options': options.asMap
+            'options': options?.asMap
           },
         ))!);
         defaultApp = appInstances[defaultFirebaseAppName];
