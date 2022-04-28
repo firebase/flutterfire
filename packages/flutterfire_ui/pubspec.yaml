@@ -32,10 +32,12 @@ dependencies:
   twitter_login: ^4.2.2
 
 dev_dependencies:
+  fake_cloud_firestore: ^1.2.2
+
   flutter_test:
     sdk: flutter
 
-  fake_cloud_firestore: ^1.2.2
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
