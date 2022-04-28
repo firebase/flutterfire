@@ -71,17 +71,25 @@ class FirestoreDataTable<T> extends StatefulWidget {
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
     this.celBuilder,
+    this.canEditCel = true,
     this.onEditItem,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
+        assert(
+          !canEditCel && onEditItem == null,
+          'do not set onEditItem if canEditCel is set to false',
+        ),
         super(key: key);
 
   /// When specified, the builder will be use to disply your own widget for the cel
   final CelBuilder? celBuilder;
 
-  ///  When specified, this will be called when selecting a cel
+  /// When set to false this allow row selection, defaults is set to true
+  final bool canEditCel;
+
+  /// When specified, this will be called when selecting a cel
   final OnEditItem? onEditItem;
 
   /// The firestore query that will be displayed
@@ -201,6 +209,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     getOnError: () => widget.onError,
     selectionEnabled: selectionEnabled,
     rowsPerPage: widget.rowsPerPage,
+    canEditCel: widget.canEditCel,
     onEditItem: widget.onEditItem ?? defaultOnEditItem,
     builder: widget.celBuilder,
   );
@@ -778,6 +787,7 @@ class _Source<T> extends DataTableSource {
     required this.getOnError,
     required bool selectionEnabled,
     required int rowsPerPage,
+    required this.canEditCel,
     required this.onEditItem,
     this.builder,
   })  : _selectionEnabled = selectionEnabled,
@@ -785,6 +795,7 @@ class _Source<T> extends DataTableSource {
 
   final CelBuilder? builder;
 
+  final bool canEditCel;
   final OnEditItem onEditItem;
 
   int _rowsPerpage;
@@ -858,13 +869,15 @@ class _Source<T> extends DataTableSource {
           DataCell(
             builder?.call(data, colList.indexOf(head)) ??
                 _ValueView(data[head]),
-            onTap: () {
-              onEditItem(
-                doc,
-                data[head],
-                head,
-              );
-            },
+            onTap: canEditCel
+                ? () {
+                    onEditItem(
+                      doc,
+                      data[head],
+                      head,
+                    );
+                  }
+                : null,
           ),
       ],
     );
