@@ -35,7 +35,19 @@ import 'query_builder.dart';
 /// );
 /// ```
 /// {@endtemplate}
-class FirestoreDataTable extends StatefulWidget {
+///
+typedef CelBuilder = Widget Function(
+  Map<String, Object?> data,
+  int colIndex,
+);
+
+typedef OnEditItem = void Function(
+  QueryDocumentSnapshot<Map<String, Object?>> snapshot,
+  Object? value,
+  String propertyName,
+);
+
+class FirestoreDataTable<T> extends StatefulWidget {
   /// {@macro flutterfire_ui.firestore_table}
   const FirestoreDataTable({
     Key? key,
@@ -58,11 +70,17 @@ class FirestoreDataTable extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
+    this.celBuilder,
+    this.onEditItem,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
         super(key: key);
+
+  final CelBuilder? celBuilder;
+
+  final OnEditItem? onEditItem;
 
   /// The firestore query that will be displayed
   final Query<Object?> query;
@@ -181,7 +199,8 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     getOnError: () => widget.onError,
     selectionEnabled: selectionEnabled,
     rowsPerPage: widget.rowsPerPage,
-    onEditItem: onEditItem,
+    onEditItem: widget.onEditItem ?? defaultOnEditItem,
+    builder: widget.celBuilder,
   );
 
   bool get selectionEnabled => widget.canDeleteItems;
@@ -258,7 +277,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     );
   }
 
-  Future<void> onEditItem(
+  Future<void> defaultOnEditItem(
     QueryDocumentSnapshot<Map<String, Object?>> snapshot,
     Object? value,
     String propertyName,
@@ -751,21 +770,20 @@ class _Edit {
   final Object? newValue;
 }
 
-class _Source extends DataTableSource {
+class _Source<T> extends DataTableSource {
   _Source({
     required this.getHeaders,
     required this.getOnError,
     required bool selectionEnabled,
     required int rowsPerPage,
     required this.onEditItem,
+    this.builder,
   })  : _selectionEnabled = selectionEnabled,
         _rowsPerpage = rowsPerPage;
 
-  final void Function(
-    QueryDocumentSnapshot<Map<String, Object?>> snapshot,
-    Object? value,
-    String propertyName,
-  ) onEditItem;
+  final CelBuilder? builder;
+
+  final OnEditItem onEditItem;
 
   int _rowsPerpage;
   int get rowsPerPage => _rowsPerpage;
@@ -819,8 +837,9 @@ class _Source extends DataTableSource {
 
     final doc = _previousSnapshot!.docs[index];
     final data = doc.data();
-
-    return DataRow(
+    final colList = getHeaders().keys.toList();
+    return DataRow.byIndex(
+      index: index,
       selected: _selectedRowIds.contains(doc.id),
       onSelectChanged: selectionEnabled
           ? (selected) {
@@ -833,9 +852,10 @@ class _Source extends DataTableSource {
             }
           : null,
       cells: [
-        for (final head in getHeaders().keys)
+        for (final head in colList)
           DataCell(
-            _ValueView(data[head]),
+            builder?.call(data, colList.indexOf(head)) ??
+                _ValueView(data[head]),
             onTap: () {
               onEditItem(
                 doc,
@@ -896,7 +916,6 @@ class _ValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FlutterFireUILocalizations.labelsOf(context);
     final value = this.value;
     if (value == null) {
       return Text('null', style: Theme.of(context).textTheme.caption);
@@ -905,6 +924,7 @@ class _ValueView extends StatelessWidget {
     } else if (value is DocumentReference) {
       return Text('/${value.path}');
     } else if (value is GeoPoint) {
+      final localizations = FlutterFireUILocalizations.labelsOf(context);
       final latitudeLabel = value.latitude < 0
           ? localizations.southInitialLabel
           : localizations.northInitialLabel;
