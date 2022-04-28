@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:flutterfire_ui/src/firestore/table_builder.dart';
 
 void main() async {
   final instance = FakeFirebaseFirestore();
@@ -11,54 +13,80 @@ void main() async {
         toFirestore: (data, option) => data.toMap(),
       );
 
-  await collection.add(
-    Person(
-      firstName: 'Bob',
-      address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
-    ),
+  final bob = Person(
+    firstName: 'Bob',
+    address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
   );
+  await collection.add(bob);
+
+  testWidgets('TableBuilder WITOUT CelBuilder is render as expected',
+      (WidgetTester tester) async {
+    // Create the widget by telling the tester to build it.
+
+    await tester.pumpWidget(_basic(collection, null));
+
+    await tester.pumpAndSettle();
+
+    // final cityFinder = find.text('FlutterFire City');
+
+    final streetFinder =
+        find.text('{street: ${bob.address.street}, city: ${bob.address.city}}');
+    final firstNameFinder = find.text(bob.firstName);
+
+    // expect(cityFinder, findsOneWidget);
+    expect(streetFinder, findsOneWidget);
+    expect(firstNameFinder, findsOneWidget);
+  });
 
   testWidgets('TableBuilder CelBuilder is render as expected',
       (WidgetTester tester) async {
     // Create the widget by telling the tester to build it.
-    await tester.pumpWidget(
-      MaterialApp(
-        home: FirestoreDataTable(
-          query: collection,
-          columnLabels: const {
-            'firstName': Text('First Name'),
-            'address': Text('Address'),
-          },
-          celBuilder: (data, colIndex) {
-            final person = Person.fromMap(data);
-            if (colIndex == 0) {
-              return Text(person.firstName);
-            }
 
-            if (colIndex == 1) {
-              return Row(
-                children: [
-                  Text(person.address.street),
-                  Text(person.address.city),
-                ],
-              );
-            }
-            return Container();
-          },
-        ),
-      ),
+    await tester.pumpWidget(
+      _basic(collection, (data, colIndex) {
+        final person = Person.fromMap(data);
+        if (colIndex == 0) {
+          return Text(person.firstName);
+        }
+
+        if (colIndex == 1) {
+          return Row(
+            children: [
+              Text(person.address.street),
+              Text(person.address.city),
+            ],
+          );
+        }
+        return Container();
+      }),
     );
 
     await tester.pumpAndSettle();
 
-    final cityFinder = find.text('FlutterFire City');
-    final roadFinder = find.text('Awesome Road');
-    final firstNameFinder = find.text('Bob');
+    final cityFinder = find.text(bob.address.city);
+    final streetFinder = find.text(bob.address.street);
+    final firstNameFinder = find.text(bob.firstName);
 
     expect(cityFinder, findsOneWidget);
-    expect(roadFinder, findsOneWidget);
+    expect(streetFinder, findsOneWidget);
     expect(firstNameFinder, findsOneWidget);
   });
+}
+
+Widget _basic(
+  CollectionReference<Person> col,
+  CelBuilder? builder,
+) {
+  return MaterialApp(
+    home: FirestoreDataTable(
+      query: col,
+      columnLabels: const {
+        'firstName': Text('First Name'),
+        'address': Text('Address'),
+      },
+      celBuilder: builder,
+    ),
+  );
 }
 
 @immutable
