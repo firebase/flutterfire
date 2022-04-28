@@ -135,14 +135,14 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           } else {
             options =
               new FirebaseOptions.Builder()
-                .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
-                .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
-                .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
-                .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
-                .setProjectId(optionsMap.get(KEY_PROJECT_ID))
-                .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
-                .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
-                .build();
+                  .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
+                  .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
+                  .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
+                  .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
+                  .setProjectId(optionsMap.get(KEY_PROJECT_ID))
+                  .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
+                  .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
+                  .build();
           }
           // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
           //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
