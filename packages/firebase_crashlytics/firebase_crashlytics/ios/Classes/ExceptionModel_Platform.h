@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 //
-//  Crashlytics_Platform.h
+//  Crashlytics_ExceptionModel.h
 //  Crashlytics
 //
 
 #import <Firebase/Firebase.h>
 
-@interface FIRCrashlytics (Platform)
+@interface FIRExceptionModel (Platform)
 
-@property(nonatomic, strong, nullable) NSString* developmentPlatformName;
-@property(nonatomic, strong, nullable) NSString* developmentPlatformVersion;
-
-- (void)recordOnDemandExceptionModel:(FIRExceptionModel* _Nonnull)exceptionModel;
+@property(nonatomic) BOOL isFatal;
+@property(nonatomic) BOOL onDemand;
 
 @end
-
-void FIRCLSUserLoggingRecordInternalKeyValue(NSString* _Nullable key, id _Nullable value);
