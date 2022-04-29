@@ -1,3 +1,7 @@
+## 2.7.0
+
+ - **FEAT**: add support for on-demand exception reporting (#8540). ([dfec7d60](https://github.com/FirebaseExtended/flutterfire/commit/dfec7d60592abe0a5c6523e13feabffb8b03020b))
+
 ## 2.6.3
 
  - Update a dependency to the latest release.
