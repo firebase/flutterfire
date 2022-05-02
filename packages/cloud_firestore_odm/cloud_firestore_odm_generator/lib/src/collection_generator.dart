@@ -82,6 +82,11 @@ class Data {
   }
 }
 
+const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+const _timestampChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
+);
+
 @immutable
 class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
@@ -295,7 +300,9 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                 f.type.isDartCoreInt ||
                 f.type.isDartCoreDouble ||
                 f.type.isDartCoreBool ||
-                f.type.isDartCoreList,
+                f.type.isDartCoreList ||
+                _dateTimeChecker.isAssignableFromType(f.type) ||
+                _timestampChecker.isAssignableFromType(f.type),
             // TODO filter list other than LIst<string|bool|num>
           )
           .toList(),

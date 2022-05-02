@@ -3,9 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_odm_example/integration/query.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'common.dart';
 
 void main() {
   group('QueryReference', () {
@@ -83,6 +86,38 @@ void main() {
               .limit(1),
         );
       });
+    });
+
+    test('supports DateTimes', () async {
+      final ref = await initializeTest(dateTimeQueryRef);
+
+      await ref.add(DateTimeQuery(DateTime(1990)));
+      await ref.add(DateTimeQuery(DateTime(2000)));
+      await ref.add(DateTimeQuery(DateTime(2010)));
+
+      final snapshot = await ref.orderByTime(startAt: DateTime(2000)).get();
+
+      expect(snapshot.docs.length, 2);
+
+      expect(snapshot.docs[0].data.time, DateTime(2000));
+      expect(snapshot.docs[1].data.time, DateTime(2010));
+    });
+
+    test('supports Timestamp', () async {
+      final ref = await initializeTest(timestampQueryRef);
+
+      await ref.add(TimestampQuery(Timestamp.fromDate(DateTime(1990))));
+      await ref.add(TimestampQuery(Timestamp.fromDate(DateTime(2000))));
+      await ref.add(TimestampQuery(Timestamp.fromDate(DateTime(2010))));
+
+      final snapshot = await ref
+          .orderByTime(startAt: Timestamp.fromDate(DateTime(2000)))
+          .get();
+
+      expect(snapshot.docs.length, 2);
+
+      expect(snapshot.docs[0].data.time, Timestamp.fromDate(DateTime(2000)));
+      expect(snapshot.docs[1].data.time, Timestamp.fromDate(DateTime(2010)));
     });
   });
 }

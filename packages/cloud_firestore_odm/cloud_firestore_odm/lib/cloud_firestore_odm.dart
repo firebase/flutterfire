@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:json_annotation/json_annotation.dart';
+
 export 'annotation.dart';
 export 'src/firestore_builder.dart' show FirestoreBuilder;
 export 'src/firestore_reference.dart'
@@ -11,3 +14,35 @@ export 'src/firestore_reference.dart'
         FirestoreQuerySnapshot,
         FirestoreReference,
         QueryReference;
+
+/// The list of all [JsonConverter]s that cloud_firestore_odm offers.
+///
+/// This list is meant to be passed to [JsonSerializable] as followed:
+///
+/// ```dart
+/// @JsonSerializable(converters: firestoreJsonConverters)
+/// ```
+const firestoreJsonConverters = [
+  FirestoreDateTimeConverter(),
+  FirestoreTimestampConverter(),
+];
+
+/// A [JsonConverter] that adds support for [Timestamp] objects within ODM models.
+class FirestoreTimestampConverter extends JsonConverter<Timestamp, Timestamp> {
+  const FirestoreTimestampConverter();
+  @override
+  Timestamp fromJson(Timestamp json) => json;
+
+  @override
+  Timestamp toJson(Timestamp object) => object;
+}
+
+/// A [JsonConverter] that adds support for [DateTime] objects within ODM models.
+class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {
+  const FirestoreDateTimeConverter();
+  @override
+  DateTime fromJson(Timestamp json) => json.toDate();
+
+  @override
+  Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
+}
