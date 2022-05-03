@@ -41,21 +41,22 @@ Future<void> main() async {
     // Create the widget by telling the tester to build it.
 
     await tester.pumpWidget(
-      _basic(collection, (data, colIndex) {
+      _basic(collection, (data, colKey) {
         final person = Person.fromMap(data);
-        if (colIndex == 0) {
-          return Text(person.firstName);
-        }
 
-        if (colIndex == 1) {
-          return Row(
-            children: [
-              Text(person.address.street),
-              Text(person.address.city),
-            ],
-          );
+        switch (ColumnKey.values.asNameMap()[colKey]) {
+          case ColumnKey.firstName:
+            return Text(person.firstName);
+          case ColumnKey.address:
+            return Row(
+              children: [
+                Text(person.address.street),
+                Text(person.address.city),
+              ],
+            );
+          default:
+            return Container();
         }
-        return Container();
       }),
     );
 
@@ -78,13 +79,18 @@ Widget _basic(
   return MaterialApp(
     home: FirestoreDataTable(
       query: col,
-      columnLabels: const {
-        'firstName': Text('First Name'),
-        'address': Text('Address'),
+      columnLabels: {
+        ColumnKey.firstName.name: const Text('First Name'),
+        ColumnKey.address.name: const Text('Address'),
       },
       cellBuilder: builder,
     ),
   );
+}
+
+enum ColumnKey {
+  firstName,
+  address,
 }
 
 @immutable

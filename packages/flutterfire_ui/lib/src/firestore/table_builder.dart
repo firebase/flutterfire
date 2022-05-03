@@ -38,7 +38,7 @@ import 'query_builder.dart';
 ///
 typedef CellBuilder = Widget Function(
   Map<String, Object?> data,
-  int colIndex,
+  String colKey,
 );
 
 typedef OnEditItem = void Function(
@@ -867,8 +867,7 @@ class _Source<T> extends DataTableSource {
       cells: [
         for (final head in colList)
           DataCell(
-            builder?.call(data, colList.indexOf(head)) ??
-                _ValueView(data[head]),
+            builder?.call(data, head) ?? _ValueView(data[head]),
             onTap: canEditCell
                 ? () {
                     onEditItem(
