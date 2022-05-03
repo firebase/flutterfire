@@ -24,9 +24,11 @@ void main() {
       await tester.pumpWidget(widget);
       expect(
         find.descendant(
-          of: find.byWidgetPredicate((widget) =>
-              widget is LoadingButton &&
-              widget.variant == ButtonVariant.outlined),
+          of: find.byWidgetPredicate(
+            (widget) =>
+                widget is LoadingButton &&
+                widget.variant == ButtonVariant.outlined,
+          ),
           matching: find.text('Sign in'),
         ),
         findsOneWidget,
@@ -37,9 +39,11 @@ void main() {
       await tester.pumpWidget(widget);
       expect(
         find.descendant(
-          of: find.byWidgetPredicate((widget) =>
-              widget is UniversalButton &&
-              widget.variant == ButtonVariant.text),
+          of: find.byWidgetPredicate(
+            (widget) =>
+                widget is UniversalButton &&
+                widget.variant == ButtonVariant.text,
+          ),
           matching: find.text('Forgot password?'),
         ),
         findsOneWidget,
