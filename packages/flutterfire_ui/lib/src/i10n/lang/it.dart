@@ -257,7 +257,7 @@ class ItLocalizations extends FlutterFireUILocalizationLabels {
         'Una email di verifica è stata appena inviata al tuo indirizzo email. '
             'Controlla la tua email e clicca sul link per la verifica '
             'del tuo indirizzo email.',
-    this.couldntVerifyEmailText = "Non possiamo verificare il tuo indirizzo email. ",
+    this.couldntVerifyEmailText = 'Non possiamo verificare il tuo indirizzo email.',
     this.resendVerificationEmailButtonLabel = 'Reinvia email di verifica',
     this.arrayLabel = 'lista',
     this.booleanLabel = 'booleano',
