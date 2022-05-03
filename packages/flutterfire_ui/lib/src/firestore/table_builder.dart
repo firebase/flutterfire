@@ -36,7 +36,7 @@ import 'query_builder.dart';
 /// ```
 /// {@endtemplate}
 ///
-typedef CelBuilder = Widget Function(
+typedef CellBuilder = Widget Function(
   Map<String, Object?> data,
   int colIndex,
 );
@@ -70,24 +70,24 @@ class FirestoreDataTable<T> extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
-    this.celBuilder,
-    this.canEditCel = true,
+    this.cellBuilder,
+    this.canEditCell = true,
     this.onEditItem,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
         assert(
-          !canEditCel && onEditItem == null,
-          'do not set onEditItem if canEditCel is set to false',
+          !canEditCell && onEditItem == null,
+          'do not set onEditItem if canEditCell is set to false',
         ),
         super(key: key);
 
   /// When specified, the builder will be use to disply your own widget for the cel
-  final CelBuilder? celBuilder;
+  final CellBuilder? cellBuilder;
 
   /// When set to false this allow row selection, defaults is set to true
-  final bool canEditCel;
+  final bool canEditCell;
 
   /// When specified, this will be called when selecting a cel
   final OnEditItem? onEditItem;
@@ -209,9 +209,9 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     getOnError: () => widget.onError,
     selectionEnabled: selectionEnabled,
     rowsPerPage: widget.rowsPerPage,
-    canEditCel: widget.canEditCel,
+    canEditCell: widget.canEditCell,
     onEditItem: widget.onEditItem ?? defaultOnEditItem,
-    builder: widget.celBuilder,
+    builder: widget.cellBuilder,
   );
 
   bool get selectionEnabled => widget.canDeleteItems;
@@ -787,15 +787,15 @@ class _Source<T> extends DataTableSource {
     required this.getOnError,
     required bool selectionEnabled,
     required int rowsPerPage,
-    required this.canEditCel,
+    required this.canEditCell,
     required this.onEditItem,
     this.builder,
   })  : _selectionEnabled = selectionEnabled,
         _rowsPerpage = rowsPerPage;
 
-  final CelBuilder? builder;
+  final CellBuilder? builder;
 
-  final bool canEditCel;
+  final bool canEditCell;
   final OnEditItem onEditItem;
 
   int _rowsPerpage;
@@ -869,7 +869,7 @@ class _Source<T> extends DataTableSource {
           DataCell(
             builder?.call(data, colList.indexOf(head)) ??
                 _ValueView(data[head]),
-            onTap: canEditCel
+            onTap: canEditCell
                 ? () {
                     onEditItem(
                       doc,

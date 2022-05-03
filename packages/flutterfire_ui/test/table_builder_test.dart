@@ -73,7 +73,7 @@ Future<void> main() async {
 
 Widget _basic(
   CollectionReference<Person> col,
-  CelBuilder? builder,
+  CellBuilder? builder,
 ) {
   return MaterialApp(
     home: FirestoreDataTable(
@@ -82,7 +82,7 @@ Widget _basic(
         'firstName': Text('First Name'),
         'address': Text('Address'),
       },
-      celBuilder: builder,
+      cellBuilder: builder,
     ),
   );
 }
