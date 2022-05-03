@@ -1,0 +1,24 @@
+{
+  "forwardPorts": [3000],
+  "build": { 
+    "dockerfile": "Dockerfile", 
+    "args": {
+      "flutter_version": "stable"
+    }
+  },
+  "features": {
+    "github-cli": "latest"
+  },
+  "postStartCommand": "melos bootstrap",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb",
+    "storage": "16gb"
+  },
+  "extensions": [
+    "Dart-Code.flutter",
+    "Dart-Code.dart-code",
+    "k--kato.intellij-idea-keybindings",
+    "blaugold.melos-code"
+  ]
+}
