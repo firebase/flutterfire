@@ -494,8 +494,8 @@ class MyApp extends StatelessWidget {
 
 With your first screen integrated, you can now start adding more providers and integrating more screens!
 
-- [Configuring Providers](configuring-providers)
-- [Building a custom UI](building-a-custom-ui)
-- [Localization](localization)
-- [Theming](theming)
-- [Navigation](navigation)
+- [Configuring Providers](configuring-providers.md)
+- [Building a custom UI](building-a-custom-ui.md)
+- [Localization](localization.md)
+- [Theming](theming.md)
+- [Navigation](navigation.md)
