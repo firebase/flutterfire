@@ -227,7 +227,7 @@ Some things to keep in mind before publishing the release:
 7) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
 8) Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
 9) After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
-10) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+10) Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
 11) Run `git push --tags` to push tags to repository.
 
 ### Graduate packages
