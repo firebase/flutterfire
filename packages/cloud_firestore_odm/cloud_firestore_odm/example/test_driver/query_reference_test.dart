@@ -119,5 +119,34 @@ void main() {
       expect(snapshot.docs[0].data.time, Timestamp.fromDate(DateTime(2000)));
       expect(snapshot.docs[1].data.time, Timestamp.fromDate(DateTime(2010)));
     });
+
+    test('supports DocumentReference', () async {
+      final ref = await initializeTest(documentReferenceRef);
+
+      await ref.add(
+        DocumentReferenceQuery(FirebaseFirestore.instance.doc('foo/a')),
+      );
+      await ref.add(
+        DocumentReferenceQuery(FirebaseFirestore.instance.doc('foo/b')),
+      );
+      await ref.add(
+        DocumentReferenceQuery(FirebaseFirestore.instance.doc('foo/c')),
+      );
+
+      final snapshot = await ref
+          .orderByRef(startAt: FirebaseFirestore.instance.doc('foo/b'))
+          .get();
+
+      expect(snapshot.docs.length, 2);
+
+      expect(
+        snapshot.docs[0].data.ref,
+        FirebaseFirestore.instance.doc('foo/b'),
+      );
+      expect(
+        snapshot.docs[1].data.ref,
+        FirebaseFirestore.instance.doc('foo/c'),
+      );
+    });
   });
 }

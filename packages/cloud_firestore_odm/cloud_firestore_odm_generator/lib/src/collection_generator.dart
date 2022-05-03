@@ -83,8 +83,13 @@ class Data {
 }
 
 const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+
 const _timestampChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
+);
+
+const _docRefChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore/src/document_reference.dart#DocumentReference',
 );
 
 @immutable
@@ -302,7 +307,8 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                 f.type.isDartCoreBool ||
                 f.type.isDartCoreList ||
                 _dateTimeChecker.isAssignableFromType(f.type) ||
-                _timestampChecker.isAssignableFromType(f.type),
+                _timestampChecker.isAssignableFromType(f.type) ||
+                f.type.isJsonDocumentReference,
             // TODO filter list other than LIst<string|bool|num>
           )
           .toList(),
@@ -341,4 +347,14 @@ const _sentinel = _Sentinel();
 
   @override
   void parseGlobalData(LibraryElement library) {}
+}
+
+extension on DartType {
+  bool get isJsonDocumentReference {
+    return element?.librarySource?.uri.scheme == 'package' &&
+        const {'cloud_firestore'}
+            .contains(element?.librarySource?.uri.pathSegments.first) &&
+        element?.name == 'DocumentReference' &&
+        (this as InterfaceType).typeArguments.single.isDartCoreMap;
+  }
 }

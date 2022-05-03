@@ -824,6 +824,419 @@ class TimestampQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
   final TimestampQuery data;
 }
 
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
+abstract class DocumentReferenceQueryCollectionReference
+    implements
+        DocumentReferenceQueryQuery,
+        FirestoreCollectionReference<DocumentReferenceQueryQuerySnapshot> {
+  factory DocumentReferenceQueryCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$DocumentReferenceQueryCollectionReference;
+
+  static DocumentReferenceQuery fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$DocumentReferenceQueryFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    DocumentReferenceQuery value,
+    SetOptions? options,
+  ) {
+    return _$DocumentReferenceQueryToJson(value);
+  }
+
+  @override
+  DocumentReferenceQueryDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<DocumentReferenceQueryDocumentReference> add(
+      DocumentReferenceQuery value);
+}
+
+class _$DocumentReferenceQueryCollectionReference
+    extends _$DocumentReferenceQueryQuery
+    implements DocumentReferenceQueryCollectionReference {
+  factory _$DocumentReferenceQueryCollectionReference(
+      [FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$DocumentReferenceQueryCollectionReference._(
+      firestore.collection('firestore-example-app/42/doc-ref').withConverter(
+            fromFirestore:
+                DocumentReferenceQueryCollectionReference.fromFirestore,
+            toFirestore: DocumentReferenceQueryCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$DocumentReferenceQueryCollectionReference._(
+    CollectionReference<DocumentReferenceQuery> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<DocumentReferenceQuery> get reference =>
+      super.reference as CollectionReference<DocumentReferenceQuery>;
+
+  @override
+  DocumentReferenceQueryDocumentReference doc([String? id]) {
+    return DocumentReferenceQueryDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<DocumentReferenceQueryDocumentReference> add(
+      DocumentReferenceQuery value) {
+    return reference
+        .add(value)
+        .then((ref) => DocumentReferenceQueryDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$DocumentReferenceQueryCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class DocumentReferenceQueryDocumentReference
+    extends FirestoreDocumentReference<DocumentReferenceQueryDocumentSnapshot> {
+  factory DocumentReferenceQueryDocumentReference(
+          DocumentReference<DocumentReferenceQuery> reference) =
+      _$DocumentReferenceQueryDocumentReference;
+
+  DocumentReference<DocumentReferenceQuery> get reference;
+
+  /// A reference to the [DocumentReferenceQueryCollectionReference] containing this document.
+  DocumentReferenceQueryCollectionReference get parent {
+    return _$DocumentReferenceQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<DocumentReferenceQueryDocumentSnapshot> snapshots();
+
+  @override
+  Future<DocumentReferenceQueryDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    DocumentReference<Map<String, dynamic>> ref,
+  });
+
+  Future<void> set(DocumentReferenceQuery value);
+}
+
+class _$DocumentReferenceQueryDocumentReference
+    extends FirestoreDocumentReference<DocumentReferenceQueryDocumentSnapshot>
+    implements DocumentReferenceQueryDocumentReference {
+  _$DocumentReferenceQueryDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<DocumentReferenceQuery> reference;
+
+  /// A reference to the [DocumentReferenceQueryCollectionReference] containing this document.
+  DocumentReferenceQueryCollectionReference get parent {
+    return _$DocumentReferenceQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<DocumentReferenceQueryDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return DocumentReferenceQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<DocumentReferenceQueryDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return DocumentReferenceQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? ref = _sentinel,
+  }) async {
+    final json = {
+      if (ref != _sentinel)
+        "ref": ref as DocumentReference<Map<String, dynamic>>,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(DocumentReferenceQuery value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is DocumentReferenceQueryDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class DocumentReferenceQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+  DocumentReferenceQueryDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<DocumentReferenceQuery> snapshot;
+
+  @override
+  DocumentReferenceQueryDocumentReference get reference {
+    return DocumentReferenceQueryDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final DocumentReferenceQuery? data;
+}
+
+abstract class DocumentReferenceQueryQuery
+    implements QueryReference<DocumentReferenceQueryQuerySnapshot> {
+  @override
+  DocumentReferenceQueryQuery limit(int limit);
+
+  @override
+  DocumentReferenceQueryQuery limitToLast(int limit);
+
+  DocumentReferenceQueryQuery whereRef({
+    DocumentReference<Map<String, dynamic>>? isEqualTo,
+    DocumentReference<Map<String, dynamic>>? isNotEqualTo,
+    DocumentReference<Map<String, dynamic>>? isLessThan,
+    DocumentReference<Map<String, dynamic>>? isLessThanOrEqualTo,
+    DocumentReference<Map<String, dynamic>>? isGreaterThan,
+    DocumentReference<Map<String, dynamic>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DocumentReference<Map<String, dynamic>>>? whereIn,
+    List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
+  });
+
+  DocumentReferenceQueryQuery orderByRef({
+    bool descending = false,
+    DocumentReference<Map<String, dynamic>> startAt,
+    DocumentReference<Map<String, dynamic>> startAfter,
+    DocumentReference<Map<String, dynamic>> endAt,
+    DocumentReference<Map<String, dynamic>> endBefore,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$DocumentReferenceQueryQuery
+    extends QueryReference<DocumentReferenceQueryQuerySnapshot>
+    implements DocumentReferenceQueryQuery {
+  _$DocumentReferenceQueryQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<DocumentReferenceQuery> reference;
+
+  DocumentReferenceQueryQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<DocumentReferenceQuery> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return DocumentReferenceQueryQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<DocumentReferenceQueryDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: DocumentReferenceQueryDocumentSnapshot._(
+            change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return DocumentReferenceQueryQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<DocumentReferenceQueryQuerySnapshot> snapshots(
+      [SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<DocumentReferenceQueryQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  DocumentReferenceQueryQuery limit(int limit) {
+    return _$DocumentReferenceQueryQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  DocumentReferenceQueryQuery limitToLast(int limit) {
+    return _$DocumentReferenceQueryQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  DocumentReferenceQueryQuery whereRef({
+    DocumentReference<Map<String, dynamic>>? isEqualTo,
+    DocumentReference<Map<String, dynamic>>? isNotEqualTo,
+    DocumentReference<Map<String, dynamic>>? isLessThan,
+    DocumentReference<Map<String, dynamic>>? isLessThanOrEqualTo,
+    DocumentReference<Map<String, dynamic>>? isGreaterThan,
+    DocumentReference<Map<String, dynamic>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DocumentReference<Map<String, dynamic>>>? whereIn,
+    List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
+  }) {
+    return _$DocumentReferenceQueryQuery(
+      reference.where(
+        'ref',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  DocumentReferenceQueryQuery orderByRef({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('ref', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DocumentReferenceQueryQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$DocumentReferenceQueryQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class DocumentReferenceQueryQuerySnapshot extends FirestoreQuerySnapshot<
+    DocumentReferenceQueryQueryDocumentSnapshot> {
+  DocumentReferenceQueryQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<DocumentReferenceQuery> snapshot;
+
+  @override
+  final List<DocumentReferenceQueryQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<DocumentReferenceQueryDocumentSnapshot>>
+      docChanges;
+}
+
+class DocumentReferenceQueryQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot
+    implements DocumentReferenceQueryDocumentSnapshot {
+  DocumentReferenceQueryQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<DocumentReferenceQuery> snapshot;
+
+  @override
+  DocumentReferenceQueryDocumentReference get reference {
+    return DocumentReferenceQueryDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final DocumentReferenceQuery data;
+}
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
@@ -846,4 +1259,17 @@ TimestampQuery _$TimestampQueryFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreTimestampConverter().toJson(instance.time),
+    };
+
+DocumentReferenceQuery _$DocumentReferenceQueryFromJson(
+        Map<String, dynamic> json) =>
+    DocumentReferenceQuery(
+      const FirestoreDocumentReferenceConverter()
+          .fromJson(json['ref'] as DocumentReference<Map<String, dynamic>>),
+    );
+
+Map<String, dynamic> _$DocumentReferenceQueryToJson(
+        DocumentReferenceQuery instance) =>
+    <String, dynamic>{
+      'ref': const FirestoreDocumentReferenceConverter().toJson(instance.ref),
     };

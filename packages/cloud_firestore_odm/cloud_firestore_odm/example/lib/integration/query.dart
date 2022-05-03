@@ -32,3 +32,14 @@ class TimestampQuery {
   TimestampQuery(this.time);
   final Timestamp time;
 }
+
+@Collection<DocumentReferenceQuery>('firestore-example-app/42/doc-ref')
+final documentReferenceRef = DocumentReferenceQueryCollectionReference();
+
+@JsonSerializable()
+@FirestoreDocumentReferenceConverter()
+class DocumentReferenceQuery {
+  DocumentReferenceQuery(this.ref);
+
+  final DocumentReference<Map<String, dynamic>> ref;
+}

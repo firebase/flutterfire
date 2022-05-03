@@ -46,3 +46,28 @@ class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {
   @override
   Timestamp toJson(DateTime object) => Timestamp.fromDate(object);
 }
+
+/// A [JsonConverter] that adds support for [DocumentReference] objects within
+/// ODM models.
+///
+/// The document reference must receive a `Map<String, Object?>` as generic
+/// argument. References coming from `withConverter` are not supported.
+class FirestoreDocumentReferenceConverter extends JsonConverter<
+    DocumentReference<Map<String, dynamic>>,
+    DocumentReference<Map<String, dynamic>>> {
+  const FirestoreDocumentReferenceConverter();
+
+  @override
+  DocumentReference<Map<String, dynamic>> fromJson(
+    DocumentReference<Map<String, dynamic>> json,
+  ) {
+    return json;
+  }
+
+  @override
+  DocumentReference<Map<String, dynamic>> toJson(
+    DocumentReference<Map<String, dynamic>> object,
+  ) {
+    return object;
+  }
+}
