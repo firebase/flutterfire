@@ -172,4 +172,4 @@ If you are looking to define a model as a reference on a Subcollection, read the
 
 Some of the code on this page is created via code generation
 (e.g. `_$assertUser`, `UserCollectionReference`) - you can learn more about
-how to generate this code via the [Code Generation](./code-generation) documentation!
+how to generate this code via the [Code Generation](./code-generation.md) documentation!

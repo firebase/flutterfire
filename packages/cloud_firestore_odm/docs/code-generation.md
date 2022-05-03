@@ -31,4 +31,4 @@ file name of your model. For example:
 
 ## Next steps
 
-With our code generated, we can now start to [use the references](./references).
+With our code generated, we can now start to [use the references](./references.md).

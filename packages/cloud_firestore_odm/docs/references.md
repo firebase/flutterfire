@@ -2,7 +2,7 @@
 
 > The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
 
-A [reference](./defining-models#creating-references) provides full type-safe access to a Firestore
+A [reference](./defining-models.md#creating-references) provides full type-safe access to a Firestore
 Collection and Documents.
 
 The ODM provides a useful `FirestoreBuilder` widget which allows you to access your Firestore data
