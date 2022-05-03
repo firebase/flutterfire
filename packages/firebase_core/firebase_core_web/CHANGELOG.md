@@ -1,3 +1,7 @@
+## 1.6.3
+
+ - Update a dependency to the latest release.
+
 ## 1.6.2
 
  - **DOCS**: Fix typo in "firebase_core_web.dart" documentation. ([658c1db7](https://github.com/FirebaseExtended/flutterfire/commit/658c1db71cc47b3eddec3a1f33d5d55d1a6ff98a))
