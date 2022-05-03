@@ -17,7 +17,7 @@ Future<void> main() async {
   );
   await collection.add(bob);
 
-  testWidgets('TableBuilder WITOUT CelBuilder is render as expected',
+  testWidgets('TableBuilder WITHOUT CelBuilder is render as expected',
       (WidgetTester tester) async {
     // Create the widget by telling the tester to build it.
 

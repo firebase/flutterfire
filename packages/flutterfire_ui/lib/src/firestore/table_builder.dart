@@ -47,7 +47,7 @@ typedef OnEditItem = void Function(
   String propertyName,
 );
 
-class FirestoreDataTable<T> extends StatefulWidget {
+class FirestoreDataTable extends StatefulWidget {
   /// {@macro flutterfire_ui.firestore_table}
   const FirestoreDataTable({
     Key? key,
@@ -77,10 +77,6 @@ class FirestoreDataTable<T> extends StatefulWidget {
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
-        assert(
-          !canEditCell && onEditItem == null,
-          'do not set onEditItem if canEditCell is set to false',
-        ),
         super(key: key);
 
   /// When specified, the builder will be use to disply your own widget for the cel
@@ -781,7 +777,7 @@ class _Edit {
   final Object? newValue;
 }
 
-class _Source<T> extends DataTableSource {
+class _Source extends DataTableSource {
   _Source({
     required this.getHeaders,
     required this.getOnError,
