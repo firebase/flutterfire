@@ -1,3 +1,7 @@
+## 11.3.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
 ## 11.2.15
 
  - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8449). ([0510d113](https://github.com/FirebaseExtended/flutterfire/commit/0510d113dd279d6f55d889e522e74781d8fbb845))

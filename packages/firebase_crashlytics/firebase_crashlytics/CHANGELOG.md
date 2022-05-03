@@ -1,3 +1,7 @@
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
 ## 2.7.1
 
  - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/FirebaseExtended/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
