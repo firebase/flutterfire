@@ -1,3 +1,7 @@
+## 2.7.1
+
+ - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/FirebaseExtended/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
+
 ## 2.7.0
 
  - **FEAT**: add support for on-demand exception reporting (#8540). ([dfec7d60](https://github.com/FirebaseExtended/flutterfire/commit/dfec7d60592abe0a5c6523e13feabffb8b03020b))

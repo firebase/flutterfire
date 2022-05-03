@@ -15,6 +15,27 @@ Packages with breaking changes:
 
 Packages with other changes:
 
+ - [`firebase_crashlytics` - `v2.7.1`](#firebase_crashlytics---v271)
+
+---
+
+#### `firebase_crashlytics` - `v2.7.1`
+
+ - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/FirebaseExtended/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
+
+
+## 2022-04-29
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
  - [`firebase_crashlytics` - `v2.7.0`](#firebase_crashlytics---v270)
 
 ---
