@@ -73,39 +73,43 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
     applicationContext = null;
   }
 
+  private Map<String, String> firebaseOptionsToMap(FirebaseOptions options) {
+    Map<String, String> optionsMap = new HashMap<>();
+
+    optionsMap.put(KEY_API_KEY, options.getApiKey());
+    optionsMap.put(KEY_APP_ID, options.getApplicationId());
+
+    if (options.getGcmSenderId() != null) {
+      optionsMap.put(KEY_MESSAGING_SENDER_ID, options.getGcmSenderId());
+    }
+
+    if (options.getProjectId() != null) {
+      optionsMap.put(KEY_PROJECT_ID, options.getProjectId());
+    }
+
+    if (options.getDatabaseUrl() != null) {
+      optionsMap.put(KEY_DATABASE_URL, options.getDatabaseUrl());
+    }
+
+    if (options.getStorageBucket() != null) {
+      optionsMap.put(KEY_STORAGE_BUCKET, options.getStorageBucket());
+    }
+
+    if (options.getGaTrackingId() != null) {
+      optionsMap.put(KEY_TRACKING_ID, options.getGaTrackingId());
+    }
+
+    return optionsMap;
+  }
+
   private Task<Map<String, Object>> firebaseAppToMap(FirebaseApp firebaseApp) {
     return Tasks.call(
         cachedThreadPool,
         () -> {
           Map<String, Object> appMap = new HashMap<>();
-          Map<String, String> optionsMap = new HashMap<>();
-          FirebaseOptions options = firebaseApp.getOptions();
-
-          optionsMap.put(KEY_API_KEY, options.getApiKey());
-          optionsMap.put(KEY_APP_ID, options.getApplicationId());
-
-          if (options.getGcmSenderId() != null) {
-            optionsMap.put(KEY_MESSAGING_SENDER_ID, options.getGcmSenderId());
-          }
-
-          if (options.getProjectId() != null) {
-            optionsMap.put(KEY_PROJECT_ID, options.getProjectId());
-          }
-
-          if (options.getDatabaseUrl() != null) {
-            optionsMap.put(KEY_DATABASE_URL, options.getDatabaseUrl());
-          }
-
-          if (options.getStorageBucket() != null) {
-            optionsMap.put(KEY_STORAGE_BUCKET, options.getStorageBucket());
-          }
-
-          if (options.getGaTrackingId() != null) {
-            optionsMap.put(KEY_TRACKING_ID, options.getGaTrackingId());
-          }
 
           appMap.put(KEY_NAME, firebaseApp.getName());
-          appMap.put(KEY_OPTIONS, optionsMap);
+          appMap.put(KEY_OPTIONS, firebaseOptionsToMap(firebaseApp.getOptions()));
 
           appMap.put(
               KEY_IS_AUTOMATIC_DATA_COLLECTION_ENABLED,
@@ -173,6 +177,16 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
         });
   }
 
+  private Task<Map<String, String>> firebaseOptionsFromResource() {
+    return Tasks.call(
+        cachedThreadPool,
+        () -> {
+          final FirebaseOptions options = FirebaseOptions.fromResource(applicationContext);
+          if (options == null) return null;
+          return firebaseOptionsToMap(options);
+        });
+  }
+
   private Task<Void> setAutomaticDataCollectionEnabled(Map<String, Object> arguments) {
     return Tasks.call(
         cachedThreadPool,
@@ -223,6 +237,9 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
         break;
       case "Firebase#initializeCore":
         methodCallTask = initializeCore();
+        break;
+      case "Firebase#optionsFromResource":
+        methodCallTask = firebaseOptionsFromResource();
         break;
       case "FirebaseApp#setAutomaticDataCollectionEnabled":
         methodCallTask = setAutomaticDataCollectionEnabled(call.arguments());
