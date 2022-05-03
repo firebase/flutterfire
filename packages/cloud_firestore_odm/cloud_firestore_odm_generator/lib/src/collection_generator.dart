@@ -88,10 +88,6 @@ const _timestampChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
 );
 
-const _docRefChecker = TypeChecker.fromUrl(
-  'package:cloud_firestore/src/document_reference.dart#DocumentReference',
-);
-
 @immutable
 class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
