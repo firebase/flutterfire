@@ -1,3 +1,11 @@
+## 3.1.13
+
+ - Update a dependency to the latest release.
+
+## 3.1.12
+
+ - Update a dependency to the latest release.
+
 ## 3.1.11
 
  - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/FirebaseExtended/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))

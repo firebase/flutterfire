@@ -1,3 +1,15 @@
+## 0.4.0+4
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+3
+
+ - **FIX**: Bump `twitter_login` version to fix Android build failure. (#8475). ([4a7f47ed](https://github.com/FirebaseExtended/flutterfire/commit/4a7f47edbe9d421e385efbd2be05a01a24b22a69))
+
+## 0.4.0+2
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+1
 
  - **FIX**: filter out whitespaces in email with input formatter (#8393). ([1da9dc15](https://github.com/FirebaseExtended/flutterfire/commit/1da9dc1539367641a43df053c243fe262e087bd2))

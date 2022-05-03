@@ -3,7 +3,7 @@ description: Flutter plugin for Firebase Core, enabling connecting to multiple
   Firebase apps.
 homepage: https://firebase.flutter.dev/docs/core/usage
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_core/firebase_core
-version: 1.14.0
+version: 1.15.0
 
 false_secrets:
   - example/**
@@ -14,7 +14,7 @@ environment:
 
 dependencies:
   firebase_core_platform_interface: ^4.2.5
-  firebase_core_web: ^1.6.1
+  firebase_core_web: ^1.6.2
   flutter:
     sdk: flutter
   meta: ^1.3.0
@@ -37,3 +37,8 @@ flutter:
         pluginClass: FLTFirebaseCorePlugin
       web:
         default_package: firebase_core_web
+
+firebase:
+  google_services_gradle_plugin_version: "4.3.10"
+  crashlytics_gradle_plugin_version: "2.8.1"
+  performance_gradle_plugin_version: "1.4.1"

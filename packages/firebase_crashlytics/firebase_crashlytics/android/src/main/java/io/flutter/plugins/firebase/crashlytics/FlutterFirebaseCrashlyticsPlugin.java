@@ -6,16 +6,14 @@ package io.flutter.plugins.firebase.crashlytics;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.connector.AnalyticsConnector;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
-import com.google.firebase.crashlytics.internal.analytics.CrashlyticsOriginAnalyticsEventLogger;
+import com.google.firebase.crashlytics.FlutterFirebaseCrashlyticsInternal;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
@@ -114,7 +112,7 @@ public class FlutterFirebaseCrashlyticsPlugin
           final String reason = (String) arguments.get(Constants.REASON);
           final String information =
               (String) Objects.requireNonNull(arguments.get(Constants.INFORMATION));
-          final boolean fatal = (boolean) arguments.get(Constants.FATAL);
+          final boolean fatal = (boolean) Objects.requireNonNull(arguments.get(Constants.FATAL));
 
           Exception exception;
           if (reason != null) {
@@ -124,21 +122,6 @@ public class FlutterFirebaseCrashlyticsPlugin
                 new FlutterError(dartExceptionMessage + ". " + "Error thrown " + reason + ".");
           } else {
             exception = new FlutterError(dartExceptionMessage);
-          }
-
-          if (fatal) {
-            AnalyticsConnector connector = FirebaseApp.getInstance().get(AnalyticsConnector.class);
-            CrashlyticsOriginAnalyticsEventLogger analyticsEventLogger =
-                new CrashlyticsOriginAnalyticsEventLogger(connector);
-
-            Bundle params = new Bundle();
-            long unixTime = System.currentTimeMillis() / 1000;
-
-            params.putInt(Constants.FATAL, 1);
-            params.putLong(Constants.TIMESTAMP, unixTime);
-
-            crashlytics.setCustomKey(Constants.CRASH_EVENT_KEY, unixTime);
-            analyticsEventLogger.logEvent(Constants.FIREBASE_APPLICATION_EXCEPTION, params);
           }
 
           crashlytics.setCustomKey(Constants.FLUTTER_ERROR_EXCEPTION, dartExceptionMessage);
@@ -162,7 +145,11 @@ public class FlutterFirebaseCrashlyticsPlugin
             crashlytics.log(information);
           }
 
-          crashlytics.recordException(exception);
+          if (fatal) {
+            FlutterFirebaseCrashlyticsInternal.recordFatalException(exception);
+          } else {
+            crashlytics.recordException(exception);
+          }
           return null;
         });
   }
