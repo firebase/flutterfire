@@ -41,10 +41,14 @@ typedef CellBuilder = Widget Function(
   String colKey,
 );
 
-typedef OnEditItem = void Function(
+typedef OnTapCell = void Function(
   QueryDocumentSnapshot<Map<String, Object?>> snapshot,
   Object? value,
   String propertyName,
+);
+
+typedef OnSelectedRows = void Function(
+  List<Map<String, Object?>> items,
 );
 
 class FirestoreDataTable extends StatefulWidget {
@@ -71,22 +75,25 @@ class FirestoreDataTable extends StatefulWidget {
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
     this.cellBuilder,
-    this.canEditCell = true,
-    this.onEditItem,
+    this.enableDefaultCellEditor = true,
+    this.onTapCell,
+    this.onSelectedRows,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
         super(key: key);
 
-  /// When specified, the builder will be use to disply your own widget for the cel
+  /// When specified, the builder will be used to display your own widget for the cell
   final CellBuilder? cellBuilder;
 
-  /// When set to false this allow row selection, defaults is set to true
-  final bool canEditCell;
+  /// When set to false onTapCell will have not effect, defaults to true
+  final bool enableDefaultCellEditor;
 
-  /// When specified, this will be called when selecting a cel
-  final OnEditItem? onEditItem;
+  /// When specified, this will override the default cell editor
+  final OnTapCell? onTapCell;
+
+  final OnSelectedRows? onSelectedRows;
 
   /// The firestore query that will be displayed
   final Query<Object?> query;
@@ -205,9 +212,10 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     getOnError: () => widget.onError,
     selectionEnabled: selectionEnabled,
     rowsPerPage: widget.rowsPerPage,
-    canEditCell: widget.canEditCell,
-    onEditItem: widget.onEditItem ?? defaultOnEditItem,
+    enableDefaultEditor: widget.enableDefaultCellEditor,
+    onTapCell: widget.onTapCell ?? defaultOnEditItem,
     builder: widget.cellBuilder,
+    onSelectedRows: widget.onSelectedRows,
   );
 
   bool get selectionEnabled => widget.canDeleteItems;
@@ -783,16 +791,18 @@ class _Source extends DataTableSource {
     required this.getOnError,
     required bool selectionEnabled,
     required int rowsPerPage,
-    required this.canEditCell,
-    required this.onEditItem,
+    required this.enableDefaultEditor,
+    required this.onTapCell,
     this.builder,
+    this.onSelectedRows,
   })  : _selectionEnabled = selectionEnabled,
         _rowsPerpage = rowsPerPage;
 
   final CellBuilder? builder;
 
-  final bool canEditCell;
-  final OnEditItem onEditItem;
+  final bool enableDefaultEditor;
+  final OnTapCell onTapCell;
+  final OnSelectedRows? onSelectedRows;
 
   int _rowsPerpage;
   int get rowsPerPage => _rowsPerpage;
@@ -846,7 +856,7 @@ class _Source extends DataTableSource {
 
     final doc = _previousSnapshot!.docs[index];
     final data = doc.data();
-    final colList = getHeaders().keys.toList();
+
     return DataRow.byIndex(
       index: index,
       selected: _selectedRowIds.contains(doc.id),
@@ -856,17 +866,24 @@ class _Source extends DataTableSource {
 
               if ((selected && _selectedRowIds.add(doc.id)) ||
                   (!selected && _selectedRowIds.remove(doc.id))) {
+                onSelectedRows?.call(
+                  _previousSnapshot!.docs
+                      .where((e) => _selectedRowIds.contains(e.id))
+                      .map((e) => e.data())
+                      .toList(),
+                );
+
                 notifyListeners();
               }
             }
           : null,
       cells: [
-        for (final head in colList)
+        for (final head in getHeaders().keys)
           DataCell(
             builder?.call(data, head) ?? _ValueView(data[head]),
-            onTap: canEditCell
+            onTap: enableDefaultEditor
                 ? () {
-                    onEditItem(
+                    onTapCell(
                       doc,
                       data[head],
                       head,

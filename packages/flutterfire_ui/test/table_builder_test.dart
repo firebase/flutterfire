@@ -2,88 +2,231 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:flutterfire_ui/src/firestore/table_builder.dart';
 
 Future<void> main() async {
   final instance = FakeFirebaseFirestore();
-  final collection = instance.collection('persons').withConverter<Person>(
-        fromFirestore: (snapshot, options) => Person.fromMap(snapshot.data()!),
-        toFirestore: (data, option) => data.toMap(),
-      );
+  final collection = instance.collection('persons');
 
   final bob = Person(
     firstName: 'Bob',
     address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
   );
-  await collection.add(bob);
+  await collection.add(bob.toMap());
 
-  testWidgets('TableBuilder WITHOUT CelBuilder is render as expected',
-      (WidgetTester tester) async {
-    // Create the widget by telling the tester to build it.
+  testWidgets(
+    'FirestoreDataTable without CellBuilder is render as expected',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(_dataTableBuilder(query: collection));
 
-    await tester.pumpWidget(_basic(collection, null));
+      await tester.pumpAndSettle();
 
-    await tester.pumpAndSettle();
+      final streetFinder = find
+          .text('{street: ${bob.address.street}, city: ${bob.address.city}}');
+      final firstNameFinder = find.text(bob.firstName);
 
-    // final cityFinder = find.text('FlutterFire City');
+      expect(streetFinder, findsOneWidget);
+      expect(firstNameFinder, findsOneWidget);
+    },
+  );
 
-    final streetFinder =
-        find.text('{street: ${bob.address.street}, city: ${bob.address.city}}');
-    final firstNameFinder = find.text(bob.firstName);
+  testWidgets(
+    'FirestoreDataTable with CellBuilder is render as expected',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _dataTableBuilder(
+          query: collection,
+          cellBuilder: _defaultCellBuilder,
+        ),
+      );
 
-    // expect(cityFinder, findsOneWidget);
-    expect(streetFinder, findsOneWidget);
-    expect(firstNameFinder, findsOneWidget);
-  });
+      await tester.pumpAndSettle();
 
-  testWidgets('TableBuilder CelBuilder is render as expected',
-      (WidgetTester tester) async {
-    // Create the widget by telling the tester to build it.
+      final cityFinder = find.text(bob.address.city);
+      final streetFinder = find.text(bob.address.street);
+      final firstNameFinder = find.text(bob.firstName);
 
-    await tester.pumpWidget(
-      _basic(collection, (data, colKey) {
-        final person = Person.fromMap(data);
+      expect(cityFinder, findsOneWidget);
+      expect(streetFinder, findsOneWidget);
+      expect(firstNameFinder, findsOneWidget);
+    },
+  );
 
-        switch (ColumnKey.values.asNameMap()[colKey]) {
-          case ColumnKey.firstName:
-            return Text(person.firstName);
-          case ColumnKey.address:
-            return Row(
-              children: [
-                Text(person.address.street),
-                Text(person.address.city),
-              ],
+  testWidgets(
+    'FirestoreDataTable with default dell dialog editor is render as expected',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _dataTableBuilder(
+          query: collection,
+          cellBuilder: _defaultCellBuilder,
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final firstNameFinder = find.text(bob.firstName);
+      expect(firstNameFinder, findsOneWidget);
+
+      await tester.tap(firstNameFinder);
+      await tester.pumpAndSettle();
+
+      final dialogFinder = find.byType(Dialog);
+
+      expect(dialogFinder, findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'FirestoreDataTable without default dell dialog editor is render as expected',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _dataTableBuilder(
+          query: collection,
+          cellBuilder: _defaultCellBuilder,
+          enableDefaultCellEditor: false,
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final firstNameFinder = find.text(bob.firstName);
+      expect(firstNameFinder, findsOneWidget);
+
+      //For some reason, we have a renderflex issue when tapping
+      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      await tester.tap(firstNameFinder);
+      await tester.pumpAndSettle();
+
+      final dialogFinder = find.byType(Dialog);
+
+      expect(dialogFinder, findsNothing);
+    },
+  );
+
+  testWidgets(
+    'FirestoreDataTable overide the default cell dialog editor is render as expected',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        _dataTableBuilder(
+          query: collection,
+          cellBuilder: _defaultCellBuilder,
+          onTapCell: (doc, value, colKey) async {
+            final person = Person.fromMap(doc.data());
+
+            await doc.reference.set(
+              person
+                  .copyWith(firstName: person.firstName.toUpperCase())
+                  .toMap(),
             );
-          default:
-            return Container();
-        }
-      }),
-    );
+          },
+        ),
+      );
 
-    await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
 
-    final cityFinder = find.text(bob.address.city);
-    final streetFinder = find.text(bob.address.street);
-    final firstNameFinder = find.text(bob.firstName);
+      Finder firstNameFinder = find.text(bob.firstName);
+      expect(firstNameFinder, findsOneWidget);
 
-    expect(cityFinder, findsOneWidget);
-    expect(streetFinder, findsOneWidget);
-    expect(firstNameFinder, findsOneWidget);
-  });
+      //For some reason, we have a renderflex issue when tapping
+      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      await tester.tap(firstNameFinder);
+      await tester.pumpAndSettle();
+
+      final upperCaseFinder = find.text(bob.firstName.toUpperCase());
+      firstNameFinder = find.text(bob.firstName);
+
+      expect(upperCaseFinder, findsOneWidget);
+      expect(firstNameFinder, findsNothing);
+    },
+  );
+
+  testWidgets(
+    'FirestoreDataTable row selection is capture',
+    (WidgetTester tester) async {
+      final bob2 = Person(
+        firstName: 'Bob #2',
+        address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
+      );
+      await collection.add(bob2.toMap());
+
+      var nbItemSelected = 0;
+
+      await tester.pumpWidget(
+        _dataTableBuilder(
+          query: collection,
+          cellBuilder: _defaultCellBuilder,
+          enableDefaultCellEditor: false,
+          onSelectedRows: (List<Map<String, dynamic>> selection) {
+            nbItemSelected = selection.length;
+          },
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      final firstRowFinder = find.text(bob.firstName);
+      expect(firstRowFinder, findsOneWidget);
+
+      //For some reason, we have a renderflex issue when tapping
+      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
+      await tester.tap(firstRowFinder);
+      await tester.pumpAndSettle();
+
+      expect(nbItemSelected, 1);
+
+      final secondRowFinder = find.text(bob2.firstName);
+      expect(secondRowFinder, findsOneWidget);
+      await tester.tap(secondRowFinder);
+      await tester.pumpAndSettle();
+
+      expect(nbItemSelected, 2);
+
+      await tester.tap(firstRowFinder);
+      await tester.tap(secondRowFinder);
+      await tester.pumpAndSettle();
+
+      expect(nbItemSelected, 0);
+    },
+  );
 }
 
-Widget _basic(
-  CollectionReference<Person> col,
-  CellBuilder? builder,
-) {
+Widget _defaultCellBuilder(Map<String, Object?> data, String colKey) {
+  final person = Person.fromMap(data);
+
+  switch (ColumnKey.values.asNameMap()[colKey]) {
+    case ColumnKey.firstName:
+      return Text(person.firstName);
+    case ColumnKey.address:
+      return Row(
+        children: [
+          Text(person.address.street),
+          Text(person.address.city),
+        ],
+      );
+    default:
+      return Container();
+  }
+}
+
+Widget _dataTableBuilder({
+  required Query<Object?> query,
+  CellBuilder? cellBuilder,
+  bool enableDefaultCellEditor = true,
+  OnTapCell? onTapCell,
+  OnSelectedRows? onSelectedRows,
+}) {
   return MaterialApp(
     home: FirestoreDataTable(
-      query: col,
+      query: query,
       columnLabels: {
         ColumnKey.firstName.name: const Text('First Name'),
         ColumnKey.address.name: const Text('Address'),
       },
-      cellBuilder: builder,
+      cellBuilder: cellBuilder,
+      enableDefaultCellEditor: enableDefaultCellEditor,
+      onTapCell: onTapCell,
+      onSelectedRows: onSelectedRows,
     ),
   );
 }
@@ -103,16 +246,6 @@ class Person {
   final String firstName;
   final Address address;
 
-  Person copyWith({
-    String? firstName,
-    Address? address,
-  }) {
-    return Person(
-      firstName: firstName ?? this.firstName,
-      address: address ?? this.address,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'firstName': firstName,
@@ -127,20 +260,15 @@ class Person {
     );
   }
 
-  @override
-  String toString() => 'Person(firstName: $firstName, address: $address)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Person &&
-        other.firstName == firstName &&
-        other.address == address;
+  Person copyWith({
+    String? firstName,
+    Address? address,
+  }) {
+    return Person(
+      firstName: firstName ?? this.firstName,
+      address: address ?? this.address,
+    );
   }
-
-  @override
-  int get hashCode => firstName.hashCode ^ address.hashCode;
 }
 
 @immutable
@@ -166,17 +294,4 @@ class Address {
       city: map['city'] ?? '',
     );
   }
-
-  @override
-  String toString() => 'Address(street: $street, city: $city)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Address && other.street == street && other.city == city;
-  }
-
-  @override
-  int get hashCode => street.hashCode ^ city.hashCode;
 }
