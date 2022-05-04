@@ -124,6 +124,8 @@ Upload the downloaded file and enter the Key & Team IDs;
 For messaging to work when your app is built for production, you must create a new App Identifier which is linked to the
 application that you're developing.
 
+Note that if you're adding push notifications to an existing app that already has a registered App Identifier you don't need to create a new one. Just make sure the "Push Notifications" capability is checked. Once you've done that you can skip to [Step 3](#3-generating-a-provisioning-profile).
+
 On the Apple Developer portal:
 
 1. Click the "Identifiers" side menu item.
@@ -160,6 +162,9 @@ Save the identifier, it'll be used when creating a provisioning profile in the n
 A provisioning profile enables signed communicate between Apple and your application. Since messaging can only be used on
 real devices, a signed certificate ensures that the app being installed on a device is genuine and has the correct
 permissions enabled.
+
+Note that if you're adding push notifications to an existing app you may have already set up a provisioning profile. In which
+case you can skip this step.
 
 On the "Profiles" menu item, register a new Profile. Select the "iOS App Development" (or macOS) checkbox and click "Continue".
 
