@@ -31,7 +31,8 @@ Future<void> main() async {
     );
   }
 
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  /* Uncomment the line below if you are running the example from a emulator, otherwise this line will cause a connection error */
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
 
   runApp(const AuthExampleApp());
 }
