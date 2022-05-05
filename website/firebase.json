@@ -1,13 +1,6 @@
 {
   "hosting": {
-    "public": "build",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
     "redirects": [
       {
         "source": "/docs/analytics/events",
