@@ -308,8 +308,18 @@
         "type": 301
       },
       {
-        "source": "/docs/storage/*",
-        "destination": "https://firebase.google.com/docs/storage/flutter/start",
+        "source": "/docs/firestore-odm/*",
+        "destination": "https://github.com/firebase/flutterfire/tree/master/packages/cloud_firestore_odm",
+        "type": 301
+      },
+      {
+        "source": "/docs/ui/**",
+        "destination": "https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui",
+        "type": 301
+      },
+      {
+        "source": "/docs/ui/**",
+        "destination": "https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui",
         "type": 301
       },
       {
