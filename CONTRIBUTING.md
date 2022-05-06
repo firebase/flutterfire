@@ -242,3 +242,18 @@ to graduate multiple packages using the following steps:
 5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
 6) Run `melos publish` to dry run and confirm all packages are publishable.
 7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+
+## 6. Contributing documentation
+
+We gladly accept contributions to the SDK documentation. As our docs are also part of this repo,
+see "Contributing code" above for how to prepare and submit a PR to the repo.
+
+Since we merged the Firebase Flutter plugins documentation into the official
+Firebase documentation on firebase.google.com, you may notice some new markdown
+syntax related to the publishing infrastructure Google uses for developer documentation.
+
+Firebase follows the [Google developer documentation style guide](https://developers.google.com/style),
+similar to the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#documentation-dartdocs-javadocs-etc),
+which you should read before writing substantial contributions.
+
+We also keep a list of issues related to the documentation.
