@@ -64,7 +64,7 @@
       },
       {
         "source": "/docs/auth/account-linking",
-        "destination": "https://firebase.google.com/docs/auth/account-linking",
+        "destination": "https://firebase.google.com/docs/auth/flutter/account-linking",
         "type": 301
       },
       {
@@ -84,7 +84,7 @@
       },
       {
         "source": "/docs/auth/error-handling",
-        "destination": "https://firebase.google.com/docs/auth/flutter/error-handling",
+        "destination": "https://firebase.google.com/docs/auth/flutter/errors",
         "type": 301
       },
       {
@@ -104,12 +104,12 @@
       },
       {
         "source": "/docs/auth/phone",
-        "destination": "https://firebase.google.com/docs/auth/flutter/phone",
+        "destination": "https://firebase.google.com/docs/auth/flutter/phone-auth",
         "type": 301
       },
       {
         "source": "/docs/auth/social",
-        "destination": "https://firebase.google.com/docs/auth/flutter/social",
+        "destination": "https://firebase.google.com/docs/auth/flutter/federated-auth",
         "type": 301
       },
       {
