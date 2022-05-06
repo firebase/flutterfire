@@ -446,6 +446,7 @@ class ProfileScreen extends MultiProviderScreen {
   final AppBar? appBar;
   final CupertinoNavigationBar? cupertinoNavigationBar;
   final ActionCodeSettings? actionCodeSettings;
+  final Set<FlutterFireUIStyle>? styles;
 
   const ProfileScreen({
     Key? key,
@@ -459,6 +460,7 @@ class ProfileScreen extends MultiProviderScreen {
     this.appBar,
     this.cupertinoNavigationBar,
     this.actionCodeSettings,
+    this.styles,
   }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
@@ -484,6 +486,13 @@ class ProfileScreen extends MultiProviderScreen {
 
   @override
   Widget build(BuildContext context) {
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: Builder(builder: buildPage),
+    );
+  }
+
+  Widget buildPage(BuildContext context) {
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
     final providersScopeKey = RebuildScopeKey();
     final emailVerificationScopeKey = RebuildScopeKey();
