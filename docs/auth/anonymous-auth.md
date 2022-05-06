@@ -40,7 +40,7 @@ try {
       print("Anonymous auth hasn't been enabled for this project.");
       break;
     default:
-      print("Unkown error.");
+      print("Unknown error.");
   }
 }
 ```
