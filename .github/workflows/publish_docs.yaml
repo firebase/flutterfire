@@ -1,0 +1,18 @@
+name: publish_docs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}"
+          projectId: flutter-firebase-docs
+          entryPoint: "website"
+          channelId: "live"
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
