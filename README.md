@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://firebase.flutter.dev">
-    <img width="250px" src="website/static/img/flutterfire_300x.png"><br/>
+  <a href="https://firebase.google.com/docs/flutter">
+    <img width="250px" src=".github/images/flutterfire_300x.png"><br/>
   </a>
   <h1 align="center">FlutterFire</h1>
 </p>
@@ -16,7 +16,7 @@
 
 ---
 
-[[Documentation]](https://firebase.flutter.dev) • [[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
+[[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
 
 ---
 
@@ -28,6 +28,15 @@ the [Firebase for Flutter](https://firebase.google.com/codelabs/firebase-get-to-
 [Flutter](https://flutter.dev) is Google’s UI toolkit for building beautiful, natively compiled applications for mobile,
 web, and desktop from a single codebase. Flutter is used by developers and organizations around the world, and is free
 and open source.
+
+---
+
+## Documentation
+
+- [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
+- [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
+- [FlutterFire UI](./packages/flutterfire_ui/README.md) (beta)
+- [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
 
 ---
 

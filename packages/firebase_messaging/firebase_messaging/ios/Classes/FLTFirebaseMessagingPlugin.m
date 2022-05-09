@@ -688,6 +688,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
+  NSNumber *timeSensitive = @-1;
+  if (@available(iOS 15.0, macOS 12.0, *)) {
+    if (settings.timeSensitiveSetting == UNNotificationSettingDisabled) {
+      timeSensitive = @0;
+    }
+    if (settings.timeSensitiveSetting == UNNotificationSettingEnabled) {
+      timeSensitive = @1;
+    }
+  }
+
   NSNumber *showPreviews = @-1;
   if (@available(iOS 11.0, *)) {
     if (settings.showPreviewsSetting == UNShowPreviewsSettingNever) {
@@ -736,6 +746,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
+  settingsDictionary[@"timeSensitive"] = timeSensitive;
+
   return settingsDictionary;
 }
 

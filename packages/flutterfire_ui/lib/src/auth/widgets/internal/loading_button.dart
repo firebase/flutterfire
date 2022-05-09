@@ -44,7 +44,7 @@ class LoadingButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.color,
-    this.variant = ButtonVariant.text,
+    this.variant = ButtonVariant.outlined,
   }) : super(key: key);
 
   @override
