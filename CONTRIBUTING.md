@@ -6,7 +6,6 @@
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
 
-**Note about contributing to Docs**: We're in the process of updating documentation for the Firebase SDK for Flutter. Please hold your PRs for docs until May 5th, 2022.
 ## 1. Things you will need
 
 - Linux, Mac OS X, or Windows.
@@ -242,3 +241,18 @@ to graduate multiple packages using the following steps:
 5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
 6) Run `melos publish` to dry run and confirm all packages are publishable.
 7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+
+## 6. Contributing documentation
+
+We gladly accept contributions to the SDK documentation. As our docs are also part of this repo,
+see "Contributing code" above for how to prepare and submit a PR to the repo.
+
+Since we merged the Firebase Flutter plugins documentation into the official
+Firebase documentation on firebase.google.com, you may notice some new markdown
+syntax related to the publishing infrastructure Google uses for developer documentation.
+
+Firebase follows the [Google developer documentation style guide](https://developers.google.com/style),
+similar to the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#documentation-dartdocs-javadocs-etc),
+which you should read before writing substantial contributions.
+
+We also keep a list of issues related to the documentation.
