@@ -1,3 +1,15 @@
+## 2.3.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 2.2.13
+
+ - Update a dependency to the latest release.
+
+## 2.2.12
+
+ - Update a dependency to the latest release.
+
 ## 2.2.11
 
  - Update a dependency to the latest release.

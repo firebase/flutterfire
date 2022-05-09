@@ -88,6 +88,7 @@ void main() {
         const mockClickTimestamp = 1234567;
         const mockMinimumVersionAndroid = 12;
         const mockMinimumVersionIOS = 'ios minimum version';
+        const mockMatchTypeIOS = MatchType.high;
         Uri mockUri = Uri.parse('mock-scheme');
 
         when(dynamicLinks.getInitialLink()).thenAnswer(
@@ -96,6 +97,7 @@ void main() {
             mockClickTimestamp,
             mockMinimumVersionAndroid,
             mockMinimumVersionIOS,
+            mockMatchTypeIOS,
           ),
         );
 
@@ -130,6 +132,7 @@ void main() {
         const mockClickTimestamp = 38947390875;
         const mockMinimumVersionAndroid = 21;
         const mockMinimumVersionIOS = 'min version';
+        const mockMatchTypeIOS = MatchType.weak;
 
         when(dynamicLinks.getDynamicLink(mockUri)).thenAnswer(
           (_) async => TestPendingDynamicLinkData(
@@ -137,6 +140,7 @@ void main() {
             mockClickTimestamp,
             mockMinimumVersionAndroid,
             mockMinimumVersionIOS,
+            mockMatchTypeIOS,
           ),
         );
 
@@ -160,6 +164,7 @@ void main() {
         const mockClickTimestamp = 239058435;
         const mockMinimumVersionAndroid = 33;
         const mockMinimumVersionIOS = 'on-link version';
+        const mockMatchTypeIOS = MatchType.unique;
         when(dynamicLinks.onLink).thenAnswer(
           (_) => Stream.value(
             TestPendingDynamicLinkData(
@@ -167,6 +172,7 @@ void main() {
               mockClickTimestamp,
               mockMinimumVersionAndroid,
               mockMinimumVersionIOS,
+              mockMatchTypeIOS,
             ),
           ),
         );
@@ -288,6 +294,7 @@ class TestPendingDynamicLinkData extends PendingDynamicLinkData {
     mockClickTimestamp,
     mockMinimumVersionAndroid,
     mockMinimumVersionIOS,
+    mockMatchTypeIOS,
   ) : super(
           link: mockUri,
           android: PendingDynamicLinkDataAndroid(
@@ -296,11 +303,13 @@ class TestPendingDynamicLinkData extends PendingDynamicLinkData {
           ),
           ios: PendingDynamicLinkDataIOS(
             minimumVersion: mockMinimumVersionIOS,
+            matchType: mockMatchTypeIOS,
           ),
         );
 }
 
-final testData = TestPendingDynamicLinkData(Uri.parse('uri'), null, null, null);
+final testData =
+    TestPendingDynamicLinkData(Uri.parse('uri'), null, null, null, null);
 
 Future<PendingDynamicLinkData?> testFutureData() {
   return Future.value(testData);

@@ -130,6 +130,7 @@ void main() {
       expect(message.threadId, mockMessageMap!['threadId']);
       expect(message.ttl, mockMessageMap!['ttl']);
     });
+
     test(
         'Use RemoteMessage constructor with nullable properties passed as null & default values invoked',
         () {
@@ -162,6 +163,50 @@ void main() {
       expect(message.sentTime, null);
       expect(message.threadId, mockNullableMessageMap['threadId']);
       expect(message.ttl, mockNullableMessageMap['ttl']);
+    });
+
+    test('"RemoteMessage.toMap" returns "RemoteMessage" as Map', () {
+      final RemoteMessage remoteMessage = RemoteMessage(
+        senderId: 'senderId',
+        category: 'category',
+        collapseKey: 'collapseKey',
+        contentAvailable: true,
+        data: {},
+        from: 'from',
+        messageId: 'messageId',
+        messageType: 'messageType',
+        mutableContent: true,
+        notification: const RemoteNotification(
+          title: 'notification_title',
+          body: 'notification_body',
+        ),
+        sentTime: DateTime.now(),
+        threadId: 'threadId',
+        ttl: 30000,
+      );
+
+      final Map<String, dynamic> map = remoteMessage.toMap();
+
+      expect(map['senderId'], remoteMessage.senderId);
+      expect(map['category'], remoteMessage.category);
+      expect(map['collapseKey'], remoteMessage.collapseKey);
+      expect(map['contentAvailable'], remoteMessage.contentAvailable);
+      expect(map['data'], remoteMessage.data);
+      expect(map['from'], remoteMessage.from);
+      expect(map['messageId'], remoteMessage.messageId);
+      expect(map['messageType'], remoteMessage.messageType);
+      expect(map['mutableContent'], remoteMessage.mutableContent);
+
+      expect(
+          map['notification'],
+          RemoteNotification(
+            title: remoteMessage.notification!.title,
+            body: remoteMessage.notification!.body,
+          ).toMap());
+
+      expect(map['sentTime'], remoteMessage.sentTime!.millisecondsSinceEpoch);
+      expect(map['threadId'], remoteMessage.threadId);
+      expect(map['ttl'], remoteMessage.ttl);
     });
   });
 }

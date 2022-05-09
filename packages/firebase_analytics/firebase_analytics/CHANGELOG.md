@@ -1,3 +1,11 @@
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
+## 9.1.6
+
+ - **REFACTOR**: Update deployment target to `10.0` for Firebase Analytics podspec. (#8371). ([fe709da9](https://github.com/FirebaseExtended/flutterfire/commit/fe709da998162a3b884070df6666690ae560d0d1))
+
 ## 9.1.5
 
  - Update a dependency to the latest release.

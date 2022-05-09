@@ -1,3 +1,11 @@
+## 1.1.5
+
+ - Update a dependency to the latest release.
+
+## 1.1.4
+
+ - Update a dependency to the latest release.
+
 ## 1.1.3
 
  - Update a dependency to the latest release.

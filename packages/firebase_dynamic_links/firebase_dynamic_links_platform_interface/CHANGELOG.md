@@ -1,3 +1,11 @@
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.3
+
+ - **FEAT**: `matchType` for pending Dynamic Link data for `iOS`. (#8464). ([d3dda125](https://github.com/FirebaseExtended/flutterfire/commit/d3dda12563eb28e565c2c01d348183d558e25335))
+
 ## 0.2.2+3
 
  - Update a dependency to the latest release.

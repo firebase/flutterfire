@@ -1,3 +1,12 @@
+## 1.16.0
+
+ - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android (#8566). ([30216c4a](https://github.com/FirebaseExtended/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
+
+## 1.15.0
+
+ - **FEAT**: bump Firebase Android SDK to `29.3.1` (#8494). ([17b9c289](https://github.com/FirebaseExtended/flutterfire/commit/17b9c2894ee901afd2631664b01829cd4df1dd16))
+ - **FEAT**: Update Firebase iOS SDK to `8.15.0` (#8454). ([faaf4496](https://github.com/FirebaseExtended/flutterfire/commit/faaf449624ff4081cbbc0f241fec3134492cbdb3))
+
 ## 1.14.1
 
  - Update a dependency to the latest release.
