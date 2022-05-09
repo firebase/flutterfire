@@ -259,7 +259,8 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
             "Lütfen e-mail'inizi kontrol edin ve e-mail adresinizi "
             'doğrulamak için bağlantıya tıklayın.',
     this.couldntVerifyEmailText = 'E-mail adresinizi doğrulayamadık.',
-    this.resendVerificationEmailButtonLabel = 'Doğrulama mailini yeniden gönder',
+    this.resendVerificationEmailButtonLabel =
+        'Doğrulama mailini yeniden gönder',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',

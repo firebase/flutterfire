@@ -262,8 +262,10 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
         'Un email de vérification vous a été envoyé. '
             'Veuillez examiner vos emails et cliquer sur le lien pour vérifier '
             'votre adresse email.',
-    this.couldntVerifyEmailText = "Nous n'avons pas réussi à vérifier votre adresse email. ",
-    this.resendVerificationEmailButtonLabel = 'Renvoyer un mail de vérification',
+    this.couldntVerifyEmailText =
+        "Nous n'avons pas réussi à vérifier votre adresse email.",
+    this.resendVerificationEmailButtonLabel =
+        'Renvoyer un mail de vérification',
     this.arrayLabel = 'liste',
     this.booleanLabel = 'booléen',
     this.mapLabel = 'map',
