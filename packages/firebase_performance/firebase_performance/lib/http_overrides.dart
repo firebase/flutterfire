@@ -36,31 +36,57 @@ typedef HttpMetricOnResponseInterceptor = void Function(
   HttpMetric metric,
 );
 
+/// Implementation of [HttpOverrides] that allows for automatic capturing of
+/// HTTP requests and responses via Firebase Performance [HttpMetric]'s.
+///
+/// Example:
+/// ```dart
+/// import 'dart:io';
+/// import 'package:flutter/material.dart';
+///
+/// import 'package:firebase_core/firebase_core.dart';
+/// import 'package:firebase_performance/firebase_performance.dart';
+/// import 'package:firebase_performance/http_overrides.dart';
+///
+/// Future<void> main() async {
+///   WidgetsFlutterBinding.ensureInitialized();
+///   await Firebase.initializeApp();
+///   HttpOverrides.global = FirebasePerformanceHttpOverrides(
+///     FirebasePerformance.instance,
+///     onResponse: (response, metric) {
+///       response.headers.value('foo') ??
+///           metric.putAttribute('foo', response.headers.value('foo')!);
+///     },
+///   );
+///   runApp(MyApp());
+/// }
+/// ```
 class FirebasePerformanceHttpOverrides extends HttpOverrides {
   FirebasePerformanceHttpOverrides(
-    this.performance, {
-    this.onRequest,
-    this.onResponse,
-  });
+    this._performance, {
+    HttpMetricOnRequestInterceptor? onRequest,
+    HttpMetricOnResponseInterceptor? onResponse,
+  })  : _onRequest = onRequest,
+        _onResponse = onResponse;
 
-  final HttpOverrides? currentOverrides = HttpOverrides.current;
+  final HttpOverrides? _currentOverrides = HttpOverrides.current;
 
-  final FirebasePerformance performance;
+  final FirebasePerformance _performance;
 
-  final HttpMetricOnRequestInterceptor? onRequest;
+  final HttpMetricOnRequestInterceptor? _onRequest;
 
-  final HttpMetricOnResponseInterceptor? onResponse;
+  final HttpMetricOnResponseInterceptor? _onResponse;
 
   @override
   HttpClient createHttpClient(SecurityContext? context) {
-    final client = currentOverrides != null
-        ? currentOverrides!.createHttpClient(context)
+    final client = _currentOverrides != null
+        ? _currentOverrides!.createHttpClient(context)
         : super.createHttpClient(context);
     return _FirebasePerformanceMonitoringHttpClient(
       client,
-      performance,
-      onRequest: onRequest,
-      onResponse: onResponse,
+      _performance,
+      onRequest: _onRequest,
+      onResponse: _onResponse,
     );
   }
 }
