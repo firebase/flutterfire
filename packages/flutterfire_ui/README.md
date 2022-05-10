@@ -6,7 +6,6 @@ FlutterFire UI is a set of Flutter widgets and utilities designed to help you bu
 
 > FlutterFire UI is still in beta and is subject to change. Please contribute to the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/6978) with feedback.
 
-
 ## Installation
 
 ```sh
@@ -72,6 +71,6 @@ Please contribute to the [discussion](https://github.com/FirebaseExtended/flutte
 
 Once installed, you can read the following documentation to learn more about the FlutterFire UI widgets and utilities:
 
-- [Authentication](docs/auth.md)
-- [Firestore](docs/firestore.md)
-- [Realtime Database](docs/database.md)
+- [Authentication](doc/auth.md)
+- [Firestore](doc/firestore.md)
+- [Realtime Database](doc/database.md)
