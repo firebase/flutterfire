@@ -211,9 +211,9 @@ public class FlutterFirebaseAnalyticsPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            final Boolean enabled =
-                (Boolean) Objects.requireNonNull(arguments.get(Constants.ENABLED));
-            analytics.setAnalyticsCollectionEnabled(enabled);
+            final Integer milliseconds =
+              (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
+            analytics.setSessionTimeoutDuration(milliseconds);
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
