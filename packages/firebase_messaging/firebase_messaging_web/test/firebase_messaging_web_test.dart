@@ -35,6 +35,7 @@ void main() {
       expect(notification.badge, AppleNotificationSetting.notSupported);
       expect(notification.carPlay, AppleNotificationSetting.notSupported);
       expect(notification.lockScreen, AppleNotificationSetting.notSupported);
+      expect(notification.timeSensitive, AppleNotificationSetting.notSupported);
       expect(
         notification.notificationCenter,
         AppleNotificationSetting.notSupported,

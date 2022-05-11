@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:drive/drive.dart' as drive;
-import 'package:flutter/foundation.dart';
 import 'cloud_functions/cloud_functions_e2e.dart' as cloud_functions;
 import 'firebase_auth/firebase_auth_e2e.dart' as firebase_auth;
 import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
@@ -31,10 +30,7 @@ void setupTests() {
   // All other tests.
   firebase_auth.setupTests();
   cloud_functions.setupTests();
-  if (defaultTargetPlatform == TargetPlatform.android || kIsWeb) {
-    // TODO(russellwheatley): Pending release of latest firebase-tools with Storage emulator fix.
-    firebase_storage.setupTests();
-  }
+  firebase_storage.setupTests();
   firebase_database.setupTests();
   firebase_app_check.setupTests();
   firebase_messaging.setupTests();
