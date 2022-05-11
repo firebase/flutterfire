@@ -11,32 +11,32 @@ you to gain insight into the performance characteristics of your Flutter apps.
 
 ## Before you begin
 
-[Install and initialize the Firebase SDKs for Flutter](/docs/flutter/setup) if you
-haven't already done so.
+If you haven't already,
+[configure and initialize Firebase](/docs/flutter/setup) in your Flutter
+project.
 
 ## **Step 1**: Add Performance Monitoring to your app {:#add-perfmon}
 
 1.  From the root directory of your Flutter project, run the following
-    command to install the Performance Monitoring plugin:
+    command to install the Performance Monitoring Flutter plugin:
 
-    ```bash
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
     flutter pub add firebase_performance
     ```
 
-1.  _(Android only)_ From the root directory of your Flutter project, run the
-    following command:
+1.  From the root directory of your Flutter project, run the following command:
 
-    ```bash
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
     flutterfire configure
     ```
 
     Running this command ensures that your Flutter app's Firebase configuration
-    is up-to-date and adds the required Performance Monitoring Gradle plugin to
-    your app.
+    is up-to-date and, for Android, adds the required Performance Monitoring
+    Gradle plugin to your app.
 
-1.  Rebuild your project:
+1.  Once complete, rebuild your Flutter project:
 
-    ```bash
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
     flutter run
     ```
 
@@ -86,8 +86,11 @@ information from your app.
 
 1.  Check your log messages for any error messages.
 
-    Performance Monitoring tags its log messages with `Firebase/Performance` so that you
-    can filter your log messages.
+    Performance Monitoring tags its log messages with the following tags so that
+    you can filter your log messages:
+
+    * iOS+: `Firebase/Performance`
+    * Android: `FirebasePerformance`
 
 1.  Check for the following types of logs which indicate that Performance Monitoring is
     logging performance events:
