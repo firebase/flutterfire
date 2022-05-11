@@ -484,7 +484,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      // If "alert" (i.e. notification) is present, this will be called by the other
+      // "Messaging#onMessage" channel handler
+      if (notificationDict[@"aps"] != nil && notificationDict[@"aps"][@"alert"] == nil) {
+        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      }
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
