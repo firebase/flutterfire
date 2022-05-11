@@ -8,12 +8,14 @@ import '../widgets/internal/universal_scaffold.dart';
 
 class UniversalEmailSignInScreen extends MultiProviderScreen {
   final ProvidersFoundCallback? onProvidersFound;
+  final Set<FlutterFireUIStyle>? styles;
 
   const UniversalEmailSignInScreen({
     Key? key,
     FirebaseAuth? auth,
     List<ProviderConfiguration>? providerConfigs,
     this.onProvidersFound,
+    this.styles,
   })  : assert(onProvidersFound != null || providerConfigs != null),
         super(key: key, auth: auth, providerConfigs: providerConfigs);
 
@@ -86,22 +88,25 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
           (email, providers) => _defaultAction(context, email, providers),
     );
 
-    return UniversalScaffold(
-      body: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.biggest.width < 500) {
-              return Padding(
-                padding: const EdgeInsets.all(20),
-                child: content,
-              );
-            } else {
-              return ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 500),
-                child: content,
-              );
-            }
-          },
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: UniversalScaffold(
+        body: Center(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.biggest.width < 500) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: content,
+                );
+              } else {
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: content,
+                );
+              }
+            },
+          ),
         ),
       ),
     );
