@@ -8,14 +8,17 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   Uri link = Uri.parse('pending-link');
   int minimumVersion = 12;
+  MatchType matchType = MatchType.high;
   String minimumVersionIos = 'minimum version';
   int clickTimestamp = 12345345;
   PendingDynamicLinkDataAndroid androidData = PendingDynamicLinkDataAndroid(
     minimumVersion: minimumVersion,
     clickTimestamp: clickTimestamp,
   );
-  PendingDynamicLinkDataIOS iosData =
-      PendingDynamicLinkDataIOS(minimumVersion: minimumVersionIos);
+  PendingDynamicLinkDataIOS iosData = PendingDynamicLinkDataIOS(
+    minimumVersion: minimumVersionIos,
+    matchType: matchType,
+  );
 
   group('$PendingDynamicLinkData', () {
     PendingDynamicLinkData pendingDynamicLinkData =
@@ -55,6 +58,10 @@ void main() {
           expect(
             result['ios']['minimumVersion'],
             pendingDynamicLinkData.ios?.minimumVersion,
+          );
+          expect(
+            result['ios']['matchType'],
+            pendingDynamicLinkData.ios?.matchType?.index,
           );
           expect(result['link'], pendingDynamicLinkData.link.toString());
         });

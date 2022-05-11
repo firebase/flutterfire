@@ -10,11 +10,11 @@ class UniversalTextFormField extends PlatformWidget {
   final void Function(String?)? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? keyboardType;
-  final bool? autofocus;
-  final bool? obscureText;
+  final bool autofocus;
+  final bool obscureText;
   final FocusNode? focusNode;
   final bool? enableSuggestions;
-  final bool? autocorrect;
+  final bool autocorrect;
   final Widget? prefix;
   final Iterable<String>? autofillHints;
 
@@ -27,11 +27,11 @@ class UniversalTextFormField extends PlatformWidget {
     this.onSubmitted,
     this.inputFormatters,
     this.keyboardType,
-    this.autofocus,
-    this.obscureText,
+    this.autofocus = false,
+    this.obscureText = false,
     this.focusNode,
     this.enableSuggestions,
-    this.autocorrect,
+    this.autocorrect = false,
     this.autofillHints,
   }) : super(key: key);
 
@@ -47,6 +47,7 @@ class UniversalTextFormField extends PlatformWidget {
         ),
       ),
       child: CupertinoTextFormFieldRow(
+        autocorrect: autocorrect,
         autofillHints: autofillHints,
         focusNode: focusNode,
         padding: EdgeInsets.zero,
@@ -54,10 +55,10 @@ class UniversalTextFormField extends PlatformWidget {
         placeholder: placeholder,
         validator: validator,
         onFieldSubmitted: onSubmitted,
-        autofocus: autofocus ?? false,
+        autofocus: autofocus,
         inputFormatters: inputFormatters,
         keyboardType: keyboardType,
-        obscureText: obscureText ?? false,
+        obscureText: obscureText,
         prefix: prefix,
       ),
     );
@@ -66,8 +67,9 @@ class UniversalTextFormField extends PlatformWidget {
   @override
   Widget buildMaterial(BuildContext context) {
     return TextFormField(
+      autocorrect: autocorrect,
       autofillHints: autofillHints,
-      autofocus: autofocus ?? false,
+      autofocus: autofocus,
       focusNode: focusNode,
       controller: controller,
       decoration: InputDecoration(
@@ -78,7 +80,7 @@ class UniversalTextFormField extends PlatformWidget {
       onFieldSubmitted: onSubmitted,
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
-      obscureText: obscureText ?? false,
+      obscureText: obscureText,
     );
   }
 }

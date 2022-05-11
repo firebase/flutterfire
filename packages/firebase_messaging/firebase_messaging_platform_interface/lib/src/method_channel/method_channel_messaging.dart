@@ -20,6 +20,7 @@ import 'utils/exception.dart';
 // from the native portion of the plugin. This allows for the plugin to perform
 // any necessary processing in Dart (e.g., populating a custom object) before
 // invoking the provided callback.
+@pragma('vm:entry-point')
 void _firebaseMessagingCallbackDispatcher() {
   // Initialize state necessary for MethodChannels.
   WidgetsFlutterBinding.ensureInitialized();

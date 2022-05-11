@@ -38,7 +38,8 @@ export 'src/auth/oauth/providers/facebook_provider.dart'
     show FacebookProviderConfiguration;
 
 export 'src/auth/widgets/auth_flow_builder.dart';
-export 'src/auth/widgets/email_form.dart' show EmailForm, ForgotPasswordAction;
+export 'src/auth/widgets/email_form.dart'
+    show EmailForm, ForgotPasswordAction, EmailFormStyle;
 export 'src/auth/widgets/error_text.dart' show ErrorText;
 export 'src/auth/widgets/phone_verification_button.dart'
     show PhoneVerificationButton;
@@ -93,6 +94,10 @@ export 'src/auth/configs/phone_provider_configuration.dart';
 export 'src/auth/configs/oauth_provider_configuration.dart';
 export 'src/auth/configs/email_link_provider_configuration.dart';
 export 'src/auth/configs/provider_configuration.dart';
+
+export 'src/auth/styling/theme.dart' show FlutterFireUITheme;
+export 'src/auth/styling/style.dart' show FlutterFireUIStyle;
+export 'src/auth/widgets/internal/universal_button.dart' show ButtonVariant;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

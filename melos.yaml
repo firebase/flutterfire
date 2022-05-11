@@ -9,8 +9,8 @@ command:
   version:
     # Generate commit links in package changelogs.
     linkToCommits: true
-    # Only allow versioning to happen on main branch.
-    branch: master
+    # # Only allow versioning to happen on main branch.
+    # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
 

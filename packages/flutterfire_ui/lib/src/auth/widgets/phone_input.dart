@@ -270,7 +270,6 @@ class PhoneInputState extends State<PhoneInput> {
                   autofillHints: const [
                     AutofillHints.telephoneNumberCountryCode
                   ],
-                  autofocus: false,
                   controller: countryController,
                   prefix: const Text('+'),
                   placeholder: l.countryCode,

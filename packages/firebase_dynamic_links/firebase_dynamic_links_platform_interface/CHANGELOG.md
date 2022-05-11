@@ -1,3 +1,19 @@
+## 0.2.3+1
+
+ - Update a dependency to the latest release.
+
+## 0.2.3
+
+ - **FEAT**: `matchType` for pending Dynamic Link data for `iOS`. (#8464). ([d3dda125](https://github.com/FirebaseExtended/flutterfire/commit/d3dda12563eb28e565c2c01d348183d558e25335))
+
+## 0.2.2+3
+
+ - Update a dependency to the latest release.
+
+## 0.2.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.2.2+1
 
  - **FIX**: Properly type cast utmParameters coming from native side. (#8280). ([22bbd807](https://github.com/FirebaseExtended/flutterfire/commit/22bbd807d2b3c3f9d9cc8ba817ccb4da931ae887))

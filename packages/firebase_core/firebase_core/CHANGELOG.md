@@ -1,3 +1,22 @@
+## 1.16.0
+
+ - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android (#8566). ([30216c4a](https://github.com/FirebaseExtended/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
+
+## 1.15.0
+
+ - **FEAT**: bump Firebase Android SDK to `29.3.1` (#8494). ([17b9c289](https://github.com/FirebaseExtended/flutterfire/commit/17b9c2894ee901afd2631664b01829cd4df1dd16))
+ - **FEAT**: Update Firebase iOS SDK to `8.15.0` (#8454). ([faaf4496](https://github.com/FirebaseExtended/flutterfire/commit/faaf449624ff4081cbbc0f241fec3134492cbdb3))
+
+## 1.14.1
+
+ - Update a dependency to the latest release.
+
+## 1.14.0
+
+ - **FEAT**: Bump Firebase iOS SDK to `8.14.0`. (#8370). ([41bb9800](https://github.com/FirebaseExtended/flutterfire/commit/41bb98004327013f90c93709513c419d04382475))
+ - **FEAT**: bump Firebase Android SDK to `29.3.0` (#8283). ([a6c646a0](https://github.com/FirebaseExtended/flutterfire/commit/a6c646a0d23600e5e4ae6d40ca4b23c7e73fc257))
+ - **DOCS**: Update inline code documentation for initializing Firebase app. (#8329). ([19727798](https://github.com/FirebaseExtended/flutterfire/commit/19727798a8dcfde103665eb8209b714e49327a11))
+
 ## 1.13.1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

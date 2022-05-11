@@ -1,3 +1,23 @@
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
+## 9.1.6
+
+ - **REFACTOR**: Update deployment target to `10.0` for Firebase Analytics podspec. (#8371). ([fe709da9](https://github.com/FirebaseExtended/flutterfire/commit/fe709da998162a3b884070df6666690ae560d0d1))
+
+## 9.1.5
+
+ - Update a dependency to the latest release.
+
+## 9.1.4
+
+ - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/FirebaseExtended/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
+
+## 9.1.3
+
+ - Update a dependency to the latest release.
+
 ## 9.1.2
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

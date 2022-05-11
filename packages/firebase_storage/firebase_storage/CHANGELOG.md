@@ -1,3 +1,27 @@
+## 10.2.15
+
+ - Update a dependency to the latest release.
+
+## 10.2.14
+
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8421). ([461bba5a](https://github.com/FirebaseExtended/flutterfire/commit/461bba5a510b341b3b9bd414c9412944714e9305))
+
+## 10.2.13
+
+ - Update a dependency to the latest release.
+
+## 10.2.12
+
+ - Update a dependency to the latest release.
+
+## 10.2.11
+
+ - **FIX**: Fix `UploadTask.cancel()` so that it completes when called. (#8417). ([19ee62c3](https://github.com/FirebaseExtended/flutterfire/commit/19ee62c33f34278dac082c11bf7574785e60abb5))
+
+## 10.2.10
+
+ - Update a dependency to the latest release.
+
 ## 10.2.9
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

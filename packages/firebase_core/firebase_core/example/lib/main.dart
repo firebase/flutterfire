@@ -3,9 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'package:firebase_core_example/firebase_config.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() => runApp(const MyApp());
 
@@ -14,23 +15,27 @@ class MyApp extends StatelessWidget {
 
   String get name => 'foo';
 
-  FirebaseOptions get firebaseOptions => const FirebaseOptions(
-        appId: '1:448618578101:ios:0b650370bb29e29cac3efc',
-        apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
-        projectId: 'react-native-firebase-testing',
-        messagingSenderId: '448618578101',
-      );
-
   Future<void> initializeDefault() async {
     FirebaseApp app = await Firebase.initializeApp(
-      options: DefaultFirebaseConfig.platformOptions,
+      options: DefaultFirebaseOptions.currentPlatform,
     );
     print('Initialized default app $app');
   }
 
+  Future<void> initializeDefaultFromAndroidResource() async {
+    if (defaultTargetPlatform != TargetPlatform.android || kIsWeb) {
+      print('Not running on Android, skipping');
+      return;
+    }
+    FirebaseApp app = await Firebase.initializeApp();
+    print('Initialized default app $app from Android resource');
+  }
+
   Future<void> initializeSecondary() async {
-    FirebaseApp app =
-        await Firebase.initializeApp(name: name, options: firebaseOptions);
+    FirebaseApp app = await Firebase.initializeApp(
+      name: name,
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     print('Initialized $app');
   }
@@ -41,9 +46,9 @@ class MyApp extends StatelessWidget {
   }
 
   void options() {
-    final FirebaseApp app = Firebase.app(name);
+    final FirebaseApp app = Firebase.app();
     final options = app.options;
-    print('Current options for app $name: $options');
+    print('Current options for app ${app.name}: $options');
   }
 
   Future<void> delete() async {
@@ -69,21 +74,28 @@ class MyApp extends StatelessWidget {
                 onPressed: initializeDefault,
                 child: const Text('Initialize default app'),
               ),
+              if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb)
+                ElevatedButton(
+                  onPressed: initializeDefaultFromAndroidResource,
+                  child: const Text(
+                    'Initialize default app from Android resources',
+                  ),
+                ),
               ElevatedButton(
                 onPressed: initializeSecondary,
                 child: const Text('Initialize secondary app'),
               ),
               ElevatedButton(
                 onPressed: apps,
-                child: const Text('Get apps'),
+                child: const Text('List apps'),
               ),
               ElevatedButton(
                 onPressed: options,
-                child: const Text('List options'),
+                child: const Text('List default options'),
               ),
               ElevatedButton(
                 onPressed: delete,
-                child: const Text('Delete app'),
+                child: const Text('Delete secondary app'),
               ),
             ],
           ),

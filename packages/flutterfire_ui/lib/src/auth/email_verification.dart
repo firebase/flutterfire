@@ -30,7 +30,10 @@ class EmailVerificationService extends ValueNotifier<EmailVerificationState> {
 
   Future<void> reload() async {
     await user.reload();
-    if (user.emailVerified) {
+
+    if (user.email == null) {
+      value = EmailVerificationState.unresolved;
+    } else if (user.emailVerified) {
       value = EmailVerificationState.verified;
     } else {
       value = EmailVerificationState.unverified;

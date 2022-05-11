@@ -1,3 +1,23 @@
+## 2.3.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 2.2.13
+
+ - Update a dependency to the latest release.
+
+## 2.2.12
+
+ - Update a dependency to the latest release.
+
+## 2.2.11
+
+ - Update a dependency to the latest release.
+
+## 2.2.10
+
+ - Update a dependency to the latest release.
+
 ## 2.2.9
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

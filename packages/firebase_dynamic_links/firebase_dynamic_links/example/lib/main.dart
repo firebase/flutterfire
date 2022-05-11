@@ -10,19 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'firebase_options.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // iOS requires you run in release mode to test dynamic links ("flutter run --release").
   await Firebase.initializeApp(
-    options: const FirebaseOptions(
-      apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-      appId: '1:448618578101:ios:3e76955ab6d49ecaac3efc',
-      messagingSenderId: '448618578101',
-      projectId: 'react-native-firebase-testing',
-      authDomain: 'react-native-firebase-testing.firebaseapp.com',
-      iosClientId:
-          '448618578101-4km55qmv55tguvnivgjdiegb3r0jquv5.apps.googleusercontent.com',
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
 
   runApp(
@@ -166,7 +160,7 @@ class _MainScreenState extends State<_MainScreen> {
                   InkWell(
                     onTap: () async {
                       if (_linkMessage != null) {
-                        await launch(_linkMessage!);
+                        await launchUrl(Uri.parse(_linkMessage!));
                       }
                     },
                     onLongPress: () {

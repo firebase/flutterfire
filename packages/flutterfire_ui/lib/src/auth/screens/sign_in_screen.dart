@@ -19,12 +19,14 @@ class SignInScreen extends MultiProviderScreen {
   final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
+  final bool? resizeToAvoidBottomInset;
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
   final List<FlutterFireUIAction> actions;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const SignInScreen({
     Key? key,
@@ -35,6 +37,7 @@ class SignInScreen extends MultiProviderScreen {
     this.sideBuilder,
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
+    this.resizeToAvoidBottomInset = false,
     this.showAuthActionSwitch,
     this.email,
     this.subtitleBuilder,
@@ -42,6 +45,7 @@ class SignInScreen extends MultiProviderScreen {
     this.loginViewKey,
     this.actions = const [],
     this.breakpoint = 800,
+    this.styles,
   }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<void> _signInWithDifferentProvider(
@@ -76,6 +80,7 @@ class SignInScreen extends MultiProviderScreen {
     return FlutterFireUIActions(
       actions: _actions,
       child: LoginScreen(
+        styles: styles,
         loginViewKey: loginViewKey,
         action: AuthAction.signIn,
         providerConfigs: providerConfigs,
@@ -86,6 +91,7 @@ class SignInScreen extends MultiProviderScreen {
         desktopLayoutDirection: desktopLayoutDirection,
         oauthButtonVariant: oauthButtonVariant,
         email: email,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
         showAuthActionSwitch: showAuthActionSwitch,
         subtitleBuilder: subtitleBuilder,
         footerBuilder: footerBuilder,

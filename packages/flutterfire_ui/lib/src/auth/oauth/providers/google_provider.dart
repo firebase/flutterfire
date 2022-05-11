@@ -24,8 +24,12 @@ abstract class GoogleProvider extends OAuthProvider {}
 class GoogleProviderImpl extends GoogleProvider with SignOutMixin {
   String clientId;
   String redirectUri;
+  List<String> scopes;
 
-  late final provider = GoogleSignIn(clientId: clientId);
+  late final provider = GoogleSignIn(
+    clientId: clientId,
+    scopes: scopes,
+  );
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
@@ -34,11 +38,13 @@ class GoogleProviderImpl extends GoogleProvider with SignOutMixin {
   late final desktopSignInArgs = GoogleSignInArgs(
     clientId: clientId,
     redirectUri: redirectUri,
+    scope: scopes.join(' '),
   );
 
   GoogleProviderImpl({
     required this.clientId,
     required this.redirectUri,
+    this.scopes = const [],
   }) {
     firebaseAuthProvider.setCustomParameters(_firebaseAuthProviderParameters);
   }
@@ -79,15 +85,18 @@ class GoogleProviderConfiguration
     extends OAuthProviderConfiguration<GoogleProvider> {
   final String clientId;
   final String? redirectUri;
+  final List<String> scopes;
 
   GoogleProviderImpl get _provider => GoogleProviderImpl(
         clientId: clientId,
         redirectUri: redirectUri ?? defaultRedirectUri,
+        scopes: scopes,
       );
 
   const GoogleProviderConfiguration({
     required this.clientId,
     this.redirectUri,
+    this.scopes = const [],
   });
 
   @override
