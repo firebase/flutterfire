@@ -167,6 +167,16 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String credentialAlreadyInUseErrorText;
+  @override
+  final String verifyEmailTitleText;
+  @override
+  final String emailVerificationInstructionText;
+  @override
+  final String couldntVerifyEmailText;
+  @override
+  final String resendVerificationEmailButtonLabel;
 
   const TrLocalizations({
     this.emailInputLabel = 'E-mail',
@@ -241,6 +251,16 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         'Sana sihirli bir link ile bir email gönderdik. Emailinizi kontrol edin ve oturum açmak için bağlantıyı takip edin',
     this.sendLinkButtonLabel = 'Sihirli bağlantı gönder',
+    this.credentialAlreadyInUseErrorText =
+        'Bu kimlik bilgisi zaten farklı bir kullanıcı hesabıyla ilişkilidir.',
+    this.verifyEmailTitleText = 'E-mail adresini doğrula',
+    this.emailVerificationInstructionText =
+        'Doğrulama maili e-mail adresinize gönderildi. '
+            "Lütfen e-mail'inizi kontrol edin ve e-mail adresinizi "
+            'doğrulamak için bağlantıya tıklayın.',
+    this.couldntVerifyEmailText = 'E-mail adresinizi doğrulayamadık.',
+    this.resendVerificationEmailButtonLabel =
+        'Doğrulama mailini yeniden gönder',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',

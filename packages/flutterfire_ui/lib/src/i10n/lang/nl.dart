@@ -167,6 +167,16 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String credentialAlreadyInUseErrorText;
+  @override
+  final String verifyEmailTitleText;
+  @override
+  final String emailVerificationInstructionText;
+  @override
+  final String couldntVerifyEmailText;
+  @override
+  final String resendVerificationEmailButtonLabel;
 
   const NlLocalizations({
     this.emailInputLabel = 'E-mailadres',
@@ -242,6 +252,15 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         'We hebben een e-mail met een magic link gestuurd. Controleer je e-mail en klik op de link om in te loggen',
     this.sendLinkButtonLabel = 'Stuur magic link',
+    this.credentialAlreadyInUseErrorText =
+        'Deze inloggegevens zijn al in gebruik voor een ander account.',
+    this.verifyEmailTitleText = 'Verifieer uw e-mailadres',
+    this.emailVerificationInstructionText =
+        'Een verificatie e-mail is naar uw e-mailadres gestuurd. '
+            'Controleer uw e-mail en klik op de link om uw e-mailadres te verifiëren.',
+    this.couldntVerifyEmailText = 'We konden uw e-mailadres niet verifiëren.',
+    this.resendVerificationEmailButtonLabel =
+        'Verificatie e-mail opnieuw versturen',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',

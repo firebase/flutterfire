@@ -167,6 +167,16 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
   final String geopointLabel;
   @override
   final String referenceLabel;
+  @override
+  final String credentialAlreadyInUseErrorText;
+  @override
+  final String verifyEmailTitleText;
+  @override
+  final String emailVerificationInstructionText;
+  @override
+  final String couldntVerifyEmailText;
+  @override
+  final String resendVerificationEmailButtonLabel;
 
   const FrLocalizations({
     this.emailInputLabel = 'Email',
@@ -245,6 +255,17 @@ class FrLocalizations extends FlutterFireUILocalizationLabels {
     this.signInWithEmailLinkSentText =
         'Nous vous avons envoyé un email avec un lien magique. Vérifiez vos emails et clickez sur le lien pour vous connecter',
     this.sendLinkButtonLabel = 'Envoyer un lien magique',
+    this.credentialAlreadyInUseErrorText =
+        'Ces informations sont déjà associées à un autre compte.',
+    this.verifyEmailTitleText = 'Veuillez vérifier votre adresse email',
+    this.emailVerificationInstructionText =
+        'Un email de vérification vous a été envoyé. '
+            'Veuillez examiner vos emails et cliquer sur le lien pour vérifier '
+            'votre adresse email.',
+    this.couldntVerifyEmailText =
+        "Nous n'avons pas réussi à vérifier votre adresse email.",
+    this.resendVerificationEmailButtonLabel =
+        'Renvoyer un mail de vérification',
     this.arrayLabel = 'liste',
     this.booleanLabel = 'booléen',
     this.mapLabel = 'map',
