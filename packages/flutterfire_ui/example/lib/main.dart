@@ -114,6 +114,9 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/email-link-sign-in');
               }),
             ],
+            styles: const {
+              EmailFormStyle(signInButtonVariant: ButtonVariant.filled),
+            },
             headerBuilder: headerImage('assets/images/flutterfire_logo.png'),
             sideBuilder: sideImage('assets/images/flutterfire_logo.png'),
             subtitleBuilder: (context, action) {
