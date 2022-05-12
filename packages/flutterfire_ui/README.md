@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-Learn more in the [Integrating your first screen section](docs/auth/integrating-your-first-screen.md) of the documentation
+Learn more in the [Integrating your first screen section](doc/auth/integrating-your-first-screen.md) of the documentation
 
 ## Roadmap / Features
 
