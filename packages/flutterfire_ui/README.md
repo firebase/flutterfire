@@ -72,6 +72,6 @@ Please contribute to the [discussion](https://github.com/FirebaseExtended/flutte
 
 Once installed, you can read the following documentation to learn more about the FlutterFire UI widgets and utilities:
 
-- [Authentication](docs/auth.md)
-- [Firestore](docs/firestore.md)
-- [Realtime Database](docs/database.md)
+- [Authentication](doc/auth.md)
+- [Firestore](doc/firestore.md)
+- [Realtime Database](doc/database.md)
