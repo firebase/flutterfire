@@ -17,12 +17,12 @@ import 'simple.dart';
 
 void main() {
   nestedRef.doc('42').update(
-    value: null,
     // expect-error: undefined_named_parameter
+    value: null,
   );
   nestedRef.doc('42').update(
-    valueList: null,
     // expect-error: undefined_named_parameter
+    valueList: null,
   );
   nestedRef.doc('42').update(
     boolList: null,
