@@ -37,7 +37,7 @@ FlutterFire uses [Melos](https://github.com/invertase/melos) to manage the proje
 To install Melos, run the following command from your SSH client:
 
 ```bash
-pub global activate melos
+dart pub global activate melos
 ```
 
 Next, at the root of your locally cloned repository bootstrap the projects dependencies:
