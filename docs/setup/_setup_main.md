@@ -52,11 +52,10 @@ flutterfire configure
 >     managing your Firebase project:
 >
 >     <ul>
->       <li>Visit
->         <a href="/docs/projects/learn-more#best-practices">Understand Firebase
->           Projects</a> to learn more about best practices and considerations
+>       <li>Check out our
+>         <a href="/docs/projects/dev-workflows/general-best-practices">best practices</a>
 >         for adding apps to a Firebase project, including how to handle
->         multiple build variants.
+>         multiple variants.
 >       </li>
 >       <li><a href="https://support.google.com/firebase/answer/9289399#linkga" class="external">
 >         Enable {{firebase_analytics}}</a>
@@ -112,6 +111,13 @@ flutterfire configure
     flutter pub add firebase_core
     ```
 
+1.  From your Flutter project directory, run the following command to ensure
+    that your Flutter app's Firebase configuration is up-to-date:
+
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
+    flutterfire configure
+    ```
+
 1.  In your `lib/main.dart` file, import the Firebase core plugin and the
     configuration file you generated earlier:
 
@@ -153,7 +159,17 @@ Here's how to add a Firebase Flutter plugin:
 
     <pre class="devsite-terminal devsite-click-to-copy" data-terminal-prefix="your-flutter-proj$ ">flutter pub add <var>PLUGIN_NAME</var></pre>
 
-1.  Once complete, rebuild your Flutter application:
+1.  From your Flutter project directory, run the following command:
+
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
+    flutterfire configure
+    ```
+
+    Running this command ensures that your Flutter app's Firebase configuration
+    is up-to-date and, for {{crashlytics}} and {{perfmon}} on Android, adds the
+    required Gradle plugins to your app.
+
+1.  Once complete, rebuild your Flutter project:
 
     ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
     flutter run
@@ -233,18 +249,18 @@ guides for [iOS+](/docs/analytics/get-started?platform=ios),
 
 {# The above line includes a Google-internal file, which isn't on GitHub. #}
 
-[analytics docs]: https://firebase.flutter.dev/docs/analytics/overview
-[app check docs]: https://firebase.flutter.dev/docs/app-check/overview
-[auth docs]: https://firebase.flutter.dev/docs/auth/overview
-[firestore docs]: https://firebase.flutter.dev/docs/firestore/overview
-[functions docs]: https://firebase.flutter.dev/docs/functions/overview
-[fcm docs]: https://firebase.flutter.dev/docs/messaging/overview
-[storage docs]: https://firebase.flutter.dev/docs/storage/overview
-[crashlytics docs]: https://firebase.flutter.dev/docs/crashlytics/overview
-[ddls docs]: https://firebase.flutter.dev/docs/dynamic-links/overview
-[fiam docs]: https://firebase.flutter.dev/docs/in-app-messaging/overview
-[installations docs]: https://firebase.flutter.dev/docs/installations/overview
-[ml docs]: https://firebase.flutter.dev/docs/ml-model-downloader/overview
-[perfmon docs]: https://firebase.flutter.dev/docs/performance/overview
-[rtdb docs]: https://firebase.flutter.dev/docs/database/overview
-[remote config docs]: https://firebase.flutter.dev/docs/remote-config/overview
+[analytics docs]: /docs/analytics/get-started?platform=flutter
+[app check docs]: /docs/app-check/flutter/default-providers
+[auth docs]: /docs/auth/flutter/start
+[firestore docs]: /docs/firestore/quickstart
+[functions docs]: /docs/functions/get-started
+[fcm docs]: /docs/cloud-messaging/flutter/client
+[storage docs]: /docs/storage/flutter/start
+[crashlytics docs]: /docs/crashlytics/get-started?platform=flutter
+[ddls docs]: /docs/dynamic-links/flutter/create
+[fiam docs]: /docs/in-app-messaging/get-started?platform=flutter
+[installations docs]: /docs/projects/manage-installations
+[ml docs]: /docs/ml/flutter/use-custom-models
+[perfmon docs]: /docs/perf-mon/flutter/get-started
+[rtdb docs]: /docs/database/flutter/start
+[remote config docs]: /docs/remote-config/get-started?platform=flutter

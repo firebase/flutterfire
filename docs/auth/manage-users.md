@@ -10,7 +10,7 @@ Book: /docs/_book.yaml
 You create a new user in your Firebase project in four ways:
 
 - Call the `createUserWithEmailAndPassword()` method.
-- Sign in a user for the first time using a [federated identity provider](social),
+- Sign in a user for the first time using a [federated identity provider](/docs/auth/flutter/federated-auth),
   such as Google Sign-In, Facebook Login, or Apple.
 
 You can also create new password-authenticated users from the Authentication
