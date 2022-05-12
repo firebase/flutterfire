@@ -37,7 +37,7 @@ void main() {
     objectList: null,
   );
   nestedRef.doc('42').update(
-    dyanmicList: null,
+    dynamicList: null,
   );  
 }
 ''',
