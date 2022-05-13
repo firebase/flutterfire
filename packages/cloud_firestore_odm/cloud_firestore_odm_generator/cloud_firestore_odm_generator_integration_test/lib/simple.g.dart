@@ -73,6 +73,10 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 
   @override
   SplitFileModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SplitFileModelDocumentReference(
       reference.doc(id),
     );
@@ -368,6 +372,10 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 
   @override
   EmptyModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return EmptyModelDocumentReference(
       reference.doc(id),
     );
@@ -659,6 +667,10 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
 
   @override
   OptionalJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return OptionalJsonDocumentReference(
       reference.doc(id),
     );
@@ -1061,6 +1073,10 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 
   @override
   MixedJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MixedJsonDocumentReference(
       reference.doc(id),
     );
@@ -1458,6 +1474,10 @@ class _$RootCollectionReference extends _$RootQuery
 
   @override
   RootDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return RootDocumentReference(
       reference.doc(id),
     );
@@ -1986,6 +2006,10 @@ class _$SubCollectionReference extends _$SubQuery
 
   @override
   SubDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SubDocumentReference(
       reference.doc(id),
     );
@@ -2497,6 +2521,10 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
 
   @override
   AsCamelCaseDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return AsCamelCaseDocumentReference(
       reference.doc(id),
     );
@@ -2917,6 +2945,10 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 
   @override
   CustomSubNameDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return CustomSubNameDocumentReference(
       reference.doc(id),
     );
@@ -3329,6 +3361,10 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
 
   @override
   ExplicitPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitPathDocumentReference(
       reference.doc(id),
     );
@@ -3749,6 +3785,10 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 
   @override
   ExplicitSubPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitSubPathDocumentReference(
       reference.doc(id),
     );
