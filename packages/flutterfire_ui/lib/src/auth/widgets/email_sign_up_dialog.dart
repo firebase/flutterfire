@@ -21,33 +21,37 @@ class EmailSignUpDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = FlutterFireUILocalizations.labelsOf(context);
 
-    return Center(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 500),
-        child: Dialog(
-          child: AuthStateListener<EmailFlowController>(
-            listener: (oldState, newState, ctrl) {
-              if (newState is CredentialLinked) {
-                Navigator.of(context).pop();
-              }
+    return SingleChildScrollView(
+      child: Center(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Dialog(
+              child: AuthStateListener<EmailFlowController>(
+                listener: (oldState, newState, ctrl) {
+                  if (newState is CredentialLinked) {
+                    Navigator.of(context).pop();
+                  }
 
-              return null;
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 16),
-                  Title(text: l.provideEmail),
-                  const SizedBox(height: 32),
-                  EmailForm(
-                    auth: auth,
-                    action: action,
-                    config: config,
+                  return null;
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 16),
+                      Title(text: l.provideEmail),
+                      const SizedBox(height: 32),
+                      EmailForm(
+                        auth: auth,
+                        action: action,
+                        config: config,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
