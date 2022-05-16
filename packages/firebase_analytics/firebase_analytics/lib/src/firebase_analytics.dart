@@ -69,6 +69,12 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return _delegate.isSupported();
   }
 
+  /// Retrieves the app instance id from the service, or null if consent has
+  /// been denied.
+  Future<String?> get appInstanceId {
+    return _delegate.getAppInstanceId();
+  }
+
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
     required String name,

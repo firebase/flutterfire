@@ -68,6 +68,11 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
     throw UnimplementedError('isSupported() is not implemented');
   }
 
+  /// Retrieves the app instance id from the service.
+  Future<String?> getAppInstanceId() {
+    throw UnimplementedError('getAppInstanceId() is not implemented');
+  }
+
   /// Logs the given event [name] with the given [parameters].
   Future<void> logEvent({
     required String name,
