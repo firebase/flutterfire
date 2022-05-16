@@ -43,7 +43,7 @@ dart pub global activate melos
 Next, at the root of your locally cloned repository bootstrap the projects dependencies:
 
 ```bash
-melos bootstrap
+melos bootstrap --flutter
 ```
 
 The bootstrap command locally links all dependencies within the project without having to
