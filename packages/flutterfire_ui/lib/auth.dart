@@ -38,7 +38,8 @@ export 'src/auth/oauth/providers/facebook_provider.dart'
     show FacebookProviderConfiguration;
 
 export 'src/auth/widgets/auth_flow_builder.dart';
-export 'src/auth/widgets/email_form.dart' show EmailForm, ForgotPasswordAction;
+export 'src/auth/widgets/email_form.dart'
+    show EmailForm, ForgotPasswordAction, EmailFormStyle;
 export 'src/auth/widgets/error_text.dart' show ErrorText;
 export 'src/auth/widgets/phone_verification_button.dart'
     show PhoneVerificationButton;
@@ -76,21 +77,27 @@ export 'src/auth/screens/phone_input_screen.dart';
 export 'src/auth/screens/sms_code_input_screen.dart';
 export 'src/auth/screens/sign_in_screen.dart';
 export 'src/auth/screens/register_screen.dart';
-export 'src/auth/screens/profile_screen.dart';
+export 'src/auth/screens/profile_screen.dart' show ProfileScreen;
 export 'src/auth/screens/forgot_password_screen.dart';
 export 'src/auth/screens/universal_email_sign_in_screen.dart';
 export 'src/auth/screens/email_link_sign_in_screen.dart';
+export 'src/auth/screens/email_verification_screen.dart';
 
 export 'src/auth/navigation/phone_verification.dart';
 export 'src/auth/navigation/forgot_password.dart';
 export 'src/auth/navigation/authentication.dart';
 export 'src/auth/actions.dart';
+export 'src/auth/email_verification.dart';
 
 export 'src/auth/configs/email_provider_configuration.dart';
 export 'src/auth/configs/phone_provider_configuration.dart';
 export 'src/auth/configs/oauth_provider_configuration.dart';
 export 'src/auth/configs/email_link_provider_configuration.dart';
 export 'src/auth/configs/provider_configuration.dart';
+
+export 'src/auth/styling/theme.dart' show FlutterFireUITheme;
+export 'src/auth/styling/style.dart' show FlutterFireUIStyle;
+export 'src/auth/widgets/internal/universal_button.dart' show ButtonVariant;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

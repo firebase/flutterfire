@@ -14,21 +14,10 @@ class UserCreated extends AuthState {
   UserCreated(this.credential);
 }
 
-class AwaitingEmailVerification extends AuthState {}
-
-class EmailVerificationFailed extends AuthState {
-  final Exception exception;
-
-  EmailVerificationFailed(this.exception);
-}
-
-class EmailVerified extends AuthState {}
-
 class SigningUp extends AuthState {}
 
 abstract class EmailFlowController extends AuthController {
   void setEmailAndPassword(String email, String password);
-  Future<void> verifyEmail([ActionCodeSettings? actionCodeSettings]);
 }
 
 class EmailFlow extends AuthFlow implements EmailFlowController {
@@ -55,27 +44,6 @@ class EmailFlow extends AuthFlow implements EmailFlowController {
     );
 
     setCredential(credential);
-  }
-
-  @override
-  Future<void> verifyEmail([ActionCodeSettings? actionCodeSettings]) async {
-    final settings = actionCodeSettings ?? config.actionCodeSettings;
-
-    value = AwaitingEmailVerification();
-    await auth.currentUser!.sendEmailVerification(settings);
-    final linkData =
-        await (dynamicLinks ?? FirebaseDynamicLinks.instance).onLink.first;
-
-    try {
-      final code = linkData.link.queryParameters['oobCode']!;
-      await auth.checkActionCode(code);
-      await auth.applyActionCode(code);
-      await auth.currentUser!.reload();
-
-      value = EmailVerified();
-    } on Exception catch (e) {
-      value = EmailVerificationFailed(e);
-    }
   }
 
   @override

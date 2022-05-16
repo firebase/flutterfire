@@ -1,3 +1,24 @@
+## 3.1.15
+
+ - Update a dependency to the latest release.
+
+## 3.1.14
+
+ - Update a dependency to the latest release.
+
+## 3.1.13
+
+ - Update a dependency to the latest release.
+
+## 3.1.12
+
+ - Update a dependency to the latest release.
+
+## 3.1.11
+
+ - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/FirebaseExtended/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
+ - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/FirebaseExtended/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
+
 ## 3.1.10
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

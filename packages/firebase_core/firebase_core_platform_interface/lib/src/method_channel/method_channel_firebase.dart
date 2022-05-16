@@ -79,23 +79,37 @@ class MethodChannelFirebase extends FirebasePlatform {
     if (name == null || name == defaultFirebaseAppName) {
       MethodChannelFirebaseApp? defaultApp =
           appInstances[defaultFirebaseAppName];
+      FirebaseOptions? _options = options;
+      // If no default app and no options are provided then
+      // attempt to read options from native resources on Android,
+      // e.g. this calls to `FirebaseOptions.fromResource(context)`.
+      if (defaultTargetPlatform == TargetPlatform.android &&
+          defaultApp == null &&
+          _options == null) {
+        final optionsMap = await channel.invokeMapMethod(
+          'Firebase#optionsFromResource',
+        );
+        if (optionsMap != null) {
+          _options = FirebaseOptions.fromMap(optionsMap);
+        }
+      }
 
-      // If options are present & no default app has been setup, the user is
-      // trying to initialize default from dart
-      if (defaultApp == null && options != null) {
+      // If no options are present & no default app has been setup, the user is
+      // trying to initialize default from Dart
+      if (defaultApp == null && _options != null) {
         _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
           'Firebase#initializeApp',
           <String, dynamic>{
             'appName': defaultFirebaseAppName,
-            'options': options.asMap
+            'options': _options.asMap
           },
         ))!);
         defaultApp = appInstances[defaultFirebaseAppName];
       }
 
-      // If there is no native default app and the user didnt provide options to
+      // If there is no native default app and the user didn't provide options to
       // create one, throw.
-      if (defaultApp == null && options == null) {
+      if (defaultApp == null && _options == null) {
         throw coreNotInitialized();
       }
 
@@ -103,12 +117,12 @@ class MethodChannelFirebase extends FirebasePlatform {
       // check to see if options are roughly identical (so we don't unnecessarily
       // throw on minor differences such as platform specific keys missing
       // e.g. hot reloads/restarts).
-      if (defaultApp != null && options != null) {
-        if (options.apiKey != defaultApp.options.apiKey ||
-            (options.databaseURL != null &&
-                options.databaseURL != defaultApp.options.databaseURL) ||
-            (options.storageBucket != null &&
-                options.storageBucket != defaultApp.options.storageBucket)) {
+      if (defaultApp != null && _options != null) {
+        if (_options.apiKey != defaultApp.options.apiKey ||
+            (_options.databaseURL != null &&
+                _options.databaseURL != defaultApp.options.databaseURL) ||
+            (_options.storageBucket != null &&
+                _options.storageBucket != defaultApp.options.storageBucket)) {
           // Options are different; throw.
           throw duplicateApp(defaultFirebaseAppName);
         }

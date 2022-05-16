@@ -19,6 +19,9 @@ String? localizedErrorText(
       return labels.accessDisabledErrorText;
     case 'wrong-password':
       return labels.wrongOrNoPasswordErrorText;
+    case 'credential-already-in-use':
+      // TODO(lesnitsky): add translation
+      return 'This credential is already associated with a different user account.';
 
     default:
       return null;

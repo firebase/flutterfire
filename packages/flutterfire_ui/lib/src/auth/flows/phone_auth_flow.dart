@@ -94,12 +94,30 @@ class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
   }
 
   Future<void> _webSignIn(String phoneNumber) async {
-    final result = await auth.signInWithPhoneNumber(phoneNumber);
+    ConfirmationResult result;
+    bool shouldLink = auth.currentUser != null;
+
+    if (shouldLink) {
+      result = await auth.currentUser!.linkWithPhoneNumber(phoneNumber);
+    } else {
+      result = await auth.signInWithPhoneNumber(phoneNumber);
+    }
+
     value = SMSCodeSent();
 
     final smsCode = await _smsCodeCompleter.future;
     final userCredential = await result.confirm(smsCode);
-    value = SignedIn(userCredential.user);
+
+    if (shouldLink) {
+      value = CredentialLinked(
+        PhoneAuthProvider.credential(
+          verificationId: result.verificationId,
+          smsCode: smsCode,
+        ),
+      );
+    } else {
+      value = SignedIn(userCredential.user);
+    }
   }
 }
 
