@@ -8,12 +8,14 @@
 #import "FLTFirebaseDatabasePlugin.h"
 #import "FLTFirebaseDatabaseUtils.h"
 
-NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_database";
+NSString *const kFLTFirebaseDatabaseChannelName =
+    @"plugins.flutter.io/firebase_database";
 
 @implementation FLTFirebaseDatabasePlugin {
   // Used by FlutterStreamHandlers.
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
-  NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *> *_streamHandlers;
+  NSMutableDictionary<NSString *, FLTFirebaseDatabaseObserveStreamHandler *>
+      *_streamHandlers;
   // Used by transactions.
   FlutterMethodChannel *_channel;
   int _listenerCount;
@@ -34,11 +36,12 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseDatabaseChannelName
-                                  binaryMessenger:[registrar messenger]];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:kFLTFirebaseDatabaseChannelName
+            binaryMessenger:[registrar messenger]];
   FLTFirebaseDatabasePlugin *instance =
-      [[FLTFirebaseDatabasePlugin alloc] init:[registrar messenger] andChannel:channel];
+      [[FLTFirebaseDatabasePlugin alloc] init:[registrar messenger]
+                                   andChannel:channel];
   [registrar addMethodCallDelegate:instance channel:channel];
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
 
@@ -60,59 +63,76 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   }
 }
 
-- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (void)detachFromEngineForRegistrar:
+    (NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:nil];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        if (code == nil) {
-          NSArray *codeAndErrorMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
-          code = codeAndErrorMessage[0];
-          message = codeAndErrorMessage[1];
-          details = @{
-            @"code" : code,
-            @"message" : message,
-          };
-        }
-        if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@", call.method);
-        }
-        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                            message:message
-                                                    optionalDetails:details
-                                                 andOptionalNSError:error]);
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)flutterResult {
+  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+      NSString *_Nullable code, NSString *_Nullable message,
+      NSDictionary *_Nullable details, NSError *_Nullable error) {
+    if (code == nil) {
+      NSArray *codeAndErrorMessage =
+          [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
+      code = codeAndErrorMessage[0];
+      message = codeAndErrorMessage[1];
+      details = @{
+        @"code" : code,
+        @"message" : message,
       };
+    }
+    if ([@"unknown" isEqualToString:code]) {
+      NSLog(@"FLTFirebaseDatabase: An error occurred while calling method %@",
+            call.method);
+    }
+    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                        message:message
+                                                optionalDetails:details
+                                             andOptionalNSError:error]);
+  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult
+                                       andErrorBlock:errorBlock];
 
   if ([@"FirebaseDatabase#goOnline" isEqualToString:call.method]) {
-    [self databaseGoOnline:call.arguments withMethodCallResult:methodCallResult];
+    [self databaseGoOnline:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDatabase#goOffline" isEqualToString:call.method]) {
-    [self databaseGoOffline:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FirebaseDatabase#purgeOutstandingWrites" isEqualToString:call.method]) {
-    [self databasePurgeOutstandingWrites:call.arguments withMethodCallResult:methodCallResult];
+    [self databaseGoOffline:call.arguments
+        withMethodCallResult:methodCallResult];
+  } else if ([@"FirebaseDatabase#purgeOutstandingWrites"
+                 isEqualToString:call.method]) {
+    [self databasePurgeOutstandingWrites:call.arguments
+                    withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#set" isEqualToString:call.method]) {
     [self databaseSet:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DatabaseReference#setWithPriority" isEqualToString:call.method]) {
-    [self databaseSetWithPriority:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"DatabaseReference#setWithPriority"
+                 isEqualToString:call.method]) {
+    [self databaseSetWithPriority:call.arguments
+             withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#update" isEqualToString:call.method]) {
     [self databaseUpdate:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"DatabaseReference#setPriority" isEqualToString:call.method]) {
-    [self databaseSetPriority:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"DatabaseReference#runTransaction" isEqualToString:call.method]) {
-    [self databaseRunTransaction:call.arguments withMethodCallResult:methodCallResult];
+    [self databaseSetPriority:call.arguments
+         withMethodCallResult:methodCallResult];
+  } else if ([@"DatabaseReference#runTransaction"
+                 isEqualToString:call.method]) {
+    [self databaseRunTransaction:call.arguments
+            withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#set" isEqualToString:call.method]) {
     [self onDisconnectSet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#setWithPriority" isEqualToString:call.method]) {
-    [self onDisconnectSetWithPriority:call.arguments withMethodCallResult:methodCallResult];
+    [self onDisconnectSetWithPriority:call.arguments
+                 withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#update" isEqualToString:call.method]) {
-    [self onDisconnectUpdate:call.arguments withMethodCallResult:methodCallResult];
+    [self onDisconnectUpdate:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"OnDisconnect#cancel" isEqualToString:call.method]) {
-    [self onDisconnectCancel:call.arguments withMethodCallResult:methodCallResult];
+    [self onDisconnectCancel:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Query#get" isEqualToString:call.method]) {
     [self queryGet:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Query#keepSynced" isEqualToString:call.method]) {
@@ -148,26 +168,32 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
 
 #pragma mark - Database API
 
-- (void)databaseGoOnline:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+- (void)databaseGoOnline:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabase *database =
+      [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
   [database goOnline];
   result.success(nil);
 }
 
-- (void)databaseGoOffline:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+- (void)databaseGoOffline:(id)arguments
+     withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabase *database =
+      [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
   [database goOffline];
   result.success(nil);
 }
 
 - (void)databasePurgeOutstandingWrites:(id)arguments
                   withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+  FIRDatabase *database =
+      [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
   [database purgeOutstandingWrites];
   result.success(nil);
 }
 
-- (void)databaseSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)databaseSet:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   [reference setValue:arguments[@"value"]
@@ -195,7 +221,8 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
       }];
 }
 
-- (void)databaseUpdate:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)databaseUpdate:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   [reference updateChildValues:arguments[@"value"]
@@ -232,11 +259,12 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   [reference
       runTransactionBlock:^FIRTransactionResult *(FIRMutableData *currentData) {
         __strong FLTFirebaseDatabasePlugin *strongSelf = weakSelf;
-        // Create semaphore to allow native side to wait while updates occur on the Dart side.
+        // Create semaphore to allow native side to wait while updates occur on
+        // the Dart side.
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
 
-        // Whether the transaction was aborted in Dart by the user or by a Dart exception
-        // occurring.
+        // Whether the transaction was aborted in Dart by the user or by a Dart
+        // exception occurring.
         __block bool aborted = false;
         // Whether an exception occurred in users Dart transaction handler.
         __block bool exception = false;
@@ -248,15 +276,16 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
           dispatch_semaphore_signal(semaphore);
         };
 
-        [strongSelf->_channel invokeMethod:@"FirebaseDatabase#callTransactionHandler"
-                                 arguments:@{
-                                   @"transactionKey" : @(transactionKey),
-                                   @"snapshot" : @{
-                                     @"key" : currentData.key ?: [NSNull null],
-                                     @"value" : currentData.value ?: [NSNull null],
-                                   }
-                                 }
-                                    result:methodCallResultHandler];
+        [strongSelf->_channel
+            invokeMethod:@"FirebaseDatabase#callTransactionHandler"
+               arguments:@{
+                 @"transactionKey" : @(transactionKey),
+                 @"snapshot" : @{
+                   @"key" : currentData.key ?: [NSNull null],
+                   @"value" : currentData.value ?: [NSNull null],
+                 }
+               }
+                  result:methodCallResultHandler];
         // Wait while Dart side updates the value.
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
@@ -265,20 +294,23 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
         }
         return [FIRTransactionResult successWithValue:currentData];
       }
-      andCompletionBlock:^(NSError *error, BOOL committed, FIRDataSnapshot *snapshot) {
+      andCompletionBlock:^(NSError *error, BOOL committed,
+                           FIRDataSnapshot *snapshot) {
         if (error != nil) {
           result.error(nil, nil, nil, error);
         } else {
           result.success(@{
             @"committed" : @(committed),
-            @"snapshot" : [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
+            @"snapshot" :
+                [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
           });
         }
       }
       withLocalEvents:[arguments[@"transactionApplyLocally"] boolValue]];
 }
 
-- (void)onDisconnectSet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)onDisconnectSet:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   [reference onDisconnectSetValue:arguments[@"value"]
@@ -311,7 +343,8 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   [reference onDisconnectUpdateChildValues:arguments[@"value"]
-                       withCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
+                       withCompletionBlock:^(NSError *error,
+                                             FIRDatabaseReference *ref) {
                          if (error != nil) {
                            result.error(nil, nil, nil, error);
                          } else {
@@ -324,48 +357,58 @@ NSString *const kFLTFirebaseDatabaseChannelName = @"plugins.flutter.io/firebase_
       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDatabaseReference *reference =
       [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
-  [reference
-      cancelDisconnectOperationsWithCompletionBlock:^(NSError *error, FIRDatabaseReference *ref) {
-        if (error != nil) {
-          result.error(nil, nil, nil, error);
-        } else {
-          result.success(nil);
-        }
-      }];
-}
-
-- (void)queryGet:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
-  [query getDataWithCompletionBlock:^(NSError *error, FIRDataSnapshot *snapshot) {
+  [reference cancelDisconnectOperationsWithCompletionBlock:^(
+                 NSError *error, FIRDatabaseReference *ref) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
-    } else
-      result.success(@{
-        @"snapshot" : [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
-      });
+    } else {
+      result.success(nil);
+    }
   }];
 }
 
-- (void)queryKeepSynced:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+- (void)queryGet:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *query =
+      [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+  [query
+      getDataWithCompletionBlock:^(NSError *error, FIRDataSnapshot *snapshot) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else
+          result.success(@{
+            @"snapshot" :
+                [FLTFirebaseDatabaseUtils dictionaryFromSnapshot:snapshot],
+          });
+      }];
+}
+
+- (void)queryKeepSynced:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *query =
+      [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
   [query keepSynced:[arguments[@"value"] boolValue]];
   result.success(nil);
 }
 
-- (void)queryObserve:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDatabaseQuery *databaseQuery = [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
+- (void)queryObserve:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRDatabaseQuery *databaseQuery =
+      [FLTFirebaseDatabaseUtils databaseQueryFromArguments:arguments];
   NSString *eventChannelNamePrefix = arguments[@"eventChannelNamePrefix"];
   _listenerCount = _listenerCount + 1;
-  NSString *eventChannelName =
-      [NSString stringWithFormat:@"%@#%i", eventChannelNamePrefix, _listenerCount];
+  NSString *eventChannelName = [NSString
+      stringWithFormat:@"%@#%i", eventChannelNamePrefix, _listenerCount];
 
-  FlutterEventChannel *eventChannel = [FlutterEventChannel eventChannelWithName:eventChannelName
-                                                                binaryMessenger:_binaryMessenger];
+  FlutterEventChannel *eventChannel =
+      [FlutterEventChannel eventChannelWithName:eventChannelName
+                                binaryMessenger:_binaryMessenger];
   FLTFirebaseDatabaseObserveStreamHandler *streamHandler =
-      [[FLTFirebaseDatabaseObserveStreamHandler alloc] initWithFIRDatabaseQuery:databaseQuery
-                                                              andOnDisposeBlock:^() {
-                                                                [eventChannel setStreamHandler:nil];
-                                                              }];
+      [[FLTFirebaseDatabaseObserveStreamHandler alloc]
+          initWithFIRDatabaseQuery:databaseQuery
+                 andOnDisposeBlock:^() {
+                   [eventChannel setStreamHandler:nil];
+                 }];
   [eventChannel setStreamHandler:streamHandler];
   _streamHandlers[eventChannelName] = streamHandler;
   result.success(eventChannelName);

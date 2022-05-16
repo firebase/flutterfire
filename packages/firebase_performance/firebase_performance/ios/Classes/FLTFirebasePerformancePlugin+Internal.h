@@ -2,12 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import <Firebase/Firebase.h>
 #import "FLTFirebasePerformancePlugin.h"
+#import <Firebase/Firebase.h>
 
 @protocol MethodCallHandler
 @required
-- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call result:(FlutterResult _Nonnull)result;
+- (void)handleMethodCall:(FlutterMethodCall *_Nonnull)call
+                  result:(FlutterResult _Nonnull)result;
 @end
 
 @interface FLTFirebasePerformancePlugin (Internal)

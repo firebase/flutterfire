@@ -18,7 +18,8 @@
   return self;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
   if ([@"Trace#start" isEqualToString:call.method]) {
     [self start:result];
   } else if ([@"Trace#stop" isEqualToString:call.method]) {
@@ -37,14 +38,15 @@
   NSDictionary *metrics = call.arguments[@"metrics"];
   NSDictionary *attributes = call.arguments[@"attributes"];
 
-  [metrics enumerateKeysAndObjectsUsingBlock:^(NSString *metricName, NSNumber *value, BOOL *stop) {
+  [metrics enumerateKeysAndObjectsUsingBlock:^(NSString *metricName,
+                                               NSNumber *value, BOOL *stop) {
     [_trace setIntValue:[value longLongValue] forMetric:metricName];
   }];
 
-  [attributes
-      enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName, NSString *value, BOOL *stop) {
-        [_trace setValue:value forAttribute:attributeName];
-      }];
+  [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *attributeName,
+                                                  NSString *value, BOOL *stop) {
+    [_trace setValue:value forAttribute:attributeName];
+  }];
 
   [_trace stop];
 

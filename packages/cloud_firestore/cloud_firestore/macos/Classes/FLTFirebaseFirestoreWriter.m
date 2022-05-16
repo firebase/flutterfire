@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebaseFirestoreWriter.m
+../../ ios / Classes / FLTFirebaseFirestoreWriter.m

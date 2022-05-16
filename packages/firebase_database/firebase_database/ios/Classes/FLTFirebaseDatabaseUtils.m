@@ -6,21 +6,24 @@
 #import <firebase_core/FLTFirebasePlugin.h>
 
 @implementation FLTFirebaseDatabaseUtils
-static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseInstances = nil;
+static __strong NSMutableDictionary<NSString *, FIRDatabase *>
+    *cachedDatabaseInstances = nil;
 
 + (dispatch_queue_t)dispatchQueue {
   static dispatch_once_t once;
   __strong static dispatch_queue_t sharedInstance;
   dispatch_once(&once, ^{
-    sharedInstance =
-        dispatch_queue_create("io.flutter.plugins.firebase.database", DISPATCH_QUEUE_SERIAL);
+    sharedInstance = dispatch_queue_create(
+        "io.flutter.plugins.firebase.database", DISPATCH_QUEUE_SERIAL);
   });
   return sharedInstance;
 }
 
 + (FIRDatabase *)databaseFromArguments:(id)arguments {
-  NSString *appName = arguments[@"appName"] == nil ? @"[DEFAULT]" : arguments[@"appName"];
-  NSString *databaseURL = arguments[@"databaseURL"] == nil ? @"" : arguments[@"databaseURL"];
+  NSString *appName =
+      arguments[@"appName"] == nil ? @"[DEFAULT]" : arguments[@"appName"];
+  NSString *databaseURL =
+      arguments[@"databaseURL"] == nil ? @"" : arguments[@"databaseURL"];
   NSString *instanceKey = [appName stringByAppendingString:databaseURL];
   if (cachedDatabaseInstances == nil) {
     cachedDatabaseInstances = [[NSMutableDictionary alloc] init];
@@ -58,7 +61,8 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   NSString *emulatorHost = arguments[@"emulatorHost"];
   NSNumber *emulatorPort = arguments[@"emulatorPort"];
   if (emulatorHost != nil && emulatorPort != nil) {
-    [database useEmulatorWithHost:emulatorHost port:[emulatorPort integerValue]];
+    [database useEmulatorWithHost:emulatorHost
+                             port:[emulatorPort integerValue]];
   }
 
   cachedDatabaseInstances[instanceKey] = database;
@@ -66,11 +70,13 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
 }
 
 + (FIRDatabaseReference *)databaseReferenceFromArguments:(id)arguments {
-  FIRDatabase *database = [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
+  FIRDatabase *database =
+      [FLTFirebaseDatabaseUtils databaseFromArguments:arguments];
   return [database referenceWithPath:arguments[@"path"]];
 }
 
-+ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyLimitModifier:(id)modifier {
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query
+                 applyLimitModifier:(id)modifier {
   NSString *name = modifier[@"name"];
   NSNumber *limit = modifier[@"limit"];
   if ([name isEqualToString:@"limitToFirst"]) {
@@ -82,7 +88,8 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   return query;
 }
 
-+ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyOrderModifier:(id)modifier {
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query
+                 applyOrderModifier:(id)modifier {
   NSString *name = [modifier valueForKey:@"name"];
   if ([name isEqualToString:@"orderByKey"]) {
     return [query queryOrderedByKey];
@@ -100,7 +107,8 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   return query;
 }
 
-+ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query applyCursorModifier:(id)modifier {
++ (FIRDatabaseQuery *)databaseQuery:(FIRDatabaseQuery *)query
+                applyCursorModifier:(id)modifier {
   NSString *name = [modifier valueForKey:@"name"];
   NSString *key = [modifier valueForKey:@"key"];
   id value = [modifier valueForKey:@"value"];
@@ -136,7 +144,8 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
 }
 
 + (FIRDatabaseQuery *)databaseQueryFromArguments:(id)arguments {
-  FIRDatabaseQuery *query = [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
+  FIRDatabaseQuery *query =
+      [FLTFirebaseDatabaseUtils databaseReferenceFromArguments:arguments];
   NSArray<NSDictionary *> *modifiers = arguments[@"modifiers"];
   for (NSDictionary *modifier in modifiers) {
     NSString *type = [modifier valueForKey:@"type"];
@@ -189,57 +198,58 @@ static __strong NSMutableDictionary<NSString *, FIRDatabase *> *cachedDatabaseIn
   NSString *message;
 
   switch (error.code) {
-    case 1:
-      code = @"permission-denied";
-      message = @"Client doesn't have permission to access the desired data.";
-      break;
-    case 2:
-      code = @"unavailable";
-      message = @"The service is unavailable.";
-      break;
-    case 3:
-      code = @"write-cancelled";
-      message = @"The write was cancelled by the user.";
-      break;
-    case -1:
-      code = @"data-stale";
-      message = @"The transaction needs to be run again with current data.";
-      break;
-    case -2:
-      code = @"failure";
-      message = @"The server indicated that this operation failed.";
-      break;
-    case -4:
-      code = @"disconnected";
-      message = @"The operation had to be aborted due to a network disconnect.";
-      break;
-    case -6:
-      code = @"expired-token";
-      message = @"The supplied auth token has expired.";
-      break;
-    case -7:
-      code = @"invalid-token";
-      message = @"The supplied auth token was invalid.";
-      break;
-    case -8:
-      code = @"max-retries";
-      message = @"The transaction had too many retries.";
-      break;
-    case -9:
-      code = @"overridden-by-set";
-      message = @"The transaction was overridden by a subsequent set";
-      break;
-    case -11:
-      code = @"user-code-exception";
-      message = @"User code called from the Firebase Database runloop threw an exception.";
-      break;
-    case -24:
-      code = @"network-error";
-      message = @"The operation could not be performed due to a network error.";
-      break;
-    default:
-      code = @"unknown";
-      message = [error localizedDescription];
+  case 1:
+    code = @"permission-denied";
+    message = @"Client doesn't have permission to access the desired data.";
+    break;
+  case 2:
+    code = @"unavailable";
+    message = @"The service is unavailable.";
+    break;
+  case 3:
+    code = @"write-cancelled";
+    message = @"The write was cancelled by the user.";
+    break;
+  case -1:
+    code = @"data-stale";
+    message = @"The transaction needs to be run again with current data.";
+    break;
+  case -2:
+    code = @"failure";
+    message = @"The server indicated that this operation failed.";
+    break;
+  case -4:
+    code = @"disconnected";
+    message = @"The operation had to be aborted due to a network disconnect.";
+    break;
+  case -6:
+    code = @"expired-token";
+    message = @"The supplied auth token has expired.";
+    break;
+  case -7:
+    code = @"invalid-token";
+    message = @"The supplied auth token was invalid.";
+    break;
+  case -8:
+    code = @"max-retries";
+    message = @"The transaction had too many retries.";
+    break;
+  case -9:
+    code = @"overridden-by-set";
+    message = @"The transaction was overridden by a subsequent set";
+    break;
+  case -11:
+    code = @"user-code-exception";
+    message = @"User code called from the Firebase Database runloop threw an "
+              @"exception.";
+    break;
+  case -24:
+    code = @"network-error";
+    message = @"The operation could not be performed due to a network error.";
+    break;
+  default:
+    code = @"unknown";
+    message = [error localizedDescription];
   }
 
   return @[ code, message ];

@@ -5,7 +5,8 @@
 #import <Flutter/Flutter.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-@interface FLTFirebaseDynamicLinksPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseDynamicLinksPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 
 @property(nonatomic, retain) NSError *initialError;
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;

@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebaseMessagingPlugin.m
+../../ ios / Classes / FLTFirebaseMessagingPlugin.m

@@ -1,1 +1,1 @@
-../../../ios/Classes/Private/FLTFirebaseFirestoreWriter.h
+../../../ ios / Classes / Private / FLTFirebaseFirestoreWriter.h

@@ -14,7 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTFirebaseDatabaseObserveStreamHandler : NSObject <FlutterStreamHandler>
+@interface FLTFirebaseDatabaseObserveStreamHandler
+    : NSObject <FlutterStreamHandler>
 - (instancetype)initWithFIRDatabaseQuery:(FIRDatabaseQuery *)databaseQuery
                        andOnDisposeBlock:(void (^)(void))disposeBlock;
 @end

@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebaseFirestoreReader.m
+../../ ios / Classes / FLTFirebaseFirestoreReader.m

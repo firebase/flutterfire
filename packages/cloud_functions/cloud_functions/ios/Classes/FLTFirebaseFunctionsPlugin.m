@@ -7,7 +7,8 @@
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase_functions";
+NSString *const kFLTFirebaseFunctionsChannelName =
+    @"plugins.flutter.io/firebase_functions";
 
 @interface FLTFirebaseFunctionsPlugin ()
 @end
@@ -24,54 +25,60 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseFunctionsPlugin alloc] init];
     // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+    [[FLTFirebasePluginRegistry sharedInstance]
+        registerFirebasePlugin:instance];
   });
 
   return instance;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseFunctionsChannelName
-                                  binaryMessenger:[registrar messenger]];
-  FLTFirebaseFunctionsPlugin *instance = [FLTFirebaseFunctionsPlugin sharedInstance];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:kFLTFirebaseFunctionsChannelName
+            binaryMessenger:[registrar messenger]];
+  FLTFirebaseFunctionsPlugin *instance =
+      [FLTFirebaseFunctionsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)flutterResult {
   if (![@"FirebaseFunctions#call" isEqualToString:call.method]) {
     flutterResult(FlutterMethodNotImplemented);
     return;
   }
 
-  FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
-        NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
-        NSString *httpsErrorMessage = error.localizedDescription;
-        if (error.domain == FIRFunctionsErrorDomain) {
-          httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
-          if (error.userInfo[FIRFunctionsErrorDetailsKey] != nil) {
-            httpsErrorDetails[@"additionalData"] = error.userInfo[FIRFunctionsErrorDetailsKey];
-          }
-        }
-        httpsErrorDetails[@"code"] = httpsErrorCode;
-        httpsErrorDetails[@"message"] = httpsErrorMessage;
-        flutterResult([FlutterError errorWithCode:httpsErrorCode
-                                          message:httpsErrorMessage
-                                          details:httpsErrorDetails]);
-      };
+  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
+      NSString *_Nullable code, NSString *_Nullable message,
+      NSDictionary *_Nullable details, NSError *_Nullable error) {
+    NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
+    NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
+    NSString *httpsErrorMessage = error.localizedDescription;
+    if (error.domain == FIRFunctionsErrorDomain) {
+      httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
+      if (error.userInfo[FIRFunctionsErrorDetailsKey] != nil) {
+        httpsErrorDetails[@"additionalData"] =
+            error.userInfo[FIRFunctionsErrorDetailsKey];
+      }
+    }
+    httpsErrorDetails[@"code"] = httpsErrorCode;
+    httpsErrorDetails[@"message"] = httpsErrorMessage;
+    flutterResult([FlutterError errorWithCode:httpsErrorCode
+                                      message:httpsErrorMessage
+                                      details:httpsErrorDetails]);
+  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult
+                                       andErrorBlock:errorBlock];
 
   [self httpsFunctionCall:call.arguments withMethodCallResult:methodCallResult];
 }
 
 #pragma mark - Firebase Functions API
 
-- (void)httpsFunctionCall:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)httpsFunctionCall:(id)arguments
+     withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appName = arguments[@"appName"];
   NSString *functionName = arguments[@"functionName"];
   NSString *origin = arguments[@"origin"];
@@ -90,14 +97,15 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
     function.timeoutInterval = timeout.doubleValue / 1000;
   }
 
-  [function callWithObject:parameters
-                completion:^(FIRHTTPSCallableResult *callableResult, NSError *error) {
-                  if (error) {
-                    result.error(nil, nil, nil, error);
-                  } else {
-                    result.success(callableResult.data);
-                  }
-                }];
+  [function
+      callWithObject:parameters
+          completion:^(FIRHTTPSCallableResult *callableResult, NSError *error) {
+            if (error) {
+              result.error(nil, nil, nil, error);
+            } else {
+              result.success(callableResult.data);
+            }
+          }];
 }
 
 #pragma mark - Utilities

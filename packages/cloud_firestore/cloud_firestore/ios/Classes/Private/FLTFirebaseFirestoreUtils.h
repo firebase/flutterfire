@@ -35,14 +35,17 @@ typedef NS_ENUM(UInt8, FirestoreDataType) {
 };
 
 @interface FLTFirebaseFirestoreReaderWriter : FlutterStandardReaderWriter
-- (FlutterStandardWriter *_Nonnull)writerWithData:(NSMutableData *_Nullable)data;
+- (FlutterStandardWriter *_Nonnull)writerWithData:
+    (NSMutableData *_Nullable)data;
 - (FlutterStandardReader *_Nonnull)readerWithData:(NSData *_Nullable)data;
 @end
 
 @interface FLTFirebaseFirestoreUtils : NSObject
-+ (FIRFirestoreSource)FIRFirestoreSourceFromArguments:(NSDictionary *_Nonnull)arguments;
++ (FIRFirestoreSource)FIRFirestoreSourceFromArguments:
+    (NSDictionary *_Nonnull)arguments;
 + (NSArray *_Nonnull)ErrorCodeAndMessageFromNSError:(NSError *_Nonnull)error;
-+ (FIRFirestore *_Nullable)getCachedFIRFirestoreInstanceForKey:(NSString *_Nonnull)key;
++ (FIRFirestore *_Nullable)getCachedFIRFirestoreInstanceForKey:
+    (NSString *_Nonnull)key;
 + (void)setCachedFIRFirestoreInstance:(FIRFirestore *_Nonnull)firestore
                                forKey:(NSString *_Nonnull)key;
 + (void)destroyCachedFIRFirestoreInstanceForKey:(NSString *_Nonnull)key;

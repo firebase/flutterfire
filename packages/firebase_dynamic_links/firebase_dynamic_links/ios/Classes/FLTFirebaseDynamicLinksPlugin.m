@@ -7,7 +7,8 @@
 
 #import "FLTFirebaseDynamicLinksPlugin.h"
 
-NSString *const kFLTFirebaseDynamicLinksChannelName = @"plugins.flutter.io/firebase_dynamic_links";
+NSString *const kFLTFirebaseDynamicLinksChannelName =
+    @"plugins.flutter.io/firebase_dynamic_links";
 NSString *const kDLAppName = @"appName";
 NSString *const kUrl = @"url";
 NSString *const kCode = @"code";
@@ -15,7 +16,8 @@ NSString *const kMessage = @"message";
 NSString *const kDynamicLinkParametersOptions = @"dynamicLinkParametersOptions";
 NSString *const kDefaultAppName = @"[DEFAULT]";
 
-static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamicLink) {
+static NSMutableDictionary *
+getDictionaryFromDynamicLink(FIRDynamicLink *dynamicLink) {
   if (dynamicLink != nil) {
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     dictionary[@"link"] = dynamicLink.url.absoluteString;
@@ -93,11 +95,12 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   return self;
 }
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseDynamicLinksChannelName
-                                  binaryMessenger:[registrar messenger]];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:kFLTFirebaseDynamicLinksChannelName
+            binaryMessenger:[registrar messenger]];
   FLTFirebaseDynamicLinksPlugin *instance =
-      [[FLTFirebaseDynamicLinksPlugin alloc] init:registrar.messenger withChannel:channel];
+      [[FLTFirebaseDynamicLinksPlugin alloc] init:registrar.messenger
+                                      withChannel:channel];
 
   [registrar addMethodCallDelegate:instance channel:channel];
 
@@ -111,57 +114,66 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)cleanupWithCompletion:(void (^)(void))completion {
-  if (completion != nil) completion();
+  if (completion != nil)
+    completion();
 }
 
-- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (void)detachFromEngineForRegistrar:
+    (NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:nil];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
-    if (code == nil) {
-      NSDictionary *errorDetails = getDictionaryFromNSError(error);
-      code = errorDetails[kCode];
-      message = errorDetails[kMessage];
-      details = errorDetails;
-    } else {
-      details = @{
-        kCode : code,
-        kMessage : message,
-        @"additionalData" : @{},
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
+  FLTFirebaseMethodCallErrorBlock errorBlock =
+      ^(NSString *_Nullable code, NSString *_Nullable message,
+        NSDictionary *_Nullable details, NSError *_Nullable error) {
+        if (code == nil) {
+          NSDictionary *errorDetails = getDictionaryFromNSError(error);
+          code = errorDetails[kCode];
+          message = errorDetails[kMessage];
+          details = errorDetails;
+        } else {
+          details = @{
+            kCode : code,
+            kMessage : message,
+            @"additionalData" : @{},
+          };
+        }
+
+        if ([@"unknown" isEqualToString:code]) {
+          NSLog(@"FLTFirebaseDynamicLinks: An error occurred while calling "
+                @"method %@, errorOrNil => %@",
+                call.method, [error userInfo]);
+        }
+
+        result([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                     message:message
+                                             optionalDetails:details
+                                          andOptionalNSError:error]);
       };
-    }
-
-    if ([@"unknown" isEqualToString:code]) {
-      NSLog(@"FLTFirebaseDynamicLinks: An error occurred while calling method %@, errorOrNil => %@",
-            call.method, [error userInfo]);
-    }
-
-    result([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                 message:message
-                                         optionalDetails:details
-                                      andOptionalNSError:error]);
-  };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:result andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:result
+                                       andErrorBlock:errorBlock];
 
   NSString *appName = call.arguments[kDLAppName];
   if (appName != nil && ![appName isEqualToString:kDefaultAppName]) {
     // TODO - document iOS default app only
-    NSLog(@"FLTFirebaseDynamicLinks: iOS plugin only supports the Firebase default app");
+    NSLog(@"FLTFirebaseDynamicLinks: iOS plugin only supports the Firebase "
+          @"default app");
   }
 
   if ([@"FirebaseDynamicLinks#buildLink" isEqualToString:call.method]) {
     [self buildLink:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FirebaseDynamicLinks#buildShortLink" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#buildShortLink"
+                 isEqualToString:call.method]) {
     [self buildShortLink:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"FirebaseDynamicLinks#getInitialLink" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#getInitialLink"
+                 isEqualToString:call.method]) {
     [self getInitialLink:methodCallResult];
-  } else if ([@"FirebaseDynamicLinks#getDynamicLink" isEqualToString:call.method]) {
+  } else if ([@"FirebaseDynamicLinks#getDynamicLink"
+                 isEqualToString:call.method]) {
     [self getDynamicLink:call.arguments withMethodCallResult:methodCallResult];
   } else {
     result(FlutterMethodNotImplemented);
@@ -170,12 +182,14 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
 #pragma mark - Firebase Dynamic Links API
 
-- (void)buildLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)buildLink:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDynamicLinkComponents *components = [self setupParameters:arguments];
   result.success([components.url absoluteString]);
 }
 
-- (void)buildShortLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)buildShortLink:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
   NSString *longDynamicLink = arguments[@"longDynamicLink"];
 
@@ -184,7 +198,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [FIRDynamicLinkComponents
         shortenURL:url
            options:options
-        completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+        completion:^(NSURL *_Nullable shortURL,
+                     NSArray<NSString *> *_Nullable warnings,
                      NSError *_Nullable error) {
           if (error != nil) {
             result.error(nil, nil, nil, error);
@@ -202,22 +217,22 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   } else {
     FIRDynamicLinkComponents *components = [self setupParameters:arguments];
     components.options = options;
-    [components
-        shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                                NSError *_Nullable error) {
-          if (error != nil) {
-            result.error(nil, nil, nil, error);
-          } else {
-            if (warnings == nil) {
-              warnings = [NSMutableArray array];
-            }
+    [components shortenWithCompletion:^(NSURL *_Nullable shortURL,
+                                        NSArray<NSString *> *_Nullable warnings,
+                                        NSError *_Nullable error) {
+      if (error != nil) {
+        result.error(nil, nil, nil, error);
+      } else {
+        if (warnings == nil) {
+          warnings = [NSMutableArray array];
+        }
 
-            result.success(@{
-              kUrl : [shortURL absoluteString],
-              @"warnings" : warnings,
-            });
-          }
-        }];
+        result.success(@{
+          kUrl : [shortURL absoluteString],
+          @"warnings" : warnings,
+        });
+      }
+    }];
   }
 }
 
@@ -231,7 +246,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   }
 }
 
-- (void)getDynamicLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)getDynamicLink:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSURL *shortLink = [NSURL URLWithString:arguments[kUrl]];
   FIRDynamicLinkUniversalLinkHandler completion =
       ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
@@ -241,73 +257,88 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
           result.success(getDictionaryFromDynamicLink(dynamicLink));
         }
       };
-  [[FIRDynamicLinks dynamicLinks] handleUniversalLink:shortLink completion:completion];
+  [[FIRDynamicLinks dynamicLinks] handleUniversalLink:shortLink
+                                           completion:completion];
 }
 
 #pragma mark - AppDelegate
 // Handle links received through your app's custom URL scheme. Called when your
-// app receives a link and your app is opened for the first time after installation.
+// app receives a link and your app is opened for the first time after
+// installation.
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
+            options:
+                (NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
   [self checkForDynamicLink:url];
-  // Results of this are ORed and NO doesn't affect other delegate interceptors' result.
+  // Results of this are ORed and NO doesn't affect other delegate interceptors'
+  // result.
   return NO;
 }
 
-// Handle links received as Universal Links when the app is already installed (on iOS 9 and newer).
+// Handle links received as Universal Links when the app is already installed
+// (on iOS 9 and newer).
 - (BOOL)application:(UIApplication *)application
     continueUserActivity:(NSUserActivity *)userActivity
-      restorationHandler:(nonnull void (^)(NSArray *_Nullable))restorationHandler {
+      restorationHandler:
+          (nonnull void (^)(NSArray *_Nullable))restorationHandler {
   __block BOOL retried = NO;
-  void (^completionBlock)(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error);
+  void (^completionBlock)(FIRDynamicLink *_Nullable dynamicLink,
+                          NSError *_Nullable error);
 
-  void (^__block __weak weakCompletionBlock)(FIRDynamicLink *_Nullable dynamicLink,
-                                             NSError *_Nullable error);
-  weakCompletionBlock = completionBlock =
-      ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
-        if (!error && dynamicLink && dynamicLink.url) {
-          [self onDeepLinkResult:dynamicLink error:nil];
-        }
+  void (^__block __weak weakCompletionBlock)(
+      FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error);
+  weakCompletionBlock = completionBlock = ^(
+      FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
+    if (!error && dynamicLink && dynamicLink.url) {
+      [self onDeepLinkResult:dynamicLink error:nil];
+    }
 
-        if (!error && dynamicLink && !dynamicLink.url) {
-          NSLog(@"FLTFirebaseDynamicLinks: The url has not been supplied with the dynamic link."
-                @"Please try opening your app with the long dynamic link to see if that works");
-        }
-        // Per Apple Tech Support, a network failure could occur when returning from background on
-        // iOS 12. https://github.com/AFNetworking/AFNetworking/issues/4279#issuecomment-447108981
-        // So we'll retry the request once
-        if (error && !retried && [NSPOSIXErrorDomain isEqualToString:error.domain] &&
-            error.code == 53) {
-          retried = YES;
-          [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
-                                                   completion:weakCompletionBlock];
-        }
+    if (!error && dynamicLink && !dynamicLink.url) {
+      NSLog(@"FLTFirebaseDynamicLinks: The url has not been supplied with the "
+            @"dynamic link."
+            @"Please try opening your app with the long dynamic link to see if "
+            @"that works");
+    }
+    // Per Apple Tech Support, a network failure could occur when returning from
+    // background on iOS 12.
+    // https://github.com/AFNetworking/AFNetworking/issues/4279#issuecomment-447108981
+    // So we'll retry the request once
+    if (error && !retried &&
+        [NSPOSIXErrorDomain isEqualToString:error.domain] && error.code == 53) {
+      retried = YES;
+      [[FIRDynamicLinks dynamicLinks]
+          handleUniversalLink:userActivity.webpageURL
+                   completion:weakCompletionBlock];
+    }
 
-        if (error && retried) {
-          // Need to update any event channel the universal link failed
-          [self onDeepLinkResult:nil error:error];
-        }
-      };
+    if (error && retried) {
+      // Need to update any event channel the universal link failed
+      [self onDeepLinkResult:nil error:error];
+    }
+  };
 
   [[FIRDynamicLinks dynamicLinks] handleUniversalLink:userActivity.webpageURL
                                            completion:completionBlock];
 
-  // Results of this are ORed and NO doesn't affect other delegate interceptors' result.
+  // Results of this are ORed and NO doesn't affect other delegate interceptors'
+  // result.
   return NO;
 }
 
 #pragma mark - Utilities
 
 - (void)checkForDynamicLink:(NSURL *)url {
-  FIRDynamicLink *dynamicLink = [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
+  FIRDynamicLink *dynamicLink =
+      [[FIRDynamicLinks dynamicLinks] dynamicLinkFromCustomSchemeURL:url];
   if (dynamicLink) {
     [self onDeepLinkResult:dynamicLink error:nil];
   }
 }
 
-// Used to action events from firebase-ios-sdk custom & universal dynamic link event listeners
-- (void)onDeepLinkResult:(FIRDynamicLink *_Nullable)dynamicLink error:(NSError *_Nullable)error {
+// Used to action events from firebase-ios-sdk custom & universal dynamic link
+// event listeners
+- (void)onDeepLinkResult:(FIRDynamicLink *_Nullable)dynamicLink
+                   error:(NSError *_Nullable)error {
   if (error) {
     if (_initialLink == nil) {
       // store initial error to pass back to user if getInitialLink is called
@@ -322,15 +353,18 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
                                       optionalDetails:errorDetails
                                    andOptionalNSError:error];
 
-    NSLog(@"FLTFirebaseDynamicLinks: Unknown error occurred when attempting to handle a dynamic "
+    NSLog(@"FLTFirebaseDynamicLinks: Unknown error occurred when attempting to "
+          @"handle a dynamic "
           @"link: %@",
           flutterError);
 
-    [_channel invokeMethod:@"FirebaseDynamicLink#onLinkError" arguments:flutterError];
+    [_channel invokeMethod:@"FirebaseDynamicLink#onLinkError"
+                 arguments:flutterError];
   } else {
     NSMutableDictionary *dictionary = getDictionaryFromDynamicLink(dynamicLink);
     if (dictionary != nil) {
-      [_channel invokeMethod:@"FirebaseDynamicLink#onLinkSuccess" arguments:dictionary];
+      [_channel invokeMethod:@"FirebaseDynamicLink#onLinkSuccess"
+                   arguments:dictionary];
     }
   }
 
@@ -344,19 +378,20 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (FIRDynamicLinkComponentsOptions *)setupOptions:(NSDictionary *)arguments {
-  FIRDynamicLinkComponentsOptions *options = [FIRDynamicLinkComponentsOptions options];
+  FIRDynamicLinkComponentsOptions *options =
+      [FIRDynamicLinkComponentsOptions options];
 
   NSNumber *shortDynamicLinkPathLength = arguments[@"shortLinkType"];
   if (![shortDynamicLinkPathLength isEqual:[NSNull null]]) {
     switch (shortDynamicLinkPathLength.intValue) {
-      case 0:
-        options.pathLength = FIRShortDynamicLinkPathLengthUnguessable;
-        break;
-      case 1:
-        options.pathLength = FIRShortDynamicLinkPathLengthShort;
-        break;
-      default:
-        break;
+    case 0:
+      options.pathLength = FIRShortDynamicLinkPathLengthUnguessable;
+      break;
+    case 1:
+      options.pathLength = FIRShortDynamicLinkPathLengthShort;
+      break;
+    default:
+      break;
     }
   }
 
@@ -367,14 +402,16 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   NSURL *link = [NSURL URLWithString:arguments[@"link"]];
   NSString *uriPrefix = arguments[@"uriPrefix"];
 
-  FIRDynamicLinkComponents *components = [FIRDynamicLinkComponents componentsWithLink:link
-                                                                      domainURIPrefix:uriPrefix];
+  FIRDynamicLinkComponents *components =
+      [FIRDynamicLinkComponents componentsWithLink:link
+                                   domainURIPrefix:uriPrefix];
 
   if (![arguments[@"androidParameters"] isEqual:[NSNull null]]) {
     NSDictionary *params = arguments[@"androidParameters"];
 
     FIRDynamicLinkAndroidParameters *androidParams =
-        [FIRDynamicLinkAndroidParameters parametersWithPackageName:params[@"packageName"]];
+        [FIRDynamicLinkAndroidParameters
+            parametersWithPackageName:params[@"packageName"]];
 
     NSString *fallbackUrl = params[@"fallbackUrl"];
     NSNumber *minimumVersion = params[@"minimumVersion"];
@@ -401,11 +438,16 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     NSString *source = params[@"source"];
     NSString *term = params[@"term"];
 
-    if (![campaign isEqual:[NSNull null]]) googleAnalyticsParameters.campaign = campaign;
-    if (![content isEqual:[NSNull null]]) googleAnalyticsParameters.content = content;
-    if (![medium isEqual:[NSNull null]]) googleAnalyticsParameters.medium = medium;
-    if (![source isEqual:[NSNull null]]) googleAnalyticsParameters.source = source;
-    if (![term isEqual:[NSNull null]]) googleAnalyticsParameters.term = term;
+    if (![campaign isEqual:[NSNull null]])
+      googleAnalyticsParameters.campaign = campaign;
+    if (![content isEqual:[NSNull null]])
+      googleAnalyticsParameters.content = content;
+    if (![medium isEqual:[NSNull null]])
+      googleAnalyticsParameters.medium = medium;
+    if (![source isEqual:[NSNull null]])
+      googleAnalyticsParameters.source = source;
+    if (![term isEqual:[NSNull null]])
+      googleAnalyticsParameters.term = term;
 
     components.analyticsParameters = googleAnalyticsParameters;
   }
@@ -413,8 +455,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   if (![arguments[@"iosParameters"] isEqual:[NSNull null]]) {
     NSDictionary *params = arguments[@"iosParameters"];
 
-    FIRDynamicLinkIOSParameters *iosParameters =
-        [FIRDynamicLinkIOSParameters parametersWithBundleID:params[@"bundleId"]];
+    FIRDynamicLinkIOSParameters *iosParameters = [FIRDynamicLinkIOSParameters
+        parametersWithBundleID:params[@"bundleId"]];
 
     NSString *appStoreID = params[@"appStoreId"];
     NSString *customScheme = params[@"customScheme"];
@@ -423,11 +465,14 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     NSString *iPadFallbackURL = params[@"ipadFallbackUrl"];
     NSString *minimumAppVersion = params[@"minimumVersion"];
 
-    if (![appStoreID isEqual:[NSNull null]]) iosParameters.appStoreID = appStoreID;
-    if (![customScheme isEqual:[NSNull null]]) iosParameters.customScheme = customScheme;
+    if (![appStoreID isEqual:[NSNull null]])
+      iosParameters.appStoreID = appStoreID;
+    if (![customScheme isEqual:[NSNull null]])
+      iosParameters.customScheme = customScheme;
     if (![fallbackURL isEqual:[NSNull null]])
       iosParameters.fallbackURL = [NSURL URLWithString:fallbackURL];
-    if (![iPadBundleID isEqual:[NSNull null]]) iosParameters.iPadBundleID = iPadBundleID;
+    if (![iPadBundleID isEqual:[NSNull null]])
+      iosParameters.iPadBundleID = iPadBundleID;
     if (![iPadFallbackURL isEqual:[NSNull null]])
       iosParameters.iPadFallbackURL = [NSURL URLWithString:iPadFallbackURL];
     if (![minimumAppVersion isEqual:[NSNull null]])
@@ -439,8 +484,9 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   if (![arguments[@"itunesConnectAnalyticsParameters"] isEqual:[NSNull null]]) {
     NSDictionary *params = arguments[@"itunesConnectAnalyticsParameters"];
 
-    FIRDynamicLinkItunesConnectAnalyticsParameters *itunesConnectAnalyticsParameters =
-        [FIRDynamicLinkItunesConnectAnalyticsParameters parameters];
+    FIRDynamicLinkItunesConnectAnalyticsParameters
+        *itunesConnectAnalyticsParameters =
+            [FIRDynamicLinkItunesConnectAnalyticsParameters parameters];
 
     NSString *affiliateToken = params[@"affiliateToken"];
     NSString *campaignToken = params[@"campaignToken"];
@@ -464,7 +510,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 
     NSNumber *forcedRedirectEnabled = params[@"forcedRedirectEnabled"];
     if (![forcedRedirectEnabled isEqual:[NSNull null]])
-      navigationInfoParameters.forcedRedirectEnabled = [forcedRedirectEnabled boolValue];
+      navigationInfoParameters.forcedRedirectEnabled =
+          [forcedRedirectEnabled boolValue];
 
     components.navigationInfoParameters = navigationInfoParameters;
   }
@@ -483,7 +530,8 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
       socialMetaTagParameters.descriptionText = descriptionText;
     if (![imageURL isEqual:[NSNull null]])
       socialMetaTagParameters.imageURL = [NSURL URLWithString:imageURL];
-    if (![title isEqual:[NSNull null]]) socialMetaTagParameters.title = title;
+    if (![title isEqual:[NSNull null]])
+      socialMetaTagParameters.title = title;
 
     components.socialMetaTagParameters = socialMetaTagParameters;
   }

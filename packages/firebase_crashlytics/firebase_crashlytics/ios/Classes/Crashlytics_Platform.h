@@ -22,11 +22,13 @@
 
 @interface FIRCrashlytics (Platform)
 
-@property(nonatomic, strong, nullable) NSString* developmentPlatformName;
-@property(nonatomic, strong, nullable) NSString* developmentPlatformVersion;
+@property(nonatomic, strong, nullable) NSString *developmentPlatformName;
+@property(nonatomic, strong, nullable) NSString *developmentPlatformVersion;
 
-- (void)recordOnDemandExceptionModel:(FIRExceptionModel* _Nonnull)exceptionModel;
+- (void)recordOnDemandExceptionModel:
+    (FIRExceptionModel *_Nonnull)exceptionModel;
 
 @end
 
-void FIRCLSUserLoggingRecordInternalKeyValue(NSString* _Nullable key, id _Nullable value);
+void FIRCLSUserLoggingRecordInternalKeyValue(NSString *_Nullable key,
+                                             id _Nullable value);

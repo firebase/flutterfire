@@ -22,7 +22,8 @@
 
 #import <firebase_core/FLTFirebasePluginRegistry.h>
 
-NSString *const kFLTFirebaseCrashlyticsChannelName = @"plugins.flutter.io/firebase_crashlytics";
+NSString *const kFLTFirebaseCrashlyticsChannelName =
+    @"plugins.flutter.io/firebase_crashlytics";
 
 // Argument Keys
 NSString *const kCrashlyticsArgumentException = @"exception";
@@ -40,7 +41,8 @@ NSString *const kCrashlyticsArgumentMethod = @"method";
 
 NSString *const kCrashlyticsArgumentEnabled = @"enabled";
 NSString *const kCrashlyticsArgumentUnsentReports = @"unsentReports";
-NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPreviousExecution";
+NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution =
+    @"didCrashOnPreviousExecution";
 
 #if TARGET_OS_OSX
 // macOS platform does not support analytics
@@ -69,7 +71,8 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseCrashlyticsPlugin alloc] init];
     // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+    [[FLTFirebasePluginRegistry sharedInstance]
+        registerFirebasePlugin:instance];
     [[FIRCrashlytics crashlytics] setDevelopmentPlatformName:@"Flutter"];
     // We can't currently get the Flutter plugin version number, so use -1.
     [[FIRCrashlytics crashlytics] setDevelopmentPlatformVersion:@"-1"];
@@ -79,28 +82,33 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseCrashlyticsChannelName
-                                  binaryMessenger:[registrar messenger]];
-  FLTFirebaseCrashlyticsPlugin *instance = [FLTFirebaseCrashlyticsPlugin sharedInstance];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:kFLTFirebaseCrashlyticsChannelName
+            binaryMessenger:[registrar messenger]];
+  FLTFirebaseCrashlyticsPlugin *instance =
+      [FLTFirebaseCrashlyticsPlugin sharedInstance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)flutterResult {
   FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
-        // `result.error` is not called in this plugin so this block does nothing.
+      ^(NSString *_Nullable code, NSString *_Nullable message,
+        NSDictionary *_Nullable details, NSError *_Nullable error) {
+        // `result.error` is not called in this plugin so this block does
+        // nothing.
         flutterResult(nil);
       };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult
+                                       andErrorBlock:errorBlock];
 
   if ([@"Crashlytics#recordError" isEqualToString:call.method]) {
     [self recordError:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#setUserIdentifier" isEqualToString:call.method]) {
-    [self setUserIdentifier:call.arguments withMethodCallResult:methodCallResult];
+    [self setUserIdentifier:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#setCustomKey" isEqualToString:call.method]) {
     [self setCustomKey:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#log" isEqualToString:call.method]) {
@@ -108,20 +116,24 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   } else if ([@"Crashlytics#crash" isEqualToString:call.method]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wall"
-    @throw
-        [NSException exceptionWithName:@"FirebaseCrashlyticsTestCrash"
-                                reason:@"This is a test crash caused by calling .crash() in Dart."
-                              userInfo:nil];
+    @throw [NSException exceptionWithName:@"FirebaseCrashlyticsTestCrash"
+                                   reason:@"This is a test crash caused by "
+                                          @"calling .crash() in Dart."
+                                 userInfo:nil];
 #pragma clang diagnostic pop
-  } else if ([@"Crashlytics#setCrashlyticsCollectionEnabled" isEqualToString:call.method]) {
-    [self setCrashlyticsCollectionEnabled:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([@"Crashlytics#checkForUnsentReports" isEqualToString:call.method]) {
+  } else if ([@"Crashlytics#setCrashlyticsCollectionEnabled"
+                 isEqualToString:call.method]) {
+    [self setCrashlyticsCollectionEnabled:call.arguments
+                     withMethodCallResult:methodCallResult];
+  } else if ([@"Crashlytics#checkForUnsentReports"
+                 isEqualToString:call.method]) {
     [self checkForUnsentReportsWithMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#sendUnsentReports" isEqualToString:call.method]) {
     [self sendUnsentReportsWithMethodCallResult:methodCallResult];
   } else if ([@"Crashlytics#deleteUnsentReports" isEqualToString:call.method]) {
     [self deleteUnsentReportsWithMethodCallResult:methodCallResult];
-  } else if ([@"Crashlytics#didCrashOnPreviousExecution" isEqualToString:call.method]) {
+  } else if ([@"Crashlytics#didCrashOnPreviousExecution"
+                 isEqualToString:call.method]) {
     [self didCrashOnPreviousExecutionWithMethodCallResult:methodCallResult];
   } else {
     methodCallResult.success(FlutterMethodNotImplemented);
@@ -130,14 +142,16 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 
 #pragma mark - Firebase Crashlytics API
 
-- (void)recordError:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)recordError:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *reason = arguments[kCrashlyticsArgumentReason];
   NSString *information = arguments[kCrashlyticsArgumentInformation];
   NSString *dartExceptionMessage = arguments[kCrashlyticsArgumentException];
   NSArray *errorElements = arguments[kCrashlyticsArgumentStackTraceElements];
   BOOL fatal = [arguments[kCrashlyticsArgumentFatal] boolValue];
 
-  // Log additional information so it's captured on the Firebase Crashlytics dashboard.
+  // Log additional information so it's captured on the Firebase Crashlytics
+  // dashboard.
   if ([information length] != 0) {
     [[FIRCrashlytics crashlytics] logWithFormat:@"%@", information];
   }
@@ -149,26 +163,29 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   }
 
   if (![reason isEqual:[NSNull null]]) {
-    reason = [NSString stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
+    reason = [NSString
+        stringWithFormat:@"%@. Error thrown %@.", dartExceptionMessage, reason];
     // Log additional custom value to match Android.
-    [[FIRCrashlytics crashlytics] setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
-                                          forKey:@"flutter_error_reason"];
+    [[FIRCrashlytics crashlytics]
+        setCustomValue:[NSString stringWithFormat:@"thrown %@", reason]
+                forKey:@"flutter_error_reason"];
   } else {
     reason = dartExceptionMessage;
   }
 
   if (fatal) {
     NSTimeInterval timeInterval = [NSDate date].timeIntervalSince1970;
-    [[FIRCrashlytics crashlytics] setCustomValue:@(llrint(timeInterval))
-                                          forKey:@"com.firebase.crashlytics.flutter.fatal"];
+    [[FIRCrashlytics crashlytics]
+        setCustomValue:@(llrint(timeInterval))
+                forKey:@"com.firebase.crashlytics.flutter.fatal"];
   }
 
   // Log additional custom value to match Android.
   [[FIRCrashlytics crashlytics] setCustomValue:dartExceptionMessage
                                         forKey:@"flutter_error_exception"];
 
-  FIRExceptionModel *exception = [FIRExceptionModel exceptionModelWithName:@"FlutterError"
-                                                                    reason:reason];
+  FIRExceptionModel *exception =
+      [FIRExceptionModel exceptionModelWithName:@"FlutterError" reason:reason];
 
   exception.stackTrace = frames;
   exception.onDemand = YES;
@@ -181,19 +198,23 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   result.success(nil);
 }
 
-- (void)setUserIdentifier:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  [[FIRCrashlytics crashlytics] setUserID:arguments[kCrashlyticsArgumentIdentifier]];
+- (void)setUserIdentifier:(id)arguments
+     withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  [[FIRCrashlytics crashlytics]
+      setUserID:arguments[kCrashlyticsArgumentIdentifier]];
   result.success(nil);
 }
 
-- (void)setCustomKey:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)setCustomKey:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *key = arguments[kCrashlyticsArgumentKey];
   NSString *value = arguments[kCrashlyticsArgumentValue];
   [[FIRCrashlytics crashlytics] setCustomValue:value forKey:key];
   result.success(nil);
 }
 
-- (void)log:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)log:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *msg = arguments[@"message"];
   [[FIRCrashlytics crashlytics] logWithFormat:@"%@", msg];
   result.success(nil);
@@ -209,25 +230,32 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
   });
 }
 
-- (void)checkForUnsentReportsWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  [[FIRCrashlytics crashlytics] checkForUnsentReportsWithCompletion:^(BOOL unsentReports) {
-    result.success(@{kCrashlyticsArgumentUnsentReports : @(unsentReports)});
-  }];
+- (void)checkForUnsentReportsWithMethodCallResult:
+    (FLTFirebaseMethodCallResult *)result {
+  [[FIRCrashlytics crashlytics]
+      checkForUnsentReportsWithCompletion:^(BOOL unsentReports) {
+        result.success(@{kCrashlyticsArgumentUnsentReports : @(unsentReports)});
+      }];
 }
 
-- (void)sendUnsentReportsWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)sendUnsentReportsWithMethodCallResult:
+    (FLTFirebaseMethodCallResult *)result {
   [[FIRCrashlytics crashlytics] sendUnsentReports];
   result.success(nil);
 }
 
-- (void)deleteUnsentReportsWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)deleteUnsentReportsWithMethodCallResult:
+    (FLTFirebaseMethodCallResult *)result {
   [[FIRCrashlytics crashlytics] deleteUnsentReports];
   result.success(nil);
 }
 
-- (void)didCrashOnPreviousExecutionWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  BOOL didCrash = [[FIRCrashlytics crashlytics] didCrashDuringPreviousExecution];
-  result.success(@{kCrashlyticsArgumentDidCrashOnPreviousExecution : @(didCrash)});
+- (void)didCrashOnPreviousExecutionWithMethodCallResult:
+    (FLTFirebaseMethodCallResult *)result {
+  BOOL didCrash =
+      [[FIRCrashlytics crashlytics] didCrashDuringPreviousExecution];
+  result.success(
+      @{kCrashlyticsArgumentDidCrashOnPreviousExecution : @(didCrash)});
 }
 
 #pragma mark - Utilities
@@ -235,12 +263,14 @@ NSString *const kCrashlyticsArgumentDidCrashOnPreviousExecution = @"didCrashOnPr
 - (FIRStackFrame *)generateFrame:(NSDictionary *)errorElement {
   NSString *methodName = [errorElement valueForKey:kCrashlyticsArgumentMethod];
   NSString *className = [errorElement valueForKey:@"class"];
-  NSString *symbol = [NSString stringWithFormat:@"%@.%@", className, methodName];
+  NSString *symbol =
+      [NSString stringWithFormat:@"%@.%@", className, methodName];
 
   FIRStackFrame *frame = [FIRStackFrame
       stackFrameWithSymbol:symbol
                       file:[errorElement valueForKey:kCrashlyticsArgumentFile]
-                      line:[[errorElement valueForKey:kCrashlyticsArgumentLine] intValue]];
+                      line:[[errorElement valueForKey:kCrashlyticsArgumentLine]
+                               intValue]];
   return frame;
 }
 

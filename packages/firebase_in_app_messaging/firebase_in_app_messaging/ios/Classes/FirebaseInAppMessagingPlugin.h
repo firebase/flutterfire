@@ -8,5 +8,6 @@
 #import <Foundation/Foundation.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-@interface FirebaseInAppMessagingPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FirebaseInAppMessagingPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end

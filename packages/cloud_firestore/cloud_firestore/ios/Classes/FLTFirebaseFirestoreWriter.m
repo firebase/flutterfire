@@ -34,7 +34,8 @@
   } else if ([value isKindOfClass:[FIRDocumentReference class]]) {
     FIRDocumentReference *document = value;
     NSString *documentPath = [document path];
-    NSString *appName = [FLTFirebasePlugin firebaseAppNameFromIosName:document.firestore.app.name];
+    NSString *appName = [FLTFirebasePlugin
+        firebaseAppNameFromIosName:document.firestore.app.name];
     [self writeByte:FirestoreDataTypeDocumentReference];
     [self writeValue:appName];
     [self writeValue:documentPath];
@@ -91,32 +92,34 @@
   NSString *type;
 
   switch (documentChange.type) {
-    case FIRDocumentChangeTypeAdded:
-      type = @"DocumentChangeType.added";
-      break;
-    case FIRDocumentChangeTypeModified:
-      type = @"DocumentChangeType.modified";
-      break;
-    case FIRDocumentChangeTypeRemoved:
-      type = @"DocumentChangeType.removed";
-      break;
+  case FIRDocumentChangeTypeAdded:
+    type = @"DocumentChangeType.added";
+    break;
+  case FIRDocumentChangeTypeModified:
+    type = @"DocumentChangeType.modified";
+    break;
+  case FIRDocumentChangeTypeRemoved:
+    type = @"DocumentChangeType.removed";
+    break;
   }
 
   NSNumber *oldIndex;
   NSNumber *newIndex;
 
-  // Note the Firestore C++ SDK here returns a maxed UInt that is != NSUIntegerMax, so we make one
-  // ourselves so we can convert to -1 for Dart.
+  // Note the Firestore C++ SDK here returns a maxed UInt that is !=
+  // NSUIntegerMax, so we make one ourselves so we can convert to -1 for Dart.
   NSUInteger MAX_VAL = (NSUInteger)[@(-1) integerValue];
 
-  if (documentChange.newIndex == NSNotFound || documentChange.newIndex == 4294967295 ||
+  if (documentChange.newIndex == NSNotFound ||
+      documentChange.newIndex == 4294967295 ||
       documentChange.newIndex == MAX_VAL) {
     newIndex = @([@(-1) intValue]);
   } else {
     newIndex = @([@(documentChange.newIndex) intValue]);
   }
 
-  if (documentChange.oldIndex == NSNotFound || documentChange.oldIndex == 4294967295 ||
+  if (documentChange.oldIndex == NSNotFound ||
+      documentChange.oldIndex == 4294967295 ||
       documentChange.oldIndex == MAX_VAL) {
     oldIndex = @([@(-1) intValue]);
   } else {
@@ -136,24 +139,26 @@
 - (NSDictionary *)FIRDocumentSnapshot:(FIRDocumentSnapshot *)documentSnapshot {
   return @{
     @"path" : documentSnapshot.reference.path,
-    @"data" : documentSnapshot.exists ? (id)documentSnapshot.data : [NSNull null],
+    @"data" : documentSnapshot.exists ? (id)documentSnapshot.data
+                                      : [NSNull null],
     @"metadata" : documentSnapshot.metadata,
   };
 }
 
-- (NSDictionary *)FIRLoadBundleTaskProgress:(FIRLoadBundleTaskProgress *)progress {
+- (NSDictionary *)FIRLoadBundleTaskProgress:
+    (FIRLoadBundleTaskProgress *)progress {
   NSString *state;
 
   switch (progress.state) {
-    case FIRLoadBundleTaskStateError:
-      state = @"error";
-      break;
-    case FIRLoadBundleTaskStateSuccess:
-      state = @"success";
-      break;
-    case FIRLoadBundleTaskStateInProgress:
-      state = @"running";
-      break;
+  case FIRLoadBundleTaskStateError:
+    state = @"error";
+    break;
+  case FIRLoadBundleTaskStateSuccess:
+    state = @"success";
+    break;
+  case FIRLoadBundleTaskStateInProgress:
+    state = @"running";
+    break;
   }
   return @{
     @"bytesLoaded" : @(progress.bytesLoaded),

@@ -12,28 +12,33 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
 
 @implementation FirebaseInAppMessagingPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseInAppMessagingChannelName
-                                  binaryMessenger:[registrar messenger]];
-  FirebaseInAppMessagingPlugin *instance = [[FirebaseInAppMessagingPlugin alloc] init];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:kFLTFirebaseInAppMessagingChannelName
+            binaryMessenger:[registrar messenger]];
+  FirebaseInAppMessagingPlugin *instance =
+      [[FirebaseInAppMessagingPlugin alloc] init];
   [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
   if ([@"FirebaseInAppMessaging#triggerEvent" isEqualToString:call.method]) {
     NSString *eventName = call.arguments[@"eventName"];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     [fiam triggerEvent:eventName];
     result(nil);
-  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed" isEqualToString:call.method]) {
-    NSNumber *suppress = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"suppress"]];
+  } else if ([@"FirebaseInAppMessaging#setMessagesSuppressed"
+                 isEqualToString:call.method]) {
+    NSNumber *suppress =
+        [NSNumber numberWithBool:(NSNumber *)call.arguments[@"suppress"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.messageDisplaySuppressed = [suppress boolValue];
     result(nil);
   } else if ([@"FirebaseInAppMessaging#setAutomaticDataCollectionEnabled"
                  isEqualToString:call.method]) {
-    NSNumber *enabled = [NSNumber numberWithBool:(NSNumber *)call.arguments[@"enabled"]];
+    NSNumber *enabled =
+        [NSNumber numberWithBool:(NSNumber *)call.arguments[@"enabled"]];
     FIRInAppMessaging *fiam = [FIRInAppMessaging inAppMessaging];
     fiam.automaticDataCollectionEnabled = [enabled boolValue];
     result(nil);
@@ -45,7 +50,8 @@ NSString *const kFLTFirebaseInAppMessagingChannelName =
 #pragma mark - FLTFirebasePlugin
 
 - (void)didReinitializeFirebaseCore:(void (^)(void))completion {
-  if (completion != nil) completion();
+  if (completion != nil)
+    completion();
 }
 
 - (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *)firebase_app {

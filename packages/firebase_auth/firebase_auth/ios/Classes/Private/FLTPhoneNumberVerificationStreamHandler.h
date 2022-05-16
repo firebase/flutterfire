@@ -16,9 +16,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FLTPhoneNumberVerificationStreamHandler : NSObject <FlutterStreamHandler>
+@interface FLTPhoneNumberVerificationStreamHandler
+    : NSObject <FlutterStreamHandler>
 
-- (instancetype)initWithAuth:(FIRAuth *)auth arguments:(NSDictionary *)arguments;
+- (instancetype)initWithAuth:(FIRAuth *)auth
+                   arguments:(NSDictionary *)arguments;
 
 @end
 

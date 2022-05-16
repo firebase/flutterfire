@@ -13,7 +13,7 @@
 #endif
 
 @implementation FirebaseInstallationsPlugin
-+ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
++ (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   [FirebaseInstallationsPluginSwift registerWithRegistrar:registrar];
 }
 
@@ -21,19 +21,20 @@
   completion();
 }
 
-- (NSString* _Nonnull)firebaseLibraryName {
+- (NSString *_Nonnull)firebaseLibraryName {
   return LIBRARY_NAME;
 }
 
-- (NSString* _Nonnull)firebaseLibraryVersion {
+- (NSString *_Nonnull)firebaseLibraryVersion {
   return LIBRARY_VERSION;
 }
 
-- (NSString* _Nonnull)flutterChannelName {
+- (NSString *_Nonnull)flutterChannelName {
   return @"plugins.flutter.io/firebase_app_installations";
 }
 
-- (NSDictionary* _Nonnull)pluginConstantsForFIRApp:(FIRApp* _Nonnull)firebaseApp {
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:
+    (FIRApp *_Nonnull)firebaseApp {
   return @{};
 }
 

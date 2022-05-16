@@ -1,1 +1,1 @@
-../../ios/Classes/FirebaseModelDownloaderPlugin.h
+../../ ios / Classes / FirebaseModelDownloaderPlugin.h

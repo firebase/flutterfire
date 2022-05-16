@@ -18,14 +18,16 @@
 @implementation FLTLoadBundleStreamHandler
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:(nonnull FlutterEventSink)events {
+                                       eventSink:
+                                           (nonnull FlutterEventSink)events {
   FlutterStandardTypedData *bundle = arguments[@"bundle"];
   FIRFirestore *firestore = arguments[@"firestore"];
 
   // use completion handler to inform user of platform error.
   self.task = [firestore
       loadBundle:bundle.data
-      completion:^(FIRLoadBundleTaskProgress *_Nullable snapshot, NSError *_Nullable error) {
+      completion:^(FIRLoadBundleTaskProgress *_Nullable snapshot,
+                   NSError *_Nullable error) {
         if (error != nil) {
           NSArray *codeAndMessage =
               [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];

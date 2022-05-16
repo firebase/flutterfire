@@ -8,26 +8,35 @@
 
 #import "FLTFirebaseStoragePlugin.h"
 
-static NSString *const kFLTFirebaseStorageChannelName = @"plugins.flutter.io/firebase_storage";
+static NSString *const kFLTFirebaseStorageChannelName =
+    @"plugins.flutter.io/firebase_storage";
 static NSString *const kFLTFirebaseStorageKeyCacheControl = @"cacheControl";
-static NSString *const kFLTFirebaseStorageKeyContentDisposition = @"contentDisposition";
-static NSString *const kFLTFirebaseStorageKeyContentEncoding = @"contentEncoding";
-static NSString *const kFLTFirebaseStorageKeyContentLanguage = @"contentLanguage";
+static NSString *const kFLTFirebaseStorageKeyContentDisposition =
+    @"contentDisposition";
+static NSString *const kFLTFirebaseStorageKeyContentEncoding =
+    @"contentEncoding";
+static NSString *const kFLTFirebaseStorageKeyContentLanguage =
+    @"contentLanguage";
 static NSString *const kFLTFirebaseStorageKeyContentType = @"contentType";
 static NSString *const kFLTFirebaseStorageKeyCustomMetadata = @"customMetadata";
 static NSString *const kFLTFirebaseStorageKeyName = @"name";
 static NSString *const kFLTFirebaseStorageKeyBucket = @"bucket";
 static NSString *const kFLTFirebaseStorageKeyGeneration = @"generation";
-static NSString *const kFLTFirebaseStorageKeyMetadataGeneration = @"metadataGeneration";
+static NSString *const kFLTFirebaseStorageKeyMetadataGeneration =
+    @"metadataGeneration";
 static NSString *const kFLTFirebaseStorageKeyFullPath = @"fullPath";
 static NSString *const kFLTFirebaseStorageKeySize = @"size";
-static NSString *const kFLTFirebaseStorageKeyCreationTime = @"creationTimeMillis";
+static NSString *const kFLTFirebaseStorageKeyCreationTime =
+    @"creationTimeMillis";
 static NSString *const kFLTFirebaseStorageKeyUpdatedTime = @"updatedTimeMillis";
 static NSString *const kFLTFirebaseStorageKeyMD5Hash = @"md5Hash";
 static NSString *const kFLTFirebaseStorageKeyAppName = @"appName";
-static NSString *const kFLTFirebaseStorageKeyMaxOperationRetryTime = @"maxOperationRetryTime";
-static NSString *const kFLTFirebaseStorageKeyMaxDownloadRetryTime = @"maxDownloadRetryTime";
-static NSString *const kFLTFirebaseStorageKeyMaxUploadRetryTime = @"maxUploadRetryTime";
+static NSString *const kFLTFirebaseStorageKeyMaxOperationRetryTime =
+    @"maxOperationRetryTime";
+static NSString *const kFLTFirebaseStorageKeyMaxDownloadRetryTime =
+    @"maxDownloadRetryTime";
+static NSString *const kFLTFirebaseStorageKeyMaxUploadRetryTime =
+    @"maxUploadRetryTime";
 static NSString *const kFLTFirebaseStorageKeyPath = @"path";
 static NSString *const kFLTFirebaseStorageKeySnapshot = @"snapshot";
 static NSString *const kFLTFirebaseStorageKeyHandle = @"handle";
@@ -65,7 +74,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 @end
 
 @implementation FLTFirebaseStoragePlugin {
-  NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
+  NSMutableDictionary<
+      NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *> *_tasks;
   dispatch_queue_t _callbackQueue;
 }
 
@@ -79,7 +89,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseStoragePlugin alloc] init];
     // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+    [[FLTFirebasePluginRegistry sharedInstance]
+        registerFirebasePlugin:instance];
   });
 
   return instance;
@@ -88,10 +99,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 - (instancetype)init {
   self = [super init];
   if (self) {
-    _tasks = [NSMutableDictionary<NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *>
+    _tasks = [NSMutableDictionary<
+        NSNumber *, FIRStorageObservableTask<FIRStorageTaskManagement> *>
         dictionary];
-    _callbackQueue =
-        dispatch_queue_create("io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
+    _callbackQueue = dispatch_queue_create(
+        "io.flutter.plugins.firebase.storage", DISPATCH_QUEUE_SERIAL);
   }
   return self;
 }
@@ -101,10 +113,12 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       [FlutterMethodChannel methodChannelWithName:kFLTFirebaseStorageChannelName
                                   binaryMessenger:[registrar messenger]];
 
-  FLTFirebaseStoragePlugin *instance = [FLTFirebaseStoragePlugin sharedInstance];
+  FLTFirebaseStoragePlugin *instance =
+      [FLTFirebaseStoragePlugin sharedInstance];
   instance.channel = channel;
 #if TARGET_OS_OSX
-  // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
+  // TODO(Salakar): Publish does not exist on MacOS version of
+  // FlutterPluginRegistrar.
 #else
   [registrar publish:instance];
 #endif
@@ -114,67 +128,82 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 - (void)cleanupWithCompletion:(void (^)(void))completion {
   @synchronized(self->_tasks) {
     for (NSNumber *key in [self->_tasks allKeys]) {
-      FIRStorageObservableTask<FIRStorageTaskManagement> *task = self->_tasks[key];
+      FIRStorageObservableTask<FIRStorageTaskManagement> *task =
+          self->_tasks[key];
       if (task != nil) {
         [task removeAllObservers];
         [task cancel];
       }
     }
     [self->_tasks removeAllObjects];
-    if (completion != nil) completion();
+    if (completion != nil)
+      completion();
   }
 }
 
-- (void)detachFromEngineForRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
+- (void)detachFromEngineForRegistrar:
+    (NSObject<FlutterPluginRegistrar> *)registrar {
   [self cleanupWithCompletion:^() {
     self.channel = nil;
   }];
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
-  FLTFirebaseMethodCallErrorBlock errorBlock = ^(
-      NSString *_Nullable code, NSString *_Nullable message, NSDictionary *_Nullable details,
-      NSError *_Nullable error) {
-    if (code == nil) {
-      NSDictionary *errorDetails = [self NSDictionaryFromNSError:error];
-      code = errorDetails[@"code"];
-      message = errorDetails[@"message"];
-      details = errorDetails;
-    }
-    if ([@"unknown" isEqualToString:code]) {
-      NSLog(@"FLTFirebaseStorage: An unknown error occurred while calling method %@", call.method);
-    }
-    flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
-                                                        message:message
-                                                optionalDetails:details
-                                             andOptionalNSError:error]);
-  };
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)flutterResult {
+  FLTFirebaseMethodCallErrorBlock errorBlock =
+      ^(NSString *_Nullable code, NSString *_Nullable message,
+        NSDictionary *_Nullable details, NSError *_Nullable error) {
+        if (code == nil) {
+          NSDictionary *errorDetails = [self NSDictionaryFromNSError:error];
+          code = errorDetails[@"code"];
+          message = errorDetails[@"message"];
+          details = errorDetails;
+        }
+        if ([@"unknown" isEqualToString:code]) {
+          NSLog(@"FLTFirebaseStorage: An unknown error occurred while calling "
+                @"method %@",
+                call.method);
+        }
+        flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
+                                                            message:message
+                                                    optionalDetails:details
+                                                 andOptionalNSError:error]);
+      };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult
+                                       andErrorBlock:errorBlock];
 
   if ([@"Storage#useEmulator" isEqualToString:call.method]) {
     [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Reference#delete" isEqualToString:call.method]) {
     [self referenceDelete:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Reference#getDownloadURL" isEqualToString:call.method]) {
-    [self referenceGetDownloadUrl:call.arguments withMethodCallResult:methodCallResult];
+    [self referenceGetDownloadUrl:call.arguments
+             withMethodCallResult:methodCallResult];
   } else if ([@"Reference#getMetadata" isEqualToString:call.method]) {
-    [self referenceGetMetadata:call.arguments withMethodCallResult:methodCallResult];
+    [self referenceGetMetadata:call.arguments
+          withMethodCallResult:methodCallResult];
   } else if ([@"Reference#getData" isEqualToString:call.method]) {
-    [self referenceGetData:call.arguments withMethodCallResult:methodCallResult];
+    [self referenceGetData:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Reference#list" isEqualToString:call.method]) {
     [self referenceList:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Reference#listAll" isEqualToString:call.method]) {
-    [self referenceListAll:call.arguments withMethodCallResult:methodCallResult];
+    [self referenceListAll:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Reference#updateMetadata" isEqualToString:call.method]) {
-    [self referenceUpdateMetadata:call.arguments withMethodCallResult:methodCallResult];
+    [self referenceUpdateMetadata:call.arguments
+             withMethodCallResult:methodCallResult];
   } else if ([@"Task#startPutData" isEqualToString:call.method]) {
-    [self taskStartPutData:call.arguments withMethodCallResult:methodCallResult];
+    [self taskStartPutData:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Task#startPutString" isEqualToString:call.method]) {
-    [self taskStartPutString:call.arguments withMethodCallResult:methodCallResult];
+    [self taskStartPutString:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Task#startPutFile" isEqualToString:call.method]) {
-    [self taskStartPutFile:call.arguments withMethodCallResult:methodCallResult];
+    [self taskStartPutFile:call.arguments
+        withMethodCallResult:methodCallResult];
   } else if ([@"Task#pause" isEqualToString:call.method]) {
     [self taskPause:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Task#resume" isEqualToString:call.method]) {
@@ -190,13 +219,16 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 #pragma mark - Firebase Storage API
 
-- (void)useEmulator:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)useEmulator:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [self FIRStorageForArguments:arguments];
   result.success(nil);
 }
 
-- (void)referenceDelete:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+- (void)referenceDelete:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
   [reference deleteWithCompletion:^(NSError *error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
@@ -208,7 +240,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (void)referenceGetDownloadUrl:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
   [reference downloadURLWithCompletion:^(NSURL *URL, NSError *error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
@@ -217,7 +250,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
       if ([url rangeOfString:@":443"].location != NSNotFound) {
         NSRange replaceRange = [url rangeOfString:@":443"];
-        url = [url stringByReplacingCharactersInRange:replaceRange withString:@""];
+        url = [url stringByReplacingCharactersInRange:replaceRange
+                                           withString:@""];
       }
 
       result.success(@{
@@ -229,40 +263,47 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (void)referenceGetMetadata:(id)arguments
         withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
-  [reference metadataWithCompletion:^(FIRStorageMetadata *metadata, NSError *error) {
-    if (error != nil) {
-      result.error(nil, nil, nil, error);
-    } else {
-      result.success([self NSDictionaryFromFIRStorageMetadata:metadata]);
-    }
-  }];
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
+  [reference
+      metadataWithCompletion:^(FIRStorageMetadata *metadata, NSError *error) {
+        if (error != nil) {
+          result.error(nil, nil, nil, error);
+        } else {
+          result.success([self NSDictionaryFromFIRStorageMetadata:metadata]);
+        }
+      }];
 }
 
-- (void)referenceGetData:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+- (void)referenceGetData:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
   NSNumber *maxSize = arguments[kFLTFirebaseStorageKeyMaxSize];
-  [reference dataWithMaxSize:[maxSize longLongValue]
-                  completion:^(NSData *_Nullable data, NSError *_Nullable error) {
-                    if (error != nil) {
-                      result.error(nil, nil, nil, error);
-                      return;
-                    }
+  [reference
+      dataWithMaxSize:[maxSize longLongValue]
+           completion:^(NSData *_Nullable data, NSError *_Nullable error) {
+             if (error != nil) {
+               result.error(nil, nil, nil, error);
+               return;
+             }
 
-                    FlutterStandardTypedData *typedData;
-                    if (data == nil) {
-                      typedData =
-                          [FlutterStandardTypedData typedDataWithBytes:[[NSData alloc] init]];
-                    } else {
-                      typedData = [FlutterStandardTypedData typedDataWithBytes:data];
-                    }
+             FlutterStandardTypedData *typedData;
+             if (data == nil) {
+               typedData = [FlutterStandardTypedData
+                   typedDataWithBytes:[[NSData alloc] init]];
+             } else {
+               typedData = [FlutterStandardTypedData typedDataWithBytes:data];
+             }
 
-                    result.success(typedData);
-                  }];
+             result.success(typedData);
+           }];
 }
 
-- (void)referenceList:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+- (void)referenceList:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
   NSDictionary *options = arguments[kFLTFirebaseStorageKeyOptions];
   long maxResults = [options[kFLTFirebaseStorageKeyMaxResults] longValue];
   id completion = ^(FIRStorageListResult *listResult, NSError *error) {
@@ -277,13 +318,18 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   if ([pageToken isEqual:[NSNull null]]) {
     [reference listWithMaxResults:(int64_t)maxResults completion:completion];
   } else {
-    [reference listWithMaxResults:(int64_t)maxResults pageToken:pageToken completion:completion];
+    [reference listWithMaxResults:(int64_t)maxResults
+                        pageToken:pageToken
+                       completion:completion];
   }
 }
 
-- (void)referenceListAll:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
-  [reference listAllWithCompletion:^(FIRStorageListResult *listResult, NSError *error) {
+- (void)referenceListAll:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
+  [reference listAllWithCompletion:^(FIRStorageListResult *listResult,
+                                     NSError *error) {
     if (error != nil) {
       result.error(nil, nil, nil, error);
     } else {
@@ -294,45 +340,57 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 - (void)referenceUpdateMetadata:(id)arguments
            withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+  FIRStorageReference *reference =
+      [self FIRStorageReferenceForArguments:arguments];
   FIRStorageMetadata *metadata =
-      [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]];
-  [reference updateMetadata:metadata
-                 completion:^(FIRStorageMetadata *updatedMetadata, NSError *error) {
-                   if (error != nil) {
-                     result.error(nil, nil, nil, error);
-                   } else {
-                     result.success([self NSDictionaryFromFIRStorageMetadata:updatedMetadata]);
-                   }
-                 }];
+      [self FIRStorageMetadataFromNSDictionary:
+                arguments[kFLTFirebaseStorageKeyMetadata]];
+  [reference
+      updateMetadata:metadata
+          completion:^(FIRStorageMetadata *updatedMetadata, NSError *error) {
+            if (error != nil) {
+              result.error(nil, nil, nil, error);
+            } else {
+              result.success(
+                  [self NSDictionaryFromFIRStorageMetadata:updatedMetadata]);
+            }
+          }];
 }
 
-- (void)taskStartPutData:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)taskStartPutData:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [self startFIRStorageObservableTaskForArguments:arguments
-                    andFLTFirebaseStorageTaskType:FLTFirebaseStorageTaskTypeBytes];
+                    andFLTFirebaseStorageTaskType:
+                        FLTFirebaseStorageTaskTypeBytes];
   result.success(nil);
 }
 
 - (void)taskStartPutString:(id)arguments
       withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [self startFIRStorageObservableTaskForArguments:arguments
-                    andFLTFirebaseStorageTaskType:FLTFirebaseStorageTaskTypeString];
+                    andFLTFirebaseStorageTaskType:
+                        FLTFirebaseStorageTaskTypeString];
   result.success(nil);
 }
 
-- (void)taskStartPutFile:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)taskStartPutFile:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  [self
+      startFIRStorageObservableTaskForArguments:arguments
+                  andFLTFirebaseStorageTaskType:FLTFirebaseStorageTaskTypeFile];
+  result.success(nil);
+}
+
+- (void)taskWriteToFile:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   [self startFIRStorageObservableTaskForArguments:arguments
-                    andFLTFirebaseStorageTaskType:FLTFirebaseStorageTaskTypeFile];
+                    andFLTFirebaseStorageTaskType:
+                        FLTFirebaseStorageTaskTypeDownload];
   result.success(nil);
 }
 
-- (void)taskWriteToFile:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  [self startFIRStorageObservableTaskForArguments:arguments
-                    andFLTFirebaseStorageTaskType:FLTFirebaseStorageTaskTypeDownload];
-  result.success(nil);
-}
-
-- (void)taskPause:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)taskPause:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   dispatch_async(self->_callbackQueue, ^() {
     NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
@@ -342,7 +400,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (task != nil) {
       [self setState:FLTFirebaseStorageTaskStatePause
           forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       withCompletion:^(BOOL success,
+                                        NSDictionary *snapshotDict) {
                          result.success(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
@@ -356,7 +415,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   });
 }
 
-- (void)taskResume:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)taskResume:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   dispatch_async(self->_callbackQueue, ^() {
     NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
@@ -366,7 +426,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (task != nil) {
       [self setState:FLTFirebaseStorageTaskStateResume
           forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       withCompletion:^(BOOL success,
+                                        NSDictionary *snapshotDict) {
                          result.success(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
@@ -380,7 +441,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   });
 }
 
-- (void)taskCancel:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)taskCancel:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   dispatch_async(self->_callbackQueue, ^() {
     NSNumber *handle = arguments[kFLTFirebaseStorageKeyHandle];
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
@@ -390,7 +452,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     if (task != nil) {
       [self setState:FLTFirebaseStorageTaskStateCancel
           forFIRStorageObservableTask:task
-                       withCompletion:^(BOOL success, NSDictionary *snapshotDict) {
+                       withCompletion:^(BOOL success,
+                                        NSDictionary *snapshotDict) {
                          result.success(@{
                            @"status" : @(success),
                            @"snapshot" : (id)snapshotDict ?: [NSNull null],
@@ -406,10 +469,11 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 
 #pragma mark - Utilities
 
-// To match Web & Android SDKs we need to return a bool of whether a task state change was
-// successful.
+// To match Web & Android SDKs we need to return a bool of whether a task state
+// change was successful.
 - (void)setState:(FLTFirebaseStorageTaskState)state
-    forFIRStorageObservableTask:(FIRStorageObservableTask<FIRStorageTaskManagement> *)task
+    forFIRStorageObservableTask:
+        (FIRStorageObservableTask<FIRStorageTaskManagement> *)task
                  withCompletion:(void (^)(BOOL, NSDictionary *))completion {
   // Pause
   if (state == FLTFirebaseStorageTaskStatePause) {
@@ -419,28 +483,32 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       __block FIRStorageHandle pauseHandle;
       __block FIRStorageHandle successHandle;
       __block FIRStorageHandle failureHandle;
-      pauseHandle =
-          [task observeStatus:FIRStorageTaskStatusPause
+      pauseHandle = [task
+          observeStatus:FIRStorageTaskStatusPause
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:pauseHandle];
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+                  completion(
+                      YES,
+                      [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                }];
+      successHandle =
+          [task observeStatus:FIRStorageTaskStatusSuccess
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
                         [task removeObserverWithHandle:pauseHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(NO, nil);
                       }];
-      successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
-                                  handler:^(FIRStorageTaskSnapshot *snapshot) {
-                                    [task removeObserverWithHandle:pauseHandle];
-                                    [task removeObserverWithHandle:successHandle];
-                                    [task removeObserverWithHandle:failureHandle];
-                                    completion(NO, nil);
-                                  }];
-      failureHandle = [task observeStatus:FIRStorageTaskStatusFailure
-                                  handler:^(FIRStorageTaskSnapshot *snapshot) {
-                                    [task removeObserverWithHandle:pauseHandle];
-                                    [task removeObserverWithHandle:successHandle];
-                                    [task removeObserverWithHandle:failureHandle];
-                                    completion(NO, nil);
-                                  }];
+      failureHandle =
+          [task observeStatus:FIRStorageTaskStatusFailure
+                      handler:^(FIRStorageTaskSnapshot *snapshot) {
+                        [task removeObserverWithHandle:pauseHandle];
+                        [task removeObserverWithHandle:successHandle];
+                        [task removeObserverWithHandle:failureHandle];
+                        completion(NO, nil);
+                      }];
 
       [task pause];
     } else {
@@ -456,40 +524,46 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       __block FIRStorageHandle progressHandle;
       __block FIRStorageHandle successHandle;
       __block FIRStorageHandle failureHandle;
-      resumeHandle =
-          [task observeStatus:FIRStorageTaskStatusResume
+      resumeHandle = [task
+          observeStatus:FIRStorageTaskStatusResume
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:resumeHandle];
+                  [task removeObserverWithHandle:progressHandle];
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+                  completion(
+                      YES,
+                      [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                }];
+      progressHandle = [task
+          observeStatus:FIRStorageTaskStatusProgress
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:resumeHandle];
+                  [task removeObserverWithHandle:progressHandle];
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+                  completion(
+                      YES,
+                      [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                }];
+      successHandle =
+          [task observeStatus:FIRStorageTaskStatusSuccess
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
                         [task removeObserverWithHandle:resumeHandle];
                         [task removeObserverWithHandle:progressHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(NO, nil);
                       }];
-      progressHandle =
-          [task observeStatus:FIRStorageTaskStatusProgress
+      failureHandle =
+          [task observeStatus:FIRStorageTaskStatusFailure
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
                         [task removeObserverWithHandle:resumeHandle];
                         [task removeObserverWithHandle:progressHandle];
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                        completion(NO, nil);
                       }];
-      successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
-                                  handler:^(FIRStorageTaskSnapshot *snapshot) {
-                                    [task removeObserverWithHandle:resumeHandle];
-                                    [task removeObserverWithHandle:progressHandle];
-                                    [task removeObserverWithHandle:successHandle];
-                                    [task removeObserverWithHandle:failureHandle];
-                                    completion(NO, nil);
-                                  }];
-      failureHandle = [task observeStatus:FIRStorageTaskStatusFailure
-                                  handler:^(FIRStorageTaskSnapshot *snapshot) {
-                                    [task removeObserverWithHandle:resumeHandle];
-                                    [task removeObserverWithHandle:progressHandle];
-                                    [task removeObserverWithHandle:successHandle];
-                                    [task removeObserverWithHandle:failureHandle];
-                                    completion(NO, nil);
-                                  }];
       [task resume];
     } else {
       completion(NO, nil);
@@ -505,23 +579,27 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
         task.snapshot.status == FIRStorageTaskStatusUnknown) {
       __block FIRStorageHandle successHandle;
       __block FIRStorageHandle failureHandle;
-      successHandle = [task observeStatus:FIRStorageTaskStatusSuccess
-                                  handler:^(FIRStorageTaskSnapshot *snapshot) {
-                                    [task removeObserverWithHandle:successHandle];
-                                    [task removeObserverWithHandle:failureHandle];
-                                    completion(NO, nil);
-                                  }];
-      failureHandle =
-          [task observeStatus:FIRStorageTaskStatusFailure
+      successHandle =
+          [task observeStatus:FIRStorageTaskStatusSuccess
                       handler:^(FIRStorageTaskSnapshot *snapshot) {
                         [task removeObserverWithHandle:successHandle];
                         [task removeObserverWithHandle:failureHandle];
-                        if (snapshot.error && snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                          completion(YES, [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
-                        } else {
-                          completion(NO, nil);
-                        }
+                        completion(NO, nil);
                       }];
+      failureHandle = [task
+          observeStatus:FIRStorageTaskStatusFailure
+                handler:^(FIRStorageTaskSnapshot *snapshot) {
+                  [task removeObserverWithHandle:successHandle];
+                  [task removeObserverWithHandle:failureHandle];
+                  if (snapshot.error &&
+                      snapshot.error.code == FIRStorageErrorCodeCancelled) {
+                    completion(
+                        YES,
+                        [self NSDictionaryFromFIRStorageTaskSnapshot:snapshot]);
+                  } else {
+                    completion(NO, nil);
+                  }
+                }];
       [task cancel];
     } else {
       completion(NO, nil);
@@ -533,12 +611,15 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
 }
 
 - (void)startFIRStorageObservableTaskForArguments:(id)arguments
-                    andFLTFirebaseStorageTaskType:(FLTFirebaseStorageTaskType)type {
+                    andFLTFirebaseStorageTaskType:
+                        (FLTFirebaseStorageTaskType)type {
   dispatch_async(self->_callbackQueue, ^() {
     FIRStorageObservableTask<FIRStorageTaskManagement> *task;
-    FIRStorageReference *reference = [self FIRStorageReferenceForArguments:arguments];
+    FIRStorageReference *reference =
+        [self FIRStorageReferenceForArguments:arguments];
     FIRStorageMetadata *metadata =
-        [self FIRStorageMetadataFromNSDictionary:arguments[kFLTFirebaseStorageKeyMetadata]];
+        [self FIRStorageMetadataFromNSDictionary:
+                  arguments[kFLTFirebaseStorageKeyMetadata]];
 
     if (type == FLTFirebaseStorageTaskTypeFile) {
       NSURL *fileUrl = [NSURL fileURLWithPath:arguments[@"filePath"]];
@@ -550,9 +631,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
       NSURL *fileUrl = [NSURL fileURLWithPath:arguments[@"filePath"]];
       task = [reference writeToFile:fileUrl];
     } else if (type == FLTFirebaseStorageTaskTypeString) {
-      NSData *data = [self
-          NSDataFromUploadString:arguments[@"data"]
-                          format:(FLTFirebaseStorageStringType)[arguments[@"format"] intValue]];
+      NSData *data =
+          [self NSDataFromUploadString:arguments[@"data"]
+                                format:(FLTFirebaseStorageStringType)
+                                           [arguments[@"format"] intValue]];
       task = [reference putData:data metadata:metadata];
     }
 
@@ -564,37 +646,43 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     }
 
     // upload paused
-    [task observeStatus:FIRStorageTaskStatusPause
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.channel invokeMethod:@"Task#onPaused"
-                                         arguments:[weakSelf NSDictionaryFromHandle:handle
-                                                          andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
+    [task
+        observeStatus:FIRStorageTaskStatusPause
+              handler:^(FIRStorageTaskSnapshot *snapshot) {
+                dispatch_async(self->_callbackQueue, ^() {
+                  [weakSelf.channel
+                      invokeMethod:@"Task#onPaused"
+                         arguments:[weakSelf NSDictionaryFromHandle:handle
+                                          andFIRStorageTaskSnapshot:snapshot]];
+                });
+              }];
 
     // upload reported progress
-    [task observeStatus:FIRStorageTaskStatusProgress
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    [weakSelf.channel invokeMethod:@"Task#onProgress"
-                                         arguments:[weakSelf NSDictionaryFromHandle:handle
-                                                          andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
+    [task
+        observeStatus:FIRStorageTaskStatusProgress
+              handler:^(FIRStorageTaskSnapshot *snapshot) {
+                dispatch_async(self->_callbackQueue, ^() {
+                  [weakSelf.channel
+                      invokeMethod:@"Task#onProgress"
+                         arguments:[weakSelf NSDictionaryFromHandle:handle
+                                          andFIRStorageTaskSnapshot:snapshot]];
+                });
+              }];
 
     // upload completed successfully
-    [task observeStatus:FIRStorageTaskStatusSuccess
-                handler:^(FIRStorageTaskSnapshot *snapshot) {
-                  dispatch_async(self->_callbackQueue, ^() {
-                    @synchronized(self->_tasks) {
-                      [self->_tasks removeObjectForKey:handle];
-                    }
-                    [weakSelf.channel invokeMethod:@"Task#onSuccess"
-                                         arguments:[weakSelf NSDictionaryFromHandle:handle
-                                                          andFIRStorageTaskSnapshot:snapshot]];
-                  });
-                }];
+    [task
+        observeStatus:FIRStorageTaskStatusSuccess
+              handler:^(FIRStorageTaskSnapshot *snapshot) {
+                dispatch_async(self->_callbackQueue, ^() {
+                  @synchronized(self->_tasks) {
+                    [self->_tasks removeObjectForKey:handle];
+                  }
+                  [weakSelf.channel
+                      invokeMethod:@"Task#onSuccess"
+                         arguments:[weakSelf NSDictionaryFromHandle:handle
+                                          andFIRStorageTaskSnapshot:snapshot]];
+                });
+              }];
 
     [task observeStatus:FIRStorageTaskStatusFailure
                 handler:^(FIRStorageTaskSnapshot *snapshot) {
@@ -603,13 +691,17 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                       [self->_tasks removeObjectForKey:handle];
                     }
                     if (snapshot.error.code == FIRStorageErrorCodeCancelled) {
-                      [weakSelf.channel invokeMethod:@"Task#onCanceled"
-                                           arguments:[weakSelf NSDictionaryFromHandle:handle
-                                                            andFIRStorageTaskSnapshot:snapshot]];
+                      [weakSelf.channel
+                          invokeMethod:@"Task#onCanceled"
+                             arguments:[weakSelf
+                                              NSDictionaryFromHandle:handle
+                                           andFIRStorageTaskSnapshot:snapshot]];
                     } else {
-                      [weakSelf.channel invokeMethod:@"Task#onFailure"
-                                           arguments:[weakSelf NSDictionaryFromHandle:handle
-                                                            andFIRStorageTaskSnapshot:snapshot]];
+                      [weakSelf.channel
+                          invokeMethod:@"Task#onFailure"
+                             arguments:[weakSelf
+                                              NSDictionaryFromHandle:handle
+                                           andFIRStorageTaskSnapshot:snapshot]];
                     }
                   });
                 }];
@@ -643,15 +735,17 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     message = @"User is not authorized to perform the desired action.";
   } else if (error.code == FIRStorageErrorCodeRetryLimitExceeded) {
     code = @"retry-limit-exceeded";
-    message = @"The maximum time limit on an operation (upload, download, delete, etc.) has been "
+    message = @"The maximum time limit on an operation (upload, download, "
+              @"delete, etc.) has been "
               @"exceeded.";
   } else if (error.code == FIRStorageErrorCodeNonMatchingChecksum) {
     code = @"invalid-checksum";
-    message = @"File on the client does not match the checksum of the file received by the server.";
+    message = @"File on the client does not match the checksum of the file "
+              @"received by the server.";
   } else if (error.code == FIRStorageErrorCodeDownloadSizeExceeded) {
     code = @"download-size-exceeded";
-    message =
-        @"Size of the downloaded file exceeds the amount of memory allocated for the download.";
+    message = @"Size of the downloaded file exceeds the amount of memory "
+              @"allocated for the download.";
   } else if (error.code == FIRStorageErrorCodeCancelled) {
     code = @"canceled";
     message = @"User cancelled the operation.";
@@ -669,8 +763,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
                andFIRStorageTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   dictionary[kFLTFirebaseStorageKeyHandle] = handle;
-  dictionary[kFLTFirebaseStorageKeyAppName] =
-      [FLTFirebasePlugin firebaseAppNameFromIosName:snapshot.reference.storage.app.name];
+  dictionary[kFLTFirebaseStorageKeyAppName] = [FLTFirebasePlugin
+      firebaseAppNameFromIosName:snapshot.reference.storage.app.name];
   dictionary[kFLTFirebaseStorageKeyBucket] = snapshot.reference.bucket;
   if (snapshot.error != nil) {
     dictionary[@"error"] = [self NSDictionaryFromNSError:snapshot.error];
@@ -681,13 +775,15 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return dictionary;
 }
 
-- (NSDictionary *)NSDictionaryFromFIRStorageTaskSnapshot:(FIRStorageTaskSnapshot *)snapshot {
+- (NSDictionary *)NSDictionaryFromFIRStorageTaskSnapshot:
+    (FIRStorageTaskSnapshot *)snapshot {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
   dictionary[kFLTFirebaseStorageKeyPath] = snapshot.reference.fullPath;
 
   if (snapshot.metadata != nil) {
-    dictionary[@"metadata"] = [self NSDictionaryFromFIRStorageMetadata:snapshot.metadata];
+    dictionary[@"metadata"] =
+        [self NSDictionaryFromFIRStorageMetadata:snapshot.metadata];
   }
 
   if (snapshot.progress != nil) {
@@ -701,7 +797,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return dictionary;
 }
 
-- (NSData *)NSDataFromUploadString:(NSString *)string format:(FLTFirebaseStorageStringType)format {
+- (NSData *)NSDataFromUploadString:(NSString *)string
+                            format:(FLTFirebaseStorageStringType)format {
   // Dart: PutStringFormat.base64
   if (format == FLTFirebaseStorageStringTypeBase64) {
     return [[NSData alloc] initWithBase64EncodedString:string options:0];
@@ -711,8 +808,10 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   if (format == FLTFirebaseStorageStringTypeBase64URL) {
     // Convert to base64 from base64url.
     NSString *base64Encoded = string;
-    base64Encoded = [base64Encoded stringByReplacingOccurrencesOfString:@"-" withString:@"+"];
-    base64Encoded = [base64Encoded stringByReplacingOccurrencesOfString:@"_" withString:@"/"];
+    base64Encoded = [base64Encoded stringByReplacingOccurrencesOfString:@"-"
+                                                             withString:@"+"];
+    base64Encoded = [base64Encoded stringByReplacingOccurrencesOfString:@"_"
+                                                             withString:@"/"];
     // Add mandatory base64 encoding padding.
     while (base64Encoded.length % 4 != 0) {
       base64Encoded = [base64Encoded stringByAppendingString:@"="];
@@ -724,7 +823,8 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return nil;
 }
 
-- (NSDictionary *)NSDictionaryFromFIRStorageListResult:(FIRStorageListResult *)listResult {
+- (NSDictionary *)NSDictionaryFromFIRStorageListResult:
+    (FIRStorageListResult *)listResult {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
   NSMutableArray<NSString *> *items = [[NSMutableArray alloc] init];
@@ -746,20 +846,25 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return dictionary;
 }
 
-- (FIRStorageMetadata *)FIRStorageMetadataFromNSDictionary:(NSDictionary *)dictionary {
-  if (dictionary == nil || [dictionary isEqual:[NSNull null]]) return nil;
+- (FIRStorageMetadata *)FIRStorageMetadataFromNSDictionary:
+    (NSDictionary *)dictionary {
+  if (dictionary == nil || [dictionary isEqual:[NSNull null]])
+    return nil;
   FIRStorageMetadata *metadata = [[FIRStorageMetadata alloc] init];
   if (dictionary[kFLTFirebaseStorageKeyCacheControl] != [NSNull null]) {
     metadata.cacheControl = dictionary[kFLTFirebaseStorageKeyCacheControl];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentDisposition] != [NSNull null]) {
-    metadata.contentDisposition = dictionary[kFLTFirebaseStorageKeyContentDisposition];
+    metadata.contentDisposition =
+        dictionary[kFLTFirebaseStorageKeyContentDisposition];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentEncoding] != [NSNull null]) {
-    metadata.contentEncoding = dictionary[kFLTFirebaseStorageKeyContentEncoding];
+    metadata.contentEncoding =
+        dictionary[kFLTFirebaseStorageKeyContentEncoding];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentLanguage] != [NSNull null]) {
-    metadata.contentLanguage = dictionary[kFLTFirebaseStorageKeyContentLanguage];
+    metadata.contentLanguage =
+        dictionary[kFLTFirebaseStorageKeyContentLanguage];
   }
   if (dictionary[kFLTFirebaseStorageKeyContentType] != [NSNull null]) {
     metadata.contentType = dictionary[kFLTFirebaseStorageKeyContentType];
@@ -770,34 +875,41 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   return metadata;
 }
 
-- (NSDictionary *)NSDictionaryFromFIRStorageMetadata:(FIRStorageMetadata *)metadata {
+- (NSDictionary *)NSDictionaryFromFIRStorageMetadata:
+    (FIRStorageMetadata *)metadata {
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
 
   [dictionary setValue:[metadata name] forKey:kFLTFirebaseStorageKeyName];
   [dictionary setValue:[metadata bucket] forKey:kFLTFirebaseStorageKeyBucket];
 
-  [dictionary setValue:[NSString stringWithFormat:@"%lld", [metadata generation]]
-                forKey:kFLTFirebaseStorageKeyGeneration];
+  [dictionary
+      setValue:[NSString stringWithFormat:@"%lld", [metadata generation]]
+        forKey:kFLTFirebaseStorageKeyGeneration];
 
-  [dictionary setValue:[NSString stringWithFormat:@"%lld", [metadata metageneration]]
-                forKey:kFLTFirebaseStorageKeyMetadataGeneration];
+  [dictionary
+      setValue:[NSString stringWithFormat:@"%lld", [metadata metageneration]]
+        forKey:kFLTFirebaseStorageKeyMetadataGeneration];
 
   [dictionary setValue:[metadata path] forKey:kFLTFirebaseStorageKeyFullPath];
 
   [dictionary setValue:@([metadata size]) forKey:kFLTFirebaseStorageKeySize];
 
-  [dictionary setValue:@((long)([[metadata timeCreated] timeIntervalSince1970] * 1000.0))
+  [dictionary setValue:@((long)([[metadata timeCreated] timeIntervalSince1970] *
+                                1000.0))
                 forKey:kFLTFirebaseStorageKeyCreationTime];
 
-  [dictionary setValue:@((long)([[metadata updated] timeIntervalSince1970] * 1000.0))
-                forKey:kFLTFirebaseStorageKeyUpdatedTime];
+  [dictionary
+      setValue:@((long)([[metadata updated] timeIntervalSince1970] * 1000.0))
+        forKey:kFLTFirebaseStorageKeyUpdatedTime];
 
   if ([metadata md5Hash] != nil) {
-    [dictionary setValue:[metadata md5Hash] forKey:kFLTFirebaseStorageKeyMD5Hash];
+    [dictionary setValue:[metadata md5Hash]
+                  forKey:kFLTFirebaseStorageKeyMD5Hash];
   }
 
   if ([metadata cacheControl] != nil) {
-    [dictionary setValue:[metadata cacheControl] forKey:kFLTFirebaseStorageKeyCacheControl];
+    [dictionary setValue:[metadata cacheControl]
+                  forKey:kFLTFirebaseStorageKeyCacheControl];
   }
 
   if ([metadata contentDisposition] != nil) {
@@ -806,19 +918,23 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   }
 
   if ([metadata contentEncoding] != nil) {
-    [dictionary setValue:[metadata contentEncoding] forKey:kFLTFirebaseStorageKeyContentEncoding];
+    [dictionary setValue:[metadata contentEncoding]
+                  forKey:kFLTFirebaseStorageKeyContentEncoding];
   }
 
   if ([metadata contentLanguage] != nil) {
-    [dictionary setValue:[metadata contentLanguage] forKey:kFLTFirebaseStorageKeyContentLanguage];
+    [dictionary setValue:[metadata contentLanguage]
+                  forKey:kFLTFirebaseStorageKeyContentLanguage];
   }
 
   if ([metadata contentType] != nil) {
-    [dictionary setValue:[metadata contentType] forKey:kFLTFirebaseStorageKeyContentType];
+    [dictionary setValue:[metadata contentType]
+                  forKey:kFLTFirebaseStorageKeyContentType];
   }
 
   if ([metadata customMetadata] != nil) {
-    [dictionary setValue:[metadata customMetadata] forKey:kFLTFirebaseStorageKeyCustomMetadata];
+    [dictionary setValue:[metadata customMetadata]
+                  forKey:kFLTFirebaseStorageKeyCustomMetadata];
   } else {
     [dictionary setValue:@{} forKey:kFLTFirebaseStorageKeyCustomMetadata];
   }
@@ -839,17 +955,22 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
     storage = [FIRStorage storageForApp:firebaseApp];
   }
 
-  NSNumber *maxOperationRetryTime = arguments[kFLTFirebaseStorageKeyMaxOperationRetryTime];
+  NSNumber *maxOperationRetryTime =
+      arguments[kFLTFirebaseStorageKeyMaxOperationRetryTime];
   if (![maxOperationRetryTime isEqual:[NSNull null]]) {
-    storage.maxOperationRetryTime = [maxOperationRetryTime longLongValue] / 1000.0;
+    storage.maxOperationRetryTime =
+        [maxOperationRetryTime longLongValue] / 1000.0;
   }
 
-  NSNumber *maxDownloadRetryTime = arguments[kFLTFirebaseStorageKeyMaxDownloadRetryTime];
+  NSNumber *maxDownloadRetryTime =
+      arguments[kFLTFirebaseStorageKeyMaxDownloadRetryTime];
   if (![maxDownloadRetryTime isEqual:[NSNull null]]) {
-    storage.maxDownloadRetryTime = [maxDownloadRetryTime longLongValue] / 1000.0;
+    storage.maxDownloadRetryTime =
+        [maxDownloadRetryTime longLongValue] / 1000.0;
   }
 
-  NSNumber *maxUploadRetryTime = arguments[kFLTFirebaseStorageKeyMaxUploadRetryTime];
+  NSNumber *maxUploadRetryTime =
+      arguments[kFLTFirebaseStorageKeyMaxUploadRetryTime];
   if (![maxUploadRetryTime isEqual:[NSNull null]]) {
     storage.maxUploadRetryTime = [maxUploadRetryTime longLongValue] / 1000.0;
   }
@@ -857,10 +978,13 @@ typedef NS_ENUM(NSUInteger, FLTFirebaseStorageStringType) {
   NSString *emulatorHost = arguments[@"host"];
   if (![emulatorHost isEqual:[NSNull null]] && emulatorHost != nil) {
     @try {
-      [storage useEmulatorWithHost:emulatorHost port:[arguments[@"port"] integerValue]];
+      [storage useEmulatorWithHost:emulatorHost
+                              port:[arguments[@"port"] integerValue]];
     } @catch (NSException *e) {
-      NSLog(@"WARNING: Unable to set the Firebase Storage emulator settings. These must be set "
-            @"before any usages of Firebase Storage. If you see this log after a hot "
+      NSLog(@"WARNING: Unable to set the Firebase Storage emulator settings. "
+            @"These must be set "
+            @"before any usages of Firebase Storage. If you see this log after "
+            @"a hot "
             @"reload/restart you can safely ignore it.");
     }
   }

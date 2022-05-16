@@ -18,22 +18,23 @@
   return self;
 }
 
-- (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
+- (FlutterError *)onListenWithArguments:(id)arguments
+                              eventSink:(FlutterEventSink)events {
   bool __block initialAuthState = YES;
 
-  _listener =
-      [_auth addIDTokenDidChangeListener:^(FIRAuth *_Nonnull auth, FIRUser *_Nullable user) {
-        if (initialAuthState) {
-          initialAuthState = NO;
-          return;
-        }
+  _listener = [_auth addIDTokenDidChangeListener:^(FIRAuth *_Nonnull auth,
+                                                   FIRUser *_Nullable user) {
+    if (initialAuthState) {
+      initialAuthState = NO;
+      return;
+    }
 
-        if (user) {
-          events(@{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]});
-        } else {
-          events(@{@"user" : [NSNull null]});
-        }
-      }];
+    if (user) {
+      events(@{@"user" : [FLTFirebaseAuthPlugin getNSDictionaryFromUser:user]});
+    } else {
+      events(@{@"user" : [NSNull null]});
+    }
+  }];
 
   return nil;
 }

@@ -25,24 +25,21 @@
 
 #if TARGET_OS_OSX
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate,
-                                                           UNUserNotificationCenterDelegate>
+@interface FLTFirebaseMessagingPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate,
+                         NSApplicationDelegate,
+                         UNUserNotificationCenterDelegate>
 #else
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           NSApplicationDelegate>
+@interface FLTFirebaseMessagingPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate,
+                         NSApplicationDelegate>
 #endif
 #else
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
 API_AVAILABLE(ios(10.0))
-@interface FLTFirebaseMessagingPlugin : FLTFirebasePlugin <FlutterPlugin,
-                                                           FLTFirebasePlugin,
-                                                           FIRMessagingDelegate,
-                                                           UNUserNotificationCenterDelegate>
+@interface FLTFirebaseMessagingPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate,
+                         UNUserNotificationCenterDelegate>
 #else
 @interface FLTFirebaseMessagingPlugin
     : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FIRMessagingDelegate>

@@ -19,11 +19,13 @@
   return self;
 }
 
-- (FlutterError *)onListenWithArguments:(id)arguments eventSink:(FlutterEventSink)events {
+- (FlutterError *)onListenWithArguments:(id)arguments
+                              eventSink:(FlutterEventSink)events {
 #if TARGET_OS_IPHONE
   id completer = ^(NSString *verificationID, NSError *error) {
     if (error != nil) {
-      NSDictionary *errorDetails = [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];
+      NSDictionary *errorDetails =
+          [FLTFirebaseAuthPlugin getNSDictionaryFromNSError:error];
       events(@{
         @"name" : @"Auth#phoneVerificationFailed",
         @"error" : @{
@@ -41,9 +43,10 @@
 
   // Try catch to capture 'missing URL scheme' error.
   @try {
-    [[FIRPhoneAuthProvider providerWithAuth:_auth] verifyPhoneNumber:_phoneNumber
-                                                          UIDelegate:nil
-                                                          completion:completer];
+    [[FIRPhoneAuthProvider providerWithAuth:_auth]
+        verifyPhoneNumber:_phoneNumber
+               UIDelegate:nil
+               completion:completer];
   } @catch (NSException *exception) {
     events(@{
       @"name" : @"Auth#phoneVerificationFailed",

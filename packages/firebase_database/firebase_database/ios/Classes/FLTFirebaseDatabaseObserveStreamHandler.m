@@ -27,22 +27,25 @@
 }
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:(nonnull FlutterEventSink)events {
+                                       eventSink:
+                                           (nonnull FlutterEventSink)events {
   NSString *eventTypeString = arguments[@"eventType"];
   id observeBlock = ^(FIRDataSnapshot *snapshot, NSString *previousChildKey) {
     NSMutableDictionary *eventDictionary = [@{
       @"eventType" : eventTypeString,
     } mutableCopy];
-    [eventDictionary addEntriesFromDictionary:[FLTFirebaseDatabaseUtils
-                                                  dictionaryFromSnapshot:snapshot
-                                                    withPreviousChildKey:previousChildKey]];
+    [eventDictionary
+        addEntriesFromDictionary:[FLTFirebaseDatabaseUtils
+                                     dictionaryFromSnapshot:snapshot
+                                       withPreviousChildKey:previousChildKey]];
     dispatch_async(dispatch_get_main_queue(), ^{
       events(eventDictionary);
     });
   };
 
   id cancelBlock = ^(NSError *error) {
-    NSArray *codeAndMessage = [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
+    NSArray *codeAndMessage =
+        [FLTFirebaseDatabaseUtils codeAndMessageFromNSError:error];
     NSString *code = codeAndMessage[0];
     NSString *message = codeAndMessage[1];
     NSDictionary *details = @{
@@ -57,10 +60,11 @@
     });
   };
 
-  _databaseHandle = [_databaseQuery
-                    observeEventType:[FLTFirebaseDatabaseUtils eventTypeFromString:eventTypeString]
-      andPreviousSiblingKeyWithBlock:observeBlock
-                     withCancelBlock:cancelBlock];
+  _databaseHandle =
+      [_databaseQuery observeEventType:[FLTFirebaseDatabaseUtils
+                                           eventTypeFromString:eventTypeString]
+          andPreviousSiblingKeyWithBlock:observeBlock
+                         withCancelBlock:cancelBlock];
 
   return nil;
 }

@@ -1,1 +1,1 @@
-../../../ios/Classes/Private/FLTDocumentSnapshotStreamHandler.h
+../../../ ios / Classes / Private / FLTDocumentSnapshotStreamHandler.h

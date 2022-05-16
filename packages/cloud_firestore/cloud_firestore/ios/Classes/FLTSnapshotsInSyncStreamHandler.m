@@ -15,7 +15,8 @@
 @implementation FLTSnapshotsInSyncStreamHandler
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:(nonnull FlutterEventSink)events {
+                                       eventSink:
+                                           (nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
 
   id listener = ^() {

@@ -34,7 +34,8 @@
 }
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:(nonnull FlutterEventSink)events {
+                                       eventSink:
+                                           (nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
   __weak FLTTransactionStreamHandler *weakSelf = self;
@@ -45,19 +46,23 @@
     strongSelf.started(transaction);
 
     dispatch_async(dispatch_get_main_queue(), ^{
-      events(@{@"appName" : [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]});
+      events(@{
+        @"appName" :
+            [FLTFirebasePlugin firebaseAppNameFromIosName:firestore.app.name]
+      });
     });
 
     long timedOut = dispatch_semaphore_wait(
         strongSelf.semaphore,
-        dispatch_time(DISPATCH_TIME_NOW, [transactionTimeout integerValue] * NSEC_PER_MSEC));
+        dispatch_time(DISPATCH_TIME_NOW,
+                      [transactionTimeout integerValue] * NSEC_PER_MSEC));
 
     if (timedOut) {
       NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils
-          ErrorCodeAndMessageFromNSError:[NSError
-                                             errorWithDomain:FIRFirestoreErrorDomain
-                                                        code:FIRFirestoreErrorCodeDeadlineExceeded
-                                                    userInfo:@{}]];
+          ErrorCodeAndMessageFromNSError:
+              [NSError errorWithDomain:FIRFirestoreErrorDomain
+                                  code:FIRFirestoreErrorCodeDeadlineExceeded
+                              userInfo:@{}]];
 
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
@@ -86,7 +91,8 @@
     for (NSDictionary *command in commands) {
       NSString *commandType = command[@"type"];
       NSString *documentPath = command[@"path"];
-      FIRDocumentReference *reference = [firestore documentWithPath:documentPath];
+      FIRDocumentReference *reference =
+          [firestore documentWithPath:documentPath];
       if ([@"DELETE" isEqualToString:commandType]) {
         [transaction deleteDocument:reference];
       } else if ([@"UPDATE" isEqualToString:commandType]) {
@@ -98,7 +104,9 @@
         if ([options[@"merge"] isEqual:@YES]) {
           [transaction setData:data forDocument:reference merge:YES];
         } else if (![options[@"mergeFields"] isEqual:[NSNull null]]) {
-          [transaction setData:data forDocument:reference mergeFields:options[@"mergeFields"]];
+          [transaction setData:data
+                   forDocument:reference
+                   mergeFields:options[@"mergeFields"]];
         } else {
           [transaction setData:data forDocument:reference];
         }
@@ -111,7 +119,8 @@
   id transactionCompleteBlock = ^(id transactionResult, NSError *error) {
     FLTTransactionStreamHandler *strongSelf = weakSelf;
     if (error) {
-      NSArray *details = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+      NSArray *details =
+          [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
 
       dispatch_async(dispatch_get_main_queue(), ^{
         events(@{
@@ -134,7 +143,8 @@
     strongSelf.ended();
   };
 
-  [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
+  [firestore runTransactionWithBlock:transactionRunBlock
+                          completion:transactionCompleteBlock];
 
   return nil;
 }

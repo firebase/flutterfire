@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebaseCorePlugin.m
+../../ ios / Classes / FLTFirebaseCorePlugin.m

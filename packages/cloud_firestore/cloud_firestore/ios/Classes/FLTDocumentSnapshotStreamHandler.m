@@ -15,14 +15,16 @@
 @implementation FLTDocumentSnapshotStreamHandler
 
 - (FlutterError *_Nullable)onListenWithArguments:(id _Nullable)arguments
-                                       eventSink:(nonnull FlutterEventSink)events {
+                                       eventSink:
+                                           (nonnull FlutterEventSink)events {
   NSNumber *includeMetadataChanges = arguments[@"includeMetadataChanges"];
 
   FIRDocumentReference *document = arguments[@"reference"];
 
   id listener = ^(FIRDocumentSnapshot *snapshot, NSError *_Nullable error) {
     if (error) {
-      NSArray *codeAndMessage = [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
+      NSArray *codeAndMessage =
+          [FLTFirebaseFirestoreUtils ErrorCodeAndMessageFromNSError:error];
       NSString *code = codeAndMessage[0];
       NSString *message = codeAndMessage[1];
       NSDictionary *details = @{
@@ -42,9 +44,10 @@
     }
   };
 
-  self.listenerRegistration =
-      [document addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges.boolValue
-                                                     listener:listener];
+  self.listenerRegistration = [document
+      addSnapshotListenerWithIncludeMetadataChanges:includeMetadataChanges
+                                                        .boolValue
+                                           listener:listener];
 
   return nil;
 }

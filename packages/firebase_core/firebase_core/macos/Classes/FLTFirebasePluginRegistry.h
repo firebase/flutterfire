@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebasePluginRegistry.h
+../../ ios / Classes / FLTFirebasePluginRegistry.h

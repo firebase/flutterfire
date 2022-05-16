@@ -1,1 +1,1 @@
-../../ios/Classes/FirebaseInstallationsPlugin.h
+../../ ios / Classes / FirebaseInstallationsPlugin.h

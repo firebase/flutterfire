@@ -6,7 +6,8 @@
 #import "FLTFirebasePluginRegistry.h"
 
 // Flutter method channel name.
-NSString *const kFLTFirebaseCoreChannelName = @"plugins.flutter.io/firebase_core";
+NSString *const kFLTFirebaseCoreChannelName =
+    @"plugins.flutter.io/firebase_core";
 
 // Firebase method names.
 NSString *const kMethodCoreInitializeApp = @"Firebase#initializeApp";
@@ -25,7 +26,8 @@ NSString *const kAppName = @"appName";
 NSString *const kOptions = @"options";
 NSString *const kEnabled = @"enabled";
 NSString *const kPluginConstants = @"pluginConstants";
-NSString *const kIsAutomaticDataCollectionEnabled = @"isAutomaticDataCollectionEnabled";
+NSString *const kIsAutomaticDataCollectionEnabled =
+    @"isAutomaticDataCollectionEnabled";
 NSString *const kFirebaseOptionsApiKey = @"apiKey";
 NSString *const kFirebaseOptionsAppId = @"appId";
 NSString *const kFirebaseOptionsMessagingSenderId = @"messagingSenderId";
@@ -61,16 +63,19 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   dispatch_once(&onceToken, ^{
     instance = [[FLTFirebaseCorePlugin alloc] init];
     // Register with the Flutter Firebase plugin registry.
-    [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:instance];
+    [[FLTFirebasePluginRegistry sharedInstance]
+        registerFirebasePlugin:instance];
 
-    // Initialize default Firebase app, but only if the plist file options exist.
-    //  - If it is missing then there is no default app discovered in Dart and Dart throws an error.
-    //  - Without this the iOS/MacOS app would crash immediately on calling [FIRApp configure]
-    //  without
+    // Initialize default Firebase app, but only if the plist file options
+    // exist.
+    //  - If it is missing then there is no default app discovered in Dart and
+    //  Dart throws an error.
+    //  - Without this the iOS/MacOS app would crash immediately on calling
+    //  [FIRApp configure] without
     //    providing helpful context about the crash to the user.
     //
-    // Default app exists check is for backwards compatibility of legacy FlutterFire plugins that
-    // call [FIRApp configure]; themselves internally.
+    // Default app exists check is for backwards compatibility of legacy
+    // FlutterFire plugins that call [FIRApp configure]; themselves internally.
     FIROptions *options = [FIROptions defaultOptions];
     if (options != nil && [FIRApp allApps][@"__FIRAPP_DEFAULT"] == nil) {
       [FIRApp configureWithOptions:options];
@@ -80,10 +85,11 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   return instance;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)flutterResult {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)flutterResult {
   FLTFirebaseMethodCallErrorBlock errorBlock =
-      ^(NSString *_Nonnull code, NSString *_Nonnull message, NSDictionary *_Nullable details,
-        NSError *_Nullable error) {
+      ^(NSString *_Nonnull code, NSString *_Nonnull message,
+        NSDictionary *_Nullable details, NSError *_Nullable error) {
         flutterResult([FLTFirebasePlugin createFlutterErrorFromCode:code
                                                             message:message
                                                     optionalDetails:details
@@ -91,15 +97,19 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
       };
 
   FLTFirebaseMethodCallResult *methodCallResult =
-      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult andErrorBlock:errorBlock];
+      [FLTFirebaseMethodCallResult createWithSuccess:flutterResult
+                                       andErrorBlock:errorBlock];
 
   if ([kMethodCoreInitializeApp isEqualToString:call.method]) {
     [self initializeApp:call.arguments withMethodCallResult:methodCallResult];
   } else if ([kMethodCoreInitializeCore isEqualToString:call.method]) {
     [self initializeCoreWithMethodCallResult:methodCallResult];
-  } else if ([kMethodAppSetAutomaticDataCollectionEnabled isEqualToString:call.method]) {
-    [self setAutomaticDataCollectionEnabled:call.arguments withMethodCallResult:methodCallResult];
-  } else if ([kMethodAppSetAutomaticResourceManagementEnabled isEqualToString:call.method]) {
+  } else if ([kMethodAppSetAutomaticDataCollectionEnabled
+                 isEqualToString:call.method]) {
+    [self setAutomaticDataCollectionEnabled:call.arguments
+                       withMethodCallResult:methodCallResult];
+  } else if ([kMethodAppSetAutomaticResourceManagementEnabled
+                 isEqualToString:call.method]) {
     // Unsupported on iOS/MacOS.
     methodCallResult.success(nil);
   } else if ([kMethodAppDelete isEqualToString:call.method]) {
@@ -111,19 +121,24 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 
 #pragma mark - API
 
-- (void)initializeApp:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  NSString *appNameIos = [FLTFirebasePlugin firebaseAppNameFromDartName:arguments[kAppName]];
+- (void)initializeApp:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+  NSString *appNameIos =
+      [FLTFirebasePlugin firebaseAppNameFromDartName:arguments[kAppName]];
 
   if ([FLTFirebasePlugin firebaseAppNamed:appNameIos]) {
-    result.success([self dictionaryFromFIRApp:[FLTFirebasePlugin firebaseAppNamed:appNameIos]]);
+    result.success([self
+        dictionaryFromFIRApp:[FLTFirebasePlugin firebaseAppNamed:appNameIos]]);
     return;
   }
 
   NSDictionary *optionsDictionary = arguments[kOptions];
   NSString *appId = optionsDictionary[kFirebaseOptionsAppId];
-  NSString *messagingSenderId = optionsDictionary[kFirebaseOptionsMessagingSenderId];
-  FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:appId
-                                                    GCMSenderID:messagingSenderId];
+  NSString *messagingSenderId =
+      optionsDictionary[kFirebaseOptionsMessagingSenderId];
+  FIROptions *options =
+      [[FIROptions alloc] initWithGoogleAppID:appId
+                                  GCMSenderID:messagingSenderId];
 
   // kFirebaseOptionsApiKey
   if (![optionsDictionary[kFirebaseOptionsApiKey] isEqual:[NSNull null]]) {
@@ -141,7 +156,8 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   }
 
   // kFirebaseOptionsStorageBucket
-  if (![optionsDictionary[kFirebaseOptionsStorageBucket] isEqual:[NSNull null]]) {
+  if (![optionsDictionary[kFirebaseOptionsStorageBucket]
+          isEqual:[NSNull null]]) {
     options.storageBucket = optionsDictionary[kFirebaseOptionsStorageBucket];
   }
 
@@ -151,13 +167,17 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   }
 
   // kFirebaseOptionsDeepLinkURLScheme
-  if (![optionsDictionary[kFirebaseOptionsDeepLinkURLScheme] isEqual:[NSNull null]]) {
-    options.deepLinkURLScheme = optionsDictionary[kFirebaseOptionsDeepLinkURLScheme];
+  if (![optionsDictionary[kFirebaseOptionsDeepLinkURLScheme]
+          isEqual:[NSNull null]]) {
+    options.deepLinkURLScheme =
+        optionsDictionary[kFirebaseOptionsDeepLinkURLScheme];
   }
 
   // kFirebaseOptionsAndroidClientId
-  if (![optionsDictionary[kFirebaseOptionsAndroidClientId] isEqual:[NSNull null]]) {
-    options.androidClientID = optionsDictionary[kFirebaseOptionsAndroidClientId];
+  if (![optionsDictionary[kFirebaseOptionsAndroidClientId]
+          isEqual:[NSNull null]]) {
+    options.androidClientID =
+        optionsDictionary[kFirebaseOptionsAndroidClientId];
   }
 
   // kFirebaseOptionsIosBundleId
@@ -180,10 +200,12 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   result.success([self dictionaryFromFIRApp:[FIRApp appNamed:appNameIos]]);
 }
 
-- (void)initializeCoreWithMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)initializeCoreWithMethodCallResult:
+    (FLTFirebaseMethodCallResult *)result {
   void (^initializeCoreBlock)(void) = ^void() {
     NSDictionary<NSString *, FIRApp *> *firebaseApps = [FIRApp allApps];
-    NSMutableArray *firebaseAppsArray = [NSMutableArray arrayWithCapacity:firebaseApps.count];
+    NSMutableArray *firebaseAppsArray =
+        [NSMutableArray arrayWithCapacity:firebaseApps.count];
 
     for (NSString *appName in firebaseApps) {
       FIRApp *firebaseApp = firebaseApps[appName];
@@ -197,11 +219,13 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
     _coreInitialized = YES;
     initializeCoreBlock();
   } else {
-    [[FLTFirebasePluginRegistry sharedInstance] didReinitializeFirebaseCore:initializeCoreBlock];
+    [[FLTFirebasePluginRegistry sharedInstance]
+        didReinitializeFirebaseCore:initializeCoreBlock];
   }
 }
 
-- (void)deleteApp:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+- (void)deleteApp:(id)arguments
+    withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
   NSString *appName = arguments[kAppName];
   FIRApp *firebaseApp = [FLTFirebasePlugin firebaseAppNamed:appName];
 
@@ -210,7 +234,8 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
       if (success) {
         result.success(nil);
       } else {
-        result.error(@"delete-failed", @"Failed to delete a Firebase app instance.", nil, nil);
+        result.error(@"delete-failed",
+                     @"Failed to delete a Firebase app instance.", nil, nil);
       }
     }];
   } else {
@@ -219,7 +244,8 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 }
 
 - (void)setAutomaticDataCollectionEnabled:(id)arguments
-                     withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+                     withMethodCallResult:
+                         (FLTFirebaseMethodCallResult *)result {
   NSString *appName = arguments[kAppName];
   BOOL dataCollectionEnabled = [arguments[kEnabled] boolValue];
 
@@ -237,13 +263,16 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
   return @{
     kFirebaseOptionsApiKey : (id)options.APIKey ?: [NSNull null],
     kFirebaseOptionsAppId : (id)options.googleAppID ?: [NSNull null],
-    kFirebaseOptionsMessagingSenderId : (id)options.GCMSenderID ?: [NSNull null],
+    kFirebaseOptionsMessagingSenderId : (id)options.GCMSenderID
+        ?: [NSNull null],
     kFirebaseOptionsProjectId : (id)options.projectID ?: [NSNull null],
     kFirebaseOptionsDatabaseUrl : (id)options.databaseURL ?: [NSNull null],
     kFirebaseOptionsStorageBucket : (id)options.storageBucket ?: [NSNull null],
     kFirebaseOptionsTrackingId : (id)options.trackingID ?: [NSNull null],
-    kFirebaseOptionsDeepLinkURLScheme : (id)options.deepLinkURLScheme ?: [NSNull null],
-    kFirebaseOptionsAndroidClientId : (id)options.androidClientID ?: [NSNull null],
+    kFirebaseOptionsDeepLinkURLScheme : (id)options.deepLinkURLScheme
+        ?: [NSNull null],
+    kFirebaseOptionsAndroidClientId : (id)options.androidClientID
+        ?: [NSNull null],
     kFirebaseOptionsIosBundleId : (id)options.bundleID ?: [NSNull null],
     kFirebaseOptionsIosClientId : (id)options.clientID ?: [NSNull null],
     kFirebaseOptionsAppGroupId : (id)options.appGroupID ?: [NSNull null],
@@ -251,14 +280,16 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 }
 
 - (NSDictionary *)dictionaryFromFIRApp:(FIRApp *)firebaseApp {
-  NSString *appNameDart = [FLTFirebasePlugin firebaseAppNameFromIosName:firebaseApp.name];
+  NSString *appNameDart =
+      [FLTFirebasePlugin firebaseAppNameFromIosName:firebaseApp.name];
 
   return @{
     kName : appNameDart,
     kOptions : [self dictionaryFromFIROptions:firebaseApp.options],
-    kIsAutomaticDataCollectionEnabled : @(firebaseApp.isDataCollectionDefaultEnabled),
-    kPluginConstants :
-        [[FLTFirebasePluginRegistry sharedInstance] pluginConstantsForFIRApp:firebaseApp]
+    kIsAutomaticDataCollectionEnabled :
+        @(firebaseApp.isDataCollectionDefaultEnabled),
+    kPluginConstants : [[FLTFirebasePluginRegistry sharedInstance]
+        pluginConstantsForFIRApp:firebaseApp]
   };
 }
 

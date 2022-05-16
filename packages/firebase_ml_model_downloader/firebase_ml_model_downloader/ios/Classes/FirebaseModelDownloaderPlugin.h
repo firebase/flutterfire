@@ -12,5 +12,6 @@
 
 #import <firebase_core/FLTFirebasePlugin.h>
 
-@interface FirebaseModelDownloaderPlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FirebaseModelDownloaderPlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 @end

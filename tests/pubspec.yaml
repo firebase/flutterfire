@@ -81,6 +81,7 @@ dependencies:
   firebase_ml_model_downloader_platform_interface:
     path: ../packages/firebase_ml_model_downloader/firebase_ml_model_downloader_platform_interface
 
+
   # TODO does not run on android without google services json due to com.google.firebase.perf.FirebasePerformanceInitializer.onAppColdStart
   # firebase_performance:
   #   path: ../packages/firebase_performance/firebase_performance
@@ -101,6 +102,8 @@ dependencies:
   firebase_storage_web:
     path: ../packages/firebase_storage/firebase_storage_web
   flutter:
+    sdk: flutter
+  flutter_web_plugins:
     sdk: flutter
   http: ^0.13.4
 

@@ -7,6 +7,7 @@
 #import <TargetConditionals.h>
 #import <firebase_core/FLTFirebasePlugin.h>
 
-@interface FLTFirebasePerformancePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebasePerformancePlugin
+    : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
 
 @end

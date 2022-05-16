@@ -1,1 +1,1 @@
-../../ios/Classes/FLTFirebaseAppCheckPlugin.h
+../../ ios / Classes / FLTFirebaseAppCheckPlugin.h

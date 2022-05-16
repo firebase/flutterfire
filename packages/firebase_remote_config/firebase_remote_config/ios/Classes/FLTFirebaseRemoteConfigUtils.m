@@ -10,18 +10,20 @@
 + (NSDictionary *)ErrorCodeAndMessageFromNSError:(NSError *)error {
   NSMutableDictionary *codeAndMessage = [[NSMutableDictionary alloc] init];
   switch (error.code) {
-    case FIRRemoteConfigErrorInternalError:
-      [codeAndMessage setValue:@"internal" forKey:@"code"];
-      [codeAndMessage setValue:error.userInfo[NSLocalizedDescriptionKey] forKey:@"message"];
-      break;
-    case FIRRemoteConfigErrorThrottled:
-      [codeAndMessage setValue:@"throttled" forKey:@"code"];
-      [codeAndMessage setValue:@"frequency of requests exceeds throttled limits" forKey:@"message"];
-      break;
-    default:
-      [codeAndMessage setValue:@"unknown" forKey:@"code"];
-      [codeAndMessage setValue:@"unknown remote config error" forKey:@"message"];
-      break;
+  case FIRRemoteConfigErrorInternalError:
+    [codeAndMessage setValue:@"internal" forKey:@"code"];
+    [codeAndMessage setValue:error.userInfo[NSLocalizedDescriptionKey]
+                      forKey:@"message"];
+    break;
+  case FIRRemoteConfigErrorThrottled:
+    [codeAndMessage setValue:@"throttled" forKey:@"code"];
+    [codeAndMessage setValue:@"frequency of requests exceeds throttled limits"
+                      forKey:@"message"];
+    break;
+  default:
+    [codeAndMessage setValue:@"unknown" forKey:@"code"];
+    [codeAndMessage setValue:@"unknown remote config error" forKey:@"message"];
+    break;
   }
   return codeAndMessage;
 }

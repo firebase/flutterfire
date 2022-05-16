@@ -3,7 +3,8 @@
 // found in the LICENSE file.
 
 #import "FirebaseModelDownloaderPlugin.h"
-#if __has_include(<firebase_ml_model_downloader/firebase_ml_model_downloader-Swift.h>)
+#if __has_include(                                                             \
+    <firebase_ml_model_downloader/firebase_ml_model_downloader-Swift.h>)
 #import <firebase_ml_model_downloader/firebase_ml_model_downloader-Swift.h>
 #else
 #import "firebase_ml_model_downloader-Swift.h"
@@ -32,7 +33,8 @@
   return @"plugins.flutter.io/firebase_ml_model_downloader";
 }
 
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp {
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:
+    (FIRApp *_Nonnull)firebaseApp {
   return @{};
 }
 

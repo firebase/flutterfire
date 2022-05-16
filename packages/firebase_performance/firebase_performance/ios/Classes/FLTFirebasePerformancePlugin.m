@@ -4,7 +4,8 @@
 
 #import "FLTFirebasePerformancePlugin+Internal.h"
 
-NSString *const kFLTFirebasePerformanceChannelName = @"plugins.flutter.io/firebase_performance";
+NSString *const kFLTFirebasePerformanceChannelName =
+    @"plugins.flutter.io/firebase_performance";
 
 @implementation FLTFirebasePerformancePlugin
 static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
@@ -12,16 +13,18 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   methodHandlers = [NSMutableDictionary new];
 
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:@"plugins.flutter.io/firebase_performance"
-                                  binaryMessenger:[registrar messenger]];
+  FlutterMethodChannel *channel = [FlutterMethodChannel
+      methodChannelWithName:@"plugins.flutter.io/firebase_performance"
+            binaryMessenger:[registrar messenger]];
 
   FLTFirebasePerformancePlugin *instance = [FLTFirebasePerformancePlugin new];
   [registrar addMethodCallDelegate:instance channel:channel];
 
   SEL sel = NSSelectorFromString(@"registerLibrary:withVersion:");
   if ([FIRApp respondsToSelector:sel]) {
-    [FIRApp performSelector:sel withObject:LIBRARY_NAME withObject:LIBRARY_VERSION];
+    [FIRApp performSelector:sel
+                 withObject:LIBRARY_NAME
+                 withObject:LIBRARY_VERSION];
   }
 }
 
@@ -30,12 +33,15 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
   return self;
 }
 
-- (void)handleMethodCall:(FlutterMethodCall *)call result:(FlutterResult)result {
+- (void)handleMethodCall:(FlutterMethodCall *)call
+                  result:(FlutterResult)result {
   NSNumber *handle = call.arguments[@"handle"];
   if (![handle isEqual:[NSNull null]]) {
     if (![methodHandlers objectForKey:handle]) {
-      FLTFirebasePerformance *performance = [FLTFirebasePerformance sharedInstance];
-      [FLTFirebasePerformancePlugin addMethodHandler:handle methodHandler:performance];
+      FLTFirebasePerformance *performance =
+          [FLTFirebasePerformance sharedInstance];
+      [FLTFirebasePerformancePlugin addMethodHandler:handle
+                                       methodHandler:performance];
     }
     [methodHandlers[handle] handleMethodCall:call result:result];
   } else {
@@ -43,11 +49,15 @@ static NSMutableDictionary<NSNumber *, id<MethodCallHandler>> *methodHandlers;
   }
 }
 
-+ (void)addMethodHandler:(NSNumber *)handle methodHandler:(id<MethodCallHandler>)handler {
++ (void)addMethodHandler:(NSNumber *)handle
+           methodHandler:(id<MethodCallHandler>)handler {
   if (methodHandlers[handle]) {
-    NSString *reason =
-        [[NSString alloc] initWithFormat:@"Object for handle already exists: %d", handle.intValue];
-    @throw [[NSException alloc] initWithName:NSInvalidArgumentException reason:reason userInfo:nil];
+    NSString *reason = [[NSString alloc]
+        initWithFormat:@"Object for handle already exists: %d",
+                       handle.intValue];
+    @throw [[NSException alloc] initWithName:NSInvalidArgumentException
+                                      reason:reason
+                                    userInfo:nil];
   }
 
   methodHandlers[handle] = handler;

@@ -1,1 +1,1 @@
-../../../ios/Classes/Public/FLTFirebaseAuthPlugin.h
+../../../ ios / Classes / Public / FLTFirebaseAuthPlugin.h

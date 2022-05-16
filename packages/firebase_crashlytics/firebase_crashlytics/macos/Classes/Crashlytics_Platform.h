@@ -1,1 +1,1 @@
-./../../ios/Classes/Crashlytics_Platform.h
+./../../ ios / Classes / Crashlytics_Platform.h

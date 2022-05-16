@@ -1,1 +1,1 @@
-./../../ios/Classes/FLTFirebaseCrashlyticsPlugin.h
+./../../ ios / Classes / FLTFirebaseCrashlyticsPlugin.h
