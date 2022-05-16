@@ -24,6 +24,24 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
     if (dynamicLink.minimumAppVersion) {
       iosData[@"minimumVersion"] = dynamicLink.minimumAppVersion;
     }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeNone) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:0];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeWeak) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:1];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeDefault) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:2];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeUnique) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:3];
+    }
+
+    dictionary[@"utmParameters"] = dynamicLink.utmParametersDictionary;
     dictionary[@"ios"] = iosData;
     return dictionary;
   } else {
@@ -158,24 +176,49 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)buildShortLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+  FIRDynamicLinkComponentsOptions *options = [self setupOptions:arguments];
+  NSString *longDynamicLink = arguments[@"longDynamicLink"];
 
-  [components
-      shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
-                              NSError *_Nullable error) {
-        if (error != nil) {
-          result.error(nil, nil, nil, error);
-        } else {
-          if (warnings == nil) {
-            warnings = [NSMutableArray array];
+  if (longDynamicLink != nil) {
+    NSURL *url = [NSURL URLWithString:longDynamicLink];
+    [FIRDynamicLinkComponents
+        shortenURL:url
+           options:options
+        completion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                     NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
+
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
           }
+        }];
+  } else {
+    FIRDynamicLinkComponents *components = [self setupParameters:arguments];
+    components.options = options;
+    [components
+        shortenWithCompletion:^(NSURL *_Nullable shortURL, NSArray<NSString *> *_Nullable warnings,
+                                NSError *_Nullable error) {
+          if (error != nil) {
+            result.error(nil, nil, nil, error);
+          } else {
+            if (warnings == nil) {
+              warnings = [NSMutableArray array];
+            }
 
-          result.success(@{
-            kUrl : [shortURL absoluteString],
-            @"warnings" : warnings,
-          });
-        }
-      }];
+            result.success(@{
+              kUrl : [shortURL absoluteString],
+              @"warnings" : warnings,
+            });
+          }
+        }];
+  }
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {

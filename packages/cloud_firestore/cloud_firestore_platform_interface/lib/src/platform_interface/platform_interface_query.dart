@@ -147,7 +147,7 @@ abstract class QueryPlatform extends PlatformInterface {
   /// After a [FieldPath.documentId] order by call, you cannot add any more [orderBy]
   /// calls.
   /// Furthermore, you may not use [orderBy] on the [FieldPath.documentId] [field] when
-  /// using [startAfterDocument], [startAtDocument], [endAfterDocument],
+  /// using [startAfterDocument], [startAtDocument], [endBeforeDocument],
   /// or [endAtDocument] because the order by clause on the document id
   /// is added by these methods implicitly.
   QueryPlatform orderBy(List<List<dynamic>> orders) {
@@ -165,7 +165,7 @@ abstract class QueryPlatform extends PlatformInterface {
   ///
   /// See also:
   ///
-  ///  * [endAfterDocument] for a query that ends after a document.
+  ///  * [endBeforeDocument] for a query that ends after a document.
   ///  * [startAtDocument] for a query that starts at a document.
   ///  * [endAtDocument] for a query that ends at a document.
   QueryPlatform startAfterDocument(List<dynamic> orders, List<dynamic> values) {

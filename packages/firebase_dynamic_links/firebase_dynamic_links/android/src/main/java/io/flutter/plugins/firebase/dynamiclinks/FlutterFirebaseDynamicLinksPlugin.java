@@ -10,6 +10,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.dynamiclinks.DynamicLink;
@@ -133,8 +134,7 @@ public class FlutterFirebaseDynamicLinksPlugin
         result.success(url);
         return;
       case "FirebaseDynamicLinks#buildShortLink":
-        DynamicLink.Builder urlBuilder = setupParameters(call.arguments());
-        methodCallTask = buildShortLink(urlBuilder, call.arguments());
+        methodCallTask = buildShortLink(call.arguments());
         break;
       case "FirebaseDynamicLinks#getDynamicLink":
       case "FirebaseDynamicLinks#getInitialLink":
@@ -165,72 +165,91 @@ public class FlutterFirebaseDynamicLinksPlugin
     return urlBuilder.buildDynamicLink().getUri().toString();
   }
 
-  private Task<Map<String, Object>> buildShortLink(
-      DynamicLink.Builder urlBuilder, @Nullable Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+  private Task<Map<String, Object>> buildShortLink(@Nullable Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Integer suffix = 1;
-          Integer shortDynamicLinkPathLength = (Integer) arguments.get("shortLinkType");
-          if (shortDynamicLinkPathLength != null) {
-            switch (shortDynamicLinkPathLength) {
-              case 0:
-                suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
-                break;
-              case 1:
-                suffix = ShortDynamicLink.Suffix.SHORT;
-                break;
-              default:
-                break;
+          try {
+            DynamicLink.Builder urlBuilder = setupParameters(arguments);
+            String longDynamicLink = (String) arguments.get("longDynamicLink");
+
+            if (longDynamicLink != null) {
+              urlBuilder.setLongLink(Uri.parse(longDynamicLink));
             }
-          }
 
-          Map<String, Object> result = new HashMap<>();
-          ShortDynamicLink shortLink;
-          if (suffix != null) {
+            Integer suffix = 1;
+            Integer shortDynamicLinkPathLength = (Integer) arguments.get("shortLinkType");
+            if (shortDynamicLinkPathLength != null) {
+              switch (shortDynamicLinkPathLength) {
+                case 0:
+                  suffix = ShortDynamicLink.Suffix.UNGUESSABLE;
+                  break;
+                case 1:
+                  suffix = ShortDynamicLink.Suffix.SHORT;
+                  break;
+                default:
+                  break;
+              }
+            }
+
+            Map<String, Object> result = new HashMap<>();
+            ShortDynamicLink shortLink;
+
             shortLink = Tasks.await(urlBuilder.buildShortDynamicLink(suffix));
-          } else {
-            shortLink = Tasks.await(urlBuilder.buildShortDynamicLink());
+
+            List<String> warnings = new ArrayList<>();
+
+            for (ShortDynamicLink.Warning warning : shortLink.getWarnings()) {
+              warnings.add(warning.getMessage());
+            }
+
+            result.put("url", shortLink.getShortLink().toString());
+            result.put("warnings", warnings);
+            result.put("previewLink", shortLink.getPreviewLink().toString());
+
+            taskCompletionSource.setResult(result);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          List<String> warnings = new ArrayList<>();
-
-          for (ShortDynamicLink.Warning warning : shortLink.getWarnings()) {
-            warnings.add(warning.getMessage());
-          }
-
-          result.put("url", shortLink.getShortLink().toString());
-          result.put("warnings", warnings);
-          result.put("previewLink", shortLink.getPreviewLink().toString());
-
-          return result;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> getDynamicLink(
       FirebaseDynamicLinks dynamicLinks, @Nullable String url) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          PendingDynamicLinkData pendingDynamicLink;
+          try {
+            PendingDynamicLinkData pendingDynamicLink;
 
-          if (url != null) {
-            pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
-          } else {
-            // If there's no activity or initial Intent, then there's no initial dynamic link.
-            if (activity.get() == null
-                || activity.get().getIntent() == null
-                || activity.get().getIntent().getBooleanExtra("flutterfire-used-link", false)) {
-              return null;
+            if (url != null) {
+              pendingDynamicLink = Tasks.await(dynamicLinks.getDynamicLink(Uri.parse(url)));
+            } else {
+              // If there's no activity or initial Intent, then there's no initial dynamic link.
+              if (activity.get() == null
+                  || activity.get().getIntent() == null
+                  || activity.get().getIntent().getBooleanExtra("flutterfire-used-link", false)) {
+                taskCompletionSource.setResult(null);
+                return;
+              }
+              pendingDynamicLink =
+                  Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
+
+              activity.get().getIntent().putExtra("flutterfire-used-link", true);
             }
-            pendingDynamicLink =
-                Tasks.await(dynamicLinks.getDynamicLink(activity.get().getIntent()));
 
-            activity.get().getIntent().putExtra("flutterfire-used-link", true);
+            taskCompletionSource.setResult(
+                Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          return Utils.getMapFromPendingDynamicLinkData(pendingDynamicLink);
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private DynamicLink.Builder setupParameters(Map<String, Object> arguments) {
@@ -359,15 +378,17 @@ public class FlutterFirebaseDynamicLinksPlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(cachedThreadPool, () -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          return null;
-        });
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+    cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
+
+    return taskCompletionSource.getTask();
   }
 }

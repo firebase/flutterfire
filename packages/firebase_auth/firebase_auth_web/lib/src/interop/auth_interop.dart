@@ -221,6 +221,31 @@ abstract class OAuthCredential extends AuthCredential {
   external String get secret;
 }
 
+/// Defines the options for initializing an firebase.auth.OAuthCredential.
+/// For ID tokens with nonce claim, the raw nonce has to also be provided.
+
+@JS()
+@anonymous
+class OAuthCredentialOptions {
+  /// The OAuth access token used to initialize the OAuthCredential.
+  external String get accessToken;
+  external set accessToken(String a);
+
+  /// The OAuth ID token used to initialize the OAuthCredential.
+  external String get idToken;
+  external set idToken(String i);
+
+  /// The raw nonce associated with the ID token. It is required when an ID token with a nonce field is provided.
+  /// The SHA-256 hash of the raw nonce must match the nonce field in the ID token.
+  external String get rawNonce;
+  external set rawNonce(String r);
+  external factory OAuthCredentialOptions({
+    String? accessToken,
+    String? idToken,
+    String? rawNonce,
+  });
+}
+
 @JS('AuthProvider')
 @anonymous
 abstract class AuthProviderJsImpl {
@@ -279,7 +304,7 @@ class OAuthProviderJsImpl extends AuthProviderJsImpl {
   external OAuthProviderJsImpl setCustomParameters(
     dynamic customOAuthParameters,
   );
-  external OAuthCredential credential([String? idToken, String? accessToken]);
+  external OAuthCredential credential(OAuthCredentialOptions credentialOptions);
 }
 
 @JS('TwitterAuthProvider')
@@ -344,11 +369,11 @@ abstract class ActionCodeInfo {
 abstract class UserMetadata {
   /// The date the user was created, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String get creationTime;
+  external String? get creationTime;
 
   /// The date the user last signed in, formatted as a UTC string.
   /// For example, 'Fri, 22 Sep 2017 01:49:58 GMT'.
-  external String get lastSignInTime;
+  external String? get lastSignInTime;
 }
 
 /// A structure for [User]'s user profile.

@@ -71,7 +71,7 @@ void main() {
           }
           return Future.delayed(Duration.zero);
         default:
-          return Future.value(null);
+          return Future.value();
       }
     });
   });

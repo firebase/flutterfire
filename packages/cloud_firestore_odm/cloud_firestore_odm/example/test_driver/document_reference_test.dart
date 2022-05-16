@@ -13,31 +13,17 @@ import 'common.dart';
 
 void main() {
   group('DocumentReference', () {
-    late FirebaseFirestore defaultFirestore;
     late FirebaseFirestore customFirestore;
 
     setUpAll(() async {
-      defaultFirestore = FirebaseFirestore.instanceFor(
-        app: await Firebase.initializeApp(
-          options: const FirebaseOptions(
-            apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
-            appId: '1:448618578101:ios:3a3c8ae9cb0b6408ac3efc',
-            messagingSenderId: '448618578101',
-            projectId: 'react-native-firebase-testing',
-            authDomain: 'react-native-firebase-testing.firebaseapp.com',
-            iosClientId:
-                '448618578101-m53gtqfnqipj12pts10590l37npccd2r.apps.googleusercontent.com',
-          ),
-        ),
-      );
       customFirestore = FirebaseFirestore.instanceFor(
         app: await Firebase.initializeApp(
           name: 'custom-document-app',
           options: FirebaseOptions(
-            apiKey: defaultFirestore.app.options.apiKey,
-            appId: defaultFirestore.app.options.appId,
-            messagingSenderId: defaultFirestore.app.options.messagingSenderId,
-            projectId: defaultFirestore.app.options.projectId,
+            apiKey: Firebase.app().options.apiKey,
+            appId: Firebase.app().options.appId,
+            messagingSenderId: Firebase.app().options.messagingSenderId,
+            projectId: Firebase.app().options.projectId,
           ),
         ),
       );
@@ -84,6 +70,7 @@ void main() {
           final collection = await initializeTest(MovieCollectionReference());
 
           await collection.doc('123').set(createMovie(title: 'title'));
+          await collection.doc('123').get();
 
           expect(
             await collection
@@ -281,7 +268,7 @@ void main() {
       test('overrides ==', () {
         expect(
           MovieCollectionReference().doc('123'),
-          MovieCollectionReference(defaultFirestore).doc('123'),
+          MovieCollectionReference(FirebaseFirestore.instance).doc('123'),
         );
         expect(
           MovieCollectionReference().doc('123'),
@@ -303,7 +290,7 @@ void main() {
       test('overrides ==', () {
         expect(
           MovieCollectionReference().doc('123').comments.doc('123'),
-          MovieCollectionReference(defaultFirestore)
+          MovieCollectionReference(FirebaseFirestore.instance)
               .doc('123')
               .comments
               .doc('123'),

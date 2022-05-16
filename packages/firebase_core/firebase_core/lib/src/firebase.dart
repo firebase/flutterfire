@@ -31,8 +31,8 @@ class Firebase {
   /// Initializes a new [FirebaseApp] instance by [name] and [options] and returns
   /// the created app. This method should be called before any usage of FlutterFire plugins.
   ///
-  /// The default app instance cannot be initialized here and should be created
-  /// using the platform Firebase integration.
+  /// The default app instance can be initialized here simply by passing no "name" as an argument
+  /// in both Dart & manual initialization flows.
   static Future<FirebaseApp> initializeApp({
     String? name,
     FirebaseOptions? options,

@@ -67,6 +67,7 @@ abstract class OAuthProvider {
     return credential;
   }
 
+  Future<void> logOutProvider();
   Future<void> signOut() async {}
 }
 

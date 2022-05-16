@@ -37,7 +37,7 @@ FlutterFire uses [Melos](https://github.com/invertase/melos) to manage the proje
 To install Melos, run the following command from your SSH client:
 
 ```bash
-pub global activate melos
+dart pub global activate melos
 ```
 
 Next, at the root of your locally cloned repository bootstrap the projects dependencies:
@@ -217,33 +217,17 @@ Some things to keep in mind before publishing the release:
 
 ### Run a release...
 
-#### ...with automatically generated change logs
-
 1) Switch to `master` branch locally.
-2) Run 'git pull origin master'.
-3) Run `git fetch --all` to make sure all tags and commits are fetched.
-4) Run `melos version`. This will auto commit, update the changelogs using git commit messages from the last release, and also tag the release for versioning.
-5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
+2) Run `git pull origin master`.
+3) Run `git pull --tags` to make sure all tags are fetched.
+4) Create new branch with the signature "release/[year]-[month]-[day]".
+5) Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
 6) Run `melos publish` to dry run and confirm all packages are publishable.
-7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
-8) Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
-
-
-#### ...with manual change log edits
-
-To run a release and manually edit the change log, do the following steps:
-
-1) Switch to `master` branch locally.
-2) Run 'git pull origin master'.
-3) Run `git fetch --all` to make sure all tags and commits are fetched.
-4) Run `melos version --no-git-tag-version`. This will skip auto commiting and git tagging, leaving your git tree dirty with version bumps and changelog entry changes.
-5) Update the `CHANGELOG.md` files that you manually want to edit/reword.
-6) Add and commit all the `CHANGELOG.md` and `pubspec.yaml` files that were modified by `melos version` (using the standard release commit message, e.g. `chore(release): publish packages`).
-7) `melos publish` to dry run and confirm all packages are publishable.
-8) `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev (`--git-tag-version` will add missing git tags since we skipped tagging in step 1).
-9) Push your changes to `master`; `git push --follow-tags`.
-10)Update the documentation by manually triggering the [publish docs workflow](https://github.com/FirebaseExtended/flutterfire/actions/workflows/docs.yaml); ![image](https://user-images.githubusercontent.com/5347038/117001552-69095780-acda-11eb-934c-a228be6f5c7a.png)
-
+7) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
+8) Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
+9) After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+10) Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
+11) Run `git push --tags` to push tags to repository.
 
 ### Graduate packages
 
@@ -257,3 +241,18 @@ to graduate multiple packages using the following steps:
 5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
 6) Run `melos publish` to dry run and confirm all packages are publishable.
 7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+
+## 6. Contributing documentation
+
+We gladly accept contributions to the SDK documentation. As our docs are also part of this repo,
+see "Contributing code" above for how to prepare and submit a PR to the repo.
+
+Since we merged the Firebase Flutter plugins documentation into the official
+Firebase documentation on firebase.google.com, you may notice some new markdown
+syntax related to the publishing infrastructure Google uses for developer documentation.
+
+Firebase follows the [Google developer documentation style guide](https://developers.google.com/style),
+similar to the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#documentation-dartdocs-javadocs-etc),
+which you should read before writing substantial contributions.
+
+We also keep a list of issues related to the documentation.

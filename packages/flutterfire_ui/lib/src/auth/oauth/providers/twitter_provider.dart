@@ -6,15 +6,17 @@ import 'package:flutter/foundation.dart';
 import 'package:twitter_login/twitter_login.dart';
 
 import 'package:flutterfire_ui/auth.dart';
-import '../../oauth/provider_resolvers.dart';
+import '../provider_resolvers.dart';
 import '../../widgets/internal/oauth_provider_button_style.dart';
 
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
+import 'sign_out_mixin.dart' if (dart.library.html) 'sign_out_mixin_web.dart';
+
 abstract class TwitterProvider extends OAuthProvider {}
 
-class TwitterProviderImpl extends TwitterProvider {
+class TwitterProviderImpl extends TwitterProvider with SignOutMixin {
   final String apiKey;
   final String apiSecretKey;
   final String redirectUri;
@@ -26,7 +28,7 @@ class TwitterProviderImpl extends TwitterProvider {
     redirectUri: redirectUri,
   );
 
-  late final _provider = TwitterLogin(
+  late final provider = TwitterLogin(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
     redirectURI: redirectUri,
@@ -40,7 +42,7 @@ class TwitterProviderImpl extends TwitterProvider {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final result = await _provider.login();
+    final result = await provider.login();
 
     switch (result.status) {
       case null:
@@ -67,6 +69,11 @@ class TwitterProviderImpl extends TwitterProvider {
 
   @override
   TwitterAuthProvider get firebaseAuthProvider => TwitterAuthProvider();
+
+  @override
+  Future<void> logOutProvider() {
+    return SynchronousFuture(null);
+  }
 }
 
 class TwitterProviderConfiguration

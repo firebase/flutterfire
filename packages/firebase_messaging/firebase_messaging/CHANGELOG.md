@@ -1,3 +1,40 @@
+## 11.4.0
+
+ - **FIX**: ensure silent foreground messages for iOS are called via event channel. ([#8635](https://github.com/FirebaseExtended/flutterfire/issues/8635)). ([abb91e48](https://github.com/FirebaseExtended/flutterfire/commit/abb91e4861b769485878a0f165d6ba8a9604de5a))
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/FirebaseExtended/flutterfire/issues/8532)). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 11.3.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 11.2.15
+
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8449). ([0510d113](https://github.com/FirebaseExtended/flutterfire/commit/0510d113dd279d6f55d889e522e74781d8fbb845))
+
+## 11.2.14
+
+ - Update a dependency to the latest release.
+
+## 11.2.13
+
+ - Update a dependency to the latest release.
+
+## 11.2.12
+
+ - Update a dependency to the latest release.
+
+## 11.2.11
+
+ - **FIX**: Ensure `onMessage` callback is consistently called on `iOS` platform. (#8202). ([54f5555e](https://github.com/FirebaseExtended/flutterfire/commit/54f5555edbedc553df30d7e32747e3b305fbe643))
+
+## 11.2.10
+
+ - **FIX**: Update notification key to `NSApplicationLaunchUserNotificationKey` for macOS. (#8251). ([46b54ccd](https://github.com/FirebaseExtended/flutterfire/commit/46b54ccd4aee61654e36396b86ed373939569d00))
+
+## 11.2.9
+
+ - **FIX**: `getInitialMessage` returns notification once & only if pressed for `iOS`. (#7634). ([85739b4c](https://github.com/FirebaseExtended/flutterfire/commit/85739b4cc2f75c6f7017de0e69160fa07477eb1e))
+
 ## 11.2.8
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
