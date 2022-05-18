@@ -1,3 +1,8 @@
+## 11.4.0
+
+ - **FIX**: ensure silent foreground messages for iOS are called via event channel. ([#8635](https://github.com/FirebaseExtended/flutterfire/issues/8635)). ([abb91e48](https://github.com/FirebaseExtended/flutterfire/commit/abb91e4861b769485878a0f165d6ba8a9604de5a))
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/FirebaseExtended/flutterfire/issues/8532)). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
 ## 11.3.0
 
  - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))

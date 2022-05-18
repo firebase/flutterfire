@@ -3,7 +3,7 @@ Book: /docs/_book.yaml
 
 <link rel="stylesheet" type="text/css" href="/styles/docs.css" />
 
-# Handle errors for Cloud Storage on Fluttter
+# Handle errors for Cloud Storage on Flutter
 
 Sometimes when you're building an app, things don't go as planned and an
 error occurs!
