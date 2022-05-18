@@ -8,12 +8,26 @@ import 'package:flutterfire_ui/src/firestore/table_builder.dart';
 Future<void> main() async {
   final instance = FakeFirebaseFirestore();
   final collection = instance.collection('persons');
-
   final bob = Person(
     firstName: 'Bob',
     address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
   );
-  await collection.add(bob.toMap());
+  final bob2 = Person(
+    firstName: 'Bob #2',
+    address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
+  );
+
+  setUp(() async {
+    await collection.add(bob.toMap());
+    await collection.add(bob2.toMap());
+  });
+
+  tearDown(() async {
+    final docsSnapshot = await collection.get();
+    for (final id in docsSnapshot.docs.map((e) => e.id)) {
+      await (collection.doc(id)).delete();
+    }
+  });
 
   testWidgets(
     'FirestoreDataTable without CellBuilder is render as expected',
@@ -26,7 +40,7 @@ Future<void> main() async {
           .text('{street: ${bob.address.street}, city: ${bob.address.city}}');
       final firstNameFinder = find.text(bob.firstName);
 
-      expect(streetFinder, findsOneWidget);
+      expect(streetFinder, findsNWidgets(2));
       expect(firstNameFinder, findsOneWidget);
     },
   );
@@ -47,8 +61,8 @@ Future<void> main() async {
       final streetFinder = find.text(bob.address.street);
       final firstNameFinder = find.text(bob.firstName);
 
-      expect(cityFinder, findsOneWidget);
-      expect(streetFinder, findsOneWidget);
+      expect(cityFinder, findsNWidgets(2));
+      expect(streetFinder, findsNWidgets(2));
       expect(firstNameFinder, findsOneWidget);
     },
   );
@@ -144,11 +158,8 @@ Future<void> main() async {
   testWidgets(
     'FirestoreDataTable row selection is capture',
     (WidgetTester tester) async {
-      final bob2 = Person(
-        firstName: 'Bob #2',
-        address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
-      );
-      await collection.add(bob2.toMap());
+      //For some reason, we have a renderflex issue when tapping
+      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
 
       var nbItemSelected = 0;
 
@@ -157,7 +168,7 @@ Future<void> main() async {
           query: collection,
           cellBuilder: _defaultCellBuilder,
           enableDefaultCellEditor: false,
-          onSelectedRows: (List<Map<String, dynamic>> selection) {
+          onSelectedRows: (selection) {
             nbItemSelected = selection.length;
           },
         ),
@@ -168,8 +179,6 @@ Future<void> main() async {
       final firstRowFinder = find.text(bob.firstName);
       expect(firstRowFinder, findsOneWidget);
 
-      //For some reason, we have a renderflex issue when tapping
-      tester.binding.window.physicalSizeTestValue = const Size(1000, 2000);
       await tester.tap(firstRowFinder);
       await tester.pumpAndSettle();
 
@@ -191,8 +200,9 @@ Future<void> main() async {
   );
 }
 
-Widget _defaultCellBuilder(Map<String, Object?> data, String colKey) {
-  final person = Person.fromMap(data);
+Widget _defaultCellBuilder(
+    QueryDocumentSnapshot<Map<String, Object?>> doc, String colKey) {
+  final person = Person.fromMap(doc.data());
 
   switch (ColumnKey.values.asNameMap()[colKey]) {
     case ColumnKey.firstName:

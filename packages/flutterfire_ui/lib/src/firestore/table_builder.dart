@@ -36,8 +36,9 @@ import 'query_builder.dart';
 /// ```
 /// {@endtemplate}
 ///
+
 typedef CellBuilder = Widget Function(
-  Map<String, Object?> data,
+  QueryDocumentSnapshot<Map<String, Object?>> snapshot,
   String colKey,
 );
 
@@ -48,7 +49,7 @@ typedef OnTapCell = void Function(
 );
 
 typedef OnSelectedRows = void Function(
-  List<Map<String, Object?>> items,
+  List<QueryDocumentSnapshot<Map<String, Object?>>> items,
 );
 
 class FirestoreDataTable extends StatefulWidget {
@@ -869,7 +870,6 @@ class _Source extends DataTableSource {
                 onSelectedRows?.call(
                   _previousSnapshot!.docs
                       .where((e) => _selectedRowIds.contains(e.id))
-                      .map((e) => e.data())
                       .toList(),
                 );
 
@@ -880,7 +880,7 @@ class _Source extends DataTableSource {
       cells: [
         for (final head in getHeaders().keys)
           DataCell(
-            builder?.call(data, head) ?? _ValueView(data[head]),
+            builder?.call(doc, head) ?? _ValueView(data[head]),
             onTap: enableDefaultEditor
                 ? () {
                     onTapCell(
