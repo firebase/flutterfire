@@ -212,7 +212,7 @@ public class FlutterFirebaseAnalyticsPlugin
         () -> {
           try {
             final Integer milliseconds =
-              (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
+                (Integer) Objects.requireNonNull(arguments.get(Constants.MILLISECONDS));
             analytics.setSessionTimeoutDuration(milliseconds);
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
