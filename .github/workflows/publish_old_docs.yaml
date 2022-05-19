@@ -17,6 +17,6 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}'
           projectId: flutter-firebase-docs
           entryPoint: 'website'
-          channelId: 'live'
+          #channelId: 'live'
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
