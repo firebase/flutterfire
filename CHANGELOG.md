@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-05-19
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore` - `v3.1.16`](#cloud_firestore---v3116)
+ - [`firebase_dynamic_links` - `v4.2.4`](#firebase_dynamic_links---v424)
+ - [`flutterfire_ui` - `v0.4.1+1`](#flutterfire_ui---v0411)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.16`](#cloud_firestore_odm---v100-dev16)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.16`](#cloud_firestore_odm_generator---v100-dev16)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `flutterfire_ui` - `v0.4.1+1`
+ - `cloud_firestore_odm` - `v1.0.0-dev.16`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.16`
+
+---
+
+#### `cloud_firestore` - `v3.1.16`
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. (#8522). ([45e27201](https://github.com/FirebaseExtended/flutterfire/commit/45e27201480088fab71af60963001baeae61d80d))
+
+#### `firebase_dynamic_links` - `v4.2.4`
+
+ - **FIX**: `getInitialLink()` returns `null` on 2nd call. (#8621). ([a83ee58e](https://github.com/FirebaseExtended/flutterfire/commit/a83ee58e56879b88b2886a6e5f5be549ee403b23))
+
+
 ## 2022-05-13
 
 ### Changes
