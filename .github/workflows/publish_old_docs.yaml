@@ -1,7 +1,12 @@
 name: publish_old_docs
 
 on:
-  workflow_dispatch:
+  push:
+    branches:    
+      - 'old-docs'
+    paths:
+      - 'docs/**'
+      - 'website/**'
 
 jobs:
   deploy:
@@ -17,6 +22,6 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_FLUTTER_FIREBASE_DOCS }}'
           projectId: flutter-firebase-docs
           entryPoint: 'website'
-          #channelId: 'live'
+          channelId: 'live'
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
