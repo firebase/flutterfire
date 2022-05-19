@@ -93,7 +93,8 @@ class __EmailVerificationScreenContentState
 
   @override
   void initState() {
-    SchedulerBinding.instance.addPostFrameCallback(_sendEmailVerification);
+    // ignore: unnecessary_non_null_assertion
+    SchedulerBinding.instance!.addPostFrameCallback(_sendEmailVerification);
     super.initState();
   }
 
