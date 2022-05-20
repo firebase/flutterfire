@@ -1,5 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart'
-    show AuthCredential, FirebaseAuth, User;
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/widgets.dart';
 
 enum AuthAction {
@@ -27,16 +26,7 @@ abstract class AuthController {
   AuthAction get action;
   FirebaseAuth get auth;
 
-  Future<User?> signIn(AuthCredential credential);
-
-  Future<void> link(AuthCredential credential);
-
-  Future<List<String>> findProvidersForEmail(
-    String email, {
-    AuthCredential? credential,
-  });
-
-  void reset();
+  void findProvidersForEmail(String email);
 }
 
 class AuthControllerProvider extends InheritedWidget {
