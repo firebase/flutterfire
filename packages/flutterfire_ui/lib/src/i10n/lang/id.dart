@@ -257,7 +257,8 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
         'Surat verifikasi telah dikirimkan ke alamat surel Anda. '
             'Silakan periksa surel Anda dan klik tautan untuk melakukan verifikasi '
             'alamat surel Anda.',
-    this.couldntVerifyEmailText = "Kami tidak dapat memverifikasi alamat surel Anda. ",
+    this.couldntVerifyEmailText =
+        'Kami tidak dapat memverifikasi alamat surel Anda. ',
     this.resendVerificationEmailButtonLabel = 'Kirim ulang verifikasi surel',
     this.arrayLabel = 'himpunan',
     this.booleanLabel = 'boolean',

@@ -253,14 +253,14 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
         'Wir haben Ihnen eine E-Mail mit einem Magic Link geschickt. Prüfen Sie Ihre E-Mail und folgen Sie dem Link, um sich anzumelden',
     this.sendLinkButtonLabel = 'Magic Link senden',
     this.credentialAlreadyInUseErrorText =
-'Diese Anmeldedaten werden bereits für ein anderes Konto verwendet.',
-this.verifyEmailTitleText = 'Bestätigen Sie Ihre E-Mail',
-this.emailVerificationInstructionText =
-'Es wurde eine Bestätigungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte prüfen Sie Ihre E-Mail und klicken Sie auf den Link, um Ihre E-Mail-Adresse zu bestätigen.',
-this.couldntVerifyEmailText =
-'Wir konnten Ihre E-Mail-Adresse nicht verifizieren.',
-this.resendVerificationEmailButtonLabel =
-'Bestätigungs-E-Mail erneut senden',
+        'Diese Anmeldedaten werden bereits für ein anderes Konto verwendet.',
+    this.verifyEmailTitleText = 'Bestätigen Sie Ihre E-Mail',
+    this.emailVerificationInstructionText =
+        'Es wurde eine Bestätigungs-E-Mail an Ihre E-Mail-Adresse gesendet. Bitte prüfen Sie Ihre E-Mail und klicken Sie auf den Link, um Ihre E-Mail-Adresse zu bestätigen.',
+    this.couldntVerifyEmailText =
+        'Wir konnten Ihre E-Mail-Adresse nicht verifizieren.',
+    this.resendVerificationEmailButtonLabel =
+        'Bestätigungs-E-Mail erneut senden',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',

@@ -255,7 +255,8 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyEmailTitleText = 'Verifique seu e-mail',
     this.emailVerificationInstructionText =
         'Um e-mail de verificação foi enviado para seu endereço de e-mail. Por favor, verifique seu e-mail e clique no link para verificar seu endereço de e-mail.',
-    this.couldntVerifyEmailText = 'Não foi possível verificar seu endereço de e-mail.',
+    this.couldntVerifyEmailText =
+        'Não foi possível verificar seu endereço de e-mail.',
     this.resendVerificationEmailButtonLabel = 'Reenviar e-mail de verificação',
     this.arrayLabel = 'lista',
     this.booleanLabel = 'boleano',

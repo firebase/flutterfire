@@ -259,7 +259,8 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
         'Een verificatie e-mail is naar uw e-mailadres gestuurd. '
             'Controleer uw e-mail en klik op de link om uw e-mailadres te verifiëren.',
     this.couldntVerifyEmailText = 'We konden uw e-mailadres niet verifiëren.',
-    this.resendVerificationEmailButtonLabel = 'Verificatie e-mail opnieuw versturen',
+    this.resendVerificationEmailButtonLabel =
+        'Verificatie e-mail opnieuw versturen',
     this.arrayLabel = 'array',
     this.booleanLabel = 'boolean',
     this.mapLabel = 'map',

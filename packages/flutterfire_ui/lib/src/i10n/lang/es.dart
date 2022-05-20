@@ -258,8 +258,9 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyEmailTitleText = 'Verifica tu correo electrónico',
     this.emailVerificationInstructionText =
         'Un mensaje de verificación ha sido enviado a tu dirección de correo electrónico. '
-            'Por favor, revisa tu correo electrónico y clica en el link para realizar la verificación.'
-    this.couldntVerifyEmailText = "No pudimos verificar tu correo electrónico. ",
+            'Por favor, revisa tu correo electrónico y clica en el link para realizar la verificación.',
+    this.couldntVerifyEmailText =
+        'No pudimos verificar tu correo electrónico. ',
     this.resendVerificationEmailButtonLabel = 'Reenviar correo de verificación',
     this.arrayLabel = 'arreglo',
     this.booleanLabel = 'booleano',
