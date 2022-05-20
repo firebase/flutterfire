@@ -257,9 +257,8 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
         'This credential is already associated with a different user account.',
     this.verifyEmailTitleText = 'Verify your email',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
+        'Un mensaje de verificación ha sido enviado a tu dirección de correo electrónico. '
+            'Por favor, revisa tu correo electrónico y clica en el link para realizar la verificación.'
     this.couldntVerifyEmailText = "No pudimos verificar tu correo electrónico. ",
     this.resendVerificationEmailButtonLabel = 'Reenviar correo de verificación',
     this.arrayLabel = 'arreglo',
