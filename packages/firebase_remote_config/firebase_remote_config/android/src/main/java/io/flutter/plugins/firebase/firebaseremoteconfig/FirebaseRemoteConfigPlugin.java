@@ -172,7 +172,10 @@ public class FirebaseRemoteConfigPlugin
               details.put("code", "unknown");
               details.put("message", "unknown remote config error");
             }
-            result.error(null, exception != null ? exception.getMessage() : null, details);
+            result.error(
+                "firebase_remote_config",
+                exception != null ? exception.getMessage() : null,
+                details);
           }
         });
   }
