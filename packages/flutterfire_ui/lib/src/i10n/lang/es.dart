@@ -261,7 +261,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
             'Please check your email and click on the link to verify '
             'your email address.',
     this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+    this.resendVerificationEmailButtonLabel = 'Reenviar correo de verificación',
     this.arrayLabel = 'arreglo',
     this.booleanLabel = 'booleano',
     this.mapLabel = 'mapa',
