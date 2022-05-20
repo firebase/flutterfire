@@ -251,14 +251,12 @@ class PtLocalizations extends FlutterFireUILocalizationLabels {
         'Enviamos um e-mail com um link mágico para você. Verifique seu e-mail e siga o link para fazer o login',
     this.sendLinkButtonLabel = 'Enviar link mágico',
     this.credentialAlreadyInUseErrorText =
-        'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+        'Esta credencial já está associada a uma conta de usuário diferente.',
+    this.verifyEmailTitleText = 'Verifique seu e-mail',
     this.emailVerificationInstructionText =
-        'A verification email has been sent to your email address. '
-            'Please check your email and click on the link to verify '
-            'your email address.',
-    this.couldntVerifyEmailText = "We couldn't verify your email address. ",
-    this.resendVerificationEmailButtonLabel = 'Resend verification email',
+        'Um e-mail de verificação foi enviado para seu endereço de e-mail. Por favor, verifique seu e-mail e clique no link para verificar seu endereço de e-mail.',
+    this.couldntVerifyEmailText = 'Não foi possível verificar seu endereço de e-mail.',
+    this.resendVerificationEmailButtonLabel = 'Reenviar e-mail de verificação',
     this.arrayLabel = 'lista',
     this.booleanLabel = 'boleano',
     this.mapLabel = 'mapa',
