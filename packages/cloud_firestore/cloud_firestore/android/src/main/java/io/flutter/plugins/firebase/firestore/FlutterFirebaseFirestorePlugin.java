@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.firestore;
 import android.app.Activity;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentReference;
@@ -139,42 +140,68 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private Task<Void> disableNetwork(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          return Tasks.await(firestore.disableNetwork());
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+            Tasks.await(firestore.disableNetwork());
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> enableNetwork(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          return Tasks.await(firestore.enableNetwork());
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+            Tasks.await(firestore.enableNetwork());
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<DocumentSnapshot> transactionGet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          DocumentReference documentReference = (DocumentReference) arguments.get("reference");
-          String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
+          try {
+            DocumentReference documentReference =
+                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
+            String transactionId = (String) Objects.requireNonNull(arguments.get("transactionId"));
 
-          Transaction transaction = transactions.get(transactionId);
+            Transaction transaction = transactions.get(transactionId);
 
-          if (transaction == null) {
-            throw new Exception(
-                "Transaction.getDocument(): No transaction handler exists for ID: "
-                    + transactionId);
+            if (transaction == null) {
+              taskCompletionSource.setException(
+                  new Exception(
+                      "Transaction.getDocument(): No transaction handler exists for ID: "
+                          + transactionId));
+              return;
+            }
+
+            taskCompletionSource.setResult(transaction.get(documentReference));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          return transaction.get(documentReference);
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private void transactionStoreResult(Map<String, Object> arguments) {
@@ -187,192 +214,272 @@ public class FlutterFirebaseFirestorePlugin
   }
 
   private Task<Void> batchCommit(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          @SuppressWarnings("unchecked")
-          List<Map<String, Object>> writes =
-              (List<Map<String, Object>>) Objects.requireNonNull(arguments.get("writes"));
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          WriteBatch batch = firestore.batch();
-
-          for (Map<String, Object> write : writes) {
-            String type = (String) Objects.requireNonNull(write.get("type"));
-            String path = (String) Objects.requireNonNull(write.get("path"));
+          try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> data = (Map<String, Object>) write.get("data");
+            List<Map<String, Object>> writes =
+                (List<Map<String, Object>>) Objects.requireNonNull(arguments.get("writes"));
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+            WriteBatch batch = firestore.batch();
 
-            DocumentReference documentReference = firestore.document(path);
+            for (Map<String, Object> write : writes) {
+              String type = (String) Objects.requireNonNull(write.get("type"));
+              String path = (String) Objects.requireNonNull(write.get("path"));
+              @SuppressWarnings("unchecked")
+              Map<String, Object> data = (Map<String, Object>) write.get("data");
 
-            switch (type) {
-              case "DELETE":
-                batch = batch.delete(documentReference);
-                break;
-              case "UPDATE":
-                batch = batch.update(documentReference, Objects.requireNonNull(data));
-                break;
-              case "SET":
-                @SuppressWarnings("unchecked")
-                Map<String, Object> options =
-                    (Map<String, Object>) Objects.requireNonNull(write.get("options"));
+              DocumentReference documentReference = firestore.document(path);
 
-                if (options.get("merge") != null && (boolean) options.get("merge")) {
-                  batch =
-                      batch.set(
-                          documentReference, Objects.requireNonNull(data), SetOptions.merge());
-                } else if (options.get("mergeFields") != null) {
+              switch (type) {
+                case "DELETE":
+                  batch = batch.delete(documentReference);
+                  break;
+                case "UPDATE":
+                  batch = batch.update(documentReference, Objects.requireNonNull(data));
+                  break;
+                case "SET":
                   @SuppressWarnings("unchecked")
-                  List<FieldPath> fieldPathList =
-                      (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
-                  batch =
-                      batch.set(
-                          documentReference,
-                          Objects.requireNonNull(data),
-                          SetOptions.mergeFieldPaths(fieldPathList));
-                } else {
-                  batch = batch.set(documentReference, Objects.requireNonNull(data));
-                }
-                break;
-            }
-          }
+                  Map<String, Object> options =
+                      (Map<String, Object>) Objects.requireNonNull(write.get("options"));
 
-          return Tasks.await(batch.commit());
+                  if (options.get("merge") != null && (boolean) options.get("merge")) {
+                    batch =
+                        batch.set(
+                            documentReference, Objects.requireNonNull(data), SetOptions.merge());
+                  } else if (options.get("mergeFields") != null) {
+                    @SuppressWarnings("unchecked")
+                    List<FieldPath> fieldPathList =
+                        (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
+                    batch =
+                        batch.set(
+                            documentReference,
+                            Objects.requireNonNull(data),
+                            SetOptions.mergeFieldPaths(fieldPathList));
+                  } else {
+                    batch = batch.set(documentReference, Objects.requireNonNull(data));
+                  }
+                  break;
+              }
+            }
+
+            Tasks.await(batch.commit());
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<QuerySnapshot> queryGet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<QuerySnapshot> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Source source = getSource(arguments);
-          Query query = (Query) arguments.get("query");
+          try {
+            Source source = getSource(arguments);
+            Query query = (Query) arguments.get("query");
 
-          if (query == null) {
-            throw new IllegalArgumentException(
-                "An error occurred while parsing query arguments, see native logs for more information. Please report this issue.");
+            if (query == null) {
+              taskCompletionSource.setException(
+                  new IllegalArgumentException(
+                      "An error occurred while parsing query arguments, see native logs for more information. Please report this issue."));
+              return;
+            }
+
+            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          return Tasks.await(query.get(source));
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<DocumentSnapshot> documentGet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<DocumentSnapshot> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Source source = getSource(arguments);
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-          return Tasks.await(documentReference.get(source));
+          try {
+            Source source = getSource(arguments);
+            DocumentReference documentReference =
+                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
+
+            taskCompletionSource.setResult(Tasks.await(documentReference.get(source)));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<QuerySnapshot> namedQueryGet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<QuerySnapshot> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Source source = getSource(arguments);
-          String name = (String) Objects.requireNonNull(arguments.get("name"));
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+          try {
+            Source source = getSource(arguments);
+            String name = (String) Objects.requireNonNull(arguments.get("name"));
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
 
-          Query query = Tasks.await(firestore.getNamedQuery(name));
+            Query query = Tasks.await(firestore.getNamedQuery(name));
 
-          if (query == null) {
-            throw new NullPointerException(
-                "Named query has not been found. Please check it has been loaded properly via loadBundle().");
+            if (query == null) {
+              taskCompletionSource.setException(
+                  new NullPointerException(
+                      "Named query has not been found. Please check it has been loaded properly via loadBundle()."));
+              return;
+            }
+
+            taskCompletionSource.setResult(Tasks.await(query.get(source)));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          return Tasks.await(query.get(source));
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> documentSet(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
+          try {
+            DocumentReference documentReference =
+                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
 
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
-          @SuppressWarnings("unchecked")
-          Map<String, Object> options =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
-
-          Task<Void> setTask;
-
-          if (options.get("merge") != null && (boolean) options.get("merge")) {
-            setTask = documentReference.set(data, SetOptions.merge());
-          } else if (options.get("mergeFields") != null) {
             @SuppressWarnings("unchecked")
-            List<FieldPath> fieldPathList =
-                (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
-            setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
-          } else {
-            setTask = documentReference.set(data);
-          }
+            Map<String, Object> data =
+                (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
+            @SuppressWarnings("unchecked")
+            Map<String, Object> options =
+                (Map<String, Object>) Objects.requireNonNull(arguments.get("options"));
 
-          return Tasks.await(setTask);
+            Task<Void> setTask;
+
+            if (options.get("merge") != null && (boolean) options.get("merge")) {
+              setTask = documentReference.set(data, SetOptions.merge());
+            } else if (options.get("mergeFields") != null) {
+              @SuppressWarnings("unchecked")
+              List<FieldPath> fieldPathList =
+                  (List<FieldPath>) Objects.requireNonNull(options.get("mergeFields"));
+              setTask = documentReference.set(data, SetOptions.mergeFieldPaths(fieldPathList));
+            } else {
+              setTask = documentReference.set(data);
+            }
+
+            taskCompletionSource.setResult(Tasks.await(setTask));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> documentUpdate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-          @SuppressWarnings("unchecked")
-          Map<String, Object> data =
-              (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          return Tasks.await(documentReference.update(data));
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            DocumentReference documentReference =
+                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
+            @SuppressWarnings("unchecked")
+            Map<String, Object> data =
+                (Map<String, Object>) Objects.requireNonNull(arguments.get("data"));
+
+            taskCompletionSource.setResult(Tasks.await(documentReference.update(data)));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> documentDelete(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          DocumentReference documentReference =
-              (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
-          return Tasks.await(documentReference.delete());
+          try {
+            DocumentReference documentReference =
+                (DocumentReference) Objects.requireNonNull(arguments.get("reference"));
+
+            taskCompletionSource.setResult(Tasks.await(documentReference.delete()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> clearPersistence(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          return Tasks.await(firestore.clearPersistence());
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+
+            taskCompletionSource.setResult(Tasks.await(firestore.clearPersistence()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> terminate(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          Tasks.await(firestore.terminate());
-          destroyCachedFirebaseFirestoreInstanceForKey(firestore.getApp().getName());
-          return null;
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+            Tasks.await(firestore.terminate());
+            destroyCachedFirebaseFirestoreInstanceForKey(firestore.getApp().getName());
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> waitForPendingWrites(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          FirebaseFirestore firestore =
-              (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
-          return Tasks.await(firestore.waitForPendingWrites());
+          try {
+            FirebaseFirestore firestore =
+                (FirebaseFirestore) Objects.requireNonNull(arguments.get("firestore"));
+
+            taskCompletionSource.setResult(Tasks.await(firestore.waitForPendingWrites()));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
@@ -497,27 +604,45 @@ public class FlutterFirebaseFirestorePlugin
 
   @Override
   public Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(cachedThreadPool, () -> null);
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
   public Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          // Context is ignored by API so we don't send it over even though annotated non-null.
+          try {
+            // Context is ignored by API so we don't send it over even though annotated non-null.
 
-          for (FirebaseApp app : FirebaseApp.getApps(null)) {
-            FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
-            Tasks.await(firestore.terminate());
-            FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
-                app.getName());
+            for (FirebaseApp app : FirebaseApp.getApps(null)) {
+              FirebaseFirestore firestore = FirebaseFirestore.getInstance(app);
+              Tasks.await(firestore.terminate());
+              FlutterFirebaseFirestorePlugin.destroyCachedFirebaseFirestoreInstanceForKey(
+                  app.getName());
+            }
+
+            removeEventListeners();
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          removeEventListeners();
-
-          return null;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   /**

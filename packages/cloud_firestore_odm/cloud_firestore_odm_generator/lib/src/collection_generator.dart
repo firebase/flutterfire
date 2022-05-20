@@ -295,7 +295,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                 f.type.isDartCoreInt ||
                 f.type.isDartCoreDouble ||
                 f.type.isDartCoreBool ||
-                f.type.isDartCoreList,
+                f.type.isPrimitiveList,
             // TODO filter list other than LIst<string|bool|num>
           )
           .toList(),
@@ -334,4 +334,18 @@ const _sentinel = _Sentinel();
 
   @override
   void parseGlobalData(LibraryElement library) {}
+}
+
+extension on DartType {
+  bool get isPrimitiveList {
+    if (!isDartCoreList) return false;
+
+    final generic = (this as InterfaceType).typeArguments.single;
+
+    return generic.isDartCoreNum ||
+        generic.isDartCoreString ||
+        generic.isDartCoreBool ||
+        generic.isDartCoreObject ||
+        generic.isDynamic;
+  }
 }

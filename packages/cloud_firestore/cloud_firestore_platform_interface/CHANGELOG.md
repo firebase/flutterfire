@@ -1,3 +1,11 @@
+## 5.5.6
+
+ - **REFACTOR**: fix analyzer issues introduced in Flutter 3.0.0 ([#8655](https://github.com/FirebaseExtended/flutterfire/issues/8655)). ([b05d7fa1](https://github.com/FirebaseExtended/flutterfire/commit/b05d7fa1ed56ab1bbceb02fec299800bce68a703))
+
+## 5.5.5
+
+ - Update a dependency to the latest release.
+
 ## 5.5.4
 
  - Update a dependency to the latest release.

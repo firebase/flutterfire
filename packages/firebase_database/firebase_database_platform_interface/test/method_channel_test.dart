@@ -29,7 +29,7 @@ void main() {
       ),
     );
 
-    messenger = ServicesBinding.instance!.defaultBinaryMessenger;
+    messenger = ServicesBinding.instance.defaultBinaryMessenger;
   });
 
   group('MethodChannelDatabase', () {

@@ -36,6 +36,7 @@ NotificationSettings getNotificationSettings(String? status) {
     notificationCenter: AppleNotificationSetting.notSupported,
     showPreviews: AppleShowPreviewSetting.notSupported,
     sound: AppleNotificationSetting.notSupported,
+    timeSensitive: AppleNotificationSetting.notSupported,
   );
 }
 

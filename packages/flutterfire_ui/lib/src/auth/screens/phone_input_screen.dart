@@ -27,6 +27,7 @@ class PhoneInputScreen extends StatelessWidget {
   final SideBuilder? sideBuilder;
   final TextDirection? desktopLayoutDirection;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const PhoneInputScreen({
     Key? key,
@@ -40,6 +41,7 @@ class PhoneInputScreen extends StatelessWidget {
     this.sideBuilder,
     this.desktopLayoutDirection,
     this.breakpoint = 500,
+    this.styles,
   }) : super(key: key);
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
@@ -62,34 +64,37 @@ class PhoneInputScreen extends StatelessWidget {
     final flowKey = Object();
     final l = FlutterFireUILocalizations.labelsOf(context);
 
-    return FlutterFireUIActions(
-      actions: actions ?? [SMSCodeRequestedAction(_next)],
-      child: UniversalScaffold(
-        body: ResponsivePage(
-          desktopLayoutDirection: desktopLayoutDirection,
-          sideBuilder: sideBuilder,
-          headerBuilder: headerBuilder,
-          headerMaxExtent: headerMaxExtent,
-          breakpoint: breakpoint,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                PhoneInputView(
-                  auth: auth,
-                  action: action,
-                  subtitleBuilder: subtitleBuilder,
-                  footerBuilder: footerBuilder,
-                  flowKey: flowKey,
-                ),
-                UniversalButton(
-                  text: l.goBackButtonLabel,
-                  variant: ButtonVariant.text,
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: FlutterFireUIActions(
+        actions: actions ?? [SMSCodeRequestedAction(_next)],
+        child: UniversalScaffold(
+          body: ResponsivePage(
+            desktopLayoutDirection: desktopLayoutDirection,
+            sideBuilder: sideBuilder,
+            headerBuilder: headerBuilder,
+            headerMaxExtent: headerMaxExtent,
+            breakpoint: breakpoint,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  PhoneInputView(
+                    auth: auth,
+                    action: action,
+                    subtitleBuilder: subtitleBuilder,
+                    footerBuilder: footerBuilder,
+                    flowKey: flowKey,
+                  ),
+                  UniversalButton(
+                    text: l.goBackButtonLabel,
+                    variant: ButtonVariant.text,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
