@@ -255,7 +255,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.sendLinkButtonLabel = 'Enviar enlace mágico',
     this.credentialAlreadyInUseErrorText =
         'This credential is already associated with a different user account.',
-    this.verifyEmailTitleText = 'Verify your email',
+    this.verifyEmailTitleText = 'Verifica tu correo electrónico',
     this.emailVerificationInstructionText =
         'Un mensaje de verificación ha sido enviado a tu dirección de correo electrónico. '
             'Por favor, revisa tu correo electrónico y clica en el link para realizar la verificación.'
