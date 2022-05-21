@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
@@ -15,60 +14,35 @@ class AwaitingDynamicLink extends AuthState {
 }
 
 abstract class EmailLinkFlowController extends AuthController {
-  Future<void> sendLink(String email);
+  void sendLink(String email);
 }
 
-class EmailLinkFlow extends AuthFlow implements EmailLinkFlowController {
-  final ActionCodeSettings actionCodeSettings;
-  final FirebaseDynamicLinks? dynamicLinks;
-
+class EmailLinkFlow extends AuthFlow<EmailLinkAuthProvider>
+    implements EmailLinkFlowController, EmailLinkAuthListener {
   EmailLinkFlow({
     FirebaseAuth? auth,
-    this.dynamicLinks,
-    required this.actionCodeSettings,
+    required EmailLinkAuthProvider provider,
   }) : super(
           action: AuthAction.signIn,
           auth: auth,
           initialState: const Uninitialized(),
+          provider: provider,
         );
-
-  FirebaseDynamicLinks get _links =>
-      dynamicLinks ?? FirebaseDynamicLinks.instance;
 
   @override
-  Future<void> sendLink(String email) async {
+  void sendLink(String email) {
+    provider.sendLink(email);
+  }
+
+  @override
+  void onBeforeLinkSent(String email) {
     value = const SendingLink();
+  }
 
-    try {
-      await auth.sendSignInLinkToEmail(
-        email: email,
-        actionCodeSettings: actionCodeSettings,
-      );
-
-      value = const AwaitingDynamicLink();
-
-      final linkData = await _links.onLink.first;
-      final link = linkData.link.toString();
-
-      if (auth.isSignInWithEmailLink(link)) {
-        value = const SigningIn();
-        final userCredential =
-            await auth.signInWithEmailLink(email: email, emailLink: link);
-
-        final user = userCredential.user;
-
-        if (user != null) {
-          value = SignedIn(user);
-        }
-      } else {
-        throw FirebaseAuthException(
-          code: 'invalid-email-signin-link',
-          message: 'Invalid email sign in link',
-        );
-      }
-    } on Exception catch (e) {
-      value = AuthFailed(e);
-    }
+  @override
+  void onLinkSent(String email) {
+    value = const AwaitingDynamicLink();
+    provider.awaitLink(email);
   }
 }
 

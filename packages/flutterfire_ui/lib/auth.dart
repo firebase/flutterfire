@@ -11,6 +11,12 @@ export 'src/auth/auth_state.dart'
         SigningIn,
         AuthFailed,
         DifferentSignInMethodsFound;
+
+export 'src/auth/providers/auth_provider.dart';
+export 'src/auth/providers/email_auth_provider.dart';
+export 'src/auth/providers/email_link_auth_provider.dart';
+export 'src/auth/providers/oauth_provider.dart';
+
 export 'src/auth/flows/phone_auth_flow.dart';
 export 'src/auth/flows/email_link_flow.dart';
 
@@ -22,7 +28,6 @@ export 'src/auth/widgets/sms_code_input.dart'
     show SMSCodeInputState, SMSCodeInput;
 
 export 'src/auth/flows/email_flow.dart';
-
 export 'src/auth/flows/oauth_flow.dart' show OAuthController, OAuthFlow;
 
 export 'src/auth/oauth/social_icons.dart' show SocialIcons;

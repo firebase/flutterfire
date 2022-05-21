@@ -1,4 +1,3 @@
-import 'package:desktop_webview_auth/desktop_webview_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 
@@ -49,27 +48,27 @@ abstract class OAuthProviders {
   }
 }
 
-abstract class OAuthProvider {
-  Future<OAuthCredential> signIn();
+// abstract class OAuthProvider {
+//   Future<OAuthCredential> signIn();
 
-  ProviderArgs get desktopSignInArgs;
-  dynamic get firebaseAuthProvider;
-  OAuthCredential fromDesktopAuthResult(AuthResult result);
+//   ProviderArgs get desktopSignInArgs;
+//   dynamic get firebaseAuthProvider;
+//   OAuthCredential fromDesktopAuthResult(AuthResult result);
 
-  Future<OAuthCredential> desktopSignIn() async {
-    final result = await DesktopWebviewAuth.signIn(desktopSignInArgs);
+//   Future<OAuthCredential> desktopSignIn() async {
+//     final result = await DesktopWebviewAuth.signIn(desktopSignInArgs);
 
-    if (result == null) {
-      throw Exception('Sign in failed');
-    }
+//     if (result == null) {
+//       throw Exception('Sign in failed');
+//     }
 
-    final credential = fromDesktopAuthResult(result);
-    return credential;
-  }
+//     final credential = fromDesktopAuthResult(result);
+//     return credential;
+//   }
 
-  Future<void> logOutProvider();
-  Future<void> signOut() async {}
-}
+//   Future<void> logOutProvider();
+//   Future<void> signOut() async {}
+// }
 
 extension OAuthHelpers on User {
   bool isProviderLinked(String providerId) {

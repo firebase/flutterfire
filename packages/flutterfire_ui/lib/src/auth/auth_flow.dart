@@ -18,7 +18,6 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
     implements AuthController, AuthListener {
   @override
   FirebaseAuth auth;
-  @override
   final AuthState initialState;
   AuthAction? _action;
   List<VoidCallback> _onDispose = [];
@@ -63,7 +62,9 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   })  : auth = auth ?? FirebaseAuth.instance,
         _action = action,
         _provider = provider,
-        super(initialState);
+        super(initialState) {
+    _provider.authListener = this;
+  }
 
   void reset() {
     value = initialState;
@@ -121,5 +122,10 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   @override
   void onSignedIn(UserCredential credential) {
     value = SignedIn(credential.user);
+  }
+
+  @override
+  void findProvidersForEmail(String email) {
+    provider.fetchDifferentProvidersForEmail(email, null);
   }
 }
