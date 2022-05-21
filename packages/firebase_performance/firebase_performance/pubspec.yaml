@@ -3,7 +3,7 @@ description:
   Flutter plugin for Google Performance Monitoring for Firebase, an app
   measurement solution that monitors traces and HTTP/S network requests on Android and
   iOS.
-homepage: https://firebase.flutter.dev/docs/performance/overview
+homepage: https://firebase.google.com/docs/performance
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
 version: 0.8.0+12
 
