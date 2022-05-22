@@ -4,40 +4,45 @@ import 'package:flutterfire_ui/auth.dart';
 
 class ReauthenticateView extends StatelessWidget {
   final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback? onSignedIn;
 
   const ReauthenticateView({
     Key? key,
-    required this.providerConfigs,
+    required this.providers,
     this.auth,
     this.onSignedIn,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final providers = (auth ?? FirebaseAuth.instance).currentUser!.providerData;
-    final configsMap = providerConfigs
-        .fold<Map<String, ProviderConfiguration>>({}, (map, config) {
-      return {
-        ...map,
-        config.providerId: config,
-      };
-    });
+    final _linkedProviders =
+        (auth ?? FirebaseAuth.instance).currentUser!.providerData;
 
-    List<ProviderConfiguration> configs = [];
+    final providersMap = providers.fold<Map<String, AuthProvider>>(
+      {},
+      (map, provider) {
+        return {
+          ...map,
+          provider.providerId: provider,
+        };
+      },
+    );
 
-    for (final p in providers) {
-      final providerConfig = configsMap[p.providerId];
-      if (providerConfig != null) {
-        configs.add(providerConfig);
+    List<AuthProvider> _providers = [];
+
+    for (final p in _linkedProviders) {
+      final provider = providersMap[p.providerId];
+
+      if (provider != null) {
+        _providers.add(provider);
       }
     }
 
     return AuthStateListener(
       child: LoginView(
         action: AuthAction.signIn,
-        providerConfigs: configs,
+        providers: _providers,
         showTitle: false,
       ),
       listener: (oldState, newState, ctrl) {

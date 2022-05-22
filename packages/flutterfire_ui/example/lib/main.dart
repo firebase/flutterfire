@@ -212,7 +212,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
                 Navigator.pushReplacementNamed(context, '/');
               }),
             ],
-            config: emailLinkProviderConfig,
+            provider: emailLinkProviderConfig,
             headerMaxExtent: 200,
             headerBuilder: headerIcon(Icons.link),
             sideBuilder: sideIcon(Icons.link),

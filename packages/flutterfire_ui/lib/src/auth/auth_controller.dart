@@ -27,6 +27,7 @@ abstract class AuthController {
   FirebaseAuth get auth;
 
   void findProvidersForEmail(String email);
+  void reset();
 }
 
 class AuthControllerProvider extends InheritedWidget {

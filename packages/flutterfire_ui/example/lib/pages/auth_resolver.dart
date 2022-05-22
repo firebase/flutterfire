@@ -9,7 +9,7 @@ class AuthResolver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const providerConfigs = [
+    const providers = [
       EmailProviderConfiguration(),
       GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
       PhoneProviderConfiguration(),
@@ -26,7 +26,7 @@ class AuthResolver extends StatelessWidget {
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return const ProfileScreen(providerConfigs: providerConfigs);
+          return const ProfileScreen(providers: providers);
         }
 
         return SignInScreen(
@@ -67,7 +67,7 @@ class AuthResolver extends StatelessWidget {
               ),
             );
           },
-          providerConfigs: providerConfigs,
+          providers: providers,
         );
       },
     );

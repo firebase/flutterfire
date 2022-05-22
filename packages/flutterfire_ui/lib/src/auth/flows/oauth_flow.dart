@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
 import '../auth_flow.dart';
 import '../auth_state.dart';

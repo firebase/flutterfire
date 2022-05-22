@@ -5,40 +5,42 @@ import 'package:flutterfire_ui/auth.dart';
 class DifferentMethodSignInView extends StatelessWidget {
   final FirebaseAuth? auth;
   final List<String> availableProviders;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback? onSignedIn;
 
   const DifferentMethodSignInView({
     Key? key,
     required this.availableProviders,
-    required this.providerConfigs,
+    required this.providers,
     this.auth,
     this.onSignedIn,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final configsMap = providerConfigs
-        .fold<Map<String, ProviderConfiguration>>({}, (map, config) {
-      return {
-        ...map,
-        config.providerId: config,
-      };
-    });
+    final providersMap = providers.fold<Map<String, AuthProvider>>(
+      {},
+      (map, config) {
+        return {
+          ...map,
+          config.providerId: config,
+        };
+      },
+    );
 
-    List<ProviderConfiguration> configs = [];
+    List<AuthProvider> _providers = [];
 
     for (final p in availableProviders) {
-      final providerConfig = configsMap[p];
+      final providerConfig = providersMap[p];
       if (providerConfig != null) {
-        configs.add(providerConfig);
+        _providers.add(providerConfig);
       }
     }
 
     return AuthStateListener(
       child: LoginView(
         action: AuthAction.signIn,
-        providerConfigs: configs,
+        providers: _providers,
         showTitle: false,
       ),
       listener: (oldState, newState, ctrl) {

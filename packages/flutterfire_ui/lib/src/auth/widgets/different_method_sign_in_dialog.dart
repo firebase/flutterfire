@@ -8,13 +8,13 @@ import '../widgets/internal/title.dart';
 class DifferentMethodSignInDialog extends StatelessWidget {
   final FirebaseAuth? auth;
   final List<String> availableProviders;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback? onSignedIn;
 
   const DifferentMethodSignInDialog({
     Key? key,
     required this.availableProviders,
-    required this.providerConfigs,
+    required this.providers,
     this.auth,
     this.onSignedIn,
   }) : super(key: key);
@@ -37,7 +37,7 @@ class DifferentMethodSignInDialog extends StatelessWidget {
                 const SizedBox(height: 32),
                 DifferentMethodSignInView(
                   auth: auth,
-                  providerConfigs: providerConfigs,
+                  providers: providers,
                   availableProviders: availableProviders,
                   onSignedIn: onSignedIn,
                 ),

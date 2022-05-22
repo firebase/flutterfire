@@ -18,13 +18,13 @@ First, we define the root route that checks for authentication state and renders
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providerConfigs = [EmailProviderConfiguration()];
+    const providers = [EmailProviderConfiguration()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
       routes: {
-        '/sign-in': (context) => SignInScreen(providerConfigs: providerConfigs),
-        '/profile': (context) => ProfileScreen(providerConfigs: providerConfigs),
+        '/sign-in': (context) => SignInScreen(providers: providers),
+        '/profile': (context) => ProfileScreen(providers: providers),
       },
     );
   }
@@ -68,14 +68,14 @@ navigate to a named route, provide the `actions` list with a `ForgotPasswordActi
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providerConfigs = [EmailProviderConfiguration()];
+    const providers = [EmailProviderConfiguration()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
       routes: {
         '/sign-in': (context) {
           return SignInScreen(
-            providerConfigs: providerConfigs,
+            providers: providers,
             actions: [
               ForgotPasswordAction((context, email) {
                 Navigator.of(context).pushNamed(
@@ -86,7 +86,7 @@ class MyApp extends StatelessWidget {
             ],
           );
         },
-        '/profile': (context) => ProfileScreen(providerConfigs: providerConfigs),
+        '/profile': (context) => ProfileScreen(providers: providers),
         '/forgot-password': (context) => MyCustomForgotPasswordScreen(),
       },
     );

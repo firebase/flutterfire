@@ -33,7 +33,7 @@ class LoginViewStory extends StoryWidget {
 
     return LoginView(
       action: action,
-      providerConfigs: [
+      providers: [
         if (emailEnabled) const EmailProviderConfiguration(),
         if (phoneEnabled) const PhoneProviderConfiguration(),
         if (googleEnabled)

@@ -8,13 +8,13 @@ import '../widgets/internal/title.dart';
 
 class EmailLinkSignInView extends StatefulWidget {
   final FirebaseAuth? auth;
-  final EmailLinkProviderConfiguration config;
+  final EmailLinkAuthProvider provider;
   final FocusNode? emailInputFocusNode;
 
   const EmailLinkSignInView({
     Key? key,
     this.auth,
-    required this.config,
+    required this.provider,
     this.emailInputFocusNode,
   }) : super(key: key);
 
@@ -30,7 +30,7 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
 
     return AuthFlowBuilder<EmailLinkFlowController>(
       auth: widget.auth,
-      config: widget.config,
+      provider: widget.provider,
       builder: (context, state, ctrl, child) {
         return Column(
           mainAxisSize: MainAxisSize.min,

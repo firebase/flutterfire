@@ -1,8 +1,8 @@
-import '../configs/default_provider_config_factory.dart';
-import '../configs/provider_configuration.dart';
+import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show AuthCredential, FirebaseAuth;
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
 import '../auth_controller.dart';
 import '../auth_flow.dart';
@@ -33,7 +33,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
   final Object? flowKey;
   final FirebaseAuth? auth;
   final AuthAction? action;
-  final ProviderConfiguration? config;
+  final AuthProvider? provider;
   final AuthFlow? flow;
   final AuthFlowBuilderCallback<T>? builder;
   final Widget? child;
@@ -48,7 +48,7 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     this.onComplete,
     this.child,
     this.listener,
-    this.config,
+    this.provider,
     this.auth,
     this.flow,
   })  : assert(
@@ -100,6 +100,17 @@ class _AuthFlowBuilderState<T extends AuthController>
     initialized = true;
   }
 
+  AuthProvider _createDefaultProvider() {
+    switch (T) {
+      case EmailAuthController:
+        return EmailAuthProvider();
+      case PhoneAuthController:
+        return PhoneAuthProvider();
+      default:
+        throw Exception("Can't create $T provider");
+    }
+  }
+
   AuthFlow createFlow() {
     if (widget.flowKey != null) {
       final existingFlow = AuthFlowBuilder._flows[widget.flowKey!];
@@ -108,8 +119,40 @@ class _AuthFlowBuilderState<T extends AuthController>
       }
     }
 
-    final config = widget.config ?? createDefaltProviderConfig<T>();
-    return config.createFlow(widget.auth, widget.action);
+    final provider = widget.provider ?? _createDefaultProvider();
+
+    if (provider is EmailAuthProvider) {
+      return EmailAuthFlow(
+        provider: provider,
+        action: widget.action,
+        auth: widget.auth,
+      );
+    } else if (provider is EmailLinkAuthProvider) {
+      return EmailLinkFlow(
+        provider: provider,
+        auth: widget.auth,
+      );
+    } else if (provider is OAuthProvider) {
+      return OAuthFlow(
+        provider: provider,
+        action: widget.action,
+        auth: widget.auth,
+      );
+    } else if (provider is PhoneAuthProvider) {
+      return PhoneAuthFlow(
+        provider: provider,
+        action: widget.action,
+        auth: widget.auth,
+      );
+    } else if (provider is UniversalEmailSignInProvider) {
+      return UniversalEmailSignInFlow(
+        provider: provider,
+        action: widget.action,
+        auth: widget.auth,
+      );
+    } else {
+      throw Exception('Unknown provider $provider');
+    }
   }
 
   void onFlowStateChanged() {

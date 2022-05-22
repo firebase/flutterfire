@@ -29,7 +29,7 @@ class ProfileScreenStory extends StoryWidget {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return ProfileScreen(
-            providerConfigs: [
+            providers: [
               if (emailEnabled) const EmailProviderConfiguration(),
               if (phoneEnabled) const PhoneProviderConfiguration(),
               if (googleEnabled)

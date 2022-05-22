@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 abstract class MultiProviderScreen extends Widget {
-  final List<ProviderConfiguration>? _providerConfigs;
+  final List<AuthProvider>? _providers;
   final FirebaseAuth? _auth;
   FirebaseAuth get auth {
     return _auth ?? FirebaseAuth.instance;
@@ -12,16 +12,16 @@ abstract class MultiProviderScreen extends Widget {
   const MultiProviderScreen({
     Key? key,
     FirebaseAuth? auth,
-    List<ProviderConfiguration>? providerConfigs,
+    List<AuthProvider>? providers,
   })  : _auth = auth,
-        _providerConfigs = providerConfigs,
+        _providers = providers,
         super(key: key);
 
-  List<ProviderConfiguration> get providerConfigs {
-    if (_providerConfigs != null) {
-      return _providerConfigs!;
+  List<AuthProvider> get providers {
+    if (_providers != null) {
+      return _providers!;
     } else {
-      return FlutterFireUIAuth.configsFor(auth.app);
+      return FlutterFireUIAuth.providersFor(auth.app);
     }
   }
 
@@ -41,9 +41,9 @@ class ScreenElement extends ComponentElement {
 
   @override
   void mount(Element? parent, Object? newSlot) {
-    if (widget._providerConfigs != null) {
+    if (widget._providers != null) {
       if (!FlutterFireUIAuth.isAppConfigured(widget.auth.app)) {
-        FlutterFireUIAuth.configureProviders(widget._providerConfigs!);
+        FlutterFireUIAuth.configureProviders(widget._providers!);
       }
     }
 

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import '../auth_flow.dart';
 import '../widgets/internal/loading_button.dart';
 
 import '../auth_state.dart';
@@ -31,8 +30,9 @@ class FindProvidersForEmailView extends StatefulWidget {
 class _FindProvidersForEmailViewState extends State<FindProvidersForEmailView> {
   final formKey = GlobalKey<FormState>();
   final emailCtrl = TextEditingController();
-  late final flow = AuthFlow(
-    initialState: const Uninitialized(),
+
+  late final flow = UniversalEmailSignInFlow(
+    provider: UniversalEmailSignInProvider(),
     auth: widget.auth,
   );
 

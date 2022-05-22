@@ -122,7 +122,7 @@ return StreamBuilder<User?>(
     // User is not signed in
     if (!snapshot.hasData) {
       return SignInScreen(
-        providerConfigs: []
+        providers: []
       );
     }
 
@@ -132,7 +132,7 @@ return StreamBuilder<User?>(
 );
 ```
 
-At a minimum, screens require a list of providers (via the `providerConfigs` property).
+At a minimum, screens require a list of providers (via the `providers` property).
 Providers are means of authentication, such as Email/Password or Google OAuth. At the moment, our `SignInScreen` has no providers
 configured so, the screen will look empty:
 
@@ -154,11 +154,11 @@ in the [Firebase Console](https://console.firebase.google.com/project/_/authenti
   caption={false}
 />
 
-Next, add a new `EmailProviderConfiguration` instance to the `providerConfigs` list:
+Next, add a new `EmailProviderConfiguration` instance to the `providers` list:
 
 ```dart
 return SignInScreen(
-  providerConfigs: [
+  providers: [
     EmailProviderConfiguration(),
   ],
 );
@@ -189,11 +189,11 @@ Additionally, ensure that the Google provider is enabled in the [Firebase Consol
   caption={false}
 />
 
-Next, add a new `GoogleProviderConfiguration` instance to the `providerConfigs` list:
+Next, add a new `GoogleProviderConfiguration` instance to the `providers` list:
 
 ```dart
 return SignInScreen(
-  providerConfigs: [
+  providers: [
     EmailProviderConfiguration(),
     GoogleProviderConfiguration(
       clientId: '...',
@@ -220,12 +220,12 @@ allowing you to add images, alter text and more.
 
 ### Provider order
 
-The order in which a provider is added to the `providerConfigs` list determines the order in which they'll appear within the screens.
+The order in which a provider is added to the `providers` list determines the order in which they'll appear within the screens.
 For example, let's show the Google sign in button first:
 
 ```dart
 return SignInScreen(
-  providerConfigs: [
+  providers: [
     GoogleProviderConfiguration(
       clientId: '...',
     ),
@@ -253,7 +253,7 @@ return SignInScreen(
       ),
     );
   },
-  providerConfigs: [
+  providers: [
     // ...
   ]
 );
@@ -278,7 +278,7 @@ return SignInScreen(
   headerBuilder: (context, constraints, _) {
     // ...
   },
-  providerConfigs: [
+  providers: [
     // ...
   ]
 );
@@ -319,7 +319,7 @@ return SignInScreen(
   headerBuilder: (context, constraints, _) {
     // ...
   },
-  providerConfigs: [
+  providers: [
     // ...
   ]
 );
@@ -350,7 +350,7 @@ A screen which allows the user to create an account.
 
 ```dart
 return RegisterScreen(
-  providerConfigs: [
+  providers: [
     EmailProviderConfiguration(),
     GoogleProviderConfiguration(
       clientId: '...',
@@ -412,7 +412,7 @@ avatar and editable profile data.
 
 ```dart
 return ProfileScreen(
-  providerConfigs: [
+  providers: [
     EmailProviderConfiguration(),
     GoogleProviderConfiguration(
       clientId: '...',
@@ -466,7 +466,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) {
           return SignInScreen(
-            // no providerConfigs property - global configuration will be used instead
+            // no providers property - global configuration will be used instead
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacementNamed(context, '/profile');
@@ -476,7 +476,7 @@ class MyApp extends StatelessWidget {
         },
         '/profile': (context) {
           return ProfileScreen(
-            // no providerConfigs property here as well
+            // no providers property here as well
             actions: [
               SignedOutAction((context) {
                 Navigator.pushReplacementNamed(context, '/');

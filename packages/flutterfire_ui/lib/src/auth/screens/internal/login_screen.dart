@@ -9,7 +9,7 @@ import 'responsive_page.dart';
 class LoginScreen extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction action;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final HeaderBuilder? headerBuilder;
   final double? headerMaxExtent;
   final OAuthButtonVariant? oauthButtonVariant;
@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
   const LoginScreen({
     Key? key,
     required this.action,
-    required this.providerConfigs,
+    required this.providers,
     this.auth,
     this.oauthButtonVariant,
     this.headerBuilder,
@@ -54,7 +54,7 @@ class LoginScreen extends StatelessWidget {
           key: loginViewKey,
           action: action,
           auth: auth,
-          providerConfigs: providerConfigs,
+          providers: providers,
           oauthButtonVariant: oauthButtonVariant,
           email: email,
           showAuthActionSwitch: showAuthActionSwitch,

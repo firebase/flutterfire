@@ -1,0 +1,26 @@
+name: flutterfire_ui_oauth_apple
+description: A new Flutter package project.
+version: 0.1.0
+homepage:
+
+environment:
+  sdk: ">=2.16.2 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  crypto: ^3.0.2
+  flutter:
+    sdk: flutter
+  firebase_auth: ^3.3.17
+  flutterfire_ui_oauth: ^0.1.0
+  sign_in_with_apple: ^3.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  assets:
+    - assets/apple_icon_dark.svg
+    - assets/apple_icon_light.svg

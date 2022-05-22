@@ -28,7 +28,7 @@ class RegisterScreen extends MultiProviderScreen {
   const RegisterScreen({
     Key? key,
     FirebaseAuth? auth,
-    List<ProviderConfiguration>? providerConfigs,
+    List<AuthProvider>? providers,
     this.headerMaxExtent,
     this.headerBuilder,
     this.sideBuilder,
@@ -41,14 +41,14 @@ class RegisterScreen extends MultiProviderScreen {
     this.footerBuilder,
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key, auth: auth, providerConfigs: providerConfigs);
+  }) : super(key: key, auth: auth, providers: providers);
 
   @override
   Widget build(BuildContext context) {
     return LoginScreen(
       styles: styles,
       action: AuthAction.signUp,
-      providerConfigs: providerConfigs,
+      providers: providers,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       auth: auth,
       headerMaxExtent: headerMaxExtent,

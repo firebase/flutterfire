@@ -7,12 +7,12 @@ import '../widgets/internal/title.dart';
 
 class ReauthenticateDialog extends StatelessWidget {
   final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback? onSignedIn;
 
   const ReauthenticateDialog({
     Key? key,
-    required this.providerConfigs,
+    required this.providers,
     this.auth,
     this.onSignedIn,
   }) : super(key: key);
@@ -35,7 +35,7 @@ class ReauthenticateDialog extends StatelessWidget {
                 const SizedBox(height: 16),
                 ReauthenticateView(
                   auth: auth,
-                  providerConfigs: providerConfigs,
+                  providers: providers,
                   onSignedIn: onSignedIn,
                 ),
               ],

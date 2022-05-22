@@ -45,7 +45,7 @@ class EmailFormStyle extends FlutterFireUIStyle {
 class EmailForm extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction? action;
-  final EmailProviderConfiguration? config;
+  final EmailAuthProvider? provider;
   final EmailSubmitCallback? onSubmit;
   final String? email;
 
@@ -53,7 +53,7 @@ class EmailForm extends StatelessWidget {
     Key? key,
     this.action,
     this.auth,
-    this.config,
+    this.provider,
     this.onSubmit,
     this.email,
   }) : super(key: key);
@@ -63,15 +63,15 @@ class EmailForm extends StatelessWidget {
     final child = _SignInFormContent(
       action: action ?? AuthAction.signIn,
       auth: auth,
-      config: config,
+      provider: provider,
       email: email,
       onSubmit: onSubmit,
     );
 
-    return AuthFlowBuilder<EmailFlowController>(
+    return AuthFlowBuilder<EmailAuthController>(
       auth: auth,
       action: action,
-      config: config,
+      provider: provider,
       child: child,
     );
   }
@@ -82,7 +82,7 @@ class _SignInFormContent extends StatefulWidget {
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
   final String? email;
-  final EmailProviderConfiguration? config;
+  final EmailAuthProvider? provider;
 
   const _SignInFormContent({
     Key? key,
@@ -90,7 +90,7 @@ class _SignInFormContent extends StatefulWidget {
     this.onSubmit,
     this.action,
     this.email,
-    this.config,
+    this.provider,
   }) : super(key: key);
 
   @override
@@ -108,7 +108,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   final confirmPasswordFocusNode = FocusNode();
 
   String _chooseButtonLabel() {
-    final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final ctrl = AuthController.ofType<EmailAuthController>(context);
     final l = FlutterFireUILocalizations.labelsOf(context);
 
     switch (ctrl.action) {
@@ -122,7 +122,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
   }
 
   void _submit([String? password]) {
-    final ctrl = AuthController.ofType<EmailFlowController>(context);
+    final ctrl = AuthController.ofType<EmailAuthController>(context);
     final email = (widget.email ?? emailCtrl.text).trim();
 
     if (formKey.currentState!.validate()) {

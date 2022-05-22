@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui/src/auth/widgets/email_link_sign_in_button.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
 import '../widgets/internal/title.dart';
 
@@ -25,12 +26,12 @@ class LoginView extends StatefulWidget {
   final AuthViewContentBuilder? footerBuilder;
   final AuthViewContentBuilder? subtitleBuilder;
 
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
 
   const LoginView({
     Key? key,
     required this.action,
-    required this.providerConfigs,
+    required this.providers,
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.auth,
     this.showTitle = true,
@@ -57,13 +58,13 @@ class LoginViewState extends State<LoginView> {
   }
 
   Widget _buildOAuthButtons(TargetPlatform platform) {
-    final oauthProviderConfigs = widget.providerConfigs
-        .whereType<OAuthProviderConfiguration>()
-        .where((element) => element.isSupportedPlatform(platform));
+    final oauthproviders = widget.providers
+        .whereType<OAuthProvider>()
+        .where((element) => element.supportsPlatform(platform));
 
     _buttonsBuilt = true;
 
-    final oauthButtonsList = oauthProviderConfigs.map((config) {
+    final oauthButtonsList = oauthproviders.map((config) {
       if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
         return OAuthProviderButton(
           auth: widget.auth,
@@ -188,18 +189,18 @@ class LoginViewState extends State<LoginView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (_showTitle) ..._buildHeader(context),
-          for (var config in widget.providerConfigs)
-            if (config.isSupportedPlatform(platform))
-              if (config is EmailProviderConfiguration) ...[
+          for (var provider in widget.providers)
+            if (provider.supportsPlatform(platform))
+              if (provider is EmailAuthProvider) ...[
                 const SizedBox(height: 8),
                 EmailForm(
                   key: ValueKey(_action),
                   auth: widget.auth,
                   action: _action,
-                  config: config,
+                  provider: provider,
                   email: widget.email,
                 )
-              ] else if (config is PhoneProviderConfiguration) ...[
+              ] else if (provider is PhoneAuthProvider) ...[
                 const SizedBox(height: 8),
                 PhoneVerificationButton(
                   label: l.signInWithPhoneButtonText,
@@ -207,13 +208,13 @@ class LoginViewState extends State<LoginView> {
                   auth: widget.auth,
                 ),
                 const SizedBox(height: 8),
-              ] else if (config is EmailLinkProviderConfiguration) ...[
+              ] else if (provider is EmailLinkAuthProvider) ...[
                 const SizedBox(height: 8),
                 EmailLinkSignInButton(
                   auth: widget.auth,
-                  config: config,
+                  provider: provider,
                 ),
-              ] else if (config is OAuthProviderConfiguration && !_buttonsBuilt)
+              ] else if (provider is OAuthProvider && !_buttonsBuilt)
                 _buildOAuthButtons(platform),
           if (widget.footerBuilder != null)
             widget.footerBuilder!(

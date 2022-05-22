@@ -15,14 +15,14 @@ export 'src/auth/auth_state.dart'
 export 'src/auth/providers/auth_provider.dart';
 export 'src/auth/providers/email_auth_provider.dart';
 export 'src/auth/providers/email_link_auth_provider.dart';
-export 'src/auth/providers/oauth_provider.dart';
+export 'src/auth/providers/phone_auth_provider.dart';
+export 'src/auth/providers/universal_email_sign_in_provider.dart';
 
 export 'src/auth/flows/phone_auth_flow.dart';
 export 'src/auth/flows/email_link_flow.dart';
+export 'src/auth/flows/universal_email_sign_in_flow.dart';
 
 export 'src/auth/widgets/phone_input.dart' show PhoneInputState, PhoneInput;
-export 'src/auth/configs/phone_provider_configuration.dart'
-    show PhoneProviderConfiguration;
 
 export 'src/auth/widgets/sms_code_input.dart'
     show SMSCodeInputState, SMSCodeInput;
@@ -32,15 +32,7 @@ export 'src/auth/flows/oauth_flow.dart' show OAuthController, OAuthFlow;
 
 export 'src/auth/oauth/social_icons.dart' show SocialIcons;
 export 'src/auth/oauth/provider_resolvers.dart' show providerIcon;
-export 'src/auth/oauth/oauth_providers.dart' show OAuthHelpers;
-export 'src/auth/oauth/providers/apple_provider.dart'
-    show AppleProviderConfiguration;
-export 'src/auth/oauth/providers/google_provider.dart'
-    show GoogleProviderConfiguration;
-export 'src/auth/oauth/providers/twitter_provider.dart'
-    show TwitterProviderConfiguration;
-export 'src/auth/oauth/providers/facebook_provider.dart'
-    show FacebookProviderConfiguration;
+export 'src/auth/oauth_providers.dart' show OAuthHelpers;
 
 export 'src/auth/widgets/auth_flow_builder.dart';
 export 'src/auth/widgets/email_form.dart'
@@ -94,39 +86,33 @@ export 'src/auth/navigation/authentication.dart';
 export 'src/auth/actions.dart';
 export 'src/auth/email_verification.dart';
 
-export 'src/auth/configs/email_provider_configuration.dart';
-export 'src/auth/configs/phone_provider_configuration.dart';
-export 'src/auth/configs/oauth_provider_configuration.dart';
-export 'src/auth/configs/email_link_provider_configuration.dart';
-export 'src/auth/configs/provider_configuration.dart';
-
 export 'src/auth/styling/theme.dart' show FlutterFireUITheme;
 export 'src/auth/styling/style.dart' show FlutterFireUIStyle;
 export 'src/auth/widgets/internal/universal_button.dart' show ButtonVariant;
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutterfire_ui/src/auth/actions.dart';
-import 'package:flutterfire_ui/src/auth/configs/oauth_provider_configuration.dart';
-import 'package:flutterfire_ui/src/auth/oauth/oauth_providers.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-import 'auth.dart' show ProviderConfiguration;
+import 'src/auth/actions.dart';
+import 'src/auth/oauth_providers.dart';
+import 'src/auth/providers/auth_provider.dart';
 
 class FlutterFireUIAuth {
-  static final _configs = <FirebaseApp, List<ProviderConfiguration>>{};
+  static final _providers = <FirebaseApp, List<AuthProvider>>{};
   static final _configuredApps = <FirebaseApp, bool>{};
 
-  static List<ProviderConfiguration> configsFor(FirebaseApp app) {
-    return _configs[app] ?? [];
+  static List<AuthProvider> providersFor(FirebaseApp app) {
+    return _providers[app] ?? [];
   }
 
   static bool isAppConfigured(FirebaseApp app) {
-    return _configs.containsKey(app);
+    return _providers.containsKey(app);
   }
 
   static void configureProviders(
-    List<ProviderConfiguration> configs, {
+    List<AuthProvider> configs, {
     FirebaseApp? app,
   }) {
     if (Firebase.apps.isEmpty) {
@@ -145,12 +131,11 @@ class FlutterFireUIAuth {
       );
     }
 
-    _configs[_app] = configs;
+    _providers[_app] = configs;
 
-    configs.whereType<OAuthProviderConfiguration>().forEach((element) {
-      final provider = element.createProvider();
+    configs.whereType<OAuthProvider>().forEach((element) {
       final auth = FirebaseAuth.instanceFor(app: _app);
-      OAuthProviders.register(auth, provider);
+      OAuthProviders.register(auth, element);
     });
   }
 

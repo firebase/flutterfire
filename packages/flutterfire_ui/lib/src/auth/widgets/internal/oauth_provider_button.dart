@@ -84,7 +84,7 @@ mixin SignInWithOAuthProviderMixin {
   void signIn(BuildContext context) {
     final ctrl = AuthController.ofType<OAuthController>(context);
     final targetPlatform = Theme.of(context).platform;
-    ctrl.signInWithProvider(targetPlatform);
+    ctrl.signIn(targetPlatform);
   }
 }
 
@@ -111,7 +111,7 @@ class OAuthProviderButton extends StatelessWidget
   final AuthAction? action;
   final FirebaseAuth? auth;
   final double _padding;
-  final OAuthProviderConfiguration providerConfig;
+  final OAuthProvider provider;
   final VoidCallback? onTap;
   final bool overrideDefaultAction;
 
@@ -146,7 +146,7 @@ class OAuthProviderButton extends StatelessWidget
       return AuthFlowBuilder<OAuthController>(
         action: action,
         auth: auth,
-        config: providerConfig,
+        provider: providerConfig,
         child: Column(
           children: [
             Container(
@@ -208,7 +208,7 @@ class OAuthProviderButton extends StatelessWidget
     return AuthFlowBuilder<OAuthController>(
       action: action,
       auth: auth,
-      config: providerConfig,
+      provider: providerConfig,
       child: Column(
         children: [
           Container(
@@ -364,7 +364,7 @@ class OAuthProviderIconButton extends StatelessWidget
       return AuthFlowBuilder<OAuthController>(
         auth: auth,
         action: action,
-        config: providerConfig,
+        provider: providerConfig,
         child: Container(
           width: size,
           height: size,
@@ -393,7 +393,7 @@ class OAuthProviderIconButton extends StatelessWidget
     return AuthFlowBuilder<OAuthController>(
       auth: auth,
       action: action,
-      config: providerConfig,
+      provider: providerConfig,
       child: Container(
         width: size,
         height: size,

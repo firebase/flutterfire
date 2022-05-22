@@ -1,7 +1,4 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
@@ -9,24 +6,34 @@ import '../auth_flow.dart';
 
 class AwaitingPhoneNumber extends AuthState {}
 
-class SMSCodeRequested extends AuthState {}
+class SMSCodeRequested extends AuthState {
+  final String phoneNumber;
+
+  const SMSCodeRequested(this.phoneNumber);
+}
 
 class PhoneVerified extends AuthState {
-  final AuthCredential credential;
+  final fba.AuthCredential credential;
 
   PhoneVerified(this.credential);
 }
 
 class PhoneVerificationFailed extends AuthState {
-  final FirebaseAuthException exception;
+  final fba.FirebaseAuthException exception;
 
   PhoneVerificationFailed(this.exception);
 }
 
 class SMSCodeSent extends AuthState {
+  String? verificationId;
   final int? resendToken;
+  fba.ConfirmationResult? confirmationResult;
 
-  SMSCodeSent([this.resendToken]);
+  SMSCodeSent({
+    this.verificationId,
+    this.resendToken,
+    this.confirmationResult,
+  });
 }
 
 class AutoresolutionFailedException implements Exception {
@@ -39,85 +46,70 @@ class AutoresolutionFailedException implements Exception {
 
 abstract class PhoneAuthController extends AuthController {
   void acceptPhoneNumber(String phoneNumber);
-  void verifySMSCode(String code);
+  void verifySMSCode(
+    String code, {
+    String? verificationId,
+    fba.ConfirmationResult? confirmationResult,
+  });
 }
 
-class PhoneAuthFlow extends AuthFlow implements PhoneAuthController {
-  final _smsCodeCompleter = Completer<String>();
+class PhoneAuthFlow extends AuthFlow<PhoneAuthProvider>
+    implements PhoneAuthController, PhoneAuthListener {
+  String? verificationId;
+  fba.ConfirmationResult? confirmationResult;
 
   PhoneAuthFlow({
-    FirebaseAuth? auth,
+    required PhoneAuthProvider provider,
+    fba.FirebaseAuth? auth,
     AuthAction? action,
-  }) : super(auth: auth, initialState: AwaitingPhoneNumber(), action: action);
+  }) : super(
+          auth: auth,
+          initialState: AwaitingPhoneNumber(),
+          action: action,
+          provider: provider,
+        );
 
   @override
-  Future<void> acceptPhoneNumber(String phoneNumber) async {
-    value = SMSCodeRequested();
-
-    try {
-      if (kIsWeb) {
-        return await _webSignIn(phoneNumber);
-      }
-
-      await auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (credential) async {
-          value = PhoneVerified(credential);
-          await Future.delayed(const Duration(milliseconds: 300));
-          setCredential(credential);
-        },
-        verificationFailed: (exception) {
-          value = PhoneVerificationFailed(exception);
-        },
-        codeSent: (String verificationId, int? resendToken) async {
-          value = SMSCodeSent(resendToken);
-          final code = await _smsCodeCompleter.future;
-          final credential = PhoneAuthProvider.credential(
-            verificationId: verificationId,
-            smsCode: code,
-          );
-
-          setCredential(credential);
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          value = AuthFailed(AutoresolutionFailedException());
-        },
-      );
-    } on Exception catch (err) {
-      value = AuthFailed(err);
-    }
+  void acceptPhoneNumber(String phoneNumber) {
+    provider.sendVerificationCode(phoneNumber, action);
   }
 
   @override
-  void verifySMSCode(String code) {
-    _smsCodeCompleter.complete(code);
+  void verifySMSCode(
+    String code, {
+    String? verificationId,
+    fba.ConfirmationResult? confirmationResult,
+  }) {
+    provider.verifySMSCode(
+      action: action,
+      code: code,
+      verificationId: verificationId,
+      confirmationResult: confirmationResult,
+    );
   }
 
-  Future<void> _webSignIn(String phoneNumber) async {
-    ConfirmationResult result;
-    bool shouldLink = auth.currentUser != null;
+  @override
+  void onCodeSent(String verificationId, [int? forceResendToken]) {
+    value = SMSCodeSent(
+      verificationId: verificationId,
+      resendToken: forceResendToken,
+    );
+  }
 
-    if (shouldLink) {
-      result = await auth.currentUser!.linkWithPhoneNumber(phoneNumber);
-    } else {
-      result = await auth.signInWithPhoneNumber(phoneNumber);
-    }
+  @override
+  void onSMSCodeRequested(String phoneNumber) {
+    value = SMSCodeRequested(phoneNumber);
+  }
 
-    value = SMSCodeSent();
+  @override
+  void onVerificationCompleted(fba.PhoneAuthCredential credential) {
+    value = PhoneVerified(credential);
+    provider.onCredentialReceived(credential, action);
+  }
 
-    final smsCode = await _smsCodeCompleter.future;
-    final userCredential = await result.confirm(smsCode);
-
-    if (shouldLink) {
-      value = CredentialLinked(
-        PhoneAuthProvider.credential(
-          verificationId: result.verificationId,
-          smsCode: smsCode,
-        ),
-      );
-    } else {
-      value = SignedIn(userCredential.user);
-    }
+  @override
+  void onConfirmationRequested(fba.ConfirmationResult result) {
+    value = SMSCodeSent(confirmationResult: result);
   }
 }
 

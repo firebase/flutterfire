@@ -3,7 +3,7 @@
 A "Provider" is a type of authentication method which users can use to perform authentication
 operations against, for example to sign-in, register or link an account.
 
-When using UI widgets, you can add a provider to the `providerConfigs` list of a widget to render the appropriate UI for that provider - for example, an Email Provider will render inputs and a
+When using UI widgets, you can add a provider to the `providers` list of a widget to render the appropriate UI for that provider - for example, an Email Provider will render inputs and a
 button, whilst the Google Provider will render a themed "Sign In with Google" button.
 
 FlutterFire UI for Auth currently supports the following providers:
@@ -24,11 +24,11 @@ enabled in the [Firebase Console](https://console.firebase.google.com/project/_/
 ![Enable Email/Password Provider](../images/ui-email-provider.jpg)
 
 On any UI widget which supports providers, you can now provide an instance of a `EmailProviderConfiguration` to the
-`providerConfigs` list, for example:
+`providers` list, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     EmailProviderConfiguration()
   ],
 )
@@ -45,11 +45,11 @@ in the [Firebase Console](https://console.firebase.google.com/project/_/authenti
 ![Enable Email Link Provider](../images/ui-email-link-provider.png)
 
 On any UI widget which supports providers, you can now provide an instance of a `EmailLinkProviderConfiguration` to the
-`providerConfigs` list, for example:
+`providers` list, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     EmailLinkProviderConfiguration(
       actionCodeSettings: ActionCodeSettings(
         url: 'example.com',
@@ -75,11 +75,11 @@ enabled in the [Firebase Console](https://console.firebase.google.com/project/_/
 Next, follow the [Setup Instructions](https://firebase.google.com/docs/auth/flutter/phone-auth) to configure Phone Authentication for your
 platforms.
 
-Once complete, add a `PhoneProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once complete, add a `PhoneProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     PhoneProviderConfiguration()
   ],
 )
@@ -98,11 +98,11 @@ Next, enable the "Google" provider in the Firebase Console:
 
 > To ensure cross-platform support, please ensure you have followed installation instructions for both the `google_sign_in` package and the provider on the Firebase Console (such as adding a [SHA1 fingerprint](https://developers.google.com/android/guides/client-auth?authuser=0) for Android applications).
 
-Once installed, add a `GoogleProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once installed, add a `GoogleProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     GoogleProviderConfiguration(
       clientId: '...',
     )
@@ -125,11 +125,11 @@ Next, enable the "Facebook" provider in the Firebase Console & provide your crea
 
 ![Enable Facebook Provider](../images/ui-facebook-provider.jpg)
 
-Once installed, add a `FacebookProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once installed, add a `FacebookProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     FacebookProviderConfiguration(
       clientId: '...',
     )
@@ -151,11 +151,11 @@ Next, enable the "Twitter" provider in the Firebase Console:
 
 ![Enable Twitter Provider](../images/ui-twitter-provider.jpg)
 
-Once installed, add a `TwitterProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once installed, add a `TwitterProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     TwitterProviderConfiguration(
       apiKey: '...',
       apiSecretKey: '...',
@@ -193,11 +193,11 @@ Next, enable the "Apple" provider in the Firebase Console:
 
 ![Enable Apple Provider](../images/ui-apple-provider.jpg)
 
-Once installed, add an `AppleProviderConfiguration` instance to the `providerConfigs` list of a supporting UI widget, for example:
+Once installed, add an `AppleProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
-  providerConfigs: [
+  providers: [
     AppleProviderConfiguration(),
   ],
 )

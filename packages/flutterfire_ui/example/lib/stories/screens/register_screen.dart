@@ -55,7 +55,7 @@ class RegisterScreenStory extends StoryWidget {
               );
             }
           : null,
-      providerConfigs: [
+      providers: [
         if (emailEnabled) const EmailProviderConfiguration(),
         if (phoneEnabled) const PhoneProviderConfiguration(),
         if (googleEnabled)

@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-import './internal/universal_button.dart';
-import './internal/universal_page_route.dart';
+import 'internal/universal_button.dart';
+import 'internal/universal_page_route.dart';
 
 class EmailLinkSignInButton extends StatelessWidget {
   final FirebaseAuth? auth;
-  final EmailLinkProviderConfiguration config;
+  final EmailLinkAuthProvider provider;
 
   const EmailLinkSignInButton({
     Key? key,
-    required this.config,
+    required this.provider,
     this.auth,
   }) : super(key: key);
 
@@ -39,7 +39,7 @@ class EmailLinkSignInButton extends StatelessWidget {
                   from: context,
                   child: EmailLinkSignInScreen(
                     auth: auth,
-                    config: config,
+                    provider: provider,
                   ),
                 );
               },

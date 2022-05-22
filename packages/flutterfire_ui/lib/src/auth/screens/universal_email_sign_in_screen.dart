@@ -13,11 +13,11 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
   const UniversalEmailSignInScreen({
     Key? key,
     FirebaseAuth? auth,
-    List<ProviderConfiguration>? providerConfigs,
+    List<AuthProvider>? providers,
     this.onProvidersFound,
     this.styles,
-  })  : assert(onProvidersFound != null || providerConfigs != null),
-        super(key: key, auth: auth, providerConfigs: providerConfigs);
+  })  : assert(onProvidersFound != null || providers != null),
+        super(key: key, auth: auth, providers: providers);
 
   Widget _wrap(BuildContext context, Widget child) {
     return AuthStateListener(
@@ -37,28 +37,28 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
   void _defaultAction(
     BuildContext context,
     String email,
-    List<String> providers,
+    List<String> providerIds,
   ) {
     late Route route;
 
-    if (providers.isEmpty) {
+    if (providerIds.isEmpty) {
       route = createPageRoute(
         context: context,
         builder: (context) => _wrap(
           context,
           RegisterScreen(
             showAuthActionSwitch: false,
-            providerConfigs: providerConfigs,
+            providers: providers,
             auth: auth,
             email: email,
           ),
         ),
       );
     } else {
-      final List<ProviderConfiguration> finalProviders = [];
+      final List<AuthProvider> finalProviders = [];
       final providersSet = Set.from(providers);
 
-      for (final p in providerConfigs) {
+      for (final p in providers) {
         if (providersSet.contains(p.providerId)) {
           finalProviders.add(p);
         }
@@ -70,7 +70,7 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
           context,
           SignInScreen(
             showAuthActionSwitch: false,
-            providerConfigs: finalProviders,
+            providers: finalProviders,
             auth: auth,
             email: email,
           ),

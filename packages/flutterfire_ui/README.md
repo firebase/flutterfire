@@ -24,14 +24,14 @@ import 'package:flutterfire_ui/auth.dart';
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providerConfigs = [EmailProviderConfiguration()];
+    const providers = [EmailAuthProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
       routes: {
         '/sign-in': (context) {
           return SignInScreen(
-            providerConfigs: providerConfigs,
+            providers: providers,
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
                 Navigator.pushReplacementNamed(context, '/profile');
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         },
         '/profile': (context) {
           return ProfileScreen(
-            providerConfigs: providerConfigs,
+            providers: providers,
             actions: [
               SignedOutAction((context) {
                 Navigator.pushReplacementNamed(context, '/sign-in');

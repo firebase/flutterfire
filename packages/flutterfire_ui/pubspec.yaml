@@ -27,6 +27,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_svg: ^1.0.0
+  flutterfire_ui_oauth: ^0.1.0
   google_sign_in: ^5.2.1
   sign_in_with_apple: ^3.3.0
   twitter_login: ^4.2.2

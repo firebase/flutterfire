@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
@@ -8,12 +8,12 @@ import 'internal/title.dart';
 class EmailSignUpDialog extends StatelessWidget {
   final FirebaseAuth? auth;
   final AuthAction? action;
-  final EmailProviderConfiguration config;
+  final EmailAuthProvider provider;
 
   const EmailSignUpDialog({
     Key? key,
     this.auth,
-    required this.config,
+    required this.provider,
     required this.action,
   }) : super(key: key);
 
@@ -25,7 +25,7 @@ class EmailSignUpDialog extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 500),
         child: Dialog(
-          child: AuthStateListener<EmailFlowController>(
+          child: AuthStateListener<EmailAuthController>(
             listener: (oldState, newState, ctrl) {
               if (newState is CredentialLinked) {
                 Navigator.of(context).pop();
@@ -45,7 +45,7 @@ class EmailSignUpDialog extends StatelessWidget {
                   EmailForm(
                     auth: auth,
                     action: action,
-                    config: config,
+                    provider: provider,
                   ),
                 ],
               ),

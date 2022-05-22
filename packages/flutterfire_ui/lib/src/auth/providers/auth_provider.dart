@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 abstract class AuthListener {
@@ -25,6 +26,9 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
   T get authListener;
   set authListener(T listener);
 
+  String get providerId;
+  bool supportsPlatform(TargetPlatform platform);
+
   AuthProvider();
 
   void signInWithCredential(AuthCredential credential) {
@@ -49,9 +53,9 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
   }
 
   void fetchDifferentProvidersForEmail(
-    String email,
+    String email, [
     AuthCredential? credential,
-  ) {
+  ]) {
     authListener.onBeforeProvidersForEmailFetch();
 
     auth

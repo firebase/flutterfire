@@ -66,11 +66,6 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
     _provider.authListener = this;
   }
 
-  void reset() {
-    value = initialState;
-    onDispose();
-  }
-
   @override
   void onBeforeCredentialLinked(AuthCredential credential) {
     value = CredentialReceived(credential);
@@ -93,7 +88,10 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void onDifferentProvidersFound(
-      String email, List<String> providers, AuthCredential? credential) {
+    String email,
+    List<String> providers,
+    AuthCredential? credential,
+  ) {
     value = DifferentSignInMethodsFound(
       email,
       providers,
@@ -126,6 +124,12 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void findProvidersForEmail(String email) {
-    provider.fetchDifferentProvidersForEmail(email, null);
+    provider.fetchDifferentProvidersForEmail(email);
+  }
+
+  @override
+  void reset() {
+    value = initialState;
+    onDispose();
   }
 }

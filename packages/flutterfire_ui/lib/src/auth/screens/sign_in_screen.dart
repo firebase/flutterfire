@@ -30,7 +30,7 @@ class SignInScreen extends MultiProviderScreen {
 
   const SignInScreen({
     Key? key,
-    List<ProviderConfiguration>? providerConfigs,
+    List<AuthProvider>? providers,
     FirebaseAuth? auth,
     this.headerMaxExtent,
     this.headerBuilder,
@@ -46,7 +46,7 @@ class SignInScreen extends MultiProviderScreen {
     this.actions = const [],
     this.breakpoint = 800,
     this.styles,
-  }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
+  }) : super(key: key, providers: providers, auth: auth);
 
   Future<void> _signInWithDifferentProvider(
     BuildContext context,
@@ -54,7 +54,7 @@ class SignInScreen extends MultiProviderScreen {
   ) async {
     await showDifferentMethodSignInDialog(
       availableProviders: state.methods,
-      providerConfigs: providerConfigs,
+      providers: providers,
       context: context,
       auth: auth,
       onSignedIn: () {
@@ -83,7 +83,7 @@ class SignInScreen extends MultiProviderScreen {
         styles: styles,
         loginViewKey: loginViewKey,
         action: AuthAction.signIn,
-        providerConfigs: providerConfigs,
+        providers: providers,
         auth: auth,
         headerMaxExtent: headerMaxExtent,
         headerBuilder: headerBuilder,

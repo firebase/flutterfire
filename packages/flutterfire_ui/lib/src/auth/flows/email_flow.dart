@@ -13,16 +13,16 @@ class UserCreated extends AuthState {
 
 class SigningUp extends AuthState {}
 
-abstract class EmailFlowController extends AuthController {
+abstract class EmailAuthController extends AuthController {
   void setEmailAndPassword(String email, String password);
 }
 
-class EmailFlow extends AuthFlow<EmailAuthProvider>
-    implements EmailFlowController, EmailAuthListener {
+class EmailAuthFlow extends AuthFlow<EmailAuthProvider>
+    implements EmailAuthController, EmailAuthListener {
   @override
   final EmailAuthProvider provider;
 
-  EmailFlow({
+  EmailAuthFlow({
     required this.provider,
     fba.FirebaseAuth? auth,
     AuthAction? action,

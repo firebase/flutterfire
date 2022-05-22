@@ -5,6 +5,7 @@ import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
 import '../widgets/internal/universal_button.dart';
 
@@ -16,13 +17,13 @@ import '../widgets/internal/universal_icon_button.dart';
 
 class AvailableProvidersRow extends StatefulWidget {
   final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback onProviderLinked;
 
   const AvailableProvidersRow({
     Key? key,
     this.auth,
-    required this.providerConfigs,
+    required this.providers,
     required this.onProviderLinked,
   }) : super(key: key);
 
@@ -35,13 +36,13 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
 
   Future<void> connectProvider({
     required BuildContext context,
-    required ProviderConfiguration config,
+    required AuthProvider provider,
   }) async {
     setState(() {
       error = null;
     });
 
-    switch (config.providerId) {
+    switch (provider.providerId) {
       case 'phone':
         await startPhoneVerification(
           context: context,
@@ -56,7 +57,7 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
           barrierLabel: '',
           pageBuilder: (context, _, __) {
             return EmailSignUpDialog(
-              config: config as EmailProviderConfiguration,
+              provider: provider as EmailAuthProvider,
               auth: widget.auth,
               action: AuthAction.link,
             );
@@ -72,32 +73,32 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
     final l = FlutterFireUILocalizations.labelsOf(context);
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 
-    final providerConfigs = widget.providerConfigs
-        .where((config) => config is! EmailLinkProviderConfiguration)
+    final providers = widget.providers
+        .where((provider) => provider is! EmailLinkAuthProvider)
         .toList();
 
     Widget child = Row(
       children: [
-        for (var config in providerConfigs)
-          if (config is! OAuthProviderConfiguration)
+        for (var provider in providers)
+          if (provider is! OAuthProvider)
             if (isCupertino)
               CupertinoButton(
                 onPressed: () => connectProvider(
                   context: context,
-                  config: config,
+                  provider: provider,
                 ).then((_) => widget.onProviderLinked()),
                 child: Icon(
-                  providerIcon(context, config.providerId),
+                  providerIcon(context, provider.providerId),
                 ),
               )
             else
               IconButton(
                 icon: Icon(
-                  providerIcon(context, config.providerId),
+                  providerIcon(context, provider.providerId),
                 ),
                 onPressed: () => connectProvider(
                   context: context,
-                  config: config,
+                  provider: provider,
                 ).then((_) => widget.onProviderLinked()),
               )
           else
@@ -111,7 +112,7 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
                 return null;
               },
               child: OAuthProviderIconButton(
-                providerConfig: config,
+                providerConfig: provider,
                 auth: widget.auth,
                 action: AuthAction.link,
                 onTap: () {
@@ -165,13 +166,13 @@ class EditButton extends StatelessWidget {
 
 class LinkedProvidersRow extends StatefulWidget {
   final FirebaseAuth? auth;
-  final List<ProviderConfiguration> providerConfigs;
+  final List<AuthProvider> providers;
   final VoidCallback onProviderUnlinked;
 
   const LinkedProvidersRow({
     Key? key,
     this.auth,
-    required this.providerConfigs,
+    required this.providers,
     required this.onProviderUnlinked,
   }) : super(key: key);
 
@@ -284,15 +285,15 @@ class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
     final l = FlutterFireUILocalizations.labelsOf(context);
     Widget child = Row(
       children: [
-        for (var config in widget.providerConfigs)
-          buildProviderIcon(context, config.providerId)
+        for (var provider in widget.providers)
+          buildProviderIcon(context, provider.providerId)
       ]
           .map((e) => [e, const SizedBox(width: 8)])
           .expand((element) => element)
           .toList(),
     );
 
-    if (widget.providerConfigs.length > 1) {
+    if (widget.providers.length > 1) {
       child = Row(
         children: [
           Expanded(child: child),
@@ -451,7 +452,7 @@ class ProfileScreen extends MultiProviderScreen {
   const ProfileScreen({
     Key? key,
     FirebaseAuth? auth,
-    List<ProviderConfiguration>? providerConfigs,
+    List<AuthProvider>? providers,
     this.avatarPlaceholderColor,
     this.avatarShape,
     this.avatarSize,
@@ -461,26 +462,26 @@ class ProfileScreen extends MultiProviderScreen {
     this.cupertinoNavigationBar,
     this.actionCodeSettings,
     this.styles,
-  }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
+  }) : super(key: key, providers: providers, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
     return showReauthenticateDialog(
       context: context,
-      providerConfigs: providerConfigs,
+      providers: providers,
       auth: auth,
       onSignedIn: () => Navigator.of(context).pop(true),
     );
   }
 
-  List<ProviderConfiguration> getLinkedProviders(User user) {
-    return providerConfigs
-        .where((config) => user.isProviderLinked(config.providerId))
+  List<AuthProvider> getLinkedProviders(User user) {
+    return providers
+        .where((provider) => user.isProviderLinked(provider.providerId))
         .toList();
   }
 
-  List<ProviderConfiguration> getAvailableProviders(User user) {
-    return providerConfigs
-        .where((config) => !user.isProviderLinked(config.providerId))
+  List<AuthProvider> getAvailableProviders(User user) {
+    return providers
+        .where((provider) => !user.isProviderLinked(provider.providerId))
         .toList();
   }
 
@@ -539,7 +540,7 @@ class ProfileScreen extends MultiProviderScreen {
               padding: const EdgeInsets.only(top: 32),
               child: LinkedProvidersRow(
                 auth: auth,
-                providerConfigs: linkedProviders,
+                providers: linkedProviders,
                 onProviderUnlinked: providersScopeKey.rebuild,
               ),
             );
@@ -559,7 +560,7 @@ class ProfileScreen extends MultiProviderScreen {
               padding: const EdgeInsets.only(top: 32),
               child: AvailableProvidersRow(
                 auth: auth,
-                providerConfigs: availableProviders,
+                providers: availableProviders,
                 onProviderLinked: providersScopeKey.rebuild,
               ),
             );
