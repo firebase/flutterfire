@@ -1,3 +1,21 @@
+## 2.8.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8582](https://github.com/FirebaseExtended/flutterfire/issues/8582)). ([9539c92a](https://github.com/FirebaseExtended/flutterfire/commit/9539c92a53f73bf57b9c61ae9e0ce5042b4b8ca4))
+ - **FIX**: symlink `ExceptionModel_Platform.h` to macOS. ([#8570](https://github.com/FirebaseExtended/flutterfire/issues/8570)). ([9991b7a5](https://github.com/FirebaseExtended/flutterfire/commit/9991b7a5389738a7bbba8f2210f8379b887d90e7))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/FirebaseExtended/flutterfire/issues/8617)). ([72158aaf](https://github.com/FirebaseExtended/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
+## 2.7.1
+
+ - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/FirebaseExtended/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
+
+## 2.7.0
+
+ - **FEAT**: add support for on-demand exception reporting (#8540). ([dfec7d60](https://github.com/FirebaseExtended/flutterfire/commit/dfec7d60592abe0a5c6523e13feabffb8b03020b))
+
 ## 2.6.3
 
  - Update a dependency to the latest release.

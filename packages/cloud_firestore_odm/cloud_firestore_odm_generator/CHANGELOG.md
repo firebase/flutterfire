@@ -1,3 +1,16 @@
+## 1.0.0-dev.16
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.15
+
+ - **FIX**: ODM should no-longer generates update/query functions for nested objects ([#8661](https://github.com/FirebaseExtended/flutterfire/issues/8661)). ([84eeed2e](https://github.com/FirebaseExtended/flutterfire/commit/84eeed2ec8da3aac87befd2028f8052005319730))
+ - **FEAT**: Assert that collection.doc(id) does not point to a separate collection ([#8676](https://github.com/FirebaseExtended/flutterfire/issues/8676)). ([0808205b](https://github.com/FirebaseExtended/flutterfire/commit/0808205bdca03fc913015f00f5ffc2e1d018adb9))
+
+## 1.0.0-dev.14
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.13
 
  - **FEAT**: upgrade analyzer, freezed_annotation and json_serializable dependencies (#8465). ([8a27ab21](https://github.com/FirebaseExtended/flutterfire/commit/8a27ab21279d72998e80aa17b8ec39a9e4a08ec8))

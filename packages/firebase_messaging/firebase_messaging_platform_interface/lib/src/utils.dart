@@ -132,6 +132,7 @@ NotificationSettings convertToNotificationSettings(Map<String, int> map) {
   return NotificationSettings(
     authorizationStatus:
         convertToAuthorizationStatus(map['authorizationStatus']),
+    timeSensitive: convertToAppleNotificationSetting(map['timeSensitive']),
     alert: convertToAppleNotificationSetting(map['alert']),
     announcement: convertToAppleNotificationSetting(map['announcement']),
     badge: convertToAppleNotificationSetting(map['badge']),
@@ -155,4 +156,5 @@ const NotificationSettings defaultNotificationSettings = NotificationSettings(
   notificationCenter: AppleNotificationSetting.notSupported,
   showPreviews: AppleShowPreviewSetting.notSupported,
   sound: AppleNotificationSetting.notSupported,
+  timeSensitive: AppleNotificationSetting.notSupported,
 );

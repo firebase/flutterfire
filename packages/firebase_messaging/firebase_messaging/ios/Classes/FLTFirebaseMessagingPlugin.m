@@ -422,6 +422,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 
 #if !TARGET_OS_OSX
+// Called for silent notifications in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -431,12 +432,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     return YES;
   }
 #endif
-
+  NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
-
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
       __block BOOL completed = NO;
 
@@ -485,6 +484,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
+      // If "alert" (i.e. notification) is present, this will be called by the other
+      // "Messaging#onMessage" channel handler
+      if (notificationDict[@"aps"] != nil && notificationDict[@"aps"][@"alert"] == nil) {
+        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      }
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -688,6 +692,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
+  NSNumber *timeSensitive = @-1;
+  if (@available(iOS 15.0, macOS 12.0, *)) {
+    if (settings.timeSensitiveSetting == UNNotificationSettingDisabled) {
+      timeSensitive = @0;
+    }
+    if (settings.timeSensitiveSetting == UNNotificationSettingEnabled) {
+      timeSensitive = @1;
+    }
+  }
+
   NSNumber *showPreviews = @-1;
   if (@available(iOS 11.0, *)) {
     if (settings.showPreviewsSetting == UNShowPreviewsSettingNever) {
@@ -736,6 +750,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
+  settingsDictionary[@"timeSensitive"] = timeSensitive;
+
   return settingsDictionary;
 }
 

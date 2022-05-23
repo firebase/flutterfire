@@ -1,3 +1,19 @@
+## 0.4.1+1
+
+ - Update a dependency to the latest release.
+
+## 0.4.1
+
+ - **FIX**: flutterfire_ui README links ([#8630](https://github.com/FirebaseExtended/flutterfire/issues/8630)). ([ba5b58af](https://github.com/FirebaseExtended/flutterfire/commit/ba5b58af354c762a4d4e4fe11e4017730bfa6c9e))
+ - **FIX**: use `EmailVerificationScreen.actionCodeSettings` & and fix `flutter analyze` with Flutter 3.0.0 ([#8651](https://github.com/FirebaseExtended/flutterfire/issues/8651)). ([f12f1e24](https://github.com/FirebaseExtended/flutterfire/commit/f12f1e24e85dcea014374752a9d58142db33a5ab))
+ - **FIX**: set the default variant of LoadingButton to outlined ([#8443](https://github.com/FirebaseExtended/flutterfire/issues/8443)) ([#8545](https://github.com/FirebaseExtended/flutterfire/issues/8545)). ([518cdcee](https://github.com/FirebaseExtended/flutterfire/commit/518cdcee7c43c995b4067857c38bff0a023302ee))
+ - **FEAT**: add styling APIs `FlutterFireUITheme` and `FlutterFireUIStyle` ([#8580](https://github.com/FirebaseExtended/flutterfire/issues/8580)). ([83e2d455](https://github.com/FirebaseExtended/flutterfire/commit/83e2d455d3a083886168b4c115191b06e307a41f))
+ - **DOCS**: Copy FlutterFire UI & ODM docs to package dirs ([#8574](https://github.com/FirebaseExtended/flutterfire/issues/8574)). ([c76f0d9b](https://github.com/FirebaseExtended/flutterfire/commit/c76f0d9bf954497923464e045671fd73be9b88c4))
+
+## 0.4.0+5
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+4
 
  - Update a dependency to the latest release.

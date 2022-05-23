@@ -1,3 +1,11 @@
+## 3.5.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/FirebaseExtended/flutterfire/issues/8532)). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 3.4.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
 ## 3.3.1
 
  - **FIX**: prevent isolate callback removal during split debug symbols (#8521). ([45ca7aeb](https://github.com/FirebaseExtended/flutterfire/commit/45ca7aeb50920cea0ba5784e16a5b78adac014f3))
