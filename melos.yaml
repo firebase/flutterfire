@@ -9,8 +9,8 @@ command:
   version:
     # Generate commit links in package changelogs.
     linkToCommits: true
-    # Only allow versioning to happen on main branch.
-    branch: master
+    # # Only allow versioning to happen on main branch.
+    # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
 
@@ -41,7 +41,7 @@ scripts:
       swiftformat .
     description: |
       Build a specific example app for Android.
-       - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+       - Requires `flutter_plugin_tools` (`dart pub global activate flutter_plugin_tools`).
        - Requires `clang-format` (can be installed via Brew on macOS).
        - Requires `swiftformat` (can be installed via Brew on macOS).
 

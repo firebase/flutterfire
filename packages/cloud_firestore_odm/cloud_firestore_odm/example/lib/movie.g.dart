@@ -71,6 +71,10 @@ class _$MovieCollectionReference extends _$MovieQuery
 
   @override
   MovieDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MovieDocumentReference(
       reference.doc(id),
     );
@@ -665,7 +669,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('poster', descending: false);
+    var query = reference.orderBy('poster', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -707,7 +711,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('likes', descending: false);
+    var query = reference.orderBy('likes', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -749,7 +753,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('title', descending: false);
+    var query = reference.orderBy('title', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -791,7 +795,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('year', descending: false);
+    var query = reference.orderBy('year', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -833,7 +837,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('runtime', descending: false);
+    var query = reference.orderBy('runtime', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -875,7 +879,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('rated', descending: false);
+    var query = reference.orderBy('rated', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -917,7 +921,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('genre', descending: false);
+    var query = reference.orderBy('genre', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1058,6 +1062,10 @@ class _$CommentCollectionReference extends _$CommentQuery
 
   @override
   CommentDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return CommentDocumentReference(
       reference.doc(id),
     );
@@ -1387,7 +1395,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('authorName', descending: false);
+    var query = reference.orderBy('authorName', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1429,7 +1437,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('message', descending: false);
+    var query = reference.orderBy('message', descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);

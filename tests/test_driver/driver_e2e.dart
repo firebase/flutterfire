@@ -9,7 +9,6 @@ import 'firebase_core/firebase_core_e2e.dart' as firebase_core;
 import 'firebase_crashlytics/firebase_crashlytics_e2e.dart'
     as firebase_crashlytics;
 import 'firebase_database/firebase_database_e2e.dart' as firebase_database;
-import 'firebase_storage/firebase_storage_e2e.dart' as firebase_storage;
 import 'firebase_analytics/firebase_analytics_e2e.dart' as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e.dart' as firebase_app_check;
 import 'firebase_app_installations/firebase_app_installations_e2e.dart'
@@ -23,6 +22,7 @@ import 'firebase_ml_model_downloader/firebase_ml_model_downloader_e2e.dart'
     as firebase_ml_model_downloader;
 import 'firebase_remote_config/firebase_remote_config_e2e.dart'
     as firebase_remote_config;
+import 'firebase_storage/firebase_storage_e2e.dart' as firebase_storage;
 
 void setupTests() {
   // Core first.

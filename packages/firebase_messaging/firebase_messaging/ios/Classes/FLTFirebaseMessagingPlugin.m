@@ -195,6 +195,18 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)notification {
   // Setup UIApplicationDelegate.
 #if TARGET_OS_OSX
+  NSDictionary *remoteNotification = notification.userInfo[NSApplicationLaunchUserNotificationKey];
+#else
+  NSDictionary *remoteNotification =
+      notification.userInfo[UIApplicationLaunchOptionsRemoteNotificationKey];
+#endif
+  if (remoteNotification != nil) {
+    // If remoteNotification exists, it is the notification that opened the app.
+    _initialNotification =
+        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
+  }
+
+#if TARGET_OS_OSX
   // For macOS we use swizzling to intercept as addApplicationDelegate does not exist on the macOS
   // registrar Flutter implementation.
   [GULAppDelegateSwizzler registerAppDelegateInterceptor:self];
@@ -290,11 +302,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin NSDictionaryFromUNNotification:notification];
 
-    // Don't send an event if contentAvailable is true - application:didReceiveRemoteNotification
-    // will send the event for us, we don't want to duplicate them.
-    if (!notificationDict[@"contentAvailable"]) {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
-    }
+    [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
   }
 
   // Forward on to any other delegates amd allow them to control presentation behavior.
@@ -333,9 +341,6 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     NSDictionary *notificationDict =
         [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:remoteNotification];
     [_channel invokeMethod:@"Messaging#onMessageOpenedApp" arguments:notificationDict];
-    @synchronized(self) {
-      _initialNotification = notificationDict;
-    }
   }
 
   // Forward on to any other delegates.
@@ -417,6 +422,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 
 #if !TARGET_OS_OSX
+// Called for silent notifications in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -426,12 +432,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     return YES;
   }
 #endif
-
+  NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
-
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
       __block BOOL completed = NO;
 
@@ -480,7 +484,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      // If "alert" (i.e. notification) is present, this will be called by the other
+      // "Messaging#onMessage" channel handler
+      if (notificationDict[@"aps"] != nil && notificationDict[@"aps"][@"alert"] == nil) {
+        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      }
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -684,6 +692,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
+  NSNumber *timeSensitive = @-1;
+  if (@available(iOS 15.0, macOS 12.0, *)) {
+    if (settings.timeSensitiveSetting == UNNotificationSettingDisabled) {
+      timeSensitive = @0;
+    }
+    if (settings.timeSensitiveSetting == UNNotificationSettingEnabled) {
+      timeSensitive = @1;
+    }
+  }
+
   NSNumber *showPreviews = @-1;
   if (@available(iOS 11.0, *)) {
     if (settings.showPreviewsSetting == UNShowPreviewsSettingNever) {
@@ -732,6 +750,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
+  settingsDictionary[@"timeSensitive"] = timeSensitive;
+
   return settingsDictionary;
 }
 

@@ -62,8 +62,8 @@ class Promise<T> {
 }
 
 // Wire to the global 'window.firebase' object.
-@JS('firebase')
+@JS('firebase_core')
 external set firebaseMock(FirebaseMock mock);
 
-@JS('firebase')
+@JS('firebase_core')
 external FirebaseMock get firebaseMock;

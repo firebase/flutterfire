@@ -10,15 +10,20 @@ class FirebaseWebService {
   /// The name which matches the Firebase JS Web SDK postfix.
   String name;
 
+  /// Overrides the created window object.
+  String? override;
+
   /// Creates a new [FirebaseWebService].
-  FirebaseWebService._(this.name);
+  FirebaseWebService._(this.name, [this.override]);
 }
 
 /// The entry point for accessing Firebase.
 ///
 /// You can get an instance by calling [FirebaseCore.instance].
 class FirebaseCoreWeb extends FirebasePlatform {
-  static Map<String, FirebaseWebService> _services = {};
+  static Map<String, FirebaseWebService> _services = {
+    'core': FirebaseWebService._('app', 'core'),
+  };
 
   /// Internally registers a Firebase Service to be initialized.
   static void registerService(String service) {
@@ -104,21 +109,15 @@ class FirebaseCoreWeb extends FirebasePlatform {
     String version = _firebaseSDKVersion;
     List<String> ignored = _ignoredServiceScripts;
 
-    // This must be loaded first!
-    await _injectSrcScript(
-      'https://www.gstatic.com/firebasejs/$version/firebase-app.js',
-      'firebase_core',
-    );
-
     await Future.wait(
       _services.values.map((service) {
-        if (ignored.contains(service.name)) {
+        if (ignored.contains(service.override ?? service.name)) {
           return Future.value();
         }
 
         return _injectSrcScript(
           'https://www.gstatic.com/firebasejs/$version/firebase-${service.name}.js',
-          'firebase_${service.name}',
+          'firebase_${service.override ?? service.name}',
         );
       }),
     );
@@ -127,7 +126,9 @@ class FirebaseCoreWeb extends FirebasePlatform {
   /// Returns all created [FirebaseAppPlatform] instances.
   @override
   List<FirebaseAppPlatform> get apps {
-    return firebase.apps.map(_createFromJsApp).toList(growable: false);
+    return guardNotInitialized(
+      () => firebase.apps.map(_createFromJsApp).toList(growable: false),
+    );
   }
 
   /// Initializes a new [FirebaseAppPlatform] instance by [name] and [options] and returns
@@ -141,16 +142,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     FirebaseOptions? options,
   }) async {
     await _initializeCore();
-
-    try {
-      firebase.SDK_VERSION;
-    } catch (e) {
-      if (e
-          .toString()
-          .contains("Cannot read property 'SDK_VERSION' of undefined")) {
-        throw coreNotInitialized();
-      }
-    }
+    guardNotInitialized(() => firebase.SDK_VERSION);
 
     assert(
       () {
@@ -163,7 +155,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
             Firebase JS SDK version "$supportedFirebaseJsSdkVersion":
 
-            If you override the version manully:
+            If you override the version manually:
               change:
                 <script>window.flutterfire_web_sdk_version = '${firebase.SDK_VERSION}';</script>
               to:
@@ -266,14 +258,8 @@ class FirebaseCoreWeb extends FirebasePlatform {
     firebase.App app;
 
     try {
-      app = firebase.app(name);
+      app = guardNotInitialized(() => firebase.app(name));
     } catch (e) {
-      if ((e.toString().contains('Cannot read property') ||
-              e.toString().contains('Cannot read properties')) &&
-          e.toString().contains("'app'")) {
-        throw coreNotInitialized();
-      }
-
       if (_getJSErrorCode(e) == 'app/no-app') {
         throw noAppExists(name);
       }
@@ -282,5 +268,31 @@ class FirebaseCoreWeb extends FirebasePlatform {
     }
 
     return _createFromJsApp(app);
+  }
+}
+
+/// Converts a Exception to a FirebaseAdminException.
+Never _handleException(Object exception, StackTrace stackTrace) {
+  if (exception.toString().contains('of undefined')) {
+    throw coreNotInitialized();
+  }
+
+  Error.throwWithStackTrace(exception, stackTrace);
+}
+
+/// A generic guard wrapper for API calls to handle exceptions.
+R guardNotInitialized<R>(R Function() cb) {
+  try {
+    final value = cb();
+
+    if (value is Future) {
+      return value.catchError(
+        _handleException,
+      ) as R;
+    }
+
+    return value;
+  } catch (error, stackTrace) {
+    _handleException(error, stackTrace);
   }
 }

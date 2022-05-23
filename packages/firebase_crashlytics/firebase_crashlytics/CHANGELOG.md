@@ -1,3 +1,37 @@
+## 2.8.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8582](https://github.com/FirebaseExtended/flutterfire/issues/8582)). ([9539c92a](https://github.com/FirebaseExtended/flutterfire/commit/9539c92a53f73bf57b9c61ae9e0ce5042b4b8ca4))
+ - **FIX**: symlink `ExceptionModel_Platform.h` to macOS. ([#8570](https://github.com/FirebaseExtended/flutterfire/issues/8570)). ([9991b7a5](https://github.com/FirebaseExtended/flutterfire/commit/9991b7a5389738a7bbba8f2210f8379b887d90e7))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/FirebaseExtended/flutterfire/issues/8617)). ([72158aaf](https://github.com/FirebaseExtended/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+
+## 2.7.2
+
+ - Update a dependency to the latest release.
+
+## 2.7.1
+
+ - **FIX**: re-add support for `recordFlutterFatalError` method from previous EAP API (#8550). ([8ef8b55c](https://github.com/FirebaseExtended/flutterfire/commit/8ef8b55c113f24abac783170723c7f784f5d1fe5))
+
+## 2.7.0
+
+ - **FEAT**: add support for on-demand exception reporting (#8540). ([dfec7d60](https://github.com/FirebaseExtended/flutterfire/commit/dfec7d60592abe0a5c6523e13feabffb8b03020b))
+
+## 2.6.3
+
+ - Update a dependency to the latest release.
+
+## 2.6.2
+
+ - Update a dependency to the latest release.
+
+## 2.6.1
+
+ - **FIX**: Exit the add crashlytics upload-symbols script if the required json isn't present. ([94077929](https://github.com/FirebaseExtended/flutterfire/commit/940779290a3039181a92567fe8492a720af899e1))
+
+## 2.6.0
+
+ - **FEAT**: add automatic Crashlytics symbol uploads for iOS & macOS apps (#8157). ([c4a3eaa7](https://github.com/FirebaseExtended/flutterfire/commit/c4a3eaa7200d924f9ec71370dd3c875813804935))
+
 ## 2.5.3
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

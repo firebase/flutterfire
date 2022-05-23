@@ -138,8 +138,7 @@ NSString *const FLTFirebaseAnalyticsChannelName = @"plugins.flutter.io/firebase_
 
 - (void)setDefaultEventParameters:(id)arguments
              withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
-  id parameters = arguments[kFLTFirebaseAnalyticsParameters];
-  [FIRAnalytics setDefaultEventParameters:parameters];
+  [FIRAnalytics setDefaultEventParameters:arguments];
   result.success(nil);
 }
 

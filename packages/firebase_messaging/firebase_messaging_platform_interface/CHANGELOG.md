@@ -1,3 +1,27 @@
+## 3.5.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/FirebaseExtended/flutterfire/issues/8532)). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 3.4.0
+
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+
+## 3.3.1
+
+ - **FIX**: prevent isolate callback removal during split debug symbols (#8521). ([45ca7aeb](https://github.com/FirebaseExtended/flutterfire/commit/45ca7aeb50920cea0ba5784e16a5b78adac014f3))
+
+## 3.3.0
+
+ - **FEAT**: add `toMap()` method to `RemoteMessage` and its properties (#8453). ([047cccda](https://github.com/FirebaseExtended/flutterfire/commit/047cccda6fe8e53c77e8e1f368e5f2c5d7d297e1))
+
+## 3.2.3
+
+ - Update a dependency to the latest release.
+
+## 3.2.2
+
+ - Update a dependency to the latest release.
+
 ## 3.2.1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

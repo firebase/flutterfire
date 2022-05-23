@@ -845,8 +845,8 @@ class OAuthProvider extends AuthProvider<auth_interop.OAuthProviderJsImpl> {
   /// Creates a credential for Google.
   /// At least one of [idToken] and [accessToken] is required.
   auth_interop.OAuthCredential credential(
-          [String? idToken, String? accessToken]) =>
-      jsObject.credential(idToken, accessToken);
+          auth_interop.OAuthCredentialOptions credentialOptions) =>
+      jsObject.credential(credentialOptions);
 }
 
 /// Twitter auth provider.

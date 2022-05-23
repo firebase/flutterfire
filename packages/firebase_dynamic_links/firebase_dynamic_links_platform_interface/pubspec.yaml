@@ -1,6 +1,6 @@
 name: firebase_dynamic_links_platform_interface
 description: A common platform interface for the firebase_dynamic_links plugin.
-version: 0.2.1+1
+version: 0.2.3+2
 homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
 
@@ -17,7 +17,7 @@ dependencies:
 
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.2.5
+  firebase_core_platform_interface: ^4.4.0
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0

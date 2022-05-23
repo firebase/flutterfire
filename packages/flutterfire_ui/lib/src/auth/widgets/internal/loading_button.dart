@@ -1,21 +1,15 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-class LoadingButton extends StatelessWidget {
-  final bool isLoading;
-  final String label;
-  final IconData? icon;
-  final Color? color;
-  final VoidCallback onTap;
+import 'universal_button.dart';
 
-  const LoadingButton({
+class _LoadingButtonContent extends StatelessWidget {
+  final String label;
+  final bool isLoading;
+  const _LoadingButtonContent({
     Key? key,
     required this.label,
-    required this.onTap,
-    this.isLoading = false,
-    this.icon,
-    this.color,
+    required this.isLoading,
   }) : super(key: key);
 
   @override
@@ -31,55 +25,38 @@ class LoadingButton extends StatelessWidget {
       );
     }
 
-    ButtonStyle? style;
+    return child;
+  }
+}
 
-    if (color != null) {
-      style = ButtonStyle(
-        foregroundColor: MaterialStateColor.resolveWith(
-          (states) => color!,
-        ),
-        overlayColor: MaterialStateColor.resolveWith(
-          (states) => color!.withAlpha(20),
-        ),
-      );
-    }
+class LoadingButton extends StatelessWidget {
+  final bool isLoading;
+  final String label;
+  final IconData? icon;
+  final Color? color;
+  final VoidCallback onTap;
+  final ButtonVariant? variant;
 
-    if (isCupertino) {
-      if (icon != null) {
-        child = Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(icon, size: 20),
-            const SizedBox(width: 8),
-            child,
-          ],
-        );
-      }
+  const LoadingButton({
+    Key? key,
+    required this.label,
+    required this.onTap,
+    this.isLoading = false,
+    this.icon,
+    this.color,
+    this.variant = ButtonVariant.outlined,
+  }) : super(key: key);
 
-      return CupertinoTheme(
-        data: CupertinoTheme.of(context).copyWith(
-          primaryColor: color ?? CupertinoColors.activeBlue,
-        ),
-        child: CupertinoButton.filled(
-          onPressed: onTap,
-          child: child,
-        ),
-      );
-    }
+  @override
+  Widget build(BuildContext context) {
+    final content = _LoadingButtonContent(label: label, isLoading: isLoading);
 
-    if (icon != null) {
-      return OutlinedButton.icon(
-        onPressed: onTap,
-        icon: Icon(icon),
-        label: child,
-        style: style,
-      );
-    }
-
-    return OutlinedButton(
+    return UniversalButton(
+      color: color,
+      icon: icon,
       onPressed: onTap,
-      style: style,
-      child: child,
+      variant: variant,
+      child: content,
     );
   }
 }
