@@ -29,10 +29,12 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   /// instance of Analytics from the web plugin
   firestore_interop.Firestore? _webFirestore;
 
+  firestore_interop.Settings? _settings;
+
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
     return _webFirestore ??=
-        firestore_interop.getFirestoreInstance(core_interop.app(app.name));
+        firestore_interop.getFirestoreInstance(core_interop.app(app.name), _settings);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -120,7 +122,6 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   @override
   set settings(Settings settings) {
     int? cacheSizeBytes;
-
     if (settings.cacheSizeBytes == null) {
       cacheSizeBytes = 40000000;
     } else if (settings.cacheSizeBytes == Settings.CACHE_SIZE_UNLIMITED) {
@@ -131,13 +132,17 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
     }
 
     if (settings.host != null && settings.sslEnabled != null) {
-      _delegate.settings(firestore_interop.Settings(
+      _settings = firestore_interop.Settings(
           cacheSizeBytes: cacheSizeBytes,
           host: settings.host,
-          ssl: settings.sslEnabled));
+          ssl: settings.sslEnabled,
+          ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      );
     } else {
-      _delegate
-          .settings(firestore_interop.Settings(cacheSizeBytes: cacheSizeBytes));
+      _settings = firestore_interop.Settings(
+        cacheSizeBytes: cacheSizeBytes,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+      );
     }
   }
 
