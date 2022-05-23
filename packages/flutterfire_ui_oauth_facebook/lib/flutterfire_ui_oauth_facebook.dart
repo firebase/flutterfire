@@ -22,6 +22,8 @@ class FacebookSignInButton extends _FacebookSignInButton {
     void Function()? onTap,
     bool? overrideDefaultTapAction,
     double? size,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           clientId: clientId,
@@ -36,6 +38,8 @@ class FacebookSignInButton extends _FacebookSignInButton {
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
           redirectUri: redirectUri,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -53,6 +57,8 @@ class FacebookSignInIconButton extends _FacebookSignInButton {
     bool? overrideDefaultTapAction,
     double? size,
     String? redirectUri,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           action: action,
@@ -67,6 +73,8 @@ class FacebookSignInIconButton extends _FacebookSignInButton {
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
           redirectUri: redirectUri,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -83,6 +91,8 @@ class _FacebookSignInButton extends StatelessWidget {
   final double size;
   final String clientId;
   final String? redirectUri;
+  final void Function(Exception exception)? onError;
+  final VoidCallback? onCanceled;
 
   const _FacebookSignInButton({
     Key? key,
@@ -98,6 +108,8 @@ class _FacebookSignInButton extends StatelessWidget {
     this.onSignedIn,
     double? size,
     this.redirectUri,
+    this.onError,
+    this.onCanceled,
   })  : label = label ?? 'Sign in with Facebook',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
         size = size ?? 19,
@@ -122,6 +134,8 @@ class _FacebookSignInButton extends StatelessWidget {
       onSignedIn: onSignedIn,
       overrideDefaultTapAction: overrideDefaultTapAction,
       size: size,
+      onError: onError,
+      onCancelled: onCanceled,
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart';
@@ -56,7 +56,10 @@ class FacebookProvider extends OAuthProvider {
 
   @override
   Future<void> logOutProvider() async {
-    await _provider.logOut();
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      await _provider.logOut();
+    }
   }
 
   @override

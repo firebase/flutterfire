@@ -75,6 +75,8 @@ class _AuthFlowBuilderState<T extends AuthController>
 
   bool initialized = false;
 
+  late AuthProvider provider = widget.provider ?? _createDefaultProvider();
+
   Widget _defaultBuilder(_, __, ___, ____) {
     return widget.child!;
   }
@@ -82,6 +84,8 @@ class _AuthFlowBuilderState<T extends AuthController>
   @override
   void initState() {
     super.initState();
+    provider.auth = widget.auth ?? FirebaseAuth.instance;
+
     flow = widget.flow ?? createFlow();
 
     if (widget.flowKey != null) {
@@ -119,39 +123,39 @@ class _AuthFlowBuilderState<T extends AuthController>
       }
     }
 
-    final provider = widget.provider ?? _createDefaultProvider();
+    final _provider = provider;
 
-    if (provider is EmailAuthProvider) {
+    if (_provider is EmailAuthProvider) {
       return EmailAuthFlow(
-        provider: provider,
+        provider: _provider,
         action: widget.action,
         auth: widget.auth,
       );
-    } else if (provider is EmailLinkAuthProvider) {
+    } else if (_provider is EmailLinkAuthProvider) {
       return EmailLinkFlow(
-        provider: provider,
+        provider: _provider,
         auth: widget.auth,
       );
-    } else if (provider is OAuthProvider) {
+    } else if (_provider is OAuthProvider) {
       return OAuthFlow(
-        provider: provider,
+        provider: _provider,
         action: widget.action,
         auth: widget.auth,
       );
-    } else if (provider is PhoneAuthProvider) {
+    } else if (_provider is PhoneAuthProvider) {
       return PhoneAuthFlow(
-        provider: provider,
+        provider: _provider,
         action: widget.action,
         auth: widget.auth,
       );
-    } else if (provider is UniversalEmailSignInProvider) {
+    } else if (_provider is UniversalEmailSignInProvider) {
       return UniversalEmailSignInFlow(
-        provider: provider,
+        provider: _provider,
         action: widget.action,
         auth: widget.auth,
       );
     } else {
-      throw Exception('Unknown provider $provider');
+      throw Exception('Unknown provider $_provider');
     }
   }
 

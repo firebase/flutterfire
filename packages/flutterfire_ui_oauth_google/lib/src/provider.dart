@@ -20,13 +20,15 @@ class GoogleProvider extends OAuthProvider {
   late final desktopSignInArgs = GoogleSignInArgs(
     clientId: clientId,
     redirectUri: redirectUri ?? defaultRedirectUri,
-    scope: (scopes ?? []).join(' '),
+    scope: scopes != null
+        ? scopes!.join(' ')
+        : 'https://www.googleapis.com/auth/plus.login',
   );
 
   GoogleProvider({
     required this.clientId,
     this.redirectUri,
-    this.scopes = const [],
+    this.scopes,
   }) {
     firebaseAuthProvider.setCustomParameters(const {
       'prompt': 'select_account',
@@ -60,7 +62,10 @@ class GoogleProvider extends OAuthProvider {
 
   @override
   Future<void> logOutProvider() async {
-    await _provider.signOut();
+    if (defaultTargetPlatform == TargetPlatform.android ||
+        defaultTargetPlatform == TargetPlatform.iOS) {
+      await _provider.signOut();
+    }
   }
 
   @override

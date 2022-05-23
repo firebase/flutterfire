@@ -2,10 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-mixin DefaultErrorHandlerMixin {
-  AuthProvider get provider;
-
-  void onError(Object error) {
+class DefaultErrorHandler {
+  static void onError(AuthProvider provider, Object error) {
     if (error is! FirebaseAuthException) {
       throw error;
     }
@@ -41,10 +39,12 @@ abstract class AuthListener {
     List<String> providers,
     AuthCredential? credential,
   );
+
+  void onCanceled();
 }
 
 abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
-  late final FirebaseAuth auth;
+  late FirebaseAuth auth;
   T get authListener;
   set authListener(T listener);
 

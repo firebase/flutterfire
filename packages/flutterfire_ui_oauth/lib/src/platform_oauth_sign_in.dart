@@ -28,7 +28,11 @@ mixin PlatformSignInMixin {
       final oauthCredential = fromDesktopAuthResult(value);
       onCredentialReceived(oauthCredential, action);
     }).catchError((err) {
-      if (err is AuthCancelledException) return;
+      if (err is AuthCancelledException) {
+        authListener.onCanceled();
+        return;
+      }
+
       authListener.onError(err);
     });
   }

@@ -116,6 +116,7 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
                 provider: provider,
                 auth: widget.auth,
                 action: AuthAction.link,
+                variant: OAuthButtonVariant.icon,
               ),
             ),
       ],

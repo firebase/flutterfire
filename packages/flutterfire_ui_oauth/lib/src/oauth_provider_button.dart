@@ -26,6 +26,8 @@ class OAuthProviderButton extends StatefulWidget {
   final DifferentProvidersFoundCallback? onDifferentProvidersFound;
 
   final SignedInCallback? onSignedIn;
+  final void Function(Exception exception)? onError;
+  final VoidCallback? onCancelled;
 
   final bool overrideDefaultTapAction;
   final bool isLoading;
@@ -43,6 +45,8 @@ class OAuthProviderButton extends StatefulWidget {
     this.overrideDefaultTapAction = false,
     this.size = 19,
     this.isLoading = false,
+    this.onError,
+    this.onCancelled,
   })  : assert(!overrideDefaultTapAction || onTap != null),
         _padding = size * 1.33 / 2,
         super(key: key);
@@ -52,7 +56,6 @@ class OAuthProviderButton extends StatefulWidget {
 }
 
 class _OAuthProviderButtonState extends State<OAuthProviderButton>
-    with DefaultErrorHandlerMixin
     implements OAuthListener {
   double get _height => widget.size + widget._padding * 2;
   late bool isLoading = widget.isLoading;
@@ -229,6 +232,33 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton>
     });
 
     widget.onSignedIn?.call(credential);
+  }
+
+  @override
+  void onError(Object error) {
+    try {
+      DefaultErrorHandler.onError(provider, error);
+    } on Exception catch (err) {
+      widget.onError?.call(err);
+    }
+  }
+
+  @override
+  void onCanceled() {
+    setState(() {
+      isLoading = false;
+    });
+
+    widget.onCancelled?.call();
+  }
+
+  @override
+  void didUpdateWidget(covariant OAuthProviderButton oldWidget) {
+    if (oldWidget.isLoading != widget.isLoading) {
+      isLoading = widget.isLoading;
+    }
+
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

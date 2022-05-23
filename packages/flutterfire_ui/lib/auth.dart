@@ -27,6 +27,7 @@ export 'src/auth/widgets/phone_input.dart' show PhoneInputState, PhoneInput;
 export 'src/auth/widgets/sms_code_input.dart'
     show SMSCodeInputState, SMSCodeInput;
 
+export 'src/auth/auth_flow.dart';
 export 'src/auth/flows/email_flow.dart';
 export 'src/auth/flows/oauth_flow.dart' show OAuthController, OAuthFlow;
 

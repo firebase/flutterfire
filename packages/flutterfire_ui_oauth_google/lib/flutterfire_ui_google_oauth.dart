@@ -23,6 +23,8 @@ class GoogleSignInButton extends _GoogleSignInButton {
     void Function()? onTap,
     bool? overrideDefaultTapAction,
     double? size,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           clientId: clientId,
@@ -38,6 +40,8 @@ class GoogleSignInButton extends _GoogleSignInButton {
           size: size,
           redirectUri: redirectUri,
           scopes: scopes,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -56,6 +60,8 @@ class GoogleSignInIconButton extends _GoogleSignInButton {
     bool? overrideDefaultTapAction,
     double? size,
     String? redirectUri,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           action: action,
@@ -71,6 +77,8 @@ class GoogleSignInIconButton extends _GoogleSignInButton {
           size: size,
           redirectUri: redirectUri,
           scopes: scopes,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -88,6 +96,8 @@ class _GoogleSignInButton extends StatelessWidget {
   final String clientId;
   final String? redirectUri;
   final List<String>? scopes;
+  final void Function(Exception exception)? onError;
+  final VoidCallback? onCanceled;
 
   const _GoogleSignInButton({
     Key? key,
@@ -104,6 +114,8 @@ class _GoogleSignInButton extends StatelessWidget {
     this.onSignedIn,
     double? size,
     this.redirectUri,
+    this.onError,
+    this.onCanceled,
   })  : label = label ?? 'Sign in with Google',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
         size = size ?? 19,
@@ -129,6 +141,8 @@ class _GoogleSignInButton extends StatelessWidget {
       onSignedIn: onSignedIn,
       overrideDefaultTapAction: overrideDefaultTapAction,
       size: size,
+      onError: onError,
+      onCancelled: onCanceled,
     );
   }
 }

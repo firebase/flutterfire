@@ -62,6 +62,15 @@ class AppleProvider extends OAuthProvider {
     }).then((credential) {
       onCredentialReceived(credential, action);
     }).catchError((err) {
+      if (err is SignInWithAppleAuthorizationException) {
+        switch (err.code) {
+          case AuthorizationErrorCode.canceled:
+            authListener.onCanceled();
+            return;
+          default:
+            authListener.onError(err);
+        }
+      }
       authListener.onError(err);
     });
   }
@@ -89,6 +98,7 @@ class AppleProvider extends OAuthProvider {
 
   @override
   bool supportsPlatform(TargetPlatform platform) {
-    return !kIsWeb && platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
+    return !kIsWeb && platform == TargetPlatform.iOS ||
+        platform == TargetPlatform.macOS;
   }
 }

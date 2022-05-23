@@ -9,10 +9,5 @@ export './src/oauth_provider.dart';
 export './src/oauth_provider_button.dart';
 export './src/oauth_provider_button_style.dart';
 
-export 'package:flutterfire_ui/auth.dart' show AuthAction;
-
-class AuthCancelledException implements Exception {
-  AuthCancelledException([this.message = 'User has cancelled auth']);
-
-  final String message;
-}
+export 'package:flutterfire_ui/auth.dart'
+    show AuthAction, AuthCancelledException;

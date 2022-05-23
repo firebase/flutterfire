@@ -15,7 +15,6 @@ class AuthCancelledException implements Exception {
 }
 
 class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
-    with DefaultErrorHandlerMixin
     implements AuthController, AuthListener {
   @override
   FirebaseAuth auth;
@@ -65,6 +64,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
         _provider = provider,
         super(initialState) {
     _provider.authListener = this;
+    _provider.auth = auth ?? FirebaseAuth.instance;
   }
 
   @override
@@ -114,5 +114,19 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   void reset() {
     value = initialState;
     onDispose();
+  }
+
+  @override
+  void onError(Object error) {
+    try {
+      DefaultErrorHandler.onError(provider, error);
+    } on Exception catch (err) {
+      value = AuthFailed(err);
+    }
+  }
+
+  @override
+  void onCanceled() {
+    value = initialState;
   }
 }

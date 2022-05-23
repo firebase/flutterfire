@@ -10,7 +10,8 @@ abstract class OAuthController extends AuthController {
   void signIn(TargetPlatform platform);
 }
 
-class OAuthFlow extends AuthFlow<OAuthProvider> implements OAuthController {
+class OAuthFlow extends AuthFlow<OAuthProvider>
+    implements OAuthController, OAuthListener {
   OAuthFlow({
     required OAuthProvider provider,
     AuthAction? action,
@@ -24,6 +25,15 @@ class OAuthFlow extends AuthFlow<OAuthProvider> implements OAuthController {
 
   @override
   void signIn(TargetPlatform platform) {
-    provider.platformSignIn(platform, action);
+    provider.signIn(platform, action);
+  }
+
+  @override
+  void onError(Object error) {
+    if (error is Exception) {
+      if (error is! AuthCancelledException) {
+        value = AuthFailed(error);
+      }
+    }
   }
 }

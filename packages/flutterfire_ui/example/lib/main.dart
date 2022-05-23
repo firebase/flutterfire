@@ -1,7 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart'
+    hide PhoneAuthProvider, EmailAuthProvider;
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
+import 'package:flutterfire_ui_oauth_apple/flutterfire_ui_oauth_apple.dart';
+import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart';
+import 'package:flutterfire_ui_oauth_google/flutterfire_ui_google_oauth.dart';
+import 'package:flutterfire_ui_oauth_twitter/flutterfire_ui_oauth_twitter.dart';
 
 import 'init.dart'
     if (dart.library.html) 'web_init.dart'
@@ -18,7 +23,7 @@ final actionCodeSettings = ActionCodeSettings(
       'io.flutter.plugins.flutterfire_ui.flutterfire_ui_example',
   iOSBundleId: 'io.flutter.plugins.flutterfireui.flutterfireUIExample',
 );
-final emailLinkProviderConfig = EmailLinkProviderConfiguration(
+final emailLinkProviderConfig = EmailLinkAuthProvider(
   actionCodeSettings: actionCodeSettings,
 );
 
@@ -27,13 +32,13 @@ Future<void> main() async {
   await initializeFirebase();
 
   FlutterFireUIAuth.configureProviders([
-    const EmailProviderConfiguration(),
+    EmailAuthProvider(),
     emailLinkProviderConfig,
-    const PhoneProviderConfiguration(),
-    const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID),
-    const AppleProviderConfiguration(),
-    const FacebookProviderConfiguration(clientId: FACEBOOK_CLIENT_ID),
-    const TwitterProviderConfiguration(
+    PhoneAuthProvider(),
+    GoogleProvider(clientId: GOOGLE_CLIENT_ID),
+    AppleProvider(),
+    FacebookProvider(clientId: FACEBOOK_CLIENT_ID),
+    TwitterProvider(
       apiKey: TWITTER_API_KEY,
       apiSecretKey: TWITTER_API_SECRET_KEY,
       redirectUri: TWITTER_REDIRECT_URI,

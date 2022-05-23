@@ -20,6 +20,8 @@ class AppleSignInButton extends _AppleSignInButton {
     void Function()? onTap,
     bool? overrideDefaultTapAction,
     double? size,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           action: action,
@@ -32,6 +34,8 @@ class AppleSignInButton extends _AppleSignInButton {
           onTap: onTap,
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -47,6 +51,8 @@ class AppleSignInIconButton extends _AppleSignInButton {
     void Function()? onTap,
     bool? overrideDefaultTapAction,
     double? size,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           action: action,
@@ -59,6 +65,8 @@ class AppleSignInIconButton extends _AppleSignInButton {
           onTap: onTap,
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -73,6 +81,8 @@ class _AppleSignInButton extends StatelessWidget {
   final DifferentProvidersFoundCallback? onDifferentProvidersFound;
   final SignedInCallback? onSignedIn;
   final double size;
+  final void Function(Exception exception)? onError;
+  final VoidCallback? onCanceled;
 
   const _AppleSignInButton({
     Key? key,
@@ -86,6 +96,8 @@ class _AppleSignInButton extends StatelessWidget {
     this.onDifferentProvidersFound,
     this.onSignedIn,
     double? size,
+    this.onError,
+    this.onCanceled,
   })  : label = label ?? 'Sign in with Apple',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
         size = size ?? 19,
@@ -107,6 +119,8 @@ class _AppleSignInButton extends StatelessWidget {
       onSignedIn: onSignedIn,
       overrideDefaultTapAction: overrideDefaultTapAction,
       size: size,
+      onError: onError,
+      onCancelled: onCanceled,
     );
   }
 }

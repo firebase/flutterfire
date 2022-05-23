@@ -10,7 +10,7 @@ class EmailAuthProvider
   late EmailAuthListener authListener;
 
   @override
-  final providerId = 'email';
+  final providerId = 'password';
 
   @override
   bool supportsPlatform(TargetPlatform platform) => true;

@@ -19,7 +19,9 @@ class PhoneAuthProvider
 
   @override
   bool supportsPlatform(TargetPlatform platform) {
-    return true;
+    return platform == TargetPlatform.android ||
+        platform == TargetPlatform.iOS ||
+        kIsWeb;
   }
 
   void sendVerificationCode(String phoneNumber, AuthAction action) {

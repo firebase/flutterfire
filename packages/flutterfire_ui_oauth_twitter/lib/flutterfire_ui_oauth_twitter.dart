@@ -23,6 +23,8 @@ class TwitterSignInButton extends _TwitterSignInButton {
     void Function()? onTap,
     bool? overrideDefaultTapAction,
     double? size,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           apiKey: apiKey,
@@ -38,6 +40,8 @@ class TwitterSignInButton extends _TwitterSignInButton {
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
           redirectUri: redirectUri,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -56,6 +60,8 @@ class TwitterSignInIconButton extends _TwitterSignInButton {
     bool? overrideDefaultTapAction,
     double? size,
     String? redirectUri,
+    void Function(Exception exception)? onError,
+    VoidCallback? onCanceled,
   }) : super(
           key: key,
           action: action,
@@ -71,6 +77,8 @@ class TwitterSignInIconButton extends _TwitterSignInButton {
           overrideDefaultTapAction: overrideDefaultTapAction,
           size: size,
           redirectUri: redirectUri,
+          onError: onError,
+          onCanceled: onCanceled,
         );
 }
 
@@ -88,6 +96,8 @@ class _TwitterSignInButton extends StatelessWidget {
   final String apiKey;
   final String apiSecretKey;
   final String? redirectUri;
+  final void Function(Exception exception)? onError;
+  final VoidCallback? onCanceled;
 
   const _TwitterSignInButton({
     Key? key,
@@ -104,6 +114,8 @@ class _TwitterSignInButton extends StatelessWidget {
     this.onSignedIn,
     double? size,
     this.redirectUri,
+    this.onError,
+    this.onCanceled,
   })  : label = label ?? 'Sign in with Twitter',
         overrideDefaultTapAction = overrideDefaultTapAction ?? false,
         size = size ?? 19,
@@ -129,6 +141,8 @@ class _TwitterSignInButton extends StatelessWidget {
       onSignedIn: onSignedIn,
       overrideDefaultTapAction: overrideDefaultTapAction,
       size: size,
+      onError: onError,
+      onCancelled: onCanceled,
     );
   }
 }

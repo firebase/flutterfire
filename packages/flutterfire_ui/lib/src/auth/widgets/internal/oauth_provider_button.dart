@@ -61,27 +61,37 @@ class OAuthProviderButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labels = FlutterFireUILocalizations.labelsOf(context);
+    final brightness = Theme.of(context).brightness;
 
     return AuthFlowBuilder<OAuthController>(
       provider: provider,
       action: action,
       auth: auth,
       builder: (context, state, ctrl, child) {
+        final button = ffui_oauth.OAuthProviderButton(
+          provider: provider,
+          action: action,
+          isLoading: state is SigningIn || state is CredentialReceived,
+          onTap: () => ctrl.signIn(Theme.of(context).platform),
+          overrideDefaultTapAction: true,
+          loadingIndicator: LoadingIndicator(
+            size: 19,
+            borderWidth: 1,
+            color: provider.style.color.getValue(brightness),
+          ),
+          label: variant == OAuthButtonVariant.icon
+              ? ''
+              : resolveProviderButtonLabel(provider.providerId, labels),
+          auth: auth,
+        );
+
+        if (variant == OAuthButtonVariant.icon) {
+          return button;
+        }
+
         return Column(
           children: [
-            ffui_oauth.OAuthProviderButton(
-              provider: provider,
-              action: action,
-              isLoading: state is SigningIn || state is CredentialReceived,
-              onTap: () => ctrl.signIn(Theme.of(context).platform),
-              overrideDefaultTapAction: true,
-              loadingIndicator:
-                  const LoadingIndicator(size: 19, borderWidth: 1),
-              label: variant == OAuthButtonVariant.icon
-                  ? ''
-                  : resolveProviderButtonLabel(provider.providerId, labels),
-              auth: auth,
-            ),
+            button,
             const _ErrorListener(),
           ],
         );

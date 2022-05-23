@@ -8,7 +8,7 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  crypto: ^3.0.2
+  crypto: ^3.0.1
   flutter:
     sdk: flutter
   firebase_auth: ^3.3.17

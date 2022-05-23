@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import 'universal_button.dart';
@@ -6,10 +7,12 @@ import 'universal_button.dart';
 class _LoadingButtonContent extends StatelessWidget {
   final String label;
   final bool isLoading;
+  final Color? color;
   const _LoadingButtonContent({
     Key? key,
     required this.label,
     required this.isLoading,
+    required this.color,
   }) : super(key: key);
 
   @override
@@ -22,6 +25,7 @@ class _LoadingButtonContent extends StatelessWidget {
       child = LoadingIndicator(
         size: isCupertino ? 20 : 16,
         borderWidth: 1,
+        color: color,
       );
     }
 
@@ -49,7 +53,13 @@ class LoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final content = _LoadingButtonContent(label: label, isLoading: isLoading);
+    final content = _LoadingButtonContent(
+      label: label,
+      isLoading: isLoading,
+      color: variant == ButtonVariant.filled
+          ? Theme.of(context).colorScheme.onPrimary
+          : null,
+    );
 
     return UniversalButton(
       color: color,
