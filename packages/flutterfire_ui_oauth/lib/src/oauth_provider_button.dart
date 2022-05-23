@@ -1,47 +1,71 @@
+import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-typedef CredentialReceivedCallback = void Function(
-  OAuthCredential credential,
+typedef ErrorBuilder = Widget Function(Exception e);
+typedef DifferentProvidersFoundCallback = void Function(
+  List<String> providers,
+  AuthCredential? credential,
 );
 
-typedef ErrorBuilder = Widget Function(Exception e);
+typedef SignedInCallback = void Function(UserCredential credential);
 
 class OAuthProviderButton extends StatefulWidget {
-  const factory OAuthProviderButton.icon({
-    required ThemedOAuthProviderButtonStyle style,
-    required String label,
-    required double size,
-    required Widget loadingIndicator,
-    required Future<void> Function() onTap,
-  }) = OAuthProviderIconButton;
-
-  final ThemedOAuthProviderButtonStyle style;
   final String label;
   final double size;
   final double _padding;
   final Widget loadingIndicator;
-  final Future<void> Function() onTap;
+  final AuthAction? action;
+  final FirebaseAuth? auth;
+  final void Function()? onTap;
+  final OAuthProvider provider;
+
+  final DifferentProvidersFoundCallback? onDifferentProvidersFound;
+
+  final SignedInCallback? onSignedIn;
+
+  final bool overrideDefaultTapAction;
+  final bool isLoading;
 
   const OAuthProviderButton({
     Key? key,
-    required this.style,
     required this.label,
-    required this.onTap,
     required this.loadingIndicator,
+    required this.provider,
+    this.onTap,
+    this.auth,
+    this.action,
+    this.onDifferentProvidersFound,
+    this.onSignedIn,
+    this.overrideDefaultTapAction = false,
     this.size = 19,
-  })  : _padding = size * 1.33 / 2,
+    this.isLoading = false,
+  })  : assert(!overrideDefaultTapAction || onTap != null),
+        _padding = size * 1.33 / 2,
         super(key: key);
 
   @override
   State<OAuthProviderButton> createState() => _OAuthProviderButtonState();
 }
 
-class _OAuthProviderButtonState extends State<OAuthProviderButton> {
+class _OAuthProviderButtonState extends State<OAuthProviderButton>
+    with DefaultErrorHandlerMixin
+    implements OAuthListener {
   double get _height => widget.size + widget._padding * 2;
-  bool isLoading = false;
+  late bool isLoading = widget.isLoading;
+
+  void _signIn() {
+    final platform = Theme.of(context).platform;
+
+    if (widget.overrideDefaultTapAction) {
+      widget.onTap!.call();
+    } else {
+      provider.signIn(platform, widget.action ?? AuthAction.signIn);
+    }
+  }
 
   Widget _buildCupertino(
     BuildContext context,
@@ -66,7 +90,7 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton> {
           child: CupertinoButton.filled(
             padding: const EdgeInsets.all(0),
             borderRadius: br,
-            onPressed: () => _signIn(),
+            onPressed: _signIn,
             child: ClipRRect(
               borderRadius: br,
               child: _ButtonContent(
@@ -87,19 +111,6 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton> {
         ),
       ),
     );
-  }
-
-  Future<void> _signIn() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      await widget.onTap();
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   Widget _buildMaterial(
@@ -146,7 +157,7 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton> {
     final brightness =
         CupertinoTheme.of(context).brightness ?? Theme.of(context).brightness;
 
-    final style = widget.style.withBrightness(brightness);
+    final style = provider.style.withBrightness(brightness);
     final margin = (widget.size + widget._padding * 2) / 10;
     final borderRadius = widget.size / 3;
     const borderWidth = 1.0;
@@ -170,24 +181,58 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton> {
       );
     }
   }
-}
 
-class OAuthProviderIconButton extends OAuthProviderButton {
-  const OAuthProviderIconButton({
-    Key? key,
-    required ThemedOAuthProviderButtonStyle style,
-    required Future<void> Function() onTap,
-    required Widget loadingIndicator,
-    required String label,
-    double size = 19,
-  }) : super(
-          key: key,
-          style: style,
-          label: '',
-          size: size,
-          onTap: onTap,
-          loadingIndicator: loadingIndicator,
-        );
+  @override
+  FirebaseAuth get auth => widget.auth ?? FirebaseAuth.instance;
+
+  @override
+  void onBeforeCredentialLinked(AuthCredential credential) {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void onBeforeProvidersForEmailFetch() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void onBeforeSignIn() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void onCredentialLinked(AuthCredential credential) {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void onDifferentProvidersFound(
+    String email,
+    List<String> providers,
+    AuthCredential? credential,
+  ) {
+    widget.onDifferentProvidersFound?.call(providers, credential);
+  }
+
+  @override
+  void onSignedIn(UserCredential credential) {
+    setState(() {
+      isLoading = false;
+    });
+
+    widget.onSignedIn?.call(credential);
+  }
+
+  @override
+  OAuthProvider get provider => widget.provider;
 }
 
 class _ButtonContent extends StatelessWidget {

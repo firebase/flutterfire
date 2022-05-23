@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,28 +11,51 @@ class FakeAssetBundle extends Fake implements AssetBundle {
   Future<String> loadString(String key, {bool cache = true}) async => svgStr;
 }
 
-void main() {
-  int tapCount = 0;
+class FakeOAuthProvider extends OAuthProvider {
+  @override
+  ProviderArgs get desktopSignInArgs => throw UnimplementedError();
 
-  final style = GoogleProviderButtonStyle();
-  Completer<void> completer = Completer();
-  late Widget button;
+  @override
+  get firebaseAuthProvider => throw UnimplementedError();
 
-  Future<void> onTap() async {
-    await completer.future;
-    tapCount++;
+  @override
+  OAuthCredential fromDesktopAuthResult(AuthResult result) {
+    throw UnimplementedError();
   }
 
-  setUp(() {
-    tapCount = 0;
-    completer = Completer();
-  });
+  @override
+  Future<void> logOutProvider() {
+    throw UnimplementedError();
+  }
+
+  @override
+  void mobileSignIn(AuthAction action) {}
+
+  @override
+  String get providerId => 'fake';
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
+  ThemedOAuthProviderButtonStyle get style => const GoogleProviderButtonStyle();
+
+  @override
+  bool supportsPlatform(TargetPlatform platform) {
+    return true;
+  }
+}
+
+void main() {
+  final provider = FakeOAuthProvider();
+
+  const style = GoogleProviderButtonStyle();
+  late Widget button;
 
   Widget renderMaterialButton([Brightness brightness = Brightness.dark]) {
     button = OAuthProviderButton(
-      style: style,
+      provider: provider,
       label: 'Sign in with Google',
-      onTap: onTap,
       loadingIndicator: const CircularProgressIndicator(),
     );
 
@@ -117,23 +138,5 @@ void main() {
 
       expect(iconFinder, findsOneWidget);
     });
-
-    testWidgets(
-      'renders a loading indicator until onTap future is resolved',
-      (tester) async {
-        await tester.pumpWidget(renderMaterialButton());
-
-        final loadingIndicatorFinder = find.byWidgetPredicate(
-          (widget) => widget is CircularProgressIndicator,
-        );
-
-        expect(loadingIndicatorFinder, findsNothing);
-
-        await tester.tap(find.byWidget(button));
-        await tester.pump();
-
-        expect(loadingIndicatorFinder, findsOneWidget);
-      },
-    );
   });
 }

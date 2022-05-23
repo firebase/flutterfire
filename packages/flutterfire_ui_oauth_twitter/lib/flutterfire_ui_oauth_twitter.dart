@@ -1,68 +1,134 @@
 export 'src/provider.dart' show TwitterProvider;
 export 'src/theme.dart' show TwitterProviderButtonStyle;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-class TwiterSignInButton extends _TwiterSignInButton {
-  const factory TwiterSignInButton.icon({
-    Key? key,
-    required ThemedOAuthProviderButtonStyle style,
-    required Widget loadingIndicator,
-    required Future<void> Function() onTap,
-  }) = TwiterSignInIconButton;
+import 'src/provider.dart';
 
-  const TwiterSignInButton({
+class TwitterSignInButton extends _TwitterSignInButton {
+  const TwitterSignInButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
     required Widget loadingIndicator,
-    required String label,
-    required Future<void> Function() onTap,
+    required String apiKey,
+    required String apiSecretKey,
+    String? redirectUri,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    String? label,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
   }) : super(
           key: key,
-          style: style,
+          apiKey: apiKey,
+          apiSecretKey: apiSecretKey,
+          action: action,
+          auth: auth,
+          isLoading: isLoading ?? false,
+          loadingIndicator: loadingIndicator,
           label: label,
-          loadingIndicator: loadingIndicator,
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
           onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
         );
 }
 
-class TwiterSignInIconButton extends TwiterSignInButton {
-  const TwiterSignInIconButton({
+class TwitterSignInIconButton extends _TwitterSignInButton {
+  const TwitterSignInIconButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
+    required String apiKey,
+    required String apiSecretKey,
     required Widget loadingIndicator,
-    required Future<void> Function() onTap,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
+    String? redirectUri,
   }) : super(
           key: key,
-          style: style,
+          action: action,
+          apiKey: apiKey,
+          apiSecretKey: apiSecretKey,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
-          onTap: onTap,
           label: '',
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
+          onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
         );
 }
 
-class _TwiterSignInButton extends StatelessWidget {
-  final ThemedOAuthProviderButtonStyle style;
+class _TwitterSignInButton extends StatelessWidget {
   final String label;
   final Widget loadingIndicator;
-  final Future<void> Function() onTap;
+  final void Function()? onTap;
+  final bool overrideDefaultTapAction;
+  final bool isLoading;
+  final AuthAction? action;
+  final FirebaseAuth? auth;
+  final DifferentProvidersFoundCallback? onDifferentProvidersFound;
+  final SignedInCallback? onSignedIn;
+  final double size;
+  final String apiKey;
+  final String apiSecretKey;
+  final String? redirectUri;
 
-  const _TwiterSignInButton({
+  const _TwitterSignInButton({
     Key? key,
-    required this.label,
+    required this.apiKey,
+    required this.apiSecretKey,
     required this.loadingIndicator,
-    required this.style,
-    required this.onTap,
-  }) : super(key: key);
+    String? label,
+    bool? overrideDefaultTapAction,
+    this.onTap,
+    this.isLoading = false,
+    this.action = AuthAction.signIn,
+    this.auth,
+    this.onDifferentProvidersFound,
+    this.onSignedIn,
+    double? size,
+    this.redirectUri,
+  })  : label = label ?? 'Sign in with Twitter',
+        overrideDefaultTapAction = overrideDefaultTapAction ?? false,
+        size = size ?? 19,
+        super(key: key);
+
+  TwitterProvider get provider => TwitterProvider(
+        apiKey: apiKey,
+        apiSecretKey: apiSecretKey,
+        redirectUri: redirectUri,
+      );
 
   @override
   Widget build(BuildContext context) {
     return OAuthProviderButton(
-      style: style,
+      provider: provider,
       label: label,
       onTap: onTap,
       loadingIndicator: loadingIndicator,
+      isLoading: isLoading,
+      action: action,
+      auth: auth ?? FirebaseAuth.instance,
+      onDifferentProvidersFound: onDifferentProvidersFound,
+      onSignedIn: onSignedIn,
+      overrideDefaultTapAction: overrideDefaultTapAction,
+      size: size,
     );
   }
 }

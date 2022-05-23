@@ -42,7 +42,7 @@ export 'src/auth/widgets/phone_verification_button.dart'
     show PhoneVerificationButton;
 
 export 'src/auth/widgets/internal/oauth_provider_button.dart'
-    show OAuthProviderButton, OAuthProviderIconButton, OAuthButtonVariant;
+    show OAuthProviderButton, OAuthButtonVariant;
 
 export 'src/auth/widgets/sign_out_button.dart';
 export 'src/auth/widgets/user_avatar.dart';
@@ -54,10 +54,6 @@ export 'src/auth/widgets/forgot_password_button.dart';
 export 'src/auth/widgets/reauthenticate_dialog.dart';
 export 'src/auth/widgets/different_method_sign_in_dialog.dart';
 export 'src/auth/widgets/email_sign_up_dialog.dart';
-export 'src/auth/widgets/apple_sign_in_button.dart';
-export 'src/auth/widgets/facebook_sign_in_button.dart';
-export 'src/auth/widgets/google_sign_in_button.dart';
-export 'src/auth/widgets/twitter_sign_in_button.dart';
 
 export 'src/auth/views/login_view.dart';
 export 'src/auth/views/phone_input_view.dart';

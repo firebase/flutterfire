@@ -1,41 +1,48 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart';
 
-class FacebookProvider extends OAuthProvider with SignOutMixin {
+class FacebookProvider extends OAuthProvider {
   @override
   final providerId = 'facebook.com';
-  final provider = FacebookAuth.instance;
+  final _provider = FacebookAuth.instance;
   final String clientId;
-  final String redirectUri;
+  final String? redirectUri;
+
+  @override
+  final style = const FacebookProviderButtonStyle();
 
   @override
   late final ProviderArgs desktopSignInArgs = FacebookSignInArgs(
     clientId: clientId,
-    redirectUri: redirectUri,
+    redirectUri: redirectUri ?? defaultRedirectUri,
   );
 
   FacebookProvider({
     required this.clientId,
-    required this.redirectUri,
+    this.redirectUri,
   });
 
-  @override
-  Future<OAuthCredential> signIn() async {
-    final result = await provider.login();
-
+  void _handleResult(LoginResult result, AuthAction action) {
     switch (result.status) {
       case LoginStatus.success:
-        final credential =
-            FacebookAuthProvider.credential(result.accessToken!.token);
+        final token = result.accessToken!.token;
+        final credential = FacebookAuthProvider.credential(token);
 
-        return credential;
+        onCredentialReceived(credential, action);
+        break;
       case LoginStatus.cancelled:
-        throw AuthCancelledException();
+        authListener.onError(AuthCancelledException());
+        break;
       case LoginStatus.failed:
-        throw Exception(result.message);
+        authListener.onError(Exception(result.message));
+        break;
       case LoginStatus.operationInProgress:
-        throw Exception('Previous login request is not complete');
+        authListener.onError(
+          Exception('Previous login request is not complete'),
+        );
     }
   }
 
@@ -49,6 +56,19 @@ class FacebookProvider extends OAuthProvider with SignOutMixin {
 
   @override
   Future<void> logOutProvider() async {
-    await provider.logOut();
+    await _provider.logOut();
+  }
+
+  @override
+  void mobileSignIn(AuthAction action) {
+    final result = _provider.login();
+    result
+        .then((result) => _handleResult(result, action))
+        .catchError(authListener.onError);
+  }
+
+  @override
+  bool supportsPlatform(TargetPlatform platform) {
+    return true;
   }
 }

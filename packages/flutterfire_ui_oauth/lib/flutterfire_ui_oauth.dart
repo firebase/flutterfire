@@ -9,8 +9,7 @@ export './src/oauth_provider.dart';
 export './src/oauth_provider_button.dart';
 export './src/oauth_provider_button_style.dart';
 
-export 'src/sign_out_mixin.dart'
-    if (dart.library.html) 'src/sign_out_mixin_web.dart';
+export 'package:flutterfire_ui/auth.dart' show AuthAction;
 
 class AuthCancelledException implements Exception {
   AuthCancelledException([this.message = 'User has cancelled auth']);

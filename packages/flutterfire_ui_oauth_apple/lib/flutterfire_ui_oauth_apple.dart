@@ -1,68 +1,112 @@
 export 'src/provider.dart' show AppleProvider;
 export 'src/theme.dart' show AppleProviderButtonStyle;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-class AppleSignInButton extends _AppleSignInButton {
-  const factory AppleSignInButton.icon({
-    Key? key,
-    required ThemedOAuthProviderButtonStyle style,
-    required Widget loadingIndicator,
-    required Future<void> Function() onTap,
-  }) = AppleSignInIconButton;
+import 'src/provider.dart';
 
+class AppleSignInButton extends _AppleSignInButton {
   const AppleSignInButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
     required Widget loadingIndicator,
-    required String label,
-    required Future<void> Function() onTap,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    String? label,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
   }) : super(
           key: key,
-          style: style,
-          label: label,
+          action: action,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
+          label: label,
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
           onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
         );
 }
 
-class AppleSignInIconButton extends AppleSignInButton {
+class AppleSignInIconButton extends _AppleSignInButton {
   const AppleSignInIconButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
     required Widget loadingIndicator,
-    required Future<void> Function() onTap,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
   }) : super(
           key: key,
-          style: style,
+          action: action,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
-          onTap: onTap,
           label: '',
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
+          onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
         );
 }
 
 class _AppleSignInButton extends StatelessWidget {
-  final ThemedOAuthProviderButtonStyle style;
   final String label;
   final Widget loadingIndicator;
-  final Future<void> Function() onTap;
+  final void Function()? onTap;
+  final bool overrideDefaultTapAction;
+  final bool isLoading;
+  final AuthAction? action;
+  final FirebaseAuth? auth;
+  final DifferentProvidersFoundCallback? onDifferentProvidersFound;
+  final SignedInCallback? onSignedIn;
+  final double size;
 
   const _AppleSignInButton({
     Key? key,
-    required this.label,
     required this.loadingIndicator,
-    required this.style,
-    required this.onTap,
-  }) : super(key: key);
+    String? label,
+    bool? overrideDefaultTapAction,
+    this.onTap,
+    this.isLoading = false,
+    this.action = AuthAction.signIn,
+    this.auth,
+    this.onDifferentProvidersFound,
+    this.onSignedIn,
+    double? size,
+  })  : label = label ?? 'Sign in with Apple',
+        overrideDefaultTapAction = overrideDefaultTapAction ?? false,
+        size = size ?? 19,
+        super(key: key);
+
+  AppleProvider get provider => AppleProvider();
 
   @override
   Widget build(BuildContext context) {
     return OAuthProviderButton(
-      style: style,
+      provider: provider,
       label: label,
       onTap: onTap,
       loadingIndicator: loadingIndicator,
+      isLoading: isLoading,
+      action: action,
+      auth: auth ?? FirebaseAuth.instance,
+      onDifferentProvidersFound: onDifferentProvidersFound,
+      onSignedIn: onSignedIn,
+      overrideDefaultTapAction: overrideDefaultTapAction,
+      size: size,
     );
   }
 }

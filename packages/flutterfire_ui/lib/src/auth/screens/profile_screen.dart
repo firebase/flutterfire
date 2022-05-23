@@ -5,7 +5,8 @@ import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
-import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart'
+    hide OAuthProviderButton;
 
 import '../widgets/internal/universal_button.dart';
 
@@ -111,13 +112,10 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
                 }
                 return null;
               },
-              child: OAuthProviderIconButton(
-                providerConfig: provider,
+              child: OAuthProviderButton(
+                provider: provider,
                 auth: widget.auth,
                 action: AuthAction.link,
-                onTap: () {
-                  setState(() => error = null);
-                },
               ),
             ),
       ],

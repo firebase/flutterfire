@@ -11,11 +11,11 @@ mixin PlatformSignInMixin {
   dynamic get firebaseAuthProvider;
 
   OAuthCredential fromDesktopAuthResult(AuthResult result);
-  void onCredentialReceived(AuthCredential credential, AuthAction action);
+  void onCredentialReceived(OAuthCredential credential, AuthAction action);
 
   void platformSignIn(TargetPlatform platform, AuthAction action) {
     if (platform == TargetPlatform.android || platform == TargetPlatform.iOS) {
-      mobileSignIn();
+      mobileSignIn(action);
     } else {
       desktopSignIn(action);
     }
@@ -33,5 +33,5 @@ mixin PlatformSignInMixin {
     });
   }
 
-  void mobileSignIn();
+  void mobileSignIn(AuthAction action);
 }

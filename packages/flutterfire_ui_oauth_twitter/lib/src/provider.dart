@@ -3,49 +3,59 @@ import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 import 'package:twitter_login/twitter_login.dart';
 
-class TwitterProvider extends OAuthProvider with SignOutMixin {
+import 'theme.dart';
+
+class TwitterProvider extends OAuthProvider {
   @override
   final providerId = 'twitter.com';
   final String apiKey;
   final String apiSecretKey;
-  final String redirectUri;
+  final String? redirectUri;
+
+  @override
+  final style = const TwitterProviderButtonStyle();
 
   @override
   late final desktopSignInArgs = TwitterSignInArgs(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
-    redirectUri: redirectUri,
+    redirectUri: redirectUri ?? defaultRedirectUri,
   );
 
   late final _provider = TwitterLogin(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
-    redirectURI: redirectUri,
+    redirectURI: redirectUri ?? defaultRedirectUri,
   );
 
   TwitterProvider({
     required this.apiKey,
     required this.apiSecretKey,
-    required this.redirectUri,
+    this.redirectUri,
   });
 
   @override
-  Future<OAuthCredential> signInProvider() async {
-    final result = await _provider.login();
+  void mobileSignIn(AuthAction action) {
+    final result = _provider.login();
 
-    switch (result.status) {
-      case null:
-        throw Exception('Unknown sign in result');
-      case TwitterLoginStatus.loggedIn:
-        return TwitterAuthProvider.credential(
-          accessToken: result.authToken!,
-          secret: result.authTokenSecret!,
-        );
-      case TwitterLoginStatus.cancelledByUser:
-        throw AuthCancelledException();
-      case TwitterLoginStatus.error:
-        throw Exception(result.errorMessage);
-    }
+    result.then((value) {
+      switch (value.status!) {
+        case TwitterLoginStatus.loggedIn:
+          final credential = TwitterAuthProvider.credential(
+            accessToken: value.authToken!,
+            secret: value.authTokenSecret!,
+          );
+
+          onCredentialReceived(credential, action);
+          break;
+        case TwitterLoginStatus.cancelledByUser:
+          authListener.onError(AuthCancelledException());
+          break;
+        case TwitterLoginStatus.error:
+          authListener.onError(Exception(value.errorMessage));
+          break;
+      }
+    });
   }
 
   @override
@@ -62,5 +72,10 @@ class TwitterProvider extends OAuthProvider with SignOutMixin {
   @override
   Future<void> logOutProvider() {
     return SynchronousFuture(null);
+  }
+
+  @override
+  bool supportsPlatform(TargetPlatform platform) {
+    return !kIsWeb;
   }
 }

@@ -6,9 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import 'package:flutterfire_ui/src/auth/widgets/email_link_sign_in_button.dart';
-import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart'
+    hide OAuthProviderButton;
 
+import '../widgets/email_link_sign_in_button.dart';
 import '../widgets/internal/title.dart';
 
 typedef AuthViewContentBuilder = Widget Function(
@@ -58,26 +59,18 @@ class LoginViewState extends State<LoginView> {
   }
 
   Widget _buildOAuthButtons(TargetPlatform platform) {
-    final oauthproviders = widget.providers
+    final oauthProviders = widget.providers
         .whereType<OAuthProvider>()
         .where((element) => element.supportsPlatform(platform));
 
     _buttonsBuilt = true;
 
-    final oauthButtonsList = oauthproviders.map((config) {
-      if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {
-        return OAuthProviderButton(
-          auth: widget.auth,
-          action: _action,
-          providerConfig: config,
-        );
-      } else {
-        return OAuthProviderIconButton(
-          providerConfig: config,
-          auth: widget.auth,
-          action: _action,
-        );
-      }
+    final oauthButtonsList = oauthProviders.map((provider) {
+      return OAuthProviderButton(
+        provider: provider,
+        auth: widget.auth,
+        action: _action,
+      );
     }).toList();
 
     if (widget.oauthButtonVariant == OAuthButtonVariant.icon_and_text) {

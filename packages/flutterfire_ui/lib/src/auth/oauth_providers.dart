@@ -44,7 +44,7 @@ abstract class OAuthProviders {
 
   static Future<void> signOut([FirebaseAuth? auth]) async {
     final _auth = auth ?? FirebaseAuth.instance;
-    final futures = providersFor(_auth).map((e) => e.signOut());
+    final futures = providersFor(_auth).map((e) => e.logOutProvider());
 
     await Future.wait(futures);
   }

@@ -1,68 +1,134 @@
 export 'src/provider.dart' show GoogleProvider;
 export 'src/theme.dart' show GoogleProviderButtonStyle;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-class GoogleSignInButton extends _GoogleSignInButton {
-  const factory GoogleSignInButton.icon({
-    Key? key,
-    required ThemedOAuthProviderButtonStyle style,
-    required Widget loadingIndicator,
-    required Future<void> Function() onTap,
-  }) = GoogleSignInIconButton;
+import 'src/provider.dart';
 
+class GoogleSignInButton extends _GoogleSignInButton {
   const GoogleSignInButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
     required Widget loadingIndicator,
-    required String label,
-    required Future<void> Function() onTap,
+    required String clientId,
+    String? redirectUri,
+    List<String>? scopes,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    String? label,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
   }) : super(
           key: key,
-          style: style,
-          label: label,
+          clientId: clientId,
+          action: action,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
+          label: label,
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
           onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
+          scopes: scopes,
         );
 }
 
-class GoogleSignInIconButton extends GoogleSignInButton {
+class GoogleSignInIconButton extends _GoogleSignInButton {
   const GoogleSignInIconButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
+    required String clientId,
     required Widget loadingIndicator,
-    required Future<void> Function() onTap,
+    List<String>? scopes,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
+    String? redirectUri,
   }) : super(
           key: key,
-          style: style,
+          action: action,
+          clientId: clientId,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
-          onTap: onTap,
           label: '',
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
+          onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
+          scopes: scopes,
         );
 }
 
 class _GoogleSignInButton extends StatelessWidget {
-  final ThemedOAuthProviderButtonStyle style;
   final String label;
   final Widget loadingIndicator;
-  final Future<void> Function() onTap;
+  final void Function()? onTap;
+  final bool overrideDefaultTapAction;
+  final bool isLoading;
+  final AuthAction? action;
+  final FirebaseAuth? auth;
+  final DifferentProvidersFoundCallback? onDifferentProvidersFound;
+  final SignedInCallback? onSignedIn;
+  final double size;
+  final String clientId;
+  final String? redirectUri;
+  final List<String>? scopes;
 
   const _GoogleSignInButton({
     Key? key,
-    required this.label,
+    required this.clientId,
     required this.loadingIndicator,
-    required this.style,
-    required this.onTap,
-  }) : super(key: key);
+    this.scopes,
+    String? label,
+    bool? overrideDefaultTapAction,
+    this.onTap,
+    this.isLoading = false,
+    this.action = AuthAction.signIn,
+    this.auth,
+    this.onDifferentProvidersFound,
+    this.onSignedIn,
+    double? size,
+    this.redirectUri,
+  })  : label = label ?? 'Sign in with Google',
+        overrideDefaultTapAction = overrideDefaultTapAction ?? false,
+        size = size ?? 19,
+        super(key: key);
+
+  GoogleProvider get provider => GoogleProvider(
+        clientId: clientId,
+        redirectUri: redirectUri,
+        scopes: scopes ?? [],
+      );
 
   @override
   Widget build(BuildContext context) {
     return OAuthProviderButton(
-      style: style,
+      provider: provider,
       label: label,
       onTap: onTap,
       loadingIndicator: loadingIndicator,
+      isLoading: isLoading,
+      action: action,
+      auth: auth ?? FirebaseAuth.instance,
+      onDifferentProvidersFound: onDifferentProvidersFound,
+      onSignedIn: onSignedIn,
+      overrideDefaultTapAction: overrideDefaultTapAction,
+      size: size,
     );
   }
 }

@@ -15,6 +15,7 @@ class AuthCancelledException implements Exception {
 }
 
 class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
+    with DefaultErrorHandlerMixin
     implements AuthController, AuthListener {
   @override
   FirebaseAuth auth;
@@ -97,24 +98,6 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
       providers,
       credential,
     );
-  }
-
-  @override
-  void onError(Object error) {
-    if (error is! FirebaseAuthException) {
-      throw error;
-    }
-
-    if (error.code == 'account-exists-with-different-credential') {
-      final email = error.email;
-      if (email == null) {
-        throw error;
-      }
-
-      provider.fetchDifferentProvidersForEmail(email, error.credential);
-    }
-
-    throw error;
   }
 
   @override

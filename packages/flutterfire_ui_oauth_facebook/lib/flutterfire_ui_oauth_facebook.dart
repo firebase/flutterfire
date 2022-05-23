@@ -1,68 +1,127 @@
 export 'src/provider.dart' show FacebookProvider;
 export 'src/theme.dart' show FacebookProviderButtonStyle;
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-class FacebbokSignInButton extends _FacebbokSignInButton {
-  const factory FacebbokSignInButton.icon({
-    Key? key,
-    required ThemedOAuthProviderButtonStyle style,
-    required Widget loadingIndicator,
-    required Future<void> Function() onTap,
-  }) = FacebbokSignInIconButton;
+import 'src/provider.dart';
 
-  const FacebbokSignInButton({
+class FacebookSignInButton extends _FacebookSignInButton {
+  const FacebookSignInButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
     required Widget loadingIndicator,
-    required String label,
-    required Future<void> Function() onTap,
+    required String clientId,
+    String? redirectUri,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    String? label,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
   }) : super(
           key: key,
-          style: style,
+          clientId: clientId,
+          action: action,
+          auth: auth,
+          isLoading: isLoading ?? false,
+          loadingIndicator: loadingIndicator,
           label: label,
-          loadingIndicator: loadingIndicator,
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
           onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
         );
 }
 
-class FacebbokSignInIconButton extends FacebbokSignInButton {
-  const FacebbokSignInIconButton({
+class FacebookSignInIconButton extends _FacebookSignInButton {
+  const FacebookSignInIconButton({
     Key? key,
-    required ThemedOAuthProviderButtonStyle style,
+    required String clientId,
     required Widget loadingIndicator,
-    required Future<void> Function() onTap,
+    AuthAction? action,
+    FirebaseAuth? auth,
+    bool? isLoading,
+    DifferentProvidersFoundCallback? onDifferentProvidersFound,
+    SignedInCallback? onSignedIn,
+    void Function()? onTap,
+    bool? overrideDefaultTapAction,
+    double? size,
+    String? redirectUri,
   }) : super(
           key: key,
-          style: style,
+          action: action,
+          clientId: clientId,
+          auth: auth,
+          isLoading: isLoading ?? false,
           loadingIndicator: loadingIndicator,
-          onTap: onTap,
           label: '',
+          onDifferentProvidersFound: onDifferentProvidersFound,
+          onSignedIn: onSignedIn,
+          onTap: onTap,
+          overrideDefaultTapAction: overrideDefaultTapAction,
+          size: size,
+          redirectUri: redirectUri,
         );
 }
 
-class _FacebbokSignInButton extends StatelessWidget {
-  final ThemedOAuthProviderButtonStyle style;
+class _FacebookSignInButton extends StatelessWidget {
   final String label;
   final Widget loadingIndicator;
-  final Future<void> Function() onTap;
+  final void Function()? onTap;
+  final bool overrideDefaultTapAction;
+  final bool isLoading;
+  final AuthAction? action;
+  final FirebaseAuth? auth;
+  final DifferentProvidersFoundCallback? onDifferentProvidersFound;
+  final SignedInCallback? onSignedIn;
+  final double size;
+  final String clientId;
+  final String? redirectUri;
 
-  const _FacebbokSignInButton({
+  const _FacebookSignInButton({
     Key? key,
-    required this.label,
+    required this.clientId,
     required this.loadingIndicator,
-    required this.style,
-    required this.onTap,
-  }) : super(key: key);
+    String? label,
+    bool? overrideDefaultTapAction,
+    this.onTap,
+    this.isLoading = false,
+    this.action = AuthAction.signIn,
+    this.auth,
+    this.onDifferentProvidersFound,
+    this.onSignedIn,
+    double? size,
+    this.redirectUri,
+  })  : label = label ?? 'Sign in with Facebook',
+        overrideDefaultTapAction = overrideDefaultTapAction ?? false,
+        size = size ?? 19,
+        super(key: key);
+
+  FacebookProvider get provider => FacebookProvider(
+        clientId: clientId,
+        redirectUri: redirectUri,
+      );
 
   @override
   Widget build(BuildContext context) {
     return OAuthProviderButton(
-      style: style,
+      provider: provider,
       label: label,
       onTap: onTap,
       loadingIndicator: loadingIndicator,
+      isLoading: isLoading,
+      action: action,
+      auth: auth ?? FirebaseAuth.instance,
+      onDifferentProvidersFound: onDifferentProvidersFound,
+      onSignedIn: onSignedIn,
+      overrideDefaultTapAction: overrideDefaultTapAction,
+      size: size,
     );
   }
 }

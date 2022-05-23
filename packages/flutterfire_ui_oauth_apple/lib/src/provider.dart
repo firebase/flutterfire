@@ -7,6 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
+import 'theme.dart';
+
 /// Generates a cryptographically secure random nonce, to be included in a
 /// credential request.
 String generateNonce([int length = 32]) {
@@ -29,12 +31,25 @@ class AppleProvider extends OAuthProvider {
   final providerId = 'apple.com';
 
   @override
-  Future<fba.OAuthCredential> mobileSignIn() async {
+  final style = const AppleProviderButtonStyle();
+
+  OAuthCredential _createOAuthCredential(
+    AuthorizationCredentialAppleID credential,
+    String rawNonce,
+  ) {
+    return fba.OAuthProvider('apple.com').credential(
+      idToken: credential.identityToken,
+      rawNonce: rawNonce,
+    );
+  }
+
+  @override
+  void mobileSignIn(AuthAction action) {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
     // Request credential for the currently signed in Apple account.
-    final appleCredential = await SignInWithApple.getAppleIDCredential(
+    final appleCredentialFuture = SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
@@ -42,18 +57,18 @@ class AppleProvider extends OAuthProvider {
       nonce: nonce,
     );
 
-    // Create an `OAuthCredential` from the credential returned by Apple.
-    final oauthCredential = fba.OAuthProvider('apple.com').credential(
-      idToken: appleCredential.identityToken,
-      rawNonce: rawNonce,
-    );
-
-    return oauthCredential;
+    appleCredentialFuture.then((credential) {
+      return _createOAuthCredential(credential, rawNonce);
+    }).then((credential) {
+      onCredentialReceived(credential, action);
+    }).catchError((err) {
+      authListener.onError(err);
+    });
   }
 
   @override
-  Future<fba.OAuthCredential> desktopSignIn() {
-    return signIn();
+  void desktopSignIn(AuthAction action) {
+    mobileSignIn(action);
   }
 
   @override
@@ -74,7 +89,6 @@ class AppleProvider extends OAuthProvider {
 
   @override
   bool supportsPlatform(TargetPlatform platform) {
-    // TODO: implement supportsPlatform
-    throw UnimplementedError();
+    return !kIsWeb && platform == TargetPlatform.iOS || platform == TargetPlatform.macOS;
   }
 }

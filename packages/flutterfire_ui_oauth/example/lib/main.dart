@@ -60,49 +60,59 @@ class Content extends StatefulWidget {
 }
 
 class _ContentState extends State<Content> {
-  Future<void> _onTap() async {
-    await Future.delayed(const Duration(seconds: 1));
+  String? loadingProvider;
+
+  void Function() _onTap(String provider) {
+    return () {
+      setState(() {
+        loadingProvider = provider;
+      });
+    };
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final button = widget.buttonVariant == ButtonVariant.full
-        ? OAuthProviderButton.new
-        : OAuthProviderIconButton.new;
-
+  Widget _button(OAuthProvider provider, String label) {
     final loadingIndicator = widget.designLibrary == DesignLibrary.material
         ? const CircularProgressIndicator()
         : const CupertinoActivityIndicator();
 
+    return OAuthProviderButton(
+      provider: provider,
+      label: label,
+      onTap: _onTap(provider.providerId),
+      isLoading: loadingProvider == provider.providerId,
+      loadingIndicator: loadingIndicator,
+      overrideDefaultTapAction: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
         width: 350,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            button(
-              style: const AppleProviderButtonStyle(),
-              label: 'Sign in with Apple',
-              onTap: _onTap,
-              loadingIndicator: loadingIndicator,
+            _button(AppleProvider(), 'Sign in with Apple'),
+            _button(
+              FacebookProvider(clientId: '', redirectUri: ''),
+              'Sign in with Facebook',
             ),
-            button(
-              style: const FacebookProviderButtonStyle(),
-              label: 'Sign in with Facebook',
-              onTap: _onTap,
-              loadingIndicator: loadingIndicator,
+            _button(
+              GoogleProvider(
+                clientId: '',
+                redirectUri: '',
+                scopes: [],
+              ),
+              'Sign in with Google',
             ),
-            button(
-              style: const GoogleProviderButtonStyle(),
-              label: 'Sign in with Google',
-              onTap: _onTap,
-              loadingIndicator: loadingIndicator,
-            ),
-            button(
-              style: const TwitterProviderButtonStyle(),
-              label: 'Sign in with Twitter',
-              onTap: _onTap,
-              loadingIndicator: loadingIndicator,
+            _button(
+              TwitterProvider(
+                apiKey: '',
+                apiSecretKey: '',
+                redirectUri: '',
+              ),
+              'Sign in with Twitter',
             ),
           ],
         ),

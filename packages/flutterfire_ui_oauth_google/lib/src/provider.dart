@@ -1,15 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart' hide OAuthProvider;
+import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
+import 'package:flutterfire_ui_oauth_google/flutterfire_ui_google_oauth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleProvider extends OAuthProvider with SignOutMixin {
+class GoogleProvider extends OAuthProvider {
   @override
   final providerId = 'google.com';
   final String clientId;
-  final String redirectUri;
-  final List<String> scopes;
+  final String? redirectUri;
+  final List<String>? scopes;
 
-  late final _provider = GoogleSignIn(scopes: scopes);
+  late final _provider = GoogleSignIn(scopes: scopes ?? []);
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
@@ -17,13 +19,13 @@ class GoogleProvider extends OAuthProvider with SignOutMixin {
   @override
   late final desktopSignInArgs = GoogleSignInArgs(
     clientId: clientId,
-    redirectUri: redirectUri,
-    scope: scopes.join(' '),
+    redirectUri: redirectUri ?? defaultRedirectUri,
+    scope: (scopes ?? []).join(' '),
   );
 
   GoogleProvider({
     required this.clientId,
-    required this.redirectUri,
+    this.redirectUri,
     this.scopes = const [],
   }) {
     firebaseAuthProvider.setCustomParameters(const {
@@ -32,21 +34,20 @@ class GoogleProvider extends OAuthProvider with SignOutMixin {
   }
 
   @override
-  Future<OAuthCredential> signIn() async {
-    final user = await _provider.signIn();
+  void mobileSignIn(AuthAction action) async {
+    _provider.signIn().then((user) {
+      if (user == null) throw Exception('Auth failed');
+      return user.authentication;
+    }).then((auth) {
+      final credential = GoogleAuthProvider.credential(
+        accessToken: auth.accessToken,
+        idToken: auth.idToken,
+      );
 
-    if (user == null) {
-      throw Exception('Auth failed');
-    }
-
-    final auth = await user.authentication;
-
-    final credential = GoogleAuthProvider.credential(
-      accessToken: auth.accessToken,
-      idToken: auth.idToken,
-    );
-
-    return credential;
+      onCredentialReceived(credential, action);
+    }).catchError((err) {
+      authListener.onError(err);
+    });
   }
 
   @override
@@ -59,6 +60,14 @@ class GoogleProvider extends OAuthProvider with SignOutMixin {
 
   @override
   Future<void> logOutProvider() async {
-    await provider.signOut();
+    await _provider.signOut();
+  }
+
+  @override
+  final style = const GoogleProviderButtonStyle();
+
+  @override
+  bool supportsPlatform(TargetPlatform platform) {
+    return true;
   }
 }

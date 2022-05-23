@@ -2,8 +2,30 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+mixin DefaultErrorHandlerMixin {
+  AuthProvider get provider;
+
+  void onError(Object error) {
+    if (error is! FirebaseAuthException) {
+      throw error;
+    }
+
+    if (error.code == 'account-exists-with-different-credential') {
+      final email = error.email;
+      if (email == null) {
+        throw error;
+      }
+
+      provider.fetchDifferentProvidersForEmail(email, error.credential);
+    }
+
+    throw error;
+  }
+}
+
 abstract class AuthListener {
   AuthProvider get provider;
+  FirebaseAuth get auth;
 
   void onError(Object error);
 

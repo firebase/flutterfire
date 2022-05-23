@@ -24,6 +24,6 @@ class OAuthFlow extends AuthFlow<OAuthProvider> implements OAuthController {
 
   @override
   void signIn(TargetPlatform platform) {
-    provider.platformSignIn(platform);
+    provider.platformSignIn(platform, action);
   }
 }
