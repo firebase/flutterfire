@@ -201,7 +201,9 @@ Future<void> main() async {
 }
 
 Widget _defaultCellBuilder(
-    QueryDocumentSnapshot<Map<String, Object?>> doc, String colKey) {
+  QueryDocumentSnapshot<Map<String, Object?>> doc,
+  String colKey,
+) {
   final person = Person.fromMap(doc.data());
 
   switch (ColumnKey.values.asNameMap()[colKey]) {
