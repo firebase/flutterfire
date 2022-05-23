@@ -33,8 +33,8 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
   /// Lazily initialize [_webFirestore] on first method call
   firestore_interop.Firestore get _delegate {
-    return _webFirestore ??=
-        firestore_interop.getFirestoreInstance(core_interop.app(app.name), _settings);
+    return _webFirestore ??= firestore_interop.getFirestoreInstance(
+        core_interop.app(app.name), _settings);
   }
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
@@ -133,10 +133,10 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
 
     if (settings.host != null && settings.sslEnabled != null) {
       _settings = firestore_interop.Settings(
-          cacheSizeBytes: cacheSizeBytes,
-          host: settings.host,
-          ssl: settings.sslEnabled,
-          ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
+        cacheSizeBytes: cacheSizeBytes,
+        host: settings.host,
+        ssl: settings.sslEnabled,
+        ignoreUndefinedProperties: settings.ignoreUndefinedProperties,
       );
     } else {
       _settings = firestore_interop.Settings(

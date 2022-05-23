@@ -58,8 +58,7 @@ class Settings {
       'host': host,
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
-      if(ignoreUndefinedProperties)
-        'ignoreUndefinedProperties': true,
+      if (ignoreUndefinedProperties) 'ignoreUndefinedProperties': true,
     };
   }
 
@@ -75,7 +74,8 @@ class Settings {
         host: host ?? this.host,
         sslEnabled: sslEnabled ?? this.sslEnabled,
         cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
-        ignoreUndefinedProperties: ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
+        ignoreUndefinedProperties:
+            ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
       );
 
   @override

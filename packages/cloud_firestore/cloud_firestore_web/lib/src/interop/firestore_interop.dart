@@ -18,7 +18,8 @@ import 'package:js/js.dart';
 external FirestoreJsImpl getFirestore([AppJsImpl? app]);
 
 @JS()
-external FirestoreJsImpl initializeFirestore([AppJsImpl app, Settings settings]);
+external FirestoreJsImpl initializeFirestore(
+    [AppJsImpl app, Settings settings]);
 
 @JS()
 external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
@@ -179,9 +180,9 @@ external bool queryEqual(QueryJsImpl left, QueryJsImpl right);
 
 @JS()
 external bool refEqual(
-    dynamic /* DocumentReference | CollectionReference */ left,
-    dynamic /* DocumentReference | CollectionReference */ right,
-    );
+  dynamic /* DocumentReference | CollectionReference */ left,
+  dynamic /* DocumentReference | CollectionReference */ right,
+);
 
 @JS()
 external PromiseJsImpl<void> runTransaction(
