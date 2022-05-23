@@ -21,7 +21,12 @@ import 'utils/utils.dart';
 export 'firestore_interop.dart';
 
 /// Given an AppJSImp, return the Firestore instance.
-Firestore getFirestoreInstance([App? app]) {
+Firestore getFirestoreInstance([App? app, firestore_interop.Settings? settings]) {
+
+  if(app != null && settings != null) {
+    return Firestore.getInstance(firestore_interop.initializeFirestore(app.jsObject, settings));
+  }
+
   return Firestore.getInstance(app != null
       ? firestore_interop.getFirestore(app.jsObject)
       : firestore_interop.getFirestore());
@@ -100,9 +105,6 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
         .then((value) => dartify(null));
   }
 
-  void settings(firestore_interop.Settings settings) =>
-      jsObject.settings(settings);
-
   void useEmulator(String host, int port) =>
       firestore_interop.connectFirestoreEmulator(jsObject, host, port);
 
@@ -137,6 +139,10 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     }
 
     return Query.fromJsObject(query);
+  }
+
+  bool refEqual(dynamic /* DocumentReference | CollectionReference */ left, dynamic /* DocumentReference | CollectionReference */ right) {
+    return firestore_interop.refEqual(left, right);
   }
 }
 
@@ -357,13 +363,10 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// Creates a new Query from a [jsObject].
   Query.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
-  Query endAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(_wrapPaginatingFunctionCall(
-          firestore_interop.endAt, snapshot, fieldValues));
+  Query endAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) => Query.fromJsObject(firestore_interop.query(jsObject, _createQueryConstraint(firestore_interop.endAt, snapshot, fieldValues)));
 
   Query endBefore({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(_wrapPaginatingFunctionCall(
-          firestore_interop.endBefore, snapshot, fieldValues));
+      Query.fromJsObject(firestore_interop.query(jsObject, _createQueryConstraint(firestore_interop.endBefore, snapshot, fieldValues)));
 
   Future<QuerySnapshot> get([firestore_interop.GetOptions? options]) {
     if (options == null || options.source == 'default') {
@@ -431,13 +434,11 @@ class Query<T extends firestore_interop.QueryJsImpl>
         firestore_interop.query(jsObject, jsObjectOrderBy));
   }
 
-  Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(_wrapPaginatingFunctionCall(
-          firestore_interop.startAfter, snapshot, fieldValues));
+  Query startAfter({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) => Query.fromJsObject(firestore_interop.query(jsObject, _createQueryConstraint(firestore_interop.startAfter, snapshot, fieldValues)));
+
 
   Query startAt({DocumentSnapshot? snapshot, List<dynamic>? fieldValues}) =>
-      Query.fromJsObject(_wrapPaginatingFunctionCall(
-          firestore_interop.startAt, snapshot, fieldValues));
+      Query.fromJsObject(firestore_interop.query(jsObject, _createQueryConstraint(firestore_interop.startAt, snapshot, fieldValues)));
 
   Query where(dynamic fieldPath, String opStr, dynamic value) =>
       Query.fromJsObject(firestore_interop.query(
@@ -447,8 +448,8 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// [fieldValues].
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
-  S? _wrapPaginatingFunctionCall<S>(
-      Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
+  S? _createQueryConstraint<S>(
+      Function method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
@@ -457,7 +458,9 @@ class Query<T extends firestore_interop.QueryJsImpl>
     var args = (snapshot != null)
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
-    return js.context.callMethod(method, args);
+
+    return callMethod(
+        method, 'apply', jsify([null, args]));
   }
 }
 
@@ -687,7 +690,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.fieldValues, 'arrayUnion', jsify(elements));
+        firestore_interop.arrayUnion, 'apply', jsify([null, elements]));
   }
 
   @override
@@ -701,7 +704,7 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.fieldValues, 'arrayRemove', jsify(elements));
+        firestore_interop.arrayRemove, 'apply', jsify([null, elements]));
   }
 
   @override

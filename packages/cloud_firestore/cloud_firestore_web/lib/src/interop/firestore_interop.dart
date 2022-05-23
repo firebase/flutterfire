@@ -18,6 +18,9 @@ import 'package:js/js.dart';
 external FirestoreJsImpl getFirestore([AppJsImpl? app]);
 
 @JS()
+external FirestoreJsImpl initializeFirestore([AppJsImpl app, Settings settings]);
+
+@JS()
 external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
   CollectionReferenceJsImpl reference,
   dynamic data,
@@ -175,7 +178,10 @@ external QueryJsImpl query(
 external bool queryEqual(QueryJsImpl left, QueryJsImpl right);
 
 @JS()
-// TODO refEqual
+external bool refEqual(
+    dynamic /* DocumentReference | CollectionReference */ left,
+    dynamic /* DocumentReference | CollectionReference */ right,
+    );
 
 @JS()
 external PromiseJsImpl<void> runTransaction(
@@ -305,15 +311,15 @@ class GeoPointJsImpl {
   external bool isEqual(Object other);
 }
 
-@JS('Blob')
-external BlobJsImpl get BlobConstructor;
+@JS('Bytes')
+external BytesJsImpl get BytesConstructor;
 
-@JS('Blob')
+@JS('Bytes')
 @anonymous
-abstract class BlobJsImpl {
-  external static BlobJsImpl fromBase64String(String base64);
+abstract class BytesJsImpl {
+  external static BytesJsImpl fromBase64String(String base64);
 
-  external static BlobJsImpl fromUint8Array(Uint8List list);
+  external static BytesJsImpl fromUint8Array(Uint8List list);
 
   external String toBase64();
 
@@ -352,18 +358,7 @@ abstract class DocumentReferenceJsImpl {
   external String get id;
   external CollectionReferenceJsImpl get parent;
   external String get path;
-//   external CollectionReferenceJsImpl collection(String collectionPath);
-
-// //ignore: prefer_void_to_null
-//   external PromiseJsImpl<Null> delete();
-
-//   external PromiseJsImpl<DocumentSnapshotJsImpl> get([GetOptions? options]);
-
-//   external void Function() onSnapshot(
-//     dynamic optionsOrObserverOrOnNext,
-//     dynamic observerOrOnNextOrOnError, [
-//     Func1<FirebaseError, dynamic>? onError,
-//   ]);
+  external String get type;
 }
 
 @JS('QueryConstraint')
@@ -406,7 +401,6 @@ abstract class DocumentSnapshotJsImpl {
   external dynamic data();
   external bool exists();
   external dynamic get(/*String|FieldPath*/ dynamic fieldPath);
-  // external bool isEqual(DocumentSnapshotJsImpl other);
 }
 
 /// Sentinel values that can be used when writing document fields with
@@ -417,7 +411,7 @@ abstract class DocumentSnapshotJsImpl {
 @anonymous
 abstract class FieldValue {
   /// Returns `true` if this [FieldValue] is equal to the provided [other].
-  external bool isEqual(Object other);
+  external bool isEqual(FieldValue other);
 }
 
 /// Used internally to allow calling FieldValue.arrayUnion and arrayRemove
@@ -550,10 +544,14 @@ abstract class Settings {
   //ignore: avoid_setters_without_getters
   external set ssl(bool v);
 
+  //ignore: avoid_setters_without_getters
+  external set ignoreUndefinedProperties(bool u);
+
   external factory Settings({
     int? cacheSizeBytes,
     String? host,
     bool? ssl,
+    bool? ignoreUndefinedProperties,
   });
 }
 
