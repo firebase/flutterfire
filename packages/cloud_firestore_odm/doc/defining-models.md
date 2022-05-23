@@ -55,6 +55,7 @@ class User {
 }
 ```
 
+**Note**: `JsonSerializable(fieldRename: ...)` and `JsonKey(ignore: true)` are currently not supported
 
 ## Model validation
 

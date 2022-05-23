@@ -1,3 +1,7 @@
+## 0.4.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.4.1
 
  - **FIX**: flutterfire_ui README links ([#8630](https://github.com/FirebaseExtended/flutterfire/issues/8630)). ([ba5b58af](https://github.com/FirebaseExtended/flutterfire/commit/ba5b58af354c762a4d4e4fe11e4017730bfa6c9e))

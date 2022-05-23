@@ -76,7 +76,7 @@ flutter pub add --dev json_serializable
 
 ## Next Steps
 
-Once installed, read the documentation on [defining models](./docs/defining-models.md).
+Once installed, read the documentation on [defining models](./doc/defining-models.md).
 
 ## Issues and feedback
 

@@ -1,3 +1,7 @@
+## 4.2.4
+
+ - **FIX**: `getInitialLink()` returns `null` on 2nd call. (#8621). ([a83ee58e](https://github.com/FirebaseExtended/flutterfire/commit/a83ee58e56879b88b2886a6e5f5be549ee403b23))
+
 ## 4.2.3
 
  - Update a dependency to the latest release.
