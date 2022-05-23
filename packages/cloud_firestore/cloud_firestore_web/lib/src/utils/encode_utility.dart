@@ -111,7 +111,7 @@ class EncodeUtility {
     } else if (value is GeoPoint) {
       return firestore_interop.GeoPointJsImpl(value.latitude, value.longitude);
     } else if (value is Blob) {
-      return firestore_interop.BlobJsImpl.fromUint8Array(value.bytes);
+      return firestore_interop.BytesJsImpl.fromUint8Array(value.bytes);
     } else if (value is DocumentReferenceWeb) {
       return value.firestoreWeb.doc(value.path);
     } else if (value is Map<String, dynamic>) {
