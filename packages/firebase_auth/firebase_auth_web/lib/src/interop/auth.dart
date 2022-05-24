@@ -8,6 +8,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
@@ -533,8 +534,22 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   ///
   /// The [persistence] string is the auth state persistence mechanism.
   /// See allowed [persistence] values in [Persistence] class.
-  Future setPersistence(String persistence) =>
-      handleThenable(jsObject.setPersistence(persistence));
+  Future setPersistence(Persistence persistence) {
+    auth_interop.Persistence instance;
+    switch(persistence){
+      case Persistence.LOCAL:
+        instance = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        instance = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        instance = auth_interop.inMemoryPersistence;
+      break;
+    }
+   return handleThenable(auth_interop.setPersistence(jsObject, instance));
+  }
+
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -1038,8 +1053,8 @@ class UserCredential
   String get operationType => jsObject.operationType;
 
   /// Returns additional user information from a federated identity provider.
-  AdditionalUserInfo get additionalUserInfo =>
-      AdditionalUserInfo.fromJsObject(jsObject.additionalUserInfo);
+  AdditionalUserInfo? get additionalUserInfo =>
+      AdditionalUserInfo.fromJsObject(auth_interop.getAdditionalUserInfo(jsObject));
 
   /// Creates a new UserCredential from a [jsObject].
   UserCredential.fromJsObject(auth_interop.UserCredentialJsImpl jsObject)

@@ -19,6 +19,13 @@ external AuthJsImpl getAuth([AppJsImpl? app]);
 external PromiseJsImpl<void> applyActionCode(AuthJsImpl auth, String oobCode);
 
 @JS()
+external Persistence inMemoryPersistence;
+@JS()
+external Persistence browserSessionPersistence;
+@JS()
+external Persistence browserLocalPersistence;
+
+@JS()
 external PromiseJsImpl<ActionCodeInfo> checkActionCode(
     AuthJsImpl auth, String oobCode);
 
@@ -36,11 +43,17 @@ external void connectAuthEmulator(
 );
 
 @JS()
+external PromiseJsImpl<void> setPersistence(AuthJsImpl auth, Persistence persistence);
+
+@JS()
 external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
   AuthJsImpl auth,
   String email,
   String password,
 );
+
+@JS()
+external AdditionalUserInfoJsImpl getAdditionalUserInfo(UserCredentialJsImpl userCredential);
 
 @JS()
 external PromiseJsImpl<void> deleteUser(
@@ -231,7 +244,6 @@ abstract class AuthJsImpl {
     Func1? opt_error,
     Func0? opt_completed,
   ]);
-  external PromiseJsImpl<void> setPersistence(String persistence);
   external PromiseJsImpl<void> signOut();
   external void useDeviceLanguage();
 }
@@ -279,19 +291,9 @@ abstract class UserJsImpl extends UserInfoJsImpl {
 /// An enumeration of the possible persistence mechanism types.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.auth.Auth#.Persistence>
-@JS('Auth.Persistence')
+@JS('Persistence')
 class Persistence {
-  /// Indicates that the state will be persisted even when the browser window
-  /// is closed.
-  external static String get LOCAL;
-
-  /// Indicates that the state will only be stored in memory and will be cleared
-  /// when the window.
-  external static String get NONE;
-
-  /// Indicates that the state will only persist in current session/tab,
-  /// relevant to web only, and will be cleared when the tab is closed.
-  external static String get SESSION;
+  external String get type;
 }
 
 /// Interface that represents the credentials returned by an auth provider.
@@ -639,3 +641,4 @@ class AuthSettings {
   external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
+
