@@ -75,7 +75,7 @@ class _ContentState extends State<Content> {
         ? const CircularProgressIndicator()
         : const CupertinoActivityIndicator();
 
-    return OAuthProviderButton(
+    return BaseOAuthProviderButton(
       provider: provider,
       label: label,
       onTap: _onTap(provider.providerId),

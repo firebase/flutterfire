@@ -13,7 +13,7 @@ class EmailLinkSignInScreenStory extends StoryWidget {
     final withImage = context.knob<bool>(title: 'With image', value: true);
 
     return EmailLinkSignInScreen(
-      provider: EmailLinkProviderConfiguration(
+      provider: EmailLinkAuthProvider(
         actionCodeSettings: ActionCodeSettings(
           url: 'https://reactnativefirebase.page.link',
           handleCodeInApp: true,

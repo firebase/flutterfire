@@ -13,7 +13,7 @@ typedef DifferentProvidersFoundCallback = void Function(
 
 typedef SignedInCallback = void Function(UserCredential credential);
 
-class OAuthProviderButton extends StatefulWidget {
+class BaseOAuthProviderButton extends StatefulWidget {
   final String label;
   final double size;
   final double _padding;
@@ -32,7 +32,7 @@ class OAuthProviderButton extends StatefulWidget {
   final bool overrideDefaultTapAction;
   final bool isLoading;
 
-  const OAuthProviderButton({
+  const BaseOAuthProviderButton({
     Key? key,
     required this.label,
     required this.loadingIndicator,
@@ -52,10 +52,11 @@ class OAuthProviderButton extends StatefulWidget {
         super(key: key);
 
   @override
-  State<OAuthProviderButton> createState() => _OAuthProviderButtonState();
+  State<BaseOAuthProviderButton> createState() =>
+      _BaseOAuthProviderButtonState();
 }
 
-class _OAuthProviderButtonState extends State<OAuthProviderButton>
+class _BaseOAuthProviderButtonState extends State<BaseOAuthProviderButton>
     implements OAuthListener {
   double get _height => widget.size + widget._padding * 2;
   late bool isLoading = widget.isLoading;
@@ -253,7 +254,7 @@ class _OAuthProviderButtonState extends State<OAuthProviderButton>
   }
 
   @override
-  void didUpdateWidget(covariant OAuthProviderButton oldWidget) {
+  void didUpdateWidget(covariant BaseOAuthProviderButton oldWidget) {
     if (oldWidget.isLoading != widget.isLoading) {
       isLoading = widget.isLoading;
     }

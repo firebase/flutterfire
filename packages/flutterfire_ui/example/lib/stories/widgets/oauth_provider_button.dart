@@ -1,7 +1,13 @@
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_example/config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
+import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
+import 'package:flutterfire_ui_oauth_apple/flutterfire_ui_oauth_apple.dart';
+import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart';
+import 'package:flutterfire_ui_oauth_google/flutterfire_ui_google_oauth.dart';
+import 'package:flutterfire_ui_oauth_twitter/flutterfire_ui_oauth_twitter.dart';
+
+import '../stories_lib/story.dart';
 
 enum OAuthProviders {
   google,
@@ -16,28 +22,28 @@ class OAuthProviderButtonStory extends StoryWidget {
 
   @override
   Widget build(StoryElement context) {
-    final provider = context.enumKnob<OAuthProviders>(
+    final selectedProvider = context.enumKnob<OAuthProviders>(
       title: 'OAuth provider',
       value: OAuthProviders.google,
       values: OAuthProviders.values,
     );
 
-    late OAuthProviderConfiguration config;
+    late OAuthProvider provider;
 
-    switch (provider) {
+    switch (selectedProvider) {
       case OAuthProviders.google:
-        config = const GoogleProviderConfiguration(clientId: GOOGLE_CLIENT_ID);
+        provider = GoogleProvider(clientId: GOOGLE_CLIENT_ID);
         break;
       case OAuthProviders.apple:
-        config = const AppleProviderConfiguration();
+        provider = AppleProvider();
         break;
       case OAuthProviders.facebook:
-        config = const FacebookProviderConfiguration(
+        provider = FacebookProvider(
           clientId: FACEBOOK_CLIENT_ID,
         );
         break;
       case OAuthProviders.twitter:
-        config = const TwitterProviderConfiguration(
+        provider = TwitterProvider(
           apiKey: TWITTER_API_KEY,
           apiSecretKey: TWITTER_API_SECRET_KEY,
           redirectUri: TWITTER_REDIRECT_URI,
@@ -46,10 +52,7 @@ class OAuthProviderButtonStory extends StoryWidget {
     }
 
     return OAuthProviderButton(
-      providerConfig: config,
-      onTap: () {
-        context.notify('Button pressed');
-      },
+      provider: provider,
     );
   }
 }

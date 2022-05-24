@@ -68,7 +68,7 @@ class OAuthProviderButton extends StatelessWidget {
       action: action,
       auth: auth,
       builder: (context, state, ctrl, child) {
-        final button = ffui_oauth.OAuthProviderButton(
+        final button = ffui_oauth.BaseOAuthProviderButton(
           provider: provider,
           action: action,
           isLoading: state is SigningIn || state is CredentialReceived,

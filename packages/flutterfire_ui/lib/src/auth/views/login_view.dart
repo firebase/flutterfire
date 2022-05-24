@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart'
-    hide OAuthProviderButton;
+    hide BaseOAuthProviderButton;
 
 import '../widgets/email_link_sign_in_button.dart';
 import '../widgets/internal/title.dart';

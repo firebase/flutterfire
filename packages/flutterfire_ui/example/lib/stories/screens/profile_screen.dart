@@ -2,6 +2,10 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_example/config.dart';
 import 'package:flutterfire_ui_example/stories/stories_lib/story.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutterfire_ui_oauth_apple/flutterfire_ui_oauth_apple.dart';
+import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart';
+import 'package:flutterfire_ui_oauth_google/flutterfire_ui_google_oauth.dart';
+import 'package:flutterfire_ui_oauth_twitter/flutterfire_ui_oauth_twitter.dart';
 
 class ProfileScreenStory extends StoryWidget {
   const ProfileScreenStory({Key? key})
@@ -30,19 +34,19 @@ class ProfileScreenStory extends StoryWidget {
         if (snapshot.hasData) {
           return ProfileScreen(
             providers: [
-              if (emailEnabled) const EmailProviderConfiguration(),
-              if (phoneEnabled) const PhoneProviderConfiguration(),
+              if (emailEnabled) EmailAuthProvider(),
+              if (phoneEnabled) PhoneAuthProvider(),
               if (googleEnabled)
-                const GoogleProviderConfiguration(
+                GoogleProvider(
                   clientId: GOOGLE_CLIENT_ID,
                 ),
-              if (appleEnabled) const AppleProviderConfiguration(),
+              if (appleEnabled) AppleProvider(),
               if (facebookEnabled)
-                const FacebookProviderConfiguration(
+                FacebookProvider(
                   clientId: FACEBOOK_CLIENT_ID,
                 ),
               if (twitterEnabled)
-                const TwitterProviderConfiguration(
+                TwitterProvider(
                   apiKey: TWITTER_API_KEY,
                   apiSecretKey: TWITTER_API_SECRET_KEY,
                   redirectUri: TWITTER_REDIRECT_URI,

@@ -107,7 +107,7 @@ class _AppleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OAuthProviderButton(
+    return BaseOAuthProviderButton(
       provider: provider,
       label: label,
       onTap: onTap,

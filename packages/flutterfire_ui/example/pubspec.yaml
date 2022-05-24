@@ -32,6 +32,7 @@ dependencies:
   flutter_svg: ^1.0.0
   flutterfire_ui:
     path: ../
+  flutterfire_ui_oauth: ^0.1.0
   flutterfire_ui_oauth_apple: ^0.1.0
   flutterfire_ui_oauth_facebook: ^0.1.0
   flutterfire_ui_oauth_google: ^0.1.0

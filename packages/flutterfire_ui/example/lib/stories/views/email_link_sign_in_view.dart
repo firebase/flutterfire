@@ -11,7 +11,7 @@ class EmailLinkSignInViewStory extends StoryWidget {
   @override
   Widget build(StoryElement context) {
     return EmailLinkSignInView(
-      provider: EmailLinkProviderConfiguration(
+      provider: EmailLinkAuthProvider(
         actionCodeSettings: ActionCodeSettings(
           url: 'https://reactnativefirebase.page.link',
           handleCodeInApp: true,
