@@ -24,8 +24,9 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
   auth_interop.AuthError firebaseError = exception as auth_interop.AuthError;
 
   String code = firebaseError.code.replaceFirst('auth/', '');
-  String message =
-      firebaseError.message.replaceFirst('(${firebaseError.code})', '');
+  String message = firebaseError.message
+      .replaceFirst(' (${firebaseError.code}).', '')
+      .replaceFirst('Firebase: ', '');
 
   auth_interop.AuthCredential firebaseAuthCredential = firebaseError.credential;
   AuthCredential? credential =
@@ -125,19 +126,6 @@ auth_interop.ActionCodeSettings? convertPlatformActionCodeSettings(
   }
 
   return webActionCodeSettings;
-}
-
-/// Converts a [Persistence] enum into a web string persistence value.
-String convertPlatformPersistence(Persistence persistence) {
-  switch (persistence) {
-    case Persistence.SESSION:
-      return 'session';
-    case Persistence.NONE:
-      return 'none';
-    case Persistence.LOCAL:
-    default:
-      return 'local';
-  }
 }
 
 /// Converts a [AuthProvider] into a [auth_interop.AuthProvider].
