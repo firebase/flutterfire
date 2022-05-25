@@ -5,12 +5,12 @@
 
 // ignore_for_file: public_member_api_docs
 
-@JS('firebase.database')
+@JS('firebase_database')
 library firebase.database_interop;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    show PromiseJsImpl, Func1;
-import 'package:firebase_database_web/src/interop/app_interop.dart';
+    show PromiseJsImpl, Func1, AppJsImpl;
+
 import 'package:js/js.dart';
 
 part 'data_snapshot_interop.dart';
@@ -19,7 +19,189 @@ part 'query_interop.dart';
 
 part 'reference_interop.dart';
 
-external void enableLogging([logger, bool persistent]);
+@JS()
+external ReferenceJsImpl child(ReferenceJsImpl parentRef, String path);
+
+@JS()
+external void connectDatabaseEmulator(
+    DatabaseJsImpl database, String host, int port);
+
+@JS()
+external void enableLogging(
+    [/* Func message || bool enabled */ loggerOrEnabled, bool persistent]);
+
+@JS()
+external QueryConstraintJsImpl endAt(
+    dynamic /* number | string | boolean | null */ value,
+    [String key]);
+
+@JS()
+external QueryConstraintJsImpl endBefore(
+    dynamic /* number | string | boolean | null */ value,
+    [String key]);
+
+@JS()
+external QueryConstraintJsImpl equalTo(
+  dynamic /* number | string | boolean | null */ value,
+  String key,
+);
+
+@JS()
+external QueryConstraintJsImpl startAfter(
+  dynamic /* number | string | boolean | null */ value,
+  String key,
+);
+
+@JS()
+external QueryConstraintJsImpl startAt(
+  dynamic /* number | string | boolean | null */ value,
+  String key,
+);
+
+@JS()
+external PromiseJsImpl<void> update(
+  ReferenceJsImpl ref,
+  Object values,
+);
+
+@JS()
+external void forceLongPolling();
+
+@JS()
+external void forceWebSockets();
+
+@JS()
+external PromiseJsImpl<DataSnapshotJsImpl> get(QueryJsImpl query);
+
+@JS()
+external DatabaseJsImpl getDatabase([AppJsImpl? app, String? databaseUrl]);
+
+@JS()
+external void goOffline(DatabaseJsImpl database);
+
+@JS()
+external void goOnline(DatabaseJsImpl database);
+
+@JS()
+external dynamic increment(int delta);
+
+@JS()
+external QueryConstraintJsImpl limitToFirst(int limit);
+
+@JS()
+external QueryConstraintJsImpl limitToLast(int limit);
+
+@JS()
+external void off([
+  QueryJsImpl query,
+  String eventType,
+  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+]);
+
+@JS()
+external QueryConstraintJsImpl onChildAdded(
+  QueryJsImpl query,
+  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+  dynamic Function(FirebaseError error) cancelCallback,
+);
+
+@JS()
+external QueryConstraintJsImpl onChildChanged(
+  QueryJsImpl query,
+  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+  dynamic Function(FirebaseError error) cancelCallback,
+);
+
+@JS()
+external QueryConstraintJsImpl onChildMoved(
+  QueryJsImpl query,
+  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+  dynamic Function(FirebaseError error) cancelCallback,
+);
+
+@JS()
+external QueryConstraintJsImpl onChildRemoved(
+  QueryJsImpl query,
+  dynamic Function(DataSnapshotJsImpl, [String previousChildName]) callback,
+  dynamic Function(FirebaseError error) cancelCallback,
+);
+
+@JS()
+external OnDisconnectJsImpl onDisconnect(ReferenceJsImpl ref);
+
+@JS()
+external void onValue(
+    QueryJsImpl query,
+    dynamic Function(DataSnapshotJsImpl) callback,
+    dynamic Function(FirebaseError error) cancelCallback,
+    [ListenOptions options]);
+
+@JS()
+external QueryJsImpl orderByChild(String path);
+
+@JS()
+external QueryJsImpl orderByKey();
+
+@JS()
+external QueryJsImpl orderByPriority();
+
+@JS()
+external QueryJsImpl orderByValue();
+
+@JS()
+external ThenableReferenceJsImpl push(ReferenceJsImpl ref, dynamic value);
+
+@JS()
+external QueryJsImpl query(
+  QueryJsImpl query,
+  QueryConstraintJsImpl queryConstraint,
+);
+
+@JS()
+external ReferenceJsImpl ref(DatabaseJsImpl database, [String path]);
+
+@JS()
+external ReferenceJsImpl refFromURL(
+  DatabaseJsImpl database,
+  String url,
+);
+
+@JS()
+external PromiseJsImpl<void> remove(
+  ReferenceJsImpl ref,
+);
+
+@JS()
+external PromiseJsImpl<TransactionResultJsImpl> runTransaction(
+  ReferenceJsImpl ref,
+  Function(dynamic currentData) transactionUpdate,
+  TransactionOptions options,
+);
+
+@JS()
+external dynamic serverTimestamp();
+
+@JS()
+external PromiseJsImpl<void> set(ReferenceJsImpl ref, dynamic value);
+
+@JS()
+external PromiseJsImpl<void> setPriority(
+    ReferenceJsImpl ref, /* string | int | null */ dynamic priority);
+
+@JS()
+external PromiseJsImpl<void> setWithPriority(ReferenceJsImpl ref, dynamic value,
+    /* string | int | null */ dynamic priority);
+
+@JS()
+abstract class TransactionOptions {
+  /// By default, events are raised each time the transaction update function runs.
+  /// So if it is run multiple times, you may see intermediate states. You can set
+  /// this to false to suppress these intermediate states and instead wait until
+  /// the transaction has completed before events are raised.
+  external static bool get applyLocally;
+
+  external factory TransactionOptions({bool applyLocally});
+}
 
 // ignore: avoid_classes_with_only_static_members
 /// A placeholder value for auto-populating the current timestamp
@@ -47,6 +229,11 @@ abstract class DatabaseJsImpl {
   external ReferenceJsImpl ref([String? path]);
 
   external ReferenceJsImpl refFromURL(String url);
+}
+
+@JS('QueryConstraint')
+abstract class QueryConstraintJsImpl {
+  external String get type;
 }
 
 @JS('OnDisconnect')
@@ -87,4 +274,24 @@ class TransactionJsImpl {
     bool? committed,
     DataSnapshotJsImpl? snapshot,
   });
+}
+
+@JS()
+abstract class ListenOptions {
+  // Whether to remove the listener after its first invocation.
+  external static bool get onlyOnce;
+
+  external factory ListenOptions({bool onlyOnce});
+}
+
+@JS()
+@anonymous
+abstract class FirebaseError {
+  external String get code;
+  external String get message;
+  external String get name;
+  external String get stack;
+
+  /// Not part of the core JS API, but occasionally exposed in error objects.
+  external Object get serverResponse;
 }
