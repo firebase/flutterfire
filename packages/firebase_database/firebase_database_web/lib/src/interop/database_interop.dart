@@ -193,6 +193,7 @@ external PromiseJsImpl<void> setWithPriority(ReferenceJsImpl ref, dynamic value,
     /* string | int | null */ dynamic priority);
 
 @JS()
+@anonymous
 abstract class TransactionOptions {
   /// By default, events are raised each time the transaction update function runs.
   /// So if it is run multiple times, you may see intermediate states. You can set
@@ -277,6 +278,7 @@ class TransactionJsImpl {
 }
 
 @JS()
+@anonymous
 abstract class ListenOptions {
   // Whether to remove the listener after its first invocation.
   external static bool get onlyOnce;
