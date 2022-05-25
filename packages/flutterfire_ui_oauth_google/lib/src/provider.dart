@@ -38,7 +38,7 @@ class GoogleProvider extends OAuthProvider {
   @override
   void mobileSignIn(AuthAction action) async {
     _provider.signIn().then((user) {
-      if (user == null) throw Exception('Auth failed');
+      if (user == null) throw AuthCancelledException();
       return user.authentication;
     }).then((auth) {
       final credential = GoogleAuthProvider.credential(

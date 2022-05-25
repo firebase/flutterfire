@@ -3,7 +3,6 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
-import '../auth_flow.dart';
 import '../auth_state.dart';
 
 abstract class OAuthController extends AuthController {
@@ -26,14 +25,5 @@ class OAuthFlow extends AuthFlow<OAuthProvider>
   @override
   void signIn(TargetPlatform platform) {
     provider.signIn(platform, action);
-  }
-
-  @override
-  void onError(Object error) {
-    if (error is Exception) {
-      if (error is! AuthCancelledException) {
-        value = AuthFailed(error);
-      }
-    }
   }
 }

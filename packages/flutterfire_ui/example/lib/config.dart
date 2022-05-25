@@ -5,8 +5,8 @@ const GOOGLE_CLIENT_ID =
 const GOOGLE_REDIRECT_URI =
     'https://react-native-firebase-testing.firebaseapp.com/__/auth/handler';
 
-const TWITTER_API_KEY = String.fromEnvironment('twitter_api_key');
-const TWITTER_API_SECRET_KEY = String.fromEnvironment('twitter_api_secret_key');
+const TWITTER_API_KEY = String.fromEnvironment('TWITTER_API_KEY');
+const TWITTER_API_SECRET_KEY = String.fromEnvironment('TWITTER_API_SECRET_KEY');
 const TWITTER_REDIRECT_URI = 'ffire://';
 
 const FACEBOOK_CLIENT_ID = '128693022464535';

@@ -55,6 +55,8 @@ class TwitterProvider extends OAuthProvider {
           authListener.onError(Exception(value.errorMessage));
           break;
       }
+    }).catchError((err) {
+      authListener.onError(err);
     });
   }
 
@@ -76,6 +78,6 @@ class TwitterProvider extends OAuthProvider {
 
   @override
   bool supportsPlatform(TargetPlatform platform) {
-    return !kIsWeb;
+    return true;
   }
 }

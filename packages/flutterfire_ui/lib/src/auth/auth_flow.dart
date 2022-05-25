@@ -120,6 +120,8 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   void onError(Object error) {
     try {
       DefaultErrorHandler.onError(provider, error);
+    } on AuthCancelledException {
+      reset();
     } on Exception catch (err) {
       value = AuthFailed(err);
     }

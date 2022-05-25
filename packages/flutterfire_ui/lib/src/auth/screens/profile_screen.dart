@@ -478,9 +478,15 @@ class ProfileScreen extends MultiProviderScreen {
         .toList();
   }
 
-  List<AuthProvider> getAvailableProviders(User user) {
+  List<AuthProvider> getAvailableProviders(BuildContext context, User user) {
+    final platform = Theme.of(context).platform;
+
     return providers
-        .where((provider) => !user.isProviderLinked(provider.providerId))
+        .where(
+          (provider) =>
+              !user.isProviderLinked(provider.providerId) &&
+              provider.supportsPlatform(platform),
+        )
         .toList();
   }
 
@@ -549,7 +555,7 @@ class ProfileScreen extends MultiProviderScreen {
         RebuildScope(
           builder: (context) {
             final user = auth.currentUser!;
-            final availableProviders = getAvailableProviders(user);
+            final availableProviders = getAvailableProviders(context, user);
 
             if (availableProviders.isEmpty) {
               return const SizedBox.shrink();

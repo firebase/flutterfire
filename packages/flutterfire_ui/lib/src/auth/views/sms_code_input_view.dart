@@ -32,11 +32,17 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
   final columnKey = GlobalKey();
   final key = GlobalKey<SMSCodeInputState>();
 
+  SMSCodeSent? _codeSentState;
+
   void submit(String code, PhoneAuthController ctrl) {
     if (widget.onSubmit != null) {
       widget.onSubmit!(code);
-    } else {
-      ctrl.verifySMSCode(code);
+    } else if (_codeSentState != null) {
+      ctrl.verifySMSCode(
+        code,
+        confirmationResult: _codeSentState!.confirmationResult,
+        verificationId: _codeSentState!.verificationId,
+      );
     }
   }
 
@@ -51,6 +57,10 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
       listener: (oldState, newState, controller) {
         if (newState is SignedIn || newState is CredentialLinked) {
           widget.onCodeVerified?.call();
+        }
+
+        if (newState is SMSCodeSent) {
+          _codeSentState = newState;
         }
       },
       builder: (context, state, ctrl, child) {

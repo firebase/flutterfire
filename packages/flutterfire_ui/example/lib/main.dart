@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart'
     hide PhoneAuthProvider, EmailAuthProvider;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
@@ -58,6 +59,21 @@ class LabelOverrides extends DefaultLocalizations {
   String get emailInputLabel => 'Enter your email';
 }
 
+class NoTransitionsBuilder extends PageTransitionsBuilder {
+  const NoTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T>? route,
+    BuildContext? context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget? child,
+  ) {
+    return child!;
+  }
+}
+
 class FirebaseAuthUIExample extends StatelessWidget {
   String get initialRoute {
     final auth = FirebaseAuth.instance;
@@ -92,6 +108,14 @@ class FirebaseAuthUIExample extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(style: buttonStyle),
         textButtonTheme: TextButtonThemeData(style: buttonStyle),
         outlinedButtonTheme: OutlinedButtonThemeData(style: buttonStyle),
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: kIsWeb
+              ? {
+                  for (final platform in TargetPlatform.values)
+                    platform: const NoTransitionsBuilder(),
+                }
+              : const {},
+        ),
       ),
       initialRoute: initialRoute,
       routes: {
@@ -190,7 +214,7 @@ class FirebaseAuthUIExample extends StatelessWidget {
           return SMSCodeInputScreen(
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
-                Navigator.of(context).pushReplacementNamed('/');
+                Navigator.of(context).pushReplacementNamed('/profile');
               })
             ],
             flowKey: arguments?['flowKey'],

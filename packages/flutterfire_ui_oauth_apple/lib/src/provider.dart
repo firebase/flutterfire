@@ -98,7 +98,7 @@ class AppleProvider extends OAuthProvider {
 
   @override
   bool supportsPlatform(TargetPlatform platform) {
-    return !kIsWeb && platform == TargetPlatform.iOS ||
-        platform == TargetPlatform.macOS;
+    return !kIsWeb &&
+        (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS);
   }
 }
