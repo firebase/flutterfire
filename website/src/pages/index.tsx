@@ -195,7 +195,38 @@ function Home(): JSX.Element {
 }
 
 function DeprecationNote() {
-  return <div style={{ margin: '2em' }} className="admonition admonition-caution alert alert--warning"><div className="admonition-heading"><h5><span className="admonition-icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>Notice</h5></div><div className="admonition-content"><p>This page is <strong>archived</strong> and might not reflect the latest version of the FlutterFire plugins. You can find the latest information on firebase.google.com:</p><p><a href="https://firebase.google.com/docs/flutter/setup#available-plugins" target="_blank" rel="noopener noreferrer">https://firebase.google.com/docs/flutter/setup#available-plugins</a></p></div></div>;
+  return (
+    <div style={{ margin: '2em' }} className="admonition admonition-caution alert alert--warning">
+      <div className="admonition-heading">
+        <h5>
+          <span className="admonition-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+              <path
+                fillRule="evenodd"
+                d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"
+              ></path>
+            </svg>
+          </span>
+          Notice
+        </h5>
+      </div>
+      <div className="admonition-content">
+        <p>
+          This page is <strong>archived</strong> and might not reflect the latest version of the
+          FlutterFire plugins. You can find the latest information on firebase.google.com:
+        </p>
+        <p>
+          <a
+            href="https://firebase.google.com/docs/flutter/setup#available-plugins"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://firebase.google.com/docs/flutter/setup#available-plugins
+          </a>
+        </p>
+      </div>
+    </div>
+  );
 }
 
 function Check() {
