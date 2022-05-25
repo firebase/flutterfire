@@ -218,7 +218,7 @@ class ZhLocalizations extends FlutterFireUILocalizationLabels {
     this.forgotPasswordButtonLabel = '忘记密码？',
     this.forgotPasswordViewTitle = '忘记密码',
     this.resetPasswordButtonLabel = '重置密码',
-    this.verifyItsYouText = "身份验证",
+    this.verifyItsYouText = '身份验证',
     this.differentMethodsSignInTitleText =
         '使用下面任意一种方式登录',
     this.findProviderForEmailTitleText = '输入电子邮箱以继续',
