@@ -2,7 +2,7 @@ part of firebase.database_interop;
 
 @JS('TransactionResult')
 abstract class TransactionResultJsImpl {
-  external dynamic toJson();
+  external dynamic toJSON();
   external bool get committed;
   external DataSnapshotJsImpl get snapshot;
 }

@@ -6,6 +6,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+import 'dart:js';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
@@ -14,7 +15,6 @@ import 'package:firebase_database_web/firebase_database_web.dart'
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify, callMethod;
 import 'package:flutter/widgets.dart';
-import 'package:js/js.dart';
 import 'package:js/js_util.dart';
 
 import 'database_interop.dart' as database_interop;
@@ -56,23 +56,23 @@ class Database
 
   /// Disconnects from the server, all database operations will be
   /// completed offline.
-  void goOffline() => jsObject.goOffline();
+  void goOffline() => database_interop.goOffline(jsObject);
 
   /// Connects to the server and synchronizes the offline database
   /// state with the server state.
-  void goOnline() => jsObject.goOnline();
+  void goOnline() => database_interop.goOnline(jsObject);
 
   void useDatabaseEmulator(String host, int port) =>
-      jsObject.useEmulator(host, port);
+      database_interop.connectDatabaseEmulator(jsObject, host, port);
 
   /// Returns a [DatabaseReference] to the root or provided [path].
-  DatabaseReference ref([String? path = '/']) =>
-      DatabaseReference.getInstance(jsObject.ref(path ?? '/'));
+  DatabaseReference ref([String? path = '/']) => DatabaseReference.getInstance(
+      database_interop.ref(jsObject, path ?? '/'));
 
   /// Returns a [DatabaseReference] from provided [url].
   /// Url must be in the same domain as the current database.
   DatabaseReference refFromURL(String url) =>
-      DatabaseReference.getInstance(jsObject.refFromURL(url));
+      DatabaseReference.getInstance(database_interop.refFromURL(jsObject, url));
 }
 
 /// A DatabaseReference represents a specific location in database and
@@ -185,29 +185,26 @@ class DatabaseReference<T extends database_interop.ReferenceJsImpl>
       final dartUpdate = dartify(update);
       final transaction = transactionUpdate(dartUpdate);
       if (transaction.aborted) {
-        return undefined;
+        return context['undefined'];
       }
       return jsify(transaction.value);
     });
 
-    final onCompleteWrap = allowInterop((error, committed, snapshot) {
-      if (error != null) {
-        final dartified = dartify(error);
-
-        c.completeError(convertFirebaseDatabaseException(dartified));
-      } else {
-        c.complete(Transaction(
-          committed: committed,
-          snapshot: DataSnapshot._fromJsObject(snapshot),
-        ));
-      }
-    });
-
-    database_interop.runTransaction(
+    database_interop
+        .runTransaction(
       jsObject,
       transactionUpdateWrap,
       database_interop.TransactionOptions(applyLocally: applyLocally),
-    );
+    )
+        .then(allowInterop((jsTransactionResult) {
+      c.complete(Transaction(
+        committed: jsTransactionResult.committed,
+        snapshot: DataSnapshot._fromJsObject(jsTransactionResult.snapshot),
+      ));
+    }), allowInterop((error) {
+      final dartified = dartify(error);
+      c.completeError(convertFirebaseDatabaseException(dartified));
+    }));
 
     return c.future;
   }
@@ -417,18 +414,20 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   }
 
   /// Returns a new Query ordered by the specified child [path].
-  Query orderByChild(String path) =>
-      Query.fromJsObject(database_interop.orderByChild(path));
+  Query orderByChild(String path) => Query.fromJsObject(
+      database_interop.query(jsObject, database_interop.orderByChild(path)));
 
   /// Returns a new Query ordered by key.
-  Query orderByKey() => Query.fromJsObject(database_interop.orderByKey());
+  Query orderByKey() => Query.fromJsObject(
+      database_interop.query(jsObject, database_interop.orderByKey()));
 
   /// Returns a new Query ordered by priority.
-  Query orderByPriority() =>
-      Query.fromJsObject(database_interop.orderByPriority());
+  Query orderByPriority() => Query.fromJsObject(
+      database_interop.query(jsObject, database_interop.orderByPriority()));
 
   /// Returns a new Query ordered by child values.
-  Query orderByValue() => Query.fromJsObject(database_interop.orderByValue());
+  Query orderByValue() => Query.fromJsObject(
+      database_interop.query(jsObject, database_interop.orderByValue()));
 
   /// Returns a Query with the starting point [value]. The starting point
   /// is inclusive.
@@ -456,13 +455,34 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
   dynamic toJson() => dartify(jsObject.toJSON());
 
   S? _createQueryConstraint<S>(
-      Function method, List<dynamic> /*list of primitive value */ args) {
+      Function method, List<dynamic>? /*list of primitive value */ args) {
     if (args == null) {
       throw ArgumentError('Please provide "args" parameter.');
     }
     var params = args.map(jsify).toList();
-    return callMethod(method, 'apply', jsify([null, ...params]));
+    return callMethod(method, 'apply', jsify([null, params]));
   }
+}
+
+class TransactionResult
+    extends JsObjectWrapper<database_interop.TransactionResultJsImpl> {
+  static final _expando = Expando<TransactionResult>();
+
+  /// Creates a new TransactionResult from a [jsObject].
+  static TransactionResult getInstance(
+    database_interop.TransactionResultJsImpl jsObject,
+  ) =>
+      _expando[jsObject] ??= TransactionResult._fromJsObject(jsObject);
+
+  TransactionResult._fromJsObject(
+      database_interop.TransactionResultJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  bool get committed => jsObject.committed;
+
+  DataSnapshot get snapshot => DataSnapshot.getInstance(jsObject.snapshot);
+
+  dynamic toJSON() => jsObject.toJSON();
 }
 
 /// A DataSnapshot contains data from a database location.
@@ -505,16 +525,13 @@ class DataSnapshot
   }
 
   /// Returns priority for data in this DataSnapshot.
-  dynamic getPriority() => jsObject.getPriority();
+  dynamic getPriority() => jsObject.priority;
 
   /// Returns `true` if the specified child [path] has data.
   bool hasChild(String path) => jsObject.hasChild(path);
 
   /// Returns `true` if this DataSnapshot has any children.
   bool hasChildren() => jsObject.hasChildren();
-
-  /// Returns the number of child properties for this DataSnapshot.
-  int numChildren() => jsObject.numChildren();
 
   /// Returns Dart value from a DataSnapshot.
   dynamic val() => dartify(jsObject.val());

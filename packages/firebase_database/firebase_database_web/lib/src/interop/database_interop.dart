@@ -137,16 +137,16 @@ external void onValue(
     [ListenOptions options]);
 
 @JS()
-external QueryJsImpl orderByChild(String path);
+external QueryConstraintJsImpl orderByChild(String path);
 
 @JS()
-external QueryJsImpl orderByKey();
+external QueryConstraintJsImpl orderByKey();
 
 @JS()
-external QueryJsImpl orderByPriority();
+external QueryConstraintJsImpl orderByPriority();
 
 @JS()
-external QueryJsImpl orderByValue();
+external QueryConstraintJsImpl orderByValue();
 
 @JS()
 external ThenableReferenceJsImpl push(ReferenceJsImpl ref, dynamic value);
@@ -218,18 +218,8 @@ abstract class ServerValue {
 @JS('Database')
 abstract class DatabaseJsImpl {
   external AppJsImpl get app;
-
   external set app(AppJsImpl a);
-
-  external void goOffline();
-
-  external void goOnline();
-
-  external void useEmulator(String host, int port);
-
-  external ReferenceJsImpl ref([String? path]);
-
-  external ReferenceJsImpl refFromURL(String url);
+  external String get type;
 }
 
 @JS('QueryConstraint')
@@ -247,14 +237,12 @@ abstract class OnDisconnectJsImpl {
 
   external PromiseJsImpl<void> setWithPriority(
     value,
-    priority, [
-    void Function(dynamic) onComplete,
-  ]);
+    priority,
+  );
 
   external PromiseJsImpl<void> update(
-    values, [
-    void Function(dynamic) onComplete,
-  ]);
+    values,
+  );
 }
 
 @JS('ThenableReference')
