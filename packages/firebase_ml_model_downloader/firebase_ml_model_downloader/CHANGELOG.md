@@ -1,3 +1,7 @@
+## 0.1.0+14
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8751). ([e1e42eb9](https://github.com/FirebaseExtended/flutterfire/commit/e1e42eb97772a86bf5e35d0f3be0376225a5f1d6))
+
 ## 0.1.0+13
 
  - Update a dependency to the latest release.
