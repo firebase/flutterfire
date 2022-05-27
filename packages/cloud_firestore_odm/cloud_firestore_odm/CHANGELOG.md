@@ -1,3 +1,11 @@
+## 1.0.0-dev.17
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.16
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.15
 
  - **FEAT**: Assert that collection.doc(id) does not point to a separate collection ([#8676](https://github.com/FirebaseExtended/flutterfire/issues/8676)). ([0808205b](https://github.com/FirebaseExtended/flutterfire/commit/0808205bdca03fc913015f00f5ffc2e1d018adb9))

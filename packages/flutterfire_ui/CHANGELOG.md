@@ -1,3 +1,11 @@
+## 0.4.1+2
+
+ - **FIX**: correctly fix lint error from issue #8651 for dart `2.16` (#8713). ([666b1973](https://github.com/FirebaseExtended/flutterfire/commit/666b1973c68cd5e60ba254a889136c922fd73500))
+
+## 0.4.1+1
+
+ - Update a dependency to the latest release.
+
 ## 0.4.1
 
  - **FIX**: flutterfire_ui README links ([#8630](https://github.com/FirebaseExtended/flutterfire/issues/8630)). ([ba5b58af](https://github.com/FirebaseExtended/flutterfire/commit/ba5b58af354c762a4d4e4fe11e4017730bfa6c9e))
