@@ -422,7 +422,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 
 #if !TARGET_OS_OSX
-// Called for silent notifications in the foreground & background
+// Called for silent messages (i.e. data only) in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -484,9 +484,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      // If "alert" (i.e. notification) is present, this will be called by the other
+      // If "alert" (i.e. notification) is present in userInfo, this will be called by the other
       // "Messaging#onMessage" channel handler
-      if (notificationDict[@"aps"] != nil && notificationDict[@"aps"][@"alert"] == nil) {
+      if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] == nil) {
         [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       }
       completionHandler(UIBackgroundFetchResultNoData);
