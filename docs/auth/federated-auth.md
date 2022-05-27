@@ -166,7 +166,7 @@ with the Facebook App ID and Secret set.
 
 Note: Firebase will not set the `User.emailVerified` property
 to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
-For further information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
+For further information, see this [issue](https://github.com/firebase/flutterfire/issues/4612#issuecomment-782107867).
 
 
 ## Apple
