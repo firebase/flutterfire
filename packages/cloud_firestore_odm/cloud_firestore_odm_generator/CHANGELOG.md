@@ -1,3 +1,11 @@
+## 1.0.0-dev.17
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.16
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.15
 
  - **FIX**: ODM should no-longer generates update/query functions for nested objects ([#8661](https://github.com/FirebaseExtended/flutterfire/issues/8661)). ([84eeed2e](https://github.com/FirebaseExtended/flutterfire/commit/84eeed2ec8da3aac87befd2028f8052005319730))

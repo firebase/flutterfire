@@ -1,3 +1,8 @@
+## 11.4.1
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8735). ([b2cf87a5](https://github.com/FirebaseExtended/flutterfire/commit/b2cf87a5d96457bf49b9dd04d6087768bfe6ad95))
+ - **FIX**: check `userInfo` for "aps.notification" property presence for firing data only messages. (#8759). ([9eb99674](https://github.com/FirebaseExtended/flutterfire/commit/9eb996748f4ddae8a34a2306b51af10b4c066039))
+
 ## 11.4.0
 
  - **FIX**: ensure silent foreground messages for iOS are called via event channel. ([#8635](https://github.com/FirebaseExtended/flutterfire/issues/8635)). ([abb91e48](https://github.com/FirebaseExtended/flutterfire/commit/abb91e4861b769485878a0f165d6ba8a9604de5a))
