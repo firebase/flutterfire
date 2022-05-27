@@ -145,7 +145,7 @@ void main() {
         verify(kMockStoragePlatform.ref(testPath));
       });
 
-      // https://github.com/FirebaseExtended/flutterfire/issues/5673
+      // https://github.com/firebase/flutterfire/issues/5673
       test('verify delegate method is called for http urls with + symbol', () {
         const String customBucket = 'test.appspot.com';
         const String testPath = 'foo+bar/file.gif';
