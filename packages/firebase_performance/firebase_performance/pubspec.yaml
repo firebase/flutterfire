@@ -4,7 +4,7 @@ description:
   measurement solution that monitors traces and HTTP/S network requests on Android and
   iOS.
 homepage: https://firebase.flutter.dev/docs/performance/overview
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance
+repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance
 version: 0.8.0+13
 
 false_secrets:

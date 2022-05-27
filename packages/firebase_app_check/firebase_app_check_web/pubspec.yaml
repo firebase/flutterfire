@@ -1,6 +1,6 @@
 name: firebase_app_check_web
 description: The web implementation of firebase_auth
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check_web
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_check/firebase_app_check_web
 version: 0.0.5+13
 
 environment:

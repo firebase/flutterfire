@@ -4,7 +4,7 @@ description:
   and handling links across multiple platforms.
 version: 4.2.5
 homepage: https://firebase.google.com/docs/dynamic-links
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_dynamic_links
+repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_dynamic_links
 
 false_secrets:
   - example/**
