@@ -13,7 +13,16 @@ To get started with Firebase Auth for Flutter, please [see the documentation](ht
 
 ## Usage
 
-To use this plugin, please visit the [Authentication Usage documentation](https://firebase.flutter.dev/docs/auth/usage)
+* [Manage Users](https://firebase.google.com/docs/auth/flutter/manage-users)
+* [Password Authentication](https://firebase.google.com/docs/auth/flutter/password-auth)
+* [Email Link Authentication](https://firebase.google.com/docs/auth/flutter/email-link-auth)
+* [Federated Identity & Social](https://firebase.google.com/docs/auth/flutter/federated-auth)
+* [Phone Number](https://firebase.google.com/docs/auth/flutter/phone-auth)
+* [Use a Custom Auth System](https://firebase.google.com/docs/auth/flutter/custom-auth)
+* [Anonymous Authentication](https://firebase.google.com/docs/auth/flutter/anonymous-auth)
+* [Link Multiple Auth Providers](https://firebase.google.com/docs/auth/flutter/account-linking)
+* [Passing State in Email Actions](https://firebase.google.com/docs/auth/flutter/passing-state-in-email-actions)
+* [Handle Errors](https://firebase.google.com/docs/auth/flutter/errors)
 
 ## Issues and feedback
 
