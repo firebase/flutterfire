@@ -11,7 +11,7 @@ public final class FlutterFirebaseCrashlyticsInternal {
       Logger.getLogger().w("A null value was passed to recordFatalException. Ignoring.");
       return;
     }
-    FirebaseCrashlytics.getInstance().core.logFatalException(throwable);
+    FirebaseCrashlytics.getInstance().core.logException(throwable);
   }
 
   private FlutterFirebaseCrashlyticsInternal() {}
