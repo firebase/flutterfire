@@ -1,3 +1,7 @@
+## 0.4.1+3
+
+ - **REFACTOR**: migrate to Object.hash*.
+
 ## 0.4.1+2
 
  - **FIX**: correctly fix lint error from issue #8651 for dart `2.16` (#8713). ([666b1973](https://github.com/FirebaseExtended/flutterfire/commit/666b1973c68cd5e60ba254a889136c922fd73500))

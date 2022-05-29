@@ -1,3 +1,7 @@
+## 5.5.8
+
+ - **REFACTOR**: migrate to Object.hash*.
+
 ## 5.5.7
 
  - Update a dependency to the latest release.

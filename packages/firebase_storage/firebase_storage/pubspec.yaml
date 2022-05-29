@@ -3,7 +3,7 @@ description: Flutter plugin for Firebase Cloud Storage, a powerful, simple, and
   cost-effective object storage service for Android and iOS.
 homepage: https://firebase.flutter.dev/docs/storage/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_storage/firebase_storage
-version: 10.2.17
+version: 10.2.18
 
 false_secrets:
   - example/**

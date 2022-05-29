@@ -4,7 +4,7 @@ description:
   live synchronization and offline support on Android and iOS.
 homepage: https://firebase.flutter.dev/docs/firestore/overview
 repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/cloud_firestore/cloud_firestore
-version: 3.1.17
+version: 3.1.18
 
 false_secrets:
   - example/**
