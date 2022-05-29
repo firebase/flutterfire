@@ -1,7 +1,3 @@
-## 2.6.17
-
- - **REFACTOR**: migrate to Object.hash*.
-
 ## 2.6.16
 
  - Update a dependency to the latest release.

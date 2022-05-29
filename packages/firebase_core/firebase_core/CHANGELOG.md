@@ -1,7 +1,3 @@
-## 1.17.2
-
-- **REFACTOR**: migrate to Object.hash*.
-
 ## 1.17.1
 
  - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8749). ([41462a42](https://github.com/FirebaseExtended/flutterfire/commit/41462a423ad783d20e5d303ed41898b061bccc48))
