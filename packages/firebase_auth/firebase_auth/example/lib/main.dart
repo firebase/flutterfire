@@ -7,6 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'auth.dart';
 import 'profile.dart';
 
+/// Requires that a Firebase local emulator is running locally.
+/// See https://firebase.flutter.dev/docs/auth/start/#optional-prototype-and-test-with-firebase-local-emulator-suite
+bool shouldUseFirebaseEmulator = false;
+
 // Requires that the Firebase Auth emulator is running locally
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
@@ -31,8 +35,9 @@ Future<void> main() async {
     );
   }
 
-  // Uncomment the line below if you are running the example from a emulator, otherwise this line will cause a connection error
-  //await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  if (shouldUseFirebaseEmulator) {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  }
 
   runApp(const AuthExampleApp());
 }
