@@ -12,7 +12,10 @@ To get started with Firebase Database for Flutter, please [see the documentation
 
 ## Usage
 
-To use this plugin, please visit the [Firebase Database Usage documentation](https://firebase.flutter.dev/docs/database/usage)
+* [Structure Data](https://firebase.google.com/docs/database/flutter/structure-data)
+* [Read and write Data](https://firebase.google.com/docs/database/flutter/read-and-write)
+* [Work with Lists of Data](https://firebase.google.com/docs/database/flutter/lists-of-data)
+* [Enable Offline Capabilities](https://firebase.google.com/docs/database/flutter/offline-capabilities)
 
 ## Issues and feedback
 
