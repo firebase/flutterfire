@@ -1,3 +1,13 @@
+## 2.8.1
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8750). ([e9e1c1bf](https://github.com/FirebaseExtended/flutterfire/commit/e9e1c1bf19d32e5b8967da162b03d0254843a836))
+
+## 2.8.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8582](https://github.com/FirebaseExtended/flutterfire/issues/8582)). ([9539c92a](https://github.com/FirebaseExtended/flutterfire/commit/9539c92a53f73bf57b9c61ae9e0ce5042b4b8ca4))
+ - **FIX**: symlink `ExceptionModel_Platform.h` to macOS. ([#8570](https://github.com/FirebaseExtended/flutterfire/issues/8570)). ([9991b7a5](https://github.com/FirebaseExtended/flutterfire/commit/9991b7a5389738a7bbba8f2210f8379b887d90e7))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/FirebaseExtended/flutterfire/issues/8617)). ([72158aaf](https://github.com/FirebaseExtended/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+
 ## 2.7.2
 
  - Update a dependency to the latest release.

@@ -1,3 +1,11 @@
+## 0.6.0+15
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8734). ([9ce47865](https://github.com/FirebaseExtended/flutterfire/commit/9ce47865e4fcba0aaf1a4558ba7ede13abcde21d))
+
+## 0.6.0+14
+
+ - Update a dependency to the latest release.
+
 ## 0.6.0+13
 
  - Update a dependency to the latest release.

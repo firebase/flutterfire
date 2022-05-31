@@ -22,6 +22,7 @@ class LoginScreen extends StatelessWidget {
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const LoginScreen({
     Key? key,
@@ -40,6 +41,7 @@ class LoginScreen extends StatelessWidget {
     this.footerBuilder,
     this.loginViewKey,
     this.breakpoint = 800,
+    this.styles,
   }) : super(key: key);
 
   @override
@@ -71,9 +73,12 @@ class LoginScreen extends StatelessWidget {
       child: loginContent,
     );
 
-    return UniversalScaffold(
-      body: body,
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: UniversalScaffold(
+        body: body,
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      ),
     );
   }
 }

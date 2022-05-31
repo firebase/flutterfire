@@ -1,6 +1,0 @@
-.docusaurus
-build
-spelling.json
-package-lock.json
-yarn.lock
-**/*.mdx

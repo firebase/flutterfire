@@ -26,6 +26,7 @@ class SignInScreen extends MultiProviderScreen {
   final Key? loginViewKey;
   final List<FlutterFireUIAction> actions;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const SignInScreen({
     Key? key,
@@ -44,6 +45,7 @@ class SignInScreen extends MultiProviderScreen {
     this.loginViewKey,
     this.actions = const [],
     this.breakpoint = 800,
+    this.styles,
   }) : super(key: key, providerConfigs: providerConfigs, auth: auth);
 
   Future<void> _signInWithDifferentProvider(
@@ -78,6 +80,7 @@ class SignInScreen extends MultiProviderScreen {
     return FlutterFireUIActions(
       actions: _actions,
       child: LoginScreen(
+        styles: styles,
         loginViewKey: loginViewKey,
         action: AuthAction.signIn,
         providerConfigs: providerConfigs,

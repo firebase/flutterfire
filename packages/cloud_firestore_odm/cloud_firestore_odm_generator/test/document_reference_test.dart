@@ -9,6 +9,43 @@ Future<void> main() async {
   );
 
   group('update', () {
+    test('rejects complex object list but allows primitive lists', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  nestedRef.doc('42').update(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    value: null,
+  );
+  nestedRef.doc('42').update(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    valueList: null,
+  );
+  nestedRef.doc('42').update(
+    boolList: null,
+  );
+  nestedRef.doc('42').update(
+    stringList: null,
+  );
+  nestedRef.doc('42').update(
+    numList: null,
+  );
+  nestedRef.doc('42').update(
+    objectList: null,
+  );
+  nestedRef.doc('42').update(
+    dynamicList: null,
+  );  
+}
+''',
+        ),
+        compiles,
+      );
+    });
+
     test('types parameters', () {
       expect(
         library.withCode(

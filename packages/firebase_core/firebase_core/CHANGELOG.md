@@ -1,3 +1,13 @@
+## 1.17.1
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8749). ([41462a42](https://github.com/FirebaseExtended/flutterfire/commit/41462a423ad783d20e5d303ed41898b061bccc48))
+
+## 1.17.0
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. ([#8581](https://github.com/FirebaseExtended/flutterfire/issues/8581)). ([374c9df3](https://github.com/FirebaseExtended/flutterfire/commit/374c9df33bbb6b354ea526dcc6cc7812fa4452c0))
+ - **FEAT**: bump Firebase Android SDK to 30.0.0 ([#8617](https://github.com/FirebaseExtended/flutterfire/issues/8617)). ([72158aaf](https://github.com/FirebaseExtended/flutterfire/commit/72158aaf9721dbf5f20c362f0c99853273507538))
+ - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android ([#8566](https://github.com/FirebaseExtended/flutterfire/issues/8566)). ([30216c4a](https://github.com/FirebaseExtended/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
+
 ## 1.16.0
 
  - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android (#8566). ([30216c4a](https://github.com/FirebaseExtended/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))
