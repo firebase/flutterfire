@@ -14,7 +14,16 @@ To get started with Crashlytics for Flutter, please [see the documentation](http
 
 ## Usage
 
-To use this plugin, please visit the [Crashlytics Usage documentation](https://firebase.flutter.dev/docs/crashlytics/usage)
+* [Get Android NDK crash reports](https://firebase.google.com/docs/crashlytics/ndk-reports)
+* [Get metrics with Google Analytics](https://firebase.google.com/docs/crashlytics/start-using-analytics?platform=flutter)
+* [Test your implementation](https://firebase.google.com/docs/crashlytics/test-implementation?platform=flutter)
+* [Get readable crash reports in the Crashlytics dashboard](https://firebase.google.com/docs/crashlytics/get-deobfuscated-reports?platform=flutter)
+* [Customize crash reports](https://firebase.google.com/docs/crashlytics/customize-crash-reports?platform=flutter)
+* [Filter events by Play track](https://firebase.google.com/docs/crashlytics/integrate-with-google-play)
+* [Debug ANR errors in Android app](https://firebase.google.com/docs/crashlytics/debug-anr-errors)
+* [Customize velocity alerts](https://firebase.google.com/docs/crashlytics/velocity-alerts)
+* [Export data to BigQuery](https://firebase.google.com/docs/crashlytics/bigquery-export)
+* [Troubleshooting & FAQ for setup](https://firebase.google.com/docs/crashlytics/troubleshooting?platform=flutter)
 
 ## Issues and feedback
 
