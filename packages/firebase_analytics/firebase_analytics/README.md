@@ -12,7 +12,17 @@ To get started with Firebase Analytics for Flutter, please [see the documentatio
 
 ## Usage
 
-To use this plugin, please visit the [Analytics Usage documentation](https://firebase.flutter.dev/docs/analytics/usage)
+* [Log events](https://firebase.google.com/docs/analytics/events?platform=flutter) 
+* [Set user properties](https://firebase.google.com/docs/analytics/user-properties?platform=flutter)
+* [Debug Events](https://firebase.google.com/docs/analytics/debugview)
+* [Track Screens](https://firebase.google.com/docs/analytics/screenviews)
+* [Set a User ID](https://firebase.google.com/docs/analytics/userid)
+* [Measure Ecommerce](https://firebase.google.com/docs/analytics/measure-ecommerce)
+* [Measure Ad Revenue](https://firebase.google.com/docs/analytics/measure-ad-revenue)
+* [Use in a WebView](https://firebase.google.com/docs/analytics/webview?platform=ios)
+* [Extend with Cloud Functions](https://firebase.google.com/docs/analytics/extend-with-functions)
+* [Configure Data Collection and Usage](https://firebase.google.com/docs/analytics/configure-data-collection?platform=ios)
+* [Analytics Error Codes](https://firebase.google.com/docs/analytics/errors)
 
 ## Issues and feedback
 
