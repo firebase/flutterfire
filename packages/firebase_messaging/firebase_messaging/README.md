@@ -14,7 +14,10 @@ To get started with Firebase Cloud Messaging for Flutter, please [see the docume
 
 ## Usage
 
-To use this plugin, please visit the [Cloud Messaging Usage documentation](https://firebase.flutter.dev/docs/messaging/usage)
+* [Set up a Flutter client](https://firebase.google.com/docs/cloud-messaging/flutter/client) 
+* [Send a test message](https://firebase.google.com/docs/cloud-messaging/flutter/first-message)
+* [Receive messages](https://firebase.google.com/docs/cloud-messaging/flutter/receive)
+* [Subscribe to topics](https://firebase.google.com/docs/cloud-messaging/flutter/topic-messaging)
 
 ## Issues and feedback
 
