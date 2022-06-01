@@ -4,4 +4,4 @@
 > Authentication and Functions, which gives you a managed, serverless gateway to Google Cloud Vision APIs. For an example
 > Functions project see the [vision-annotate-images](https://github.com/firebase/functions-samples/tree/master/vision-annotate-images) sample project.
 
-Source for the original package can be found [here](https://github.com/FirebaseExtended/flutterfire/tree/ml_vision_backup/packages/firebase_ml_vision).
+Source for the original package can be found [here](https://github.com/firebase/flutterfire/tree/ml_vision_backup/packages/firebase_ml_vision).

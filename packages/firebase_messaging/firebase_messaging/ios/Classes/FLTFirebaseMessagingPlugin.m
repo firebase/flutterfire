@@ -244,7 +244,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
       // replace it, it will cause a stack overflow as our original delegate forwarding handler
       // below causes an infinite loop of forwarding. See
-      // https://github.com/FirebaseExtended/flutterfire/issues/4026.
+      // https://github.com/firebasefire/issues/4026.
       if ([GULApplication sharedApplication].delegate != nil &&
           [[GULApplication sharedApplication].delegate
               conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {

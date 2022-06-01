@@ -1,6 +1,6 @@
 name: firebase_performance_web
 description: Web implementation of Firebase Performance monitoring.
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_performance/firebase_performance_web
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_performance/firebase_performance_web
 version: 0.1.0+13
 
 environment:
