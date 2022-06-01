@@ -53,6 +53,10 @@ ${_parentProperty(data)}
 
   @override
   ${data.documentReferenceName} doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ${data.documentReferenceName}(
       reference.doc(id),
     );

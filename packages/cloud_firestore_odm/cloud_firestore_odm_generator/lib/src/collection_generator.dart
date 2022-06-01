@@ -301,10 +301,10 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                 f.type.isDartCoreInt ||
                 f.type.isDartCoreDouble ||
                 f.type.isDartCoreBool ||
-                f.type.isDartCoreList ||
                 _dateTimeChecker.isAssignableFromType(f.type) ||
                 _timestampChecker.isAssignableFromType(f.type) ||
-                f.type.isJsonDocumentReference,
+                f.type.isJsonDocumentReference ||
+                f.type.isPrimitiveList,
             // TODO filter list other than LIst<string|bool|num>
           )
           .toList(),
@@ -352,5 +352,17 @@ extension on DartType {
             .contains(element?.librarySource?.uri.pathSegments.first) &&
         element?.name == 'DocumentReference' &&
         (this as InterfaceType).typeArguments.single.isDartCoreMap;
+  }
+
+  bool get isPrimitiveList {
+    if (!isDartCoreList) return false;
+
+    final generic = (this as InterfaceType).typeArguments.single;
+
+    return generic.isDartCoreNum ||
+        generic.isDartCoreString ||
+        generic.isDartCoreBool ||
+        generic.isDartCoreObject ||
+        generic.isDynamic;
   }
 }

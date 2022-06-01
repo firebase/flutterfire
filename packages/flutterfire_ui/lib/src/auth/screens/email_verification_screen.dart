@@ -59,6 +59,7 @@ class EmailVerificationScreen extends StatelessWidget {
               padding: const EdgeInsets.all(32),
               child: _EmailVerificationScreenContent(
                 auth: auth,
+                actionCodeSettings: actionCodeSettings,
               ),
             ),
           ),
@@ -74,8 +75,8 @@ class _EmailVerificationScreenContent extends StatefulWidget {
 
   const _EmailVerificationScreenContent({
     Key? key,
-    this.auth,
-    this.actionCodeSettings,
+    required this.auth,
+    required this.actionCodeSettings,
   }) : super(key: key);
 
   @override
@@ -92,6 +93,7 @@ class __EmailVerificationScreenContentState
 
   @override
   void initState() {
+    // ignore: unnecessary_non_null_assertion
     SchedulerBinding.instance!.addPostFrameCallback(_sendEmailVerification);
     super.initState();
   }

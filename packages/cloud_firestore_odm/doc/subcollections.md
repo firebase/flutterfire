@@ -1,6 +1,6 @@
 # Working with Subcollections
 
-> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
+> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/firebase/flutterfire/discussions/7475) for more details.
 
 The ODM provides support for subcollections via the `Collection` annotation. For example, first define
 the root collection as normal:

@@ -14,7 +14,7 @@ first crash report to Firebase.
 
 1.  If you haven't already,
     [configure and initialize Firebase](/docs/flutter/setup) in your Flutter
-    app.
+    project.
 
 1.  **Recommended**: To get features like crash-free users, breadcrumb logs,
     and velocity alerts, you need to enable {{firebase_analytics}} in your
@@ -31,28 +31,27 @@ first crash report to Firebase.
 ## **Step 1**: Add {{crashlytics}} to your Flutter project {: #add-sdk}
 
 1.  From the root of your Flutter project, run the following command to install
-    the {{crashlytics}} Flutter plugin
+    the {{crashlytics}} Flutter plugin:
 
-    <pre class="devsite-terminal devsite-click-to-copy"
-         data-terminal-prefix="your-flutter-proj$ ">flutter pub add firebase_crashlytics
-    </pre>
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
+    flutter pub add firebase_crashlytics
+    ```
 
-1.  _(Android only)_ From the root directory of your Flutter project, run the
-    following command:
+1.  From the root directory of your Flutter project, run the following command:
 
-    <pre class="devsite-terminal devsite-click-to-copy"
-         data-terminal-prefix="your-flutter-proj$ ">flutterfire configure
-    </pre>
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
+    flutterfire configure
+    ```
 
     Running this command ensures that your Flutter app's Firebase configuration
-    is up-to-date and adds the required {{crashlytics}} Gradle plugin to your
-    app.
+    is up-to-date and, for Android, adds the required {{crashlytics}} Gradle
+    plugin to your app.
 
-1.  Once complete, rebuild your Flutter application:
+1.  Once complete, rebuild your Flutter project:
 
-    <pre class="devsite-terminal devsite-click-to-copy"
-         data-terminal-prefix="your-flutter-proj$ ">flutter run
-    </pre>
+    ```sh {: .devsite-terminal .devsite-click-to-copy data-terminal-prefix="your-flutter-proj$ " }
+    flutter run
+    ```
 
 
 ## **Step 2**: Configure crash handlers {: #configure-crash-handlers}
@@ -119,6 +118,16 @@ to view and investigate all your reports and statistics.
 
 ## Next steps {:#next-steps}
 
-[Customize your crash report setup](/docs/crashlytics/customize-crash-reports)
-by adding opt-in reporting, logs, keys, and tracking of additional non-fatal
-errors.
+* [Customize your crash report setup](/docs/crashlytics/customize-crash-reports)
+  by adding opt-in reporting, logs, keys, and tracking of additional non-fatal
+  errors.
+
+* [Integrate with {{play_name}}](/docs/crashlytics/integrate-with-google-play)
+  so that you can filter your Android app's crash reports by {{play_name}} track
+  directly in the {{crashlytics}} dashboard. This allows you to better focus
+  your dashboard on specific builds.
+
+* [View stack traces and crash statistics alongside your
+  code](https://developer.android.com/studio/preview/features#aqi){: .external}
+  with the _App Quality Insights_ window in Android Studio (available starting
+  with Electric Eel 2022.1.1).

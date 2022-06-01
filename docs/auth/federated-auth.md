@@ -166,7 +166,7 @@ with the Facebook App ID and Secret set.
 
 Note: Firebase will not set the `User.emailVerified` property
 to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
-For further information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
+For further information, see this [issue](https://github.com/firebase/flutterfire/issues/4612#issuecomment-782107867).
 
 
 ## Apple
@@ -198,7 +198,7 @@ For further information, see this [issue](https://github.com/FirebaseExtended/fl
   /// Generates a cryptographically secure random nonce, to be included in a
   /// credential request.
   String generateNonce([int length = 32]) {
-    final charset =
+    const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
     final random = Random.secure();
     return List.generate(length, (_) => charset[random.nextInt(charset.length)])

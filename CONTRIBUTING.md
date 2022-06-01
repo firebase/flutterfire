@@ -1,7 +1,7 @@
 # Contributing to FlutterFire
 
-<a href="https://github.com/FirebaseExtended/flutterfire/actions?query=workflow%3Aall_plugins">
-  <img src="https://github.com/FirebaseExtended/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
+<a href="https://github.com/firebase/flutterfire/actions?query=workflow%3Aall_plugins">
+  <img src="https://github.com/firebase/flutterfire/workflows/all_plugins/badge.svg" alt="all_plugins GitHub Workflow Status"/>
 </a>
 
 _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#code-of-conduct)_
@@ -18,7 +18,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 ## 2. Forking & cloning the repository
 
 - Ensure all the dependencies described in the previous section are installed.
-- Fork `https://github.com/FirebaseExtended/flutterfire` into your own GitHub account. If
+- Fork `https://github.com/firebase/flutterfire` into your own GitHub account. If
   you already have a fork, and are now installing a development environment on
   a new machine, make sure you've updated your fork so that you don't use stale
   configuration options from long ago.
@@ -26,7 +26,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
   follow [GitHub's directions](https://help.github.com/articles/generating-ssh-keys/)
   to generate an SSH key.
 - `git clone git@github.com:<your_name_here>/flutterfire.git`
-- `git remote add upstream git@github.com:FirebaseExtended/flutterfire.git` (So that you
+- `git remote add upstream git@github.com:firebase/flutterfire.git` (So that you
   fetch from the master repository, not your clone, when running `git fetch`
   et al.)
 
@@ -37,7 +37,7 @@ FlutterFire uses [Melos](https://github.com/invertase/melos) to manage the proje
 To install Melos, run the following command from your SSH client:
 
 ```bash
-pub global activate melos
+dart pub global activate melos
 ```
 
 Next, at the root of your locally cloned repository bootstrap the projects dependencies:
@@ -113,7 +113,7 @@ run the following command from the root of your cloned repository:
 melos run test:e2e
 ```
 
-A full list of all commands can be found within the [`melos.yaml`](https://github.com/FirebaseExtended/flutterfire/blob/master/melos.yaml)
+A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
 file.
 
 ## 5. Contributing code
@@ -151,7 +151,7 @@ Assuming all is successful, commit and push your code:
 To send us a pull request:
 
 - `git pull-request` (if you are using [Hub](http://github.com/github/hub/)) or
-  go to `https://github.com/FirebaseExtended/flutterfire` and click the
+  go to `https://github.com/firebase/flutterfire` and click the
   "Compare & pull request" button
 
 Please make sure all your check-ins have detailed commit messages explaining the patch.

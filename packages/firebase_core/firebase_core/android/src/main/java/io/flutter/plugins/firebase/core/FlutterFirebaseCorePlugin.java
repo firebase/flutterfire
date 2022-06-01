@@ -9,6 +9,7 @@ import android.content.Context;
 import android.os.Looper;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -103,128 +104,183 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
   }
 
   private Task<Map<String, Object>> firebaseAppToMap(FirebaseApp firebaseApp) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Map<String, Object> appMap = new HashMap<>();
+          try {
+            Map<String, Object> appMap = new HashMap<>();
 
-          appMap.put(KEY_NAME, firebaseApp.getName());
-          appMap.put(KEY_OPTIONS, firebaseOptionsToMap(firebaseApp.getOptions()));
+            appMap.put(KEY_NAME, firebaseApp.getName());
+            appMap.put(KEY_OPTIONS, firebaseOptionsToMap(firebaseApp.getOptions()));
 
-          appMap.put(
-              KEY_IS_AUTOMATIC_DATA_COLLECTION_ENABLED,
-              firebaseApp.isDataCollectionDefaultEnabled());
-          appMap.put(
-              KEY_PLUGIN_CONSTANTS,
-              Tasks.await(
-                  FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
+            appMap.put(
+                KEY_IS_AUTOMATIC_DATA_COLLECTION_ENABLED,
+                firebaseApp.isDataCollectionDefaultEnabled());
+            appMap.put(
+                KEY_PLUGIN_CONSTANTS,
+                Tasks.await(
+                    FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
 
-          return appMap;
+            taskCompletionSource.setResult(appMap);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, Object>> initializeApp(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          String name = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-
-          @SuppressWarnings("unchecked")
-          Map<String, String> optionsMap =
-              (Map<String, String>) Objects.requireNonNull(arguments.get(KEY_OPTIONS));
-
-          FirebaseOptions options =
-              new FirebaseOptions.Builder()
-                  .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
-                  .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
-                  .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
-                  .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
-                  .setProjectId(optionsMap.get(KEY_PROJECT_ID))
-                  .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
-                  .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
-                  .build();
-          // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
-          //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
-          //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
           try {
-            Looper.prepare();
+            String name = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
+
+            @SuppressWarnings("unchecked")
+            Map<String, String> optionsMap =
+                (Map<String, String>) Objects.requireNonNull(arguments.get(KEY_OPTIONS));
+
+            FirebaseOptions options =
+                new FirebaseOptions.Builder()
+                    .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
+                    .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
+                    .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
+                    .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
+                    .setProjectId(optionsMap.get(KEY_PROJECT_ID))
+                    .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
+                    .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
+                    .build();
+            // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
+            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
+            //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+            try {
+              Looper.prepare();
+            } catch (Exception e) {
+              // do nothing
+            }
+            FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, name);
+            taskCompletionSource.setResult(Tasks.await(firebaseAppToMap(firebaseApp)));
           } catch (Exception e) {
-            // do nothing
+            taskCompletionSource.setException(e);
           }
-          FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, name);
-          return Tasks.await(firebaseAppToMap(firebaseApp));
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<List<Map<String, Object>>> initializeCore() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<List<Map<String, Object>>> taskCompletionSource =
+        new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          if (!coreInitialized) {
-            coreInitialized = true;
-          } else {
-            Tasks.await(FlutterFirebasePluginRegistry.didReinitializeFirebaseCore());
+          try {
+            if (!coreInitialized) {
+              coreInitialized = true;
+            } else {
+              Tasks.await(FlutterFirebasePluginRegistry.didReinitializeFirebaseCore());
+            }
+
+            List<FirebaseApp> firebaseApps = FirebaseApp.getApps(applicationContext);
+            List<Map<String, Object>> firebaseAppsList = new ArrayList<>(firebaseApps.size());
+
+            for (FirebaseApp firebaseApp : firebaseApps) {
+              firebaseAppsList.add(Tasks.await(firebaseAppToMap(firebaseApp)));
+            }
+
+            taskCompletionSource.setResult(firebaseAppsList);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          List<FirebaseApp> firebaseApps = FirebaseApp.getApps(applicationContext);
-          List<Map<String, Object>> firebaseAppsList = new ArrayList<>(firebaseApps.size());
-
-          for (FirebaseApp firebaseApp : firebaseApps) {
-            firebaseAppsList.add(Tasks.await(firebaseAppToMap(firebaseApp)));
-          }
-
-          return firebaseAppsList;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Map<String, String>> firebaseOptionsFromResource() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, String>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          final FirebaseOptions options = FirebaseOptions.fromResource(applicationContext);
-          if (options == null) return null;
-          return firebaseOptionsToMap(options);
+          try {
+            final FirebaseOptions options = FirebaseOptions.fromResource(applicationContext);
+            if (options == null) {
+              taskCompletionSource.setResult(null);
+              return;
+            }
+            taskCompletionSource.setResult(firebaseOptionsToMap(options));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setAutomaticDataCollectionEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-          Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
-          FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-          firebaseApp.setDataCollectionDefaultEnabled(enabled);
-          return null;
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
+            Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
+            FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
+            firebaseApp.setDataCollectionDefaultEnabled(enabled);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> setAutomaticResourceManagementEnabled(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-          boolean enabled = (boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
-          FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-          firebaseApp.setAutomaticResourceManagementEnabled(enabled);
-          return null;
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
+            boolean enabled = (boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
+            FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
+            firebaseApp.setAutomaticResourceManagementEnabled(enabled);
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   private Task<Void> deleteApp(Map<String, Object> arguments) {
-    return Tasks.call(
-        cachedThreadPool,
-        () -> {
-          String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-          FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
-          try {
-            firebaseApp.delete();
-          } catch (IllegalStateException appNotFoundException) {
-            // Ignore app not found exceptions.
-          }
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
-          return null;
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
+            FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
+            try {
+              firebaseApp.delete();
+            } catch (IllegalStateException appNotFoundException) {
+              // Ignore app not found exceptions.
+            }
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
         });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override
