@@ -46,7 +46,7 @@ class TaskSnapshot {
       other is TaskSnapshot && other.ref == ref && other.storage == storage;
 
   @override
-  int get hashCode => hashValues(storage, ref);
+  int get hashCode => Object.hash(storage, ref);
 
   @override
   String toString() => '$TaskSnapshot(ref: $ref, state: $state)';
