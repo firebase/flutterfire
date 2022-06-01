@@ -71,6 +71,10 @@ class _$MovieCollectionReference extends _$MovieQuery
 
   @override
   MovieDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MovieDocumentReference(
       reference.doc(id),
     );
@@ -1058,6 +1062,10 @@ class _$CommentCollectionReference extends _$CommentQuery
 
   @override
   CommentDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return CommentDocumentReference(
       reference.doc(id),
     );

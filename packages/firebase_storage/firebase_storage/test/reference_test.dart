@@ -10,7 +10,6 @@ import 'dart:typed_data';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -310,7 +309,7 @@ Future<void> main() async {
     });
 
     test('hashCode()', () {
-      expect(testRef.hashCode, hashValues(storage, testFullPath));
+      expect(testRef.hashCode, Object.hash(storage, testFullPath));
     });
 
     test('toString()', () {

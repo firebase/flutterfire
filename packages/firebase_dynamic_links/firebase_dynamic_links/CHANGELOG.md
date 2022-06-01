@@ -1,15 +1,27 @@
+## 4.2.5
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8733). ([a11bd602](https://github.com/firebase/flutterfire/commit/a11bd6021a3e915bf36f0db295b45ee8a3f16517))
+
+## 4.2.4
+
+ - **FIX**: `getInitialLink()` returns `null` on 2nd call. (#8621). ([a83ee58e](https://github.com/firebase/flutterfire/commit/a83ee58e56879b88b2886a6e5f5be549ee403b23))
+
+## 4.2.3
+
+ - Update a dependency to the latest release.
+
 ## 4.2.2
 
  - Update a dependency to the latest release.
 
 ## 4.2.1
 
- - **REFACTOR**: Update deprecated API for dynamic links example app. (#8519). ([c5d288b3](https://github.com/FirebaseExtended/flutterfire/commit/c5d288b388cfd4180896ef9fc2a004c84ccbc017))
+ - **REFACTOR**: Update deprecated API for dynamic links example app. (#8519). ([c5d288b3](https://github.com/firebase/flutterfire/commit/c5d288b388cfd4180896ef9fc2a004c84ccbc017))
 
 ## 4.2.0
 
- - **REFACTOR**: Remove deprecated Tasks.call() API from android. (#8450). ([fdb24c8d](https://github.com/FirebaseExtended/flutterfire/commit/fdb24c8d2cf4c51b20ffdb6c8898b7eced16aa64))
- - **FEAT**: `matchType` for pending Dynamic Link data for `iOS`. (#8464). ([d3dda125](https://github.com/FirebaseExtended/flutterfire/commit/d3dda12563eb28e565c2c01d348183d558e25335))
+ - **REFACTOR**: Remove deprecated Tasks.call() API from android. (#8450). ([fdb24c8d](https://github.com/firebase/flutterfire/commit/fdb24c8d2cf4c51b20ffdb6c8898b7eced16aa64))
+ - **FEAT**: `matchType` for pending Dynamic Link data for `iOS`. (#8464). ([d3dda125](https://github.com/firebase/flutterfire/commit/d3dda12563eb28e565c2c01d348183d558e25335))
 
 ## 4.1.3
 
@@ -17,7 +29,7 @@
 
 ## 4.1.2
 
- - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/FirebaseExtended/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
+ - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/firebase/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
 
 ## 4.1.1
 
@@ -25,12 +37,12 @@
 
 ## 4.1.0
 
- - **FIX**: pass through `utmParameters` on `iOS` and make property on `PendingDynamicLinkData`. (#8232). ([32d06e79](https://github.com/FirebaseExtended/flutterfire/commit/32d06e793b4fc1bc1dad9b9071f94b28c5d477ca))
- - **FEAT**: add additional `longDynamicLink` parameter for creating a short Dynamic Link enabling additional parameters to be appended such as "ofl". (#7796). ([433a08ea](https://github.com/FirebaseExtended/flutterfire/commit/433a08eaacfaabb109a0185a5e494d87f9334d75))
+ - **FIX**: pass through `utmParameters` on `iOS` and make property on `PendingDynamicLinkData`. (#8232). ([32d06e79](https://github.com/firebase/flutterfire/commit/32d06e793b4fc1bc1dad9b9071f94b28c5d477ca))
+ - **FEAT**: add additional `longDynamicLink` parameter for creating a short Dynamic Link enabling additional parameters to be appended such as "ofl". (#7796). ([433a08ea](https://github.com/firebase/flutterfire/commit/433a08eaacfaabb109a0185a5e494d87f9334d75))
 
 ## 4.0.8
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 4.0.7
 
@@ -38,7 +50,7 @@
 
 ## 4.0.6
 
- - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/FirebaseExtended/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
+ - **FIX**: Ensure Dynamic link is retrieved from the Intent just once for `getInitialLink()` on Android as per the documentation. (#7743). ([67cc6647](https://github.com/firebase/flutterfire/commit/67cc66471046822463f326c05e732313dbaa9560))
 
 ## 4.0.5
 
@@ -50,7 +62,7 @@
 
 ## 4.0.3
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 4.0.2
 
