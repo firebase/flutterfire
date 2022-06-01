@@ -244,7 +244,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
       // replace it, it will cause a stack overflow as our original delegate forwarding handler
       // below causes an infinite loop of forwarding. See
-      // https://github.com/FirebaseExtended/flutterfire/issues/4026.
+      // https://github.com/firebasefire/issues/4026.
       if ([GULApplication sharedApplication].delegate != nil &&
           [[GULApplication sharedApplication].delegate
               conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {
@@ -422,7 +422,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 
 #if !TARGET_OS_OSX
-// Called for silent notifications in the foreground & background
+// Called for silent messages (i.e. data only) in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -484,9 +484,9 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
-      // If "alert" (i.e. notification) is present, this will be called by the other
+      // If "alert" (i.e. notification) is present in userInfo, this will be called by the other
       // "Messaging#onMessage" channel handler
-      if (notificationDict[@"aps"] != nil && notificationDict[@"aps"][@"alert"] == nil) {
+      if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] == nil) {
         [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
       }
       completionHandler(UIBackgroundFetchResultNoData);

@@ -321,7 +321,7 @@ public class FlutterFirebaseAuthPlugin
     output.put(Constants.IS_ANONYMOUS, firebaseUser.isAnonymous());
 
     // TODO(Salakar): add an integration test to check for null, if possible
-    // See https://github.com/FirebaseExtended/flutterfire/issues/3643
+    // See https://github.com/firebase/flutterfire/issues/3643
     final FirebaseUserMetadata userMetadata = firebaseUser.getMetadata();
     if (userMetadata != null) {
       metadata.put(Constants.CREATION_TIME, firebaseUser.getMetadata().getCreationTimestamp());
