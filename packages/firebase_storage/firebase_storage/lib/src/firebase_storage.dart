@@ -209,7 +209,7 @@ class FirebaseStorage extends FirebasePluginPlatform {
       other.bucket == bucket;
 
   @override
-  int get hashCode => hashValues(app.name, bucket);
+  int get hashCode => Object.hash(app.name, bucket);
 
   @override
   String toString() => '$FirebaseStorage(app: ${app.name}, bucket: $bucket)';
