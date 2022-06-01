@@ -23,6 +23,7 @@ class FirebaseWebService {
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', 'core'),
+    'app-check': FirebaseWebService._('app-check', 'app_check'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
