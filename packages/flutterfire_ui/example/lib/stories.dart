@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutterfire_ui_example/firebase_options.dart';
 import 'package:flutterfire_ui_example/stories/screens/forgot_password_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/profile_screen.dart';
 import 'package:flutterfire_ui_example/stories/screens/sms_code_input_screen.dart';
@@ -29,13 +31,9 @@ import 'stories/widgets/phone_input.dart';
 import 'stories/widgets/sign_out_button.dart';
 import 'stories/widgets/user_avatar.dart';
 
-import 'init.dart'
-    if (dart.library.html) 'web_init.dart'
-    if (dart.library.io) 'io_init.dart';
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeFirebase();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const StoriesApp());
 }
 

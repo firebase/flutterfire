@@ -1,11 +1,12 @@
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
-import 'package:flutterfire_ui/src/auth/widgets/internal/universal_button.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../test_utils.dart';
+
+class MockAuth extends Mock implements FirebaseAuth {}
 
 void main() {
   group('EmailForm', () {
@@ -14,7 +15,7 @@ void main() {
     setUp(() {
       widget = TestMaterialApp(
         child: EmailForm(
-          auth: MockFirebaseAuth(),
+          auth: MockAuth(),
           action: AuthAction.signIn,
         ),
       );
@@ -22,30 +23,17 @@ void main() {
 
     testWidgets('has a Sign in button of outlined variant', (tester) async {
       await tester.pumpWidget(widget);
-      expect(
-        find.descendant(
-          of: find.byWidgetPredicate(
-            (widget) =>
-                widget is LoadingButton &&
-                widget.variant == ButtonVariant.outlined,
-          ),
-          matching: find.text('Sign in'),
-        ),
-        findsOneWidget,
-      );
+      final button = find.byType(OutlinedButton);
+
+      expect(button, findsOneWidget);
     });
 
     testWidgets('has a Forgot password button of text variant', (tester) async {
       await tester.pumpWidget(widget);
+      final button = find.byType(TextButton);
+
       expect(
-        find.descendant(
-          of: find.byWidgetPredicate(
-            (widget) =>
-                widget is UniversalButton &&
-                widget.variant == ButtonVariant.text,
-          ),
-          matching: find.text('Forgot password?'),
-        ),
+        button,
         findsOneWidget,
       );
     });
@@ -60,17 +48,8 @@ void main() {
         ),
       );
 
-      expect(
-        find.descendant(
-          of: find.byWidgetPredicate(
-            (widget) =>
-                widget is UniversalButton &&
-                widget.variant == ButtonVariant.filled,
-          ),
-          matching: find.text('Sign in'),
-        ),
-        findsOneWidget,
-      );
+      final button = find.byType(ElevatedButton);
+      expect(button, findsOneWidget);
     });
   });
 }

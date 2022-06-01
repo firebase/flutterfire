@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart'
     hide PhoneAuthProvider, EmailAuthProvider;
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -9,9 +10,7 @@ import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart
 import 'package:flutterfire_ui_oauth_google/flutterfire_ui_google_oauth.dart';
 import 'package:flutterfire_ui_oauth_twitter/flutterfire_ui_oauth_twitter.dart';
 
-import 'init.dart'
-    if (dart.library.html) 'web_init.dart'
-    if (dart.library.io) 'io_init.dart';
+import 'firebase_options.dart';
 
 import 'config.dart';
 import 'decorations.dart';
@@ -30,7 +29,7 @@ final emailLinkProviderConfig = EmailLinkAuthProvider(
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeFirebase();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   FlutterFireUIAuth.configureProviders([
     EmailAuthProvider(),

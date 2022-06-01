@@ -1,12 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<void> setupEmulator() async {
-  await Firebase.initializeApp();
+import 'firebase_options.dart';
 
-  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+String get testEmulatorHost {
+  if (defaultTargetPlatform == TargetPlatform.android && !kIsWeb) {
+    return '10.0.2.2';
+  }
+  return 'localhost';
+}
+
+Future<void> prepare() async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  FirebaseFirestore.instance.useFirestoreEmulator(testEmulatorHost, 8080);
+  await FirebaseAuth.instance.useAuthEmulator(testEmulatorHost, 9099);
 }
 
 Future<CollectionReference<T>> setupCollection<T>(

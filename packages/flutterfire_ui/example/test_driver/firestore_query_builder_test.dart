@@ -9,7 +9,7 @@ import 'utils.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(setupEmulator);
+  setUpAll(prepare);
 
   group('FirestoreQueryBuilder', () {
     testWidgets('fetches initial page', (tester) async {

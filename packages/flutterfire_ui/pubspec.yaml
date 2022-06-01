@@ -33,9 +33,9 @@ dependencies:
   twitter_login: ^4.2.2
 
 dev_dependencies:
-  firebase_auth_mocks: ^0.8.4
   flutter_test:
     sdk: flutter
+  mockito: ^5.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

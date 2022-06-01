@@ -9,7 +9,7 @@ import 'utils.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(setupEmulator);
+  setUpAll(prepare);
 
   group('FirestoreListViewBuilder', () {
     testWidgets('Allows specifying custom error handler', (tester) async {

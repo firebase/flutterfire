@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../auth_flow.dart';
 import '../auth_state.dart';
 
 class SendingLink extends AuthState {

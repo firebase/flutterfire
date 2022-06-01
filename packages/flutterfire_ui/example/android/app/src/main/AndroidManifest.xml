@@ -2,7 +2,8 @@
     package="io.flutter.plugins.flutterfire_ui.flutterfire_ui_example">
    <application
         android:label="flutterfire_ui_example"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
         <meta-data
            android:name="com.facebook.sdk.ApplicationId"
