@@ -202,7 +202,7 @@ class Reference {
       other.storage == storage;
 
   @override
-  int get hashCode => hashValues(storage, fullPath);
+  int get hashCode => Object.hash(storage, fullPath);
 
   @override
   String toString() =>
