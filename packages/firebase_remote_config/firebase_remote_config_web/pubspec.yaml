@@ -1,7 +1,7 @@
 name: firebase_remote_config_web
 description: The web implementation of firebase_remote_config
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
+repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_remote_config/firebase_remote_config_web
 
 version: 1.0.13
 

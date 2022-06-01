@@ -24,11 +24,11 @@
 
 ## 0.8.0+7
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 0.8.0+6
 
- - **FIX**: Fix firebase_performance not recording response payload size on Android. (#8154). ([46d8bc0f](https://github.com/FirebaseExtended/flutterfire/commit/46d8bc0f205f24b1e160333ddb76200543f48c89))
+ - **FIX**: Fix firebase_performance not recording response payload size on Android. (#8154). ([46d8bc0f](https://github.com/firebase/flutterfire/commit/46d8bc0f205f24b1e160333ddb76200543f48c89))
 
 ## 0.8.0+5
 
@@ -36,7 +36,7 @@
 
 ## 0.8.0+4
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 0.8.0+3
 
