@@ -3,7 +3,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:ui' show hashValues;
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show immutable;
 
@@ -50,5 +49,5 @@ class MethodChannelFieldValue {
       const DeepCollectionEquality().equals(other.value, value);
 
   @override
-  int get hashCode => hashValues(type, value);
+  int get hashCode => Object.hash(type, value);
 }

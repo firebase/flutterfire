@@ -1,3 +1,7 @@
+## 10.2.17
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8752). ([5c5dcaf1](https://github.com/firebase/flutterfire/commit/5c5dcaf1909dacf293fec5e79461d43468a13279))
+
 ## 10.2.16
 
  - Update a dependency to the latest release.
@@ -8,7 +12,7 @@
 
 ## 10.2.14
 
- - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8421). ([461bba5a](https://github.com/FirebaseExtended/flutterfire/commit/461bba5a510b341b3b9bd414c9412944714e9305))
+ - **REFACTOR**: Remove deprecated `Tasks.call()` API from android. (#8421). ([461bba5a](https://github.com/firebase/flutterfire/commit/461bba5a510b341b3b9bd414c9412944714e9305))
 
 ## 10.2.13
 
@@ -20,7 +24,7 @@
 
 ## 10.2.11
 
- - **FIX**: Fix `UploadTask.cancel()` so that it completes when called. (#8417). ([19ee62c3](https://github.com/FirebaseExtended/flutterfire/commit/19ee62c33f34278dac082c11bf7574785e60abb5))
+ - **FIX**: Fix `UploadTask.cancel()` so that it completes when called. (#8417). ([19ee62c3](https://github.com/firebase/flutterfire/commit/19ee62c33f34278dac082c11bf7574785e60abb5))
 
 ## 10.2.10
 
@@ -28,7 +32,7 @@
 
 ## 10.2.9
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 10.2.8
 
@@ -44,11 +48,11 @@
 
 ## 10.2.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 10.2.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 10.2.3
 
@@ -234,7 +238,7 @@
 
 ## 5.0.0-dev.1
 
-As part of our on-going work for [#2582](https://github.com/FirebaseExtended/flutterfire/issues/2582) this is our Firebase Storage rework changes.
+As part of our on-going work for [#2582](https://github.com/firebase/flutterfire/issues/2582) this is our Firebase Storage rework changes.
 
 Overall, Firebase Storage has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and many more unit and end-to-end tests (tested on Android, iOS & MacOS).

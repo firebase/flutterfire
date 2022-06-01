@@ -43,18 +43,16 @@ and open source.
 ## Issues
 
 Please file FlutterFire specific issues, bugs, or feature requests in
-our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new/choose).
+our [issue tracker](https://github.com/firebase/flutterfire/issues/new/choose).
 
 Plugin issues that are not specific to FlutterFire can be filed in
 the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
 
-**Note about contributing to Docs**: We're in the process of updating documentation for the Firebase SDK for Flutter. Please hold your PRs for docs until May 5th, 2022.
-
 If you wish to contribute a change to any of the existing plugins in this repo, please review
-our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/firebase/flutterfire/pulls).
 
 ## Status
 

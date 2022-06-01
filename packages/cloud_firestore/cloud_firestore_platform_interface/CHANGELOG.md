@@ -1,6 +1,10 @@
+## 5.5.7
+
+ - Update a dependency to the latest release.
+
 ## 5.5.6
 
- - **REFACTOR**: fix analyzer issues introduced in Flutter 3.0.0 ([#8655](https://github.com/FirebaseExtended/flutterfire/issues/8655)). ([b05d7fa1](https://github.com/FirebaseExtended/flutterfire/commit/b05d7fa1ed56ab1bbceb02fec299800bce68a703))
+ - **REFACTOR**: fix analyzer issues introduced in Flutter 3.0.0 ([#8655](https://github.com/firebase/flutterfire/issues/8655)). ([b05d7fa1](https://github.com/firebase/flutterfire/commit/b05d7fa1ed56ab1bbceb02fec299800bce68a703))
 
 ## 5.5.5
 
@@ -16,19 +20,19 @@
 
 ## 5.5.2
 
- - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/FirebaseExtended/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
+ - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/firebase/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
 
 ## 5.5.1
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 5.5.0
 
- - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/firebase/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
 
 ## 5.4.13
 
- - **FIX**: Export enum `LoadBundleTaskState` from Platform Interface package. (#8027). ([7fa461e4](https://github.com/FirebaseExtended/flutterfire/commit/7fa461e4476db3ac255877db93b6ccf493d0e1cf))
+ - **FIX**: Export enum `LoadBundleTaskState` from Platform Interface package. (#8027). ([7fa461e4](https://github.com/firebase/flutterfire/commit/7fa461e4476db3ac255877db93b6ccf493d0e1cf))
 
 ## 5.4.12
 
@@ -40,7 +44,7 @@
 
 ## 5.4.10
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 5.4.9
 
@@ -189,7 +193,7 @@
 
 ## 2.0.1
 
- - Fixed 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+ - Fixed 2 race conditions. [(#3251)](https://github.com/firebase/flutterfire/pull/3251)
    - When a snapshot stream unsubscribes, the Dart Stream is removed at the same time an async request to remove the native listener is sent. In some cases, an event is sent from native before the native listener has been removed, but after the Dart Stream is removed, causing an assertion error.
    - If a widget updates in a very short period of time, the `onCancel` stream handler is called pretty much straight away. Since setting up the stream handler takes longer than removing, in some edge cases it's trying to remove a listener which hasn't been created.
 
