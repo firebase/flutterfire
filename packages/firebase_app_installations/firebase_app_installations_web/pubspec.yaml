@@ -1,8 +1,8 @@
 name: firebase_app_installations_web
 description: The web implementation of firebase_app_installations.
 version: 0.1.0+14
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_web
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_web
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_web
+repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_web
 
 environment:
   sdk: '>=2.16.0 <3.0.0'
