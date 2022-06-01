@@ -12,7 +12,7 @@ To get started with Firebase Database for Flutter, please [see the documentation
 
 ## Usage
 
-To use this plugin, please visit the [Firebase Database Usage documentation](https://firebase.flutter.dev/docs/database/usage)
+To use this plugin, please visit the [Firebase Database Usage documentation](https://firebase.google.com/docs/database/flutter/start)
 
 ## Issues and feedback
 

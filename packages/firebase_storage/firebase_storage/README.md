@@ -13,7 +13,7 @@ To get started with Cloud Storage for Flutter, please [see the documentation](ht
 
 ## Usage
 
-To use this plugin, please visit the [Storage Usage documentation](https://firebase.flutter.dev/docs/storage/usage)
+To use this plugin, please visit the [Storage Usage documentation](https://firebase.google.com/docs/storage/flutter/create-reference)
 
 ## Issues and feedback
 

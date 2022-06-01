@@ -13,7 +13,7 @@ To get started with Firebase Auth for Flutter, please [see the documentation](ht
 
 ## Usage
 
-To use this plugin, please visit the [Authentication Usage documentation](https://firebase.flutter.dev/docs/auth/usage)
+To use this plugin, please visit the [Authentication Usage documentation](https://firebase.google.com/docs/auth/flutter/manage-users)
 
 ## Issues and feedback
 
