@@ -1,5 +1,5 @@
 name: FlutterFire
-repository: https://github.com/FirebaseExtended/flutterfire
+repository: https://github.com/firebase/flutterfire
 
 packages:
   - packages/**

@@ -4,7 +4,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:typed_data';
-import 'dart:ui' show hashList;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart' show immutable;
@@ -24,5 +23,5 @@ class Blob {
       const DeepCollectionEquality().equals(other.bytes, bytes);
 
   @override
-  int get hashCode => hashList(bytes);
+  int get hashCode => Object.hashAll(bytes);
 }

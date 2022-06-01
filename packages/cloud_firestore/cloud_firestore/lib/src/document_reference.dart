@@ -190,7 +190,7 @@ class _JsonDocumentReference
       other.path == path;
 
   @override
-  int get hashCode => hashValues(firestore, path);
+  int get hashCode => Object.hash(firestore, path);
 
   @override
   String toString() => 'DocumentReference<Map<String, dynamic>>($path)';
@@ -307,7 +307,7 @@ class _WithConverterDocumentReference<T extends Object?>
       other._toFirestore == _toFirestore;
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         _originalDocumentReference,
         _fromFirestore,
