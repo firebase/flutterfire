@@ -84,7 +84,7 @@ try {
 Caution: When a user uninstalls your app on iOS or macOS, the user's authentication
 state can persist between app re-installs, as the Firebase iOS SDK persists
 authentication state to the system keychain.
-See issue [#4661](https://github.com/FirebaseExtended/flutterfire/issues/4661)
+See issue [#4661](https://github.com/firebase/flutterfire/issues/4661)
 for more information.
 
 
