@@ -70,7 +70,7 @@ class FlutterFirebaseStorageTask {
           task = inProgressTasks.valueAt(i);
         } catch (ArrayIndexOutOfBoundsException e) {
           // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
-          // Can safely ignore exception for now, see https://github.com/FirebaseExtended/flutterfire/issues/4334
+          // Can safely ignore exception for now, see https://github.com/firebase/flutterfire/issues/4334
         }
         if (task != null) {
           task.destroy();
@@ -148,7 +148,7 @@ class FlutterFirebaseStorageTask {
         inProgressTasks.remove(handle);
       } catch (ArrayIndexOutOfBoundsException e) {
         // TODO(Salakar): Why does this happen? Race condition / multiple destroy calls?
-        // Can safely ignore exception for now, see https://github.com/FirebaseExtended/flutterfire/issues/4334
+        // Can safely ignore exception for now, see https://github.com/firebase/flutterfire/issues/4334
       }
     }
 
