@@ -28,7 +28,7 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
   Widget build(BuildContext context) {
     final l = FlutterFireUILocalizations.labelsOf(context);
 
-    return AuthFlowBuilder<EmailLinkFlowController>(
+    return AuthFlowBuilder<EmailLinkAuthController>(
       auth: widget.auth,
       provider: widget.provider,
       builder: (context, state, ctrl, child) {

@@ -12,12 +12,12 @@ class AwaitingDynamicLink extends AuthState {
   const AwaitingDynamicLink();
 }
 
-abstract class EmailLinkFlowController extends AuthController {
+abstract class EmailLinkAuthController extends AuthController {
   void sendLink(String email);
 }
 
 class EmailLinkFlow extends AuthFlow<EmailLinkAuthProvider>
-    implements EmailLinkFlowController, EmailLinkAuthListener {
+    implements EmailLinkAuthController, EmailLinkAuthListener {
   EmailLinkFlow({
     FirebaseAuth? auth,
     required EmailLinkAuthProvider provider,

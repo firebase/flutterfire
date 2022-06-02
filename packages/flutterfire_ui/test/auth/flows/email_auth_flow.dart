@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../test_utils.dart';
+
 void main() {
   late EmailAuthFlow flow;
   late MockAuth auth;
@@ -25,7 +27,8 @@ void main() {
   });
 
   tearDown(() {
-    auth._user = null;
+    // simulate sign out
+    auth.user = null;
   });
 
   group('EmailAuthProvider', () {
@@ -61,7 +64,7 @@ void main() {
 
       test('calls linkWithCredential if action is link', () {
         final user = MockUser();
-        auth._user = user;
+        auth.user = user;
 
         provider.authenticate('email', 'password', AuthAction.link);
         verify(user.linkWithCredential(any)).called(1);
@@ -101,7 +104,7 @@ void main() {
         flow.provider.authListener = mockListener;
 
         final user = MockUser();
-        auth._user = user;
+        auth.user = user;
 
         flow.provider.authenticate('email', 'password', AuthAction.link);
 
@@ -238,58 +241,6 @@ class MockPorivder extends Mock implements EmailAuthProvider {
   }
 }
 
-class MockCredential extends Mock implements UserCredential {}
-
-class MockUser extends Mock implements User {
-  @override
-  Future<UserCredential> linkWithCredential(AuthCredential? credential) async {
-    return super.noSuchMethod(
-      Invocation.method(
-        #linkWithCredential,
-        [credential],
-      ),
-      returnValue: MockCredential(),
-      returnValueForMissingStub: MockCredential(),
-    );
-  }
-}
-
-class MockAuth extends Mock implements FirebaseAuth {
-  MockUser? _user;
-
-  @override
-  User? get currentUser => _user;
-
-  @override
-  Future<UserCredential> signInWithCredential(
-    AuthCredential? credential,
-  ) async {
-    return super.noSuchMethod(
-      Invocation.method(
-        #signInWithCredential,
-        [credential],
-      ),
-      returnValue: MockCredential(),
-      returnValueForMissingStub: MockCredential(),
-    );
-  }
-
-  @override
-  Future<UserCredential> createUserWithEmailAndPassword({
-    String? email,
-    String? password,
-  }) async {
-    return super.noSuchMethod(
-      Invocation.method(#createUserWithEmailAndPassword, null, {
-        #email: email,
-        #password: password,
-      }),
-      returnValue: MockCredential(),
-      returnValueForMissingStub: MockCredential(),
-    );
-  }
-}
-
 class MockAuthListener extends Mock implements EmailAuthListener {
   @override
   void onBeforeCredentialLinked(AuthCredential? credential) {
@@ -326,5 +277,3 @@ class MockAuthListener extends Mock implements EmailAuthListener {
     super.noSuchMethod(Invocation.method(#onError, [error]));
   }
 }
-
-class TestException implements Exception {}

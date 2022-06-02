@@ -44,11 +44,11 @@ class EmailLinkAuthProvider
   }
 
   void _onLinkReceived(String email, PendingDynamicLinkData linkData) {
-    final link = linkData.toString();
+    final link = linkData.link.toString();
 
     if (auth.isSignInWithEmailLink(link)) {
       authListener.onBeforeSignIn();
-      signInWithEmailLink(email, link);
+      _signInWithEmailLink(email, link);
     } else {
       authListener.onError(
         FirebaseAuthException(
@@ -61,13 +61,11 @@ class EmailLinkAuthProvider
 
   void awaitLink(String email) {
     _dynamicLinks.onLink.first
-        .then(
-          (linkData) => _onLinkReceived(email, linkData),
-        )
+        .then((linkData) => _onLinkReceived(email, linkData))
         .catchError(authListener.onError);
   }
 
-  void signInWithEmailLink(String email, String link) {
+  void _signInWithEmailLink(String email, String link) {
     auth
         .signInWithEmailLink(email: email, emailLink: link)
         .then(authListener.onSignedIn)
