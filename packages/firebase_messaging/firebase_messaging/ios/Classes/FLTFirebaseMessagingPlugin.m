@@ -245,9 +245,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       // replace it, it will cause a stack overflow as our original delegate forwarding handler
       // below causes an infinite loop of forwarding. See
       // https://github.com/firebasefire/issues/4026.
-      if ([GULApplication sharedApplication].delegate != nil &&
-          [[GULApplication sharedApplication].delegate
-              conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {
+      if ([notificationCenter.delegate
+              conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
         // Note this one only executes if Firebase swizzling is **enabled**.
         shouldReplaceDelegate = NO;
       }
