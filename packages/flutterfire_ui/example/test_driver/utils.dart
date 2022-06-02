@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -101,4 +102,19 @@ TypeMatcher<FirestoreQueryBuilderSnapshot<T>> isQueryBuilderSnapshot<T>({
 
 class _Sentinel {
   const _Sentinel();
+}
+
+Future<void> render(WidgetTester tester, Widget widget) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: SafeArea(
+        child: Scaffold(
+          body: Padding(
+            padding: const EdgeInsets.all(8),
+            child: widget,
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -4,20 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 
-Future<void> render(WidgetTester tester, Widget widget) async {
-  await tester.pumpWidget(
-    MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(8),
-            child: widget,
-          ),
-        ),
-      ),
-    ),
-  );
-}
+import 'utils.dart';
 
 void main() {
   const labels = DefaultLocalizations();

@@ -27,6 +27,7 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
   @override
   Widget build(BuildContext context) {
     final l = FlutterFireUILocalizations.labelsOf(context);
+    final formKey = GlobalKey<FormState>();
 
     return AuthFlowBuilder<EmailLinkAuthController>(
       auth: widget.auth,
@@ -39,11 +40,18 @@ class _EmailLinkSignInViewState extends State<EmailLinkSignInView> {
             Title(text: l.signInWithEmailLinkViewTitleText),
             const SizedBox(height: 16),
             if (state is! AwaitingDynamicLink)
-              EmailInput(
-                autofocus: true,
-                focusNode: widget.emailInputFocusNode,
-                controller: emailCtrl,
-                onSubmitted: ctrl.sendLink,
+              Form(
+                key: formKey,
+                child: EmailInput(
+                  autofocus: true,
+                  focusNode: widget.emailInputFocusNode,
+                  controller: emailCtrl,
+                  onSubmitted: (v) {
+                    if (formKey.currentState?.validate() ?? false) {
+                      ctrl.sendLink(emailCtrl.text);
+                    }
+                  },
+                ),
               )
             else ...[
               Text(l.signInWithEmailLinkSentText),
