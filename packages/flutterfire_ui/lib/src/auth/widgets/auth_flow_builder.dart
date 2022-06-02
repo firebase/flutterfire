@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart'
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
 import '../auth_controller.dart';
-import '../auth_flow.dart';
 import '../auth_state.dart';
 
 typedef AuthFlowBuilderCallback<T extends AuthController> = Widget Function(

@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../auth_flow.dart';
-
 class AwaitingPhoneNumber extends AuthState {}
 
 class SMSCodeRequested extends AuthState {

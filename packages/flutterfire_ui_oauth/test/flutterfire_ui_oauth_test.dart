@@ -35,9 +35,6 @@ class FakeOAuthProvider extends OAuthProvider {
   String get providerId => 'fake';
 
   @override
-  Future<void> signOut() async {}
-
-  @override
   ThemedOAuthProviderButtonStyle get style => const GoogleProviderButtonStyle();
 
   @override

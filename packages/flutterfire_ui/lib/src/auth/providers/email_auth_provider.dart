@@ -41,7 +41,9 @@ class EmailAuthProvider
 
   @override
   void onCredentialReceived(
-      fba.EmailAuthCredential credential, AuthAction action) {
+    fba.EmailAuthCredential credential,
+    AuthAction action,
+  ) {
     if (action == AuthAction.signUp) {
       signUpWithCredential(credential);
     } else {

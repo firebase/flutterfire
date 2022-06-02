@@ -35,7 +35,9 @@ class OAuthProviderButton extends StatelessWidget {
   final OAuthButtonVariant? variant;
 
   static String resolveProviderButtonLabel(
-      String providerId, FlutterFireUILocalizationLabels labels) {
+    String providerId,
+    FlutterFireUILocalizationLabels labels,
+  ) {
     switch (providerId) {
       case 'google.com':
         return labels.signInWithGoogleButtonText;
