@@ -41,4 +41,4 @@ flutter:
       macos:
         pluginClass: FLTFirebaseAuthPlugin
       web:
-        default_package: firebase_auth_web
+        default_package: firebase_auth_web 
