@@ -47,7 +47,8 @@ class _FindProvidersForEmailViewState extends State<FindProvidersForEmailView> {
     final l = FlutterFireUILocalizations.labelsOf(context);
     const spacer = SizedBox(height: 24);
 
-    return AuthFlowBuilder<AuthController>(
+    return AuthFlowBuilder<UniversalEmailSignInController>(
+      auth: widget.auth,
       flow: flow,
       listener: (oldState, newState, controller) {
         if (newState is DifferentSignInMethodsFound) {

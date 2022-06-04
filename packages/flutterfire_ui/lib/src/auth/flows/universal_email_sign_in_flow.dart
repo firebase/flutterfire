@@ -16,8 +16,4 @@ class UniversalEmailSignInFlow extends AuthFlow<UniversalEmailSignInProvider>
           auth: auth,
           action: action,
         );
-
-  void resolveProviers(String email) {
-    provider.fetchDifferentProvidersForEmail(email);
-  }
 }

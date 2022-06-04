@@ -109,6 +109,8 @@ class _AuthFlowBuilderState<T extends AuthController>
         return EmailAuthProvider();
       case PhoneAuthController:
         return PhoneAuthProvider();
+      case UniversalEmailSignInController:
+        return UniversalEmailSignInProvider();
       default:
         throw Exception("Can't create $T provider");
     }

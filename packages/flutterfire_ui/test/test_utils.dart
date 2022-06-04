@@ -139,6 +139,18 @@ class MockAuth extends Mock implements FirebaseAuth {
       returnValueForMissingStub: MockCredential(),
     );
   }
+
+  @override
+  Future<List<String>> fetchSignInMethodsForEmail(String? email) async {
+    return super.noSuchMethod(
+      Invocation.method(
+        #fetchSignInMethodsForEmail,
+        [email],
+      ),
+      returnValue: <String>['phone'],
+      returnValueForMissingStub: <String>['phone'],
+    );
+  }
 }
 
 class TestException implements Exception {}

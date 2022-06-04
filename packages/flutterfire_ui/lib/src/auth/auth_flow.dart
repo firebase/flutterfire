@@ -107,7 +107,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
 
   @override
   void findProvidersForEmail(String email) {
-    provider.fetchDifferentProvidersForEmail(email);
+    provider.findProvidersForEmail(email);
   }
 
   @override

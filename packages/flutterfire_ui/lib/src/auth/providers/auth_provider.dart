@@ -14,7 +14,7 @@ class DefaultErrorHandler {
         throw error;
       }
 
-      provider.fetchDifferentProvidersForEmail(email, error.credential);
+      provider.findProvidersForEmail(email, error.credential);
     }
 
     throw error;
@@ -74,7 +74,7 @@ abstract class AuthProvider<T extends AuthListener, K extends AuthCredential> {
     }
   }
 
-  void fetchDifferentProvidersForEmail(
+  void findProvidersForEmail(
     String email, [
     AuthCredential? credential,
   ]) {

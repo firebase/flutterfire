@@ -10,6 +10,8 @@ import 'firestore_list_view_test.dart' as firestore_list_view;
 import 'firestore_query_builder_test.dart' as firestore_query_builder;
 import 'email_form_test.dart' as email_form;
 import 'email_link_sign_in_view_test.dart' as email_link_sign_in_view;
+import 'universal_email_sign_in_screen_test.dart'
+    as universal_email_sign_in_screen;
 
 import 'utils.dart';
 
@@ -39,4 +41,5 @@ Future<void> main() async {
   firestore_list_view.main();
   email_form.main();
   email_link_sign_in_view.main();
+  universal_email_sign_in_screen.main();
 }

@@ -55,14 +55,20 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
         ),
       );
     } else {
-      final List<AuthProvider> finalProviders = [];
-      final providersSet = Set.from(providers);
+      final providersMap = providers.fold<Map<String, AuthProvider>>(
+        {},
+        (acc, element) {
+          return {
+            ...acc,
+            element.providerId: element,
+          };
+        },
+      );
 
-      for (final p in providers) {
-        if (providersSet.contains(p.providerId)) {
-          finalProviders.add(p);
-        }
-      }
+      final authorizedProviders = providerIds
+          .where(providersMap.containsKey)
+          .map((id) => providersMap[id]!)
+          .toList();
 
       route = createPageRoute(
         context: context,
@@ -70,7 +76,7 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
           context,
           SignInScreen(
             showAuthActionSwitch: false,
-            providers: finalProviders,
+            providers: authorizedProviders,
             auth: auth,
             email: email,
           ),
@@ -84,6 +90,7 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
   @override
   Widget build(BuildContext context) {
     final content = FindProvidersForEmailView(
+      auth: auth,
       onProvidersFound: onProvidersFound ??
           (email, providers) => _defaultAction(context, email, providers),
     );
