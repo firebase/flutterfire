@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 part of cloud_firestore;
-
+ 
 @immutable
 // `extends Object?` so that type inference defaults to `Object?` instead of `dynamic`
 abstract class CollectionReference<T extends Object?> implements Query<T> {
