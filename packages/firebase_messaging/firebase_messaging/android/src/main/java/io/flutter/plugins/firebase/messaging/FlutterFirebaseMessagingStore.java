@@ -125,6 +125,6 @@ public class FlutterFirebaseMessagingStore {
       }
       list.add(value);
     }
-    return list;
+    return list; 
   }
 }
