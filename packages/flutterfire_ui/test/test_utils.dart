@@ -151,6 +151,35 @@ class MockAuth extends Mock implements FirebaseAuth {
       returnValueForMissingStub: <String>['phone'],
     );
   }
+
+  @override
+  Future<void> verifyPhoneNumber({
+    String? phoneNumber,
+    PhoneVerificationCompleted? verificationCompleted,
+    PhoneVerificationFailed? verificationFailed,
+    PhoneCodeSent? codeSent,
+    PhoneCodeAutoRetrievalTimeout? codeAutoRetrievalTimeout,
+    @visibleForTesting String? autoRetrievedSmsCodeForTesting,
+    Duration? timeout = const Duration(seconds: 30),
+    int? forceResendingToken,
+  }) async {
+    super.noSuchMethod(
+      Invocation.method(
+        #verifyPhoneNumber,
+        null,
+        {
+          #phoneNumber: phoneNumber,
+          #verificationCompleted: verificationCompleted,
+          #verificationFailed: verificationFailed,
+          #codeSent: codeSent,
+          #codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+          #autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
+          #timeout: timeout,
+          #forceResendingToken: forceResendingToken,
+        },
+      ),
+    );
+  }
 }
 
 class TestException implements Exception {}

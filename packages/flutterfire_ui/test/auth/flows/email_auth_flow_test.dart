@@ -135,7 +135,7 @@ void main() {
   group('EmailAuthController', () {
     group('#setEmailAndPassword', () {
       test('calls EmailAuthProvider#signIn', () {
-        final provider = MockPorivder();
+        final provider = MockProvider();
         final ctrl = EmailAuthFlow(provider: provider, auth: MockAuth());
 
         ctrl.setEmailAndPassword('email', 'password');
@@ -230,7 +230,7 @@ void main() {
   });
 }
 
-class MockPorivder extends Mock implements EmailAuthProvider {
+class MockProvider extends Mock implements EmailAuthProvider {
   @override
   void authenticate(
     String? email,
