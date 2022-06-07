@@ -12,7 +12,7 @@ To get started with Firebase Analytics for Flutter, please [see the documentatio
 
 ## Usage
 
-To use this plugin, please visit the [Analytics Usage documentation](https://firebase.google.com/docs/firestore/quickstart#add_data)
+To use this plugin, please visit the [Analytics Usage documentation](https://firebase.google.com/docs/analytics/events?platform=flutter)
 
 ## Issues and feedback
 
