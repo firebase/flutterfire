@@ -31,7 +31,9 @@ external void logEvent(
 
 @JS()
 external void setAnalyticsCollectionEnabled(
-    AnalyticsJsImpl analytics, bool enabled);
+  AnalyticsJsImpl analytics,
+  bool enabled,
+);
 
 @JS()
 external void setCurrentScreen(
@@ -50,7 +52,7 @@ external void setUserId(
 @JS()
 external void setUserProperties(
   AnalyticsJsImpl analytics,
-  Map<String, Object?> property,
+  dynamic property,
   AnalyticsCallOptions? callOptions,
 );
 

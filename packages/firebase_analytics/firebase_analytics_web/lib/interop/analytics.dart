@@ -41,7 +41,11 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
     AnalyticsCallOptions? callOptions,
   }) {
     return analytics_interop.logEvent(
-        jsObject, name, util.jsify(parameters ?? {}), callOptions);
+      jsObject,
+      name,
+      util.jsify(parameters ?? {}),
+      callOptions,
+    );
   }
 
   void setAnalyticsCollectionEnabled({required bool enabled}) {
@@ -77,7 +81,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   }) {
     return analytics_interop.setUserProperties(
       jsObject,
-      {name: value},
+      util.jsify({name: value}),
       callOptions,
     );
   }
