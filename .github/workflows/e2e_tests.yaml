@@ -73,7 +73,7 @@ jobs:
             flutter drive --target=./test_driver/driver_e2e.dart --dart-define=CI=true
 
   ios:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
