@@ -71,7 +71,8 @@ jobs:
           script: |
             sleep 15
             flutter drive --target=./test_driver/driver_e2e.dart --dart-define=CI=true
-            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt & ./gradlew uninstallAll jacocoAndroidTestReport --daemon
+            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
+            ./gradlew uninstallAll jacocoAndroidTestReport --daemon
 
       - name: Compress Emulator Log
         if: always()
