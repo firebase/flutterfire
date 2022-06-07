@@ -239,15 +239,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
     if (notificationCenter.delegate != nil) {
 #if !TARGET_OS_OSX
-      // If the App delegate exists and it conforms to UNUserNotificationCenterDelegate then we
-      // don't want to replace it on iOS as the earlier call to `[_registrar
-      // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
-      // replace it, it will cause a stack overflow as our original delegate forwarding handler
-      // below causes an infinite loop of forwarding. See
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow as our original
+      // delegate forwarding handler below causes an infinite loop of forwarding. See
       // https://github.com/firebasefire/issues/4026.
-      if ([GULApplication sharedApplication].delegate != nil &&
-          [[GULApplication sharedApplication].delegate
-              conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {
+      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
         // Note this one only executes if Firebase swizzling is **enabled**.
         shouldReplaceDelegate = NO;
       }
