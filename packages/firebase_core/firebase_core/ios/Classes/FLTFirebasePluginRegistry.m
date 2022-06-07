@@ -3,7 +3,7 @@
 // found in the LICENSE file.
 
 #import "FLTFirebasePluginRegistry.h"
-#import <FirebaseCore/FIRAppInternal.h>
+#import <FirebaseCoreExtension/FIRAppInternal.h>
 
 @implementation FLTFirebasePluginRegistry {
   NSMutableDictionary<NSString *, id<FLTFirebasePlugin>> *registeredPlugins;

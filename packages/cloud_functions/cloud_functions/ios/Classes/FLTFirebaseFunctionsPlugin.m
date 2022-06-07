@@ -50,10 +50,10 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
         NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
         NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
         NSString *httpsErrorMessage = error.localizedDescription;
-        if (error.domain == FIRFunctionsErrorDomain) {
+        if (error.domain == FIRFunctionsErrorCodeOK) {
           httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
-          if (error.userInfo[FIRFunctionsErrorDetailsKey] != nil) {
-            httpsErrorDetails[@"additionalData"] = error.userInfo[FIRFunctionsErrorDetailsKey];
+          if (error.userInfo[FIRFunctionsErrorCodeOK] != nil) {
+            httpsErrorDetails[@"additionalData"] = error.userInfo[FIRFunctionsErrorCodeOK];
           }
         }
         httpsErrorDetails[@"code"] = httpsErrorCode;

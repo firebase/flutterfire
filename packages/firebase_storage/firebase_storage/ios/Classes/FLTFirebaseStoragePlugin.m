@@ -5,7 +5,7 @@
 
 #import <Firebase/Firebase.h>
 #import <firebase_core/FLTFirebasePluginRegistry.h>
-
+#import <FirebaseStorage/FIRStorageTypedefs.h>
 #import "FLTFirebaseStoragePlugin.h"
 
 static NSString *const kFLTFirebaseStorageChannelName = @"plugins.flutter.io/firebase_storage";
