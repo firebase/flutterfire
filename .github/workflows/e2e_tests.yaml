@@ -71,6 +71,20 @@ jobs:
           script: |
             sleep 15
             flutter drive --target=./test_driver/driver_e2e.dart --dart-define=CI=true
+            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt & ./gradlew uninstallAll jacocoAndroidTestReport --daemon
+
+      - name: Compress Emulator Log
+        if: always()
+        run: gzip -9 adb-log.txt
+        shell: bash
+
+      - name: Upload Emulator Log
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: ${{ matrix.api-level }}-${{ matrix.arch }}-${{matrix.target}}-${{matrix.first-boot-delay}}-${{matrix.iteration}}-adb_logs
+          path: adb-log.txt.gz
+
 
   ios:
     runs-on: macos-latest
