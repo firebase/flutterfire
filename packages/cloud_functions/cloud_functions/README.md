@@ -13,7 +13,7 @@ To get started with Cloud Functions for Firebase, please [see the documentation]
 
 ## Usage
 
-To use this plugin, please visit the [Functions Usage documentation](https://firebase.google.com/docs/functions/callable#call_the_function)
+To use this plugin, please visit the [Functions Usage documentation](https://firebase.google.com/docs/functions/callable#dart)
 
 ## Issues and feedback
 
