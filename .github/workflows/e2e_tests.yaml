@@ -22,7 +22,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-latest
+    runs-on: macos-12
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
