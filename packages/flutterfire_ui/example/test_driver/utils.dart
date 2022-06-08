@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
 
 import 'firebase_options.dart';
 
@@ -117,4 +120,33 @@ Future<void> render(WidgetTester tester, Widget widget) async {
       ),
     ),
   );
+}
+
+Future<void> deleteAllAccounts() async {
+  final id = DefaultFirebaseOptions.currentPlatform.projectId;
+  final uriString =
+      'http://$testEmulatorHost:9099/emulator/v1/projects/$id/accounts';
+  final res = await http.delete(Uri.parse(uriString));
+
+  if (res.statusCode != 200) throw Exception('Delete failed');
+}
+
+Future<Map<String, String>> getVerificationCodes() async {
+  final id = DefaultFirebaseOptions.currentPlatform.projectId;
+  final uriString =
+      'http://$testEmulatorHost:9099/emulator/v1/projects/$id/verificationCodes';
+  final res = await http.get(Uri.parse(uriString));
+
+  final body = json.decode(res.body);
+  final codes = (body['verificationCodes'] as List).fold<Map<String, String>>(
+    {},
+    (acc, value) {
+      return {
+        ...acc,
+        value['phoneNumber']: value['code'],
+      };
+    },
+  );
+
+  return codes;
 }

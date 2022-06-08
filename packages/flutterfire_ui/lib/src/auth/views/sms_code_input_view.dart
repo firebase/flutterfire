@@ -32,6 +32,17 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
   final columnKey = GlobalKey();
   final key = GlobalKey<SMSCodeInputState>();
 
+  @override
+  initState() {
+    super.initState();
+
+    final state = AuthFlowBuilder.getState(widget.flowKey);
+
+    if (state != null && state is SMSCodeSent) {
+      _codeSentState = state;
+    }
+  }
+
   SMSCodeSent? _codeSentState;
 
   void submit(String code, PhoneAuthController ctrl) {

@@ -29,6 +29,12 @@ class AuthFlowBuilder<T extends AuthController> extends StatefulWidget {
     return flow as T;
   }
 
+  static AuthState? getState(Object flowKey) {
+    final flow = _flows[flowKey];
+    if (flow == null) return null;
+    return flow.value;
+  }
+
   final Object? flowKey;
   final FirebaseAuth? auth;
   final AuthAction? action;
