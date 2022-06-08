@@ -50,10 +50,16 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
         NSMutableDictionary *httpsErrorDetails = [NSMutableDictionary dictionary];
         NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
         NSString *httpsErrorMessage = error.localizedDescription;
-        if (error.domain == FIRFunctionsErrorCodeOK) {
+        // FIRFunctionsErrorDomain has been removed and replaced with Swift implementation https://github.com/firebase/firebase-ios-sdk/blob/master/FirebaseFunctions/Sources/FunctionsError.swift#L18
+        NSString *errorDomain = [[NSString init] initWithString: @"com.firebase.functions"];
+        // FIRFunctionsErrorDetailsKey has been deprecated and replaced with Swift implementation https://github.com/firebase/firebase-ios-sdk/blob/master/FirebaseFunctions/Sources/FunctionsError.swift#L21
+        NSString *detailsKey = [[NSString init] initWithString: @"details"];
+        // See also https://github.com/firebase/firebase-ios-sdk/pull/9569
+        if (error.domain == errorDomain) {
           httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
-          if (error.userInfo[FIRFunctionsErrorCodeOK] != nil) {
-            httpsErrorDetails[@"additionalData"] = error.userInfo[FIRFunctionsErrorCodeOK];
+  
+          if (error.userInfo[detailsKey] != nil) {
+            httpsErrorDetails[@"additionalData"] = error.userInfo[detailsKey];
           }
         }
         httpsErrorDetails[@"code"] = httpsErrorCode;
@@ -82,7 +88,8 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
   FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appName];
   FIRFunctions *functions = [FIRFunctions functionsForApp:app region:region];
   if (origin != nil && origin != (id)[NSNull null]) {
-    [functions useFunctionsEmulatorOrigin:origin];
+    NSURL *url = [NSURL URLWithString:origin];
+    [functions useEmulatorWithHost:[url host] port:[[url port] intValue]];
   }
 
   FIRHTTPSCallable *function = [functions HTTPSCallableWithName:functionName];
