@@ -75,7 +75,7 @@ jobs:
 
       - name: Compress Emulator Log
         if: always()
-        run: gzip -9 adb-log.txt
+        run: cd tests/ && gzip -9 adb-log.txt
         shell: bash
 
       - name: Upload Emulator Log
@@ -83,7 +83,7 @@ jobs:
         if: always()
         with:
           name: ${{ matrix.api-level }}-${{ matrix.arch }}-${{matrix.target}}-${{matrix.first-boot-delay}}-${{matrix.iteration}}-adb_logs
-          path: adb-log.txt.gz
+          path: tests/adb-log.txt.gz
 
 
   ios:
