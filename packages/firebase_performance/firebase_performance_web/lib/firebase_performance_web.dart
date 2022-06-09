@@ -32,7 +32,9 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
     }
 
     return _webPerformance = performance_interop.getPerformanceInstance(
-        core_interop.app(app.name), _settings);
+      core_interop.app(app.name),
+      _settings,
+    );
   }
 
   /// Builds an instance of [FirebasePerformanceWeb]
@@ -65,7 +67,8 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   Future<bool> isPerformanceCollectionEnabled() async {
     // Default setting for "dataCollectionEnabled" is `true`. See https://github.com/firebase/firebase-js-sdk/blob/master/packages/performance/src/services/settings_service.ts#L27
     return Future.value(
-        _settings == null ? true : _settings!.dataCollectionEnabled);
+      _settings == null ? true : _settings!.dataCollectionEnabled,
+    );
   }
 
   @override

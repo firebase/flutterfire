@@ -10,13 +10,19 @@ import 'performance_interop.dart' as performance_interop;
 /// only works with the default app.
 Performance getPerformanceInstance([App? app, PerformanceSettings? settings]) {
   if (settings != null && app != null) {
-    return Performance.getInstance(performance_interop.initializePerformance(
-        app.jsObject, settings.jsObject));
+    return Performance.getInstance(
+      performance_interop.initializePerformance(
+        app.jsObject,
+        settings.jsObject,
+      ),
+    );
   }
 
-  return Performance.getInstance(app != null
-      ? performance_interop.getPerformance(app.jsObject)
-      : performance_interop.getPerformance());
+  return Performance.getInstance(
+    app != null
+        ? performance_interop.getPerformance(app.jsObject)
+        : performance_interop.getPerformance(),
+  );
 }
 
 class Performance
@@ -86,11 +92,14 @@ class PerformanceSettings
     extends JsObjectWrapper<performance_interop.PerformanceSettingsJsImpl> {
   static final _expando = Expando<PerformanceSettings>();
 
-  static PerformanceSettings getInstance(
-      [bool? dataCollectionEnabled, bool? instrumentationEnabled]) {
+  static PerformanceSettings getInstance([
+    bool? dataCollectionEnabled,
+    bool? instrumentationEnabled,
+  ]) {
     final jsObject = performance_interop.PerformanceSettingsJsImpl(
-        dataCollectionEnabled: dataCollectionEnabled,
-        instrumentationEnabled: instrumentationEnabled);
+      dataCollectionEnabled: dataCollectionEnabled,
+      instrumentationEnabled: instrumentationEnabled,
+    );
     return _expando[jsObject] ??= PerformanceSettings._fromJsObject(jsObject);
   }
 
