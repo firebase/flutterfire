@@ -26,7 +26,7 @@ import 'firebase_storage/firebase_storage_e2e.dart' as firebase_storage;
 
 void setupTests() {
   // Core first.
-  // firebase_core.setupTests();
+  firebase_core.setupTests();
   // All other tests.
   // firebase_auth.setupTests();
   // cloud_functions.setupTests();
