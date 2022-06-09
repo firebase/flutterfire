@@ -1,6 +1,6 @@
 import '../default_localizations.dart';
 
-class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
+class ZhLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String emailInputLabel;
   @override
@@ -168,7 +168,7 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String referenceLabel;
 
-  const EnLocalizations({
+  const ZhLocalizations({
     this.emailInputLabel = '电子邮箱',
     this.passwordInputLabel = '密码',
     this.signInActionText = '登录',
@@ -186,8 +186,7 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyCodeButtonText = '验证',
     this.verifyingPhoneNumberViewTitle = '输入短信验证码',
     this.unknownError = '发生未知错误',
-    this.smsAutoresolutionFailedError =
-        '无法自动解析短信验证码。请手动输入验证码',
+    this.smsAutoresolutionFailedError = '无法自动解析短信验证码。请手动输入验证码',
     this.smsCodeSentText = '短信验证码已发送',
     this.sendingSMSCodeText = '正在发送短信验证码...',
     this.verifyingSMSCodeText = '正在验证短信验证码...',
@@ -196,10 +195,8 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.isNotAValidEmailErrorText = '请输入有效的电子邮箱地址',
     this.userNotFoundErrorText = "账户不存在",
     this.emailTakenErrorText = '该邮箱已被注册',
-    this.accessDisabledErrorText =
-        '该账户已被暂时禁止访问',
-    this.wrongOrNoPasswordErrorText =
-        '密码无效或改账户没有密码',
+    this.accessDisabledErrorText = '该账户已被暂时禁止访问',
+    this.wrongOrNoPasswordErrorText = '密码无效或改账户没有密码',
     this.signInText = '登录',
     this.registerText = '注册',
     this.registerHintText = "没有账户？",
@@ -219,8 +216,7 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.forgotPasswordViewTitle = '忘记密码',
     this.resetPasswordButtonLabel = '重置密码',
     this.verifyItsYouText = "身份验证",
-    this.differentMethodsSignInTitleText =
-        '使用下面任意一种方式登录',
+    this.differentMethodsSignInTitleText = '使用下面任意一种方式登录',
     this.findProviderForEmailTitleText = '输入电子邮箱以继续',
     this.continueText = '继续',
     this.countryCode = '地区代码',
@@ -231,14 +227,11 @@ class ZhCnLocalizations extends FlutterFireUILocalizationLabels {
     this.signInMethods = '登录方式',
     this.provideEmail = '输入电子邮箱和密码',
     this.goBackButtonLabel = '返回',
-    this.passwordResetEmailSentText =
-        "我们向您的邮箱发送了重置密码的链接。请查看您的邮箱",
-    this.forgotPasswordHintText =
-        '输入您的邮箱以便我们为您发送重置密码的链接',
+    this.passwordResetEmailSentText = "我们向您的邮箱发送了重置密码的链接。请查看您的邮箱",
+    this.forgotPasswordHintText = '输入您的邮箱以便我们为您发送重置密码的链接',
     this.emailLinkSignInButtonLabel = '使用魔法链接登录',
     this.signInWithEmailLinkViewTitleText = '使用魔法链接登录',
-    this.signInWithEmailLinkSentText =
-        "我们向您的邮箱发送了魔法链接。请查看您的邮箱并点击链接登录",
+    this.signInWithEmailLinkSentText = "我们向您的邮箱发送了魔法链接。请查看您的邮箱并点击链接登录",
     this.sendLinkButtonLabel = '发送魔法链接',
     this.arrayLabel = '数组',
     this.booleanLabel = '布尔',
