@@ -26,6 +26,7 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   ReferenceWeb(FirebaseStorageWeb storage, String path)
       : _path = path,
+        _storage = storage,
         super(storage, path) {
     if (_path.startsWith(_storageUrlPrefix)) {
       _ref = storage.delegate.refFromURL(_path);
@@ -33,6 +34,7 @@ class ReferenceWeb extends ReferencePlatform {
       _ref = storage.delegate.ref(_path);
     }
   }
+  FirebaseStorageWeb _storage;
 
   // The js-interop layer for the ref that is wrapped by this class...
   late storage_interop.StorageReference _ref;
@@ -185,16 +187,25 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
-    return TaskWeb(
-      this,
-      _ref.putString(
+    throw UnsupportedError(
+        '`putString()` API is no longer available on the web platform. Please use `uploadString()` API.');
+  }
+
+  @override
+  Future<UploadResultPlatform> uploadString(
+    String data,
+    PutStringFormat format, [
+    SettableMetadata? metadata,
+  ]) async {
+    storage_interop.UploadResult result = await _ref.uploadString(
         data,
         putStringFormatToString(format),
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
-        ),
-      ),
-    );
+        ));
+
+    return UploadResultPlatform(fbFullMetadataToFullMetadata(result.metadata),
+        ReferenceWeb(_storage, result.ref.fullPath));
   }
 
   /// Updates the metadata on a storage object.

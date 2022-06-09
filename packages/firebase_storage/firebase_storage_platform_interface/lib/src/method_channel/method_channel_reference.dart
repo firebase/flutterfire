@@ -192,6 +192,13 @@ class MethodChannelReference extends ReferencePlatform {
   }
 
   @override
+  Future<UploadResultPlatform> uploadString(String data, PutStringFormat format,
+      [SettableMetadata? metadata]) {
+    throw UnsupportedError(
+        '`uploadString() API is only supported for the web platform`. Please use `putString() API.`');
+  }
+
+  @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) async {
     try {
       Map<String, dynamic>? data = await MethodChannelFirebaseStorage.channel
