@@ -129,8 +129,10 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
     );
   }
 
-  /// Submits a Crashlytics report of a non-fatal error caught by the Flutter framework.
-  Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails) {
+  /// Submits a Crashlytics report of an error caught by the Flutter framework.
+  /// Use [fatal] to indicate whether the error is a fatal or not.
+  Future<void> recordFlutterError(FlutterErrorDetails flutterErrorDetails,
+      {bool fatal = false}) {
     FlutterError.presentError(flutterErrorDetails);
 
     return recordError(
@@ -141,7 +143,14 @@ class FirebaseCrashlytics extends FirebasePluginPlatform {
           ? []
           : flutterErrorDetails.informationCollector!(),
       printDetails: false,
+      fatal: fatal,
     );
+  }
+
+  /// Submits a Crashlytics report of a fatal error caught by the Flutter framework.
+  Future<void> recordFlutterFatalError(
+      FlutterErrorDetails flutterErrorDetails) {
+    return recordFlutterError(flutterErrorDetails, fatal: true);
   }
 
   /// Logs a message that's included in the next fatal or non-fatal report.

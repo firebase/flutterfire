@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://firebase.flutter.dev">
-    <img width="250px" src="website/static/img/flutterfire_300x.png"><br/>
+  <a href="https://firebase.google.com/docs/flutter">
+    <img width="250px" src=".github/images/flutterfire_300x.png"><br/>
   </a>
   <h1 align="center">FlutterFire</h1>
 </p>
@@ -16,7 +16,7 @@
 
 ---
 
-[[Documentation]](https://firebase.flutter.dev) • [[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
+[[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
 
 ---
 
@@ -31,10 +31,19 @@ and open source.
 
 ---
 
+## Documentation
+
+- [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
+- [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
+- [FlutterFire UI](./packages/flutterfire_ui/README.md) (beta)
+- [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
+
+---
+
 ## Issues
 
 Please file FlutterFire specific issues, bugs, or feature requests in
-our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new/choose).
+our [issue tracker](https://github.com/firebase/flutterfire/issues/new/choose).
 
 Plugin issues that are not specific to FlutterFire can be filed in
 the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
@@ -42,8 +51,8 @@ the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 ## Contributing
 
 If you wish to contribute a change to any of the existing plugins in this repo, please review
-our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/firebase/flutterfire/pulls).
 
 ## Status
 

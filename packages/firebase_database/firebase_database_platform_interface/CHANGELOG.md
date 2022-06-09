@@ -1,18 +1,38 @@
+## 0.2.1+7
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+6
+
+ - **REFACTOR**: fix analyzer issue introduced in Flutter 3.0.0 ([#8652](https://github.com/firebase/flutterfire/issues/8652)). ([b781153a](https://github.com/firebase/flutterfire/commit/b781153ac65df629c0a181219bf0b01999a5fa59))
+
+## 0.2.1+5
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+4
+
+ - Update a dependency to the latest release.
+
+## 0.2.1+3
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1+2
 
  - Update a dependency to the latest release.
 
 ## 0.2.1+1
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 0.2.1
 
- - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/firebase/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
 
 ## 0.2.0+5
 
- - **FIX**: Fixed transaction bug by removing duplicate arguments when they are already set as defaults. (#7839). ([df6568c2](https://github.com/FirebaseExtended/flutterfire/commit/df6568c2f5f58f1c93abebca4df477114ed7a68e))
+ - **FIX**: Fixed transaction bug by removing duplicate arguments when they are already set as defaults. (#7839). ([df6568c2](https://github.com/firebase/flutterfire/commit/df6568c2f5f58f1c93abebca4df477114ed7a68e))
 
 ## 0.2.0+4
 
@@ -24,7 +44,7 @@
 
 ## 0.2.0+2
 
- - **FIX**: database path should default to `/` if no path specified rather than an empty string (fixes #7515). ([c33c3c93](https://github.com/FirebaseExtended/flutterfire/commit/c33c3c931d7e4c654dd0b2cd23d800b43192d95d))
+ - **FIX**: database path should default to `/` if no path specified rather than an empty string (fixes #7515). ([c33c3c93](https://github.com/firebase/flutterfire/commit/c33c3c931d7e4c654dd0b2cd23d800b43192d95d))
 
 ## 0.2.0+1
 

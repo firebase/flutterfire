@@ -41,7 +41,7 @@ void setupTests() {
 
       group('onMessage', () {
         test('can listen multiple times', () async {
-          // regresion test for https://github.com/FirebaseExtended/flutterfire/issues/6009
+          // regression test for https://github.com/firebase/flutterfire/issues/6009
 
           StreamSubscription<RemoteMessage> _onMessageSubscription;
           StreamSubscription<RemoteMessage> _onMessageOpenedAppSubscription;

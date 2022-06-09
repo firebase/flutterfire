@@ -1,10 +1,22 @@
+## 1.6.4
+
+ - Update a dependency to the latest release.
+
+## 1.6.3
+
+ - Update a dependency to the latest release.
+
+## 1.6.2
+
+ - **DOCS**: Fix typo in "firebase_core_web.dart" documentation. ([658c1db7](https://github.com/firebase/flutterfire/commit/658c1db71cc47b3eddec3a1f33d5d55d1a6ff98a))
+
 ## 1.6.1
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 1.6.0
 
- - **FEAT**: Bump Firebase Web SDK version to 8.10.1 (CVE-2022-0235) for security patch purposes. (#8162). ([7624f777](https://github.com/FirebaseExtended/flutterfire/commit/7624f7779f4a49f2353f3f593b31be9139197028))
+ - **FEAT**: Bump Firebase Web SDK version to 8.10.1 (CVE-2022-0235) for security patch purposes. (#8162). ([7624f777](https://github.com/firebase/flutterfire/commit/7624f7779f4a49f2353f3f593b31be9139197028))
 
 ## 1.5.4
 
@@ -16,7 +28,7 @@
 
 ## 1.5.2
 
- - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/FirebaseExtended/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
+ - **FIX**: correctly detect `not-initialized` errors and provide a better error message. ([0578423e](https://github.com/firebase/flutterfire/commit/0578423e9868352556bfdd326eef1cca8dbe04aa))
 
 ## 1.5.1
 
@@ -60,7 +72,7 @@
 
 ## 1.0.1
 
- - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+ - **FIX**: Fix wrong cast (firebase#5050) (#5242).
 
 ## 1.0.0
 

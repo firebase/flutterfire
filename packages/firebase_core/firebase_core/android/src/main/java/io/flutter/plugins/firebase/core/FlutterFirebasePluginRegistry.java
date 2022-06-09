@@ -7,6 +7,7 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThrea
 
 import androidx.annotation.Keep;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import java.util.HashMap;
@@ -40,20 +41,27 @@ public class FlutterFirebasePluginRegistry {
    *     key) for the provided Firebase App.
    */
   static Task<Map<String, Object>> getPluginConstantsForFirebaseApp(FirebaseApp firebaseApp) {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          Map<String, Object> pluginConstants = new HashMap<>(registeredPlugins.size());
+          try {
+            Map<String, Object> pluginConstants = new HashMap<>(registeredPlugins.size());
 
-          for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
-            String channelName = entry.getKey();
-            FlutterFirebasePlugin plugin = entry.getValue();
-            pluginConstants.put(
-                channelName, Tasks.await(plugin.getPluginConstantsForFirebaseApp(firebaseApp)));
+            for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
+              String channelName = entry.getKey();
+              FlutterFirebasePlugin plugin = entry.getValue();
+              pluginConstants.put(
+                  channelName, Tasks.await(plugin.getPluginConstantsForFirebaseApp(firebaseApp)));
+            }
+
+            taskCompletionSource.setResult(pluginConstants);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-
-          return pluginConstants;
         });
+
+    return taskCompletionSource.getTask();
   }
 
   /**
@@ -64,14 +72,22 @@ public class FlutterFirebasePluginRegistry {
    * Restarts as `initializeCore` can only be called once in Dart.
    */
   static Task<Void> didReinitializeFirebaseCore() {
-    return Tasks.call(
-        cachedThreadPool,
+    TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
         () -> {
-          for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
-            FlutterFirebasePlugin plugin = entry.getValue();
-            Tasks.await(plugin.didReinitializeFirebaseCore());
+          try {
+            for (Map.Entry<String, FlutterFirebasePlugin> entry : registeredPlugins.entrySet()) {
+              FlutterFirebasePlugin plugin = entry.getValue();
+              Tasks.await(plugin.didReinitializeFirebaseCore());
+            }
+
+            taskCompletionSource.setResult(null);
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
           }
-          return null;
         });
+
+    return taskCompletionSource.getTask();
   }
 }

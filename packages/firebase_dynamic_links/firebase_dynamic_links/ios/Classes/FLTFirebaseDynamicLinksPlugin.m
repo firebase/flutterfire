@@ -24,6 +24,23 @@ static NSMutableDictionary *getDictionaryFromDynamicLink(FIRDynamicLink *dynamic
     if (dynamicLink.minimumAppVersion) {
       iosData[@"minimumVersion"] = dynamicLink.minimumAppVersion;
     }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeNone) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:0];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeWeak) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:1];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeDefault) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:2];
+    }
+
+    if (dynamicLink.matchType == FIRDLMatchTypeUnique) {
+      iosData[@"matchType"] = [NSNumber numberWithInt:3];
+    }
+
     dictionary[@"utmParameters"] = dynamicLink.utmParametersDictionary;
     dictionary[@"ios"] = iosData;
     return dictionary;
@@ -72,6 +89,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
     _channel = channel;
+    _initiated = NO;
   }
   return self;
 }
@@ -205,13 +223,18 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
-  _initiated = YES;
+  if (_initiated == YES) {
+    result.success(nil);
+    return;
+  }
+
   NSMutableDictionary *dict = getDictionaryFromDynamicLink(_initialLink);
   if (dict == nil && self.initialError != nil) {
     result.error(nil, nil, nil, self.initialError);
   } else {
     result.success(dict);
   }
+  _initiated = YES;
 }
 
 - (void)getDynamicLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -317,7 +340,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     }
   }
 
-  if (_initialLink == nil && dynamicLink.url != nil) {
+  if (_initialLink == nil && _initiated == NO && dynamicLink.url != nil) {
     _initialLink = dynamicLink;
   }
 

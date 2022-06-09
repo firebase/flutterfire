@@ -239,15 +239,13 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
     if (notificationCenter.delegate != nil) {
 #if !TARGET_OS_OSX
-      // If the App delegate exists and it conforms to UNUserNotificationCenterDelegate then we
-      // don't want to replace it on iOS as the earlier call to `[_registrar
-      // addApplicationDelegate:self];` will automatically delegate calls to this plugin. If we
-      // replace it, it will cause a stack overflow as our original delegate forwarding handler
-      // below causes an infinite loop of forwarding. See
-      // https://github.com/FirebaseExtended/flutterfire/issues/4026.
-      if ([GULApplication sharedApplication].delegate != nil &&
-          [[GULApplication sharedApplication].delegate
-              conformsToProtocol:@protocol(UNUserNotificationCenterDelegate)]) {
+      // If a UNUserNotificationCenterDelegate is set and it conforms to
+      // FlutterAppLifeCycleProvider then we don't want to replace it on iOS as the earlier
+      // call to `[_registrar addApplicationDelegate:self];` will automatically delegate calls
+      // to this plugin. If we replace it, it will cause a stack overflow as our original
+      // delegate forwarding handler below causes an infinite loop of forwarding. See
+      // https://github.com/firebasefire/issues/4026.
+      if ([notificationCenter.delegate conformsToProtocol:@protocol(FlutterAppLifeCycleProvider)]) {
         // Note this one only executes if Firebase swizzling is **enabled**.
         shouldReplaceDelegate = NO;
       }
@@ -422,6 +420,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 #endif
 
 #if !TARGET_OS_OSX
+// Called for silent messages (i.e. data only) in the foreground & background
 - (BOOL)application:(UIApplication *)application
     didReceiveRemoteNotification:(NSDictionary *)userInfo
           fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
@@ -431,12 +430,10 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     return YES;
   }
 #endif
-
+  NSDictionary *notificationDict =
+      [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
   // Only handle notifications from FCM.
   if (userInfo[@"gcm.message_id"]) {
-    NSDictionary *notificationDict =
-        [FLTFirebaseMessagingPlugin remoteMessageUserInfoToDict:userInfo];
-
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
       __block BOOL completed = NO;
 
@@ -485,6 +482,11 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
                         }
                       }];
     } else {
+      // If "alert" (i.e. notification) is present in userInfo, this will be called by the other
+      // "Messaging#onMessage" channel handler
+      if (userInfo[@"aps"] != nil && userInfo[@"aps"][@"alert"] == nil) {
+        [_channel invokeMethod:@"Messaging#onMessage" arguments:notificationDict];
+      }
       completionHandler(UIBackgroundFetchResultNoData);
     }
 
@@ -688,6 +690,16 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     }
   }
 
+  NSNumber *timeSensitive = @-1;
+  if (@available(iOS 15.0, macOS 12.0, *)) {
+    if (settings.timeSensitiveSetting == UNNotificationSettingDisabled) {
+      timeSensitive = @0;
+    }
+    if (settings.timeSensitiveSetting == UNNotificationSettingEnabled) {
+      timeSensitive = @1;
+    }
+  }
+
   NSNumber *showPreviews = @-1;
   if (@available(iOS 11.0, *)) {
     if (settings.showPreviewsSetting == UNShowPreviewsSettingNever) {
@@ -736,6 +748,8 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
       [FLTFirebaseMessagingPlugin NSNumberForUNNotificationSetting:settings.lockScreenSetting];
   settingsDictionary[@"notificationCenter"] = [FLTFirebaseMessagingPlugin
       NSNumberForUNNotificationSetting:settings.notificationCenterSetting];
+  settingsDictionary[@"timeSensitive"] = timeSensitive;
+
   return settingsDictionary;
 }
 

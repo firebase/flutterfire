@@ -1,8 +1,8 @@
 name: flutterfire_ui
 description: UI library built on top of firebase services
-version: 0.4.0+1
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui
+version: 0.4.1+2
+repository: https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/flutterfire_ui
 
 false_secrets:
   - example/**
@@ -12,15 +12,15 @@ environment:
   flutter: '>=1.17.0'
 
 dependencies:
-  cloud_firestore: ^3.1.11
+  cloud_firestore: ^3.1.17
   collection: ^1.15.0
   crypto: ^3.0.1
   desktop_webview_auth: ^0.0.5
   email_validator: ^2.0.1
-  firebase_auth: ^3.3.13
+  firebase_auth: ^3.3.19
   firebase_core: ^1.10.2
-  firebase_database: ^9.0.10
-  firebase_dynamic_links: ^4.1.2
+  firebase_database: ^9.0.15
+  firebase_dynamic_links: ^4.2.5
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^4.0.1
@@ -29,12 +29,16 @@ dependencies:
   flutter_svg: ^1.0.0
   google_sign_in: ^5.2.1
   sign_in_with_apple: ^3.3.0
-  twitter_login: ^4.0.1
+  twitter_login: ^4.2.2
 
 dev_dependencies:
+  fake_cloud_firestore: ^1.2.2
+  firebase_auth_mocks: ^0.8.4
+
   flutter_test:
     sdk: flutter
 
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.

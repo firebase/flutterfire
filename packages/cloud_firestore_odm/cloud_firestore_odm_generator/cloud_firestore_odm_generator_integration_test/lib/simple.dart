@@ -5,6 +5,41 @@ import 'model.dart';
 
 part 'simple.g.dart';
 
+@Collection<Model>('root')
+@JsonSerializable()
+class Model {
+  Model(this.value);
+  final String value;
+}
+
+@JsonSerializable()
+class Nested {
+  Nested({
+    required this.value,
+    required this.valueList,
+    required this.boolList,
+    required this.stringList,
+    required this.numList,
+    required this.objectList,
+    required this.dynamicList,
+  });
+
+  factory Nested.fromJson(Map<String, Object?> json) => _$NestedFromJson(json);
+
+  Map<String, Object?> toJson() => _$NestedToJson(this);
+
+  final Nested? value;
+  final List<Nested>? valueList;
+  final List<bool>? boolList;
+  final List<String>? stringList;
+  final List<num>? numList;
+  final List<Object?>? objectList;
+  final List<dynamic>? dynamicList;
+}
+
+@Collection<Nested>('nested')
+final nestedRef = NestedCollectionReference();
+
 @Collection<SplitFileModel>('split-file')
 final splitFileRef = SplitFileModelCollectionReference();
 

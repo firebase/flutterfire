@@ -1,6 +1,26 @@
+## 9.1.9
+
+ - Update a dependency to the latest release.
+
+## 9.1.8
+
+ - Update a dependency to the latest release.
+
+## 9.1.7
+
+ - Update a dependency to the latest release.
+
+## 9.1.6
+
+ - **REFACTOR**: Update deployment target to `10.0` for Firebase Analytics podspec. (#8371). ([fe709da9](https://github.com/firebase/flutterfire/commit/fe709da998162a3b884070df6666690ae560d0d1))
+
+## 9.1.5
+
+ - Update a dependency to the latest release.
+
 ## 9.1.4
 
- - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/FirebaseExtended/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
+ - **FIX**: Send default parameters for iOS when using `setDefaultEventParameters()` API. (#8402). ([7d3e5ba6](https://github.com/firebase/flutterfire/commit/7d3e5ba6e4ee0bff178c5cfb73d34cdd3a7064e0))
 
 ## 9.1.3
 
@@ -8,32 +28,32 @@
 
 ## 9.1.2
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 9.1.1
 
- - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/FirebaseExtended/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
+ - **DOCS**: code comment typo - `logAdImpression` mentions wrong event (#8180). ([960a75a7](https://github.com/firebase/flutterfire/commit/960a75a77dc8c575e7f8f9c4350ad564a3814eb8))
 
 ## 9.1.0
 
- - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/FirebaseExtended/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))
+ - **FEAT**: Improve `FirebaseAnalyticsObserver` so that it also fires events when the modal route changes. (#7711). ([f3bb2055](https://github.com/firebase/flutterfire/commit/f3bb205594b3920f37eb4476c324e463f942c451))
 
 ## 9.0.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
- - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/FirebaseExtended/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
- - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/FirebaseExtended/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
- - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/FirebaseExtended/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: user id and user properties can be null so `NSNull` should be converted to `nil` on iOS/macOS (#7810). ([f588cf38](https://github.com/firebase/flutterfire/commit/f588cf381135c6d51d472e7f744e72d7f6a69240))
+ - **FIX**: `setUserProperty` should now accept null as a valid value on Android (#7735). ([c2237acb](https://github.com/firebase/flutterfire/commit/c2237acb25903d2466db76a9c4fd2f14701369b6))
+ - **DOCS**: example app initialization and docs support status (#7745). ([ac21f485](https://github.com/firebase/flutterfire/commit/ac21f4855359d9c8452e60917b1992d8ad0f7a5e))
 
 ## 9.0.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 9.0.3
 
- - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
- - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/FirebaseExtended/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
- - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/FirebaseExtended/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/firebase/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: reinstate Analytics screen navigation observer. (#7529). ([caf2986e](https://github.com/firebase/flutterfire/commit/caf2986ec76b0d761c2ef863af4c16f02fc4638f))
+ - **FIX**: userId can be null (#7545). ([0d3b523c](https://github.com/firebase/flutterfire/commit/0d3b523c3a2d1cd1d8c1ec17f7579727e88e5cb6))
 
 ## 9.0.2
 
@@ -47,7 +67,7 @@
 
 > Note: This release has breaking changes.
 
-As part of our on-going work for [#6769](https://github.com/FirebaseExtended/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
+As part of our on-going work for [#6769](https://github.com/firebase/flutterfire/issues/6979) this is our Firebase Analytics rework changes.
 
 Overall, Firebase Analytics has been heavily reworked to bring it inline with the federated plugin setup along with adding new features,
 documentation and updating unit and end-to-end tests.
