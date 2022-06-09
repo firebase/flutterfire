@@ -8,9 +8,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
+import 'firebase_config.dart';
+
 void testsMain() {
   setUpAll(() async {
-    await Firebase.initializeApp();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseConfig.platformOptions,
+    );
   });
 
   group('$FirebasePerformance.instance', () {
@@ -62,19 +66,9 @@ void testsMain() {
 
     test('setMetric works correctly', () async {
       testTrace.setMetric(metricName, 37);
-
-      if (kIsWeb) {
-        expect(testTrace.getMetric(metricName), 0);
-      } else {
-        expect(testTrace.getMetric(metricName), 37);
-      }
-
+      expect(testTrace.getMetric(metricName), 37);
       testTrace.setMetric(metricName, 3);
-      if (kIsWeb) {
-        expect(testTrace.getMetric(metricName), 0);
-      } else {
-        expect(testTrace.getMetric(metricName), 3);
-      }
+      expect(testTrace.getMetric(metricName), 3);
     });
 
     test('putAttribute works correctly', () {
