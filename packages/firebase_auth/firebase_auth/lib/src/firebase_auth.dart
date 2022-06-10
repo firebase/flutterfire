@@ -579,7 +579,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
-  /// reCAPTCHA widget apperance and behavior.
+  /// reCAPTCHA widget appearance and behavior.
   ///
   /// Once the reCAPTCHA verification has completed, called [ConfirmationResult.confirm]
   /// with the users SMS verification code to complete the authentication flow.
