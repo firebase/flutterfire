@@ -24,6 +24,8 @@ class FirebaseApp {
   ///
   /// Once deleted, any plugin functionality using this app instance will throw
   /// an error.
+  ///
+  /// Deleting the default app is not possible and throws an exception.
   Future<void> delete() async {
     await _delegate.delete();
   }
