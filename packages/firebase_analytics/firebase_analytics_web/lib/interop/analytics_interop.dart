@@ -19,7 +19,7 @@ external AnalyticsJsImpl getAnalytics([AppJsImpl? app]);
 external AnalyticsJsImpl initializeAnalytics([AppJsImpl app]);
 
 @JS()
-external bool isSupported();
+external PromiseJsImpl<bool> isSupported();
 
 @JS()
 external void logEvent(
@@ -31,7 +31,9 @@ external void logEvent(
 
 @JS()
 external void setAnalyticsCollectionEnabled(
-    AnalyticsJsImpl analytics, bool enabled);
+  AnalyticsJsImpl analytics,
+  bool enabled,
+);
 
 @JS()
 external void setCurrentScreen(
