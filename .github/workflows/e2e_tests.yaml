@@ -22,7 +22,7 @@ on:
 
 jobs:
   android:
-    runs-on: macos-12
+    runs-on: macos-11
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v2
@@ -38,14 +38,34 @@ jobs:
         name: Gradle Cache
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-v1-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-v1
+          key: ${{ runner.os }}-gradle-v2-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-v2
+      - uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd
+      - name: Generate AVD snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_atd
+          arch: x86
+          profile: Galaxy Nexus
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          channel: canary
+          script: echo "Generated AVD snapshot for caching."
       - name: Firebase Emulator Cache
         uses: actions/cache@v2
         with:
           path: ~/.cache/firebase/emulators
-          key: firebase-emulators-v1-${{ github.run_id }}
-          restore-keys: firebase-emulators-v1
+          key: firebase-emulators-v2-${{ github.run_id }}
+          restore-keys: firebase-emulators-v2
       - name: "Install Flutter"
         run: ./.github/workflows/scripts/install-flutter.sh stable
       - name: "Install Tools"
@@ -60,13 +80,16 @@ jobs:
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "E2E Tests"
-        uses: reactivecircus/android-emulator-runner@v2.21.0
+        uses: reactivecircus/android-emulator-runner@v2
         timeout-minutes: 30
         with:
           api-level: 30
-          arch: x86_64
-          target: google_apis
-          profile: Nexus 5X
+          arch: x86
+          target: google_atd
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          channel: canary
+          profile: Galaxy Nexus
           working-directory: tests
           script: |
             sleep 15
