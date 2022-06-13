@@ -48,6 +48,8 @@ our [issue tracker](https://github.com/firebase/flutterfire/issues/new/choose).
 Plugin issues that are not specific to FlutterFire can be filed in
 the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
+Please keep in mind that deleting the default Firebase app is not possible
+
 ## Contributing
 
 If you wish to contribute a change to any of the existing plugins in this repo, please review
