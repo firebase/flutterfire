@@ -17,6 +17,11 @@ void setupTests() {
       );
     });
 
+    test('isSupported', () async {
+      final result = await FirebaseAnalytics.instance.isSupported();
+      expect(result, isA<bool>());
+    });
+
     test('logEvent', () async {
       await expectLater(
         FirebaseAnalytics.instance.logEvent(name: 'testing'),
