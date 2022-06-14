@@ -46,12 +46,12 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
   }
 
   private GeneratedAndroidFirebaseCore.PigeonFirebaseOptions firebaseOptionsToMap(FirebaseOptions options) {
-    GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder  firebaseOptions = new GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder();
+    GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder firebaseOptions = new GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder();
 
     firebaseOptions.setApiKey(options.getApiKey());
     firebaseOptions.setAppId(options.getApplicationId());
     if (options.getGcmSenderId() != null) {
-      firebaseOptions.setMessagingSenderId( options.getGcmSenderId());
+      firebaseOptions.setMessagingSenderId(options.getGcmSenderId());
     }
     if (options.getProjectId() != null) {
       firebaseOptions.setProjectId(options.getProjectId());
@@ -67,26 +67,39 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
     TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeReponse> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
-        () -> {
-          try {
-            GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder initializeResponse = new GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder();
+      () -> {
+        try {
+          GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder initializeResponse = new GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder();
 
-            initializeResponse.setName( firebaseApp.getName());
-            initializeResponse.setOptions(firebaseOptionsToMap(firebaseApp.getOptions()));
+          initializeResponse.setName(firebaseApp.getName());
+          initializeResponse.setOptions(firebaseOptionsToMap(firebaseApp.getOptions()));
 
-            initializeResponse.setIsAutomaticDataCollectionEnabled(
-                firebaseApp.isDataCollectionDefaultEnabled());
-            initializeResponse.setPluginConstants(
-                Tasks.await(
-                    FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
+          initializeResponse.setIsAutomaticDataCollectionEnabled(
+            firebaseApp.isDataCollectionDefaultEnabled());
+          initializeResponse.setPluginConstants(
+            Tasks.await(
+              FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
 
-            taskCompletionSource.setResult(initializeResponse.build());
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
+          taskCompletionSource.setResult(initializeResponse.build());
+        } catch (Exception e) {
+          taskCompletionSource.setException(e);
+        }
+      });
 
     return taskCompletionSource.getTask();
+  }
+
+
+  private <T> void listenToResponse(TaskCompletionSource<T> taskCompletionSource, GeneratedAndroidFirebaseCore.Result<T> result) {
+    taskCompletionSource.getTask().addOnCompleteListener(
+      task -> {
+        if (task.isSuccessful()) {
+          result.success(task.getResult());
+        } else {
+          Exception exception = task.getException();
+          result.error(exception);
+        }
+      });
   }
 
   @Override
@@ -122,16 +135,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
         }
       });
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
-
+    listenToResponse(taskCompletionSource, result);
   }
 
 
@@ -162,15 +166,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
         }
       });
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
+    listenToResponse(taskCompletionSource, result);
   }
 
   @Override
@@ -192,15 +188,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
       });
 
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
+    listenToResponse(taskCompletionSource, result);
   }
 
   @Override
@@ -219,15 +207,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
         }
       });
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
+    listenToResponse(taskCompletionSource, result);
   }
 
   @Override
@@ -246,16 +226,7 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
         }
       });
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
-
+    listenToResponse(taskCompletionSource, result);
   }
 
   @Override
@@ -278,14 +249,6 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, GeneratedAndroi
         }
       });
 
-    taskCompletionSource.getTask().addOnCompleteListener(
-      task -> {
-        if (task.isSuccessful()) {
-          result.success(task.getResult());
-        } else {
-          Exception exception = task.getException();
-          result.error(exception);
-        }
-      });
+    listenToResponse(taskCompletionSource, result);
   }
 }
