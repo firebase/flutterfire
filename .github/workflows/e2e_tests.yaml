@@ -70,7 +70,9 @@ jobs:
           working-directory: tests
           script: |
             sleep 15
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true
+            flutter test \
+              integration_test/e2e_test.dart \
+              --dart-define=CI=true
 
   ios:
     runs-on: macos-latest
