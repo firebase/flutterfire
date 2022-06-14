@@ -98,7 +98,6 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-          flutter config --enable-web
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"
