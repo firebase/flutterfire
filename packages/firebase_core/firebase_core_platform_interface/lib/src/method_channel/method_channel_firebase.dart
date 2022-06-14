@@ -21,6 +21,8 @@ class MethodChannelFirebase extends FirebasePlatform {
     'plugins.flutter.io/firebase_core',
   );
 
+  final _api = FirebaseCoreHostApi();
+
   /// Calls the native Firebase#initializeCore method.
   ///
   /// Before any plugins can be consumed, any platforms using the [MethodChannel]
@@ -97,13 +99,17 @@ class MethodChannelFirebase extends FirebasePlatform {
       // If no options are present & no default app has been setup, the user is
       // trying to initialize default from Dart
       if (defaultApp == null && _options != null) {
-        _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
-          'Firebase#initializeApp',
-          <String, dynamic>{
-            'appName': defaultFirebaseAppName,
-            'options': _options.asMap
-          },
-        ))!);
+        _initializeFirebaseAppFromMap(
+            await _api.intializeApp(PigeonInitializeAppRequest(
+          apiKey: _options.apiKey,
+          appName: name,
+          appId: _options.appId,
+          messagingSenderId: _options.messagingSenderId,
+          projectId: _options.projectId,
+          databaseURL: _options.databaseURL,
+          storageBucket: _options.storageBucket,
+          trackingId: _options.trackingId,
+        )));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
 
@@ -152,10 +158,17 @@ class MethodChannelFirebase extends FirebasePlatform {
       }
     }
 
-    _initializeFirebaseAppFromMap((await channel.invokeMapMethod(
-      'Firebase#initializeApp',
-      <String, dynamic>{'appName': name, 'options': options!.asMap},
-    ))!);
+    _initializeFirebaseAppFromMap(
+        await _api.intializeApp(PigeonInitializeAppRequest(
+      apiKey: options!.apiKey,
+      appName: name,
+      appId: options.appId,
+      messagingSenderId: options.messagingSenderId,
+      projectId: options.projectId,
+      databaseURL: options.databaseURL,
+      storageBucket: options.storageBucket,
+      trackingId: options.trackingId,
+    )));
 
     return appInstances[name]!;
   }
