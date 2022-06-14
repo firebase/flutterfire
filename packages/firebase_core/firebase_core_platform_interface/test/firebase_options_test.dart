@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
+import 'package:firebase_core_platform_interface/src/messages.pigeon.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -48,12 +49,14 @@ void main() {
     });
 
     test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptions.fromMap(const {
-        'apiKey': 'apiKey',
-        'appId': 'appId',
-        'messagingSenderId': 'messagingSenderId',
-        'projectId': 'projectId'
-      });
+      FirebaseOptions options1 = FirebaseOptions.fromPigeon(
+        PigeonFirebaseOptions(
+          apiKey: 'apiKey',
+          appId: 'appId',
+          messagingSenderId: 'messagingSenderId',
+          projectId: 'projectId',
+        ),
+      );
 
       FirebaseOptions options2 = const FirebaseOptions(
         apiKey: 'apiKey',
