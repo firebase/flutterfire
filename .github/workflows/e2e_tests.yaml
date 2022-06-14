@@ -133,7 +133,7 @@ jobs:
           sleep 15
           # Uncomment following line to have simulator logs printed out for debugging purposes.
           # xcrun simctl spawn booted log stream --predicate 'eventMessage contains "flutter"' &
-          flutter drive -d "$SIMULATOR" --driver=test_driver/integration_test.dart --target=integration_test/e2e_test.dart --dart-define=CI=true
+          flutter test integration_test/e2e_test.dart -d "$SIMULATOR" --dart-define=CI=true
           FLUTTER_DRIVE_EXIT_CODE=$?
           xcrun simctl shutdown "$SIMULATOR"
           exit $FLUTTER_DRIVE_EXIT_CODE
@@ -197,7 +197,11 @@ jobs:
       - name: "E2E Tests"
         working-directory: tests
         run: |
-          flutter drive -d macos --driver=test_driver/integration_test.dart --target=integration_test/e2e_test.dart --dart-define=CI=true
+          flutter drive \
+            -d macos \
+            --driver=test_driver/integration_test.dart \
+            --target=integration_test/e2e_test.dart \
+            --dart-define=CI=true
 
   web:
     runs-on: ubuntu-latest
