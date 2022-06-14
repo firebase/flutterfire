@@ -8,6 +8,8 @@ import static io.flutter.plugins.firebase.core.FlutterFirebasePlugin.cachedThrea
 import android.content.Context;
 import android.os.Looper;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -27,7 +29,7 @@ import java.util.Objects;
  *
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
-public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
+public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler, GeneratedAndroidFirebaseCore.FirebaseCoreHostApi {
   private static final String KEY_API_KEY = "apiKey";
   private static final String KEY_APP_NAME = "appName";
   private static final String KEY_APP_ID = "appId";
@@ -123,46 +125,6 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
                     FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
 
             taskCompletionSource.setResult(appMap);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
-        });
-
-    return taskCompletionSource.getTask();
-  }
-
-  private Task<Map<String, Object>> initializeApp(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
-
-    cachedThreadPool.execute(
-        () -> {
-          try {
-            String name = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> optionsMap =
-                (Map<String, String>) Objects.requireNonNull(arguments.get(KEY_OPTIONS));
-
-            FirebaseOptions options =
-                new FirebaseOptions.Builder()
-                    .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
-                    .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
-                    .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
-                    .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
-                    .setProjectId(optionsMap.get(KEY_PROJECT_ID))
-                    .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
-                    .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
-                    .build();
-            // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
-            //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
-            //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
-            try {
-              Looper.prepare();
-            } catch (Exception e) {
-              // do nothing
-            }
-            FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, name);
-            taskCompletionSource.setResult(Tasks.await(firebaseAppToMap(firebaseApp)));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -288,9 +250,6 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
     Task<?> methodCallTask;
 
     switch (call.method) {
-      case "Firebase#initializeApp":
-        methodCallTask = initializeApp(call.arguments());
-        break;
       case "Firebase#initializeCore":
         methodCallTask = initializeCore();
         break;
@@ -320,5 +279,50 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
             result.error("firebase_core", exception != null ? exception.getMessage() : null, null);
           }
         });
+  }
+
+  @Override
+  public void intializeApp(@Nullable GeneratedAndroidFirebaseCore.PigeonInitializeAppRequest initializeAppRequest, GeneratedAndroidFirebaseCore.Result<Map<String, Object>> result) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+      () -> {
+        try {
+
+          FirebaseOptions options =
+            new FirebaseOptions.Builder()
+              .setApiKey(initializeAppRequest.getApiKey())
+              .setApplicationId(initializeAppRequest.getAppId())
+              .setDatabaseUrl(initializeAppRequest.getDatabaseURL())
+              .setGcmSenderId(initializeAppRequest.getMessagingSenderId())
+              .setProjectId(initializeAppRequest.getProjectId())
+              .setStorageBucket(initializeAppRequest.getStorageBucket())
+              .setGaTrackingId(initializeAppRequest.getTrackingId())
+              .build();
+          // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
+          //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
+          //     at com.google.firebase.inappmessaging.internal.ForegroundNotifier.<init>(ForegroundNotifier.java:61)
+          try {
+            Looper.prepare();
+          } catch (Exception e) {
+            // do nothing
+          }
+          FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, initializeAppRequest.getAppName());
+          taskCompletionSource.setResult(Tasks.await(firebaseAppToMap(firebaseApp)));
+        } catch (Exception e) {
+          taskCompletionSource.setException(e);
+        }
+      });
+
+    taskCompletionSource.getTask().addOnCompleteListener(
+      task -> {
+        if (task.isSuccessful()) {
+          result.success(task.getResult());
+        } else {
+          Exception exception = task.getException();
+          result.error(exception);
+        }
+      });
+
   }
 }
