@@ -197,10 +197,9 @@ jobs:
       - name: "E2E Tests"
         working-directory: tests
         run: |
-          flutter drive \
+          flutter test \
+            integration_test/e2e_test.dart \
             -d macos \
-            --driver=test_driver/integration_test.dart \
-            --target=integration_test/e2e_test.dart \
             --dart-define=CI=true
 
   web:
