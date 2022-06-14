@@ -52,31 +52,26 @@ class FirebaseOptions {
     this.appGroupId,
   });
 
-  /// Named constructor to create [FirebaseOptions] from a Map.
+  /// Named constructor to create [FirebaseOptions] from a the response of Pigeon channel.
   ///
   /// This constructor is used when platforms cannot directly return a
   /// [FirebaseOptions] instance, for example when data is sent back from a
   /// [MethodChannel].
-  FirebaseOptions.fromMap(Map<dynamic, dynamic> map)
-      : assert(map['apiKey'] != null, "'apiKey' cannot be null."),
-        assert(map['appId'] != null, "'appId' cannot be null."),
-        assert(map['messagingSenderId'] != null,
-            "'messagingSenderId' cannot be null."),
-        assert(map['projectId'] != null, "'projectId' cannot be null."),
-        apiKey = map['apiKey'],
-        appId = map['appId'],
-        messagingSenderId = map['messagingSenderId'],
-        projectId = map['projectId'],
-        authDomain = map['authDomain'],
-        databaseURL = map['databaseURL'],
-        storageBucket = map['storageBucket'],
-        measurementId = map['measurementId'],
-        trackingId = map['trackingId'],
-        deepLinkURLScheme = map['deepLinkURLScheme'],
-        androidClientId = map['androidClientId'],
-        iosClientId = map['iosClientId'],
-        iosBundleId = map['iosBundleId'],
-        appGroupId = map['appGroupId'];
+  FirebaseOptions.fromPigeon(PigeonFirebaseOptions options)
+      : apiKey = options.apiKey,
+        appId = options.appId,
+        messagingSenderId = options.messagingSenderId,
+        projectId = options.projectId,
+        authDomain = options.authDomain,
+        databaseURL = options.databaseURL,
+        storageBucket = options.storageBucket,
+        measurementId = options.measurementId,
+        trackingId = options.trackingId,
+        deepLinkURLScheme = options.deepLinkURLScheme,
+        androidClientId = options.androidClientId,
+        iosClientId = options.iosClientId,
+        iosBundleId = options.iosBundleId,
+        appGroupId = options.appGroupId;
 
   /// An API key used for authenticating requests from your app to Google
   /// servers.

@@ -30,29 +30,31 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<Map> apps = (await channel.invokeListMethod<Map>(
-      'Firebase#initializeCore',
-    ))!;
+    List<PigeonInitializeReponse?> apps = await _api.initializeCore();
 
-    apps.forEach(_initializeFirebaseAppFromMap);
+    apps
+        .where((element) => element != null)
+        .cast<PigeonInitializeReponse>()
+        .forEach(_initializeFirebaseAppFromMap);
     isCoreInitialized = true;
   }
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(Map<dynamic, dynamic> map) {
+  void _initializeFirebaseAppFromMap(PigeonInitializeReponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
-      map['name'],
-      FirebaseOptions.fromMap(map['options']),
-      isAutomaticDataCollectionEnabled: map['isAutomaticDataCollectionEnabled'],
+      response.name,
+      FirebaseOptions.fromPigeon(response.options),
+      isAutomaticDataCollectionEnabled:
+          response.isAutomaticDataCollectionEnabled,
     );
 
     appInstances[methodChannelFirebaseApp.name] = methodChannelFirebaseApp;
 
     FirebasePluginPlatform
             ._constantsForPluginApps[methodChannelFirebaseApp.name] =
-        map['pluginConstants'];
+        response.pluginConstants;
   }
 
   /// Returns the created [FirebaseAppPlatform] instances.
@@ -88,28 +90,24 @@ class MethodChannelFirebase extends FirebasePlatform {
       if (defaultTargetPlatform == TargetPlatform.android &&
           defaultApp == null &&
           _options == null) {
-        final optionsMap = await channel.invokeMapMethod(
-          'Firebase#optionsFromResource',
-        );
-        if (optionsMap != null) {
-          _options = FirebaseOptions.fromMap(optionsMap);
-        }
+        final options = await _api.optionsFromResource();
+        _options = FirebaseOptions.fromPigeon(options);
       }
 
       // If no options are present & no default app has been setup, the user is
       // trying to initialize default from Dart
       if (defaultApp == null && _options != null) {
-        _initializeFirebaseAppFromMap(
-            await _api.intializeApp(PigeonInitializeAppRequest(
-          apiKey: _options.apiKey,
-          appName: name,
-          appId: _options.appId,
-          messagingSenderId: _options.messagingSenderId,
-          projectId: _options.projectId,
-          databaseURL: _options.databaseURL,
-          storageBucket: _options.storageBucket,
-          trackingId: _options.trackingId,
-        )));
+        _initializeFirebaseAppFromMap(await _api.initializeApp(
+            name!,
+            PigeonFirebaseOptions(
+              apiKey: _options.apiKey,
+              appId: _options.appId,
+              messagingSenderId: _options.messagingSenderId,
+              projectId: _options.projectId,
+              databaseURL: _options.databaseURL,
+              storageBucket: _options.storageBucket,
+              trackingId: _options.trackingId,
+            )));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
 
@@ -158,17 +156,17 @@ class MethodChannelFirebase extends FirebasePlatform {
       }
     }
 
-    _initializeFirebaseAppFromMap(
-        await _api.intializeApp(PigeonInitializeAppRequest(
-      apiKey: options!.apiKey,
-      appName: name,
-      appId: options.appId,
-      messagingSenderId: options.messagingSenderId,
-      projectId: options.projectId,
-      databaseURL: options.databaseURL,
-      storageBucket: options.storageBucket,
-      trackingId: options.trackingId,
-    )));
+    _initializeFirebaseAppFromMap(await _api.initializeApp(
+        name,
+        PigeonFirebaseOptions(
+          apiKey: options!.apiKey,
+          appId: options.appId,
+          messagingSenderId: options.messagingSenderId,
+          projectId: options.projectId,
+          databaseURL: options.databaseURL,
+          storageBucket: options.storageBucket,
+          trackingId: options.trackingId,
+        )));
 
     return appInstances[name]!;
   }
