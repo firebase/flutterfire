@@ -110,7 +110,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
 
   /// Returns the default FCM token for this device.
   ///
-  /// On web you need to pass the [vapidKey].
+  /// On web is the [vapidKey] required.
   Future<String?> getToken({
     String? vapidKey,
   }) {
