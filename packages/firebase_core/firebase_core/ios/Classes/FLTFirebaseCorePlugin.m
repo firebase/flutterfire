@@ -14,7 +14,10 @@
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
   FLTFirebaseCorePlugin *sharedInstance = [self sharedInstance];
+  #if TARGET_OS_OSX
+  #else
   [registrar publish:sharedInstance];
+  #endif
   FirebaseCoreHostApiSetup(registrar.messenger, sharedInstance);
   FirebaseAppHostApiSetup(registrar.messenger, sharedInstance);
 }
