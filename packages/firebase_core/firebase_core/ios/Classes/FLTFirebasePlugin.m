@@ -14,9 +14,11 @@ NSString *_Nonnull const kFIRDefaultAppNameDart = @"[DEFAULT]";
 @end
 @implementation FLTFirebaseMethodCallResult
 
-+ (instancetype)createWithSuccess:(FLTFirebaseMethodCallSuccessBlock)successBlock
++ (instancetype)createWithSuccess:
+                    (FLTFirebaseMethodCallSuccessBlock)successBlock
                     andErrorBlock:(FLTFirebaseMethodCallErrorBlock)errorBlock {
-  FLTFirebaseMethodCallResult *methodCallResult = [[FLTFirebaseMethodCallResult alloc] init];
+  FLTFirebaseMethodCallResult *methodCallResult =
+      [[FLTFirebaseMethodCallResult alloc] init];
   methodCallResult.error = errorBlock;
   methodCallResult.success = successBlock;
   return methodCallResult;
@@ -27,9 +29,11 @@ NSString *_Nonnull const kFIRDefaultAppNameDart = @"[DEFAULT]";
 @implementation FLTFirebasePlugin
 + (FlutterError *_Nonnull)createFlutterErrorFromCode:(NSString *_Nonnull)code
                                              message:(NSString *_Nonnull)message
-                                     optionalDetails:(NSDictionary *_Nullable)details
+                                     optionalDetails:
+                                         (NSDictionary *_Nullable)details
                                   andOptionalNSError:(NSError *_Nullable)error {
-  NSMutableDictionary *detailsDict = [NSMutableDictionary dictionaryWithDictionary:details ?: @{}];
+  NSMutableDictionary *detailsDict =
+      [NSMutableDictionary dictionaryWithDictionary:details ?: @{}];
   if (error != nil) {
     detailsDict[@"nativeErrorCode"] = [@(error.code) stringValue];
     detailsDict[@"nativeErrorMessage"] = error.localizedDescription;
