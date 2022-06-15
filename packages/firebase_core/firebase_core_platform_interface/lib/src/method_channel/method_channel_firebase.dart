@@ -98,15 +98,22 @@ class MethodChannelFirebase extends FirebasePlatform {
       // trying to initialize default from Dart
       if (defaultApp == null && _options != null) {
         _initializeFirebaseAppFromMap(await _api.initializeApp(
-            name!,
+            name ?? defaultFirebaseAppName,
             PigeonFirebaseOptions(
               apiKey: _options.apiKey,
               appId: _options.appId,
               messagingSenderId: _options.messagingSenderId,
               projectId: _options.projectId,
+              authDomain: _options.authDomain,
               databaseURL: _options.databaseURL,
               storageBucket: _options.storageBucket,
+              measurementId: _options.measurementId,
               trackingId: _options.trackingId,
+              deepLinkURLScheme: _options.deepLinkURLScheme,
+              androidClientId: _options.androidClientId,
+              iosClientId: _options.iosClientId,
+              iosBundleId: _options.iosBundleId,
+              appGroupId: _options.appGroupId,
             )));
         defaultApp = appInstances[defaultFirebaseAppName];
       }
@@ -163,9 +170,16 @@ class MethodChannelFirebase extends FirebasePlatform {
           appId: options.appId,
           messagingSenderId: options.messagingSenderId,
           projectId: options.projectId,
+          authDomain: options.authDomain,
           databaseURL: options.databaseURL,
           storageBucket: options.storageBucket,
+          measurementId: options.measurementId,
           trackingId: options.trackingId,
+          deepLinkURLScheme: options.deepLinkURLScheme,
+          androidClientId: options.androidClientId,
+          iosClientId: options.iosClientId,
+          iosBundleId: options.iosBundleId,
+          appGroupId: options.appGroupId,
         )));
 
     return appInstances[name]!;
