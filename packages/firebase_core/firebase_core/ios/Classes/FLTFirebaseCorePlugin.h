@@ -12,5 +12,5 @@
 #import "FLTFirebasePlugin.h"
 #import "messages.g.h"
 
-@interface FLTFirebaseCorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseCoreHostApi>
+@interface FLTFirebaseCorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseCoreHostApi, FirebaseAppHostApi>
 @end
