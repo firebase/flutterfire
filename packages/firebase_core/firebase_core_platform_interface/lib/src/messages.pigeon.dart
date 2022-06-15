@@ -98,7 +98,8 @@ class PigeonInitializeReponse {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
     pigeonMap['name'] = name;
     pigeonMap['options'] = options.encode();
-    pigeonMap['isAutomaticDataCollectionEnabled'] = isAutomaticDataCollectionEnabled;
+    pigeonMap['isAutomaticDataCollectionEnabled'] =
+        isAutomaticDataCollectionEnabled;
     pigeonMap['pluginConstants'] = pluginConstants;
     return pigeonMap;
   }
@@ -107,10 +108,11 @@ class PigeonInitializeReponse {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return PigeonInitializeReponse(
       name: pigeonMap['name']! as String,
-      options: PigeonFirebaseOptions.decode(pigeonMap['options']!)
-,
-      isAutomaticDataCollectionEnabled: pigeonMap['isAutomaticDataCollectionEnabled'] as bool?,
-      pluginConstants: (pigeonMap['pluginConstants'] as Map<Object?, Object?>?)!.cast<String?, Object?>(),
+      options: PigeonFirebaseOptions.decode(pigeonMap['options']!),
+      isAutomaticDataCollectionEnabled:
+          pigeonMap['isAutomaticDataCollectionEnabled'] as bool?,
+      pluginConstants: (pigeonMap['pluginConstants'] as Map<Object?, Object?>?)!
+          .cast<String?, Object?>(),
     );
   }
 }
@@ -122,27 +124,25 @@ class _FirebaseCoreHostApiCodec extends StandardMessageCodec {
     if (value is PigeonFirebaseOptions) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is PigeonInitializeReponse) {
+    } else if (value is PigeonInitializeReponse) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else 
-{
+    } else {
       super.writeValue(buffer, value);
     }
   }
+
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:       
+      case 128:
         return PigeonFirebaseOptions.decode(readValue(buffer)!);
-      
-      case 129:       
+
+      case 129:
         return PigeonInitializeReponse.decode(readValue(buffer)!);
-      
-      default:      
+
+      default:
         return super.readValueOfType(type, buffer);
-      
     }
   }
 }
@@ -151,24 +151,29 @@ class FirebaseCoreHostApi {
   /// Constructor for [FirebaseCoreHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseCoreHostApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+  FirebaseCoreHostApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
   static const MessageCodec<Object?> codec = _FirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeReponse> initializeApp(String arg_appName, PigeonFirebaseOptions arg_initializeAppRequest) async {
+  Future<PigeonInitializeReponse> initializeApp(String arg_appName,
+      PigeonFirebaseOptions arg_initializeAppRequest) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
-        await channel.send(<Object?>[arg_appName, arg_initializeAppRequest]) as Map<Object?, Object?>?;
+        await channel.send(<Object?>[arg_appName, arg_initializeAppRequest])
+            as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -186,7 +191,8 @@ class FirebaseCoreHostApi {
 
   Future<List<PigeonInitializeReponse?>> initializeCore() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -195,7 +201,8 @@ class FirebaseCoreHostApi {
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -207,13 +214,15 @@ class FirebaseCoreHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyMap['result'] as List<Object?>?)!.cast<PigeonInitializeReponse?>();
+      return (replyMap['result'] as List<Object?>?)!
+          .cast<PigeonInitializeReponse?>();
     }
   }
 
   Future<PigeonFirebaseOptions> optionsFromResource() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -222,7 +231,8 @@ class FirebaseCoreHostApi {
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -247,24 +257,29 @@ class FirebaseAppHostApi {
   /// Constructor for [FirebaseAppHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FirebaseAppHostApi({BinaryMessenger? binaryMessenger}) : _binaryMessenger = binaryMessenger;
+  FirebaseAppHostApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
 
   final BinaryMessenger? _binaryMessenger;
 
   static const MessageCodec<Object?> codec = _FirebaseAppHostApiCodec();
 
-  Future<void> setAutomaticDataCollectionEnabled(String arg_appName, bool arg_enabled) async {
+  Future<void> setAutomaticDataCollectionEnabled(
+      String arg_appName, bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled', codec, binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
+        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap = await channel
+        .send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -275,18 +290,22 @@ class FirebaseAppHostApi {
     }
   }
 
-  Future<void> setAutomaticResourceManagementEnabled(String arg_appName, bool arg_enabled) async {
+  Future<void> setAutomaticResourceManagementEnabled(
+      String arg_appName, bool arg_enabled) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled', codec, binaryMessenger: _binaryMessenger);
-    final Map<Object?, Object?>? replyMap =
-        await channel.send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
+        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap = await channel
+        .send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,
@@ -299,7 +318,8 @@ class FirebaseAppHostApi {
 
   Future<void> delete(String arg_appName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.delete', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.FirebaseAppHostApi.delete', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -308,7 +328,8 @@ class FirebaseAppHostApi {
         message: 'Unable to establish connection on channel.',
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      final Map<Object?, Object?> error =
+          (replyMap['error'] as Map<Object?, Object?>?)!;
       throw PlatformException(
         code: (error['code'] as String?)!,
         message: error['message'] as String?,

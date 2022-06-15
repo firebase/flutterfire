@@ -43,7 +43,8 @@
 
   for (pluginFlutterChannelName in registeredPlugins) {
     pluginConstants[pluginFlutterChannelName] =
-        [registeredPlugins[pluginFlutterChannelName] pluginConstantsForFIRApp:firebaseApp];
+        [registeredPlugins[pluginFlutterChannelName]
+            pluginConstantsForFIRApp:firebaseApp];
   }
 
   return pluginConstants;
@@ -60,7 +61,8 @@
   };
 
   for (NSString *pluginFlutterChannelName in registeredPlugins) {
-    [registeredPlugins[pluginFlutterChannelName] didReinitializeFirebaseCore:allPluginsCompletion];
+    [registeredPlugins[pluginFlutterChannelName]
+        didReinitializeFirebaseCore:allPluginsCompletion];
   }
 }
 
