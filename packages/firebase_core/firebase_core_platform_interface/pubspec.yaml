@@ -14,6 +14,9 @@ dependencies:
   collection: ^1.0.0
   flutter:
     sdk: flutter
+  # Needed to export the mocks
+  flutter_test:
+    sdk: flutter
   meta: ^1.3.0
   plugin_platform_interface: ^2.0.0
 
