@@ -2,7 +2,9 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/messages.pigeon.dart',
+    dartOut: 'lib/src/pigeon/messages.pigeon.dart',
+    // We export in the lib folder to expose the class to other packages.
+    dartTestOut: 'lib/src/pigeon/test_api.dart',
     javaOut:
         '../firebase_core/android/src/main/java/io/flutter/plugins/firebase/core/GeneratedAndroidFirebaseCore.java',
     javaOptions: JavaOptions(
@@ -74,7 +76,7 @@ class PigeonInitializeReponse {
   Map<String?, Object?> pluginConstants;
 }
 
-@HostApi()
+@HostApi(dartHostTestHandler: 'TestFirebaseCoreHostApi')
 abstract class FirebaseCoreHostApi {
   @async
   PigeonInitializeReponse initializeApp(
@@ -89,7 +91,7 @@ abstract class FirebaseCoreHostApi {
   PigeonFirebaseOptions optionsFromResource();
 }
 
-@HostApi()
+@HostApi(dartHostTestHandler: 'TestFirebaseAppHostApi')
 abstract class FirebaseAppHostApi {
   @async
   void setAutomaticDataCollectionEnabled(
