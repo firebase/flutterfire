@@ -10,6 +10,7 @@
 #endif
 
 #import "FLTFirebasePlugin.h"
+#import "messages.g.h"
 
-@interface FLTFirebaseCorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin>
+@interface FLTFirebaseCorePlugin : FLTFirebasePlugin <FlutterPlugin, FLTFirebasePlugin, FirebaseCoreHostApi>
 @end

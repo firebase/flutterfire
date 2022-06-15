@@ -9,6 +9,8 @@ import 'package:pigeon/pigeon.dart';
       package: 'io.flutter.plugins.firebase.core',
       className: 'GeneratedAndroidFirebaseCore',
     ),
+    objcHeaderOut: '../firebase_core/ios/Classes/messages.g.h',
+    objcSourceOut: '../firebase_core/ios/Classes/messages.g.m',
   ),
 )
 class PigeonFirebaseOptions {

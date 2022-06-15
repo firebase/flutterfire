@@ -4,6 +4,7 @@
 
 #import "FLTFirebaseCorePlugin.h"
 #import "FLTFirebasePluginRegistry.h"
+#import "messages.g.h"
 
 // Flutter method channel name.
 NSString *const kFLTFirebaseCoreChannelName = @"plugins.flutter.io/firebase_core";
@@ -46,11 +47,9 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 #pragma mark - FlutterPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar {
-  FlutterMethodChannel *channel =
-      [FlutterMethodChannel methodChannelWithName:kFLTFirebaseCoreChannelName
-                                  binaryMessenger:[registrar messenger]];
   FLTFirebaseCorePlugin *sharedInstance = [self sharedInstance];
-  [registrar addMethodCallDelegate:sharedInstance channel:channel];
+  [registrar publish:sharedInstance];
+  FirebaseCoreHostApiSetup(registrar.messenger, sharedInstance);
 }
 
 // Returns a singleton instance of the Firebase Core plugin.
@@ -233,33 +232,32 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 
 #pragma mark - Helpers
 
-- (NSDictionary *)dictionaryFromFIROptions:(FIROptions *)options {
-  return @{
-    kFirebaseOptionsApiKey : (id)options.APIKey ?: [NSNull null],
-    kFirebaseOptionsAppId : (id)options.googleAppID ?: [NSNull null],
-    kFirebaseOptionsMessagingSenderId : (id)options.GCMSenderID ?: [NSNull null],
-    kFirebaseOptionsProjectId : (id)options.projectID ?: [NSNull null],
-    kFirebaseOptionsDatabaseUrl : (id)options.databaseURL ?: [NSNull null],
-    kFirebaseOptionsStorageBucket : (id)options.storageBucket ?: [NSNull null],
-    kFirebaseOptionsTrackingId : (id)options.trackingID ?: [NSNull null],
-    kFirebaseOptionsDeepLinkURLScheme : (id)options.deepLinkURLScheme ?: [NSNull null],
-    kFirebaseOptionsAndroidClientId : (id)options.androidClientID ?: [NSNull null],
-    kFirebaseOptionsIosBundleId : (id)options.bundleID ?: [NSNull null],
-    kFirebaseOptionsIosClientId : (id)options.clientID ?: [NSNull null],
-    kFirebaseOptionsAppGroupId : (id)options.appGroupID ?: [NSNull null],
-  };
+- (PigeonFirebaseOptions *)optionsFromFIROptions:(FIROptions *)options {
+    PigeonFirebaseOptions *pigeonOptions = [PigeonFirebaseOptions alloc];
+    pigeonOptions.apiKey = (id)options.APIKey ?: [NSNull null];
+    pigeonOptions.appId = (id)options.googleAppID ?: [NSNull null];
+    pigeonOptions.messagingSenderId = (id)options.GCMSenderID ?: [NSNull null];
+    pigeonOptions.projectId = (id)options.projectID ?: [NSNull null];
+    pigeonOptions.databaseURL = (id)options.databaseURL ?: [NSNull null];
+    pigeonOptions.storageBucket = (id)options.storageBucket ?: [NSNull null];
+    pigeonOptions.trackingId = (id)options.trackingID ?: [NSNull null];
+    pigeonOptions.deepLinkURLScheme = (id)options.deepLinkURLScheme ?: [NSNull null];
+    pigeonOptions.androidClientId = (id)options.androidClientID ?: [NSNull null];
+    pigeonOptions.iosBundleId = (id)options.bundleID ?: [NSNull null];
+    pigeonOptions.iosClientId = (id)options.clientID ?: [NSNull null];
+    pigeonOptions.appGroupId = (id)options.appGroupID ?: [NSNull null];
+    return pigeonOptions;
 }
 
-- (NSDictionary *)dictionaryFromFIRApp:(FIRApp *)firebaseApp {
+- (PigeonInitializeReponse *)initializeResponseFromFIRApp:(FIRApp *)firebaseApp {
   NSString *appNameDart = [FLTFirebasePlugin firebaseAppNameFromIosName:firebaseApp.name];
+  PigeonInitializeReponse *response = [PigeonInitializeReponse alloc];
+  response.name = appNameDart;
+  response.options =[self optionsFromFIROptions:firebaseApp.options];
+  response.isAutomaticDataCollectionEnabled = @(firebaseApp.isDataCollectionDefaultEnabled);
+  response.pluginConstants = [[FLTFirebasePluginRegistry sharedInstance] pluginConstantsForFIRApp:firebaseApp];
 
-  return @{
-    kName : appNameDart,
-    kOptions : [self dictionaryFromFIROptions:firebaseApp.options],
-    kIsAutomaticDataCollectionEnabled : @(firebaseApp.isDataCollectionDefaultEnabled),
-    kPluginConstants :
-        [[FLTFirebasePluginRegistry sharedInstance] pluginConstantsForFIRApp:firebaseApp]
-  };
+  return response;
 }
 
 #pragma mark - FLTFirebasePlugin
@@ -282,6 +280,76 @@ NSString *const kFirebaseOptionsAppGroupId = @"appGroupId";
 
 - (NSString *_Nonnull)flutterChannelName {
   return kFLTFirebaseCoreChannelName;
+}
+
+- (void)initializeAppAppName:(nonnull NSString *)appName initializeAppRequest:(nonnull PigeonFirebaseOptions *)initializeAppRequest completion:(nonnull void (^)(PigeonInitializeReponse * _Nullable, FlutterError * _Nullable))completion {
+    NSString *appNameIos = [FLTFirebasePlugin firebaseAppNameFromDartName:appName];
+
+    if ([FLTFirebasePlugin firebaseAppNamed:appNameIos]) {
+      completion([self initializeResponseFromFIRApp:[FLTFirebasePlugin firebaseAppNamed:appNameIos]], nil);
+      return;
+    }
+
+    NSString *appId = initializeAppRequest.appId;
+    NSString *messagingSenderId = initializeAppRequest.messagingSenderId;
+    FIROptions *options = [[FIROptions alloc] initWithGoogleAppID:appId
+                                                      GCMSenderID:messagingSenderId];
+
+    options.APIKey = initializeAppRequest.apiKey;
+    options.projectID = initializeAppRequest.projectId;
+
+
+    // kFirebaseOptionsDatabaseUrl
+    if (![initializeAppRequest.databaseURL isEqual:[NSNull null]]) {
+      options.databaseURL = initializeAppRequest.databaseURL;
+    }
+
+    // kFirebaseOptionsStorageBucket
+    if (![options.storageBucket isEqual:[NSNull null]]) {
+      options.storageBucket = initializeAppRequest.storageBucket;
+    }
+
+    // kFirebaseOptionsTrackingId
+    if (![initializeAppRequest.trackingId isEqual:[NSNull null]]) {
+      options.trackingID = initializeAppRequest.trackingId;
+    }
+
+    // kFirebaseOptionsDeepLinkURLScheme
+    if (![initializeAppRequest.deepLinkURLScheme isEqual:[NSNull null]]) {
+      options.deepLinkURLScheme = initializeAppRequest.deepLinkURLScheme;
+    }
+
+    // kFirebaseOptionsAndroidClientId
+    if (![initializeAppRequest.androidClientId isEqual:[NSNull null]]) {
+      options.androidClientID = initializeAppRequest.androidClientId;
+    }
+
+    // kFirebaseOptionsIosBundleId
+    if (![initializeAppRequest.iosBundleId isEqual:[NSNull null]]) {
+      options.bundleID = initializeAppRequest.iosBundleId;
+    }
+
+    // kFirebaseOptionsIosClientId
+    if (![initializeAppRequest.iosClientId isEqual:[NSNull null]]) {
+      options.clientID = initializeAppRequest.iosClientId;
+    }
+
+    // kFirebaseOptionsAppGroupId
+    if (![initializeAppRequest.appGroupId isEqual:[NSNull null]]) {
+      options.appGroupID = initializeAppRequest.appGroupId;
+    }
+
+    [FIRApp configureWithName:appNameIos options:options];
+
+    completion([self initializeResponseFromFIRApp:[FIRApp appNamed:appNameIos]], nil);
+}
+
+- (void)initializeCoreWithCompletion:(nonnull void (^)(NSArray<PigeonInitializeReponse *> * _Nullable, FlutterError * _Nullable))completion {
+    NSLog(@"initializeCoreWithCompletion");
+}
+
+- (void)optionsFromResourceWithCompletion:(nonnull void (^)(PigeonFirebaseOptions * _Nullable, FlutterError * _Nullable))completion {
+    NSLog(@"optionsFromResourceWithCompletion");
 }
 
 @end
