@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core_platform_interface/src/messages.pigeon.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

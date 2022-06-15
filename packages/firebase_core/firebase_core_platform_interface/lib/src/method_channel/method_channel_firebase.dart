@@ -15,13 +15,9 @@ class MethodChannelFirebase extends FirebasePlatform {
   @visibleForTesting
   static bool isCoreInitialized = false;
 
-  /// The [MethodChannel] to which calls will be delegated.
+  /// Keeps track of whether users have initialized core.
   @visibleForTesting
-  static const MethodChannel channel = MethodChannel(
-    'plugins.flutter.io/firebase_core',
-  );
-
-  final _api = FirebaseCoreHostApi();
+  static FirebaseCoreHostApi api = FirebaseCoreHostApi();
 
   /// Calls the native Firebase#initializeCore method.
   ///
@@ -30,7 +26,7 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<PigeonInitializeReponse?> apps = await _api.initializeCore();
+    List<PigeonInitializeReponse?> apps = await api.initializeCore();
 
     apps
         .where((element) => element != null)
@@ -90,15 +86,15 @@ class MethodChannelFirebase extends FirebasePlatform {
       if (defaultTargetPlatform == TargetPlatform.android &&
           defaultApp == null &&
           _options == null) {
-        final options = await _api.optionsFromResource();
+        final options = await api.optionsFromResource();
         _options = FirebaseOptions.fromPigeon(options);
       }
 
       // If no options are present & no default app has been setup, the user is
       // trying to initialize default from Dart
       if (defaultApp == null && _options != null) {
-        _initializeFirebaseAppFromMap(await _api.initializeApp(
-            name ?? defaultFirebaseAppName,
+        _initializeFirebaseAppFromMap(await api.initializeApp(
+            defaultFirebaseAppName,
             PigeonFirebaseOptions(
               apiKey: _options.apiKey,
               appId: _options.appId,
@@ -163,7 +159,7 @@ class MethodChannelFirebase extends FirebasePlatform {
       }
     }
 
-    _initializeFirebaseAppFromMap(await _api.initializeApp(
+    _initializeFirebaseAppFromMap(await api.initializeApp(
         name,
         PigeonFirebaseOptions(
           apiKey: options!.apiKey,
@@ -181,7 +177,6 @@ class MethodChannelFirebase extends FirebasePlatform {
           iosBundleId: options.iosBundleId,
           appGroupId: options.appGroupId,
         )));
-
     return appInstances[name]!;
   }
 
