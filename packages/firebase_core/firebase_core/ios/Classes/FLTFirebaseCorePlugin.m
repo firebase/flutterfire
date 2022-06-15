@@ -16,6 +16,7 @@
   FLTFirebaseCorePlugin *sharedInstance = [self sharedInstance];
   [registrar publish:sharedInstance];
   FirebaseCoreHostApiSetup(registrar.messenger, sharedInstance);
+  FirebaseAppHostApiSetup(registrar.messenger, sharedInstance);
 }
 
 // Returns a singleton instance of the Firebase Core plugin.
@@ -92,6 +93,12 @@
 - (NSString *_Nonnull)firebaseLibraryVersion {
   return LIBRARY_VERSION;
 }
+
+- (NSString * _Nonnull)flutterChannelName {
+  // The pigeon channel depends on each function
+  return @"dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp";
+}
+
 
 #pragma mark - API
 
@@ -191,7 +198,7 @@
         if (success) {
           completion(nil);
         } else {
-          completion([FlutterError errorWithCode:@"delete-failed" message:@"Failed to delete a Firebase app instance." details:nil])
+            completion([FlutterError errorWithCode:@"delete-failed" message:@"Failed to delete a Firebase app instance." details:nil]);
         }
       }];
     } else {
