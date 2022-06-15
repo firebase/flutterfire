@@ -16,7 +16,7 @@ on:
 
 jobs:
   analyze:
-    timeout-minutes: 30
+    timeout-minutes: 75
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -35,7 +35,7 @@ jobs:
             dart pub publish --dry-run
 
   pub_get_check:
-    timeout-minutes: 30
+    timeout-minutes: 75
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,7 +51,7 @@ jobs:
 
   format:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v2
       - name: "Install Flutter"
@@ -81,7 +81,7 @@ jobs:
           ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
-    timeout-minutes: 30
+    timeout-minutes: 75
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -99,7 +99,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v2
       - name: "Install Flutter"
