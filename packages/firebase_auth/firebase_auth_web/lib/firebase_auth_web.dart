@@ -29,6 +29,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   Completer<void> _initialized = Completer();
 
+  bool initialUserChange = true;
+
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({required FirebaseApp app}) : super(appInstance: app) {
     // Create a app instance broadcast stream for both delegate listener events
@@ -64,7 +66,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       }
     }).listen((UserWeb? webUser) {
       _idTokenChangesListeners[app.name]!.add(webUser);
-      _userChangesListeners[app.name]!.add(webUser);
+      if (initialUserChange) {
+        initialUserChange = false;
+        _userChangesListeners[app.name]!.add(webUser);
+      }
     });
   }
 

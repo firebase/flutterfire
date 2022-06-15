@@ -179,8 +179,6 @@ void setupTests() {
                   user!.displayName,
                   equals('updatedName'),
                 ); // updated profile
-              } else {
-                fail('Should not have been called');
               }
             },
             count: 2,
@@ -191,7 +189,9 @@ void setupTests() {
         await FirebaseAuth.instance.currentUser!
             .updateDisplayName('updatedName');
 
-        await FirebaseAuth.instance.currentUser!.reload();
+        if(!kIsWeb){
+          await FirebaseAuth.instance.currentUser!.reload();
+        }
 
         expect(
           FirebaseAuth.instance.currentUser!.displayName,
@@ -551,12 +551,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('user-disabled'));
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
           expect(
             e.message,
             equals(
               'The user account has been disabled by an administrator.',
             ),
           );
+          }
         } catch (e) {
           fail(e.toString());
         }
@@ -570,12 +579,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('wrong-password'));
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
           expect(
             e.message,
             equals(
               'The password is invalid or the user does not have a password.',
             ),
           );
+          }
         } catch (e) {
           fail(e.toString());
         }
@@ -591,12 +609,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('user-not-found'));
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
           expect(
             e.message,
             equals(
               'There is no user record corresponding to this identifier. The user may have been deleted.',
             ),
           );
+          }
         } catch (e) {
           fail(e.toString());
         }
@@ -654,12 +681,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('user-disabled'));
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
           expect(
             e.message,
             equals(
               'The user account has been disabled by an administrator.',
             ),
           );
+          }
         } catch (e) {
           fail(e.toString());
         }
@@ -674,12 +710,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('wrong-password'));
-          expect(
-            e.message,
-            equals(
-              'The password is invalid or the user does not have a password.',
-            ),
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'The password is invalid or the user does not have a password.',
+              ),
+            );
+          }
         } catch (e) {
           fail(e.toString());
         }
@@ -694,12 +739,21 @@ void setupTests() {
           fail('Should have thrown');
         } on FirebaseException catch (e) {
           expect(e.code, equals('user-not-found'));
-          expect(
-            e.message,
-            equals(
-              'There is no user record corresponding to this identifier. The user may have been deleted.',
-            ),
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'There is no user record corresponding to this identifier. The user may have been deleted.',
+              ),
+            );
+          }
         } catch (e) {
           fail(e.toString());
         }

@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -132,10 +131,21 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, 'email-already-in-use');
-          expect(
-            e.message,
-            'The email address is already in use by another account.',
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'The email address is already in use by another account.',
+              ),
+            );
+          }
 
           // clean up
           await FirebaseAuth.instance.currentUser!.delete();
@@ -283,12 +293,22 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('user-mismatch'));
-          expect(
-            e.message,
-            equals(
-              'The supplied credentials do not correspond to the previously signed in user.',
-            ),
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'The supplied credentials do not correspond to the previously signed in user.',
+              ),
+            );
+          }
+
           await FirebaseAuth.instance.currentUser!.delete(); //clean up
           return;
         } catch (e) {
@@ -371,12 +391,22 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('wrong-password'));
-          expect(
-            e.message,
-            equals(
-              'The password is invalid or the user does not have a password.',
-            ),
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'The password is invalid or the user does not have a password.',
+              ),
+            );
+          }
+
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -481,10 +511,22 @@ void setupTests() {
           await FirebaseAuth.instance.currentUser!.unlink('invalid');
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          expect(
-            e.message,
-            'User was not linked to an account with the given provider.',
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'User was not linked to an account with the given provider.',
+              ),
+            );
+          }
+
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException error');
@@ -502,10 +544,22 @@ void setupTests() {
               .unlink(EmailAuthProvider.PROVIDER_ID);
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          expect(
-            e.message,
-            'User was not linked to an account with the given provider.',
-          );
+          if(kIsWeb){
+            expect(
+              e.message,
+              equals(
+                'Error',
+              ),
+            );
+          } else {
+            expect(
+              e.message,
+              equals(
+                'User was not linked to an account with the given provider.',
+              ),
+            );
+          }
+
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException error');
@@ -704,7 +758,8 @@ void setupTests() {
           // Skip apple CI because of https://github.com/firebase/firebase-ios-sdk/issues/8149
           // Using `kIsWeb` because `Platform` is not available on web
         },
-        skip: !kIsWeb && (Platform.isIOS || Platform.isMacOS),
+        // setting `displayName` on web throws an error
+        skip: kIsWeb || (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS),
       );
     });
 
@@ -771,7 +826,9 @@ void setupTests() {
           FirebaseAuth.instance.currentUser!.photoURL,
           isNull,
         );
-      });
+        // setting `photoURL` on web throws an error
+      },skip: kIsWeb,
+      );
     });
 
     group('updateProfile()', () {

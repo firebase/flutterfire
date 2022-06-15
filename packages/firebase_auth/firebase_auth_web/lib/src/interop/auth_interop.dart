@@ -43,7 +43,8 @@ external void connectAuthEmulator(
 );
 
 @JS()
-external PromiseJsImpl<void> setPersistence(AuthJsImpl auth, Persistence persistence);
+external PromiseJsImpl<void> setPersistence(
+    AuthJsImpl auth, Persistence persistence);
 
 @JS()
 external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
@@ -53,7 +54,8 @@ external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
 );
 
 @JS()
-external AdditionalUserInfoJsImpl getAdditionalUserInfo(UserCredentialJsImpl userCredential);
+external AdditionalUserInfoJsImpl getAdditionalUserInfo(
+    UserCredentialJsImpl userCredential);
 
 @JS()
 external PromiseJsImpl<void> deleteUser(
@@ -641,4 +643,3 @@ class AuthSettings {
   external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
-

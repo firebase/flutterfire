@@ -536,7 +536,7 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
   /// See allowed [persistence] values in [Persistence] class.
   Future setPersistence(Persistence persistence) {
     auth_interop.Persistence instance;
-    switch(persistence){
+    switch (persistence) {
       case Persistence.LOCAL:
         instance = auth_interop.browserLocalPersistence;
         break;
@@ -545,11 +545,10 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
         break;
       case Persistence.NONE:
         instance = auth_interop.inMemoryPersistence;
-      break;
+        break;
     }
-   return handleThenable(auth_interop.setPersistence(jsObject, instance));
+    return handleThenable(auth_interop.setPersistence(jsObject, instance));
   }
-
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -1053,8 +1052,8 @@ class UserCredential
   String get operationType => jsObject.operationType;
 
   /// Returns additional user information from a federated identity provider.
-  AdditionalUserInfo? get additionalUserInfo =>
-      AdditionalUserInfo.fromJsObject(auth_interop.getAdditionalUserInfo(jsObject));
+  AdditionalUserInfo? get additionalUserInfo => AdditionalUserInfo.fromJsObject(
+      auth_interop.getAdditionalUserInfo(jsObject));
 
   /// Creates a new UserCredential from a [jsObject].
   UserCredential.fromJsObject(auth_interop.UserCredentialJsImpl jsObject)

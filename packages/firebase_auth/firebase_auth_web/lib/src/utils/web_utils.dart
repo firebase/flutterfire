@@ -28,17 +28,10 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
 
-  auth_interop.AuthCredential firebaseAuthCredential = firebaseError.credential;
-  AuthCredential? credential =
-      firebaseAuthCredential is auth_interop.OAuthCredential
-          ? convertWebOAuthCredential(firebaseAuthCredential)
-          : convertWebAuthCredential(firebaseAuthCredential);
-
   return FirebaseAuthException(
     code: code,
     message: message,
     email: firebaseError.email,
-    credential: credential,
     phoneNumber: firebaseError.phoneNumber,
     tenantId: firebaseError.tenantId,
   );
