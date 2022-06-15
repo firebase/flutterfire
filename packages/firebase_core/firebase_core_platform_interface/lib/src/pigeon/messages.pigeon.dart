@@ -158,11 +158,15 @@ class FirebaseCoreHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeReponse> initializeApp(String arg_appName,
-      PigeonFirebaseOptions arg_initializeAppRequest) async {
+  Future<PigeonInitializeReponse> initializeApp(
+    String arg_appName,
+    PigeonFirebaseOptions arg_initializeAppRequest,
+  ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp', codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName, arg_initializeAppRequest])
             as Map<Object?, Object?>?;
@@ -191,8 +195,10 @@ class FirebaseCoreHostApi {
 
   Future<List<PigeonInitializeReponse?>> initializeCore() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore', codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -221,8 +227,10 @@ class FirebaseCoreHostApi {
 
   Future<PigeonFirebaseOptions> optionsFromResource() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource', codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseCoreHostApi.optionsFromResource',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap =
         await channel.send(null) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -265,11 +273,14 @@ class FirebaseAppHostApi {
   static const MessageCodec<Object?> codec = _FirebaseAppHostApiCodec();
 
   Future<void> setAutomaticDataCollectionEnabled(
-      String arg_appName, bool arg_enabled) async {
+    String arg_appName,
+    bool arg_enabled,
+  ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled',
-        codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticDataCollectionEnabled',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap = await channel
         .send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -291,11 +302,14 @@ class FirebaseAppHostApi {
   }
 
   Future<void> setAutomaticResourceManagementEnabled(
-      String arg_appName, bool arg_enabled) async {
+    String arg_appName,
+    bool arg_enabled,
+  ) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled',
-        codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseAppHostApi.setAutomaticResourceManagementEnabled',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap = await channel
         .send(<Object?>[arg_appName, arg_enabled]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -318,8 +332,10 @@ class FirebaseAppHostApi {
 
   Future<void> delete(String arg_appName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.FirebaseAppHostApi.delete', codec,
-        binaryMessenger: _binaryMessenger);
+      'dev.flutter.pigeon.FirebaseAppHostApi.delete',
+      codec,
+      binaryMessenger: _binaryMessenger,
+    );
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName]) as Map<Object?, Object?>?;
     if (replyMap == null) {
