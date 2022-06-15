@@ -14,6 +14,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 - An IDE such as [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/).
 - [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) locally activated.
 - [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) (available via brew on macOS, apt on Ubuntu, maybe via llvm on chocolatey for Windows)
+- [`swiftformat`](https://github.com/nicklockwood/SwiftFormat) (available via brew on macOS)
 
 ## 2. Forking & cloning the repository
 
