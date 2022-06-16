@@ -52,7 +52,7 @@ external void setUserId(
 @JS()
 external void setUserProperties(
   AnalyticsJsImpl analytics,
-  Map<String, Object?> property,
+  dynamic property,
   AnalyticsCallOptions? callOptions,
 );
 

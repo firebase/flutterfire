@@ -85,7 +85,7 @@ class Analytics extends JsObjectWrapper<analytics_interop.AnalyticsJsImpl> {
   }) {
     return analytics_interop.setUserProperties(
       jsObject,
-      {name: value},
+      util.jsify({name: value}),
       callOptions,
     );
   }
