@@ -45,6 +45,10 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
   }
 }
 
+/// [setupFirebaseCoreMocks] can be used to mock the FirebasePlatform.
+///
+/// If you need to customize the mock, you can implement [TestFirebaseCoreHostApi]
+/// and call `TestFirebaseCoreHostApi.setup(MyMock());`
 void setupFirebaseCoreMocks() {
   TestFirebaseCoreHostApi.setup(MockFirebaseApp());
 }
