@@ -1,3 +1,8 @@
+## 0.6.0+16
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
 ## 0.6.0+15
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8734). ([9ce47865](https://github.com/firebase/flutterfire/commit/9ce47865e4fcba0aaf1a4558ba7ede13abcde21d))

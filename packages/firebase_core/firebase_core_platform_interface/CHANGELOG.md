@@ -1,3 +1,8 @@
+## 4.4.1
+
+ - **REFACTOR**: migrate from hash* to Object.hash* (#8797). ([3dfc0997](https://github.com/firebase/flutterfire/commit/3dfc0997050ee4351207c355b2c22b46885f971f))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
 ## 4.4.0
 
  - **FEAT**: allow initializing default Firebase apps via `FirebaseOptions.fromResource` on Android ([#8566](https://github.com/firebase/flutterfire/issues/8566)). ([30216c4a](https://github.com/firebase/flutterfire/commit/30216c4a4c06c20f9c4c2b9a235a4aa9a48816a0))

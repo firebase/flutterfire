@@ -1,3 +1,7 @@
+## 1.6.5
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
 ## 1.6.4
 
  - Update a dependency to the latest release.

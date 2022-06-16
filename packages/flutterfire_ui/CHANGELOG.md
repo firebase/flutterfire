@@ -1,3 +1,12 @@
+## 0.4.2
+
+ - **REFACTOR**: migrate from hash* to Object.hash* (#8797). ([3dfc0997](https://github.com/firebase/flutterfire/commit/3dfc0997050ee4351207c355b2c22b46885f971f))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FIX**: fixed profile email modal overflow occurring on smaller devices (#8685). ([ed7add02](https://github.com/firebase/flutterfire/commit/ed7add025b1cb4accaa8163c5858d3025e87a62f))
+ - **FEAT**: add Simplified Chinese localization support (#8867). ([2aecd483](https://github.com/firebase/flutterfire/commit/2aecd483430ef50f3a184a9992c4079710aa206a))
+ - **FEAT**: Added Flexibility to the TableBuilder (#8539). ([78f93d69](https://github.com/firebase/flutterfire/commit/78f93d69806dc412dd055d0671e6d4c7a6507cec))
+ - **DOCS**: Change Facebook Typo to Twitter in the documentation (#8824). ([f2ddb783](https://github.com/firebase/flutterfire/commit/f2ddb783aab4262fd2dd8f4be3819c00e10d4fca))
+
 ## 0.4.1+2
 
  - **FIX**: correctly fix lint error from issue #8651 for dart `2.16` (#8713). ([666b1973](https://github.com/firebase/flutterfire/commit/666b1973c68cd5e60ba254a889136c922fd73500))

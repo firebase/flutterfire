@@ -1,3 +1,11 @@
+## 11.4.2
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FIX**: Swizzle check for FlutterAppLifeCycleProvider instead of UNUserNotificationCenterDelegate (#8822). ([81f6b274](https://github.com/firebase/flutterfire/commit/81f6b2743b99e47c16fc3ee13cc1e7e6e7982730))
+ - **DOCS**: clarify when `vapidKey` parameter is needed when calling `getToken()` (#8905). ([5ded8652](https://github.com/firebase/flutterfire/commit/5ded86528fad07f9eac9d70e4a49db372350f50d))
+ - **DOCS**: fix typo "RemoteMesage" in `messaging.dart` (#8906). ([fd016cd0](https://github.com/firebase/flutterfire/commit/fd016cd09221adde82836a777c770d604d4f99b6))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (#8814). ([78006e0d](https://github.com/firebase/flutterfire/commit/78006e0d5b9dce8038ce3606a43ddcbc8a4a71b9))
+
 ## 11.4.1
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8735). ([b2cf87a5](https://github.com/firebase/flutterfire/commit/b2cf87a5d96457bf49b9dd04d6087768bfe6ad95))
