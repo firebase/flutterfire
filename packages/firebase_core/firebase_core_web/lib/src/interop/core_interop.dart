@@ -8,6 +8,7 @@
 @JS('firebase_core')
 library firebase_interop.core;
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
 import 'app_interop.dart';
@@ -28,7 +29,7 @@ external AppJsImpl initializeApp(FirebaseOptions options, [String? name]);
 external AppJsImpl getApp([String? name]);
 
 @JS()
-external Future<void> deleteApp(AppJsImpl app);
+external PromiseJsImpl<void> deleteApp(AppJsImpl app);
 
 /// FirebaseError is a subclass of the standard Error object.
 /// In addition to a message string, it contains a string-valued code.
