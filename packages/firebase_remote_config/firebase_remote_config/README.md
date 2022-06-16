@@ -13,7 +13,7 @@ at [https://firebase.flutter.dev](https://firebase.flutter.dev)
 
 ## Usage
 
-To use this plugin, please visit the [Firebase Remote Config Usage documentation](https://firebase.flutter.dev/docs/remote-config/usage)
+To use this plugin, please visit the [Firebase Remote Config Usage documentation](https://firebase.google.com/docs/remote-config/get-started?platform=flutter)
 
 ## Issues and feedback
 

@@ -9,7 +9,7 @@ To get started with Firebase ML Model Downloader, please [see the documentation]
 
 ## Usage
 
-To use this plugin, please visit the [Firebase ML Model Downloader Usage documentation](https://firebase.flutter.dev/docs/ml/usage)
+To use this plugin, please visit the [Firebase ML Model Downloader Usage documentation](https://firebase.google.com/docs/ml/flutter/use-custom-models)
 
 ## Issues and feedback
 
