@@ -8,9 +8,10 @@
 import 'dart:async';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:js/js.dart';
+
 import 'storage_interop.dart' as storage_interop;
 
 export 'storage_interop.dart';
@@ -180,26 +181,6 @@ class StorageReference
       taskImpl = storage_interop.uploadBytesResumable(jsObject, blob);
     }
     return UploadTask.getInstance(taskImpl);
-  }
-
-  /// Uploads String [data] to the actual location with optional String [format]
-  /// and [metadata].
-  ///
-  /// See allowed [format] values in [storage_interop.StringFormat] class.
-  ///
-  /// Returns the [UploadResult]
-  Future<UploadResult> uploadString(String data,
-      [String? format, UploadMetadata? metadata]) {
-    PromiseJsImpl<storage_interop.UploadResult> promiseImpl;
-    if (metadata != null) {
-      promiseImpl = storage_interop.uploadString(
-          jsObject, data, format, metadata.jsObject);
-    } else if (format != null) {
-      promiseImpl = storage_interop.uploadString(jsObject, data, format);
-    } else {
-      promiseImpl = storage_interop.uploadString(jsObject, data);
-    }
-    return handleThenable(promiseImpl).then(UploadResult.getInstance);
   }
 
   /// Returns the String representation of the current storage reference.

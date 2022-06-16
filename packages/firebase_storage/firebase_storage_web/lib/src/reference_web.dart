@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
 
@@ -26,7 +27,6 @@ class ReferenceWeb extends ReferencePlatform {
   @override
   ReferenceWeb(FirebaseStorageWeb storage, String path)
       : _path = path,
-        _storage = storage,
         super(storage, path) {
     if (_path.startsWith(_storageUrlPrefix)) {
       _ref = storage.delegate.refFromURL(_path);
@@ -34,7 +34,6 @@ class ReferenceWeb extends ReferencePlatform {
       _ref = storage.delegate.ref(_path);
     }
   }
-  FirebaseStorageWeb _storage;
 
   // The js-interop layer for the ref that is wrapped by this class...
   late storage_interop.StorageReference _ref;
@@ -187,25 +186,24 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
-    throw UnsupportedError(
-        '`putString()` API is no longer available on the web platform. Please use `uploadString()` API.');
-  }
+    dynamic _data = data;
 
-  @override
-  Future<UploadResultPlatform> uploadString(
-    String data,
-    PutStringFormat format, [
-    SettableMetadata? metadata,
-  ]) async {
-    storage_interop.UploadResult result = await _ref.uploadString(
-        data,
-        putStringFormatToString(format),
+    // The universal package is converting raw to base64, so we need to convert
+    // Any base64 string values into a Uint8List.
+    if (format == PutStringFormat.base64) {
+      _data = base64Decode(data);
+    }
+
+    return TaskWeb(
+      this,
+      _ref.put(
+        _data,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
-        ));
-
-    return UploadResultPlatform(fbFullMetadataToFullMetadata(result.metadata),
-        ReferenceWeb(_storage, result.ref.fullPath));
+          // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.
+        ),
+      ),
+    );
   }
 
   /// Updates the metadata on a storage object.

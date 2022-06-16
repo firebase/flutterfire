@@ -11,8 +11,6 @@ library firebase.storage_interop;
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-import 'storage.dart';
-
 @JS()
 external StorageJsImpl getStorage([AppJsImpl? app, String? bucketUrl]);
 
