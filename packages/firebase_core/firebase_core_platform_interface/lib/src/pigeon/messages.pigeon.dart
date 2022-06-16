@@ -81,8 +81,8 @@ class PigeonFirebaseOptions {
   }
 }
 
-class PigeonInitializeReponse {
-  PigeonInitializeReponse({
+class PigeonInitializeResponse {
+  PigeonInitializeResponse({
     required this.name,
     required this.options,
     this.isAutomaticDataCollectionEnabled,
@@ -104,9 +104,9 @@ class PigeonInitializeReponse {
     return pigeonMap;
   }
 
-  static PigeonInitializeReponse decode(Object message) {
+  static PigeonInitializeResponse decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return PigeonInitializeReponse(
+    return PigeonInitializeResponse(
       name: pigeonMap['name']! as String,
       options: PigeonFirebaseOptions.decode(pigeonMap['options']!),
       isAutomaticDataCollectionEnabled:
@@ -124,7 +124,7 @@ class _FirebaseCoreHostApiCodec extends StandardMessageCodec {
     if (value is PigeonFirebaseOptions) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonInitializeReponse) {
+    } else if (value is PigeonInitializeResponse) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
@@ -139,7 +139,7 @@ class _FirebaseCoreHostApiCodec extends StandardMessageCodec {
         return PigeonFirebaseOptions.decode(readValue(buffer)!);
 
       case 129:
-        return PigeonInitializeReponse.decode(readValue(buffer)!);
+        return PigeonInitializeResponse.decode(readValue(buffer)!);
 
       default:
         return super.readValueOfType(type, buffer);
@@ -158,7 +158,7 @@ class FirebaseCoreHostApi {
 
   static const MessageCodec<Object?> codec = _FirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeReponse> initializeApp(
+  Future<PigeonInitializeResponse> initializeApp(
     String arg_appName,
     PigeonFirebaseOptions arg_initializeAppRequest,
   ) async {
@@ -189,11 +189,11 @@ class FirebaseCoreHostApi {
         message: 'Host platform returned null value for non-null return value.',
       );
     } else {
-      return (replyMap['result'] as PigeonInitializeReponse?)!;
+      return (replyMap['result'] as PigeonInitializeResponse?)!;
     }
   }
 
-  Future<List<PigeonInitializeReponse?>> initializeCore() async {
+  Future<List<PigeonInitializeResponse?>> initializeCore() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
       'dev.flutter.pigeon.FirebaseCoreHostApi.initializeCore',
       codec,
@@ -221,7 +221,7 @@ class FirebaseCoreHostApi {
       );
     } else {
       return (replyMap['result'] as List<Object?>?)!
-          .cast<PigeonInitializeReponse?>();
+          .cast<PigeonInitializeResponse?>();
     }
   }
 

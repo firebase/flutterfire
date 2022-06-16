@@ -26,18 +26,18 @@ class MethodChannelFirebase extends FirebasePlatform {
   /// any Firebase apps created natively and any constants which are required
   /// for a plugin to function correctly before usage.
   Future<void> _initializeCore() async {
-    List<PigeonInitializeReponse?> apps = await api.initializeCore();
+    List<PigeonInitializeResponse?> apps = await api.initializeCore();
 
     apps
         .where((element) => element != null)
-        .cast<PigeonInitializeReponse>()
+        .cast<PigeonInitializeResponse>()
         .forEach(_initializeFirebaseAppFromMap);
     isCoreInitialized = true;
   }
 
   /// Creates and attaches a new [MethodChannelFirebaseApp] to the [MethodChannelFirebase]
   /// and adds any constants to the [FirebasePluginPlatform] class.
-  void _initializeFirebaseAppFromMap(PigeonInitializeReponse response) {
+  void _initializeFirebaseAppFromMap(PigeonInitializeResponse response) {
     MethodChannelFirebaseApp methodChannelFirebaseApp =
         MethodChannelFirebaseApp(
       response.name,

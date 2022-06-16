@@ -14,11 +14,11 @@ final List<MethodCall> methodCallLog = <MethodCall>[];
 
 class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeReponse> initializeApp(
+  Future<PigeonInitializeResponse> initializeApp(
     String appName,
     PigeonFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeReponse(
+    return PigeonInitializeResponse(
       name: appName,
       options: PigeonFirebaseOptions(
         apiKey: '123',
@@ -35,9 +35,9 @@ class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeReponse?>> initializeCore() async {
+  Future<List<PigeonInitializeResponse?>> initializeCore() async {
     return [
-      PigeonInitializeReponse(
+      PigeonInitializeResponse(
         name: defaultFirebaseAppName,
         options: PigeonFirebaseOptions(
           apiKey: '123',
