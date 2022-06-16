@@ -18,6 +18,1176 @@ const _sentinel = _Sentinel();
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class ModelCollectionReference
+    implements ModelQuery, FirestoreCollectionReference<ModelQuerySnapshot> {
+  factory ModelCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$ModelCollectionReference;
+
+  static Model fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$ModelFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Model value,
+    SetOptions? options,
+  ) {
+    return _$ModelToJson(value);
+  }
+
+  @override
+  ModelDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ModelDocumentReference> add(Model value);
+}
+
+class _$ModelCollectionReference extends _$ModelQuery
+    implements ModelCollectionReference {
+  factory _$ModelCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$ModelCollectionReference._(
+      firestore.collection('root').withConverter(
+            fromFirestore: ModelCollectionReference.fromFirestore,
+            toFirestore: ModelCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ModelCollectionReference._(
+    CollectionReference<Model> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<Model> get reference =>
+      super.reference as CollectionReference<Model>;
+
+  @override
+  ModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ModelDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ModelDocumentReference> add(Model value) {
+    return reference.add(value).then((ref) => ModelDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ModelDocumentReference
+    extends FirestoreDocumentReference<ModelDocumentSnapshot> {
+  factory ModelDocumentReference(DocumentReference<Model> reference) =
+      _$ModelDocumentReference;
+
+  DocumentReference<Model> get reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots();
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    String value,
+  });
+
+  Future<void> set(Model value);
+}
+
+class _$ModelDocumentReference
+    extends FirestoreDocumentReference<ModelDocumentSnapshot>
+    implements ModelDocumentReference {
+  _$ModelDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<Model> reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? value = _sentinel,
+  }) async {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(Model value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ModelDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class ModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+  ModelDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Model? data;
+}
+
+abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
+  @override
+  ModelQuery limit(int limit);
+
+  @override
+  ModelQuery limitToLast(int limit);
+
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
+    implements ModelQuery {
+  _$ModelQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<Model> reference;
+
+  ModelQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<Model> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return ModelQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<ModelDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: ModelDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return ModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<ModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<ModelQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  ModelQuery limit(int limit) {
+    return _$ModelQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  ModelQuery limitToLast(int limit) {
+    return _$ModelQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        'value',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('value', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ModelQuerySnapshot
+    extends FirestoreQuerySnapshot<ModelQueryDocumentSnapshot> {
+  ModelQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<Model> snapshot;
+
+  @override
+  final List<ModelQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ModelDocumentSnapshot>> docChanges;
+}
+
+class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+    implements ModelDocumentSnapshot {
+  ModelQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final Model data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
+abstract class NestedCollectionReference
+    implements NestedQuery, FirestoreCollectionReference<NestedQuerySnapshot> {
+  factory NestedCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$NestedCollectionReference;
+
+  static Nested fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return Nested.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Nested value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  NestedDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<NestedDocumentReference> add(Nested value);
+}
+
+class _$NestedCollectionReference extends _$NestedQuery
+    implements NestedCollectionReference {
+  factory _$NestedCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$NestedCollectionReference._(
+      firestore.collection('nested').withConverter(
+            fromFirestore: NestedCollectionReference.fromFirestore,
+            toFirestore: NestedCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$NestedCollectionReference._(
+    CollectionReference<Nested> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<Nested> get reference =>
+      super.reference as CollectionReference<Nested>;
+
+  @override
+  NestedDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return NestedDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<NestedDocumentReference> add(Nested value) {
+    return reference.add(value).then((ref) => NestedDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$NestedCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class NestedDocumentReference
+    extends FirestoreDocumentReference<NestedDocumentSnapshot> {
+  factory NestedDocumentReference(DocumentReference<Nested> reference) =
+      _$NestedDocumentReference;
+
+  DocumentReference<Nested> get reference;
+
+  /// A reference to the [NestedCollectionReference] containing this document.
+  NestedCollectionReference get parent {
+    return _$NestedCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<NestedDocumentSnapshot> snapshots();
+
+  @override
+  Future<NestedDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    List<bool>? boolList,
+    List<String>? stringList,
+    List<num>? numList,
+    List<Object?>? objectList,
+    List<dynamic>? dynamicList,
+  });
+
+  Future<void> set(Nested value);
+}
+
+class _$NestedDocumentReference
+    extends FirestoreDocumentReference<NestedDocumentSnapshot>
+    implements NestedDocumentReference {
+  _$NestedDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<Nested> reference;
+
+  /// A reference to the [NestedCollectionReference] containing this document.
+  NestedCollectionReference get parent {
+    return _$NestedCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<NestedDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<NestedDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return NestedDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? boolList = _sentinel,
+    Object? stringList = _sentinel,
+    Object? numList = _sentinel,
+    Object? objectList = _sentinel,
+    Object? dynamicList = _sentinel,
+  }) async {
+    final json = {
+      if (boolList != _sentinel) "boolList": boolList as List<bool>?,
+      if (stringList != _sentinel) "stringList": stringList as List<String>?,
+      if (numList != _sentinel) "numList": numList as List<num>?,
+      if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
+      if (dynamicList != _sentinel)
+        "dynamicList": dynamicList as List<dynamic>?,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(Nested value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is NestedDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class NestedDocumentSnapshot extends FirestoreDocumentSnapshot {
+  NestedDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<Nested> snapshot;
+
+  @override
+  NestedDocumentReference get reference {
+    return NestedDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Nested? data;
+}
+
+abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
+  @override
+  NestedQuery limit(int limit);
+
+  @override
+  NestedQuery limitToLast(int limit);
+
+  NestedQuery whereBoolList({
+    List<bool>? isEqualTo,
+    List<bool>? isNotEqualTo,
+    List<bool>? isLessThan,
+    List<bool>? isLessThanOrEqualTo,
+    List<bool>? isGreaterThan,
+    List<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<bool>? arrayContainsAny,
+  });
+  NestedQuery whereStringList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? arrayContainsAny,
+  });
+  NestedQuery whereNumList({
+    List<num>? isEqualTo,
+    List<num>? isNotEqualTo,
+    List<num>? isLessThan,
+    List<num>? isLessThanOrEqualTo,
+    List<num>? isGreaterThan,
+    List<num>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? arrayContainsAny,
+  });
+  NestedQuery whereObjectList({
+    List<Object?>? isEqualTo,
+    List<Object?>? isNotEqualTo,
+    List<Object?>? isLessThan,
+    List<Object?>? isLessThanOrEqualTo,
+    List<Object?>? isGreaterThan,
+    List<Object?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Object?>? arrayContainsAny,
+  });
+  NestedQuery whereDynamicList({
+    List<dynamic>? isEqualTo,
+    List<dynamic>? isNotEqualTo,
+    List<dynamic>? isLessThan,
+    List<dynamic>? isLessThanOrEqualTo,
+    List<dynamic>? isGreaterThan,
+    List<dynamic>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<dynamic>? arrayContainsAny,
+  });
+
+  NestedQuery orderByBoolList({
+    bool descending = false,
+    List<bool>? startAt,
+    List<bool>? startAfter,
+    List<bool>? endAt,
+    List<bool>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByStringList({
+    bool descending = false,
+    List<String>? startAt,
+    List<String>? startAfter,
+    List<String>? endAt,
+    List<String>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByNumList({
+    bool descending = false,
+    List<num>? startAt,
+    List<num>? startAfter,
+    List<num>? endAt,
+    List<num>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByObjectList({
+    bool descending = false,
+    List<Object?>? startAt,
+    List<Object?>? startAfter,
+    List<Object?>? endAt,
+    List<Object?>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByDynamicList({
+    bool descending = false,
+    List<dynamic>? startAt,
+    List<dynamic>? startAfter,
+    List<dynamic>? endAt,
+    List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
+    implements NestedQuery {
+  _$NestedQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<Nested> reference;
+
+  NestedQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<Nested> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return NestedQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<NestedDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: NestedDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return NestedQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<NestedQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<NestedQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  NestedQuery limit(int limit) {
+    return _$NestedQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  NestedQuery limitToLast(int limit) {
+    return _$NestedQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  NestedQuery whereBoolList({
+    List<bool>? isEqualTo,
+    List<bool>? isNotEqualTo,
+    List<bool>? isLessThan,
+    List<bool>? isLessThanOrEqualTo,
+    List<bool>? isGreaterThan,
+    List<bool>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<bool>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        'boolList',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereStringList({
+    List<String>? isEqualTo,
+    List<String>? isNotEqualTo,
+    List<String>? isLessThan,
+    List<String>? isLessThanOrEqualTo,
+    List<String>? isGreaterThan,
+    List<String>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        'stringList',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereNumList({
+    List<num>? isEqualTo,
+    List<num>? isNotEqualTo,
+    List<num>? isLessThan,
+    List<num>? isLessThanOrEqualTo,
+    List<num>? isGreaterThan,
+    List<num>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        'numList',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereObjectList({
+    List<Object?>? isEqualTo,
+    List<Object?>? isNotEqualTo,
+    List<Object?>? isLessThan,
+    List<Object?>? isLessThanOrEqualTo,
+    List<Object?>? isGreaterThan,
+    List<Object?>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Object?>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        'objectList',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereDynamicList({
+    List<dynamic>? isEqualTo,
+    List<dynamic>? isNotEqualTo,
+    List<dynamic>? isLessThan,
+    List<dynamic>? isLessThanOrEqualTo,
+    List<dynamic>? isGreaterThan,
+    List<dynamic>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<dynamic>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        'dynamicList',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery orderByBoolList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('boolList', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByStringList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('stringList', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByNumList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('numList', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByObjectList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('objectList', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByDynamicList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('dynamicList', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$NestedQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class NestedQuerySnapshot
+    extends FirestoreQuerySnapshot<NestedQueryDocumentSnapshot> {
+  NestedQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<Nested> snapshot;
+
+  @override
+  final List<NestedQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<NestedDocumentSnapshot>> docChanges;
+}
+
+class NestedQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+    implements NestedDocumentSnapshot {
+  NestedQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<Nested> snapshot;
+
+  @override
+  NestedDocumentReference get reference {
+    return NestedDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final Nested data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class SplitFileModelCollectionReference
     implements
         SplitFileModelQuery,
@@ -73,6 +1243,10 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 
   @override
   SplitFileModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SplitFileModelDocumentReference(
       reference.doc(id),
     );
@@ -368,6 +1542,10 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 
   @override
   EmptyModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return EmptyModelDocumentReference(
       reference.doc(id),
     );
@@ -659,6 +1837,10 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
 
   @override
   OptionalJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return OptionalJsonDocumentReference(
       reference.doc(id),
     );
@@ -1061,6 +2243,10 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 
   @override
   MixedJsonDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return MixedJsonDocumentReference(
       reference.doc(id),
     );
@@ -1458,6 +2644,10 @@ class _$RootCollectionReference extends _$RootQuery
 
   @override
   RootDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return RootDocumentReference(
       reference.doc(id),
     );
@@ -1986,6 +3176,10 @@ class _$SubCollectionReference extends _$SubQuery
 
   @override
   SubDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return SubDocumentReference(
       reference.doc(id),
     );
@@ -2497,6 +3691,10 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
 
   @override
   AsCamelCaseDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return AsCamelCaseDocumentReference(
       reference.doc(id),
     );
@@ -2917,6 +4115,10 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 
   @override
   CustomSubNameDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return CustomSubNameDocumentReference(
       reference.doc(id),
     );
@@ -3329,6 +4531,10 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
 
   @override
   ExplicitPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitPathDocumentReference(
       reference.doc(id),
     );
@@ -3749,6 +4955,10 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 
   @override
   ExplicitSubPathDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return ExplicitSubPathDocumentReference(
       reference.doc(id),
     );
@@ -4120,6 +5330,42 @@ _$assertMinValidation(MinValidation instance) {
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+Model _$ModelFromJson(Map<String, dynamic> json) => Model(
+      json['value'] as String,
+    );
+
+Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
+      'value': instance.value,
+    };
+
+Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
+      value: json['value'] == null
+          ? null
+          : Nested.fromJson(json['value'] as Map<String, dynamic>),
+      valueList: (json['valueList'] as List<dynamic>?)
+          ?.map((e) => Nested.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      boolList:
+          (json['boolList'] as List<dynamic>?)?.map((e) => e as bool).toList(),
+      stringList: (json['stringList'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      numList:
+          (json['numList'] as List<dynamic>?)?.map((e) => e as num).toList(),
+      objectList: json['objectList'] as List<dynamic>?,
+      dynamicList: json['dynamicList'] as List<dynamic>?,
+    );
+
+Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
+      'value': instance.value,
+      'valueList': instance.valueList,
+      'boolList': instance.boolList,
+      'stringList': instance.stringList,
+      'numList': instance.numList,
+      'objectList': instance.objectList,
+      'dynamicList': instance.dynamicList,
+    };
 
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 

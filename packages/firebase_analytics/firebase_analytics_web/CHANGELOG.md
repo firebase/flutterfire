@@ -1,3 +1,11 @@
+## 0.4.0+14
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+13
+
+ - Update a dependency to the latest release.
+
 ## 0.4.0+12
 
  - Update a dependency to the latest release.
@@ -16,7 +24,7 @@
 
 ## 0.4.0+8
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 0.4.0+7
 
@@ -36,7 +44,7 @@
 
 ## 0.4.0+3
 
- - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/FirebaseExtended/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
+ - **FIX**: ensure `setDefaultEventParameters()` API throws stating not supported on web. (#7522). ([9a83f121](https://github.com/firebase/flutterfire/commit/9a83f1219e33090bc8dbdd9bf26316e7fc6e7979))
 
 ## 0.4.0+2
 

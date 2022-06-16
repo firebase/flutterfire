@@ -1,3 +1,11 @@
+## 2.6.16
+
+ - Update a dependency to the latest release.
+
+## 2.6.15
+
+ - Update a dependency to the latest release.
+
 ## 2.6.14
 
  - Update a dependency to the latest release.
@@ -16,7 +24,7 @@
 
 ## 2.6.10
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 2.6.9
 
@@ -36,7 +44,7 @@
 
 ## 2.6.5
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 2.6.4
 
@@ -176,7 +184,7 @@
 
 ## 1.0.1
 
- - **FIX**: Fix wrong cast (FirebaseExtended#5050) (#5242).
+ - **FIX**: Fix wrong cast (firebase#5050) (#5242).
 
 ## 1.0.0
 

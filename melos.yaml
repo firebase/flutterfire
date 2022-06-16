@@ -1,5 +1,5 @@
 name: FlutterFire
-repository: https://github.com/FirebaseExtended/flutterfire
+repository: https://github.com/firebase/flutterfire
 
 packages:
   - packages/**
@@ -41,7 +41,7 @@ scripts:
       swiftformat .
     description: |
       Build a specific example app for Android.
-       - Requires `flutter_plugin_tools` (`pub global activate flutter_plugin_tools`).
+       - Requires `flutter_plugin_tools` (`dart pub global activate flutter_plugin_tools`).
        - Requires `clang-format` (can be installed via Brew on macOS).
        - Requires `swiftformat` (can be installed via Brew on macOS).
 

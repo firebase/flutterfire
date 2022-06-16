@@ -1,3 +1,11 @@
+## 6.2.7
+
+ - Update a dependency to the latest release.
+
+## 6.2.6
+
+ - **REFACTOR**: fix analyzer issues introduced in Flutter 3.0.0 ([#8653](https://github.com/firebase/flutterfire/issues/8653)). ([74e58171](https://github.com/firebase/flutterfire/commit/74e5817159f18934ed0cd803f410ec96b372316a))
+
 ## 6.2.5
 
  - Update a dependency to the latest release.
@@ -16,11 +24,11 @@
 
 ## 6.2.1
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 6.2.0
 
- - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/FirebaseExtended/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
+ - **FEAT**: refactor error handling to preserve stack traces on platform exceptions (#8156). ([6ac77d99](https://github.com/firebase/flutterfire/commit/6ac77d99042de2a1950f89b35972e3ee1116dc9f))
 
 ## 6.1.11
 
@@ -32,7 +40,7 @@
 
 ## 6.1.9
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 6.1.8
 
@@ -213,7 +221,7 @@ Migrated to null safety (#4633)
 
 ## 2.0.1
 
-* Fixed an incorrect assert when creating a `GoogleAuthCredential` instance. [(#3216)](https://github.com/FirebaseExtended/flutterfire/pull/3216/files#diff-be71096f90f1a879f17b7c94607b0885)
+* Fixed an incorrect assert when creating a `GoogleAuthCredential` instance. [(#3216)](https://github.com/firebase/flutterfire/pull/3216/files#diff-be71096f90f1a879f17b7c94607b0885)
 
 ## 2.0.0
 

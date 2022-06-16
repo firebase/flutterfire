@@ -1,14 +1,22 @@
+## 3.3.19
+
+ - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8748). ([c6ff0b21](https://github.com/firebase/flutterfire/commit/c6ff0b21352eb0f9a9a576ca7ef737d203292a58))
+
+## 3.3.18
+
+ - Update a dependency to the latest release.
+
 ## 3.3.17
 
  - Update a dependency to the latest release.
 
 ## 3.3.16
 
- - **REFACTOR**: remove deprecated `Tasks.call()` API from Android. (#8452). ([3e92496b](https://github.com/FirebaseExtended/flutterfire/commit/3e92496b2783ec149258c22d3167c5388dcb1c40))
+ - **REFACTOR**: remove deprecated `Tasks.call()` API from Android. (#8452). ([3e92496b](https://github.com/firebase/flutterfire/commit/3e92496b2783ec149258c22d3167c5388dcb1c40))
 
 ## 3.3.15
 
- - **FIX**: Use iterator instead of enhanced for loop on android. (#8498). ([027c75a6](https://github.com/FirebaseExtended/flutterfire/commit/027c75a60b39a40e6a3edc12edc51487cc954503))
+ - **FIX**: Use iterator instead of enhanced for loop on android. (#8498). ([027c75a6](https://github.com/firebase/flutterfire/commit/027c75a60b39a40e6a3edc12edc51487cc954503))
 
 ## 3.3.14
 
@@ -24,16 +32,16 @@
 
 ## 3.3.11
 
- - **FIX**: Update APN token once auth plugin has been initialized on `iOS`. (#8201). ([ab6239dd](https://github.com/FirebaseExtended/flutterfire/commit/ab6239ddf5cb14211b76bced04ec52203919a57a))
+ - **FIX**: Update APN token once auth plugin has been initialized on `iOS`. (#8201). ([ab6239dd](https://github.com/firebase/flutterfire/commit/ab6239ddf5cb14211b76bced04ec52203919a57a))
 
 ## 3.3.10
 
- - **FIX**: return correct error code for linkWithCredential `provider-already-linked` on Android (#8245). ([ae090719](https://github.com/FirebaseExtended/flutterfire/commit/ae090719ebbb0873cf227f76004feeae9a7d0580))
- - **FIX**: Fixed bug that sets email to `nil` on `iOS` when the `User` has no provider. (#8209). ([fb646438](https://github.com/FirebaseExtended/flutterfire/commit/fb646438f219b0f0f7c6a8c52e2b9daa4afc833e))
+ - **FIX**: return correct error code for linkWithCredential `provider-already-linked` on Android (#8245). ([ae090719](https://github.com/firebase/flutterfire/commit/ae090719ebbb0873cf227f76004feeae9a7d0580))
+ - **FIX**: Fixed bug that sets email to `nil` on `iOS` when the `User` has no provider. (#8209). ([fb646438](https://github.com/firebase/flutterfire/commit/fb646438f219b0f0f7c6a8c52e2b9daa4afc833e))
 
 ## 3.3.9
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 3.3.8
 
@@ -41,7 +49,7 @@
 
 ## 3.3.7
 
- - **DOCS**: Update documentation for `currentUser` property to make expectations clearer. (#7843). ([59bb47c2](https://github.com/FirebaseExtended/flutterfire/commit/59bb47c2490fbd641a1fcc26f2f888e8f4f02671))
+ - **DOCS**: Update documentation for `currentUser` property to make expectations clearer. (#7843). ([59bb47c2](https://github.com/firebase/flutterfire/commit/59bb47c2490fbd641a1fcc26f2f888e8f4f02671))
 
 ## 3.3.6
 
@@ -49,11 +57,11 @@
 
 ## 3.3.5
 
- - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/FirebaseExtended/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
+ - **FIX**: bump Android `compileSdkVersion` to 31 (#7726). ([a9562bac](https://github.com/firebase/flutterfire/commit/a9562bac60ba927fb3664a47a7f7eaceb277dca6))
 
 ## 3.3.4
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 3.3.3
 
@@ -312,7 +320,7 @@
 
 ## 0.18.0+1
 
-* Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/FirebaseExtended/flutterfire/pull/3217)
+* Fixed an Android issue where certain network related Firebase Auth error codes would come through as `unknown`. [(#3217)](https://github.com/firebase/flutterfire/pull/3217)
 * Added missing deprecations: `FirebaseUser` class and `photoUrl` getter.
 * Bump `firebase_auth_platform_interface` dependency to fix an assertion issue when creating Google sign-in credentials.
 * Bump `firebase_auth_web` dependency to `^0.3.0+1`.

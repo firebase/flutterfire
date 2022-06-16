@@ -16,6 +16,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   final TextDirection? desktopLayoutDirection;
   final bool? resizeToAvoidBottomInset;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const ForgotPasswordScreen({
     Key? key,
@@ -29,6 +30,7 @@ class ForgotPasswordScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.resizeToAvoidBottomInset,
     this.breakpoint = 600,
+    this.styles,
   }) : super(key: key);
 
   @override
@@ -40,19 +42,22 @@ class ForgotPasswordScreen extends StatelessWidget {
       subtitleBuilder: subtitleBuilder,
     );
 
-    return UniversalScaffold(
-      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      body: ResponsivePage(
-        desktopLayoutDirection: desktopLayoutDirection,
-        headerBuilder: headerBuilder,
-        headerMaxExtent: headerMaxExtent,
-        sideBuilder: sideBuilder,
-        breakpoint: breakpoint,
-        maxWidth: 1200,
-        contentFlex: 1,
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: child,
+    return FlutterFireUITheme(
+      styles: styles ?? const {},
+      child: UniversalScaffold(
+        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+        body: ResponsivePage(
+          desktopLayoutDirection: desktopLayoutDirection,
+          headerBuilder: headerBuilder,
+          headerMaxExtent: headerMaxExtent,
+          sideBuilder: sideBuilder,
+          breakpoint: breakpoint,
+          maxWidth: 1200,
+          contentFlex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: child,
+          ),
         ),
       ),
     );
