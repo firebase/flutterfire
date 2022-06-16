@@ -14,6 +14,7 @@ _See also: [Flutter's code of conduct](https://flutter.io/design-principles/#cod
 - An IDE such as [Android Studio](https://developer.android.com/studio) or [Visual Studio Code](https://code.visualstudio.com/).
 - [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) locally activated.
 - [`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) (available via brew on macOS, apt on Ubuntu, maybe via llvm on chocolatey for Windows)
+- [`swiftformat`](https://github.com/nicklockwood/SwiftFormat) (available via brew on macOS)
 
 ## 2. Forking & cloning the repository
 
@@ -51,6 +52,8 @@ provide manual [`dependency_overrides`](https://dart.dev/tools/pub/pubspec). Thi
 plugins, examples and tests to build from the local clone project.
 
 > You do not need to run `flutter pub get` once bootstrap has been completed.
+
+> If you're using [fvm](https://fvm.app/) you might need to specify the sdk-path: `melos bs --sdk-path=/Users/user/fvm/default/`
 
 ## 4. Running an example
 
@@ -217,30 +220,30 @@ Some things to keep in mind before publishing the release:
 
 ### Run a release...
 
-1) Switch to `master` branch locally.
-2) Run `git pull origin master`.
-3) Run `git pull --tags` to make sure all tags are fetched.
-4) Create new branch with the signature "release/[year]-[month]-[day]".
-5) Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
-6) Run `melos publish` to dry run and confirm all packages are publishable.
-7) After successful dry run, commit all changes with the signature "chore(release): prepare for release".
-8) Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
-9) After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
-10) Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
-11) Run `git push --tags` to push tags to repository.
+1. Switch to `master` branch locally.
+2. Run `git pull origin master`.
+3. Run `git pull --tags` to make sure all tags are fetched.
+4. Create new branch with the signature "release/[year]-[month]-[day]".
+5. Run `melos version --no-git-tag-version` to automatically version packages and update Changelogs.
+6. Run `melos publish` to dry run and confirm all packages are publishable.
+7. After successful dry run, commit all changes with the signature "chore(release): prepare for release".
+8. Run `git push origin [RELEASE BRANCH NAME]` & open pull request for review on GitHub.
+9. After successful review and merge of the pull request, switch to `master` branch locally, & run `git pull origin master`.
+10. Run `melos publish --no-dry-run --git-tag-version` to now publish to Pub.dev.
+11. Run `git push --tags` to push tags to repository.
 
 ### Graduate packages
 
 Sometimes you may need to 'graduate' a package from a 'dev' or 'beta' (versions tagged like this: `0.10.0-dev.4`) to a stable version. Melos can also be used
 to graduate multiple packages using the following steps:
 
-1) Switch to `master` branch locally.
-2) Run 'git pull origin master'.
-3) Run `git fetch --all` to make sure all tags and commits are fetched.
-4) Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
-5) Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
-6) Run `melos publish` to dry run and confirm all packages are publishable.
-7) Run `melos publish --no-dry-run` to now publish to Pub.dev.
+1. Switch to `master` branch locally.
+2. Run 'git pull origin master'.
+3. Run `git fetch --all` to make sure all tags and commits are fetched.
+4. Run `melos version --graduate` to prompt a list of all packages to be graduated (You may also specifically select packages using the scope flag like this: `--scope="*firestore*"`)
+5. Run `git push --follow-tags` to push the auto commits and tags to the remote repository.
+6. Run `melos publish` to dry run and confirm all packages are publishable.
+7. Run `melos publish --no-dry-run` to now publish to Pub.dev.
 
 ## 6. Contributing documentation
 
