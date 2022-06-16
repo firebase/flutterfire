@@ -90,6 +90,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     context.callMethod('ff_trigger_$windowVar', [
       (module) {
         context[windowVar] = module;
+        context.deleteProperty('ff_trigger_$windowVar');
         completer.complete();
       }
     ]);
