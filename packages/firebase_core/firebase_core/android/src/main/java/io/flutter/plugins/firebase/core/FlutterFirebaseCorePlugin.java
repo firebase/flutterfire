@@ -63,16 +63,16 @@ public class FlutterFirebaseCorePlugin
     return firebaseOptions.build();
   }
 
-  private Task<GeneratedAndroidFirebaseCore.PigeonInitializeReponse> firebaseAppToMap(
+  private Task<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppToMap(
       FirebaseApp firebaseApp) {
-    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeReponse>
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
         taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder initializeResponse =
-                new GeneratedAndroidFirebaseCore.PigeonInitializeReponse.Builder();
+            GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder initializeResponse =
+                new GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder();
 
             initializeResponse.setName(firebaseApp.getName());
             initializeResponse.setOptions(firebaseOptionsToMap(firebaseApp.getOptions()));
@@ -111,9 +111,9 @@ public class FlutterFirebaseCorePlugin
   public void initializeApp(
       @NonNull String appName,
       @NonNull GeneratedAndroidFirebaseCore.PigeonFirebaseOptions initializeAppRequest,
-      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonInitializeReponse>
+      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
           result) {
-    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeReponse>
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
         taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -152,9 +152,9 @@ public class FlutterFirebaseCorePlugin
   @Override
   public void initializeCore(
       GeneratedAndroidFirebaseCore.Result<
-              List<GeneratedAndroidFirebaseCore.PigeonInitializeReponse>>
+              List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
           result) {
-    TaskCompletionSource<List<GeneratedAndroidFirebaseCore.PigeonInitializeReponse>>
+    TaskCompletionSource<List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
         taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
@@ -167,7 +167,7 @@ public class FlutterFirebaseCorePlugin
             }
 
             List<FirebaseApp> firebaseApps = FirebaseApp.getApps(applicationContext);
-            List<GeneratedAndroidFirebaseCore.PigeonInitializeReponse> firebaseAppsList =
+            List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppsList =
                 new ArrayList<>(firebaseApps.size());
 
             for (FirebaseApp firebaseApp : firebaseApps) {

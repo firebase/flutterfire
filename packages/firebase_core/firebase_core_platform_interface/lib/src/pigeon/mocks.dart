@@ -2,11 +2,11 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
 
 class MockFirebaseApp implements TestFirebaseCoreHostApi {
   @override
-  Future<PigeonInitializeReponse> initializeApp(
+  Future<PigeonInitializeResponse> initializeApp(
     String appName,
     PigeonFirebaseOptions initializeAppRequest,
   ) async {
-    return PigeonInitializeReponse(
+    return PigeonInitializeResponse(
       name: appName,
       options: PigeonFirebaseOptions(
         apiKey: '123',
@@ -19,9 +19,9 @@ class MockFirebaseApp implements TestFirebaseCoreHostApi {
   }
 
   @override
-  Future<List<PigeonInitializeReponse?>> initializeCore() async {
+  Future<List<PigeonInitializeResponse?>> initializeCore() async {
     return [
-      PigeonInitializeReponse(
+      PigeonInitializeResponse(
         name: defaultFirebaseAppName,
         options: PigeonFirebaseOptions(
           apiKey: '123',

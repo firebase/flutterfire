@@ -72,11 +72,11 @@
   return pigeonOptions;
 }
 
-- (PigeonInitializeReponse *)initializeResponseFromFIRApp:
+- (PigeonInitializeResponse *)initializeResponseFromFIRApp:
     (FIRApp *)firebaseApp {
   NSString *appNameDart =
       [FLTFirebasePlugin firebaseAppNameFromIosName:firebaseApp.name];
-  PigeonInitializeReponse *response = [PigeonInitializeReponse alloc];
+  PigeonInitializeResponse *response = [PigeonInitializeResponse alloc];
   response.name = appNameDart;
   response.options = [self optionsFromFIROptions:firebaseApp.options];
   response.isAutomaticDataCollectionEnabled =
@@ -115,7 +115,7 @@
 - (void)
     initializeAppAppName:(nonnull NSString *)appName
     initializeAppRequest:(nonnull PigeonFirebaseOptions *)initializeAppRequest
-              completion:(nonnull void (^)(PigeonInitializeReponse *_Nullable,
+              completion:(nonnull void (^)(PigeonInitializeResponse *_Nullable,
                                            FlutterError *_Nullable))completion {
   NSString *appNameIos =
       [FLTFirebasePlugin firebaseAppNameFromDartName:appName];
@@ -184,7 +184,7 @@
 }
 
 - (void)initializeCoreWithCompletion:
-    (nonnull void (^)(NSArray<PigeonInitializeReponse *> *_Nullable,
+    (nonnull void (^)(NSArray<PigeonInitializeResponse *> *_Nullable,
                       FlutterError *_Nullable))completion {
   void (^initializeCoreBlock)(void) = ^void() {
     NSDictionary<NSString *, FIRApp *> *firebaseApps = [FIRApp allApps];

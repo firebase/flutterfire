@@ -62,8 +62,8 @@ class PigeonFirebaseOptions {
   final String? appGroupId;
 }
 
-class PigeonInitializeReponse {
-  PigeonInitializeReponse({
+class PigeonInitializeResponse {
+  PigeonInitializeResponse({
     required this.name,
     required this.options,
     required this.isAutomaticDataCollectionEnabled,
@@ -79,13 +79,13 @@ class PigeonInitializeReponse {
 @HostApi(dartHostTestHandler: 'TestFirebaseCoreHostApi')
 abstract class FirebaseCoreHostApi {
   @async
-  PigeonInitializeReponse initializeApp(
+  PigeonInitializeResponse initializeApp(
     String appName,
     PigeonFirebaseOptions initializeAppRequest,
   );
 
   @async
-  List<PigeonInitializeReponse> initializeCore();
+  List<PigeonInitializeResponse> initializeCore();
 
   @async
   PigeonFirebaseOptions optionsFromResource();

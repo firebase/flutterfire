@@ -21,7 +21,5 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   mockito: ^5.0.0
   pigeon: ^3.1.5

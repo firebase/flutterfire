@@ -352,7 +352,7 @@ public class GeneratedAndroidFirebaseCore {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class PigeonInitializeReponse {
+  public static class PigeonInitializeResponse {
     private @NonNull String name;
 
     public @NonNull String getName() {
@@ -403,7 +403,7 @@ public class GeneratedAndroidFirebaseCore {
     }
 
     /** Constructor is private to enforce null safety; use Builder. */
-    private PigeonInitializeReponse() {}
+    private PigeonInitializeResponse() {}
 
     public static final class Builder {
       private @Nullable String name;
@@ -434,8 +434,8 @@ public class GeneratedAndroidFirebaseCore {
         return this;
       }
 
-      public @NonNull PigeonInitializeReponse build() {
-        PigeonInitializeReponse pigeonReturn = new PigeonInitializeReponse();
+      public @NonNull PigeonInitializeResponse build() {
+        PigeonInitializeResponse pigeonReturn = new PigeonInitializeResponse();
         pigeonReturn.setName(name);
         pigeonReturn.setOptions(options);
         pigeonReturn.setIsAutomaticDataCollectionEnabled(isAutomaticDataCollectionEnabled);
@@ -454,8 +454,8 @@ public class GeneratedAndroidFirebaseCore {
       return toMapResult;
     }
 
-    static @NonNull PigeonInitializeReponse fromMap(@NonNull Map<String, Object> map) {
-      PigeonInitializeReponse pigeonResult = new PigeonInitializeReponse();
+    static @NonNull PigeonInitializeResponse fromMap(@NonNull Map<String, Object> map) {
+      PigeonInitializeResponse pigeonResult = new PigeonInitializeResponse();
       Object name = map.get("name");
       pigeonResult.setName((String) name);
       Object options = map.get("options");
@@ -487,7 +487,7 @@ public class GeneratedAndroidFirebaseCore {
           return PigeonFirebaseOptions.fromMap((Map<String, Object>) readValue(buffer));
 
         case (byte) 129:
-          return PigeonInitializeReponse.fromMap((Map<String, Object>) readValue(buffer));
+          return PigeonInitializeResponse.fromMap((Map<String, Object>) readValue(buffer));
 
         default:
           return super.readValueOfType(type, buffer);
@@ -499,9 +499,9 @@ public class GeneratedAndroidFirebaseCore {
       if (value instanceof PigeonFirebaseOptions) {
         stream.write(128);
         writeValue(stream, ((PigeonFirebaseOptions) value).toMap());
-      } else if (value instanceof PigeonInitializeReponse) {
+      } else if (value instanceof PigeonInitializeResponse) {
         stream.write(129);
-        writeValue(stream, ((PigeonInitializeReponse) value).toMap());
+        writeValue(stream, ((PigeonInitializeResponse) value).toMap());
       } else {
         super.writeValue(stream, value);
       }
@@ -513,9 +513,9 @@ public class GeneratedAndroidFirebaseCore {
     void initializeApp(
         @NonNull String appName,
         @NonNull PigeonFirebaseOptions initializeAppRequest,
-        Result<PigeonInitializeReponse> result);
+        Result<PigeonInitializeResponse> result);
 
-    void initializeCore(Result<List<PigeonInitializeReponse>> result);
+    void initializeCore(Result<List<PigeonInitializeResponse>> result);
 
     void optionsFromResource(Result<PigeonFirebaseOptions> result);
 
@@ -550,9 +550,9 @@ public class GeneratedAndroidFirebaseCore {
                   if (initializeAppRequestArg == null) {
                     throw new NullPointerException("initializeAppRequestArg unexpectedly null.");
                   }
-                  Result<PigeonInitializeReponse> resultCallback =
-                      new Result<PigeonInitializeReponse>() {
-                        public void success(PigeonInitializeReponse result) {
+                  Result<PigeonInitializeResponse> resultCallback =
+                      new Result<PigeonInitializeResponse>() {
+                        public void success(PigeonInitializeResponse result) {
                           wrapped.put("result", result);
                           reply.reply(wrapped);
                         }
@@ -584,9 +584,9 @@ public class GeneratedAndroidFirebaseCore {
               (message, reply) -> {
                 Map<String, Object> wrapped = new HashMap<>();
                 try {
-                  Result<List<PigeonInitializeReponse>> resultCallback =
-                      new Result<List<PigeonInitializeReponse>>() {
-                        public void success(List<PigeonInitializeReponse> result) {
+                  Result<List<PigeonInitializeResponse>> resultCallback =
+                      new Result<List<PigeonInitializeResponse>>() {
+                        public void success(List<PigeonInitializeResponse> result) {
                           wrapped.put("result", result);
                           reply.reply(wrapped);
                         }

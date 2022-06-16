@@ -18,7 +18,7 @@ class _TestFirebaseCoreHostApiCodec extends StandardMessageCodec {
     if (value is PigeonFirebaseOptions) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is PigeonInitializeReponse) {
+    } else if (value is PigeonInitializeResponse) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else {
@@ -33,7 +33,7 @@ class _TestFirebaseCoreHostApiCodec extends StandardMessageCodec {
         return PigeonFirebaseOptions.decode(readValue(buffer)!);
 
       case 129:
-        return PigeonInitializeReponse.decode(readValue(buffer)!);
+        return PigeonInitializeResponse.decode(readValue(buffer)!);
 
       default:
         return super.readValueOfType(type, buffer);
@@ -44,11 +44,11 @@ class _TestFirebaseCoreHostApiCodec extends StandardMessageCodec {
 abstract class TestFirebaseCoreHostApi {
   static const MessageCodec<Object?> codec = _TestFirebaseCoreHostApiCodec();
 
-  Future<PigeonInitializeReponse> initializeApp(
+  Future<PigeonInitializeResponse> initializeApp(
     String appName,
     PigeonFirebaseOptions initializeAppRequest,
   );
-  Future<List<PigeonInitializeReponse?>> initializeCore();
+  Future<List<PigeonInitializeResponse?>> initializeCore();
   Future<PigeonFirebaseOptions> optionsFromResource();
   static void setup(
     TestFirebaseCoreHostApi? api, {
@@ -80,7 +80,7 @@ abstract class TestFirebaseCoreHostApi {
             arg_initializeAppRequest != null,
             'Argument for dev.flutter.pigeon.FirebaseCoreHostApi.initializeApp was null, expected non-null PigeonFirebaseOptions.',
           );
-          final PigeonInitializeReponse output =
+          final PigeonInitializeResponse output =
               await api.initializeApp(arg_appName!, arg_initializeAppRequest!);
           return <Object?, Object?>{'result': output};
         });
@@ -97,7 +97,7 @@ abstract class TestFirebaseCoreHostApi {
       } else {
         channel.setMockMessageHandler((Object? message) async {
           // ignore message
-          final List<PigeonInitializeReponse?> output =
+          final List<PigeonInitializeResponse?> output =
               await api.initializeCore();
           return <Object?, Object?>{'result': output};
         });
