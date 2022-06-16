@@ -7,6 +7,7 @@ package io.flutter.plugins.firebase.crashlytics;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.Task;
@@ -78,7 +79,7 @@ public class FlutterFirebaseCrashlyticsPlugin
   }
 
   private void crash() {
-    new Handler()
+    new Handler(Looper.myLooper())
         .postDelayed(
             () -> {
               throw new FirebaseCrashlyticsTestCrash();
