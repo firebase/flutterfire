@@ -5,6 +5,8 @@
 
 // ignore_for_file: public_member_api_docs
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
+
 import 'app_interop.dart';
 import 'core_interop.dart';
 import 'core.dart' as core_interop;
@@ -31,5 +33,5 @@ class App extends JsObjectWrapper<AppJsImpl> {
   }
 
   /// Deletes the app and frees resources of all App's services.
-  Future delete() => core_interop.handleThenable(jsObject.delete());
+  Future<void> delete() => handleThenable(core_interop.deleteApp(jsObject));
 }
