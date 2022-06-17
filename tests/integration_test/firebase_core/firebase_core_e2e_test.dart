@@ -2,15 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:drive/drive.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-
-import 'package:drive/drive.dart';
 import 'package:flutter/foundation.dart';
+import 'package:integration_test/integration_test.dart';
 
 import '../../test_driver/firebase_default_options.dart';
 
 void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
   group('firebase_core', () {
     String testAppName = '[DEFAULT]';
 
