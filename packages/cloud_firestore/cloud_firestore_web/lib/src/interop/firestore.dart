@@ -6,7 +6,6 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
-import 'dart:js' as js;
 import 'dart:typed_data';
 
 import 'package:cloud_firestore_platform_interface/cloud_firestore_platform_interface.dart';

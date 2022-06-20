@@ -7,10 +7,7 @@
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
-import 'app_interop.dart';
-import 'core_interop.dart';
 import 'core.dart' as core_interop;
-import 'utils/js.dart';
 
 /// A Firebase App holds the initialization information for a collection
 /// of services.
