@@ -143,7 +143,7 @@ class ${data.queryReferenceImplName}
     ${data.documentSnapshotName}? endBeforeDocument,
     ${data.documentSnapshotName}? startAfterDocument,
   }) {
-    var query = reference.orderBy('${field.name}', descending: descending);
+    var query = reference.orderBy(${field.field}, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);

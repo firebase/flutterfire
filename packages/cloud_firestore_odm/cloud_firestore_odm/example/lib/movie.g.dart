@@ -720,7 +720,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('documentId', descending: descending);
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -762,7 +762,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('poster', descending: descending);
+    var query = reference.orderBy("poster", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -804,7 +804,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('likes', descending: descending);
+    var query = reference.orderBy("likes", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -846,7 +846,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('title', descending: descending);
+    var query = reference.orderBy("title", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -888,7 +888,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('year', descending: descending);
+    var query = reference.orderBy("year", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -930,7 +930,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('runtime', descending: descending);
+    var query = reference.orderBy("runtime", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -972,7 +972,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('rated', descending: descending);
+    var query = reference.orderBy("rated", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1014,7 +1014,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('genre', descending: descending);
+    var query = reference.orderBy("genre", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1539,7 +1539,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('documentId', descending: descending);
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1581,7 +1581,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('authorName', descending: descending);
+    var query = reference.orderBy("authorName", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1623,7 +1623,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('message', descending: descending);
+    var query = reference.orderBy("message", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
