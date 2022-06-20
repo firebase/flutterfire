@@ -1,0 +1,83 @@
+require 'xcodeproj'
+require 'optparse'
+
+# Dictionary to hold command line arguments
+options_dict = {}
+options_dict[:flutter_project] = false
+options_dict[:additional_options] = ""
+
+# Parse command line arguments into options_dict
+OptionParser.new do |options|
+    options.banner = "Adds the Crashlytics upload-symbols tool to an Xcode target's build phase. Usage:  crashlytics_upload_symbols [options]"
+
+    options.on("-p", "--projectDirectory=DIRECTORY", String, "Directory of the Xcode project") do |dir|
+        options_dict[:project_dir] = dir
+    end
+
+    options.on("-n", "--projectName=NAME", String, "Name of the Xcode project (ex: Runner.xcodeproj)") do |name|
+        options_dict[:project_name] = name
+    end
+
+    options.on("-o", "--additionalOptions=OPTIONS", String, "Additional arguments to pass to upload-symbols (quote if multiple args)") do |opts|
+        options_dict[:additional_options] = opts
+    end
+
+    options.on("-f", "--flutter", "Use flutter firebase_app_id_file.json") do |fl|
+        options_dict[:flutter_project] = true
+    end
+end.parse!
+
+# Minimum required arguments are a project directory and project name
+unless (options_dict[:project_dir] and options_dict[:project_name])
+    abort("Must provide a project directory and project name.\n")
+end
+
+# Path to the Xcode project to modify
+project_path = File.join(options_dict[:project_dir], options_dict[:project_name])
+
+unless (File.exist?(project_path)) 
+   abort("Project at #{project_path} does not exist. Please check paths or incorporate Crashlytics upload symbols manually.\n");
+end
+
+# If this is a Flutter project, upload-symbols will use the firebase_app_id_file.json to get the app's ID. If this file doesn't exist, upload-symbols may not be
+# able to upload symbols correctly. 
+if(options_dict[:flutter_project])
+    unless File.exist?("#{options_dict[:project_dir]}/firebase_app_id_file.json")
+        puts("Warning: firebase_app_id_file.json file does not exist. This may cause issues in upload-symbols. If this error is unexpected, try running flutterfire configure again.")
+        exit(0)
+    end
+end
+
+if(options_dict[:flutter_project])
+    upload_symbols_args = "--flutter-project \"$PROJECT_DIR/firebase_app_id_file.json\" #{options_dict[:additional_options]}"
+else
+    upload_symbols_args = options_dict[:additional_options]
+end
+
+# Actually open and modify the project
+project = Xcodeproj::Project.open(project_path)
+project.targets.each do |target|
+    if (target.name == "Runner") 
+        # We need to make sure that we're not adding more than one run script to upload-symbols (or overwriting custom upload-symbols scripts).
+        target.shell_script_build_phases().each { |phase| 
+            if (phase.shell_script.include? "FirebaseCrashlytics/upload-symbols")
+                puts("Run script to upload symbols already exists.")
+                exit(0)
+            end
+            if (phase.shell_script.include? "FirebaseCrashlytics/run")
+                puts("Run script to upload symbols already exists.")
+                exit(0)
+            end
+        }
+        phase = target.shell_script_build_phases().find {|item| item.name == "[firebase_crashlytics] Crashlytics Upload Symbols"}
+
+        # If no existing run scripts exist, then create one.
+        if (phase.nil?)
+            phase = target.new_shell_script_build_phase("[firebase_crashlytics] Crashlytics Upload Symbols")
+            phase.shell_script = "\"$PODS_ROOT/FirebaseCrashlytics/upload-symbols\" #{upload_symbols_args}"
+            phase.input_paths = ["\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\"", "\"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)\""]
+            project.save()
+        end
+    end
+end
+

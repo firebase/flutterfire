@@ -1,3 +1,23 @@
+## 6.2.6
+
+ - **REFACTOR**: fix analyzer issues introduced in Flutter 3.0.0 ([#8653](https://github.com/FirebaseExtended/flutterfire/issues/8653)). ([74e58171](https://github.com/FirebaseExtended/flutterfire/commit/74e5817159f18934ed0cd803f410ec96b372316a))
+
+## 6.2.5
+
+ - Update a dependency to the latest release.
+
+## 6.2.4
+
+ - Update a dependency to the latest release.
+
+## 6.2.3
+
+ - Update a dependency to the latest release.
+
+## 6.2.2
+
+ - Update a dependency to the latest release.
+
 ## 6.2.1
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

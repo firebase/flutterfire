@@ -18,10 +18,12 @@ class RegisterScreen extends MultiProviderScreen {
   final OAuthButtonVariant? oauthButtonVariant;
   final TextDirection? desktopLayoutDirection;
   final String? email;
+  final bool? resizeToAvoidBottomInset;
   final bool? showAuthActionSwitch;
   final AuthViewContentBuilder? subtitleBuilder;
   final AuthViewContentBuilder? footerBuilder;
   final double breakpoint;
+  final Set<FlutterFireUIStyle>? styles;
 
   const RegisterScreen({
     Key? key,
@@ -33,17 +35,21 @@ class RegisterScreen extends MultiProviderScreen {
     this.oauthButtonVariant = OAuthButtonVariant.icon_and_text,
     this.desktopLayoutDirection,
     this.email,
+    this.resizeToAvoidBottomInset = false,
     this.showAuthActionSwitch,
     this.subtitleBuilder,
     this.footerBuilder,
     this.breakpoint = 800,
+    this.styles,
   }) : super(key: key, auth: auth, providerConfigs: providerConfigs);
 
   @override
   Widget build(BuildContext context) {
     return LoginScreen(
+      styles: styles,
       action: AuthAction.signUp,
       providerConfigs: providerConfigs,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       auth: auth,
       headerMaxExtent: headerMaxExtent,
       headerBuilder: headerBuilder,

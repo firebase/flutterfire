@@ -1,3 +1,23 @@
+## 1.0.12
+
+ - Update a dependency to the latest release.
+
+## 1.0.11
+
+ - Update a dependency to the latest release.
+
+## 1.0.10
+
+ - Update a dependency to the latest release.
+
+## 1.0.9
+
+ - Update a dependency to the latest release.
+
+## 1.0.8
+
+ - Update a dependency to the latest release.
+
 ## 1.0.7
 
  - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))

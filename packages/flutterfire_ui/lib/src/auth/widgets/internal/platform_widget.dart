@@ -6,14 +6,27 @@ abstract class PlatformWidget extends StatelessWidget {
   Widget buildCupertino(BuildContext context);
   Widget buildMaterial(BuildContext context);
 
+  Widget? buildWrapper(BuildContext context, Widget child) {
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
+    late Widget child;
 
     if (isCupertino) {
-      return buildCupertino(context);
+      child = buildCupertino(context);
     } else {
-      return buildMaterial(context);
+      child = buildMaterial(context);
+    }
+
+    final wrapper = buildWrapper(context, child);
+
+    if (wrapper == null) {
+      return child;
+    } else {
+      return wrapper;
     }
   }
 }

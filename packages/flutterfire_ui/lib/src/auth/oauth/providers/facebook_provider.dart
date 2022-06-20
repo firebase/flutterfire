@@ -8,14 +8,16 @@ import 'package:desktop_webview_auth/facebook.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../../widgets/internal/oauth_provider_button_style.dart';
-import '../../oauth/provider_resolvers.dart';
+import '../provider_resolvers.dart';
 import '../../auth_flow.dart';
 import '../oauth_providers.dart';
 
+import 'sign_out_mixin.dart' if (dart.library.html) 'sign_out_mixin_web.dart';
+
 abstract class FacebookProvider extends OAuthProvider {}
 
-class FacebookProviderImpl extends FacebookProvider {
-  final _provider = FacebookAuth.instance;
+class FacebookProviderImpl extends FacebookProvider with SignOutMixin {
+  final provider = FacebookAuth.instance;
   final String clientId;
   final String redirectUri;
 
@@ -32,7 +34,7 @@ class FacebookProviderImpl extends FacebookProvider {
 
   @override
   Future<OAuthCredential> signIn() async {
-    final result = await _provider.login();
+    final result = await provider.login();
 
     switch (result.status) {
       case LoginStatus.success:
@@ -50,17 +52,17 @@ class FacebookProviderImpl extends FacebookProvider {
   }
 
   @override
-  Future<void> signOut() async {
-    await _provider.logOut();
-  }
-
-  @override
   OAuthCredential fromDesktopAuthResult(AuthResult result) {
     return FacebookAuthProvider.credential(result.accessToken!);
   }
 
   @override
   FacebookAuthProvider get firebaseAuthProvider => FacebookAuthProvider();
+
+  @override
+  Future<void> logOutProvider() async {
+    await provider.logOut();
+  }
 }
 
 class FacebookProviderConfiguration
@@ -73,7 +75,7 @@ class FacebookProviderConfiguration
     this.redirectUri,
   });
 
-  FacebookProvider get _provider => FacebookProviderImpl(
+  FacebookProvider get provider => FacebookProviderImpl(
         clientId: clientId,
         redirectUri: redirectUri ?? defaultRedirectUri,
       );
@@ -83,7 +85,7 @@ class FacebookProviderConfiguration
 
   @override
   FacebookProvider createProvider() {
-    return _provider;
+    return provider;
   }
 
   @override

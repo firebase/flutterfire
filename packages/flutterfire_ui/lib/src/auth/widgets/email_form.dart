@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
-import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
-import '../widgets/internal/loading_button.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/internal/loading_button.dart';
 import '../validators.dart';
 
 class ForgotPasswordAction extends FlutterFireUIAction {
@@ -14,6 +13,28 @@ class ForgotPasswordAction extends FlutterFireUIAction {
 }
 
 typedef EmailSubmitCallback = void Function(String email, String password);
+
+class EmailFormStyle extends FlutterFireUIStyle {
+  final ButtonVariant? signInButtonVariant;
+  final InputDecorationTheme? inputDecorationTheme;
+
+  const EmailFormStyle({
+    this.signInButtonVariant = ButtonVariant.outlined,
+    this.inputDecorationTheme,
+  });
+
+  @override
+  Widget applyToMaterialTheme(BuildContext context, Widget child) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        inputDecorationTheme: inputDecorationTheme,
+      ),
+      child: child,
+    );
+  }
+}
+
+// FlutterFireUIStyle.defaultStyle = EmailFormStyle();
 
 /// A barebones email form widget.
 ///
@@ -39,16 +60,19 @@ class EmailForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final child = _SignInFormContent(
+      action: action ?? AuthAction.signIn,
+      auth: auth,
+      config: config,
+      email: email,
+      onSubmit: onSubmit,
+    );
+
     return AuthFlowBuilder<EmailFlowController>(
       auth: auth,
       action: action,
       config: config,
-      child: _SignInFormContent(
-        auth: auth,
-        action: action,
-        onSubmit: onSubmit,
-        email: email,
-      ),
+      child: child,
     );
   }
 }
@@ -58,6 +82,7 @@ class _SignInFormContent extends StatefulWidget {
   final EmailSubmitCallback? onSubmit;
   final AuthAction? action;
   final String? email;
+  final EmailProviderConfiguration? config;
 
   const _SignInFormContent({
     Key? key,
@@ -65,6 +90,7 @@ class _SignInFormContent extends StatefulWidget {
     this.onSubmit,
     this.action,
     this.email,
+    this.config,
   }) : super(key: key);
 
   @override
@@ -97,7 +123,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
 
   void _submit([String? password]) {
     final ctrl = AuthController.ofType<EmailFlowController>(context);
-    final email = widget.email ?? emailCtrl.text;
+    final email = (widget.email ?? emailCtrl.text).trim();
 
     if (formKey.currentState!.validate()) {
       if (widget.onSubmit != null) {
@@ -179,8 +205,13 @@ class _SignInFormContentState extends State<_SignInFormContent> {
       Builder(
         builder: (context) {
           final state = AuthState.of(context);
+          final style = FlutterFireUIStyle.ofType<EmailFormStyle>(
+            context,
+            const EmailFormStyle(),
+          );
 
           return LoadingButton(
+            variant: style.signInButtonVariant,
             label: _chooseButtonLabel(),
             isLoading: state is SigningIn || state is SigningUp,
             onTap: _submit,

@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="https://firebase.flutter.dev">
-    <img width="250px" src="website/static/img/flutterfire_300x.png"><br/>
+  <a href="https://firebase.google.com/docs/flutter">
+    <img width="250px" src=".github/images/flutterfire_300x.png"><br/>
   </a>
   <h1 align="center">FlutterFire</h1>
 </p>
@@ -16,7 +16,7 @@
 
 ---
 
-[[Documentation]](https://firebase.flutter.dev) • [[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
+[[Changelog]](./CHANGELOG.md) • [[Packages]](https://pub.dev/publishers/firebase.google.com/packages)
 
 ---
 
@@ -31,6 +31,15 @@ and open source.
 
 ---
 
+## Documentation
+
+- [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
+- [Available plugins](https://firebase.google.com/docs/flutter/setup#available-plugins)
+- [FlutterFire UI](./packages/flutterfire_ui/README.md) (beta)
+- [Firestore ODM](./packages/cloud_firestore_odm/README.md) (alpha)
+
+---
+
 ## Issues
 
 Please file FlutterFire specific issues, bugs, or feature requests in
@@ -40,6 +49,8 @@ Plugin issues that are not specific to FlutterFire can be filed in
 the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 ## Contributing
+
+**Note about contributing to Docs**: We're in the process of updating documentation for the Firebase SDK for Flutter. Please hold your PRs for docs until May 5th, 2022.
 
 If you wish to contribute a change to any of the existing plugins in this repo, please review
 our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)

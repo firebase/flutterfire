@@ -10,7 +10,8 @@ class FirebaseWebService {
   /// The name which matches the Firebase JS Web SDK postfix.
   String name;
 
-  /// Overrides the created window object.
+  /// Naming of Firebase web products is different from Flutterfire plugins. This
+  /// property allows overriding of web naming to Flutterfire plugin naming.
   String? override;
 
   /// Creates a new [FirebaseWebService].
@@ -90,6 +91,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     context.callMethod('ff_trigger_$windowVar', [
       (module) {
         context[windowVar] = module;
+        context.deleteProperty('ff_trigger_$windowVar');
         completer.complete();
       }
     ]);
@@ -155,7 +157,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
             file or by providing an override - this may lead to unexpected issues in your application. It is recommended that you change all of the versions of the
             Firebase JS SDK version "$supportedFirebaseJsSdkVersion":
 
-            If you override the version manully:
+            If you override the version manually:
               change:
                 <script>window.flutterfire_web_sdk_version = '${firebase.SDK_VERSION}';</script>
               to:
