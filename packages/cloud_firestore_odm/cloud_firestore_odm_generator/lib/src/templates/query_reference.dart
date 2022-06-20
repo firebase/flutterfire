@@ -230,7 +230,7 @@ class ${data.queryReferenceImplName}
           '''
   ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
     return ${data.queryReferenceImplName}(
-      reference.where('${field.name}', $parameters,),
+      reference.where(${field.field}, $parameters,),
       _collection,
     );
   }
