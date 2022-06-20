@@ -237,9 +237,5 @@ abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
     String startAfter,
     String endAt,
     String endBefore,
-    QuerySnapshot<Snapshot> startAtDocument,
-    QuerySnapshot<Snapshot> endAtDocument,
-    QuerySnapshot<Snapshot> endBeforeDocument,
-    QuerySnapshot<Snapshot> startAfterDocument,
   });
 }
