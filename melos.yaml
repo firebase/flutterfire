@@ -13,6 +13,11 @@ command:
     # branch: master
     # Additionally build a changelog at the root of the workspace.
     workspaceChangelog: true
+  bootstrap:
+    # It seems so that running "pub get" in parallel has some issues (like
+    # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
+    # makes the CI much more stable.
+    runPubGetInParallel: false
 
 scripts:
   lint:all:
@@ -20,8 +25,10 @@ scripts:
     description: Run all static analysis checks.
 
   analyze:
+    # We are setting the concurrency to 1 because a higher concurrency can crash
+    # the analysis server on low performance machines (like GitHub Actions).
     run: |
-      melos exec -c 5 -- \
+      melos exec -c 1 -- \
         dart analyze . --fatal-infos
     description: |
       Run `dart analyze` in all packages.
