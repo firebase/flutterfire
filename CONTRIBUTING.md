@@ -59,8 +59,8 @@ plugins, examples and tests to build from the local clone project.
 
 ### Use
 
-FlutterFire use [pigeon](https://github.com/flutter/packages/tree/main/packages/pigeon) to generate some MethodChannel.
-To modify the messages send with Pigeon, you can modify the `pigeons/messages.dart` file in the corresponding folder.
+FlutterFire use [pigeon](https://github.com/flutter/packages/tree/main/packages/pigeon) to generate the MethodChannel API layer between Dart and the native platforms.
+To modify the messages sent with Pigeon (i.e. API code between Dart and native platforms), you can modify the `pigeons/messages.dart` file in the corresponding folder and regenerate the code running the below noted melos command.
 
 Then you can run
 
@@ -68,11 +68,11 @@ Then you can run
 melos run generate:pigeon
 ```
 
-Don't forget to run the formater on the generated files.
+Don't forget to run the formatter on the generated files.
 
 ### Tests
 
-To tests the created interface, you can mock directly the interface with
+To tests the created interface, you can mock the interface directly with:
 
 ```dart
 TestNAMEHostApi.setup(MockNAMEApp());
