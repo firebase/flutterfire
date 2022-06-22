@@ -215,6 +215,34 @@ abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
   @override
   ModelQuery limitToLast(int limit);
 
+  ModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  ModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   ModelQuery whereValue({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -297,6 +325,68 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
   ModelQuery limitToLast(int limit) {
     return _$ModelQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$ModelQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -628,6 +718,34 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
   @override
   NestedQuery limitToLast(int limit);
 
+  NestedQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -797,6 +915,68 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   NestedQuery limitToLast(int limit) {
     return _$NestedQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  NestedQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$NestedQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  NestedQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -1376,6 +1556,34 @@ abstract class SplitFileModelQuery
 
   @override
   SplitFileModelQuery limitToLast(int limit);
+
+  SplitFileModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  SplitFileModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
 }
 
 class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
@@ -1435,6 +1643,68 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
   SplitFileModelQuery limitToLast(int limit) {
     return _$SplitFileModelQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  SplitFileModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  SplitFileModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -1672,6 +1942,34 @@ abstract class EmptyModelQuery
 
   @override
   EmptyModelQuery limitToLast(int limit);
+
+  EmptyModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  EmptyModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
 }
 
 class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
@@ -1731,6 +2029,68 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   EmptyModelQuery limitToLast(int limit) {
     return _$EmptyModelQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  EmptyModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$EmptyModelQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  EmptyModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -1985,6 +2345,34 @@ abstract class OptionalJsonQuery
   @override
   OptionalJsonQuery limitToLast(int limit);
 
+  OptionalJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  OptionalJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   OptionalJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2067,6 +2455,68 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   OptionalJsonQuery limitToLast(int limit) {
     return _$OptionalJsonQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  OptionalJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  OptionalJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -2388,6 +2838,34 @@ abstract class MixedJsonQuery
   @override
   MixedJsonQuery limitToLast(int limit);
 
+  MixedJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MixedJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   MixedJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2470,6 +2948,68 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
   MixedJsonQuery limitToLast(int limit) {
     return _$MixedJsonQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  MixedJsonQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$MixedJsonQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  MixedJsonQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$MixedJsonQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -2819,6 +3359,34 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
   @override
   RootQuery limitToLast(int limit);
 
+  RootQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  RootQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   RootQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -2924,6 +3492,68 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   RootQuery limitToLast(int limit) {
     return _$RootQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  RootQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$RootQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  RootQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$RootQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -3333,6 +3963,34 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
   @override
   SubQuery limitToLast(int limit);
 
+  SubQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  SubQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   SubQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -3437,6 +4095,68 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   SubQuery limitToLast(int limit) {
     return _$SubQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  SubQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$SubQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  SubQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$SubQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -3849,6 +4569,34 @@ abstract class AsCamelCaseQuery
   @override
   AsCamelCaseQuery limitToLast(int limit);
 
+  AsCamelCaseQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  AsCamelCaseQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   AsCamelCaseQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -3931,6 +4679,68 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   AsCamelCaseQuery limitToLast(int limit) {
     return _$AsCamelCaseQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  AsCamelCaseQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  AsCamelCaseQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -4273,6 +5083,34 @@ abstract class CustomSubNameQuery
   @override
   CustomSubNameQuery limitToLast(int limit);
 
+  CustomSubNameQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  CustomSubNameQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   CustomSubNameQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -4355,6 +5193,68 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   CustomSubNameQuery limitToLast(int limit) {
     return _$CustomSubNameQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  CustomSubNameQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  CustomSubNameQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -4689,6 +5589,34 @@ abstract class ExplicitPathQuery
   @override
   ExplicitPathQuery limitToLast(int limit);
 
+  ExplicitPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  ExplicitPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   ExplicitPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -4771,6 +5699,68 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   ExplicitPathQuery limitToLast(int limit) {
     return _$ExplicitPathQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ExplicitPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -5113,6 +6103,34 @@ abstract class ExplicitSubPathQuery
   @override
   ExplicitSubPathQuery limitToLast(int limit);
 
+  ExplicitSubPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  ExplicitSubPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   ExplicitSubPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -5196,6 +6214,68 @@ class _$ExplicitSubPathQuery
   ExplicitSubPathQuery limitToLast(int limit) {
     return _$ExplicitSubPathQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ExplicitSubPathQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitSubPathQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
