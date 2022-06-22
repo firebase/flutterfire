@@ -38,36 +38,52 @@ const String testPageToken = 'test-page-token';
 
 final MockFirebaseStorage kMockStoragePlatform = MockFirebaseStorage();
 
+class MockFirebaseAppStorage implements TestFirebaseCoreHostApi {
+  @override
+  Future<PigeonInitializeResponse> initializeApp(
+    String appName,
+    PigeonFirebaseOptions initializeAppRequest,
+  ) async {
+    return PigeonInitializeResponse(
+      name: appName,
+      options: initializeAppRequest,
+      pluginConstants: {},
+    );
+  }
+
+  @override
+  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+    return [
+      PigeonInitializeResponse(
+        name: defaultFirebaseAppName,
+        options: PigeonFirebaseOptions(
+          apiKey: '123',
+          projectId: '123',
+          appId: '123',
+          messagingSenderId: '123',
+          storageBucket: kBucket,
+        ),
+        pluginConstants: {},
+      )
+    ];
+  }
+
+  @override
+  Future<PigeonFirebaseOptions> optionsFromResource() async {
+    return PigeonFirebaseOptions(
+      apiKey: '123',
+      projectId: '123',
+      appId: '123',
+      messagingSenderId: '123',
+      storageBucket: kBucket,
+    );
+  }
+}
+
 void setupFirebaseStorageMocks() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'Firebase#initializeCore') {
-      return [
-        {
-          'name': defaultFirebaseAppName,
-          'options': {
-            'apiKey': '123',
-            'appId': '123',
-            'messagingSenderId': '123',
-            'projectId': '123',
-            'storageBucket': kBucket
-          },
-          'pluginConstants': {},
-        }
-      ];
-    }
-
-    if (call.method == 'Firebase#initializeApp') {
-      return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
-        'pluginConstants': {},
-      };
-    }
-
-    return null;
-  });
+  TestFirebaseCoreHostApi.setup(MockFirebaseAppStorage());
 
   // Mock Platform Interface Methods
   when(kMockStoragePlatform.delegateFor(

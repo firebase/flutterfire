@@ -55,7 +55,29 @@ plugins, examples and tests to build from the local clone project.
 
 > If you're using [fvm](https://fvm.app/) you might need to specify the sdk-path: `melos bs --sdk-path=/Users/user/fvm/default/`
 
-## 4. Running an example
+## 4. Automatically generated MethodChannel with Pigeon
+
+### Use
+
+FlutterFire uses [pigeon](https://github.com/flutter/packages/tree/main/packages/pigeon) to generate the `MethodChannel` API layer between Dart and the native platforms.
+To modify the messages sent with Pigeon (i.e. API code between Dart and native platforms), you can modify the `pigeons/messages.dart` file in the corresponding folder and regenerate the code running the below noted melos command.
+
+
+```
+melos run generate:pigeon
+```
+
+Don't forget to run the formatter on the generated files.
+
+### Tests
+
+To tests the created interface, you can mock the interface directly with:
+
+```dart
+TestNAMEHostApi.setup(MockNAMEApp());
+```
+
+## 5. Running an example
 
 Each plugin provides an example app which aims to showcase the main use-cases of each plugin.
 
@@ -70,7 +92,7 @@ flutter run
 Using Melos (installed in step 3), any changes made to the plugins locally will also be reflected within all
 example applications code automatically.
 
-## 4. Running tests
+## 6. Running tests
 
 FlutterFire comprises of a number of tests for each plugin, either end-to-end (e2e) or unit tests.
 
@@ -119,7 +141,7 @@ melos run test:e2e
 A full list of all commands can be found within the [`melos.yaml`](https://github.com/firebase/flutterfire/blob/master/melos.yaml)
 file.
 
-## 5. Contributing code
+## 7. Contributing code
 
 We gladly accept contributions via GitHub pull requests.
 
@@ -245,7 +267,7 @@ to graduate multiple packages using the following steps:
 6. Run `melos publish` to dry run and confirm all packages are publishable.
 7. Run `melos publish --no-dry-run` to now publish to Pub.dev.
 
-## 6. Contributing documentation
+## 8. Contributing documentation
 
 We gladly accept contributions to the SDK documentation. As our docs are also part of this repo,
 see "Contributing code" above for how to prepare and submit a PR to the repo.
