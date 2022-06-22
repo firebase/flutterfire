@@ -336,10 +336,10 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
   }) {
     return _$ModelQuery(
       reference.orderBy(
@@ -926,10 +926,10 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
   }) {
     return _$NestedQuery(
       reference.orderBy(
@@ -1654,10 +1654,10 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
     return _$SplitFileModelQuery(
       reference.orderBy(
@@ -2040,10 +2040,10 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
     return _$EmptyModelQuery(
       reference.orderBy(
@@ -2466,10 +2466,10 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
     return _$OptionalJsonQuery(
       reference.orderBy(
@@ -2959,10 +2959,10 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
     return _$MixedJsonQuery(
       reference.orderBy(
@@ -3503,10 +3503,10 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
   }) {
     return _$RootQuery(
       reference.orderBy(
@@ -4106,10 +4106,10 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
   }) {
     return _$SubQuery(
       reference.orderBy(
@@ -4690,10 +4690,10 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
     return _$AsCamelCaseQuery(
       reference.orderBy(
@@ -5204,10 +5204,10 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
     return _$CustomSubNameQuery(
       reference.orderBy(
@@ -5710,10 +5710,10 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
     return _$ExplicitPathQuery(
       reference.orderBy(
@@ -6225,10 +6225,10 @@ class _$ExplicitSubPathQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
     return _$ExplicitSubPathQuery(
       reference.orderBy(
