@@ -14,6 +14,26 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
   @override
   ${data.queryReferenceInterfaceName} limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  /// 
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  /// 
+  /// If possible, instead use the more explicit variant of order queries:
+  /// 
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  /// 
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
   ${data.queryReferenceInterfaceName} orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
@@ -27,6 +47,23 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
     MovieDocumentSnapshot? startAfterDocument,
   });
 
+  /// Perform a where query based on a [FieldPath].
+  /// 
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  /// 
+  /// If possible, instead use the more explicit variant of where queries:
+  /// 
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  /// 
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
   ${data.queryReferenceInterfaceName} whereFieldPath(
     FieldPath fieldPath, {
     Object? isEqualTo,
