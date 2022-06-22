@@ -241,6 +241,26 @@ abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
   @override
   MovieQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
   MovieQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
@@ -254,6 +274,23 @@ abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
     MovieDocumentSnapshot? startAfterDocument,
   });
 
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
   MovieQuery whereFieldPath(
     FieldPath fieldPath, {
     Object? isEqualTo,
@@ -1309,6 +1346,26 @@ abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
   @override
   CommentQuery limitToLast(int limit);
 
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
   CommentQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
@@ -1322,6 +1379,23 @@ abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
     MovieDocumentSnapshot? startAfterDocument,
   });
 
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
   CommentQuery whereFieldPath(
     FieldPath fieldPath, {
     Object? isEqualTo,
@@ -1453,10 +1527,10 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    CommentDocumentSnapshot? startAtDocument,
+    CommentDocumentSnapshot? endAtDocument,
+    CommentDocumentSnapshot? endBeforeDocument,
+    CommentDocumentSnapshot? startAfterDocument,
   }) {
     return _$CommentQuery(
       reference.orderBy(
