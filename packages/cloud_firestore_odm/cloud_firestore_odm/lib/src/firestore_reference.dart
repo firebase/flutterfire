@@ -213,7 +213,7 @@ abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
   /// otherwise an exception will be thrown during execution.
   QueryReference<Snapshot> limitToLast(int limit);
 
-  /// Filter a collection based on the documents' ID
+  /// Filter a collection based on the documents' ID.
   ///
   /// This is similar to using [FieldPath.documentId].
   QueryReference<Snapshot> whereDocumentId({
