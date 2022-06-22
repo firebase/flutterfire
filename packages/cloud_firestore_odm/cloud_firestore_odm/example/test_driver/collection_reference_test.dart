@@ -328,6 +328,56 @@ void main() {
         });
       });
 
+      test('orderByFieldPath', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.add(createMovie(title: 'A', genre: ['genre_A']));
+        await collection.add(createMovie(title: 'B', genre: ['genre_B']));
+        await collection.add(createMovie(title: 'C', genre: ['genre_C']));
+
+        final querySnap = await collection
+            .orderByFieldPath(
+              FieldPath.fromString('genre.0'),
+              startAt: 'genre_B',
+            )
+            .get();
+
+        expect(
+          querySnap.docs,
+          [
+            isA<MovieQueryDocumentSnapshot>()
+                .having((d) => d.data.title, 'data.title', 'B'),
+            isA<MovieQueryDocumentSnapshot>()
+                .having((d) => d.data.title, 'data.title', 'C'),
+          ],
+        );
+      });
+
+      test('whereFieldPath', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.add(createMovie(title: 'A', genre: ['genre']));
+        await collection.add(createMovie(title: 'B', genre: ['genre2']));
+        await collection.add(createMovie(title: 'C', genre: ['genre2']));
+
+        final querySnap = await collection
+            .whereFieldPath(
+              FieldPath.fromString('genre.0'),
+              isEqualTo: 'genre2',
+            )
+            .get();
+
+        expect(
+          querySnap.docs,
+          [
+            isA<MovieQueryDocumentSnapshot>()
+                .having((d) => d.data.title, 'data.title', 'B'),
+            isA<MovieQueryDocumentSnapshot>()
+                .having((d) => d.data.title, 'data.title', 'C'),
+          ],
+        );
+      });
+
       group('startAt', () {
         test('supports values', () async {
           final collection = await initializeTest(MovieCollectionReference());

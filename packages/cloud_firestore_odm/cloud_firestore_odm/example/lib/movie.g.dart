@@ -241,6 +241,34 @@ abstract class MovieQuery implements QueryReference<MovieQuerySnapshot> {
   @override
   MovieQuery limitToLast(int limit);
 
+  MovieQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   MovieQuery wherePoster({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -460,6 +488,68 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   MovieQuery limitToLast(int limit) {
     return _$MovieQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  MovieQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$MovieQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  MovieQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$MovieQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
@@ -1219,6 +1309,34 @@ abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
   @override
   CommentQuery limitToLast(int limit);
 
+  CommentQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  CommentQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   CommentQuery whereAuthorName({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -1324,6 +1442,68 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
   CommentQuery limitToLast(int limit) {
     return _$CommentQuery(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  CommentQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return _$CommentQuery(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  CommentQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$CommentQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }

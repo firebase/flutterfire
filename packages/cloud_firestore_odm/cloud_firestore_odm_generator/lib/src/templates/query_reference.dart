@@ -14,6 +14,34 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
   @override
   ${data.queryReferenceInterfaceName} limitToLast(int limit);
 
+  ${data.queryReferenceInterfaceName} orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  ${data.queryReferenceInterfaceName} whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
   ${_where(data, isAbstract: true)}
   ${_orderByProto(data)}
 }
@@ -80,6 +108,68 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} limitToLast(int limit) {
     return ${data.queryReferenceImplName}(
       reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ${data.queryReferenceInterfaceName} orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    return ${data.queryReferenceImplName}(
+      reference.orderBy(
+        fieldPath,
+        descending: descending,
+        startAt: startAt,
+        startAfter: startAfter,
+        endAt: endAt,
+        endBefore: endBefore,
+        startAtDocument: startAtDocument,
+        endAtDocument: endAtDocument,
+        endBeforeDocument: endBeforeDocument,
+        startAfterDocument: startAfterDocument,
+      ),
+      _collection,
+    );
+  }
+
+  ${data.queryReferenceInterfaceName} whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return ${data.queryReferenceImplName}(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
       _collection,
     );
   }
