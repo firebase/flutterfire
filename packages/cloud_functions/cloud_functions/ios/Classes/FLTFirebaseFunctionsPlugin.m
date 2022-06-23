@@ -51,13 +51,12 @@ NSString *const kFLTFirebaseFunctionsChannelName = @"plugins.flutter.io/firebase
         NSString *httpsErrorCode = [NSString stringWithFormat:@"%ld", error.code];
         NSString *httpsErrorMessage = error.localizedDescription;
         // FIRFunctionsErrorDomain has been removed and replaced with Swift implementation https://github.com/firebase/firebase-ios-sdk/blob/master/FirebaseFunctions/Sources/FunctionsError.swift#L18
-        NSString *errorDomain = [[NSString init] initWithString: @"com.firebase.functions"];
+        NSString *errorDomain = @"com.firebase.functions";
         // FIRFunctionsErrorDetailsKey has been deprecated and replaced with Swift implementation https://github.com/firebase/firebase-ios-sdk/blob/master/FirebaseFunctions/Sources/FunctionsError.swift#L21
-        NSString *detailsKey = [[NSString init] initWithString: @"details"];
+        NSString *detailsKey = @"details";
         // See also https://github.com/firebase/firebase-ios-sdk/pull/9569
         if (error.domain == errorDomain) {
           httpsErrorCode = [self mapFunctionsErrorCodes:error.code];
-  
           if (error.userInfo[detailsKey] != nil) {
             httpsErrorDetails[@"additionalData"] = error.userInfo[detailsKey];
           }
