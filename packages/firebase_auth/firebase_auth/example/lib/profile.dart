@@ -169,7 +169,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 40),
                     TextButton(
-                      onPressed: _signOut,
+                      onPressed: () async {
+                        final session = await user.multiFactor.getSession();
+                        print(session.id);
+                      },
                       child: const Text('Get Session'),
                     ),
                     const SizedBox(height: 40),

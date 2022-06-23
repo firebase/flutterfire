@@ -6,6 +6,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +26,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   static Map<String, MethodChannelFirebaseAuth>
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
+
+  static Map<String, MethodChannelMultiFactor> _mutliFactorInstances =
+      <String, MethodChannelMultiFactor>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
       _authStateChangesListeners =
@@ -111,13 +115,16 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
+    MethodChannelMultiFactor mutliFactorInstance =
+        _mutliFactorInstances[appName]!;
+
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
       streamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+          instance, mutliFactorInstance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -139,6 +146,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
+    MethodChannelMultiFactor multiFactorInstance =
+        _mutliFactorInstances[appName]!;
 
     final userMap = arguments['user'];
     if (userMap == null) {
@@ -146,8 +155,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       idTokenStreamController.add(const _ValueWrapper.absent());
       userChangesStreamController.add(const _ValueWrapper.absent());
     } else {
-      final MethodChannelUser user =
-          MethodChannelUser(instance, userMap.cast<String, dynamic>());
+      final MethodChannelUser user = MethodChannelUser(
+          instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -181,7 +190,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String? languageCode,
   }) {
     if (currentUser != null) {
-      this.currentUser = MethodChannelUser(this, currentUser);
+      final multiFactor = MethodChannelMultiFactor(this);
+      this.currentUser = MethodChannelUser(this, multiFactor, currentUser);
     }
 
     this.languageCode = languageCode;
@@ -582,6 +592,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) async {
     if (defaultTargetPlatform == TargetPlatform.macOS) {
       throw UnimplementedError(
@@ -597,6 +608,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'timeout': timeout.inMilliseconds,
             'forceResendingToken': forceResendingToken,
             'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
+            if (multiFactorSession?.id != null)
+              'multiFactorSession': multiFactorSession!.id,
           }));
 
       EventChannel(eventChannelName!)

@@ -31,4 +31,8 @@ abstract class MultiFactorPlatform extends PlatformInterface {
 
 }
 
-class MultiFactorSession {}
+class MultiFactorSession {
+  MultiFactorSession(this.id);
+  
+  final String id;
+}

@@ -83,4 +83,7 @@ public class Constants {
   public static final String APP_VERIFICATION_DISABLED_FOR_TESTING =
       "appVerificationDisabledForTesting";
   public static final String FORCE_RECAPTCHA_FLOW = "forceRecaptchaFlow";
+
+  // MultiFactor
+  public static final String MULTI_FACTOR_SESSION_ID = "multiFactorSessionId";
 }

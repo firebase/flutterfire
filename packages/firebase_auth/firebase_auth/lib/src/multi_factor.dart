@@ -3,11 +3,7 @@ part of firebase_auth;
 class MultiFactor {
   MultiFactorPlatform _delegate;
 
-  final FirebaseAuth _auth;
-
-  MultiFactor._(this._auth, this._delegate);
-
-  MultiFactor.fromAppName(this._auth, this._delegate);
+  MultiFactor._(this._delegate);
 
   /// The users display name.
   ///

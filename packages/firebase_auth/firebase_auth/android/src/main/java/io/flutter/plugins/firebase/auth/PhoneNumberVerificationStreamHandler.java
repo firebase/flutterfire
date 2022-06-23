@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -29,6 +30,8 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   final int timeout;
   final OnCredentialsListener onCredentialsListener;
 
+  final MultiFactorSession multiFactorSession;
+
   String autoRetrievedSmsCodeForTesting;
   Integer forceResendingToken;
 
@@ -39,9 +42,11 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   public PhoneNumberVerificationStreamHandler(
       Activity activity,
       Map<String, Object> arguments,
+      @Nullable MultiFactorSession multiFactorSession,
       OnCredentialsListener onCredentialsListener) {
     this.activityRef.set(activity);
 
+    this.multiFactorSession = multiFactorSession;
     firebaseAuth = FlutterFirebaseAuthPlugin.getAuth(arguments);
     phoneNumber = (String) Objects.requireNonNull(arguments.get(Constants.PHONE_NUMBER));
     timeout = (int) Objects.requireNonNull(arguments.get(Constants.TIMEOUT));
@@ -142,6 +147,9 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
     phoneAuthOptionsBuilder.setActivity(activityRef.get());
     phoneAuthOptionsBuilder.setPhoneNumber(phoneNumber);
     phoneAuthOptionsBuilder.setCallbacks(callbacks);
+    if (multiFactorSession != null) {
+      phoneAuthOptionsBuilder.setMultiFactorSession(multiFactorSession);
+    }
     phoneAuthOptionsBuilder.setTimeout((long) timeout, TimeUnit.MILLISECONDS);
 
     if (forceResendingToken != null) {
