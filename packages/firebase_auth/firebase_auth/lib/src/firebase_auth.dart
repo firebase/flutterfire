@@ -647,6 +647,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return _delegate.verifyPasswordResetCode(code);
   }
 
+  Future<UserCredentialPlatform> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    return _delegate.signInWithAuthProvider(provider);
+  }
+
   /// Starts a phone number verification process for the given phone number.
   ///
   /// This method is used to verify that the user-provided phone number belongs

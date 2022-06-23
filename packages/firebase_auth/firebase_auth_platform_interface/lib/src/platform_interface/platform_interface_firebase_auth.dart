@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:meta/meta.dart';
@@ -515,6 +516,12 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     String emailLink,
   ) async {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
+  }
+
+  Future<UserCredentialPlatform> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    throw UnimplementedError('signInWithAuthProvider() is not implemented');
   }
 
   /// Starts a sign-in flow for a phone number.
