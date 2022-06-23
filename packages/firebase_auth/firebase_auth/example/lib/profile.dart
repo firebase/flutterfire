@@ -225,6 +225,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     const SizedBox(height: 20),
                     TextButton(
                       onPressed: _signOut,
+                      child: const Text('Get Session'),
+                    ),
+                    const SizedBox(height: 40),
+                    TextButton(
+                      onPressed: _signOut,
                       child: const Text('Sign out'),
                     ),
                   ],
