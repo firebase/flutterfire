@@ -14,6 +14,7 @@ export 'src/firebase_auth_exception.dart';
 export 'src/id_token_result.dart';
 export 'src/platform_interface/platform_interface_confirmation_result.dart';
 export 'src/platform_interface/platform_interface_firebase_auth.dart';
+export 'src/platform_interface/platform_interface_multi_factor.dart';
 export 'src/platform_interface/platform_interface_recaptcha_verifier_factory.dart';
 export 'src/platform_interface/platform_interface_user.dart';
 export 'src/platform_interface/platform_interface_user_credential.dart';

@@ -34,6 +34,8 @@ import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.MultiFactor;
+import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -63,7 +65,7 @@ import java.util.concurrent.ExecutionException;
 
 /** Flutter plugin for Firebase Auth. */
 public class FlutterFirebaseAuthPlugin
-    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware {
+    implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware, GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_auth";
 
@@ -98,6 +100,7 @@ public class FlutterFirebaseAuthPlugin
     registerPlugin(METHOD_CHANNEL_NAME, this);
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, this);
 
     this.messenger = messenger;
   }
@@ -112,6 +115,7 @@ public class FlutterFirebaseAuthPlugin
     channel.setMethodCallHandler(null);
     channel = null;
     messenger = null;
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(null, this);
 
     removeEventListeners();
   }
@@ -158,6 +162,12 @@ public class FlutterFirebaseAuthPlugin
     FirebaseApp app = FirebaseApp.getInstance(appName);
     return FirebaseAuth.getInstance(app).getCurrentUser();
   }
+
+  private FirebaseUser getCurrentUser(String appName) {
+    FirebaseApp app = FirebaseApp.getInstance(appName);
+    return FirebaseAuth.getInstance(app).getCurrentUser();
+  }
+
 
   private AuthCredential getCredential(Map<String, Object> arguments)
       throws FlutterFirebaseAuthPluginException {
@@ -1573,4 +1583,48 @@ public class FlutterFirebaseAuthPlugin
     }
     streamHandlers.clear();
   }
+
+
+  // Map an app id to a map of user id to a MultiFactorUser object.
+  private Map<String, Map<String, MultiFactor>> multiFactorUserMap = new HashMap<>();
+
+  // Map an id to a MultiFactorSession object.
+  private Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
+
+  @Override
+  public void enroll(@NonNull String appName, @NonNull GeneratedAndroidFirebaseAuth.PigeonMultiFactorAssertion assertion, @Nullable String displayName) {
+
+  }
+
+  @Override
+  public void getSession(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession> result) {
+    final FirebaseUser currentUser = getCurrentUser(appName);
+    if (currentUser == null) {
+      throw new Error("No user is signed in.");
+    }
+    if (multiFactorUserMap.get(appName) == null) {
+      multiFactorUserMap.put(appName, new HashMap<>());
+    }
+
+    final Map<String, MultiFactor> appMultiFactorUser = multiFactorUserMap.get(appName);
+    if (appMultiFactorUser.get(currentUser.getUid()) == null) {
+      appMultiFactorUser.put(currentUser.getUid(), currentUser.getMultiFactor());
+    }
+
+    final MultiFactor multiFactor = appMultiFactorUser.get(currentUser.getUid());
+
+    multiFactor.getSession().addOnCompleteListener(
+      task -> {
+        if (task.isSuccessful()) {
+          final MultiFactorSession sessionResult = task.getResult();
+          final String id = UUID.randomUUID().toString();
+            multiFactorSessionMap.put(id, sessionResult);
+            result.success(new GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession.Builder().setId(id).build());
+        } else {
+          Exception exception = task.getException();
+          result.error(exception);
+        }
+      });
+  }
+
 }

@@ -503,6 +503,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// Confirm the link is a sign-in email link before calling this method,
   /// using [isSignInWithEmailLink].
+
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **expired-action-code**:
