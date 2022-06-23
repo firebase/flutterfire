@@ -134,13 +134,28 @@ void setupTests() {
       });
 
       group('getDynamicLink', () {
-        test('dynamic link using uri', () async {
-          Uri uri = Uri.parse('');
+        test('dynamic link using uri created on Firebase console', () async {
+          // Link created in Firebase console
+          Uri uri = Uri.parse('https://flutterfiretests.page.link/iho8');
           PendingDynamicLinkData? pendingLink =
               await FirebaseDynamicLinks.instance.getDynamicLink(uri);
-          expect(pendingLink, isNull);
+          expect(pendingLink, isA<PendingDynamicLinkData>());
+          expect(pendingLink?.link.toString(), 'https://example/helloworld');
         });
+
+        test('Universal link error for URL that cannot be parsed', () async {
+        Uri uri = Uri.parse('');
+        await expectLater(
+          ()=> FirebaseDynamicLinks.instance.getDynamicLink(uri),
+          throwsA(isA<FirebaseException>().having(
+                (e) => e.message,
+            'message',
+            contains('could not be parsed'),
+        ),
+        ),);
+    });
       });
+
 
       group('onLink', () {
         test('test multiple times', () async {
