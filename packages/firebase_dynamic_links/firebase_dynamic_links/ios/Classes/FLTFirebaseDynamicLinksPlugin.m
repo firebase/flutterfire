@@ -128,6 +128,17 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
       code = errorDetails[kCode];
       message = errorDetails[kMessage];
       details = errorDetails;
+
+      if(errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
+        // This stops an uncaught type cast exception in dart
+        NSMutableDictionary *temp = [errorDetails[@"additionalData"] mutableCopy];
+        [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
+        details = temp;
+        // provides a useful message to the user. e.g. "Universal link URL could not be parsed".
+        if([message containsString:@"unknown error"]){
+          message = errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey];
+        }
+      }
     } else {
       details = @{
         kCode : code,
@@ -155,7 +166,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     // TODO - document iOS default app only
     NSLog(@"FLTFirebaseDynamicLinks: iOS plugin only supports the Firebase default app");
   }
-
+  NSLog(@"RRRRRRRRRRRRRR");
   if ([@"FirebaseDynamicLinks#buildLink" isEqualToString:call.method]) {
     [self buildLink:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"FirebaseDynamicLinks#buildShortLink" isEqualToString:call.method]) {
@@ -242,8 +253,10 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
   FIRDynamicLinkUniversalLinkHandler completion =
       ^(FIRDynamicLink *_Nullable dynamicLink, NSError *_Nullable error) {
         if (error) {
+          NSLog(@"WWWWWW00000 %@", error);
           result.error(nil, nil, nil, error);
         } else {
+          NSLog(@"WWWWWW11111 %@", dynamicLink);
           result.success(getDictionaryFromDynamicLink(dynamicLink));
         }
       };
