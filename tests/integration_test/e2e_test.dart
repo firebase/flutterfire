@@ -12,7 +12,6 @@ import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  // ignore: unnecessary_lambdas
   group('FlutterFire', () {
     firebase_analytics.main();
     firebase_core.main();
