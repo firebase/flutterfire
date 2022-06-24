@@ -22,7 +22,7 @@ class TwitterProvider extends OAuthProvider {
     redirectUri: redirectUri ?? defaultRedirectUri,
   );
 
-  late final _provider = TwitterLogin(
+  late TwitterLogin provider = TwitterLogin(
     apiKey: apiKey,
     apiSecretKey: apiSecretKey,
     redirectURI: redirectUri ?? defaultRedirectUri,
@@ -36,7 +36,7 @@ class TwitterProvider extends OAuthProvider {
 
   @override
   void mobileSignIn(AuthAction action) {
-    final result = _provider.login();
+    final result = provider.login();
 
     result.then((value) {
       switch (value.status!) {

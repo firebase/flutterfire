@@ -26,13 +26,7 @@ String sha256ofString(String input) {
   return digest.toString();
 }
 
-class AppleProvider extends OAuthProvider {
-  @override
-  final providerId = 'apple.com';
-
-  @override
-  final style = const AppleProviderButtonStyle();
-
+class AppleProviderBackend {
   OAuthCredential _createOAuthCredential(
     AuthorizationCredentialAppleID credential,
     String rawNonce,
@@ -43,8 +37,7 @@ class AppleProvider extends OAuthProvider {
     );
   }
 
-  @override
-  void mobileSignIn(AuthAction action) {
+  Future<OAuthCredential> signIn() {
     final rawNonce = generateNonce();
     final nonce = sha256ofString(rawNonce);
 
@@ -57,9 +50,24 @@ class AppleProvider extends OAuthProvider {
       nonce: nonce,
     );
 
-    appleCredentialFuture.then((credential) {
+    return appleCredentialFuture.then((credential) {
       return _createOAuthCredential(credential, rawNonce);
-    }).then((credential) {
+    });
+  }
+}
+
+class AppleProvider extends OAuthProvider {
+  @override
+  final providerId = 'apple.com';
+
+  @override
+  final style = const AppleProviderButtonStyle();
+
+  AppleProviderBackend provider = AppleProviderBackend();
+
+  @override
+  void mobileSignIn(AuthAction action) {
+    provider.signIn().then((credential) {
       onCredentialReceived(credential, action);
     }).catchError((err) {
       if (err is SignInWithAppleAuthorizationException) {

@@ -7,7 +7,8 @@ import 'package:flutterfire_ui_oauth_facebook/flutterfire_ui_oauth_facebook.dart
 class FacebookProvider extends OAuthProvider {
   @override
   final providerId = 'facebook.com';
-  final _provider = FacebookAuth.instance;
+
+  FacebookAuth provider = FacebookAuth.instance;
   final String clientId;
   final String? redirectUri;
 
@@ -58,13 +59,13 @@ class FacebookProvider extends OAuthProvider {
   Future<void> logOutProvider() async {
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS) {
-      await _provider.logOut();
+      await provider.logOut();
     }
   }
 
   @override
   void mobileSignIn(AuthAction action) {
-    final result = _provider.login();
+    final result = provider.login();
     result
         .then((result) => _handleResult(result, action))
         .catchError(authListener.onError);

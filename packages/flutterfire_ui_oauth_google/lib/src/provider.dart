@@ -11,7 +11,7 @@ class GoogleProvider extends OAuthProvider {
   final String? redirectUri;
   final List<String>? scopes;
 
-  late final _provider = GoogleSignIn(scopes: scopes ?? []);
+  late GoogleSignIn provider = GoogleSignIn(scopes: scopes ?? []);
 
   @override
   final GoogleAuthProvider firebaseAuthProvider = GoogleAuthProvider();
@@ -37,7 +37,7 @@ class GoogleProvider extends OAuthProvider {
 
   @override
   void mobileSignIn(AuthAction action) async {
-    _provider.signIn().then((user) {
+    provider.signIn().then((user) {
       if (user == null) throw AuthCancelledException();
       return user.authentication;
     }).then((auth) {
@@ -64,7 +64,7 @@ class GoogleProvider extends OAuthProvider {
   Future<void> logOutProvider() async {
     if (defaultTargetPlatform == TargetPlatform.android ||
         defaultTargetPlatform == TargetPlatform.iOS) {
-      await _provider.signOut();
+      await provider.signOut();
     }
   }
 

@@ -66,5 +66,7 @@
 	<string>fbauth2</string>
 	<string>fbshareextension</string>
 	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>

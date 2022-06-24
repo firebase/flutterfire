@@ -28,19 +28,5 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-	
-	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Editor</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-		<string>com.googleusercontent.apps.448618578101-mcfaooqa343utlqtd0rbsnhcpqc0r17h</string>
-		<string>fb128693022464535</string>
-		<string>ffire</string>
-		</array>
-	</dict>
-	</array>
 </dict>
 </plist>
