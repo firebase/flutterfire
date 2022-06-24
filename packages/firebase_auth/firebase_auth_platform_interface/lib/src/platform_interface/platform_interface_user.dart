@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_multi_factor.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// A user account.

@@ -38,7 +38,6 @@ public class GeneratedAndroidFirebaseAuth {
 
     /** Constructor is private to enforce null safety; use Builder. */
     private PigeonMultiFactorSession() {}
-
     public static final class Builder {
       private @Nullable String id;
 
@@ -46,7 +45,6 @@ public class GeneratedAndroidFirebaseAuth {
         this.id = setterArg;
         return this;
       }
-
       public @NonNull PigeonMultiFactorSession build() {
         PigeonMultiFactorSession pigeonReturn = new PigeonMultiFactorSession();
         pigeonReturn.setId(id);
@@ -60,7 +58,6 @@ public class GeneratedAndroidFirebaseAuth {
       toMapResult.put("id", id);
       return toMapResult;
     }
-
     static @NonNull PigeonMultiFactorSession fromMap(@NonNull Map<String, Object> map) {
       PigeonMultiFactorSession pigeonResult = new PigeonMultiFactorSession();
       Object id = map.get("id");
@@ -114,7 +111,6 @@ public class GeneratedAndroidFirebaseAuth {
         this.verificationCode = setterArg;
         return this;
       }
-
       public @NonNull PigeonPhoneMultiFactorAssertion build() {
         PigeonPhoneMultiFactorAssertion pigeonReturn = new PigeonPhoneMultiFactorAssertion();
         pigeonReturn.setVerificationId(verificationId);

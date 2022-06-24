@@ -5,6 +5,7 @@
 // @dart = 2.12
 import 'dart:async';
 import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
+
 import 'package:flutter/foundation.dart' show WriteBuffer, ReadBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,7 +16,7 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorAssertion) {
+    if (value is PigeonMultiFactorSession) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else if (value is PigeonMultiFactorSession) {
@@ -45,30 +46,30 @@ abstract class TestMultiFactorUserHostApi {
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
   void enroll(String appName, PigeonMultiFactorAssertion assertion,
-      String? displayName);
+      String? displayName,);
   Future<PigeonMultiFactorSession> getSession(String appName);
   static void setup(TestMultiFactorUserHostApi? api,
-      {BinaryMessenger? binaryMessenger}) {
+      {BinaryMessenger? binaryMessenger,}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.MultiFactorUserHostApi.enroll', codec,
-          binaryMessenger: binaryMessenger);
+          binaryMessenger: binaryMessenger,);
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null.');
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null.',);
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null String.');
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null String.',);
           final PigeonMultiFactorAssertion? arg_assertion =
               (args[1] as PigeonMultiFactorAssertion?);
           assert(arg_assertion != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null PigeonMultiFactorAssertion.');
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null PigeonMultiFactorAssertion.',);
           final String? arg_displayName = (args[2] as String?);
-          api.enroll(arg_appName!, arg_assertion!, arg_displayName);
+          await api.enrollPhone(arg_appName!, arg_assertion!, arg_displayName);
           return <Object?, Object?>{};
         });
       }
@@ -76,17 +77,17 @@ abstract class TestMultiFactorUserHostApi {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.MultiFactorUserHostApi.getSession', codec,
-          binaryMessenger: binaryMessenger);
+          binaryMessenger: binaryMessenger,);
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
           assert(message != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null.');
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null.',);
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.');
+              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.',);
           final PigeonMultiFactorSession output =
               await api.getSession(arg_appName!);
           return <Object?, Object?>{'result': output};
