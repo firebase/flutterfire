@@ -212,4 +212,30 @@ abstract class QueryReference<Snapshot extends FirestoreQuerySnapshot>
   /// You must specify at least one orderBy clause for limitToLast queries,
   /// otherwise an exception will be thrown during execution.
   QueryReference<Snapshot> limitToLast(int limit);
+
+  /// Filter a collection based on the documents' ID.
+  ///
+  /// This is similar to using [FieldPath.documentId].
+  QueryReference<Snapshot> whereDocumentId({
+    String isEqualTo,
+    String isNotEqualTo,
+    String isLessThan,
+    String isLessThanOrEqualTo,
+    String isGreaterThan,
+    String isGreaterThanOrEqualTo,
+    bool isNull,
+    List<String> whereIn,
+    List<String> whereNotIn,
+  });
+
+  /// Sorts a collection based on the documents' ID.
+  ///
+  /// This is similar to using [FieldPath.documentId].
+  QueryReference<Snapshot> orderByDocumentId({
+    bool descending,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+  });
 }
