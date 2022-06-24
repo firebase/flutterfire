@@ -12,6 +12,7 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -37,10 +38,12 @@ import com.google.firebase.auth.GetTokenResult;
 import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.MultiFactor;
+import com.google.firebase.auth.MultiFactorAssertion;
 import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.auth.PhoneMultiFactorGenerator;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
@@ -1607,13 +1610,8 @@ public class FlutterFirebaseAuthPlugin
   // Map an id to a MultiFactorSession object.
   private Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
 
-  @Override
-  public void enroll(@NonNull String appName, @NonNull GeneratedAndroidFirebaseAuth.PigeonMultiFactorAssertion assertion, @Nullable String displayName) {
 
-  }
-
-  @Override
-  public void getSession(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession> result) {
+  private MultiFactor getAppMultiFactor(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result result) {
     final FirebaseUser currentUser = getCurrentUser(appName);
     if (currentUser == null) {
       result.error(new FirebaseNoSignedInUserException("No user is signed in"));
@@ -1628,6 +1626,33 @@ public class FlutterFirebaseAuthPlugin
     }
 
     final MultiFactor multiFactor = appMultiFactorUser.get(currentUser.getUid());
+    return multiFactor;
+  }
+
+
+  @Override
+  public void enrollPhone(@NonNull String appName, @NonNull GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion, @Nullable String displayName, GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+
+    PhoneAuthCredential credential =
+      PhoneAuthProvider.getCredential(assertion.getVerificationId(), assertion.getVerificationCode());
+
+    MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
+
+    multiFactor.enroll(multiFactorAssertion, displayName)
+      .addOnCompleteListener(
+        task -> {
+          if (task.isSuccessful()) {
+            result.success(null);
+          } else {
+            result.error(task.getException());
+          }
+        });
+  }
+
+  @Override
+  public void getSession(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession> result) {
+    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
 
     multiFactor.getSession().addOnCompleteListener(
       task -> {

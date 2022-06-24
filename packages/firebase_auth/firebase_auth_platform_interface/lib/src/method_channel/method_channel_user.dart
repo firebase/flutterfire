@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
+import 'package:firebase_auth_platform_interface/src/platform_interface/platform_interface_multi_factor.dart';
 
 import 'utils/exception.dart';
 

@@ -15,14 +15,6 @@ import 'package:pigeon/pigeon.dart';
     objcSourceOut: '../firebase_auth/ios/Classes/messages.g.m',
   ),
 )
-class PigeonMultiFactorAssertion {
-  const PigeonMultiFactorAssertion({
-    required this.id,
-  });
-
-  final String id;
-}
-
 class PigeonMultiFactorSession {
   const PigeonMultiFactorSession({
     required this.id,
@@ -31,11 +23,22 @@ class PigeonMultiFactorSession {
   final String id;
 }
 
+class PigeonPhoneMultiFactorAssertion {
+  const PigeonPhoneMultiFactorAssertion({
+    required this.verificationId,
+    required this.verificationCode,
+  });
+
+  final String verificationId;
+  final String verificationCode;
+}
+
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
 abstract class MultiFactorUserHostApi {
-  void enroll(
+  @async
+  void enrollPhone(
     String appName,
-    PigeonMultiFactorAssertion assertion,
+    PigeonPhoneMultiFactorAssertion assertion,
     String? displayName,
   );
 

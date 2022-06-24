@@ -8,27 +8,6 @@ import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 import 'package:flutter/foundation.dart' show WriteBuffer, ReadBuffer;
 import 'package:flutter/services.dart';
 
-class PigeonMultiFactorAssertion {
-  PigeonMultiFactorAssertion({
-    required this.id,
-  });
-
-  String id;
-
-  Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['id'] = id;
-    return pigeonMap;
-  }
-
-  static PigeonMultiFactorAssertion decode(Object message) {
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return PigeonMultiFactorAssertion(
-      id: pigeonMap['id']! as String,
-    );
-  }
-}
-
 class PigeonMultiFactorSession {
   PigeonMultiFactorSession({
     required this.id,
@@ -50,15 +29,40 @@ class PigeonMultiFactorSession {
   }
 }
 
+class PigeonPhoneMultiFactorAssertion {
+  PigeonPhoneMultiFactorAssertion({
+    required this.verificationId,
+    required this.verificationCode,
+  });
+
+  String verificationId;
+  String verificationCode;
+
+  Object encode() {
+    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
+    pigeonMap['verificationId'] = verificationId;
+    pigeonMap['verificationCode'] = verificationCode;
+    return pigeonMap;
+  }
+
+  static PigeonPhoneMultiFactorAssertion decode(Object message) {
+    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
+    return PigeonPhoneMultiFactorAssertion(
+      verificationId: pigeonMap['verificationId']! as String,
+      verificationCode: pigeonMap['verificationCode']! as String,
+    );
+  }
+}
+
 class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _MultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorAssertion) {
+    if (value is PigeonMultiFactorSession) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is PigeonMultiFactorSession) {
+    if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else 
@@ -70,10 +74,10 @@ class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return PigeonMultiFactorAssertion.decode(readValue(buffer)!);
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
       
       case 129:       
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       
       default:      
         return super.readValueOfType(type, buffer);
@@ -92,9 +96,9 @@ class MultiFactorUserHostApi {
 
   static const MessageCodec<Object?> codec = _MultiFactorUserHostApiCodec();
 
-  Future<void> enroll(String arg_appName, PigeonMultiFactorAssertion arg_assertion, String? arg_displayName) async {
+  Future<void> enrollPhone(String arg_appName, PigeonPhoneMultiFactorAssertion arg_assertion, String? arg_displayName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.MultiFactorUserHostApi.enroll', codec, binaryMessenger: _binaryMessenger);
+        'dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone', codec, binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName, arg_assertion, arg_displayName]) as Map<Object?, Object?>?;
     if (replyMap == null) {

@@ -23,44 +23,6 @@ import java.util.HashMap;
 public class GeneratedAndroidFirebaseAuth {
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class PigeonMultiFactorAssertion {
-    private @NonNull String id;
-    public @NonNull String getId() { return id; }
-    public void setId(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"id\" is null.");
-      }
-      this.id = setterArg;
-    }
-
-    /** Constructor is private to enforce null safety; use Builder. */
-    private PigeonMultiFactorAssertion() {}
-    public static final class Builder {
-      private @Nullable String id;
-      public @NonNull Builder setId(@NonNull String setterArg) {
-        this.id = setterArg;
-        return this;
-      }
-      public @NonNull PigeonMultiFactorAssertion build() {
-        PigeonMultiFactorAssertion pigeonReturn = new PigeonMultiFactorAssertion();
-        pigeonReturn.setId(id);
-        return pigeonReturn;
-      }
-    }
-    @NonNull Map<String, Object> toMap() {
-      Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("id", id);
-      return toMapResult;
-    }
-    static @NonNull PigeonMultiFactorAssertion fromMap(@NonNull Map<String, Object> map) {
-      PigeonMultiFactorAssertion pigeonResult = new PigeonMultiFactorAssertion();
-      Object id = map.get("id");
-      pigeonResult.setId((String)id);
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
   public static class PigeonMultiFactorSession {
     private @NonNull String id;
     public @NonNull String getId() { return id; }
@@ -98,6 +60,62 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class PigeonPhoneMultiFactorAssertion {
+    private @NonNull String verificationId;
+    public @NonNull String getVerificationId() { return verificationId; }
+    public void setVerificationId(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"verificationId\" is null.");
+      }
+      this.verificationId = setterArg;
+    }
+
+    private @NonNull String verificationCode;
+    public @NonNull String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"verificationCode\" is null.");
+      }
+      this.verificationCode = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private PigeonPhoneMultiFactorAssertion() {}
+    public static final class Builder {
+      private @Nullable String verificationId;
+      public @NonNull Builder setVerificationId(@NonNull String setterArg) {
+        this.verificationId = setterArg;
+        return this;
+      }
+      private @Nullable String verificationCode;
+      public @NonNull Builder setVerificationCode(@NonNull String setterArg) {
+        this.verificationCode = setterArg;
+        return this;
+      }
+      public @NonNull PigeonPhoneMultiFactorAssertion build() {
+        PigeonPhoneMultiFactorAssertion pigeonReturn = new PigeonPhoneMultiFactorAssertion();
+        pigeonReturn.setVerificationId(verificationId);
+        pigeonReturn.setVerificationCode(verificationCode);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("verificationId", verificationId);
+      toMapResult.put("verificationCode", verificationCode);
+      return toMapResult;
+    }
+    static @NonNull PigeonPhoneMultiFactorAssertion fromMap(@NonNull Map<String, Object> map) {
+      PigeonPhoneMultiFactorAssertion pigeonResult = new PigeonPhoneMultiFactorAssertion();
+      Object verificationId = map.get("verificationId");
+      pigeonResult.setVerificationId((String)verificationId);
+      Object verificationCode = map.get("verificationCode");
+      pigeonResult.setVerificationCode((String)verificationCode);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     void success(T result);
     void error(Throwable error);
@@ -109,10 +127,10 @@ public class GeneratedAndroidFirebaseAuth {
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return PigeonMultiFactorAssertion.fromMap((Map<String, Object>) readValue(buffer));
+          return PigeonMultiFactorSession.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return PigeonMultiFactorSession.fromMap((Map<String, Object>) readValue(buffer));
+          return PigeonPhoneMultiFactorAssertion.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
           return super.readValueOfType(type, buffer);
@@ -121,13 +139,13 @@ public class GeneratedAndroidFirebaseAuth {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof PigeonMultiFactorAssertion) {
-        stream.write(128);
-        writeValue(stream, ((PigeonMultiFactorAssertion) value).toMap());
-      } else 
       if (value instanceof PigeonMultiFactorSession) {
-        stream.write(129);
+        stream.write(128);
         writeValue(stream, ((PigeonMultiFactorSession) value).toMap());
+      } else 
+      if (value instanceof PigeonPhoneMultiFactorAssertion) {
+        stream.write(129);
+        writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toMap());
       } else 
 {
         super.writeValue(stream, value);
@@ -137,7 +155,7 @@ public class GeneratedAndroidFirebaseAuth {
 
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
   public interface MultiFactorUserHostApi {
-    void enroll(@NonNull String appName, @NonNull PigeonMultiFactorAssertion assertion, @Nullable String displayName);
+    void enrollPhone(@NonNull String appName, @NonNull PigeonPhoneMultiFactorAssertion assertion, @Nullable String displayName, Result<Void> result);
     void getSession(@NonNull String appName, Result<PigeonMultiFactorSession> result);
 
     /** The codec used by MultiFactorUserHostApi. */
@@ -149,7 +167,7 @@ public class GeneratedAndroidFirebaseAuth {
     static void setup(BinaryMessenger binaryMessenger, MultiFactorUserHostApi api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.MultiFactorUserHostApi.enroll", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -159,18 +177,28 @@ public class GeneratedAndroidFirebaseAuth {
               if (appNameArg == null) {
                 throw new NullPointerException("appNameArg unexpectedly null.");
               }
-              PigeonMultiFactorAssertion assertionArg = (PigeonMultiFactorAssertion)args.get(1);
+              PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion)args.get(1);
               if (assertionArg == null) {
                 throw new NullPointerException("assertionArg unexpectedly null.");
               }
               String displayNameArg = (String)args.get(2);
-              api.enroll(appNameArg, assertionArg, displayNameArg);
-              wrapped.put("result", null);
+              Result<Void> resultCallback = new Result<Void>() {
+                public void success(Void result) {
+                  wrapped.put("result", null);
+                  reply.reply(wrapped);
+                }
+                public void error(Throwable error) {
+                  wrapped.put("error", wrapError(error));
+                  reply.reply(wrapped);
+                }
+              };
+
+              api.enrollPhone(appNameArg, assertionArg, displayNameArg, resultCallback);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));
+              reply.reply(wrapped);
             }
-            reply.reply(wrapped);
           });
         } else {
           channel.setMessageHandler(null);

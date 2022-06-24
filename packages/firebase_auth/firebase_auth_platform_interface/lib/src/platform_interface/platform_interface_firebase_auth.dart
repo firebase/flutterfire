@@ -644,6 +644,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
     // ignore: invalid_use_of_visible_for_testing_member
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
   }) {

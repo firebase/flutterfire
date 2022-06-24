@@ -11,4 +11,14 @@ class MultiFactor {
   Future<MultiFactorSession> getSession() {
     return _delegate.getSession();
   }
+
+  /// The users display name.
+  ///
+  /// Will be `null` if signing in anonymously or via password authentication.
+  Future<void> enroll(
+    MultiFactorAssertion assertion, {
+    String? displayName,
+  }) async {
+    return _delegate.enroll(assertion, displayName: displayName);
+  }
 }

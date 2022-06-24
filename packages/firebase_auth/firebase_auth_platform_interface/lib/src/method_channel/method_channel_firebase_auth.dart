@@ -27,7 +27,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
 
-  static Map<String, MethodChannelMultiFactor> _mutliFactorInstances =
+  static Map<String, MethodChannelMultiFactor> _multiFactorInstances =
       <String, MethodChannelMultiFactor>{};
 
   static final Map<String, StreamController<_ValueWrapper<UserPlatform>>>
@@ -115,8 +115,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
 
-    MethodChannelMultiFactor mutliFactorInstance =
-        _mutliFactorInstances[appName]!;
+    MethodChannelMultiFactor? multiFactorInstance =
+        _multiFactorInstances[appName];
+    if (multiFactorInstance == null) {
+      multiFactorInstance = MethodChannelMultiFactor(instance);
+      _multiFactorInstances[appName] = multiFactorInstance;
+    }
 
     final userMap = arguments['user'];
     if (userMap == null) {
@@ -124,7 +128,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       streamController.add(const _ValueWrapper.absent());
     } else {
       final MethodChannelUser user = MethodChannelUser(
-          instance, mutliFactorInstance, userMap.cast<String, dynamic>());
+          instance, multiFactorInstance, userMap.cast<String, dynamic>());
 
       // TODO(rousselGit): should this logic be moved to the setter instead?
       instance.currentUser = user;
@@ -146,8 +150,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
         _methodChannelFirebaseAuthInstances[appName]!;
-    MethodChannelMultiFactor multiFactorInstance =
-        _mutliFactorInstances[appName]!;
+    MethodChannelMultiFactor? multiFactorInstance =
+        _multiFactorInstances[appName];
+    if (multiFactorInstance == null) {
+      multiFactorInstance = MethodChannelMultiFactor(instance);
+      _multiFactorInstances[appName] = multiFactorInstance;
+    }
 
     final userMap = arguments['user'];
     if (userMap == null) {
@@ -609,7 +617,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
             'forceResendingToken': forceResendingToken,
             'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,
             if (multiFactorSession?.id != null)
-              'multiFactorSession': multiFactorSession!.id,
+              'multiFactorSessionId': multiFactorSession!.id,
           }));
 
       EventChannel(eventChannelName!)

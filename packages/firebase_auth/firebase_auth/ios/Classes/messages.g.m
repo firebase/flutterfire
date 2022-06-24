@@ -31,35 +31,15 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 }
 
 
-@interface PigeonMultiFactorAssertion ()
-+ (PigeonMultiFactorAssertion *)fromMap:(NSDictionary *)dict;
-+ (nullable PigeonMultiFactorAssertion *)nullableFromMap:(NSDictionary *)dict;
-- (NSDictionary *)toMap;
-@end
 @interface PigeonMultiFactorSession ()
 + (PigeonMultiFactorSession *)fromMap:(NSDictionary *)dict;
 + (nullable PigeonMultiFactorSession *)nullableFromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
-
-@implementation PigeonMultiFactorAssertion
-+ (instancetype)makeWithId:(NSString *)id {
-  PigeonMultiFactorAssertion* pigeonResult = [[PigeonMultiFactorAssertion alloc] init];
-  pigeonResult.id = id;
-  return pigeonResult;
-}
-+ (PigeonMultiFactorAssertion *)fromMap:(NSDictionary *)dict {
-  PigeonMultiFactorAssertion *pigeonResult = [[PigeonMultiFactorAssertion alloc] init];
-  pigeonResult.id = GetNullableObject(dict, @"id");
-  NSAssert(pigeonResult.id != nil, @"");
-  return pigeonResult;
-}
-+ (nullable PigeonMultiFactorAssertion *)nullableFromMap:(NSDictionary *)dict { return (dict) ? [PigeonMultiFactorAssertion fromMap:dict] : nil; }
-- (NSDictionary *)toMap {
-  return @{
-    @"id" : (self.id ?: [NSNull null]),
-  };
-}
+@interface PigeonPhoneMultiFactorAssertion ()
++ (PigeonPhoneMultiFactorAssertion *)fromMap:(NSDictionary *)dict;
++ (nullable PigeonPhoneMultiFactorAssertion *)nullableFromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
 @end
 
 @implementation PigeonMultiFactorSession
@@ -82,6 +62,31 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 }
 @end
 
+@implementation PigeonPhoneMultiFactorAssertion
++ (instancetype)makeWithVerificationId:(NSString *)verificationId
+    verificationCode:(NSString *)verificationCode {
+  PigeonPhoneMultiFactorAssertion* pigeonResult = [[PigeonPhoneMultiFactorAssertion alloc] init];
+  pigeonResult.verificationId = verificationId;
+  pigeonResult.verificationCode = verificationCode;
+  return pigeonResult;
+}
++ (PigeonPhoneMultiFactorAssertion *)fromMap:(NSDictionary *)dict {
+  PigeonPhoneMultiFactorAssertion *pigeonResult = [[PigeonPhoneMultiFactorAssertion alloc] init];
+  pigeonResult.verificationId = GetNullableObject(dict, @"verificationId");
+  NSAssert(pigeonResult.verificationId != nil, @"");
+  pigeonResult.verificationCode = GetNullableObject(dict, @"verificationCode");
+  NSAssert(pigeonResult.verificationCode != nil, @"");
+  return pigeonResult;
+}
++ (nullable PigeonPhoneMultiFactorAssertion *)nullableFromMap:(NSDictionary *)dict { return (dict) ? [PigeonPhoneMultiFactorAssertion fromMap:dict] : nil; }
+- (NSDictionary *)toMap {
+  return @{
+    @"verificationId" : (self.verificationId ?: [NSNull null]),
+    @"verificationCode" : (self.verificationCode ?: [NSNull null]),
+  };
+}
+@end
+
 @interface MultiFactorUserHostApiCodecReader : FlutterStandardReader
 @end
 @implementation MultiFactorUserHostApiCodecReader
@@ -89,10 +94,10 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 {
   switch (type) {
     case 128:     
-      return [PigeonMultiFactorAssertion fromMap:[self readValue]];
+      return [PigeonMultiFactorSession fromMap:[self readValue]];
     
     case 129:     
-      return [PigeonMultiFactorSession fromMap:[self readValue]];
+      return [PigeonPhoneMultiFactorAssertion fromMap:[self readValue]];
     
     default:    
       return [super readValueOfType:type];
@@ -106,11 +111,11 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 @implementation MultiFactorUserHostApiCodecWriter
 - (void)writeValue:(id)value 
 {
-  if ([value isKindOfClass:[PigeonMultiFactorAssertion class]]) {
+  if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
   } else 
-  if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
   } else 
@@ -146,19 +151,19 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
   {
     FlutterBasicMessageChannel *channel =
       [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.MultiFactorUserHostApi.enroll"
+        initWithName:@"dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone"
         binaryMessenger:binaryMessenger
         codec:MultiFactorUserHostApiGetCodec()        ];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(enrollAppName:assertion:displayName:error:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(enrollAppName:assertion:displayName:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(enrollPhoneAppName:assertion:displayName:completion:)], @"MultiFactorUserHostApi api (%@) doesn't respond to @selector(enrollPhoneAppName:assertion:displayName:completion:)", api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_appName = GetNullableObjectAtIndex(args, 0);
-        PigeonMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
+        PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
         NSString *arg_displayName = GetNullableObjectAtIndex(args, 2);
-        FlutterError *error;
-        [api enrollAppName:arg_appName assertion:arg_assertion displayName:arg_displayName error:&error];
-        callback(wrapResult(nil, error));
+        [api enrollPhoneAppName:arg_appName assertion:arg_assertion displayName:arg_displayName completion:^(FlutterError *_Nullable error) {
+          callback(wrapResult(nil, error));
+        }];
       }];
     }
     else {

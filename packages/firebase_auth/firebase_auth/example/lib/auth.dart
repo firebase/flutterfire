@@ -396,48 +396,6 @@ class _AuthGateState extends State<AuthGate> {
     }
   }
 
-  Future<String?> getSmsCodeFromUser() async {
-    String? smsCode;
-
-    // Update the UI - wait for the user to enter the SMS code
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('SMS code:'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign in'),
-            ),
-            OutlinedButton(
-              onPressed: () {
-                smsCode = null;
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-          content: Container(
-            padding: const EdgeInsets.all(20),
-            child: TextField(
-              onChanged: (value) {
-                smsCode = value;
-              },
-              textAlign: TextAlign.center,
-              autofocus: true,
-            ),
-          ),
-        );
-      },
-    );
-
-    return smsCode;
-  }
-
   Future<void> _phoneAuth() async {
     if (mode != AuthMode.phone) {
       setState(() {
@@ -448,7 +406,7 @@ class _AuthGateState extends State<AuthGate> {
         if (kIsWeb) {
           final confirmationResult =
               await _auth.signInWithPhoneNumber(phoneController.text);
-          final smsCode = await getSmsCodeFromUser();
+          final smsCode = await getSmsCodeFromUser(context);
 
           if (smsCode != null) {
             await confirmationResult.confirm(smsCode);
@@ -463,7 +421,7 @@ class _AuthGateState extends State<AuthGate> {
               });
             },
             codeSent: (String verificationId, int? resendToken) async {
-              final smsCode = await getSmsCodeFromUser();
+              final smsCode = await getSmsCodeFromUser(context);
 
               if (smsCode != null) {
                 // Create a PhoneAuthCredential with the code
@@ -591,4 +549,46 @@ class _AuthGateState extends State<AuthGate> {
       setIsLoading();
     }
   }
+}
+
+Future<String?> getSmsCodeFromUser(BuildContext context) async {
+  String? smsCode;
+
+  // Update the UI - wait for the user to enter the SMS code
+  await showDialog<String>(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('SMS code:'),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Sign in'),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              smsCode = null;
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+        ],
+        content: Container(
+          padding: const EdgeInsets.all(20),
+          child: TextField(
+            onChanged: (value) {
+              smsCode = value;
+            },
+            textAlign: TextAlign.center,
+            autofocus: true,
+          ),
+        ),
+      );
+    },
+  );
+
+  return smsCode;
 }

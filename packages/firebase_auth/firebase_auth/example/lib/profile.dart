@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -167,15 +168,52 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
+                    TextButton(
+                      onPressed: () {
+                        user.sendEmailVerification();
+                      },
+                      child: const Text('Verify Email'),
+                    ),
+                    const SizedBox(height: 20),
                     TextButton(
                       onPressed: () async {
                         final session = await user.multiFactor.getSession();
-                        print(session.id);
+                        final auth = FirebaseAuth.instance;
+                        await auth.verifyPhoneNumber(
+                          multiFactorSession: session,
+                          // TODO(Lyokone): add a phone number input
+                          phoneNumber: '',
+                          verificationCompleted: (_) {},
+                          verificationFailed: print,
+                          codeSent:
+                              (String verificationId, int? resendToken) async {
+                            final smsCode = await getSmsCodeFromUser(context);
+
+                            if (smsCode != null) {
+                              // Create a PhoneAuthCredential with the code
+                              final credential = PhoneAuthProvider.credential(
+                                verificationId: verificationId,
+                                smsCode: smsCode,
+                              );
+
+                              try {
+                                await user.multiFactor.enroll(
+                                  PhoneMultiFactorGenerator.getAssertion(
+                                    credential,
+                                  ),
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                print(e.message);
+                              }
+                            }
+                          },
+                          codeAutoRetrievalTimeout: print,
+                        );
                       },
-                      child: const Text('Get Session'),
+                      child: const Text('Verify Number For MFA'),
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 20),
                     TextButton(
                       onPressed: _signOut,
                       child: const Text('Sign out'),

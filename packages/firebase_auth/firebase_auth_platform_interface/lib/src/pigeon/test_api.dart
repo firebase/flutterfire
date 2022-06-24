@@ -15,11 +15,11 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorAssertion) {
+    if (value is PigeonMultiFactorSession) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is PigeonMultiFactorSession) {
+    if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
     } else 
@@ -31,10 +31,10 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return PigeonMultiFactorAssertion.decode(readValue(buffer)!);
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
       
       case 129:       
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       
       default:      
         return super.readValueOfType(type, buffer);
@@ -45,24 +45,24 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
 abstract class TestMultiFactorUserHostApi {
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
-  void enroll(String appName, PigeonMultiFactorAssertion assertion, String? displayName);
+  Future<void> enrollPhone(String appName, PigeonPhoneMultiFactorAssertion assertion, String? displayName);
   Future<PigeonMultiFactorSession> getSession(String appName);
   static void setup(TestMultiFactorUserHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactorUserHostApi.enroll', codec, binaryMessenger: binaryMessenger);
+          'dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone', codec, binaryMessenger: binaryMessenger);
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null.');
+          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null String.');
-          final PigeonMultiFactorAssertion? arg_assertion = (args[1] as PigeonMultiFactorAssertion?);
-          assert(arg_assertion != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null PigeonMultiFactorAssertion.');
+          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null, expected non-null String.');
+          final PigeonPhoneMultiFactorAssertion? arg_assertion = (args[1] as PigeonPhoneMultiFactorAssertion?);
+          assert(arg_assertion != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone was null, expected non-null PigeonPhoneMultiFactorAssertion.');
           final String? arg_displayName = (args[2] as String?);
-          api.enroll(arg_appName!, arg_assertion!, arg_displayName);
+          await api.enrollPhone(arg_appName!, arg_assertion!, arg_displayName);
           return <Object?, Object?>{};
         });
       }
