@@ -28,6 +28,11 @@ jobs:
   android:
     runs-on: macos-11
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        test1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        test2: [1, 2]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -111,7 +116,6 @@ jobs:
         with:
           name: ${{ matrix.api-level }}-${{ matrix.arch }}-${{matrix.target}}-${{matrix.first-boot-delay}}-${{matrix.iteration}}-adb_logs
           path: tests/adb-log.txt.gz
-
 
   ios:
     runs-on: macos-latest
