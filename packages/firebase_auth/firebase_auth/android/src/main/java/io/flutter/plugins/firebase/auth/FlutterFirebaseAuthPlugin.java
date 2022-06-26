@@ -343,7 +343,7 @@ public class FlutterFirebaseAuthPlugin
       List<? extends UserInfo> userInfoList) {
     List<Map<String, Object>> output = new ArrayList<>();
 
-    Iterator<? extends UserInfo> iterator = userInfoList.iterator();
+    Iterator<? extends UserInfo> userInfoListIterator = new ArrayList<? extends UserInfo>(userInfoList).iterator();
 
     while (iterator.hasNext()) {
       UserInfo userInfo = iterator.next();
