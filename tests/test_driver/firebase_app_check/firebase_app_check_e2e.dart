@@ -31,17 +31,16 @@ void setupTests() {
       test(
         'getToken',
         () async {
-          // Enable the App Check
-          FirebaseAppCheck.instance.activate(
-            webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
-          );
-
           final token = await FirebaseAppCheck.instance.getToken(true);
           expect(token, isA<String>());
         },
+        // Getting "Fetch server returned an HTTP error status. HTTP status:
+        // 400" when running tests on web.
+        //
         // Is not working on iOS and macOS. Tracking issue:
         // https://github.com/firebase/flutterfire/issues/8969
-        skip: defaultTargetPlatform == TargetPlatform.iOS ||
+        skip: kIsWeb ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
             defaultTargetPlatform == TargetPlatform.macOS,
       );
 
