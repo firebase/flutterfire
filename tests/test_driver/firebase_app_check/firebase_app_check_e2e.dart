@@ -31,6 +31,11 @@ void setupTests() {
       test(
         'getToken',
         () async {
+          // Enable the App Check
+          FirebaseAppCheck.instance.activate(
+            webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+          );
+
           final token = await FirebaseAppCheck.instance.getToken(true);
           expect(token, isA<String>());
         },
