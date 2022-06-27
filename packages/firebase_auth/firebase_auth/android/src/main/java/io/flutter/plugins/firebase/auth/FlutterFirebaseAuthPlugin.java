@@ -1421,10 +1421,10 @@ public class FlutterFirebaseAuthPlugin
         () -> {
           try {
             FirebaseAuth firebaseAuth = getAuth(arguments);
-            String newEmail =
+            String providerId =
                 (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
 
-            OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
+            OAuthProvider.Builder provider = OAuthProvider.newBuilder(providerId);
 
             AuthResult authResult =
                 Tasks.await(
