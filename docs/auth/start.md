@@ -199,7 +199,7 @@ or `user-not-found` exception that you can catch and handle in your app code.
 ## Persisting authentication state
 
 The Firebase SDKs for all platforms provide out of the box support for ensuring
-that your user's authentication state is persisted across pp restarts or page
+that your user's authentication state is persisted across app restarts or page
 reloads.
 
 On native platforms such as Android & iOS, this behavior is not configurable
