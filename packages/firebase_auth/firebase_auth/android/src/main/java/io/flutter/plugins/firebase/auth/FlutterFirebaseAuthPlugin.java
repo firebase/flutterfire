@@ -1356,6 +1356,9 @@ public class FlutterFirebaseAuthPlugin
       case "Auth#verifyPhoneNumber":
         methodCallTask = verifyPhoneNumber(call.arguments());
         break;
+      case "Auth#signInWithAuthProvider":
+        methodCallTask = signInWithAuthProvider(call.arguments());
+        break;
       case "User#delete":
         methodCallTask = deleteUser(call.arguments());
         break;
@@ -1409,6 +1412,31 @@ public class FlutterFirebaseAuthPlugin
                 getExceptionDetails(exception));
           }
         });
+  }
+
+  private Task<Map<String, Object>> signInWithAuthProvider(Map<String, Object> arguments) {
+    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+        () -> {
+          try {
+            FirebaseAuth firebaseAuth = getAuth(arguments);
+            String newEmail =
+                (String) Objects.requireNonNull(arguments.get(Constants.SIGN_IN_PROVIDER));
+
+            OAuthProvider.Builder provider = OAuthProvider.newBuilder("github.com");
+
+            AuthResult authResult =
+                Tasks.await(
+                    firebaseAuth.startActivityForSignInWithProvider(
+                        /* activity= */ activity, provider.build()));
+            taskCompletionSource.setResult(parseAuthResult(authResult));
+          } catch (Exception e) {
+            taskCompletionSource.setException(e);
+          }
+        });
+
+    return taskCompletionSource.getTask();
   }
 
   @Override

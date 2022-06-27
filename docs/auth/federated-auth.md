@@ -357,20 +357,10 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
   import 'package:github_sign_in/github_sign_in.dart';
 
   Future<UserCredential> signInWithGitHub() async {
-    // Create a GitHubSignIn instance
-        final GitHubSignIn gitHubSignIn = GitHubSignIn(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            redirectUrl: 'https://my-project.firebaseapp.com/__/auth/handler');
+    // Create a new provider
+    GithubAuthProvider githubProvider = GithubAuthProvider();
 
-    // Trigger the sign-in flow
-    final result = await gitHubSignIn.signIn(context);
-
-    // Create a credential from the access token
-    final githubAuthCredential = GithubAuthProvider.credential(result.token);
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
+    return await _auth.signInWithAuthProvider(githubProvider);
   }
   ```
 
