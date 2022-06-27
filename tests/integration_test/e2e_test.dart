@@ -6,12 +6,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
+import 'firebase_database/firebase_database_e2e_test.dart' as firebase_database;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  // ignore: unnecessary_lambdas
   group('FlutterFire', () {
     firebase_core.main();
+    firebase_database.main();
   });
 }
