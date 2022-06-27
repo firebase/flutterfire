@@ -144,18 +144,19 @@ void setupTests() {
         });
 
         test('Universal link error for URL that cannot be parsed', () async {
-        Uri uri = Uri.parse('');
-        await expectLater(
-          ()=> FirebaseDynamicLinks.instance.getDynamicLink(uri),
-          throwsA(isA<FirebaseException>().having(
+          Uri uri = Uri.parse('');
+          await expectLater(
+            () => FirebaseDynamicLinks.instance.getDynamicLink(uri),
+            throwsA(
+              isA<FirebaseException>().having(
                 (e) => e.message,
-            'message',
-            contains('could not be parsed'),
-        ),
-        ),);
-    });
+                'message',
+                contains('could not be parsed'),
+              ),
+            ),
+          );
+        });
       });
-
 
       group('onLink', () {
         test('test multiple times', () async {
