@@ -78,6 +78,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   Future<void> _injectSrcScript(String src, String windowVar) async {
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
+    script.crossOrigin = 'anonymous';
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         callback(await import("$src"));
