@@ -32,7 +32,7 @@ void setupTests() {
         'getToken',
         () async {
           final token = await FirebaseAppCheck.instance.getToken(true);
-          expect(token, isA<String?>());
+          expect(token, isA<String>());
         },
         // Is not working on iOS and macOS. Tracking issue:
         // https://github.com/firebase/flutterfire/issues/8969
