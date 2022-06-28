@@ -131,7 +131,7 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, 'email-already-in-use');
-          if(kIsWeb){
+          if (kIsWeb) {
             expect(
               e.message,
               equals(
@@ -293,7 +293,7 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('user-mismatch'));
-          if(kIsWeb){
+          if (kIsWeb) {
             expect(
               e.message,
               equals(
@@ -391,7 +391,7 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('wrong-password'));
-          if(kIsWeb){
+          if (kIsWeb) {
             expect(
               e.message,
               equals(
@@ -511,7 +511,7 @@ void setupTests() {
           await FirebaseAuth.instance.currentUser!.unlink('invalid');
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          if(kIsWeb){
+          if (kIsWeb) {
             expect(
               e.message,
               equals(
@@ -544,7 +544,7 @@ void setupTests() {
               .unlink(EmailAuthProvider.PROVIDER_ID);
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          if(kIsWeb){
+          if (kIsWeb) {
             expect(
               e.message,
               equals(
@@ -759,7 +759,9 @@ void setupTests() {
           // Using `kIsWeb` because `Platform` is not available on web
         },
         // setting `displayName` on web throws an error
-        skip: kIsWeb || (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.macOS),
+        skip: kIsWeb ||
+            (defaultTargetPlatform == TargetPlatform.iOS ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
     });
 
@@ -802,32 +804,35 @@ void setupTests() {
         );
       });
 
-      test('can set the photoURL to null', () async {
-        // First create a user with a photo
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: testPassword,
-        );
-        await FirebaseAuth.instance.currentUser!.updatePhotoURL(
-          'http://photo.url/test.jpg',
-        );
-        await FirebaseAuth.instance.currentUser!.reload();
+      test(
+        'can set the photoURL to null',
+        () async {
+          // First create a user with a photo
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+            'http://photo.url/test.jpg',
+          );
+          await FirebaseAuth.instance.currentUser!.reload();
 
-        // Just checking that the user indeed had a photo before we set it to null
-        expect(
-          FirebaseAuth.instance.currentUser!.photoURL,
-          isNotNull,
-        );
+          // Just checking that the user indeed had a photo before we set it to null
+          expect(
+            FirebaseAuth.instance.currentUser!.photoURL,
+            isNotNull,
+          );
 
-        await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
-        await FirebaseAuth.instance.currentUser!.reload();
+          await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
+          await FirebaseAuth.instance.currentUser!.reload();
 
-        expect(
-          FirebaseAuth.instance.currentUser!.photoURL,
-          isNull,
-        );
-        // setting `photoURL` on web throws an error
-      },skip: kIsWeb,
+          expect(
+            FirebaseAuth.instance.currentUser!.photoURL,
+            isNull,
+          );
+          // setting `photoURL` on web throws an error
+        },
+        skip: kIsWeb,
       );
     });
 

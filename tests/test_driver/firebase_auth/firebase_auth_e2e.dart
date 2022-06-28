@@ -27,26 +27,25 @@ void setupTests() {
       await emulatorClearAllUsers();
 
       try {
-      // Create a generic testing user account. Wrapped around try/catch because web still seems to have knowledge of user.
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: testEmail,
-        password: testPassword,
-      );
-
-      } catch(e){
+        // Create a generic testing user account. Wrapped around try/catch because web still seems to have knowledge of user.
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: testEmail,
+          password: testPassword,
+        );
+      } catch (e) {
         // ignore: avoid_print
         print('Already existing user: $e');
       }
 
-      try{
-      // Create a disabled user account. Wrapped around try/catch because web still seems to have knowledge of user.
-      final disabledUserCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: testDisabledEmail,
-        password: testPassword,
-      );
-      await emulatorDisableUser(disabledUserCredential.user!.uid);
-      } catch(e){
+      try {
+        // Create a disabled user account. Wrapped around try/catch because web still seems to have knowledge of user.
+        final disabledUserCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: testDisabledEmail,
+          password: testPassword,
+        );
+        await emulatorDisableUser(disabledUserCredential.user!.uid);
+      } catch (e) {
         // ignore: avoid_print
         print('Already existing disabled user: $e');
       }
