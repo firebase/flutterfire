@@ -66,10 +66,10 @@ dependencies:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  firebase_in_app_messaging:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  firebase_in_app_messaging_platform_interface:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  #firebase_in_app_messaging:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  #firebase_in_app_messaging_platform_interface:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
@@ -161,10 +161,10 @@ dependency_overrides:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  firebase_in_app_messaging:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  firebase_in_app_messaging_platform_interface:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  #firebase_in_app_messaging:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  #firebase_in_app_messaging_platform_interface:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:

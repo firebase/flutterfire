@@ -1,7 +1,12 @@
 name: publish_old_docs
 
 on:
-  workflow_dispatch:
+  push:
+    branches:    
+      - 'old-docs'
+    paths:
+      - 'docs/**'
+      - 'website/**'
 
 jobs:
   deploy:

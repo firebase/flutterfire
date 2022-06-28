@@ -1,3 +1,11 @@
+## 0.2.0+15
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 0.2.0+14
+
+ - Update a dependency to the latest release.
+
 ## 0.2.0+13
 
  - Update a dependency to the latest release.
@@ -16,7 +24,7 @@
 
 ## 0.2.0+9
 
- - **FIX**: Remove sync as `true` on Stream broadcast for web platform. (#8420). ([4336e047](https://github.com/FirebaseExtended/flutterfire/commit/4336e0478a927385e676b069f354bd3cc2f932ab))
+ - **FIX**: Remove sync as `true` on Stream broadcast for web platform. (#8420). ([4336e047](https://github.com/firebase/flutterfire/commit/4336e0478a927385e676b069f354bd3cc2f932ab))
 
 ## 0.2.0+8
 
@@ -24,7 +32,7 @@
 
 ## 0.2.0+7
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 0.2.0+6
 
@@ -44,7 +52,7 @@
 
 ## 0.2.0+2
 
- - **FIX**: web reference `path` should now correctly return a path string. ([f9995ce0](https://github.com/FirebaseExtended/flutterfire/commit/f9995ce043d8d60d1e74077064f0df2226291738))
+ - **FIX**: web reference `path` should now correctly return a path string. ([f9995ce0](https://github.com/firebase/flutterfire/commit/f9995ce043d8d60d1e74077064f0df2226291738))
 
 ## 0.2.0+1
 
