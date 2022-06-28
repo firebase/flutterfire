@@ -85,3 +85,67 @@ abstract class TestMultiFactorUserHostApi {
     }
   }
 }
+
+class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
+  const _TestMultiFactoResolverHostApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is PigeonMultiFactorInfo) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is PigeonMultiFactorSession) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else 
+{
+      super.writeValue(buffer, value);
+    }
+  }
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:       
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
+      
+      case 129:       
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      
+      case 130:       
+        return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
+      
+      default:      
+        return super.readValueOfType(type, buffer);
+      
+    }
+  }
+}
+abstract class TestMultiFactoResolverHostApi {
+  static const MessageCodec<Object?> codec = _TestMultiFactoResolverHostApiCodec();
+
+  Future<Map<String?, Object?>> resolveSignIn(String resolverId, PigeonPhoneMultiFactorAssertion assertion);
+  static void setup(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger}) {
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn', codec, binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_resolverId = (args[0] as String?);
+          assert(arg_resolverId != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null String.');
+          final PigeonPhoneMultiFactorAssertion? arg_assertion = (args[1] as PigeonPhoneMultiFactorAssertion?);
+          assert(arg_assertion != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null PigeonPhoneMultiFactorAssertion.');
+          final Map<String?, Object?> output = await api.resolveSignIn(arg_resolverId!, arg_assertion!);
+          return <Object?, Object?>{'result': output};
+        });
+      }
+    }
+  }
+}

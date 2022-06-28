@@ -1,4 +1,6 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class MethodChannelMultiFactor extends MultiFactorPlatform {
@@ -40,7 +42,59 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       );
     } else {
       throw UnimplementedError(
-          'Credential type ${assertion.credential} is not supported yet');
+        'Credential type ${assertion.credential} is not supported yet',
+      );
+    }
+  }
+}
+
+class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
+  MethodChannelMultiFactorResolver(
+    List<MultiFactorInfo> hints,
+    MultiFactorSession session,
+    String resolverId,
+    MethodChannelFirebaseAuth auth,
+  )   : _resolverId = resolverId,
+        _auth = auth,
+        super(hints, session);
+
+  final String _resolverId;
+
+  final MethodChannelFirebaseAuth _auth;
+  final _api = MultiFactoResolverHostApi();
+
+  @override
+  Future<UserCredentialPlatform> resolveSignIn(
+    MultiFactorAssertion assertion,
+  ) async {
+    if (assertion.credential is PhoneAuthCredential) {
+      final credential = assertion.credential as PhoneAuthCredential;
+      final verificationId = credential.verificationId;
+      final verificationCode = credential.smsCode;
+
+      if (verificationCode == null) {
+        throw ArgumentError('verificationCode must not be null');
+      }
+      if (verificationId == null) {
+        throw ArgumentError('verificationId must not be null');
+      }
+
+      final data = await _api.resolveSignIn(
+        _resolverId,
+        PigeonPhoneMultiFactorAssertion(
+          verificationId: verificationId,
+          verificationCode: verificationCode,
+        ),
+      );
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(_auth, data.cast<String, dynamic>());
+
+      return userCredential;
+    } else {
+      throw UnimplementedError(
+        'Credential type ${assertion.credential} is not supported yet',
+      );
     }
   }
 }

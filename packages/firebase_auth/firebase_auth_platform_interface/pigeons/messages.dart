@@ -1,3 +1,5 @@
+// ignore_for_file: one_member_abstracts
+
 import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
@@ -33,6 +35,22 @@ class PigeonPhoneMultiFactorAssertion {
   final String verificationCode;
 }
 
+class PigeonMultiFactorInfo {
+  const PigeonMultiFactorInfo({
+    this.displayName,
+    required this.enrollmentTimestamp,
+    required this.factorId,
+    required this.uid,
+    required this.phoneNumber,
+  });
+
+  final String? displayName;
+  final double enrollmentTimestamp;
+  final String factorId;
+  final String uid;
+  final String? phoneNumber;
+}
+
 @HostApi(dartHostTestHandler: 'TestMultiFactorUserHostApi')
 abstract class MultiFactorUserHostApi {
   @async
@@ -44,4 +62,19 @@ abstract class MultiFactorUserHostApi {
 
   @async
   PigeonMultiFactorSession getSession(String appName);
+}
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactoResolverHostApi {
+  @async
+  Map<String, Object> resolveSignIn(
+    String resolverId,
+    PigeonPhoneMultiFactorAssertion assertion,
+  );
+}
+
+/// Only used to generate the object interface that are use outside of the Pigeon interface
+@HostApi()
+abstract class GenerateInterfaces {
+  void generateInterfaces(PigeonMultiFactorInfo info);
 }

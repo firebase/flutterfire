@@ -24,7 +24,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   );
 
   static Map<String, MethodChannelFirebaseAuth>
-      _methodChannelFirebaseAuthInstances =
+      methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};
 
   static Map<String, MethodChannelMultiFactor> _multiFactorInstances =
@@ -113,7 +113,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     // ignore: close_sinks
     final streamController = _authStateChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
-        _methodChannelFirebaseAuthInstances[appName]!;
+        methodChannelFirebaseAuthInstances[appName]!;
 
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
@@ -149,7 +149,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
         // ignore: close_sinks
         userChangesStreamController = _userChangesListeners[appName]!;
     MethodChannelFirebaseAuth instance =
-        _methodChannelFirebaseAuthInstances[appName]!;
+        methodChannelFirebaseAuthInstances[appName]!;
     MethodChannelMultiFactor? multiFactorInstance =
         _multiFactorInstances[appName];
     if (multiFactorInstance == null) {
@@ -187,7 +187,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   /// Instances are cached and reused for incoming event handlers.
   @override
   FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
-    return _methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
+    return methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
       return MethodChannelFirebaseAuth(app: app);
     });
   }
@@ -592,7 +592,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
 
   @override
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    MultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -612,7 +613,9 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       final eventChannelName = await channel.invokeMethod<String>(
           'Auth#verifyPhoneNumber',
           _withChannelDefaults({
-            'phoneNumber': phoneNumber,
+            if (phoneNumber != null) 'phoneNumber': phoneNumber,
+            if (multiFactorInfo?.uid != null)
+              'multiFactorInfo': multiFactorInfo?.uid,
             'timeout': timeout.inMilliseconds,
             'forceResendingToken': forceResendingToken,
             'autoRetrievedSmsCodeForTesting': autoRetrievedSmsCodeForTesting,

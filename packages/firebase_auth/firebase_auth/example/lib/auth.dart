@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_example/config.dart';
+import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -382,6 +383,44 @@ class _AuthGateState extends State<AuthGate> {
         } else {
           await _phoneAuth();
         }
+      } on FirebaseAuthMultiFactorException catch (e) {
+        setState(() {
+          error = '${e.message}';
+        });
+        final firstHint = e.resolver.hints.first;
+        if (firstHint is! PhoneMultiFactorInfo) {
+          return;
+        }
+        final auth = FirebaseAuth.instance;
+        await auth.verifyPhoneNumber(
+          multiFactorSession: e.resolver.session,
+          // TODO(Lyokone): add a phone number input
+          multiFactorInfo: firstHint,
+          verificationCompleted: (_) {},
+          verificationFailed: print,
+          codeSent: (String verificationId, int? resendToken) async {
+            final smsCode = await getSmsCodeFromUser(context);
+
+            if (smsCode != null) {
+              // Create a PhoneAuthCredential with the code
+              final credential = PhoneAuthProvider.credential(
+                verificationId: verificationId,
+                smsCode: smsCode,
+              );
+
+              try {
+                await e.resolver.resolveSignIn(
+                  PhoneMultiFactorGenerator.getAssertion(
+                    credential,
+                  ),
+                );
+              } on FirebaseAuthException catch (e) {
+                print(e.message);
+              }
+            }
+          },
+          codeAutoRetrievalTimeout: print,
+        );
       } on FirebaseAuthException catch (e) {
         setState(() {
           error = '${e.message}';

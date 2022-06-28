@@ -11,6 +11,7 @@ export 'src/additional_user_info.dart';
 export 'src/auth_credential.dart';
 export 'src/auth_provider.dart';
 export 'src/firebase_auth_exception.dart';
+export 'src/firebase_auth_multi_factor_exception.dart';
 export 'src/id_token_result.dart';
 export 'src/platform_interface/platform_interface_confirmation_result.dart';
 export 'src/platform_interface/platform_interface_firebase_auth.dart';

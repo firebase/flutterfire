@@ -41,6 +41,11 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
 + (nullable PigeonPhoneMultiFactorAssertion *)nullableFromMap:(NSDictionary *)dict;
 - (NSDictionary *)toMap;
 @end
+@interface PigeonMultiFactorInfo ()
++ (PigeonMultiFactorInfo *)fromMap:(NSDictionary *)dict;
++ (nullable PigeonMultiFactorInfo *)nullableFromMap:(NSDictionary *)dict;
+- (NSDictionary *)toMap;
+@end
 
 @implementation PigeonMultiFactorSession
 + (instancetype)makeWithId:(NSString *)id {
@@ -83,6 +88,44 @@ static id GetNullableObjectAtIndex(NSArray* array, NSInteger key) {
   return @{
     @"verificationId" : (self.verificationId ?: [NSNull null]),
     @"verificationCode" : (self.verificationCode ?: [NSNull null]),
+  };
+}
+@end
+
+@implementation PigeonMultiFactorInfo
++ (instancetype)makeWithDisplayName:(nullable NSString *)displayName
+    enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
+    factorId:(NSString *)factorId
+    uid:(NSString *)uid
+    phoneNumber:(nullable NSString *)phoneNumber {
+  PigeonMultiFactorInfo* pigeonResult = [[PigeonMultiFactorInfo alloc] init];
+  pigeonResult.displayName = displayName;
+  pigeonResult.enrollmentTimestamp = enrollmentTimestamp;
+  pigeonResult.factorId = factorId;
+  pigeonResult.uid = uid;
+  pigeonResult.phoneNumber = phoneNumber;
+  return pigeonResult;
+}
++ (PigeonMultiFactorInfo *)fromMap:(NSDictionary *)dict {
+  PigeonMultiFactorInfo *pigeonResult = [[PigeonMultiFactorInfo alloc] init];
+  pigeonResult.displayName = GetNullableObject(dict, @"displayName");
+  pigeonResult.enrollmentTimestamp = GetNullableObject(dict, @"enrollmentTimestamp");
+  NSAssert(pigeonResult.enrollmentTimestamp != nil, @"");
+  pigeonResult.factorId = GetNullableObject(dict, @"factorId");
+  NSAssert(pigeonResult.factorId != nil, @"");
+  pigeonResult.uid = GetNullableObject(dict, @"uid");
+  NSAssert(pigeonResult.uid != nil, @"");
+  pigeonResult.phoneNumber = GetNullableObject(dict, @"phoneNumber");
+  return pigeonResult;
+}
++ (nullable PigeonMultiFactorInfo *)nullableFromMap:(NSDictionary *)dict { return (dict) ? [PigeonMultiFactorInfo fromMap:dict] : nil; }
+- (NSDictionary *)toMap {
+  return @{
+    @"displayName" : (self.displayName ?: [NSNull null]),
+    @"enrollmentTimestamp" : (self.enrollmentTimestamp ?: [NSNull null]),
+    @"factorId" : (self.factorId ?: [NSNull null]),
+    @"uid" : (self.uid ?: [NSNull null]),
+    @"phoneNumber" : (self.phoneNumber ?: [NSNull null]),
   };
 }
 @end
@@ -184,6 +227,171 @@ void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSO
         [api getSessionAppName:arg_appName completion:^(PigeonMultiFactorSession *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult(output, error));
         }];
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+}
+@interface MultiFactoResolverHostApiCodecReader : FlutterStandardReader
+@end
+@implementation MultiFactoResolverHostApiCodecReader
+- (nullable id)readValueOfType:(UInt8)type 
+{
+  switch (type) {
+    case 128:     
+      return [PigeonMultiFactorInfo fromMap:[self readValue]];
+    
+    case 129:     
+      return [PigeonMultiFactorSession fromMap:[self readValue]];
+    
+    case 130:     
+      return [PigeonPhoneMultiFactorAssertion fromMap:[self readValue]];
+    
+    default:    
+      return [super readValueOfType:type];
+    
+  }
+}
+@end
+
+@interface MultiFactoResolverHostApiCodecWriter : FlutterStandardWriter
+@end
+@implementation MultiFactoResolverHostApiCodecWriter
+- (void)writeValue:(id)value 
+{
+  if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+    [self writeByte:128];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+    [self writeByte:129];
+    [self writeValue:[value toMap]];
+  } else 
+  if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+    [self writeByte:130];
+    [self writeValue:[value toMap]];
+  } else 
+{
+    [super writeValue:value];
+  }
+}
+@end
+
+@interface MultiFactoResolverHostApiCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation MultiFactoResolverHostApiCodecReaderWriter
+- (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
+  return [[MultiFactoResolverHostApiCodecWriter alloc] initWithData:data];
+}
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[MultiFactoResolverHostApiCodecReader alloc] initWithData:data];
+}
+@end
+
+NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec() {
+  static dispatch_once_t sPred = 0;
+  static FlutterStandardMessageCodec *sSharedObject = nil;
+  dispatch_once(&sPred, ^{
+    MultiFactoResolverHostApiCodecReaderWriter *readerWriter = [[MultiFactoResolverHostApiCodecReaderWriter alloc] init];
+    sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  });
+  return sSharedObject;
+}
+
+
+void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *api) {
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn"
+        binaryMessenger:binaryMessenger
+        codec:MultiFactoResolverHostApiGetCodec()        ];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:completion:)], @"MultiFactoResolverHostApi api (%@) doesn't respond to @selector(resolveSignInResolverId:assertion:completion:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        NSString *arg_resolverId = GetNullableObjectAtIndex(args, 0);
+        PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
+        [api resolveSignInResolverId:arg_resolverId assertion:arg_assertion completion:^(NSDictionary<NSString *, id> *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult(output, error));
+        }];
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+}
+@interface GenerateInterfacesCodecReader : FlutterStandardReader
+@end
+@implementation GenerateInterfacesCodecReader
+- (nullable id)readValueOfType:(UInt8)type 
+{
+  switch (type) {
+    case 128:     
+      return [PigeonMultiFactorInfo fromMap:[self readValue]];
+    
+    default:    
+      return [super readValueOfType:type];
+    
+  }
+}
+@end
+
+@interface GenerateInterfacesCodecWriter : FlutterStandardWriter
+@end
+@implementation GenerateInterfacesCodecWriter
+- (void)writeValue:(id)value 
+{
+  if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
+    [self writeByte:128];
+    [self writeValue:[value toMap]];
+  } else 
+{
+    [super writeValue:value];
+  }
+}
+@end
+
+@interface GenerateInterfacesCodecReaderWriter : FlutterStandardReaderWriter
+@end
+@implementation GenerateInterfacesCodecReaderWriter
+- (FlutterStandardWriter *)writerWithData:(NSMutableData *)data {
+  return [[GenerateInterfacesCodecWriter alloc] initWithData:data];
+}
+- (FlutterStandardReader *)readerWithData:(NSData *)data {
+  return [[GenerateInterfacesCodecReader alloc] initWithData:data];
+}
+@end
+
+NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec() {
+  static dispatch_once_t sPred = 0;
+  static FlutterStandardMessageCodec *sSharedObject = nil;
+  dispatch_once(&sPred, ^{
+    GenerateInterfacesCodecReaderWriter *readerWriter = [[GenerateInterfacesCodecReaderWriter alloc] init];
+    sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
+  });
+  return sSharedObject;
+}
+
+
+void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *api) {
+  {
+    FlutterBasicMessageChannel *channel =
+      [[FlutterBasicMessageChannel alloc]
+        initWithName:@"dev.flutter.pigeon.GenerateInterfaces.generateInterfaces"
+        binaryMessenger:binaryMessenger
+        codec:GenerateInterfacesGetCodec()        ];
+    if (api) {
+      NSCAssert([api respondsToSelector:@selector(generateInterfacesInfo:error:)], @"GenerateInterfaces api (%@) doesn't respond to @selector(generateInterfacesInfo:error:)", api);
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        NSArray *args = message;
+        PigeonMultiFactorInfo *arg_info = GetNullableObjectAtIndex(args, 0);
+        FlutterError *error;
+        [api generateInterfacesInfo:arg_info error:&error];
+        callback(wrapResult(nil, error));
       }];
     }
     else {

@@ -703,7 +703,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    MultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -713,8 +714,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
     int? forceResendingToken,
     MultiFactorSession? multiFactorSession,
   }) {
+    assert(
+      phoneNumber != null || multiFactorInfo != null,
+      'Either phoneNumber or multiFactorInfo must be provided.',
+    );
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
+      multiFactorInfo: multiFactorInfo,
       timeout: timeout,
       forceResendingToken: forceResendingToken,
       verificationCompleted: verificationCompleted,

@@ -12,7 +12,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -31,6 +30,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthMultiFactorException;
 import com.google.firebase.auth.FirebaseAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.FirebaseUserMetadata;
@@ -39,11 +39,14 @@ import com.google.firebase.auth.GithubAuthProvider;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.MultiFactor;
 import com.google.firebase.auth.MultiFactorAssertion;
+import com.google.firebase.auth.MultiFactorInfo;
+import com.google.firebase.auth.MultiFactorResolver;
 import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneMultiFactorGenerator;
+import com.google.firebase.auth.PhoneMultiFactorInfo;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
@@ -75,7 +78,7 @@ import java.util.concurrent.ExecutionException;
  * Flutter plugin for Firebase Auth.
  */
 public class FlutterFirebaseAuthPlugin
-  implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware, GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi {
+  implements FlutterFirebasePlugin, MethodCallHandler, FlutterPlugin, ActivityAware, GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi, GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi {
 
   private static final String METHOD_CHANNEL_NAME = "plugins.flutter.io/firebase_auth";
 
@@ -112,6 +115,7 @@ public class FlutterFirebaseAuthPlugin
     channel = new MethodChannel(messenger, METHOD_CHANNEL_NAME);
     channel.setMethodCallHandler(this);
     GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(messenger, this);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(messenger, this);
 
     this.messenger = messenger;
   }
@@ -127,6 +131,7 @@ public class FlutterFirebaseAuthPlugin
     channel = null;
     messenger = null;
     GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(null, this);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(null, this);
 
     removeEventListeners();
   }
@@ -809,7 +814,63 @@ public class FlutterFirebaseAuthPlugin
 
           taskCompletionSource.setResult(parseAuthResult(authResult));
         } catch (Exception e) {
-          taskCompletionSource.setException(e);
+          if (e.getCause() instanceof FirebaseAuthMultiFactorException) {
+            final FirebaseAuthMultiFactorException multiFactorException =
+              (FirebaseAuthMultiFactorException) e.getCause();
+            Map<String, Object> output = new HashMap<>();
+
+            MultiFactorResolver multiFactorResolver = multiFactorException.getResolver();
+            final List<MultiFactorInfo> hints = multiFactorResolver.getHints();
+
+            final List<Map<String, Object>> pigeonHints = new ArrayList<>();
+
+            final MultiFactorSession session = multiFactorResolver.getSession();
+            final String sessionId = UUID.randomUUID().toString();
+            multiFactorSessionMap.put(sessionId, session);
+
+            final String resolverId = UUID.randomUUID().toString();
+            multiFactorResolverMap.put(resolverId, multiFactorResolver);
+
+
+            for (MultiFactorInfo info : hints) {
+              if (info instanceof PhoneMultiFactorInfo) {
+                pigeonHints.add(new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                  .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
+                    .setDisplayName(info.getDisplayName())
+                    .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                    .setUid(info.getUid())
+                    .setFactorId(info.getFactorId())
+                  .build().toMap());
+
+              } else {
+                pigeonHints.add(new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                  .setDisplayName(info.getDisplayName())
+                  .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                  .setUid(info.getUid())
+                  .setFactorId(info.getFactorId())
+                  .build().toMap());
+              }
+            }
+
+            output.put(Constants.APP_NAME, getAuth(arguments).getApp().getName());
+
+            output.put(
+              Constants.MULTI_FACTOR_HINTS,
+              pigeonHints);
+
+            output.put(
+              Constants.MULTI_FACTOR_SESSION_ID,
+              sessionId
+              );
+            output.put(
+              Constants.MULTI_FACTOR_RESOLVER_ID,
+              resolverId
+              );
+
+            taskCompletionSource.setException(new FlutterFirebaseAuthPluginException(multiFactorException.getErrorCode(), multiFactorException.getLocalizedMessage(), output));
+          } else {
+            taskCompletionSource.setException(e);
+          }
         }
       });
 
@@ -911,11 +972,28 @@ public class FlutterFirebaseAuthPlugin
             multiFactorSession = multiFactorSessionMap.get(multiFactorSessionId);
           }
 
+          final String multiFactorInfoId = (String) arguments.get(Constants.MULTI_FACTOR_INFO);
+          PhoneMultiFactorInfo multiFactorInfo =
+            null;
+
+          if (multiFactorInfoId != null) {
+            for (String resolverId : multiFactorResolverMap.keySet()) {
+              for (MultiFactorInfo info : multiFactorResolverMap.get(resolverId).getHints()) {
+                if (info.getUid().equals(multiFactorInfoId) && info instanceof PhoneMultiFactorInfo) {
+                  multiFactorInfo = (PhoneMultiFactorInfo) info;
+                  break;
+                }
+              }
+            }
+          }
+
+
           PhoneNumberVerificationStreamHandler handler =
             new PhoneNumberVerificationStreamHandler(
               getActivity(),
               arguments,
               multiFactorSession,
+              multiFactorInfo,
               credential -> {
                 int hashCode = credential.hashCode();
                 authCredentials.put(hashCode, credential);
@@ -1605,11 +1683,13 @@ public class FlutterFirebaseAuthPlugin
 
 
   // Map an app id to a map of user id to a MultiFactorUser object.
-  private Map<String, Map<String, MultiFactor>> multiFactorUserMap = new HashMap<>();
+  final private Map<String, Map<String, MultiFactor>> multiFactorUserMap = new HashMap<>();
 
   // Map an id to a MultiFactorSession object.
-  private Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
+  final private Map<String, MultiFactorSession> multiFactorSessionMap = new HashMap<>();
 
+  // Map an id to a MultiFactorSession object.
+  final private Map<String, MultiFactorResolver> multiFactorResolverMap = new HashMap<>();
 
   private MultiFactor getAppMultiFactor(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result result) {
     final FirebaseUser currentUser = getCurrentUser(appName);
@@ -1668,4 +1748,24 @@ public class FlutterFirebaseAuthPlugin
       });
   }
 
+  @Override
+  public void resolveSignIn(@NonNull String resolverId, @NonNull GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion, GeneratedAndroidFirebaseAuth.Result<Map<String, Object>> result) {
+    final MultiFactorResolver resolver = multiFactorResolverMap.get(resolverId);
+
+    PhoneAuthCredential credential =
+      PhoneAuthProvider.getCredential(assertion.getVerificationId(), assertion.getVerificationCode());
+
+    MultiFactorAssertion multiFactorAssertion = PhoneMultiFactorGenerator.getAssertion(credential);
+
+    resolver.resolveSignIn(multiFactorAssertion).addOnCompleteListener(
+      task -> {
+        if (task.isSuccessful()) {
+          final AuthResult authResult = task.getResult();
+          result.success(parseAuthResult(authResult));
+        } else {
+          Exception exception = task.getException();
+          result.error(exception);
+        }
+      });
+  }
 }

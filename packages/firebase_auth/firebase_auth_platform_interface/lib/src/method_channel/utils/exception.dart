@@ -4,6 +4,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 
@@ -40,6 +43,10 @@ FirebaseException platformExceptionToFirebaseAuthException(
 
   if (details != null) {
     code = details['code'] ?? code;
+    if (code == 'second-factor-required') {
+      return parseMultiFactorError(details);
+    }
+
     message = details['message'] ?? message;
 
     if (details['additionalData'] != null) {
@@ -62,5 +69,58 @@ FirebaseException platformExceptionToFirebaseAuthException(
     message: message,
     email: email,
     credential: credential,
+  );
+}
+
+FirebaseAuthMultiFactorException parseMultiFactorError(
+    Map<String, dynamic> details) {
+  final code = details['code'];
+  final message = details['message'];
+  final additionalData = details['additionalData'];
+
+  final List<MultiFactorInfo> multiFactorInfo =
+      (additionalData['multiFactorHints'] as List<Object?>)
+          .where((element) => element != null)
+          .cast<Object>()
+          .map(
+            PigeonMultiFactorInfo.decode,
+          )
+          .map((e) {
+    if (e.phoneNumber != null) {
+      return PhoneMultiFactorInfo(
+          displayName: e.displayName,
+          enrollmentTimestamp: e.enrollmentTimestamp,
+          factorId: e.factorId,
+          uid: e.uid,
+          phoneNumber: e.phoneNumber!);
+    }
+    return MultiFactorInfo(
+        displayName: e.displayName,
+        enrollmentTimestamp: e.enrollmentTimestamp,
+        factorId: e.factorId,
+        uid: e.uid);
+  }).toList();
+
+  final auth = MethodChannelFirebaseAuth
+      .methodChannelFirebaseAuthInstances[additionalData['appName']];
+
+  if (auth == null) {
+    throw FirebaseAuthException(
+      code: code,
+      message: message,
+    );
+  }
+
+  final multiFactorResolver = MethodChannelMultiFactorResolver(
+    multiFactorInfo,
+    MultiFactorSession(additionalData['multiFactorSessionId']),
+    additionalData['multiFactorResolverId'],
+    auth,
+  );
+
+  return FirebaseAuthMultiFactorException(
+    code: code,
+    message: message,
+    resolver: multiFactorResolver,
   );
 }

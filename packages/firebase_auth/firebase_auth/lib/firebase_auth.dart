@@ -14,6 +14,9 @@ import 'package:flutter/foundation.dart';
 export 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     show
         FirebaseAuthException,
+        FirebaseAuthMultiFactorException,
+        MultiFactorInfo,
+        PhoneMultiFactorInfo,
         IdTokenResult,
         UserMetadata,
         UserInfo,

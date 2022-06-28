@@ -116,6 +116,110 @@ public class GeneratedAndroidFirebaseAuth {
     }
   }
 
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class PigeonMultiFactorInfo {
+    private @Nullable String displayName;
+    public @Nullable String getDisplayName() { return displayName; }
+    public void setDisplayName(@Nullable String setterArg) {
+      this.displayName = setterArg;
+    }
+
+    private @NonNull Double enrollmentTimestamp;
+    public @NonNull Double getEnrollmentTimestamp() { return enrollmentTimestamp; }
+    public void setEnrollmentTimestamp(@NonNull Double setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"enrollmentTimestamp\" is null.");
+      }
+      this.enrollmentTimestamp = setterArg;
+    }
+
+    private @NonNull String factorId;
+    public @NonNull String getFactorId() { return factorId; }
+    public void setFactorId(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"factorId\" is null.");
+      }
+      this.factorId = setterArg;
+    }
+
+    private @NonNull String uid;
+    public @NonNull String getUid() { return uid; }
+    public void setUid(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"uid\" is null.");
+      }
+      this.uid = setterArg;
+    }
+
+    private @Nullable String phoneNumber;
+    public @Nullable String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(@Nullable String setterArg) {
+      this.phoneNumber = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private PigeonMultiFactorInfo() {}
+    public static final class Builder {
+      private @Nullable String displayName;
+      public @NonNull Builder setDisplayName(@Nullable String setterArg) {
+        this.displayName = setterArg;
+        return this;
+      }
+      private @Nullable Double enrollmentTimestamp;
+      public @NonNull Builder setEnrollmentTimestamp(@NonNull Double setterArg) {
+        this.enrollmentTimestamp = setterArg;
+        return this;
+      }
+      private @Nullable String factorId;
+      public @NonNull Builder setFactorId(@NonNull String setterArg) {
+        this.factorId = setterArg;
+        return this;
+      }
+      private @Nullable String uid;
+      public @NonNull Builder setUid(@NonNull String setterArg) {
+        this.uid = setterArg;
+        return this;
+      }
+      private @Nullable String phoneNumber;
+      public @NonNull Builder setPhoneNumber(@Nullable String setterArg) {
+        this.phoneNumber = setterArg;
+        return this;
+      }
+      public @NonNull PigeonMultiFactorInfo build() {
+        PigeonMultiFactorInfo pigeonReturn = new PigeonMultiFactorInfo();
+        pigeonReturn.setDisplayName(displayName);
+        pigeonReturn.setEnrollmentTimestamp(enrollmentTimestamp);
+        pigeonReturn.setFactorId(factorId);
+        pigeonReturn.setUid(uid);
+        pigeonReturn.setPhoneNumber(phoneNumber);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("displayName", displayName);
+      toMapResult.put("enrollmentTimestamp", enrollmentTimestamp);
+      toMapResult.put("factorId", factorId);
+      toMapResult.put("uid", uid);
+      toMapResult.put("phoneNumber", phoneNumber);
+      return toMapResult;
+    }
+    static @NonNull PigeonMultiFactorInfo fromMap(@NonNull Map<String, Object> map) {
+      PigeonMultiFactorInfo pigeonResult = new PigeonMultiFactorInfo();
+      Object displayName = map.get("displayName");
+      pigeonResult.setDisplayName((String)displayName);
+      Object enrollmentTimestamp = map.get("enrollmentTimestamp");
+      pigeonResult.setEnrollmentTimestamp((Double)enrollmentTimestamp);
+      Object factorId = map.get("factorId");
+      pigeonResult.setFactorId((String)factorId);
+      Object uid = map.get("uid");
+      pigeonResult.setUid((String)uid);
+      Object phoneNumber = map.get("phoneNumber");
+      pigeonResult.setPhoneNumber((String)phoneNumber);
+      return pigeonResult;
+    }
+  }
+
   public interface Result<T> {
     void success(T result);
     void error(Throwable error);
@@ -233,6 +337,160 @@ public class GeneratedAndroidFirebaseAuth {
               wrapped.put("error", wrapError(exception));
               reply.reply(wrapped);
             }
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+    }
+  }
+  private static class MultiFactoResolverHostApiCodec extends StandardMessageCodec {
+    public static final MultiFactoResolverHostApiCodec INSTANCE = new MultiFactoResolverHostApiCodec();
+    private MultiFactoResolverHostApiCodec() {}
+    @Override
+    protected Object readValueOfType(byte type, ByteBuffer buffer) {
+      switch (type) {
+        case (byte)128:         
+          return PigeonMultiFactorInfo.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)129:         
+          return PigeonMultiFactorSession.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)130:         
+          return PigeonPhoneMultiFactorAssertion.fromMap((Map<String, Object>) readValue(buffer));
+        
+        default:        
+          return super.readValueOfType(type, buffer);
+        
+      }
+    }
+    @Override
+    protected void writeValue(ByteArrayOutputStream stream, Object value)     {
+      if (value instanceof PigeonMultiFactorInfo) {
+        stream.write(128);
+        writeValue(stream, ((PigeonMultiFactorInfo) value).toMap());
+      } else 
+      if (value instanceof PigeonMultiFactorSession) {
+        stream.write(129);
+        writeValue(stream, ((PigeonMultiFactorSession) value).toMap());
+      } else 
+      if (value instanceof PigeonPhoneMultiFactorAssertion) {
+        stream.write(130);
+        writeValue(stream, ((PigeonPhoneMultiFactorAssertion) value).toMap());
+      } else 
+{
+        super.writeValue(stream, value);
+      }
+    }
+  }
+
+  /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
+  public interface MultiFactoResolverHostApi {
+    void resolveSignIn(@NonNull String resolverId, @NonNull PigeonPhoneMultiFactorAssertion assertion, Result<Map<String, Object>> result);
+
+    /** The codec used by MultiFactoResolverHostApi. */
+    static MessageCodec<Object> getCodec() {
+      return MultiFactoResolverHostApiCodec.INSTANCE;
+    }
+
+    /** Sets up an instance of `MultiFactoResolverHostApi` to handle messages through the `binaryMessenger`. */
+    static void setup(BinaryMessenger binaryMessenger, MultiFactoResolverHostApi api) {
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              String resolverIdArg = (String)args.get(0);
+              if (resolverIdArg == null) {
+                throw new NullPointerException("resolverIdArg unexpectedly null.");
+              }
+              PigeonPhoneMultiFactorAssertion assertionArg = (PigeonPhoneMultiFactorAssertion)args.get(1);
+              if (assertionArg == null) {
+                throw new NullPointerException("assertionArg unexpectedly null.");
+              }
+              Result<Map<String, Object>> resultCallback = new Result<Map<String, Object>>() {
+                public void success(Map<String, Object> result) {
+                  wrapped.put("result", result);
+                  reply.reply(wrapped);
+                }
+                public void error(Throwable error) {
+                  wrapped.put("error", wrapError(error));
+                  reply.reply(wrapped);
+                }
+              };
+
+              api.resolveSignIn(resolverIdArg, assertionArg, resultCallback);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+              reply.reply(wrapped);
+            }
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+    }
+  }
+  private static class GenerateInterfacesCodec extends StandardMessageCodec {
+    public static final GenerateInterfacesCodec INSTANCE = new GenerateInterfacesCodec();
+    private GenerateInterfacesCodec() {}
+    @Override
+    protected Object readValueOfType(byte type, ByteBuffer buffer) {
+      switch (type) {
+        case (byte)128:         
+          return PigeonMultiFactorInfo.fromMap((Map<String, Object>) readValue(buffer));
+        
+        default:        
+          return super.readValueOfType(type, buffer);
+        
+      }
+    }
+    @Override
+    protected void writeValue(ByteArrayOutputStream stream, Object value)     {
+      if (value instanceof PigeonMultiFactorInfo) {
+        stream.write(128);
+        writeValue(stream, ((PigeonMultiFactorInfo) value).toMap());
+      } else 
+{
+        super.writeValue(stream, value);
+      }
+    }
+  }
+
+  /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
+  public interface GenerateInterfaces {
+    void generateInterfaces(@NonNull PigeonMultiFactorInfo info);
+
+    /** The codec used by GenerateInterfaces. */
+    static MessageCodec<Object> getCodec() {
+      return GenerateInterfacesCodec.INSTANCE;
+    }
+
+    /** Sets up an instance of `GenerateInterfaces` to handle messages through the `binaryMessenger`. */
+    static void setup(BinaryMessenger binaryMessenger, GenerateInterfaces api) {
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GenerateInterfaces.generateInterfaces", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              PigeonMultiFactorInfo infoArg = (PigeonMultiFactorInfo)args.get(0);
+              if (infoArg == null) {
+                throw new NullPointerException("infoArg unexpectedly null.");
+              }
+              api.generateInterfaces(infoArg);
+              wrapped.put("result", null);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
           });
         } else {
           channel.setMessageHandler(null);

@@ -50,3 +50,51 @@ class PhoneMultiFactorGenerator {
     return MultiFactorAssertion(credential);
   }
 }
+
+class MultiFactorResolverPlatform {
+  const MultiFactorResolverPlatform(
+    this.hints,
+    this.session,
+  );
+
+  final List<MultiFactorInfo> hints;
+
+  final MultiFactorSession session;
+
+  Future<UserCredentialPlatform> resolveSignIn(
+    MultiFactorAssertion assertion,
+  ) {
+    throw UnimplementedError('resolveSignIn() is not implemented');
+  }
+}
+
+class MultiFactorInfo {
+  const MultiFactorInfo({
+    required this.factorId,
+    required this.enrollmentTimestamp,
+    required this.displayName,
+    required this.uid,
+  });
+
+  final String? displayName;
+  final double enrollmentTimestamp;
+  final String factorId;
+  final String uid;
+}
+
+class PhoneMultiFactorInfo extends MultiFactorInfo {
+  const PhoneMultiFactorInfo({
+    required String? displayName,
+    required double enrollmentTimestamp,
+    required String factorId,
+    required String uid,
+    required this.phoneNumber,
+  }) : super(
+          displayName: displayName,
+          enrollmentTimestamp: enrollmentTimestamp,
+          factorId: factorId,
+          uid: uid,
+        );
+
+  final String phoneNumber;
+}
