@@ -1,10 +1,18 @@
+## 2.4.2
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 2.4.1
+
+ - Update a dependency to the latest release.
+
 ## 2.4.0
 
- - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/FirebaseExtended/flutterfire/issues/8532)). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. ([#8532](https://github.com/firebase/flutterfire/issues/8532)). ([14b38da3](https://github.com/firebase/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
 
 ## 2.3.0
 
- - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/FirebaseExtended/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
+ - **FEAT**: retrieve `timeSensitiveSetting` for iOS 15+. (#8532). ([14b38da3](https://github.com/firebase/flutterfire/commit/14b38da31f364ad35be20c5df9cd633c613d8067))
 
 ## 2.2.13
 
@@ -24,7 +32,7 @@
 
 ## 2.2.9
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 2.2.8
 
@@ -32,7 +40,7 @@
 
 ## 2.2.7
 
- - **FIX**: Make Web `deleteToken()` API a Future so it resolves only when completed. (#7687). ([cf59bd38](https://github.com/FirebaseExtended/flutterfire/commit/cf59bd380a495a0390d8c14a63498ba1600f9f12))
+ - **FIX**: Make Web `deleteToken()` API a Future so it resolves only when completed. (#7687). ([cf59bd38](https://github.com/firebase/flutterfire/commit/cf59bd380a495a0390d8c14a63498ba1600f9f12))
 
 ## 2.2.6
 
@@ -44,7 +52,7 @@
 
 ## 2.2.4
 
- - **FIX**: messaging `isSupported()` check on web should be used lazily in `_delegate` (fixes #7511). ([9a3d1d93](https://github.com/FirebaseExtended/flutterfire/commit/9a3d1d9300c49ccdffa90b8193269badd79d2c9b))
+ - **FIX**: messaging `isSupported()` check on web should be used lazily in `_delegate` (fixes #7511). ([9a3d1d93](https://github.com/firebase/flutterfire/commit/9a3d1d9300c49ccdffa90b8193269badd79d2c9b))
 
 ## 2.2.3
 

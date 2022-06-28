@@ -144,7 +144,7 @@ The configuration requires the `clientId` property (which can be found in the Fi
 
 ## Twitter
 
-To support Facebook as a provider, first install the [`twitter_login`](https://pub.dev/packages/twitter_login)
+To support Twitter as a provider, first install the [`twitter_login`](https://pub.dev/packages/twitter_login)
 plugin to your project.
 
 Next, enable the "Twitter" provider in the Firebase Console:

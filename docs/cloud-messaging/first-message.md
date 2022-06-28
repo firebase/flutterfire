@@ -52,7 +52,7 @@ ask the user for notification permissions. Otherwise, it returns a token or
 rejects the future due to an error.
 
 ```dart
-final fcmToken = FirebaseMessaging.instance.getToken();
+final fcmToken = await FirebaseMessaging.instance.getToken();
 ```
 
 

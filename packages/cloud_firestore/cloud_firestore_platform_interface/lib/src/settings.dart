@@ -89,7 +89,7 @@ class Settings {
       other.ignoreUndefinedProperties == ignoreUndefinedProperties;
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         persistenceEnabled,
         host,
