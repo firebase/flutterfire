@@ -176,11 +176,12 @@ void setupTests() {
               expect(token1, isNot(token2));
             } else {
               await expectLater(
-                  messaging.getToken(),
-                  throwsA(
-                    isA<FirebaseException>()
-                        .having((e) => e.code, 'code', 'permission-blocked'),
-                  ));
+                messaging.getToken(),
+                throwsA(
+                  isA<FirebaseException>()
+                      .having((e) => e.code, 'code', 'permission-blocked'),
+                ),
+              );
             }
           },
           skip: skipManualTests,
