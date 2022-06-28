@@ -90,7 +90,6 @@ jobs:
       - name: "Install Tools"
         run: |
           ./.github/workflows/scripts/install-tools.sh
-          flutter config --enable-web
       - name: "Bootstrap Workspace"
         run: melos bootstrap
       - name: "Build Examples"
