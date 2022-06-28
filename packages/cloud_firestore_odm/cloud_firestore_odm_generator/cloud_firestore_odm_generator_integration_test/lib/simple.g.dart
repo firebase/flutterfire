@@ -18,6 +18,406 @@ const _sentinel = _Sentinel();
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class ModelCollectionReference
+    implements ModelQuery, FirestoreCollectionReference<ModelQuerySnapshot> {
+  factory ModelCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$ModelCollectionReference;
+
+  static Model fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$ModelFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    Model value,
+    SetOptions? options,
+  ) {
+    return _$ModelToJson(value);
+  }
+
+  @override
+  ModelDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ModelDocumentReference> add(Model value);
+}
+
+class _$ModelCollectionReference extends _$ModelQuery
+    implements ModelCollectionReference {
+  factory _$ModelCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$ModelCollectionReference._(
+      firestore.collection('root').withConverter(
+            fromFirestore: ModelCollectionReference.fromFirestore,
+            toFirestore: ModelCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ModelCollectionReference._(
+    CollectionReference<Model> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<Model> get reference =>
+      super.reference as CollectionReference<Model>;
+
+  @override
+  ModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ModelDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ModelDocumentReference> add(Model value) {
+    return reference.add(value).then((ref) => ModelDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ModelDocumentReference
+    extends FirestoreDocumentReference<ModelDocumentSnapshot> {
+  factory ModelDocumentReference(DocumentReference<Model> reference) =
+      _$ModelDocumentReference;
+
+  DocumentReference<Model> get reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots();
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    String value,
+  });
+
+  Future<void> set(Model value);
+}
+
+class _$ModelDocumentReference
+    extends FirestoreDocumentReference<ModelDocumentSnapshot>
+    implements ModelDocumentReference {
+  _$ModelDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<Model> reference;
+
+  /// A reference to the [ModelCollectionReference] containing this document.
+  ModelCollectionReference get parent {
+    return _$ModelCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<ModelDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<ModelDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return ModelDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? value = _sentinel,
+  }) async {
+    final json = {
+      if (value != _sentinel) "value": value as String,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(Model value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ModelDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class ModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+  ModelDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final Model? data;
+}
+
+abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
+  @override
+  ModelQuery limit(int limit);
+
+  @override
+  ModelQuery limitToLast(int limit);
+
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
+    implements ModelQuery {
+  _$ModelQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<Model> reference;
+
+  ModelQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<Model> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return ModelQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<ModelDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: ModelDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return ModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<ModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<ModelQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  ModelQuery limit(int limit) {
+    return _$ModelQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  ModelQuery limitToLast(int limit) {
+    return _$ModelQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        'value',
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByValue({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy('value', descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ModelQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ModelQuerySnapshot
+    extends FirestoreQuerySnapshot<ModelQueryDocumentSnapshot> {
+  ModelQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<Model> snapshot;
+
+  @override
+  final List<ModelQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ModelDocumentSnapshot>> docChanges;
+}
+
+class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+    implements ModelDocumentSnapshot {
+  ModelQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<Model> snapshot;
+
+  @override
+  ModelDocumentReference get reference {
+    return ModelDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final Model data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class NestedCollectionReference
     implements NestedQuery, FirestoreCollectionReference<NestedQuerySnapshot> {
   factory NestedCollectionReference([
@@ -71,6 +471,10 @@ class _$NestedCollectionReference extends _$NestedQuery
 
   @override
   NestedDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return NestedDocumentReference(
       reference.doc(id),
     );
@@ -4926,6 +5330,14 @@ _$assertMinValidation(MinValidation instance) {
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+Model _$ModelFromJson(Map<String, dynamic> json) => Model(
+      json['value'] as String,
+    );
+
+Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
+      'value': instance.value,
+    };
 
 Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
       value: json['value'] == null

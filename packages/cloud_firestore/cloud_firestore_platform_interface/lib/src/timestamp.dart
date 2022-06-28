@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 
 const int _kThousand = 1000;
@@ -85,7 +83,7 @@ class Timestamp implements Comparable<Timestamp> {
   }
 
   @override
-  int get hashCode => hashValues(seconds, nanoseconds);
+  int get hashCode => Object.hash(seconds, nanoseconds);
 
   @override
   bool operator ==(Object other) =>

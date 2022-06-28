@@ -13,8 +13,8 @@ import 'firebase_analytics/firebase_analytics_e2e.dart' as firebase_analytics;
 import 'firebase_app_check/firebase_app_check_e2e.dart' as firebase_app_check;
 import 'firebase_app_installations/firebase_app_installations_e2e.dart'
     as firebase_app_installations;
-import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e.dart'
-    as firebase_in_app_messaging;
+//import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e.dart'
+//    as firebase_in_app_messaging;
 import 'firebase_messaging/firebase_messaging_e2e.dart' as firebase_messaging;
 import 'firebase_dynamic_links/firebase_dynamic_links_e2e.dart'
     as firebase_dynamic_links;
@@ -38,7 +38,7 @@ void setupTests() {
   firebase_crashlytics.setupTests();
   firebase_dynamic_links.setupTests();
   firebase_remote_config.setupTests();
-  firebase_in_app_messaging.setupTests();
+  // firebase_in_app_messaging.setupTests();
   firebase_app_installations.setupTests();
   firebase_ml_model_downloader.setupTests();
 }

@@ -24,6 +24,8 @@ class FirebaseApp {
   ///
   /// Once deleted, any plugin functionality using this app instance will throw
   /// an error.
+  ///
+  /// Deleting the default app is not possible and throws an exception.
   Future<void> delete() async {
     await _delegate.delete();
   }
@@ -65,7 +67,7 @@ class FirebaseApp {
 
   @override
   // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => hashValues(name, options);
+  int get hashCode => Object.hash(name, options);
 
   @override
   String toString() => '$FirebaseApp($name)';
