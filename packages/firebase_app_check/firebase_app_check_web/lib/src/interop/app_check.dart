@@ -36,7 +36,9 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
 
   void setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) =>
       app_check_interop.setTokenAutoRefreshEnabled(
-          jsObject, isTokenAutoRefreshEnabled);
+        jsObject,
+        isTokenAutoRefreshEnabled,
+      );
 
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
       handleThenable(app_check_interop.getToken(jsObject, forceRefresh));
@@ -60,7 +62,10 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
       void startListen() {
         assert(_idTokenChangedUnsubscribe == null);
         _idTokenChangedUnsubscribe = app_check_interop.onTokenChanged(
-            jsObject, nextWrapper, errorWrapper);
+          jsObject,
+          nextWrapper,
+          errorWrapper,
+        );
       }
 
       void stopListen() {

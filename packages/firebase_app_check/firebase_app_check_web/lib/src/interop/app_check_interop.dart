@@ -12,8 +12,10 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
 @JS()
-external AppCheckJsImpl initializeAppCheck(AppJsImpl? app,
-    [AppCheckOptions? options]);
+external AppCheckJsImpl initializeAppCheck(
+  AppJsImpl? app, [
+  AppCheckOptions? options,
+]);
 
 @JS()
 external PromiseJsImpl<AppCheckTokenResult> getToken(
@@ -42,8 +44,10 @@ abstract class AppCheckTokenResult {
 class AppCheckOptions {
   external bool? get isTokenAutoRefreshEnabled;
   external ReCaptchaV3Provider get provider;
-  external factory AppCheckOptions(
-      {bool? isTokenAutoRefreshEnabled, ReCaptchaV3Provider provider});
+  external factory AppCheckOptions({
+    bool? isTokenAutoRefreshEnabled,
+    ReCaptchaV3Provider provider,
+  });
 }
 
 external Func0 onTokenChanged(
