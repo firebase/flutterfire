@@ -161,13 +161,13 @@ jobs:
         with:
           key: ${{ runner.os }}-macos-v2
           max-size: 700M
-      - uses: actions/cache@v2
-        name: Pods Cache
-        id: pods-cache
-        with:
-          path: tests/macos/Pods
-          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
-          restore-keys: ${{ runner.os }}-macos-pods-v1
+#      - uses: actions/cache@v2
+#        name: Pods Cache
+#        id: pods-cache
+#        with:
+#          path: tests/macos/Pods
+#          key: ${{ runner.os }}-pods-v2-${{ hashFiles('tests/macos/Podfile.lock') }}
+#          restore-keys: ${{ runner.os }}-macos-pods-v1
       - name: Cache Firebase Emulator
         uses: actions/cache@v2
         with:

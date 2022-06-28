@@ -47,8 +47,7 @@ target 'Runner' do
     end
   end
 
-# This breaks tests with v9 SDK
-#   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
 end
 
 post_install do |installer|
