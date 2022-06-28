@@ -12,7 +12,6 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.gms.tasks.Tasks;
@@ -1020,11 +1019,28 @@ public class FlutterFirebaseAuthPlugin
             taskCompletionSource.setException(e);
           }
 
+          final String multiFactorInfoId = (String) arguments.get(Constants.MULTI_FACTOR_INFO);
+          PhoneMultiFactorInfo multiFactorInfo =
+            null;
+
+          if (multiFactorInfoId != null) {
+            for (String resolverId : multiFactorResolverMap.keySet()) {
+              for (MultiFactorInfo info : multiFactorResolverMap.get(resolverId).getHints()) {
+                if (info.getUid().equals(multiFactorInfoId) && info instanceof PhoneMultiFactorInfo) {
+                  multiFactorInfo = (PhoneMultiFactorInfo) info;
+                  break;
+                }
+              }
+            }
+          }
+
+
           PhoneNumberVerificationStreamHandler handler =
             new PhoneNumberVerificationStreamHandler(
               getActivity(),
               arguments,
               multiFactorSession,
+              multiFactorInfo,
               credential -> {
                 int hashCode = credential.hashCode();
                 authCredentials.put(hashCode, credential);

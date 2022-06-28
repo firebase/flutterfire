@@ -87,3 +87,18 @@ abstract class MultiFactoResolverHostApi {
 abstract class GenerateInterfaces {
   void generateInterfaces(PigeonMultiFactorInfo info);
 }
+
+@HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')
+abstract class MultiFactoResolverHostApi {
+  @async
+  Map<String, Object> resolveSignIn(
+    String resolverId,
+    PigeonPhoneMultiFactorAssertion assertion,
+  );
+}
+
+/// Only used to generate the object interface that are use outside of the Pigeon interface
+@HostApi()
+abstract class GenerateInterfaces {
+  void generateInterfaces(PigeonMultiFactorInfo info);
+}
