@@ -518,6 +518,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     throw UnimplementedError('signInWithEmailLink() is not implemented');
   }
 
+  /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given email has been disabled.
   Future<UserCredentialPlatform> signInWithAuthProvider(
     AuthProvider provider,
   ) async {

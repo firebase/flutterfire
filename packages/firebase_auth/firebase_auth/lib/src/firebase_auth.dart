@@ -576,6 +576,20 @@ class FirebaseAuth extends FirebasePluginPlatform {
     );
   }
 
+  /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given email has been disabled.
+  Future<UserCredential> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    return UserCredential._(
+      this,
+      await _delegate.signInWithAuthProvider(provider),
+    );
+  }
+
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
@@ -645,12 +659,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///    was issued and when this method was called.
   Future<String> verifyPasswordResetCode(String code) {
     return _delegate.verifyPasswordResetCode(code);
-  }
-
-  Future<UserCredentialPlatform> signInWithAuthProvider(
-    AuthProvider provider,
-  ) async {
-    return _delegate.signInWithAuthProvider(provider);
   }
 
   /// Starts a phone number verification process for the given phone number.
