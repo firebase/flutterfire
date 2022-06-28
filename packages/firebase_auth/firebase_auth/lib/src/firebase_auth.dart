@@ -679,6 +679,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [phoneNumber] The phone number for the account the user is signing up
   ///   for or signing into. Make sure to pass in a phone number with country
   ///   code prefixed with plus sign ('+').
+  ///   Should be null if it's a multi-factor sign in.
+  ///
+  /// [multiFactorInfo] The multi factor info you're using to verify the phone number.
+  ///   Should be set if a [multiFactorSession] is provided.
+  ///
+  /// [multiFactorSession] The multi factor session you're using to verify the phone number.
+  ///   Should be set if a [multiFactorInfo] is provided.
   ///
   /// [timeout] The maximum amount of time you are willing to wait for SMS
   ///   auto-retrieval to be completed by the library. Maximum allowed value

@@ -394,7 +394,6 @@ class _AuthGateState extends State<AuthGate> {
         final auth = FirebaseAuth.instance;
         await auth.verifyPhoneNumber(
           multiFactorSession: e.resolver.session,
-          // TODO(Lyokone): add a phone number input
           multiFactorInfo: firstHint,
           verificationCompleted: (_) {},
           verificationFailed: print,
