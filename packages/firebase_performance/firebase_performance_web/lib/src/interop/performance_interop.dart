@@ -12,8 +12,10 @@ import 'package:js/js.dart';
 external PerformanceJsImpl getPerformance([AppJsImpl? app]);
 
 @JS()
-external PerformanceJsImpl initializePerformance(AppJsImpl app,
-    [PerformanceSettingsJsImpl? settings]);
+external PerformanceJsImpl initializePerformance(
+  AppJsImpl app, [
+  PerformanceSettingsJsImpl? settings,
+]);
 
 @JS()
 external TraceJsImpl trace(PerformanceJsImpl performance, String traceName);
@@ -57,6 +59,8 @@ class PerformanceSettingsJsImpl {
   external set dataCollectionEnabled(bool? b);
   external bool? get instrumentationEnabled;
   external set instrumentationEnabled(bool? b);
-  external factory PerformanceSettingsJsImpl(
-      {bool? dataCollectionEnabled, bool? instrumentationEnabled});
+  external factory PerformanceSettingsJsImpl({
+    bool? dataCollectionEnabled,
+    bool? instrumentationEnabled,
+  });
 }
