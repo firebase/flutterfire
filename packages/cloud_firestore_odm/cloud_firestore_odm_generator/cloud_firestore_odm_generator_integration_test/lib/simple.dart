@@ -5,6 +5,13 @@ import 'model.dart';
 
 part 'simple.g.dart';
 
+@Collection<Model>('root')
+@JsonSerializable()
+class Model {
+  Model(this.value);
+  final String value;
+}
+
 @JsonSerializable()
 class Nested {
   Nested({

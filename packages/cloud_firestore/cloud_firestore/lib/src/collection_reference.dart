@@ -141,7 +141,7 @@ class _JsonCollectionReference extends _JsonQuery
       other.path == path;
 
   @override
-  int get hashCode => hashValues(firestore, path);
+  int get hashCode => Object.hash(firestore, path);
 
   @override
   String toString() => 'CollectionReference<Map<String, dynamic>>($path)';
@@ -219,7 +219,7 @@ class _WithConverterCollectionReference<T extends Object?>
       other._toFirestore == _toFirestore;
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         _originalCollectionReferenceQuery,
         _fromFirestore,

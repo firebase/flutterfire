@@ -204,7 +204,7 @@ Product                                          | Plugin name                  
 ## Try out an example app with {{analytics}} {: #try-analytics-example-app}
 
 Like all packages, the `firebase_analytics` plugin comes with an
-[example program](//github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example){: .external}.
+[example program](//github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example){: .external}.
 
 1.  Open a Flutter app that you've already configured to use Firebase (see
     instructions on this page).
@@ -213,7 +213,7 @@ Like all packages, the `firebase_analytics` plugin comes with an
     file.
 
 1.  From the {{firebase_analytics}}
-    [example program repository](//github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example/lib){: .external},
+    [example program repository](//github.com/firebase/flutterfire/tree/master/packages/firebase_analytics/firebase_analytics/example/lib){: .external},
     copy-paste the following two files into your app's `lib` directory:
 
       * `main.dart`
