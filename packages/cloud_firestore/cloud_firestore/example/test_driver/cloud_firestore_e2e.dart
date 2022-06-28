@@ -20,6 +20,7 @@ import 'timestamp_e2e.dart';
 import 'transaction_e2e.dart';
 import 'write_batch_e2e.dart';
 import 'load_bundle_e2e.dart';
+import 'second_app_e2e.dart';
 
 bool kUseFirestoreEmulator = true;
 
@@ -45,6 +46,7 @@ void testsMain() {
   runTransactionTests();
   runWriteBatchTests();
   runLoadBundleTests();
+  runSecondAppTests();
 }
 
 void main() => drive.main(testsMain);

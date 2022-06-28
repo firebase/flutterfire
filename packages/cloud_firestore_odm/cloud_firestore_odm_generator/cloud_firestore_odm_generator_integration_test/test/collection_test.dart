@@ -6,6 +6,13 @@ import 'setup_firestore_mock.dart';
 void main() {
   setUpAll(setupCloudFirestoreMocks);
 
+  test('can specify @Collection on the model itself', () {
+    expect(
+      ModelCollectionReference().path,
+      'root',
+    );
+  });
+
   group('orderBy', () {
     testWidgets('applies `descending`', (tester) async {
       expect(

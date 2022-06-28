@@ -35,6 +35,23 @@ import 'query_builder.dart';
 /// );
 /// ```
 /// {@endtemplate}
+///
+
+typedef CellBuilder = Widget Function(
+  QueryDocumentSnapshot<Map<String, Object?>> snapshot,
+  String colKey,
+);
+
+typedef OnTapCell = void Function(
+  QueryDocumentSnapshot<Map<String, Object?>> snapshot,
+  Object? value,
+  String propertyName,
+);
+
+typedef OnSelectedRows = void Function(
+  List<QueryDocumentSnapshot<Map<String, Object?>>> items,
+);
+
 class FirestoreDataTable extends StatefulWidget {
   /// {@macro flutterfire_ui.firestore_table}
   const FirestoreDataTable({
@@ -58,11 +75,26 @@ class FirestoreDataTable extends StatefulWidget {
     this.dragStartBehavior = DragStartBehavior.start,
     this.arrowHeadColor,
     this.checkboxHorizontalMargin,
+    this.cellBuilder,
+    this.enableDefaultCellEditor = true,
+    this.onTapCell,
+    this.onSelectedRows,
   })  : assert(
           columnLabels is LinkedHashMap,
           'only LinkedHashMap are supported as header',
         ), // using an assert instead of a type because `<A, B>{}` types as `Map` but is an instance of `LinkedHashMap`
         super(key: key);
+
+  /// When specified, the builder will be used to display your own widget for the cell
+  final CellBuilder? cellBuilder;
+
+  /// When set to false onTapCell will have not effect, defaults to true
+  final bool enableDefaultCellEditor;
+
+  /// When specified, this will override the default cell editor
+  final OnTapCell? onTapCell;
+
+  final OnSelectedRows? onSelectedRows;
 
   /// The firestore query that will be displayed
   final Query<Object?> query;
@@ -181,7 +213,10 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     getOnError: () => widget.onError,
     selectionEnabled: selectionEnabled,
     rowsPerPage: widget.rowsPerPage,
-    onEditItem: onEditItem,
+    enableDefaultEditor: widget.enableDefaultCellEditor,
+    onTapCell: widget.onTapCell ?? defaultOnEditItem,
+    builder: widget.cellBuilder,
+    onSelectedRows: widget.onSelectedRows,
   );
 
   bool get selectionEnabled => widget.canDeleteItems;
@@ -258,7 +293,7 @@ class _FirestoreTableState extends State<FirestoreDataTable> {
     );
   }
 
-  Future<void> onEditItem(
+  Future<void> defaultOnEditItem(
     QueryDocumentSnapshot<Map<String, Object?>> snapshot,
     Object? value,
     String propertyName,
@@ -757,15 +792,18 @@ class _Source extends DataTableSource {
     required this.getOnError,
     required bool selectionEnabled,
     required int rowsPerPage,
-    required this.onEditItem,
+    required this.enableDefaultEditor,
+    required this.onTapCell,
+    this.builder,
+    this.onSelectedRows,
   })  : _selectionEnabled = selectionEnabled,
         _rowsPerpage = rowsPerPage;
 
-  final void Function(
-    QueryDocumentSnapshot<Map<String, Object?>> snapshot,
-    Object? value,
-    String propertyName,
-  ) onEditItem;
+  final CellBuilder? builder;
+
+  final bool enableDefaultEditor;
+  final OnTapCell onTapCell;
+  final OnSelectedRows? onSelectedRows;
 
   int _rowsPerpage;
   int get rowsPerPage => _rowsPerpage;
@@ -820,7 +858,8 @@ class _Source extends DataTableSource {
     final doc = _previousSnapshot!.docs[index];
     final data = doc.data();
 
-    return DataRow(
+    return DataRow.byIndex(
+      index: index,
       selected: _selectedRowIds.contains(doc.id),
       onSelectChanged: selectionEnabled
           ? (selected) {
@@ -828,6 +867,12 @@ class _Source extends DataTableSource {
 
               if ((selected && _selectedRowIds.add(doc.id)) ||
                   (!selected && _selectedRowIds.remove(doc.id))) {
+                onSelectedRows?.call(
+                  _previousSnapshot!.docs
+                      .where((e) => _selectedRowIds.contains(e.id))
+                      .toList(),
+                );
+
                 notifyListeners();
               }
             }
@@ -835,14 +880,16 @@ class _Source extends DataTableSource {
       cells: [
         for (final head in getHeaders().keys)
           DataCell(
-            _ValueView(data[head]),
-            onTap: () {
-              onEditItem(
-                doc,
-                data[head],
-                head,
-              );
-            },
+            builder?.call(doc, head) ?? _ValueView(data[head]),
+            onTap: enableDefaultEditor
+                ? () {
+                    onTapCell(
+                      doc,
+                      data[head],
+                      head,
+                    );
+                  }
+                : null,
           ),
       ],
     );
@@ -896,7 +943,6 @@ class _ValueView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = FlutterFireUILocalizations.labelsOf(context);
     final value = this.value;
     if (value == null) {
       return Text('null', style: Theme.of(context).textTheme.caption);
@@ -905,6 +951,7 @@ class _ValueView extends StatelessWidget {
     } else if (value is DocumentReference) {
       return Text('/${value.path}');
     } else if (value is GeoPoint) {
+      final localizations = FlutterFireUILocalizations.labelsOf(context);
       final latitudeLabel = value.latitude < 0
           ? localizations.southInitialLabel
           : localizations.northInitialLabel;
