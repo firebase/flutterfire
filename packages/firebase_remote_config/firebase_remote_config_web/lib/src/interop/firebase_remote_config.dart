@@ -9,7 +9,8 @@ RemoteConfig getRemoteConfigInstance(App? app) {
     return RemoteConfig.getInstance(remote_config_interop.getRemoteConfig());
   }
   return RemoteConfig.getInstance(
-      remote_config_interop.getRemoteConfig(app.jsObject));
+    remote_config_interop.getRemoteConfig(app.jsObject),
+  );
 }
 
 /// Provides access to Remote Config service.
