@@ -48,7 +48,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, webUser);
+        return UserWeb(this, this., webUser);
       }
     }).listen((UserWeb? webUser) {
       _authStateChangesListeners[app.name]!.add(webUser);
@@ -400,7 +400,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -408,6 +409,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) {
     throw UnimplementedError(
         'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');

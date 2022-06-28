@@ -638,7 +638,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
     String? phoneNumber,
-    MultiFactorInfo? multiFactorInfo,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
