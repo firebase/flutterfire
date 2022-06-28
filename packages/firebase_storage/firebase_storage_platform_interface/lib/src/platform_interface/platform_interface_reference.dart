@@ -163,20 +163,6 @@ abstract class ReferencePlatform extends PlatformInterface {
     throw UnimplementedError('putString() is not implemented');
   }
 
-  /// Uploads a string to this object's location. The upload is not resumable.
-  /// Use [PutStringFormat] to correctly encode the string:
-  ///   - [PutStringFormat.raw] the string will be encoded in a Base64 format.
-  ///   - [PutStringFormat.dataUrl] the string must be in a data url format
-  ///     (e.g. "data:text/plain;base64,SGVsbG8sIFdvcmxkIQ=="). If no
-  ///     [SettableMetadata.mimeType] is provided as part of the [metadata]
-  ///     argument, the [mimeType] will be automatically set.
-  ///   - [PutStringFormat.base64] will be encoded as a Base64 string.
-  ///   - [PutStringFormat.base64Url] will be encoded as a Base64 string safe URL.
-  Future<UploadResultPlatform> uploadString(String data, PutStringFormat format,
-      [SettableMetadata? metadata]) {
-    throw UnimplementedError('uploadString() is not implemented');
-  }
-
   /// Updates the metadata on a storage object.
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
     throw UnimplementedError('updateMetadata() is not implemented');
