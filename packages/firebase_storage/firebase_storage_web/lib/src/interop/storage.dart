@@ -196,24 +196,6 @@ class StorageReference
   }
 }
 
-/// Returned after uploading String.
-/// See: <https://firebase.google.com/docs/reference/js/firebase.storage.FullMetadata>
-class UploadResult extends JsObjectWrapper<storage_interop.UploadResult> {
-  UploadResult._fromJsObject(storage_interop.UploadResult jsObject)
-      : super.fromJsObject(jsObject);
-
-  static final _expando = Expando<UploadResult>();
-
-  /// Creates a new UploadResult from a [jsObject].
-  static UploadResult getInstance(storage_interop.UploadResult jsObject) {
-    return _expando[jsObject] ??= UploadResult._fromJsObject(jsObject);
-  }
-
-  StorageReference get ref => StorageReference.getInstance(jsObject.ref);
-
-  FullMetadata get metadata => FullMetadata.getInstance(jsObject.metadata);
-}
-
 /// The full set of object metadata, including read-only properties.
 ///
 /// See: <https://firebase.google.com/docs/reference/js/firebase.storage.FullMetadata>

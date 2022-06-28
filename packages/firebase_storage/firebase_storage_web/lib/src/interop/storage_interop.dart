@@ -52,29 +52,10 @@ external ReferenceJsImpl ref(Object storageOrRef, [String? urlOrPath]);
 external PromiseJsImpl<FullMetadataJsImpl> updateMetadata(
     ReferenceJsImpl ref, SettableMetadataJsImpl settableMetadata);
 
-// TODO - new API.
-@JS()
-external PromiseJsImpl<UploadResult> uploadBytes(
-    ReferenceJsImpl ref,
-    dynamic /* Blob | Uint8Array | ArrayBuffer */ data,
-    UploadMetadataJsImpl metadata);
-
 @JS()
 external UploadTaskJsImpl uploadBytesResumable(
     ReferenceJsImpl ref, dynamic /* Blob | Uint8Array | ArrayBuffer */ data,
     [UploadMetadataJsImpl? metadata]);
-
-@JS()
-external PromiseJsImpl<UploadResult> uploadString(
-    ReferenceJsImpl ref, String value,
-    [String? format, UploadMetadataJsImpl uploadMetadata]);
-
-@JS()
-@anonymous
-class UploadResult {
-  external ReferenceJsImpl get ref;
-  external FullMetadataJsImpl get metadata;
-}
 
 @JS()
 @anonymous
