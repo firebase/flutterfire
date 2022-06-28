@@ -5,10 +5,9 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'app_interop.dart';
-import 'core_interop.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
+
 import 'core.dart' as core_interop;
-import 'utils/js.dart';
 
 /// A Firebase App holds the initialization information for a collection
 /// of services.
@@ -31,5 +30,5 @@ class App extends JsObjectWrapper<AppJsImpl> {
   }
 
   /// Deletes the app and frees resources of all App's services.
-  Future delete() => core_interop.deleteApp(jsObject);
+  Future<void> delete() => handleThenable(core_interop.deleteApp(jsObject));
 }
