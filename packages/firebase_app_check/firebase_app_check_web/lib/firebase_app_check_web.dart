@@ -42,6 +42,10 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   /// Lazily initialize [_webAppCheck] on first method call
   app_check_interop.AppCheck? get _delegate {
+    if (_webAppCheck == null) {
+      throw Exception(
+          "Please call activate() after you've initialized your Firebase app to initialize the app-check plugin");
+    }
     return _webAppCheck;
   }
 
