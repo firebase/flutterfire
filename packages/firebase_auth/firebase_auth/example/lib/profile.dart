@@ -229,8 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         final auth = FirebaseAuth.instance;
                         await auth.verifyPhoneNumber(
                           multiFactorSession: session,
-                          // TODO(Lyokone): add a phone number input
-                          phoneNumber: '',
+                          phoneNumber: phoneController.text,
                           verificationCompleted: (_) {},
                           verificationFailed: print,
                           codeSent:
