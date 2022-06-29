@@ -821,8 +821,6 @@ public class FlutterFirebaseAuthPlugin
               MultiFactorResolver multiFactorResolver = multiFactorException.getResolver();
               final List<MultiFactorInfo> hints = multiFactorResolver.getHints();
 
-              final List<Map<String, Object>> pigeonHints = new ArrayList<>();
-
               final MultiFactorSession session = multiFactorResolver.getSession();
               final String sessionId = UUID.randomUUID().toString();
               multiFactorSessionMap.put(sessionId, session);
@@ -830,29 +828,7 @@ public class FlutterFirebaseAuthPlugin
               final String resolverId = UUID.randomUUID().toString();
               multiFactorResolverMap.put(resolverId, multiFactorResolver);
 
-              for (MultiFactorInfo info : hints) {
-                if (info instanceof PhoneMultiFactorInfo) {
-                  pigeonHints.add(
-                      new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-                          .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
-                          .setDisplayName(info.getDisplayName())
-                          .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-                          .setUid(info.getUid())
-                          .setFactorId(info.getFactorId())
-                          .build()
-                          .toMap());
-
-                } else {
-                  pigeonHints.add(
-                      new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-                          .setDisplayName(info.getDisplayName())
-                          .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-                          .setUid(info.getUid())
-                          .setFactorId(info.getFactorId())
-                          .build()
-                          .toMap());
-                }
-              }
+              final List<Map<String, Object>> pigeonHints = multiFactorInfoToMap(hints);
 
               output.put(Constants.APP_NAME, getAuth(arguments).getApp().getName());
 
@@ -873,6 +849,41 @@ public class FlutterFirebaseAuthPlugin
         });
 
     return taskCompletionSource.getTask();
+  }
+
+  private List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(List<MultiFactorInfo> hints) {
+    List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> pigeonHints = new ArrayList<>();
+    for (MultiFactorInfo info : hints) {
+      if (info instanceof PhoneMultiFactorInfo) {
+        pigeonHints.add(
+          new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+            .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
+            .setDisplayName(info.getDisplayName())
+            .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+            .setUid(info.getUid())
+            .setFactorId(info.getFactorId())
+            .build());
+
+      } else {
+        pigeonHints.add(
+          new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+            .setDisplayName(info.getDisplayName())
+            .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+            .setUid(info.getUid())
+            .setFactorId(info.getFactorId())
+            .build());
+      }
+    }
+    return pigeonHints;
+  }
+
+
+  private List<Map<String, Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
+    List<Map<String, Object>> pigeonHints = new ArrayList<>();
+    for (GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo info : multiFactorInfoToPigeon(hints)) {
+      pigeonHints.add(info.toMap());
+    }
+    return pigeonHints;
   }
 
   private Task<Map<String, Object>> signInWithEmailLink(Map<String, Object> arguments) {
@@ -1756,6 +1767,31 @@ public class FlutterFirebaseAuthPlugin
                 result.error(exception);
               }
             });
+  }
+
+  @Override
+  public void unenroll(@NonNull String appName, @Nullable String factorUid, GeneratedAndroidFirebaseAuth.Result<Void> result) {
+    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+
+    multiFactor.unenroll(factorUid).addOnCompleteListener(task -> {
+      if (task.isSuccessful()) {
+        result.success(null);
+      } else {
+        result.error(task.getException());
+      }
+    });
+  }
+
+  @Override
+  public void getEnrolledFactors(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result<List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo>> result) {
+    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+
+    final List<MultiFactorInfo> factors = multiFactor
+        .getEnrolledFactors();
+
+    final List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> resultFactors = multiFactorInfoToPigeon(factors);
+
+    result.success(resultFactors);
   }
 
   @Override

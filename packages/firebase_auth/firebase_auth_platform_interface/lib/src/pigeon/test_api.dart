@@ -15,12 +15,16 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _TestMultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorSession) {
+    if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is PigeonPhoneMultiFactorAssertion) {
+    if (value is PigeonMultiFactorSession) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -31,9 +35,12 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       
       case 129:       
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      
+      case 130:       
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       
       default:      
@@ -47,6 +54,8 @@ abstract class TestMultiFactorUserHostApi {
 
   Future<void> enrollPhone(String appName, PigeonPhoneMultiFactorAssertion assertion, String? displayName);
   Future<PigeonMultiFactorSession> getSession(String appName);
+  Future<void> unenroll(String appName, String? factorUid);
+  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(String appName);
   static void setup(TestMultiFactorUserHostApi? api, {BinaryMessenger? binaryMessenger}) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -79,6 +88,39 @@ abstract class TestMultiFactorUserHostApi {
           final String? arg_appName = (args[0] as String?);
           assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.');
           final PigeonMultiFactorSession output = await api.getSession(arg_appName!);
+          return <Object?, Object?>{'result': output};
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll', codec, binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_appName = (args[0] as String?);
+          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null String.');
+          final String? arg_factorUid = (args[1] as String?);
+          await api.unenroll(arg_appName!, arg_factorUid);
+          return <Object?, Object?>{};
+        });
+      }
+    }
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors', codec, binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object? message) async {
+          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final String? arg_appName = (args[0] as String?);
+          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null String.');
+          final List<PigeonMultiFactorInfo?> output = await api.getEnrolledFactors(arg_appName!);
           return <Object?, Object?>{'result': output};
         });
       }

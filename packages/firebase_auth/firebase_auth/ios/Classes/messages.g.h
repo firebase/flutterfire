@@ -49,6 +49,8 @@ NSObject<FlutterMessageCodec> *MultiFactorUserHostApiGetCodec(void);
 @protocol MultiFactorUserHostApi
 - (void)enrollPhoneAppName:(NSString *)appName assertion:(PigeonPhoneMultiFactorAssertion *)assertion displayName:(nullable NSString *)displayName completion:(void(^)(FlutterError *_Nullable))completion;
 - (void)getSessionAppName:(NSString *)appName completion:(void(^)(PigeonMultiFactorSession *_Nullable, FlutterError *_Nullable))completion;
+- (void)unenrollAppName:(NSString *)appName factorUid:(nullable NSString *)factorUid completion:(void(^)(FlutterError *_Nullable))completion;
+- (void)getEnrolledFactorsAppName:(NSString *)appName completion:(void(^)(NSArray<PigeonMultiFactorInfo *> *_Nullable, FlutterError *_Nullable))completion;
 @end
 
 extern void MultiFactorUserHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactorUserHostApi> *_Nullable api);

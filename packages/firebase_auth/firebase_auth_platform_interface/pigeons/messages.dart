@@ -62,6 +62,15 @@ abstract class MultiFactorUserHostApi {
 
   @async
   PigeonMultiFactorSession getSession(String appName);
+
+  @async
+  void unenroll(
+    String appName,
+    String? factorUid,
+  );
+
+  @async
+  List<PigeonMultiFactorInfo> getEnrolledFactors(String appName);
 }
 
 @HostApi(dartHostTestHandler: 'TestMultiFactoResolverHostApi')

@@ -22,4 +22,21 @@ class MultiFactor {
   }) async {
     return _delegate.enroll(assertion, displayName: displayName);
   }
+
+  /// Unenrolls a second factor from this user.
+  ///
+  /// [factorUid] is the unique identifier of the second factor to unenroll.
+  /// [multiFactorInfo] is the [MultiFactorInfo] of the second factor to unenroll.
+  /// Only one of [factorUid] or [multiFactorInfo] should be provided.
+  Future<void> unenroll({String? factorUid, MultiFactorInfo? multiFactorInfo}) {
+    return _delegate.unenroll(
+      factorUid: factorUid,
+      multiFactorInfo: multiFactorInfo,
+    );
+  }
+
+  /// Returns a list of the [MultiFactorInfo] already associated with this user.
+  Future<List<MultiFactorInfo>> getEnrolledFactors() {
+    return _delegate.getEnrolledFactors();
+  }
 }

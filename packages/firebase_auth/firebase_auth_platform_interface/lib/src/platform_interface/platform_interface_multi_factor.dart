@@ -28,9 +28,19 @@ abstract class MultiFactorPlatform extends PlatformInterface {
     throw UnimplementedError('getSession() is not implemented');
   }
 
-// Future<void> unenroll(String factorUid) {}
-// Future<List<MultiFactorInfo>> getEnrolledFactors() {}
+  /// Unenrolls a second factor from this user.
+  ///
+  /// [factorUid] is the unique identifier of the second factor to unenroll.
+  /// [multiFactorInfo] is the [MultiFactorInfo] of the second factor to unenroll.
+  /// Only one of [factorUid] or [multiFactorInfo] should be provided.
+  Future<void> unenroll({String? factorUid, MultiFactorInfo? multiFactorInfo}) {
+    throw UnimplementedError('unenroll() is not implemented');
+  }
 
+  /// Returns a list of the [MultiFactorInfo] already associated with this user.
+  Future<List<MultiFactorInfo>> getEnrolledFactors() {
+    throw UnimplementedError('getEnrolledFactors() is not implemented');
+  }
 }
 
 /// Identifies the current session to enroll a second factor or to complete sign in when previously enrolled.

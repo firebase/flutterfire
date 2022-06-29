@@ -95,12 +95,16 @@ class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   const _MultiFactorUserHostApiCodec();
   @override
   void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is PigeonMultiFactorSession) {
+    if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
     } else 
-    if (value is PigeonPhoneMultiFactorAssertion) {
+    if (value is PigeonMultiFactorSession) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else 
+    if (value is PigeonPhoneMultiFactorAssertion) {
+      buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -111,9 +115,12 @@ class _MultiFactorUserHostApiCodec extends StandardMessageCodec {
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
       case 128:       
-        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+        return PigeonMultiFactorInfo.decode(readValue(buffer)!);
       
       case 129:       
+        return PigeonMultiFactorSession.decode(readValue(buffer)!);
+      
+      case 130:       
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
       
       default:      
@@ -179,6 +186,55 @@ class MultiFactorUserHostApi {
       );
     } else {
       return (replyMap['result'] as PigeonMultiFactorSession?)!;
+    }
+  }
+
+  Future<void> unenroll(String arg_appName, String? arg_factorUid) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object?>[arg_appName, arg_factorUid]) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(String arg_appName) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors', codec, binaryMessenger: _binaryMessenger);
+    final Map<Object?, Object?>? replyMap =
+        await channel.send(<Object?>[arg_appName]) as Map<Object?, Object?>?;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object?, Object?> error = (replyMap['error'] as Map<Object?, Object?>?)!;
+      throw PlatformException(
+        code: (error['code'] as String?)!,
+        message: error['message'] as String?,
+        details: error['details'],
+      );
+    } else if (replyMap['result'] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyMap['result'] as List<Object?>?)!.cast<PigeonMultiFactorInfo?>();
     }
   }
 }
