@@ -89,5 +89,4 @@ public class Constants {
   public static final String MULTI_FACTOR_SESSION_ID = "multiFactorSessionId";
   public static final String MULTI_FACTOR_RESOLVER_ID = "multiFactorResolverId";
   public static final String MULTI_FACTOR_INFO = "multiFactorInfo";
-
 }

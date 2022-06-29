@@ -24,14 +24,14 @@ public class FlutterFirebaseAuthPluginException extends Exception {
     this.message = message;
   }
 
-  FlutterFirebaseAuthPluginException(@NonNull String code, @NonNull String message, @NonNull Map<String, Object> additionalData) {
+  FlutterFirebaseAuthPluginException(
+      @NonNull String code, @NonNull String message, @NonNull Map<String, Object> additionalData) {
     super(message, null);
 
     this.code = code;
     this.message = message;
     this.additionalData = additionalData;
   }
-
 
   FlutterFirebaseAuthPluginException(@NonNull Exception nativeException, Throwable cause) {
     super(nativeException.getMessage(), cause);
