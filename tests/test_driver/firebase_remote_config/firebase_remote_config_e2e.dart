@@ -39,7 +39,7 @@ void setupTests() {
         );
         if (!kIsWeb && Platform.isIOS) {
           // iOS v9.2.0 hangs on ci if `fetchAndActivate()` is used, but works locally.
-          await FirebaseRemoteConfig.instance.fetch();
+          // await FirebaseRemoteConfig.instance.fetch();
           await FirebaseRemoteConfig.instance.activate();
         } else {
           await FirebaseRemoteConfig.instance.fetchAndActivate();
