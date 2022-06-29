@@ -38,6 +38,7 @@ public class GeneratedAndroidFirebaseAuth {
 
     /** Constructor is private to enforce null safety; use Builder. */
     private PigeonMultiFactorSession() {}
+
     public static final class Builder {
       private @Nullable String id;
 
@@ -45,6 +46,7 @@ public class GeneratedAndroidFirebaseAuth {
         this.id = setterArg;
         return this;
       }
+
       public @NonNull PigeonMultiFactorSession build() {
         PigeonMultiFactorSession pigeonReturn = new PigeonMultiFactorSession();
         pigeonReturn.setId(id);
@@ -58,6 +60,7 @@ public class GeneratedAndroidFirebaseAuth {
       toMapResult.put("id", id);
       return toMapResult;
     }
+
     static @NonNull PigeonMultiFactorSession fromMap(@NonNull Map<String, Object> map) {
       PigeonMultiFactorSession pigeonResult = new PigeonMultiFactorSession();
       Object id = map.get("id");
@@ -111,6 +114,7 @@ public class GeneratedAndroidFirebaseAuth {
         this.verificationCode = setterArg;
         return this;
       }
+
       public @NonNull PigeonPhoneMultiFactorAssertion build() {
         PigeonPhoneMultiFactorAssertion pigeonReturn = new PigeonPhoneMultiFactorAssertion();
         pigeonReturn.setVerificationId(verificationId);
@@ -278,13 +282,21 @@ public class GeneratedAndroidFirebaseAuth {
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class PigeonMultiFactorInfo {
     private @Nullable String displayName;
-    public @Nullable String getDisplayName() { return displayName; }
+
+    public @Nullable String getDisplayName() {
+      return displayName;
+    }
+
     public void setDisplayName(@Nullable String setterArg) {
       this.displayName = setterArg;
     }
 
     private @NonNull Double enrollmentTimestamp;
-    public @NonNull Double getEnrollmentTimestamp() { return enrollmentTimestamp; }
+
+    public @NonNull Double getEnrollmentTimestamp() {
+      return enrollmentTimestamp;
+    }
+
     public void setEnrollmentTimestamp(@NonNull Double setterArg) {
       if (setterArg == null) {
         throw new IllegalStateException("Nonnull field \"enrollmentTimestamp\" is null.");
@@ -293,7 +305,11 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     private @NonNull String factorId;
-    public @NonNull String getFactorId() { return factorId; }
+
+    public @NonNull String getFactorId() {
+      return factorId;
+    }
+
     public void setFactorId(@NonNull String setterArg) {
       if (setterArg == null) {
         throw new IllegalStateException("Nonnull field \"factorId\" is null.");
@@ -302,7 +318,11 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     private @NonNull String uid;
-    public @NonNull String getUid() { return uid; }
+
+    public @NonNull String getUid() {
+      return uid;
+    }
+
     public void setUid(@NonNull String setterArg) {
       if (setterArg == null) {
         throw new IllegalStateException("Nonnull field \"uid\" is null.");
@@ -311,39 +331,54 @@ public class GeneratedAndroidFirebaseAuth {
     }
 
     private @Nullable String phoneNumber;
-    public @Nullable String getPhoneNumber() { return phoneNumber; }
+
+    public @Nullable String getPhoneNumber() {
+      return phoneNumber;
+    }
+
     public void setPhoneNumber(@Nullable String setterArg) {
       this.phoneNumber = setterArg;
     }
 
     /** Constructor is private to enforce null safety; use Builder. */
     private PigeonMultiFactorInfo() {}
+
     public static final class Builder {
       private @Nullable String displayName;
+
       public @NonNull Builder setDisplayName(@Nullable String setterArg) {
         this.displayName = setterArg;
         return this;
       }
+
       private @Nullable Double enrollmentTimestamp;
+
       public @NonNull Builder setEnrollmentTimestamp(@NonNull Double setterArg) {
         this.enrollmentTimestamp = setterArg;
         return this;
       }
+
       private @Nullable String factorId;
+
       public @NonNull Builder setFactorId(@NonNull String setterArg) {
         this.factorId = setterArg;
         return this;
       }
+
       private @Nullable String uid;
+
       public @NonNull Builder setUid(@NonNull String setterArg) {
         this.uid = setterArg;
         return this;
       }
+
       private @Nullable String phoneNumber;
+
       public @NonNull Builder setPhoneNumber(@Nullable String setterArg) {
         this.phoneNumber = setterArg;
         return this;
       }
+
       public @NonNull PigeonMultiFactorInfo build() {
         PigeonMultiFactorInfo pigeonReturn = new PigeonMultiFactorInfo();
         pigeonReturn.setDisplayName(displayName);
@@ -354,7 +389,9 @@ public class GeneratedAndroidFirebaseAuth {
         return pigeonReturn;
       }
     }
-    @NonNull Map<String, Object> toMap() {
+
+    @NonNull
+    Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("displayName", displayName);
       toMapResult.put("enrollmentTimestamp", enrollmentTimestamp);
@@ -363,18 +400,19 @@ public class GeneratedAndroidFirebaseAuth {
       toMapResult.put("phoneNumber", phoneNumber);
       return toMapResult;
     }
+
     static @NonNull PigeonMultiFactorInfo fromMap(@NonNull Map<String, Object> map) {
       PigeonMultiFactorInfo pigeonResult = new PigeonMultiFactorInfo();
       Object displayName = map.get("displayName");
-      pigeonResult.setDisplayName((String)displayName);
+      pigeonResult.setDisplayName((String) displayName);
       Object enrollmentTimestamp = map.get("enrollmentTimestamp");
-      pigeonResult.setEnrollmentTimestamp((Double)enrollmentTimestamp);
+      pigeonResult.setEnrollmentTimestamp((Double) enrollmentTimestamp);
       Object factorId = map.get("factorId");
-      pigeonResult.setFactorId((String)factorId);
+      pigeonResult.setFactorId((String) factorId);
       Object uid = map.get("uid");
-      pigeonResult.setUid((String)uid);
+      pigeonResult.setUid((String) uid);
       Object phoneNumber = map.get("phoneNumber");
-      pigeonResult.setPhoneNumber((String)phoneNumber);
+      pigeonResult.setPhoneNumber((String) phoneNumber);
       return pigeonResult;
     }
   }
@@ -785,6 +823,7 @@ public class GeneratedAndroidFirebaseAuth {
       }
     }
   }
+
   private static Map<String, Object> wrapError(Throwable exception) {
     Map<String, Object> errorMap = new HashMap<>();
     errorMap.put("message", exception.toString());

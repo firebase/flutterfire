@@ -465,21 +465,19 @@ void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
 @interface MultiFactoResolverHostApiCodecReader : FlutterStandardReader
 @end
 @implementation MultiFactoResolverHostApiCodecReader
-- (nullable id)readValueOfType:(UInt8)type 
-{
+- (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128:     
+    case 128:
       return [PigeonMultiFactorInfo fromMap:[self readValue]];
-    
-    case 129:     
+
+    case 129:
       return [PigeonMultiFactorSession fromMap:[self readValue]];
-    
-    case 130:     
+
+    case 130:
       return [PigeonPhoneMultiFactorAssertion fromMap:[self readValue]];
-    
-    default:    
+
+    default:
       return [super readValueOfType:type];
-    
   }
 }
 @end
@@ -487,21 +485,17 @@ void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
 @interface MultiFactoResolverHostApiCodecWriter : FlutterStandardWriter
 @end
 @implementation MultiFactoResolverHostApiCodecWriter
-- (void)writeValue:(id)value 
-{
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
-  } else 
-  if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
+  } else if ([value isKindOfClass:[PigeonMultiFactorSession class]]) {
     [self writeByte:129];
     [self writeValue:[value toMap]];
-  } else 
-  if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
+  } else if ([value isKindOfClass:[PigeonPhoneMultiFactorAssertion class]]) {
     [self writeByte:130];
     [self writeValue:[value toMap]];
-  } else 
-{
+  } else {
     [super writeValue:value];
   }
 }
@@ -522,32 +516,37 @@ NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    MultiFactoResolverHostApiCodecReaderWriter *readerWriter = [[MultiFactoResolverHostApiCodecReaderWriter alloc] init];
+    MultiFactoResolverHostApiCodecReaderWriter *readerWriter =
+        [[MultiFactoResolverHostApiCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-
-void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *api) {
+void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<MultiFactoResolverHostApi> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn"
         binaryMessenger:binaryMessenger
-        codec:MultiFactoResolverHostApiGetCodec()        ];
+                  codec:MultiFactoResolverHostApiGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:completion:)], @"MultiFactoResolverHostApi api (%@) doesn't respond to @selector(resolveSignInResolverId:assertion:completion:)", api);
+      NSCAssert([api respondsToSelector:@selector(resolveSignInResolverId:assertion:completion:)],
+                @"MultiFactoResolverHostApi api (%@) doesn't respond to "
+                @"@selector(resolveSignInResolverId:assertion:completion:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         NSString *arg_resolverId = GetNullableObjectAtIndex(args, 0);
         PigeonPhoneMultiFactorAssertion *arg_assertion = GetNullableObjectAtIndex(args, 1);
-        [api resolveSignInResolverId:arg_resolverId assertion:arg_assertion completion:^(NSDictionary<NSString *, id> *_Nullable output, FlutterError *_Nullable error) {
-          callback(wrapResult(output, error));
-        }];
+        [api resolveSignInResolverId:arg_resolverId
+                           assertion:arg_assertion
+                          completion:^(NSDictionary<NSString *, id> *_Nullable output,
+                                       FlutterError *_Nullable error) {
+                            callback(wrapResult(output, error));
+                          }];
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
@@ -555,15 +554,13 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
 @interface GenerateInterfacesCodecReader : FlutterStandardReader
 @end
 @implementation GenerateInterfacesCodecReader
-- (nullable id)readValueOfType:(UInt8)type 
-{
+- (nullable id)readValueOfType:(UInt8)type {
   switch (type) {
-    case 128:     
+    case 128:
       return [PigeonMultiFactorInfo fromMap:[self readValue]];
-    
-    default:    
+
+    default:
       return [super readValueOfType:type];
-    
   }
 }
 @end
@@ -571,13 +568,11 @@ void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, 
 @interface GenerateInterfacesCodecWriter : FlutterStandardWriter
 @end
 @implementation GenerateInterfacesCodecWriter
-- (void)writeValue:(id)value 
-{
+- (void)writeValue:(id)value {
   if ([value isKindOfClass:[PigeonMultiFactorInfo class]]) {
     [self writeByte:128];
     [self writeValue:[value toMap]];
-  } else 
-{
+  } else {
     [super writeValue:value];
   }
 }
@@ -598,22 +593,25 @@ NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec() {
   static dispatch_once_t sPred = 0;
   static FlutterStandardMessageCodec *sSharedObject = nil;
   dispatch_once(&sPred, ^{
-    GenerateInterfacesCodecReaderWriter *readerWriter = [[GenerateInterfacesCodecReaderWriter alloc] init];
+    GenerateInterfacesCodecReaderWriter *readerWriter =
+        [[GenerateInterfacesCodecReaderWriter alloc] init];
     sSharedObject = [FlutterStandardMessageCodec codecWithReaderWriter:readerWriter];
   });
   return sSharedObject;
 }
 
-
-void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *api) {
+void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                             NSObject<GenerateInterfaces> *api) {
   {
-    FlutterBasicMessageChannel *channel =
-      [[FlutterBasicMessageChannel alloc]
-        initWithName:@"dev.flutter.pigeon.GenerateInterfaces.generateInterfaces"
+    FlutterBasicMessageChannel *channel = [[FlutterBasicMessageChannel alloc]
+           initWithName:@"dev.flutter.pigeon.GenerateInterfaces.generateInterfaces"
         binaryMessenger:binaryMessenger
-        codec:GenerateInterfacesGetCodec()        ];
+                  codec:GenerateInterfacesGetCodec()];
     if (api) {
-      NSCAssert([api respondsToSelector:@selector(generateInterfacesInfo:error:)], @"GenerateInterfaces api (%@) doesn't respond to @selector(generateInterfacesInfo:error:)", api);
+      NSCAssert([api respondsToSelector:@selector(generateInterfacesInfo:error:)],
+                @"GenerateInterfaces api (%@) doesn't respond to "
+                @"@selector(generateInterfacesInfo:error:)",
+                api);
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         NSArray *args = message;
         PigeonMultiFactorInfo *arg_info = GetNullableObjectAtIndex(args, 0);
@@ -621,8 +619,7 @@ void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObjec
         [api generateInterfacesInfo:arg_info error:&error];
         callback(wrapResult(nil, error));
       }];
-    }
-    else {
+    } else {
       [channel setMessageHandler:nil];
     }
   }
