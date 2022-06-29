@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#import "FLTFirebasePlugin.h"
 #import <Foundation/Foundation.h>
+#import "FLTFirebasePlugin.h"
 
 @interface FLTFirebasePluginRegistry : NSObject
 /**
@@ -34,8 +34,7 @@
  * @param firebaseApp FIRApp Firebase App instance these constants relate to.
  * @return NSDictionary Dictionary of plugins and their constants.
  */
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:
-    (FIRApp *_Nonnull)firebaseApp;
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp;
 
 /**
  * Each FlutterFire plugin implementing this method are notified that
