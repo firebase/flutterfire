@@ -46,8 +46,9 @@ target 'Runner' do
       raise "Error - unable to locate firebase_ios_sdk.rb script in firebase_core, and no FirebaseSDKVersion specified"
     end
   end
-# fails if included "9.2.0"
-#   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+
+  # TODO - replace with #{firebase_sdk_version} once it has been released on: https://github.com/invertase/firestore-ios-sdk-frameworks.git
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :branch => 'exclude-frameworks'
 end
 
 post_install do |installer|

@@ -51,8 +51,8 @@ target 'Runner' do
     end
   end
 
-# Removed, otherwise, tests won't run
-#   pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => "#{firebase_sdk_version}"
+  # TODO - replace with #{firebase_sdk_version} once it has been released on: https://github.com/invertase/firestore-ios-sdk-frameworks.git
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :branch => 'exclude-frameworks'
 end
 
 post_install do |installer|
