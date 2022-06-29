@@ -139,15 +139,12 @@ class MultiFactorUserHostApi {
   static const MessageCodec<Object?> codec = _MultiFactorUserHostApiCodec();
 
   Future<void> enrollPhone(
-    String arg_appName,
-    PigeonPhoneMultiFactorAssertion arg_assertion,
-    String? arg_displayName,
-  ) async {
+      String arg_appName,
+      PigeonPhoneMultiFactorAssertion arg_assertion,
+      String? arg_displayName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.MultiFactorUserHostApi.enrollPhone', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap = await channel
             .send(<Object?>[arg_appName, arg_assertion, arg_displayName])
         as Map<Object?, Object?>?;
@@ -171,10 +168,8 @@ class MultiFactorUserHostApi {
 
   Future<PigeonMultiFactorSession> getSession(String arg_appName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.MultiFactorUserHostApi.getSession',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.MultiFactorUserHostApi.getSession', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -202,10 +197,8 @@ class MultiFactorUserHostApi {
 
   Future<void> unenroll(String arg_appName, String? arg_factorUid) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap = await channel
         .send(<Object?>[arg_appName, arg_factorUid]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -227,13 +220,10 @@ class MultiFactorUserHostApi {
   }
 
   Future<List<PigeonMultiFactorInfo?>> getEnrolledFactors(
-    String arg_appName,
-  ) async {
+      String arg_appName) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_appName]) as Map<Object?, Object?>?;
     if (replyMap == null) {
@@ -308,15 +298,11 @@ class MultiFactoResolverHostApi {
 
   static const MessageCodec<Object?> codec = _MultiFactoResolverHostApiCodec();
 
-  Future<Map<String?, Object?>> resolveSignIn(
-    String arg_resolverId,
-    PigeonPhoneMultiFactorAssertion arg_assertion,
-  ) async {
+  Future<Map<String?, Object?>> resolveSignIn(String arg_resolverId,
+      PigeonPhoneMultiFactorAssertion arg_assertion) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_resolverId, arg_assertion])
             as Map<Object?, Object?>?;
@@ -382,10 +368,8 @@ class GenerateInterfaces {
 
   Future<void> generateInterfaces(PigeonMultiFactorInfo arg_info) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-      'dev.flutter.pigeon.GenerateInterfaces.generateInterfaces',
-      codec,
-      binaryMessenger: _binaryMessenger,
-    );
+        'dev.flutter.pigeon.GenerateInterfaces.generateInterfaces', codec,
+        binaryMessenger: _binaryMessenger);
     final Map<Object?, Object?>? replyMap =
         await channel.send(<Object?>[arg_info]) as Map<Object?, Object?>?;
     if (replyMap == null) {

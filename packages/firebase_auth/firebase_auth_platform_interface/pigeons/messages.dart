@@ -6,7 +6,7 @@ import 'package:pigeon/pigeon.dart';
   PigeonOptions(
     dartOut: 'lib/src/pigeon/messages.pigeon.dart',
     // We export in the lib folder to expose the class to other packages.
-    dartTestOut: 'lib/src/pigeon/test_api.dart',
+    dartTestOut: 'test/pigeon/test_api.dart',
     javaOut:
         '../firebase_auth/android/src/main/java/io/flutter/plugins/firebase/auth/GeneratedAndroidFirebaseAuth.java',
     javaOptions: JavaOptions(
