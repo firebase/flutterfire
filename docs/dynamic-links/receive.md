@@ -15,7 +15,7 @@ get the data passed in the Dynamic Link.
 1.  [Install and initialize the Firebase SDKs for Flutter](/docs/flutter/setup) if you
     haven't already done so.
 
-1.  From the root direcctory of your Flutter project, run the following
+1.  From the root directory of your Flutter project, run the following
     command to install the Dynamic Links plugin:
 
     ```
