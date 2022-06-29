@@ -66,23 +66,14 @@ jobs:
           curl -sL https://github.com/google/google-java-format/releases/download/google-java-format-1.3/google-java-format-1.3-all-deps.jar -o $HOME/google-java-format.jar
       - name: 'Bootstrap Workspace'
         run: melos bootstrap
-      - name: 'Dart'
+      - name: 'Dart, Java and Objective-C '
         run: |
-          melos exec -c 1 -- \
-            "flutter format ."
+          dart pub global run flutter_plugin_tools format
           ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Objective-C'
+      - name: 'Swift'
         if: ${{ success() || failure() }}
         run: |
-          echo "$(clang-format --version)"
-          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" --dir-exists="ios" -- \
-            find . -maxdepth 3 -name "*.h" -o -name "*.m" -print0 \| xargs -0 clang-format -i --style=Google --verbose
-          ./.github/workflows/scripts/validate-formatting.sh
-      - name: 'Java'
-        if: ${{ success() || failure() }}
-        run: |
-          melos exec -c 4 --ignore="*platform_interface*" --ignore="*web*" --dir-exists="android" -- \
-            find . -maxdepth 12 -name "*.java" -print0 \| xargs -0 java -jar $HOME/google-java-format.jar --replace
+          swiftformat .
           ./.github/workflows/scripts/validate-formatting.sh
 
   build_examples_dart:
