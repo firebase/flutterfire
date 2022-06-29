@@ -45,29 +45,42 @@ class _TestMultiFactorUserHostApiCodec extends StandardMessageCodec {
 abstract class TestMultiFactorUserHostApi {
   static const MessageCodec<Object?> codec = _TestMultiFactorUserHostApiCodec();
 
-  void enroll(String appName, PigeonMultiFactorAssertion assertion,
-      String? displayName,);
+  void enroll(
+    String appName,
+    PigeonMultiFactorAssertion assertion,
+    String? displayName,
+  );
   Future<PigeonMultiFactorSession> getSession(String appName);
-  static void setup(TestMultiFactorUserHostApi? api,
-      {BinaryMessenger? binaryMessenger,}) {
+  static void setup(
+    TestMultiFactorUserHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+  }) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactorUserHostApi.enroll', codec,
-          binaryMessenger: binaryMessenger,);
+        'dev.flutter.pigeon.MultiFactorUserHostApi.enroll',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null.',);
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null String.',);
+          assert(
+            arg_appName != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null String.',
+          );
           final PigeonMultiFactorAssertion? arg_assertion =
               (args[1] as PigeonMultiFactorAssertion?);
-          assert(arg_assertion != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null PigeonMultiFactorAssertion.',);
+          assert(
+            arg_assertion != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.enroll was null, expected non-null PigeonMultiFactorAssertion.',
+          );
           final String? arg_displayName = (args[2] as String?);
           await api.enrollPhone(arg_appName!, arg_assertion!, arg_displayName);
           return <Object?, Object?>{};
@@ -76,18 +89,24 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactorUserHostApi.getSession', codec,
-          binaryMessenger: binaryMessenger,);
+        'dev.flutter.pigeon.MultiFactorUserHostApi.getSession',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null.',);
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null,
-              'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.',);
+          assert(
+            arg_appName != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getSession was null, expected non-null String.',
+          );
           final PigeonMultiFactorSession output =
               await api.getSession(arg_appName!);
           return <Object?, Object?>{'result': output};
@@ -96,15 +115,24 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll', codec, binaryMessenger: binaryMessenger,);
+        'dev.flutter.pigeon.MultiFactorUserHostApi.unenroll',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null String.');
+          assert(
+            arg_appName != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.unenroll was null, expected non-null String.',
+          );
           final String? arg_factorUid = (args[1] as String?);
           await api.unenroll(arg_appName!, arg_factorUid);
           return <Object?, Object?>{};
@@ -113,16 +141,26 @@ abstract class TestMultiFactorUserHostApi {
     }
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors', codec, binaryMessenger: binaryMessenger,);
+        'dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_appName = (args[0] as String?);
-          assert(arg_appName != null, 'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null String.');
-          final List<PigeonMultiFactorInfo?> output = await api.getEnrolledFactors(arg_appName!);
+          assert(
+            arg_appName != null,
+            'Argument for dev.flutter.pigeon.MultiFactorUserHostApi.getEnrolledFactors was null, expected non-null String.',
+          );
+          final List<PigeonMultiFactorInfo?> output =
+              await api.getEnrolledFactors(arg_appName!);
           return <Object?, Object?>{'result': output};
         });
       }
@@ -137,56 +175,75 @@ class _TestMultiFactoResolverHostApiCodec extends StandardMessageCodec {
     if (value is PigeonMultiFactorInfo) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is PigeonMultiFactorSession) {
+    } else if (value is PigeonMultiFactorSession) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else 
-    if (value is PigeonPhoneMultiFactorAssertion) {
+    } else if (value is PigeonPhoneMultiFactorAssertion) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    } else 
-{
+    } else {
       super.writeValue(buffer, value);
     }
   }
+
   @override
   Object? readValueOfType(int type, ReadBuffer buffer) {
     switch (type) {
-      case 128:       
+      case 128:
         return PigeonMultiFactorInfo.decode(readValue(buffer)!);
-      
-      case 129:       
+
+      case 129:
         return PigeonMultiFactorSession.decode(readValue(buffer)!);
-      
-      case 130:       
+
+      case 130:
         return PigeonPhoneMultiFactorAssertion.decode(readValue(buffer)!);
-      
-      default:      
+
+      default:
         return super.readValueOfType(type, buffer);
-      
     }
   }
 }
-abstract class TestMultiFactoResolverHostApi {
-  static const MessageCodec<Object?> codec = _TestMultiFactoResolverHostApiCodec();
 
-  Future<Map<String?, Object?>> resolveSignIn(String resolverId, PigeonPhoneMultiFactorAssertion assertion);
-  static void setup(TestMultiFactoResolverHostApi? api, {BinaryMessenger? binaryMessenger}) {
+abstract class TestMultiFactoResolverHostApi {
+  static const MessageCodec<Object?> codec =
+      _TestMultiFactoResolverHostApiCodec();
+
+  Future<Map<String?, Object?>> resolveSignIn(
+    String resolverId,
+    PigeonPhoneMultiFactorAssertion assertion,
+  );
+  static void setup(
+    TestMultiFactoResolverHostApi? api, {
+    BinaryMessenger? binaryMessenger,
+  }) {
     {
       final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn', codec, binaryMessenger: binaryMessenger,);
+        'dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn',
+        codec,
+        binaryMessenger: binaryMessenger,
+      );
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object? message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null.');
+          assert(
+            message != null,
+            'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null.',
+          );
           final List<Object?> args = (message as List<Object?>?)!;
           final String? arg_resolverId = (args[0] as String?);
-          assert(arg_resolverId != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null String.');
-          final PigeonPhoneMultiFactorAssertion? arg_assertion = (args[1] as PigeonPhoneMultiFactorAssertion?);
-          assert(arg_assertion != null, 'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null PigeonPhoneMultiFactorAssertion.');
-          final Map<String?, Object?> output = await api.resolveSignIn(arg_resolverId!, arg_assertion!);
+          assert(
+            arg_resolverId != null,
+            'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null String.',
+          );
+          final PigeonPhoneMultiFactorAssertion? arg_assertion =
+              (args[1] as PigeonPhoneMultiFactorAssertion?);
+          assert(
+            arg_assertion != null,
+            'Argument for dev.flutter.pigeon.MultiFactoResolverHostApi.resolveSignIn was null, expected non-null PigeonPhoneMultiFactorAssertion.',
+          );
+          final Map<String?, Object?> output =
+              await api.resolveSignIn(arg_resolverId!, arg_assertion!);
           return <Object?, Object?>{'result': output};
         });
       }

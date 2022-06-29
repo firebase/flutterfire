@@ -47,15 +47,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// `init` unavailable to enforce nonnull fields, see the `make` class method.
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)makeWithDisplayName:(nullable NSString *)displayName
-    enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
-    factorId:(NSString *)factorId
-    uid:(NSString *)uid
-    phoneNumber:(nullable NSString *)phoneNumber;
-@property(nonatomic, copy, nullable) NSString * displayName;
-@property(nonatomic, strong) NSNumber * enrollmentTimestamp;
-@property(nonatomic, copy) NSString * factorId;
-@property(nonatomic, copy) NSString * uid;
-@property(nonatomic, copy, nullable) NSString * phoneNumber;
+                enrollmentTimestamp:(NSNumber *)enrollmentTimestamp
+                           factorId:(NSString *)factorId
+                                uid:(NSString *)uid
+                        phoneNumber:(nullable NSString *)phoneNumber;
+@property(nonatomic, copy, nullable) NSString *displayName;
+@property(nonatomic, strong) NSNumber *enrollmentTimestamp;
+@property(nonatomic, copy) NSString *factorId;
+@property(nonatomic, copy) NSString *uid;
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
 @end
 
 /// The codec used by MultiFactorUserHostApi.
@@ -108,18 +108,24 @@ extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
 NSObject<FlutterMessageCodec> *MultiFactoResolverHostApiGetCodec(void);
 
 @protocol MultiFactoResolverHostApi
-- (void)resolveSignInResolverId:(NSString *)resolverId assertion:(PigeonPhoneMultiFactorAssertion *)assertion completion:(void(^)(NSDictionary<NSString *, id> *_Nullable, FlutterError *_Nullable))completion;
+- (void)resolveSignInResolverId:(NSString *)resolverId
+                      assertion:(PigeonPhoneMultiFactorAssertion *)assertion
+                     completion:(void (^)(NSDictionary<NSString *, id> *_Nullable,
+                                          FlutterError *_Nullable))completion;
 @end
 
-extern void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<MultiFactoResolverHostApi> *_Nullable api);
+extern void MultiFactoResolverHostApiSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                           NSObject<MultiFactoResolverHostApi> *_Nullable api);
 
 /// The codec used by GenerateInterfaces.
 NSObject<FlutterMessageCodec> *GenerateInterfacesGetCodec(void);
 
 @protocol GenerateInterfaces
-- (void)generateInterfacesInfo:(PigeonMultiFactorInfo *)info error:(FlutterError *_Nullable *_Nonnull)error;
+- (void)generateInterfacesInfo:(PigeonMultiFactorInfo *)info
+                         error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger, NSObject<GenerateInterfaces> *_Nullable api);
+extern void GenerateInterfacesSetup(id<FlutterBinaryMessenger> binaryMessenger,
+                                    NSObject<GenerateInterfaces> *_Nullable api);
 
 NS_ASSUME_NONNULL_END
