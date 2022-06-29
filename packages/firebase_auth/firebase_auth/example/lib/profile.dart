@@ -24,6 +24,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late User user;
   late TextEditingController controller;
+  final phoneController = TextEditingController();
 
   String? photoURL;
 
@@ -176,14 +177,22 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: const Text('Verify Email'),
                     ),
                     const SizedBox(height: 20),
+                    TextFormField(
+                      controller: phoneController,
+                      decoration: const InputDecoration(
+                        icon: Icon(Icons.phone),
+                        hintText: '+33612345678',
+                        labelText: 'Phone number',
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     TextButton(
                       onPressed: () async {
                         final session = await user.multiFactor.getSession();
                         final auth = FirebaseAuth.instance;
                         await auth.verifyPhoneNumber(
                           multiFactorSession: session,
-                          // TODO(Lyokone): add a phone number input
-                          phoneNumber: '',
+                          phoneNumber: phoneController.text,
                           verificationCompleted: (_) {},
                           verificationFailed: print,
                           codeSent:
