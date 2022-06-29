@@ -24,6 +24,7 @@ class FirebaseWebService {
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', 'core'),
+    'remote-config': FirebaseWebService._('remote-config', 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
