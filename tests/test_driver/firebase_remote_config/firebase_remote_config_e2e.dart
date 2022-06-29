@@ -2,10 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import 'package:drive/drive.dart';
+import 'package:flutter/foundation.dart';
 import '../firebase_default_options.dart';
 
 void setupTests() {
@@ -34,7 +37,13 @@ void setupTests() {
           FirebaseRemoteConfig.instance.lastFetchTime.isBefore(mark),
           true,
         );
-        await FirebaseRemoteConfig.instance.fetchAndActivate();
+        if (!kIsWeb && Platform.isIOS) {
+          // iOS v9.2.0 hangs on ci if `fetchAndActivate()` is used, but works locally.
+          await FirebaseRemoteConfig.instance.fetch();
+          await FirebaseRemoteConfig.instance.activate();
+        } else {
+          await FirebaseRemoteConfig.instance.fetchAndActivate();
+        }
         expect(
           FirebaseRemoteConfig.instance.lastFetchStatus,
           RemoteConfigFetchStatus.success,
