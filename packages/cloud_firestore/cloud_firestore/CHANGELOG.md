@@ -1,3 +1,17 @@
+## 3.1.18
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8724). ([fd3f3102](https://github.com/firebase/flutterfire/commit/fd3f3102a0614e0e155756239a57b54fab324c2c))
+ - **REFACTOR**: migrate from hash* to Object.hash* (#8797). ([3dfc0997](https://github.com/firebase/flutterfire/commit/3dfc0997050ee4351207c355b2c22b46885f971f))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 3.1.17
+
+ - Update a dependency to the latest release.
+
+## 3.1.16
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. (#8522). ([45e27201](https://github.com/firebase/flutterfire/commit/45e27201480088fab71af60963001baeae61d80d))
+
 ## 3.1.15
 
  - Update a dependency to the latest release.
@@ -16,12 +30,12 @@
 
 ## 3.1.11
 
- - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/FirebaseExtended/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
- - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/FirebaseExtended/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
+ - **REFACTOR**: recreate ios, android, web and macOS folders for example app (#8255). ([cdae0613](https://github.com/firebase/flutterfire/commit/cdae0613a359da41013721f601c20169807d214f))
+ - **DOCS**: Fix method name typo in code documentation (#8291). ([7b4e06db](https://github.com/firebase/flutterfire/commit/7b4e06db305ff9f785a1bfcf1888fec1a53970c4))
 
 ## 3.1.10
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 3.1.9
 
@@ -33,7 +47,7 @@
 
 ## 3.1.7
 
- - **FIX**: Fix Android Firestore transaction crash when running in background caused by `null` `Activity`. (#7627). ([8d60d474](https://github.com/FirebaseExtended/flutterfire/commit/8d60d474438fccc5d6dcb41b840221ae385a853c))
+ - **FIX**: Fix Android Firestore transaction crash when running in background caused by `null` `Activity`. (#7627). ([8d60d474](https://github.com/firebase/flutterfire/commit/8d60d474438fccc5d6dcb41b840221ae385a853c))
 
 ## 3.1.6
 
@@ -41,7 +55,7 @@
 
 ## 3.1.5
 
- - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/FirebaseExtended/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
+ - **REFACTOR**: fix all `unnecessary_import` analyzer issues introduced with Flutter 2.8. ([7f0e82c9](https://github.com/firebase/flutterfire/commit/7f0e82c978a3f5a707dd95c7e9136a3e106ff75e))
 
 ## 3.1.4
 
@@ -317,7 +331,7 @@
 * Fixed issue #3210 (`Query.orderBy(FieldPath.documentId)` throws exception).
 * Fixed issue #3237 (`DocumentReference` not being parsed correctly).
 * Bump `cloud_firestore_web` dependency.
-* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/FirebaseExtended/flutterfire/pull/3251)
+* Bump `cloud_firestore_platform_interface` dependency to fix 2 race conditions. [(#3251)](https://github.com/firebase/flutterfire/pull/3251)
 
 ## 0.14.0
 

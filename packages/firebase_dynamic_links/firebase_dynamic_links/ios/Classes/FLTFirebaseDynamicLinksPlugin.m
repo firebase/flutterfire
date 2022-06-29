@@ -89,6 +89,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     [[FLTFirebasePluginRegistry sharedInstance] registerFirebasePlugin:self];
     _binaryMessenger = messenger;
     _channel = channel;
+    _initiated = NO;
   }
   return self;
 }
@@ -222,13 +223,18 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
 }
 
 - (void)getInitialLink:(FLTFirebaseMethodCallResult *)result {
-  _initiated = YES;
+  if (_initiated == YES) {
+    result.success(nil);
+    return;
+  }
+
   NSMutableDictionary *dict = getDictionaryFromDynamicLink(_initialLink);
   if (dict == nil && self.initialError != nil) {
     result.error(nil, nil, nil, self.initialError);
   } else {
     result.success(dict);
   }
+  _initiated = YES;
 }
 
 - (void)getDynamicLink:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -334,7 +340,7 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
     }
   }
 
-  if (_initialLink == nil && dynamicLink.url != nil) {
+  if (_initialLink == nil && _initiated == NO && dynamicLink.url != nil) {
     _initialLink = dynamicLink;
   }
 

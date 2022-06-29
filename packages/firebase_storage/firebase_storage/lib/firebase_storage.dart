@@ -16,7 +16,6 @@ import 'package:firebase_core_platform_interface/firebase_core_platform_interfac
     show FirebasePluginPlatform;
 import 'package:firebase_storage_platform_interface/firebase_storage_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 
 import 'src/utils.dart';
 

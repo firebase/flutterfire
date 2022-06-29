@@ -1,4 +1,4 @@
-[<img src="https://raw.githubusercontent.com/FirebaseExtended/flutterfire/master/resources/flutter_favorite.png" width="200" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
+[<img src="https://raw.githubusercontent.com/firebase/flutterfire/master/resources/flutter_favorite.png" width="200" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
 
 # Firebase Core for Flutter
 
@@ -14,15 +14,15 @@ To get started with FlutterFire, please [see the documentation](https://firebase
 
 ## Usage
 
-To use this plugin, please visit the [Core Usage documentation](https://firebase.flutter.dev/docs/core/usage)
+To use this plugin, please visit the [Core Usage documentation](https://firebase.google.com/docs/flutter/setup)
 
 ## Issues and feedback
 
-Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/FirebaseExtended/flutterfire/issues/new).
+Please file FlutterFire specific issues, bugs, or feature requests in our [issue tracker](https://github.com/firebase/flutterfire/issues/new).
 
-Plugin issues that are not specific to Flutterfire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
+Plugin issues that are not specific to FlutterFire can be filed in the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 
 To contribute a change to this plugin,
-please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md)
-and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
+please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
+and open a [pull request](https://github.com/firebase/flutterfire/pulls).
 

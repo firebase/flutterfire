@@ -7,7 +7,6 @@
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
-import 'firebase_interop.dart' as firebase_interop;
 import 'functions_interop.dart' as functions_interop;
 
 export 'functions_interop.dart' show HttpsCallableOptions;
@@ -16,9 +15,9 @@ export 'functions_interop.dart' show HttpsCallableOptions;
 Functions getFunctionsInstance(App app, [String? region]) {
   functions_interop.FunctionsJsImpl jsObject;
   if (region == null) {
-    jsObject = firebase_interop.functions(app.jsObject);
+    jsObject = functions_interop.getFunctions(app.jsObject);
   } else {
-    jsObject = firebase_interop.functions(app.jsObject).app.functions(region);
+    jsObject = functions_interop.getFunctions(app.jsObject, region);
   }
   return Functions.getInstance(jsObject);
 }
@@ -35,47 +34,51 @@ class Functions extends JsObjectWrapper<functions_interop.FunctionsJsImpl> {
 
   Functions get functions => getInstance(jsObject);
 
-  functions_interop.FunctionsAppJsImpl get app => jsObject.app;
+  AppJsImpl get app => jsObject.app;
 
   HttpsCallable httpsCallable(String name,
       [functions_interop.HttpsCallableOptions? options]) {
-    functions_interop.HttpsCallableJsImpl httpCallableImpl;
+    functions_interop.CustomFunction httpCallableImpl;
     if (options != null) {
-      httpCallableImpl = jsObject.httpsCallable(name, options);
+      httpCallableImpl =
+          functions_interop.httpsCallable(jsObject, name, options);
     } else {
-      httpCallableImpl = jsObject.httpsCallable(name);
+      httpCallableImpl = functions_interop.httpsCallable(jsObject, name);
     }
     return HttpsCallable.getInstance(httpCallableImpl);
   }
 
-  void useFunctionsEmulator(String url) => jsObject.useFunctionsEmulator(url);
+  void useFunctionsEmulator(String host, int port) =>
+      functions_interop.connectFunctionsEmulator(jsObject, host, port);
 }
 
-class HttpsCallable
-    extends JsObjectWrapper<functions_interop.HttpsCallableJsImpl> {
-  HttpsCallable._fromJsObject(functions_interop.HttpsCallableJsImpl jsObject)
+class HttpsCallable extends JsObjectWrapper<functions_interop.CustomFunction> {
+  HttpsCallable._fromJsObject(functions_interop.CustomFunction jsObject)
       : super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallable>();
 
   /// Creates a new HttpsCallable from a [jsObject].
-  static HttpsCallable getInstance(
-      functions_interop.HttpsCallableJsImpl jsObject) {
+  static HttpsCallable getInstance(functions_interop.CustomFunction jsObject) {
     return _expando[jsObject] ??= HttpsCallable._fromJsObject(jsObject);
   }
 
   Future<HttpsCallableResult> call([dynamic data]) =>
-      handleThenable(jsObject.call(data == null ? null : jsify(data)))
-          .then(HttpsCallableResult.getInstance);
+      handleThenable(jsObject.apply(null, [data])).then((result) {
+        return HttpsCallableResult.getInstance(
+            result as functions_interop.HttpsCallableResultJsImpl);
+      });
 }
 
 class HttpsCallableResult
     extends JsObjectWrapper<functions_interop.HttpsCallableResultJsImpl> {
   HttpsCallableResult._fromJsObject(
       functions_interop.HttpsCallableResultJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+      : _data = dartify(jsObject.data),
+        super.fromJsObject(jsObject);
 
   static final _expando = Expando<HttpsCallableResult>();
+  final dynamic _data;
 
   /// Creates a new HttpsCallableResult from a [jsObject].
   static HttpsCallableResult getInstance(
@@ -83,5 +86,7 @@ class HttpsCallableResult
     return _expando[jsObject] ??= HttpsCallableResult._fromJsObject(jsObject);
   }
 
-  dynamic get data => dartify(jsObject.data);
+  dynamic get data {
+    return _data;
+  }
 }

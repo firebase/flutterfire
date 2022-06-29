@@ -6,7 +6,7 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  cloud_firestore: ^3.1.15
+  cloud_firestore: ^3.1.18
   cloud_firestore_odm:
     path: ../../cloud_firestore_odm
   flutter:

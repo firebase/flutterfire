@@ -16,6 +16,7 @@ class Settings {
     this.host,
     this.sslEnabled,
     this.cacheSizeBytes,
+    this.ignoreUndefinedProperties = false,
   });
 
   /// Constant used to indicate the LRU garbage collection should be disabled.
@@ -44,13 +45,20 @@ class Settings {
   /// and can be set to [Settings.CACHE_SIZE_UNLIMITED] to disable garbage collection.
   final int? cacheSizeBytes;
 
+  /// Whether to skip nested properties that are set to undefined during object serialization.
+  /// If set to true, these properties are skipped and not written to Firestore. If set to false
+  /// or omitted, the SDK throws an exception when it encounters properties of type undefined.
+  /// Web only.
+  final bool ignoreUndefinedProperties;
+
   /// Returns the settings as a [Map]
   Map<String, dynamic> get asMap {
     return {
       'persistenceEnabled': persistenceEnabled,
       'host': host,
       'sslEnabled': sslEnabled,
-      'cacheSizeBytes': cacheSizeBytes
+      'cacheSizeBytes': cacheSizeBytes,
+      if (ignoreUndefinedProperties) 'ignoreUndefinedProperties': true,
     };
   }
 
@@ -59,12 +67,15 @@ class Settings {
     String? host,
     bool? sslEnabled,
     int? cacheSizeBytes,
+    bool? ignoreUndefinedProperties,
   }) =>
       Settings(
         persistenceEnabled: persistenceEnabled ?? this.persistenceEnabled,
         host: host ?? this.host,
         sslEnabled: sslEnabled ?? this.sslEnabled,
         cacheSizeBytes: cacheSizeBytes ?? this.cacheSizeBytes,
+        ignoreUndefinedProperties:
+            ignoreUndefinedProperties ?? this.ignoreUndefinedProperties,
       );
 
   @override
@@ -74,15 +85,17 @@ class Settings {
       other.persistenceEnabled == persistenceEnabled &&
       other.host == host &&
       other.sslEnabled == sslEnabled &&
-      other.cacheSizeBytes == cacheSizeBytes;
+      other.cacheSizeBytes == cacheSizeBytes &&
+      other.ignoreUndefinedProperties == ignoreUndefinedProperties;
 
   @override
-  int get hashCode => hashValues(
+  int get hashCode => Object.hash(
         runtimeType,
         persistenceEnabled,
         host,
         sslEnabled,
         cacheSizeBytes,
+        ignoreUndefinedProperties,
       );
 
   @override
