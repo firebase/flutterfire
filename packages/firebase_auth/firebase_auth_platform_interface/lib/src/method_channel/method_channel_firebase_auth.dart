@@ -553,6 +553,26 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
+  Future<UserCredentialPlatform> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    try {
+      Map<String, dynamic> data =
+          (await channel.invokeMapMethod<String, dynamic>(
+              'Auth#signInWithAuthProvider',
+              _withChannelDefaults({'signInProvider': provider.providerId})))!;
+
+      MethodChannelUserCredential userCredential =
+          MethodChannelUserCredential(this, data);
+
+      currentUser = userCredential.user;
+      return userCredential;
+    } catch (e, stack) {
+      convertPlatformException(e, stack);
+    }
+  }
+
+  @override
   Future<void> verifyPhoneNumber({
     required String phoneNumber,
     required PhoneVerificationCompleted verificationCompleted,

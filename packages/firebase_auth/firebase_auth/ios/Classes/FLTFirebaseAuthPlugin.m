@@ -46,10 +46,12 @@ NSString *const kErrCodeNoCurrentUser = @"no-current-user";
 NSString *const kErrMsgNoCurrentUser = @"No user currently signed in.";
 NSString *const kErrCodeInvalidCredential = @"invalid-credential";
 NSString *const kErrMsgInvalidCredential =
-    @"The supplied auth credential is malformed, has expired or is not currently supported.";
+    @"The supplied auth credential is malformed, has expired or is not "
+    @"currently supported.";
 
 @interface FLTFirebaseAuthPlugin ()
 @property(nonatomic, retain) NSObject<FlutterBinaryMessenger> *messenger;
+@property(strong, nonatomic) FIROAuthProvider *authProvider;
 @end
 
 @implementation FLTFirebaseAuthPlugin {
@@ -85,7 +87,8 @@ NSString *const kErrMsgInvalidCredential =
   [registrar addMethodCallDelegate:instance channel:channel];
 
 #if TARGET_OS_OSX
-  // TODO(Salakar): Publish does not exist on MacOS version of FlutterPluginRegistrar.
+  // TODO(Salakar): Publish does not exist on MacOS version of
+  // FlutterPluginRegistrar.
   // TODO(Salakar): addApplicationDelegate does not exist on MacOS version of
   // FlutterPluginRegistrar. (https://github.com/flutter/flutter/issues/41471)
 #else
@@ -133,7 +136,8 @@ NSString *const kErrMsgInvalidCredential =
         }
 
         if ([@"unknown" isEqualToString:code]) {
-          NSLog(@"FLTFirebaseAuth: An error occurred while calling method %@, errorOrNil => %@",
+          NSLog(@"FLTFirebaseAuth: An error occurred while calling method %@, "
+                @"errorOrNil => %@",
                 call.method, [error userInfo]);
         }
 
@@ -196,6 +200,8 @@ NSString *const kErrMsgInvalidCredential =
     [self useEmulator:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPasswordResetCode" isEqualToString:call.method]) {
     [self verifyPasswordResetCode:call.arguments withMethodCallResult:methodCallResult];
+  } else if ([@"Auth#signInWithAuthProvider" isEqualToString:call.method]) {
+    [self signInWithAuthProvider:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"Auth#verifyPhoneNumber" isEqualToString:call.method]) {
     [self verifyPhoneNumber:call.arguments withMethodCallResult:methodCallResult];
   } else if ([@"User#delete" isEqualToString:call.method]) {
@@ -435,7 +441,8 @@ NSString *const kErrMsgInvalidCredential =
                           underlyingError.userInfo[@"FIRAuthErrorUserInfoDeserializedResponseKey"];
 
                       if (firebaseDictionary != nil && firebaseDictionary[@"message"] != nil) {
-                        // error from firebase-ios-sdk is buried in underlying error.
+                        // error from firebase-ios-sdk is buried in underlying
+                        // error.
                         result.error(nil, firebaseDictionary[@"message"], nil, nil);
                       } else {
                         result.error(nil, nil, nil, error);
@@ -444,6 +451,57 @@ NSString *const kErrMsgInvalidCredential =
                       result.success(authResult);
                     }
                   }];
+}
+
+- (void)signInWithAuthProvider:(id)arguments
+          withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
+#if TARGET_OS_OSX
+  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+        @"MacOS platform.");
+  result.success(nil);
+#else
+  FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
+  self.authProvider = [FIROAuthProvider providerWithProviderID:arguments[@"signInProvider"]];
+
+  [self.authProvider
+      getCredentialWithUIDelegate:nil
+                       completion:^(FIRAuthCredential *_Nullable credential,
+                                    NSError *_Nullable error) {
+                         if (error) {
+                           result.error(kErrCodeInvalidCredential, kErrMsgInvalidCredential, nil,
+                                        nil);
+                           return;
+                         }
+                         if (credential) {
+                           [auth
+                               signInWithCredential:credential
+                                         completion:^(FIRAuthDataResult *authResult,
+                                                      NSError *error) {
+                                           if (error != nil) {
+                                             NSDictionary *userInfo = [error userInfo];
+                                             NSError *underlyingError =
+                                                 [userInfo objectForKey:NSUnderlyingErrorKey];
+
+                                             NSDictionary *firebaseDictionary =
+                                                 underlyingError.userInfo[@"FIRAuthErrorUserInfoDes"
+                                                                          @"erializedResponseKey"];
+
+                                             if (firebaseDictionary != nil &&
+                                                 firebaseDictionary[@"message"] != nil) {
+                                               // error from firebase-ios-sdk is
+                                               // buried in underlying error.
+                                               result.error(nil, firebaseDictionary[@"message"],
+                                                            nil, nil);
+                                             } else {
+                                               result.error(nil, nil, nil, error);
+                                             }
+                                           } else {
+                                             result.success(authResult);
+                                           }
+                                         }];
+                         }
+                       }];
+#endif
 }
 
 - (void)setLanguageCode:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
@@ -480,7 +538,8 @@ NSString *const kErrMsgInvalidCredential =
         [arguments[@"appVerificationDisabledForTesting"] boolValue];
   }
 #else
-  NSLog(@"FIRAuthSettings.appVerificationDisabledForTesting is not supported on MacOS.");
+  NSLog(@"FIRAuthSettings.appVerificationDisabledForTesting is not supported "
+        @"on MacOS.");
 #endif
 
   result.success(nil);
@@ -739,9 +798,10 @@ NSString *const kErrMsgInvalidCredential =
                     if (reloadError != nil) {
                       result.error(nil, nil, nil, reloadError);
                     } else {
-                      // Note: On other SDKs `unlinkFromProvider` returns an AuthResult
-                      // instance, whereas the iOS SDK currently does not, so we manualy
-                      // construct a Dart representation of one here.
+                      // Note: On other SDKs `unlinkFromProvider` returns an
+                      // AuthResult instance, whereas the iOS SDK currently
+                      // does not, so we manualy construct a Dart
+                      // representation of one here.
                       result.success(@{
                         @"additionalUserInfo" : [NSNull null],
                         @"authCredential" : [NSNull null],
@@ -837,7 +897,8 @@ NSString *const kErrMsgInvalidCredential =
                          }
                        }];
 #else
-  NSLog(@"Updating a users phone number via Firebase Authentication is only supported on the iOS "
+  NSLog(@"Updating a users phone number via Firebase Authentication is only "
+        @"supported on the iOS "
         @"platform.");
   result.success(nil);
 #endif
@@ -964,7 +1025,8 @@ NSString *const kErrMsgInvalidCredential =
 
 - (void)verifyPhoneNumber:(id)arguments withMethodCallResult:(FLTFirebaseMethodCallResult *)result {
 #if TARGET_OS_OSX
-  NSLog(@"The Firebase Phone Authentication provider is not supported on the MacOS platform.");
+  NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+        @"MacOS platform.");
   result.success(nil);
 #else
   FIRAuth *auth = [self getFIRAuthFromArguments:arguments];
@@ -1012,8 +1074,8 @@ NSString *const kErrMsgInvalidCredential =
   // code
   if ([error userInfo][FIRAuthErrorUserInfoNameKey] != nil) {
     // See [FIRAuthErrorCodeString] for list of codes.
-    // Codes are in the format "ERROR_SOME_NAME", converting below to the format required in Dart.
-    // ERROR_SOME_NAME -> SOME_NAME
+    // Codes are in the format "ERROR_SOME_NAME", converting below to the format
+    // required in Dart. ERROR_SOME_NAME -> SOME_NAME
     NSString *firebaseErrorCode = [error userInfo][FIRAuthErrorUserInfoNameKey];
     code = [firebaseErrorCode stringByReplacingOccurrencesOfString:@"ERROR_" withString:@""];
     // SOME_NAME -> SOME-NAME
@@ -1116,8 +1178,8 @@ NSString *const kErrMsgInvalidCredential =
 - (FIRAuthCredential *_Nullable)getFIRAuthCredentialFromArguments:(NSDictionary *)arguments {
   NSDictionary *credentialDictionary = arguments[kArgumentCredential];
 
-  // If the credential dictionary contains a token, it means a native one has been stored for later
-  // usage, so we'll attempt to retrieve it here.
+  // If the credential dictionary contains a token, it means a native one has
+  // been stored for later usage, so we'll attempt to retrieve it here.
   if (credentialDictionary[kArgumentToken] != nil &&
       ![credentialDictionary[kArgumentToken] isEqual:[NSNull null]]) {
     NSNumber *credentialHashCode = credentialDictionary[kArgumentToken];
@@ -1180,7 +1242,8 @@ NSString *const kErrMsgInvalidCredential =
         credentialWithVerificationID:verificationId
                     verificationCode:smsCode];
 #else
-    NSLog(@"The Firebase Phone Authentication provider is not supported on the MacOS platform.");
+    NSLog(@"The Firebase Phone Authentication provider is not supported on the "
+          @"MacOS platform.");
     return nil;
 #endif
   }
@@ -1228,7 +1291,8 @@ NSString *const kErrMsgInvalidCredential =
 
   return @{
     kArgumentProviderId : authCredential.provider,
-    // Note: "signInMethod" does not exist on iOS SDK, so using provider instead.
+    // Note: "signInMethod" does not exist on iOS SDK, so using provider
+    // instead.
     kArgumentSignInMethod : authCredential.provider,
     kArgumentToken : @([authCredential hash]),
   };
@@ -1251,7 +1315,8 @@ NSString *const kErrMsgInvalidCredential =
 }
 
 + (NSMutableDictionary *)getNSDictionaryFromUser:(FIRUser *)user {
-  // FIRUser inherits from FIRUserInfo, so we can re-use `getNSDictionaryFromUserInfo` method.
+  // FIRUser inherits from FIRUserInfo, so we can re-use
+  // `getNSDictionaryFromUserInfo` method.
   NSMutableDictionary *userData = [[self getNSDictionaryFromUserInfo:user] mutableCopy];
   NSMutableDictionary *metadata = [NSMutableDictionary dictionary];
 
