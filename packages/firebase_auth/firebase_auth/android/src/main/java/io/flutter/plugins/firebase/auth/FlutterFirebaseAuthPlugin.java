@@ -851,32 +851,32 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(List<MultiFactorInfo> hints) {
+  private List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> multiFactorInfoToPigeon(
+      List<MultiFactorInfo> hints) {
     List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> pigeonHints = new ArrayList<>();
     for (MultiFactorInfo info : hints) {
       if (info instanceof PhoneMultiFactorInfo) {
         pigeonHints.add(
-          new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-            .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
-            .setDisplayName(info.getDisplayName())
-            .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-            .setUid(info.getUid())
-            .setFactorId(info.getFactorId())
-            .build());
+            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                .setPhoneNumber(((PhoneMultiFactorInfo) info).getPhoneNumber())
+                .setDisplayName(info.getDisplayName())
+                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                .setUid(info.getUid())
+                .setFactorId(info.getFactorId())
+                .build());
 
       } else {
         pigeonHints.add(
-          new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
-            .setDisplayName(info.getDisplayName())
-            .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
-            .setUid(info.getUid())
-            .setFactorId(info.getFactorId())
-            .build());
+            new GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo.Builder()
+                .setDisplayName(info.getDisplayName())
+                .setEnrollmentTimestamp((double) info.getEnrollmentTimestamp())
+                .setUid(info.getUid())
+                .setFactorId(info.getFactorId())
+                .build());
       }
     }
     return pigeonHints;
   }
-
 
   private List<Map<String, Object>> multiFactorInfoToMap(List<MultiFactorInfo> hints) {
     List<Map<String, Object>> pigeonHints = new ArrayList<>();
@@ -1770,26 +1770,35 @@ public class FlutterFirebaseAuthPlugin
   }
 
   @Override
-  public void unenroll(@NonNull String appName, @Nullable String factorUid, GeneratedAndroidFirebaseAuth.Result<Void> result) {
+  public void unenroll(
+      @NonNull String appName,
+      @Nullable String factorUid,
+      GeneratedAndroidFirebaseAuth.Result<Void> result) {
     final MultiFactor multiFactor = getAppMultiFactor(appName, result);
 
-    multiFactor.unenroll(factorUid).addOnCompleteListener(task -> {
-      if (task.isSuccessful()) {
-        result.success(null);
-      } else {
-        result.error(task.getException());
-      }
-    });
+    multiFactor
+        .unenroll(factorUid)
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(null);
+              } else {
+                result.error(task.getException());
+              }
+            });
   }
 
   @Override
-  public void getEnrolledFactors(@NonNull String appName, GeneratedAndroidFirebaseAuth.Result<List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo>> result) {
+  public void getEnrolledFactors(
+      @NonNull String appName,
+      GeneratedAndroidFirebaseAuth.Result<List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo>>
+          result) {
     final MultiFactor multiFactor = getAppMultiFactor(appName, result);
 
-    final List<MultiFactorInfo> factors = multiFactor
-        .getEnrolledFactors();
+    final List<MultiFactorInfo> factors = multiFactor.getEnrolledFactors();
 
-    final List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> resultFactors = multiFactorInfoToPigeon(factors);
+    final List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo> resultFactors =
+        multiFactorInfoToPigeon(factors);
 
     result.success(resultFactors);
   }
