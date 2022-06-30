@@ -41,6 +41,12 @@ NSString *const kArgumentVerificationId = @"verificationId";
 NSString *const kArgumentSmsCode = @"smsCode";
 NSString *const kArgumentActionCodeSettings = @"actionCodeSettings";
 
+// MultiFactor
+NSString *const kArgumentMultiFactorHints = @"multiFactorHints";
+NSString *const kArgumentMultiFactorSessionId = @"multiFactorSessionId";
+NSString *const kArgumentMultiFactorResolverId = @"multiFactorResolverId";
+NSString *const kArgumentMultiFactorInfo = @"multiFactorInfo";
+
 // Manual error codes & messages.
 NSString *const kErrCodeNoCurrentUser = @"no-current-user";
 NSString *const kErrMsgNoCurrentUser = @"No user currently signed in.";
@@ -58,6 +64,15 @@ NSString *const kErrMsgInvalidCredential =
   // Used for caching credentials between Method Channel method calls.
   NSMutableDictionary<NSNumber *, FIRAuthCredential *> *_credentials;
 
+  // Map an app id to a map of user id to a MultiFactorUser object.
+  NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, FIRMultiFactor *> *> *_multiFactorUserMap;
+
+  // Map an id to a MultiFactorSession object.
+  NSMutableDictionary<NSString *, FIRMultiFactorSession *> *_multiFactorSessionMap;
+
+  // Map an id to a MultiFactorSession object.
+  NSMutableDictionary<NSString *, FIRMultiFactorResolver *> *multiFactorResolverMap;
+    
   NSObject<FlutterBinaryMessenger> *_binaryMessenger;
   NSMutableDictionary<NSString *, FlutterEventChannel *> *_eventChannels;
   NSMutableDictionary<NSString *, NSObject<FlutterStreamHandler> *> *_streamHandlers;
@@ -94,6 +109,8 @@ NSString *const kErrMsgInvalidCredential =
 #else
   [registrar publish:instance];
   [registrar addApplicationDelegate:instance];
+  MultiFactorUserHostApiSetup(registrar.messenger, instance);
+  MultiFactoResolverHostApiSetup(registrar.messenger, instance);
 #endif
 }
 
@@ -1035,9 +1052,31 @@ NSString *const kErrMsgInvalidCredential =
       stringWithFormat:@"%@/phone/%@", kFLTFirebaseAuthChannelName, [NSUUID UUID].UUIDString];
   FlutterEventChannel *channel = [FlutterEventChannel eventChannelWithName:name
                                                            binaryMessenger:_binaryMessenger];
+    
+    NSString *multiFactorSessionId = arguments[kArgumentMultiFactorSessionId];
+    FIRMultiFactorSession *multiFactorSession = nil;
+
+    if (multiFactorSessionId != nil) {
+      multiFactorSession = _multiFactorSessionMap[multiFactorSessionId];
+    }
+
+    NSString *multiFactorInfoId = arguments[kArgumentMultiFactorInfo];
+
+    FIRPhoneMultiFactorInfo *multiFactorInfo = nil;
+    if (multiFactorInfoId != nil) {
+     for (NSString *resolverId in multiFactorResolverMap) {
+       for (FIRMultiFactorInfo *info in multiFactorResolverMap[resolverId].hints) {
+         if (info.UID == multiFactorInfoId && [info class] == [FIRPhoneMultiFactorInfo class]) {
+             multiFactorInfo = (FIRPhoneMultiFactorInfo *)info;
+           break;
+         }
+       }
+     }
+   }
+
 
   FLTPhoneNumberVerificationStreamHandler *handler =
-      [[FLTPhoneNumberVerificationStreamHandler alloc] initWithAuth:auth arguments:arguments];
+    [[FLTPhoneNumberVerificationStreamHandler alloc] initWithAuth:auth arguments:arguments session:multiFactorSession factorInfo:multiFactorInfo ];
   [channel setStreamHandler:handler];
 
   [_eventChannels setObject:channel forKey:name];
@@ -1125,6 +1164,15 @@ NSString *const kErrMsgInvalidCredential =
 
   return auth;
 }
+
+- (FIRAuth *_Nullable)getFIRAuthFromAppName:(NSString *)appNameDart {
+  FIRApp *app = [FLTFirebasePlugin firebaseAppNamed:appNameDart];
+  FIRAuth *auth = [FIRAuth authWithApp:app];
+
+
+  return auth;
+}
+
 
 - (FIRActionCodeSettings *_Nullable)getFIRActionCodeSettingsFromArguments:
     (NSDictionary *)arguments {
@@ -1363,6 +1411,59 @@ NSString *const kErrMsgInvalidCredential =
     }
   }
 #endif
+}
+
+- (FIRMultiFactor *)getAppMultiFactor:(nonnull NSString *)appName {
+    FIRAuth *auth = [self getFIRAuthFromAppName:appName];
+    FIRUser *currentUser = auth.currentUser;
+    return currentUser.multiFactor;
+}
+
+- (void)enrollPhoneAppName:(nonnull NSString *)appName assertion:(nonnull PigeonPhoneMultiFactorAssertion *)assertion displayName:(nullable NSString *)displayName completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    FIRMultiFactor *multiFactor = [self getAppMultiFactor:appName];
+    
+    FIRPhoneAuthCredential *credential = [[FIRPhoneAuthProvider providerWithAuth:[self getFIRAuthFromAppName:appName]]
+      credentialWithVerificationID:[assertion verificationId]
+                                     verificationCode:[assertion verificationCode]];
+
+    FIRMultiFactorAssertion *multiFactorAssertion = [FIRPhoneMultiFactorGenerator assertionWithCredential:credential];
+
+
+    [multiFactor enrollWithAssertion:multiFactorAssertion
+      displayName:displayName
+      completion:^(NSError * _Nullable error) {
+        if (error == nil) {
+          completion(nil);
+        } else {
+          completion([FlutterError errorWithCode:@"enroll-failed"
+                                         message:error.localizedDescription
+                                         details:nil]);
+        }
+    }];
+
+}
+
+- (void)getEnrolledFactorsAppName:(nonnull NSString *)appName completion:(nonnull void (^)(NSArray<PigeonMultiFactorInfo *> * _Nullable, FlutterError * _Nullable))completion {
+    <#code#>
+}
+
+- (void)getSessionAppName:(nonnull NSString *)appName completion:(nonnull void (^)(PigeonMultiFactorSession * _Nullable, FlutterError * _Nullable))completion {
+    FIRMultiFactor *multiFactor = [self getAppMultiFactor:appName];
+    [multiFactor getSessionWithCompletion:^(FIRMultiFactorSession * _Nullable session, NSError * _Nullable error) {
+        NSString *UUID = [[NSUUID UUID] UUIDString];
+        self->_multiFactorSessionMap[UUID] = session;
+        
+        PigeonMultiFactorSession* pigeonSession = [PigeonMultiFactorSession makeWithId:UUID];
+        completion(pigeonSession, nil);
+    }];
+}
+
+- (void)unenrollAppName:(nonnull NSString *)appName factorUid:(nullable NSString *)factorUid completion:(nonnull void (^)(FlutterError * _Nullable))completion {
+    <#code#>
+}
+
+- (void)resolveSignInResolverId:(nonnull NSString *)resolverId assertion:(nonnull PigeonPhoneMultiFactorAssertion *)assertion completion:(nonnull void (^)(NSDictionary<NSString *,id> * _Nullable, FlutterError * _Nullable))completion {
+    <#code#>
 }
 
 @end

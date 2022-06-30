@@ -8,13 +8,17 @@
 @implementation FLTPhoneNumberVerificationStreamHandler {
   FIRAuth *_auth;
   NSString *_phoneNumber;
+    FIRMultiFactorSession *_session;
+    FIRPhoneMultiFactorInfo *_factorInfo;
 }
 
-- (instancetype)initWithAuth:(id)auth arguments:(NSDictionary *)arguments {
+- (instancetype)initWithAuth:(id)auth arguments:(NSDictionary *)arguments session:(FIRMultiFactorSession *) session factorInfo:(FIRPhoneMultiFactorInfo *) factorInfo {
   self = [super init];
   if (self) {
     _auth = auth;
     _phoneNumber = arguments[@"phoneNumber"];
+      _session = session;
+      _factorInfo = factorInfo;
   }
   return self;
 }
@@ -41,9 +45,16 @@
 
   // Try catch to capture 'missing URL scheme' error.
   @try {
-    [[FIRPhoneAuthProvider providerWithAuth:_auth] verifyPhoneNumber:_phoneNumber
-                                                          UIDelegate:nil
-                                                          completion:completer];
+      if (_factorInfo != nil) {
+          [[FIRPhoneAuthProvider providerWithAuth:_auth] verifyPhoneNumberWithMultiFactorInfo:_factorInfo UIDelegate:nil multiFactorSession:_session completion:completer];
+
+      } else {
+          [[FIRPhoneAuthProvider providerWithAuth:_auth] verifyPhoneNumber:_phoneNumber
+                                                                UIDelegate:nil
+                                                        multiFactorSession:_session
+                                                                completion:completer];
+
+      }
   } @catch (NSException *exception) {
     events(@{
       @"name" : @"Auth#phoneVerificationFailed",
