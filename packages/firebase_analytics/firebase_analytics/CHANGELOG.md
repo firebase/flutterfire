@@ -1,3 +1,7 @@
+## 9.1.11
+
+ - Update a dependency to the latest release.
+
 ## 9.1.10
 
  - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. (#8583). ([94310ab3](https://github.com/firebase/flutterfire/commit/94310ab338ad1bf34174b19d1d5db8a856e8d161))
