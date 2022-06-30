@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import 'package:drive/drive.dart';
+import 'package:flutter/foundation.dart';
 import '../firebase_default_options.dart';
 
 void setupTests() {
@@ -78,7 +79,7 @@ void setupTests() {
           );
         },
         // iOS v9.2.0 hangs on ci if `fetchAndActivate()` is used, but works locally.
-        skip: Platform.isIOS,
+        skip: defaultTargetPlatform == TargetPlatform.iOS,
       );
 
       test('settings', () async {
