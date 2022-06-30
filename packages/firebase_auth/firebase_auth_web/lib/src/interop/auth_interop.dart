@@ -16,6 +16,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 external AuthJsImpl getAuth([AppJsImpl? app]);
 
 @JS()
+external AuthJsImpl initializeAuth(AppJsImpl app, dynamic debugErrorMap);
+
+@JS('debugErrorMap')
+external Map get debugErrorMap;
+
+@JS()
 external PromiseJsImpl<void> applyActionCode(AuthJsImpl auth, String oobCode);
 
 @JS()

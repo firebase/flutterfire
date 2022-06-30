@@ -131,21 +131,10 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, 'email-already-in-use');
-          if (kIsWeb) {
-            expect(
-              e.message,
-              equals(
-                'Error',
-              ),
-            );
-          } else {
-            expect(
-              e.message,
-              equals(
-                'The email address is already in use by another account.',
-              ),
-            );
-          }
+          expect(
+            e.message,
+            'The email address is already in use by another account.',
+          );
 
           // clean up
           await FirebaseAuth.instance.currentUser!.delete();
@@ -293,22 +282,12 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('user-mismatch'));
-          if (kIsWeb) {
-            expect(
-              e.message,
-              equals(
-                'Error',
-              ),
-            );
-          } else {
-            expect(
-              e.message,
-              equals(
-                'The supplied credentials do not correspond to the previously signed in user.',
-              ),
-            );
-          }
-
+          expect(
+            e.message,
+            equals(
+              'The supplied credentials do not correspond to the previously signed in user.',
+            ),
+          );
           await FirebaseAuth.instance.currentUser!.delete(); //clean up
           return;
         } catch (e) {
@@ -391,22 +370,12 @@ void setupTests() {
         } on FirebaseAuthException catch (e) {
           // Assertions
           expect(e.code, equals('wrong-password'));
-          if (kIsWeb) {
-            expect(
-              e.message,
-              equals(
-                'Error',
-              ),
-            );
-          } else {
-            expect(
-              e.message,
-              equals(
-                'The password is invalid or the user does not have a password.',
-              ),
-            );
-          }
-
+          expect(
+            e.message,
+            equals(
+              'The password is invalid or the user does not have a password.',
+            ),
+          );
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException');
@@ -511,22 +480,10 @@ void setupTests() {
           await FirebaseAuth.instance.currentUser!.unlink('invalid');
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          if (kIsWeb) {
-            expect(
-              e.message,
-              equals(
-                'Error',
-              ),
-            );
-          } else {
-            expect(
-              e.message,
-              equals(
-                'User was not linked to an account with the given provider.',
-              ),
-            );
-          }
-
+          expect(
+            e.message,
+            'User was not linked to an account with the given provider.',
+          );
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException error');
@@ -544,22 +501,10 @@ void setupTests() {
               .unlink(EmailAuthProvider.PROVIDER_ID);
         } on FirebaseAuthException catch (e) {
           expect(e.code, 'no-such-provider');
-          if (kIsWeb) {
-            expect(
-              e.message,
-              equals(
-                'Error',
-              ),
-            );
-          } else {
-            expect(
-              e.message,
-              equals(
-                'User was not linked to an account with the given provider.',
-              ),
-            );
-          }
-
+          expect(
+            e.message,
+            'User was not linked to an account with the given provider.',
+          );
           return;
         } catch (e) {
           fail('should have thrown an FirebaseAuthException error');
@@ -830,8 +775,8 @@ void setupTests() {
             FirebaseAuth.instance.currentUser!.photoURL,
             isNull,
           );
-          // setting `photoURL` on web throws an error
         },
+        // setting `photoURL` on web throws an error
         skip: kIsWeb,
       );
     });
