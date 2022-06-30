@@ -63,10 +63,11 @@ external PromiseJsImpl<void> update(
   ReferenceJsImpl ref,
   Object values,
 );
-
+// TODO - new API for implementing post web v9 SDK integration
 @JS()
 external void forceLongPolling();
 
+// TODO - new API for implementing post web v9 SDK integration
 @JS()
 external void forceWebSockets();
 
