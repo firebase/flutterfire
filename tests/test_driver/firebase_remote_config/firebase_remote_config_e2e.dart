@@ -46,7 +46,9 @@ void setupTests() {
             RemoteConfigFetchStatus.success,
           );
           expect(
-              FirebaseRemoteConfig.instance.lastFetchTime.isAfter(mark), true);
+            FirebaseRemoteConfig.instance.lastFetchTime.isAfter(mark),
+            true,
+          );
           expect(
             FirebaseRemoteConfig.instance.getString('string'),
             'flutterfire',
