@@ -122,7 +122,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
 
         if (service.name == 'installations') {
           return _injectSrcScript(
-              'https://storage.googleapis.com/static.invertase.io/firebasejs/9.8.4/firebase-installations.js',
+              'https://storage.googleapis.com/static.invertase.io/firebasejs/9.8.4/installations.js',
               'firebase_${service.override ?? service.name}');
         }
 
