@@ -5,11 +5,11 @@ part of firebase.database_interop;
 abstract class DataSnapshotJsImpl {
   external String get key;
 
-  external set key(String s);
-
   external ReferenceJsImpl get ref;
 
-  external set ref(ReferenceJsImpl r);
+  external dynamic /* string | num | null*/ get priority;
+
+  external int get size;
 
   external DataSnapshotJsImpl child(String path);
 
@@ -25,9 +25,7 @@ abstract class DataSnapshotJsImpl {
 
   external bool hasChildren();
 
-  external int numChildren();
+  external Object toJSON();
 
   external dynamic val();
-
-  external Object toJSON();
 }
