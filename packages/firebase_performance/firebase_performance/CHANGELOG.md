@@ -1,3 +1,7 @@
+## 0.8.1
+
+ - **FEAT**: Bump Firebase iOS SDK to `9.2.0` (#8594). ([79610162](https://github.com/firebase/flutterfire/commit/79610162460b8877f3bc727464a7065106f08079))
+
 ## 0.8.0+14
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8737). ([5d5d4d21](https://github.com/firebase/flutterfire/commit/5d5d4d213233158971d7cb896a250d050e95e1a6))

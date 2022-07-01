@@ -1,3 +1,7 @@
+## 2.8.3
+
+ - Update a dependency to the latest release.
+
 ## 2.8.2
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8731). ([c534eb04](https://github.com/firebase/flutterfire/commit/c534eb045a2ced454fdc803d438c3cd0f0b8097a))
