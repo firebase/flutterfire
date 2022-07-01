@@ -13,7 +13,7 @@ environment:
 
 dependencies:
   firebase_core: ^1.10.0
-  firebase_core_platform_interface: ^4.4.1
+  firebase_core_platform_interface: ^4.4.2
   firebase_in_app_messaging_platform_interface: ^0.2.1+9
   flutter:
     sdk: flutter
