@@ -1,3 +1,7 @@
+## 1.0.0-dev.20
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.19
 
  - **FEAT**: add whereDocumentId/orderByDocumentId (#8935). ([3769bcca](https://github.com/firebase/flutterfire/commit/3769bccadedc2c12228ec51dfb48561a23055370))

@@ -1,3 +1,7 @@
+## 0.4.2+2
+
+ - Update a dependency to the latest release.
+
 ## 0.4.2+1
 
  - **FIX**: migrate flutterfire_ui to flutter v3 (#8949). ([528f8eae](https://github.com/firebase/flutterfire/commit/528f8eae3d138493dfba8532ec00196e39b90c49))
