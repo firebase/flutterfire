@@ -1,3 +1,7 @@
+## 0.1.1+1
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
 ## 0.1.1
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8728). ([05a1a75b](https://github.com/firebase/flutterfire/commit/05a1a75bce84c1c73547485fe406ec430aefdf40))
