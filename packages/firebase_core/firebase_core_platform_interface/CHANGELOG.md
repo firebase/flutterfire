@@ -1,3 +1,7 @@
+## 4.4.2
+
+ - Manually release to fix last release.
+
 ## 4.4.1
 
  - **REFACTOR**: migrate from hash* to Object.hash* (#8797). ([3dfc0997](https://github.com/firebase/flutterfire/commit/3dfc0997050ee4351207c355b2c22b46885f971f))
