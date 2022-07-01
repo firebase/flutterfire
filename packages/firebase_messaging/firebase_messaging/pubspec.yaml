@@ -14,7 +14,7 @@ environment:
 
 dependencies:
   firebase_core: ^1.10.0
-  firebase_core_platform_interface: ^4.4.1
+  firebase_core_platform_interface: ^4.4.2
   firebase_messaging_platform_interface: ^3.5.3
   firebase_messaging_web: ^2.4.3
   flutter:
