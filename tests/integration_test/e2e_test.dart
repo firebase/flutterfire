@@ -11,6 +11,7 @@ import 'firebase_app_installations/firebase_app_installations_e2e_test.dart'
 import 'firebase_analytics/firebase_analytics_e2e_test.dart'
     as firebase_analytics;
 import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
+import 'firebase_auth/firebase_auth_e2e_test.dart' as firebase_auth;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -20,5 +21,6 @@ void main() {
     firebase_app_installations.main();
     firebase_analytics.main();
     firebase_core.main();
+    firebase_auth.main();
   });
 }
