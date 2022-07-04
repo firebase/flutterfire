@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_odm_example/integration.dart';
 import 'package:cloud_firestore_odm_example/movie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -362,6 +363,147 @@ void main() {
             querySnap.docs,
             [
               isA<MovieQueryDocumentSnapshot>().having((d) => d.id, 'id', 'B'),
+            ],
+          );
+        });
+      });
+
+      group('where', () {
+        test('supports field renaming', () async {
+          final collection =
+              await initializeTest(AdvancedJsonCollectionReference());
+
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Doe'));
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Smith'));
+          await collection
+              .add(AdvancedJson(firstName: 'Mike', lastName: 'Doe'));
+
+          expect(
+            await collection.reference
+                .get()
+                .then((value) => value.docs.map((e) => e.data())),
+            [
+              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
+              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
+              {'first_name': 'John', 'LAST_NAME': 'Doe'},
+            ],
+          );
+
+          expect(
+            await collection
+                .whereFirstName(isEqualTo: 'John')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'John', lastName: 'Smith'),
+            ],
+          );
+          expect(
+            await collection
+                .whereLastName(isEqualTo: 'Doe')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
+            ],
+          );
+        });
+      });
+
+      group('orderBy', () {
+        test('supports field renaming', () async {
+          final collection =
+              await initializeTest(AdvancedJsonCollectionReference());
+
+          await collection.add(AdvancedJson(firstName: 'A', lastName: 'A'));
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Doe'));
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Smith'));
+          await collection
+              .add(AdvancedJson(firstName: 'Mike', lastName: 'Doe'));
+
+          expect(
+            await collection.reference
+                .get()
+                .then((value) => value.docs.map((e) => e.data())),
+            [
+              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
+              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
+              {'first_name': 'John', 'LAST_NAME': 'Doe'},
+            ],
+          );
+
+          expect(
+            await collection
+                .orderByFirstName(startAt: 'John')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'John', lastName: 'Smith'),
+              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
+            ],
+          );
+          expect(
+            await collection
+                .orderByLastName(startAt: 'Doe')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
+              AdvancedJson(firstName: 'John', lastName: 'Smith'),
+            ],
+          );
+        });
+      });
+
+      group('where', () {
+        test('supports field renaming', () async {
+          final collection =
+              await initializeTest(AdvancedJsonCollectionReference());
+
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Doe'));
+          await collection
+              .add(AdvancedJson(firstName: 'John', lastName: 'Smith'));
+          await collection
+              .add(AdvancedJson(firstName: 'Mike', lastName: 'Doe'));
+
+          expect(
+            await collection.reference
+                .get()
+                .then((value) => value.docs.map((e) => e.data())),
+            [
+              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
+              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
+              {'first_name': 'John', 'LAST_NAME': 'Doe'},
+            ],
+          );
+
+          expect(
+            await collection
+                .whereFirstName(isEqualTo: 'John')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'John', lastName: 'Smith'),
+            ],
+          );
+          expect(
+            await collection
+                .whereLastName(isEqualTo: 'Doe')
+                .get()
+                .then((value) => value.docs.map((e) => e.data)),
+            [
+              AdvancedJson(firstName: 'John', lastName: 'Doe'),
+              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
             ],
           );
         });

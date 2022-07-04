@@ -322,13 +322,18 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                   f.type.isPrimitiveList,
               // TODO filter list other than LIst<string|bool|num>
             )
+            .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
+            final key = '"${e.name}"';
+
             return QueryingField(
               e.name,
               e.type,
               updatable: true,
-              field: '"${e.name}"',
+              field: hasJsonSerializable
+                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]'
+                  : key,
             );
           },
         ).toList(),
@@ -370,6 +375,12 @@ const _sentinel = _Sentinel();
   void parseGlobalData(LibraryElement library) {}
 }
 
+extension on String {
+  String get public {
+    return startsWith('_') ? substring(1) : this;
+  }
+}
+
 extension on DartType {
   bool get isPrimitiveList {
     if (!isDartCoreList) return false;
@@ -381,5 +392,21 @@ extension on DartType {
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
         generic.isDynamic;
+  }
+}
+
+extension on FieldElement {
+  bool isJsonIgnored() {
+    const checker = TypeChecker.fromRuntime(JsonKey);
+    final jsonKeys = checker.annotationsOf(this);
+
+    for (final jsonKey in jsonKeys) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue();
+      if (ignore ?? false) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
