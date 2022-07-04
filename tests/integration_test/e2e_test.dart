@@ -11,6 +11,8 @@ import 'firebase_app_installations/firebase_app_installations_e2e_test.dart'
 import 'firebase_analytics/firebase_analytics_e2e_test.dart'
     as firebase_analytics;
 import 'firebase_core/firebase_core_e2e_test.dart' as firebase_core;
+import 'firebase_in_app_messaging/firebase_in_app_messaging_e2e_test.dart'
+    as firebase_in_app_messaging;
 import 'firebase_crashlytics/firebase_crashlytics_e2e_test.dart'
     as firebase_crashlytics;
 import 'firebase_auth/firebase_auth_e2e_test.dart' as firebase_auth;
@@ -23,6 +25,7 @@ void main() {
     firebase_app_installations.main();
     firebase_analytics.main();
     firebase_core.main();
+    firebase_in_app_messaging.main();
     firebase_crashlytics.main();
     firebase_auth.main();
   });
