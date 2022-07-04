@@ -71,8 +71,12 @@ start the activity with this intent filter to handle the link.
     1.  On the Signing & Capabilities page, ensure your Team is registered, and
         your Provisioning Profile is set.
 
-    1.  Add the domain you created in the Firebase console to the Associated
-        Domains, prefixed with `applinks:` (for example, `applinks:example.page.link`).
+    1.  On the Signing & Capabilities page, enable **Associated Domains** and
+        add the following to the Associated Domains list:
+        
+        ```
+        applinks:example.page.link
+        ```
 
     1.  On the Info page, add a URL Type to your project. Set the URL Schemes
         field to your app's bundle ID. (The Identifier can be `Bundle ID` or
