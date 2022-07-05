@@ -59,7 +59,7 @@ class Settings {
       'host': host,
       'sslEnabled': sslEnabled,
       'cacheSizeBytes': cacheSizeBytes,
-      if (ignoreUndefinedProperties) 'ignoreUndefinedProperties': true,
+      if (kIsWeb) 'ignoreUndefinedProperties': ignoreUndefinedProperties,
     };
   }
 
