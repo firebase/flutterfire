@@ -68,6 +68,36 @@ class FakeCollectionReference<Value>
   QueryReference<FakeQuerySnapshot<Value>> limitToLast(int limit) {
     throw UnimplementedError();
   }
+
+  @override
+  QueryReference<FakeQuerySnapshot<Value>> orderByDocumentId({
+    bool? descending,
+    String? startAt,
+    String? startAfter,
+    String? endAt,
+    String? endBefore,
+    QuerySnapshot<FakeQuerySnapshot<Value>>? startAtDocument,
+    QuerySnapshot<FakeQuerySnapshot<Value>>? endAtDocument,
+    QuerySnapshot<FakeQuerySnapshot<Value>>? endBeforeDocument,
+    QuerySnapshot<FakeQuerySnapshot<Value>>? startAfterDocument,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  QueryReference<FakeQuerySnapshot<Value>> whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    throw UnimplementedError();
+  }
 }
 
 class FakeQuerySnapshot<Value> extends FirestoreQuerySnapshot {

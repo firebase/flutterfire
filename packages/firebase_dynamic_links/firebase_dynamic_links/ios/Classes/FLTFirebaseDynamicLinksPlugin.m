@@ -128,6 +128,17 @@ static NSDictionary *getDictionaryFromNSError(NSError *error) {
       code = errorDetails[kCode];
       message = errorDetails[kMessage];
       details = errorDetails;
+
+      if (errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey] != nil) {
+        // This stops an uncaught type cast exception in dart
+        NSMutableDictionary *temp = [errorDetails[@"additionalData"] mutableCopy];
+        [temp removeObjectForKey:NSLocalizedFailureReasonErrorKey];
+        details = temp;
+        // provides a useful message to the user. e.g. "Universal link URL could not be parsed".
+        if ([message containsString:@"unknown error"]) {
+          message = errorDetails[@"additionalData"][NSLocalizedFailureReasonErrorKey];
+        }
+      }
     } else {
       details = @{
         kCode : code,

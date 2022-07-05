@@ -69,6 +69,14 @@ class EmailVerificationScreen extends StatelessWidget {
   }
 }
 
+/// This allows a value of type T or T?
+/// to be treated as a value of type T?.
+///
+/// We use this so that APIs that have become
+/// non-nullable can still be used with `!` and `?`
+/// to support older versions of the API as well.
+T? _ambiguate<T>(T? value) => value;
+
 class _EmailVerificationScreenContent extends StatefulWidget {
   final FirebaseAuth? auth;
   final ActionCodeSettings? actionCodeSettings;
@@ -93,8 +101,8 @@ class __EmailVerificationScreenContentState
 
   @override
   void initState() {
-    // ignore: unnecessary_non_null_assertion
-    SchedulerBinding.instance!.addPostFrameCallback(_sendEmailVerification);
+    _ambiguate(SchedulerBinding.instance)!
+        .addPostFrameCallback(_sendEmailVerification);
     super.initState();
   }
 

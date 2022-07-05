@@ -38,42 +38,41 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCdRjCVZlhrq72RuEklEyyxYlBRCYhI2Sw',
-    appId: '1:406099696497:android:0f3f7bfe78b8b7103574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:3d7b3d90894e689eac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+    storageBucket: 'react-native-firebase-testing.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
-    appId: '1:406099696497:ios:1d042a17c4dd64323574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:3d7b3d90894e689eac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+    storageBucket: 'react-native-firebase-testing.appspot.com',
     androidClientId:
-        '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
+        '448618578101-velutq65ok2dr5ohh0oi1q62irr920ss.apps.googleusercontent.com',
     iosClientId:
-        '406099696497-epk7902e2mb4pj4i4gcotk4q7dp2i9h3.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.crashlytics.example',
+        '448618578101-54jhd806d0tr4vkgode0b4fi8iruvjpn.apps.googleusercontent.com',
+    iosBundleId:
+        'io.flutter.plugins.firebase.crashlytics.firebaseCrashlyticsExample',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDooSUGSf63Ghq02_iIhtnmwMDs4HlWS6c',
-    appId: '1:406099696497:ios:1d042a17c4dd64323574d0',
-    messagingSenderId: '406099696497',
-    projectId: 'flutterfire-e2e-tests',
-    databaseURL:
-        'https://flutterfire-e2e-tests-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'flutterfire-e2e-tests.appspot.com',
+    apiKey: 'AIzaSyAHAsf51D0A407EklG1bs-5wA7EbyfNFg0',
+    appId: '1:448618578101:ios:3d7b3d90894e689eac3efc',
+    messagingSenderId: '448618578101',
+    projectId: 'react-native-firebase-testing',
+    databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
+    storageBucket: 'react-native-firebase-testing.appspot.com',
     androidClientId:
-        '406099696497-tvtvuiqogct1gs1s6lh114jeps7hpjm5.apps.googleusercontent.com',
+        '448618578101-velutq65ok2dr5ohh0oi1q62irr920ss.apps.googleusercontent.com',
     iosClientId:
-        '406099696497-epk7902e2mb4pj4i4gcotk4q7dp2i9h3.apps.googleusercontent.com',
-    iosBundleId: 'io.flutter.plugins.firebase.crashlytics.example',
+        '448618578101-54jhd806d0tr4vkgode0b4fi8iruvjpn.apps.googleusercontent.com',
+    iosBundleId:
+        'io.flutter.plugins.firebase.crashlytics.firebaseCrashlyticsExample',
   );
 }
