@@ -1466,10 +1466,10 @@ abstract class CommentQuery implements QueryReference<CommentQuerySnapshot> {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    CommentDocumentSnapshot? startAtDocument,
+    CommentDocumentSnapshot? endAtDocument,
+    CommentDocumentSnapshot? endBeforeDocument,
+    CommentDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].

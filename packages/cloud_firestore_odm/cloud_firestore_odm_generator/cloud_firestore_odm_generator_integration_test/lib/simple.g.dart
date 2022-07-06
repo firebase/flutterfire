@@ -242,10 +242,10 @@ abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -875,10 +875,10 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -1844,10 +1844,10 @@ abstract class SplitFileModelQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -2361,10 +2361,10 @@ abstract class EmptyModelQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -2894,10 +2894,10 @@ abstract class OptionalJsonQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -3517,10 +3517,10 @@ abstract class MixedJsonQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -4168,10 +4168,10 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -4902,10 +4902,10 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -5638,10 +5638,10 @@ abstract class AsCamelCaseQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -6282,10 +6282,10 @@ abstract class CustomSubNameQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -6918,10 +6918,10 @@ abstract class ExplicitPathQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
@@ -7562,10 +7562,10 @@ abstract class ExplicitSubPathQuery
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].

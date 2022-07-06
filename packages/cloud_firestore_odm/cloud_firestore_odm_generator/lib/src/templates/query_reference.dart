@@ -41,10 +41,10 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
     Object? startAfter,
     Object? endAt,
     Object? endBefore,
-    MovieDocumentSnapshot? startAtDocument,
-    MovieDocumentSnapshot? endAtDocument,
-    MovieDocumentSnapshot? endBeforeDocument,
-    MovieDocumentSnapshot? startAfterDocument,
+    ${data.documentSnapshotName}? startAtDocument,
+    ${data.documentSnapshotName}? endAtDocument,
+    ${data.documentSnapshotName}? endBeforeDocument,
+    ${data.documentSnapshotName}? startAfterDocument,
   });
 
   /// Perform a where query based on a [FieldPath].
