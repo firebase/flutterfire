@@ -5,6 +5,8 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_performance_platform_interface/firebase_performance_platform_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 
 import 'src/trace.dart';
 import 'src/interop/performance.dart' as performance_interop;
@@ -20,9 +22,19 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
   /// Instance of Performance from the web plugin.
   performance_interop.Performance? _webPerformance;
 
+  /// Keep settings so we can pass to Performance instance.
+  performance_interop.PerformanceSettings? _settings;
+
   /// Lazily initialize [_webRemoteConfig] on first method call
   performance_interop.Performance get _delegate {
-    return _webPerformance ??= performance_interop.getPerformanceInstance();
+    if (_settings == null) {
+      return _webPerformance ??= performance_interop.getPerformanceInstance();
+    }
+
+    return _webPerformance = performance_interop.getPerformanceInstance(
+      core_interop.app(app.name),
+      _settings,
+    );
   }
 
   /// Builds an instance of [FirebasePerformanceWeb]
@@ -53,12 +65,16 @@ class FirebasePerformanceWeb extends FirebasePerformancePlatform {
 
   @override
   Future<bool> isPerformanceCollectionEnabled() async {
-    return _delegate.dataCollectionEnabled;
+    // Default setting for "dataCollectionEnabled" is `true`. See https://github.com/firebase/firebase-js-sdk/blob/master/packages/performance/src/services/settings_service.ts#L27
+    return Future.value(
+      _settings == null ? true : _settings!.dataCollectionEnabled,
+    );
   }
 
   @override
   Future<void> setPerformanceCollectionEnabled(bool enabled) async {
-    _delegate.setPerformanceCollection(enabled);
+    // TODO - "instrumentationEnabled" is also a setting property on web to be implemented.
+    _settings = performance_interop.PerformanceSettings.getInstance(enabled);
   }
 
   @override

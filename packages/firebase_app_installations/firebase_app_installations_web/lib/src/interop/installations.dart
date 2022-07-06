@@ -7,15 +7,14 @@ import 'dart:async';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
-import 'firebase_interop.dart' as firebase_interop;
 import 'installations_interop.dart' as installations_interop;
 
 export 'installations_interop.dart';
 
 Installations getInstallationsInstance([App? app]) {
   return Installations.getInstance(app != null
-      ? firebase_interop.installations(app.jsObject)
-      : firebase_interop.installations());
+      ? installations_interop.getInstallations(app.jsObject)
+      : installations_interop.getInstallations());
 }
 
 class Installations
@@ -32,12 +31,14 @@ class Installations
       installations_interop.InstallationsJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  Future<void> delete() => handleThenable(jsObject.delete());
+  Future<void> delete() =>
+      handleThenable(installations_interop.deleteInstallations(jsObject));
 
-  Future<String> getId() => handleThenable(jsObject.getId());
+  Future<String> getId() =>
+      handleThenable(installations_interop.getId(jsObject));
 
   Future<String> getToken([bool forceRefresh = false]) =>
-      handleThenable(jsObject.getToken(forceRefresh));
+      handleThenable(installations_interop.getToken(jsObject, forceRefresh));
 
   Func0? _onIdChangedUnsubscribe;
 
@@ -51,7 +52,8 @@ class Installations
 
       void startListen() {
         assert(_onIdChangedUnsubscribe == null);
-        _onIdChangedUnsubscribe = jsObject.onIdChange(wrapper);
+        _onIdChangedUnsubscribe =
+            installations_interop.onIdChange(jsObject, wrapper);
       }
 
       void stopListen() {

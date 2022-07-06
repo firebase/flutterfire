@@ -14,7 +14,8 @@ export 'app.dart';
 export 'app_interop.dart';
 export 'core_interop.dart';
 
-List<App> get apps => firebase_interop.apps
+List<App> get apps => firebase_interop
+    .getApps()
     // explicitly typing the param as dynamic to work-around
     // https://github.com/dart-lang/sdk/issues/33537
     // ignore: unnecessary_lambdas
@@ -49,11 +50,10 @@ App initializeApp({
       name,
     ),
   );
-  // TODO if error - firebase not loaded?
 }
 
 App app([String? name]) {
   return App.getInstance(
-    name != null ? firebase_interop.app(name) : firebase_interop.app(),
+    name != null ? firebase_interop.getApp(name) : firebase_interop.getApp(),
   );
 }

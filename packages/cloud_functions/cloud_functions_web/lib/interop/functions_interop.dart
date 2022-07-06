@@ -5,7 +5,7 @@
 
 // ignore_for_file: avoid_unused_constructor_parameters, non_constant_identifier_names, public_member_api_docs
 
-@JS('firebase.functions')
+@JS('firebase_functions')
 library firebase_interop.functions;
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
@@ -13,9 +13,21 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
 
 @JS()
-abstract class FunctionsAppJsImpl extends AppJsImpl {
-  external FunctionsJsImpl functions(String region);
-}
+external FunctionsJsImpl getFunctions([AppJsImpl? app, String? regionOrDomain]);
+
+@JS()
+external void connectFunctionsEmulator(
+    FunctionsJsImpl functions, String host, int port);
+
+@JS()
+external CustomFunction httpsCallable(FunctionsJsImpl functions, String name,
+    [HttpsCallableOptions? options]);
+
+//TODO - implement once web v9 SDK lands
+@JS()
+external CustomFunction httpsCallableFromURL(
+    FunctionsJsImpl functions, String url,
+    [HttpsCallableOptions? options]);
 
 /// The Cloud Functions for Firebase service interface.
 ///
@@ -23,19 +35,9 @@ abstract class FunctionsAppJsImpl extends AppJsImpl {
 /// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.
 @JS('Functions')
 abstract class FunctionsJsImpl {
-  external FunctionsAppJsImpl get app;
-  external HttpsCallableJsImpl httpsCallable(String name,
-      [HttpsCallableOptions? options]);
-  external void useFunctionsEmulator(String url);
-}
-
-/// An HttpsCallable is a reference to a 'callable' http trigger
-/// in Google Cloud Functions.
-///
-/// See: <https://firebase.google.com/docs/reference/js/firebase.functions.Functions>.
-@JS('HttpsCallable')
-abstract class HttpsCallableJsImpl {
-  external PromiseJsImpl<HttpsCallableResultJsImpl> call(dynamic data);
+  external AppJsImpl get app;
+  external String? get customDomain;
+  external String get region;
 }
 
 /// An HttpsCallableOptions is an option to set timeout property
@@ -86,4 +88,9 @@ abstract class ErrorJsImpl {
   external set fileName(String f);
   external String get lineNumber;
   external set lineNumber(String l);
+}
+
+@JS('Function')
+class CustomFunction {
+  external PromiseJsImpl<dynamic> apply(dynamic thisArg, List<dynamic> args);
 }
