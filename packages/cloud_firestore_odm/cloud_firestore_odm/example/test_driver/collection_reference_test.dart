@@ -328,6 +328,45 @@ void main() {
         });
       });
 
+      group('documentId', () {
+        test('orderByDocumentId', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.doc('A').set(createMovie(title: 'title'));
+          await collection.doc('B').set(createMovie(title: 'title'));
+          await collection.doc('C').set(createMovie(title: 'title'));
+
+          final querySnap =
+              await collection.orderByDocumentId(startAt: 'B').get();
+
+          expect(
+            querySnap.docs,
+            [
+              isA<MovieQueryDocumentSnapshot>().having((d) => d.id, 'id', 'B'),
+              isA<MovieQueryDocumentSnapshot>().having((d) => d.id, 'id', 'C'),
+            ],
+          );
+        });
+
+        test('whereDocumentId', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.doc('A').set(createMovie(title: 'title'));
+          await collection.doc('B').set(createMovie(title: 'title'));
+          await collection.doc('C').set(createMovie(title: 'title'));
+
+          final querySnap =
+              await collection.whereDocumentId(isEqualTo: 'B').get();
+
+          expect(
+            querySnap.docs,
+            [
+              isA<MovieQueryDocumentSnapshot>().having((d) => d.id, 'id', 'B'),
+            ],
+          );
+        });
+      });
+
       group('startAt', () {
         test('supports values', () async {
           final collection = await initializeTest(MovieCollectionReference());

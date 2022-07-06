@@ -65,6 +65,10 @@ class FirebaseAnalytics extends FirebasePluginPlatform {
     return FirebaseAnalytics.instanceFor(app: defaultAppInstance);
   }
 
+  Future<bool> isSupported() {
+    return _delegate.isSupported();
+  }
+
   /// Logs a custom Flutter Analytics event with the given [name] and event [parameters].
   Future<void> logEvent({
     required String name,

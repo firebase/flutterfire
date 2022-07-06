@@ -52,9 +52,7 @@ Pod::Spec.new do |s|
 
   # Firebase dependencies
   s.dependency 'Firebase/CoreOnly', "~> #{firebase_sdk_version}"
-  # TODO(Salakar): Direct pod depency here instead of the Firebase subspec due to:
-  # https://github.com/firebase/firebase-ios-sdk/pull/9186 (pending acceptance / merge)
-  s.dependency 'FirebaseMLModelDownloader', '~> 8.10.0-beta'
+  s.dependency 'Firebase/MLModelDownloader', firebase_sdk_version
   s.static_framework = true
   s.swift_version = '5.0'
   s.pod_target_xcconfig = {

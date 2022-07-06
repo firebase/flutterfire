@@ -39,6 +39,11 @@ class FirebaseAnalyticsWeb extends FirebaseAnalyticsPlatform {
   }
 
   @override
+  Future<bool> isSupported() {
+    return analytics_interop.Analytics.isSupported();
+  }
+
+  @override
   Future<void> logEvent({
     required String name,
     Map<String, Object?>? parameters,

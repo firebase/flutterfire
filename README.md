@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://firebase.google.com/docs/flutter">
-    <img width="250px" src=".github/images/flutterfire_300x.png"><br/>
+    <img width="250px" src=".github/images/flutterfire_300x.png" alt="Flutter + Firebase logo"><br/>
   </a>
   <h1 align="center">FlutterFire</h1>
 </p>

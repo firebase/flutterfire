@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:github_sign_in/github_sign_in.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:twitter_login/twitter_login.dart';
 
@@ -579,25 +578,10 @@ class _AuthGateState extends State<AuthGate> {
         // Once signed in, return the UserCredential
         await _auth.signInWithPopup(githubProvider);
       } else {
-        // Create a GitHubSignIn instance
-        final GitHubSignIn gitHubSignIn = GitHubSignIn(
-          clientId: GitHubConfig['CLIENT_ID']!,
-          clientSecret: GitHubConfig['CLIENT_SECRET']!,
-          redirectUrl: GitHubConfig['REDIRECT_URL']!,
-        );
+        // Create a new provider
+        GithubAuthProvider githubProvider = GithubAuthProvider();
 
-        // Trigger the sign-in flow
-        final result = await gitHubSignIn.signIn(context);
-
-        final token = result.token;
-
-        if (token != null) {
-          // Create a credential from the access token
-          final githubAuthCredential = GithubAuthProvider.credential(token);
-
-          // Once signed in, return the UserCredential
-          await _auth.signInWithCredential(githubAuthCredential);
-        }
+        await _auth.signInWithAuthProvider(githubProvider);
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
