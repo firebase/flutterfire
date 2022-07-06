@@ -1,8 +1,8 @@
 name: firebase_app_installations_platform_interface
 description: A common platform interface for the firebase_app_installations plugin.
-version: 0.1.1+6
-homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_platform_interface
-repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_platform_interface
+version: 0.1.1+10
+homepage: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_platform_interface
+repository: https://github.com/firebase/flutterfire/tree/master/packages/firebase_app_installations/firebase_app_installations_platform_interface
 
 environment:
   sdk: ">=2.16.0 <3.0.0"
@@ -16,7 +16,7 @@ dependencies:
   plugin_platform_interface: ^2.0.0
 
 dev_dependencies:
-  firebase_core_platform_interface: ^4.4.0
+  firebase_core_platform_interface: ^4.4.3
   flutter_test:
     sdk: flutter
   flutter_lints: ^1.0.0

@@ -26,8 +26,8 @@ dynamic dartify(Object? jsObject) {
       return DateTime.fromMillisecondsSinceEpoch(
           (object as TimestampJsImpl).toMillis());
     }
-    if (util.instanceof(object, BlobConstructor)) {
-      return object as BlobJsImpl;
+    if (util.instanceof(object, BytesConstructor)) {
+      return object as BytesJsImpl;
     }
     return null;
   });
@@ -52,7 +52,7 @@ dynamic jsify(Object? dartObject) {
       return jsifyFieldValue(object);
     }
 
-    if (object is BlobJsImpl) {
+    if (object is BytesJsImpl) {
       return object;
     }
 

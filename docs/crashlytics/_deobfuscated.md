@@ -60,9 +60,9 @@ If you have this issue, first make sure that you have the run script installed:
     These scripts process your project's dSYM files and upload the files to
     {{crashlytics}}.
 
-    <pre class="devsite-click-to-copy">"$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai <var>FIREBASE_APPLE_APP_ID</var>"</pre>
+    <pre class="devsite-click-to-copy">$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase --validate -ai <var>FIREBASE_APPLE_APP_ID</var></pre>
 
-    <pre class="devsite-click-to-copy">"$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai <var>FIREBASE_APPLE_APP_ID</var>"</pre>
+    <pre class="devsite-click-to-copy">$PODS_ROOT/FirebaseCrashlytics/upload-symbols --build-phase -ai <var>FIREBASE_APPLE_APP_ID</var></pre>
 
 1.  In the _Input Files_ section, add the paths for the locations of the
     following files:

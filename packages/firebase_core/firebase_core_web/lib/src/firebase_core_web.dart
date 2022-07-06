@@ -10,7 +10,8 @@ class FirebaseWebService {
   /// The name which matches the Firebase JS Web SDK postfix.
   String name;
 
-  /// Overrides the created window object.
+  /// Naming of Firebase web products is different from Flutterfire plugins. This
+  /// property allows overriding of web naming to Flutterfire plugin naming.
   String? override;
 
   /// Creates a new [FirebaseWebService].
@@ -23,6 +24,8 @@ class FirebaseWebService {
 class FirebaseCoreWeb extends FirebasePlatform {
   static Map<String, FirebaseWebService> _services = {
     'core': FirebaseWebService._('app', 'core'),
+    'app-check': FirebaseWebService._('app-check', 'app_check'),
+    'remote-config': FirebaseWebService._('remote-config', 'remote_config'),
   };
 
   /// Internally registers a Firebase Service to be initialized.
@@ -77,6 +80,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
   Future<void> _injectSrcScript(String src, String windowVar) async {
     ScriptElement script = ScriptElement();
     script.type = 'text/javascript';
+    script.crossOrigin = 'anonymous';
     script.text = '''
       window.ff_trigger_$windowVar = async (callback) => {
         callback(await import("$src"));
@@ -90,6 +94,7 @@ class FirebaseCoreWeb extends FirebasePlatform {
     context.callMethod('ff_trigger_$windowVar', [
       (module) {
         context[windowVar] = module;
+        context.deleteProperty('ff_trigger_$windowVar');
         completer.complete();
       }
     ]);

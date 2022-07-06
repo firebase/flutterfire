@@ -1,3 +1,19 @@
+## 0.1.0+16
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+15
+
+ - Update a dependency to the latest release.
+
+## 0.1.0+14
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 0.1.0+13
+
+ - Update a dependency to the latest release.
+
 ## 0.1.0+12
 
  - Update a dependency to the latest release.
@@ -20,7 +36,7 @@
 
 ## 0.1.0+7
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 0.1.0+6
 
