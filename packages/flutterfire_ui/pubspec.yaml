@@ -33,12 +33,10 @@ dependencies:
 
 dev_dependencies:
   fake_cloud_firestore: ^1.2.2
-  firebase_auth_mocks: ^0.8.4
-
   flutter_test:
     sdk: flutter
+  mocktail: ^0.3.0
 
-  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
@@ -50,6 +48,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/countries.json
+
 # To add assets to your package, add an assets section, like this:
 # assets:
 #   - images/a_dot_burr.jpeg

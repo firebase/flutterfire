@@ -4,6 +4,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 
 /// Method Channel delegate for [UserCredentialPlatform].
@@ -30,7 +31,7 @@ class MethodChannelUserCredential extends UserCredentialPlatform {
                 ),
           user: data['user'] == null
               ? null
-              : MethodChannelUser(
-                  auth, Map<String, dynamic>.from(data['user'])),
+              : MethodChannelUser(auth, MethodChannelMultiFactor(auth),
+                  Map<String, dynamic>.from(data['user'])),
         );
 }

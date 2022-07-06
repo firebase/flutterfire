@@ -11,7 +11,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// A user account.
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserPlatform(this.auth, Map<String, dynamic> user)
+  UserPlatform(this.auth, this.multiFactor, Map<String, dynamic> user)
       : _user = user,
         super(token: _token);
 
@@ -24,6 +24,8 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
+
+  final MultiFactorPlatform multiFactor;
 
   final Map<String, dynamic> _user;
 

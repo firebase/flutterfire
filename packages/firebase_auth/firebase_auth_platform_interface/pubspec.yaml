@@ -7,8 +7,8 @@ repository: https://github.com/firebase/flutterfire/tree/master/packages/firebas
 version: 6.3.1
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
-  flutter: ">=1.9.1+hotfix.5"
+  sdk: '>=2.16.0 <3.0.0'
+  flutter: '>=1.9.1+hotfix.5'
 
 dependencies:
   firebase_core: ^1.10.0
@@ -22,3 +22,4 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.0.0
+  pigeon: ^3.2.0

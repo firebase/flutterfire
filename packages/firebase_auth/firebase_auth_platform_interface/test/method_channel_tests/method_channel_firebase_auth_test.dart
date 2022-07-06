@@ -8,6 +8,7 @@ import 'dart:io';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
@@ -17,6 +18,9 @@ import '../mock.dart';
 
 void main() {
   setupFirebaseAuthMocks();
+
+  late MultiFactorPlatform multiFactor;
+
   late FirebaseAuthPlatform auth;
   final List<MethodCall> log = <MethodCall>[];
   const String regularTestEmail = 'test@email.com';
@@ -173,6 +177,9 @@ void main() {
       });
 
       auth = MethodChannelFirebaseAuth.instance.delegateFor(app: app);
+      // TODO(Lyokone): mock properly
+      multiFactor = MethodChannelMultiFactor(auth);
+
       user = kMockUser;
     });
 
@@ -194,7 +201,7 @@ void main() {
 
     test('setCurrentUser()', () async {
       expect(auth.currentUser, isNull);
-      MockUserPlatform userPlatform = MockUserPlatform(auth, user);
+      MockUserPlatform userPlatform = MockUserPlatform(auth, multiFactor, user);
       auth.currentUser = userPlatform;
       expect(auth.currentUser, isA<UserPlatform>());
       expect(auth.currentUser!.uid, equals(kMockUid));
@@ -1138,8 +1145,9 @@ void main() {
 }
 
 class MockUserPlatform extends UserPlatform {
-  MockUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> user)
-      : super(auth, user);
+  MockUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> user)
+      : super(auth, multiFactor, user);
 }
 
 class TestMethodChannelFirebaseAuth extends MethodChannelFirebaseAuth {

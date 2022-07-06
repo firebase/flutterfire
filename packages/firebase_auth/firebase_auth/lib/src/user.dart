@@ -421,6 +421,10 @@ class User {
     await _delegate.verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
   }
 
+  MultiFactor get multiFactor {
+    return MultiFactor._(_delegate.multiFactor);
+  }
+
   @override
   String toString() {
     return '$User('
