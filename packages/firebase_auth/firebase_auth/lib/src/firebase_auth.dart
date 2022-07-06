@@ -683,6 +683,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [phoneNumber] The phone number for the account the user is signing up
   ///   for or signing into. Make sure to pass in a phone number with country
   ///   code prefixed with plus sign ('+').
+  ///   Should be null if it's a multi-factor sign in.
+  ///
+  /// [multiFactorInfo] The multi factor info you're using to verify the phone number.
+  ///   Should be set if a [multiFactorSession] is provided.
+  ///
+  /// [multiFactorSession] The multi factor session you're using to verify the phone number.
+  ///   Should be set if a [multiFactorInfo] is provided.
   ///
   /// [timeout] The maximum amount of time you are willing to wait for SMS
   ///   auto-retrieval to be completed by the library. Maximum allowed value
@@ -707,7 +714,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -715,9 +723,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) {
+    assert(
+      phoneNumber != null || multiFactorInfo != null,
+      'Either phoneNumber or multiFactorInfo must be provided.',
+    );
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
+      multiFactorInfo: multiFactorInfo,
       timeout: timeout,
       forceResendingToken: forceResendingToken,
       verificationCompleted: verificationCompleted,
@@ -726,6 +740,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       // ignore: invalid_use_of_visible_for_testing_member
       autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
+      multiFactorSession: multiFactorSession,
     );
   }
 

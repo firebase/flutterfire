@@ -14,8 +14,9 @@ import 'utils/exception.dart';
 /// Method Channel delegate for [UserPlatform] instances.
 class MethodChannelUser extends UserPlatform {
   /// Constructs a new [MethodChannelUser] instance.
-  MethodChannelUser(FirebaseAuthPlatform auth, Map<String, dynamic> data)
-      : super(auth, data);
+  MethodChannelUser(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> data)
+      : super(auth, multiFactor, data);
 
   /// Attaches generic default values to method channel arguments.
   Map<String, dynamic> _withChannelDefaults(Map<String, dynamic> other) {
@@ -129,7 +130,7 @@ class MethodChannelUser extends UserPlatform {
           .invokeMapMethod<String, dynamic>(
               'User#reload', _withChannelDefaults({})))!;
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -188,7 +189,7 @@ class MethodChannelUser extends UserPlatform {
                 },
               )))!;
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -208,7 +209,7 @@ class MethodChannelUser extends UserPlatform {
                 },
               )))!;
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -228,7 +229,7 @@ class MethodChannelUser extends UserPlatform {
                 },
               )))!;
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
@@ -248,7 +249,7 @@ class MethodChannelUser extends UserPlatform {
                 },
               )))!;
 
-      MethodChannelUser user = MethodChannelUser(auth, data);
+      MethodChannelUser user = MethodChannelUser(auth, super.multiFactor, data);
       auth.currentUser = user;
       auth.sendAuthChangesEvent(auth.app.name, user);
     } catch (e, stack) {
