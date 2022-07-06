@@ -224,43 +224,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     const SizedBox(height: 20),
                     TextButton(
-                      onPressed: () async {
-                        final session = await user.multiFactor.getSession();
-                        final auth = FirebaseAuth.instance;
-                        await auth.verifyPhoneNumber(
-                          multiFactorSession: session,
-                          phoneNumber: phoneController.text,
-                          verificationCompleted: (_) {},
-                          verificationFailed: print,
-                          codeSent:
-                              (String verificationId, int? resendToken) async {
-                            final smsCode = await getSmsCodeFromUser(context);
-
-                            if (smsCode != null) {
-                              // Create a PhoneAuthCredential with the code
-                              final credential = PhoneAuthProvider.credential(
-                                verificationId: verificationId,
-                                smsCode: smsCode,
-                              );
-
-                              try {
-                                await user.multiFactor.enroll(
-                                  PhoneMultiFactorGenerator.getAssertion(
-                                    credential,
-                                  ),
-                                );
-                              } on FirebaseAuthException catch (e) {
-                                print(e.message);
-                              }
-                            }
-                          },
-                          codeAutoRetrievalTimeout: print,
-                        );
-                      },
-                      child: const Text('Verify Number For MFA'),
-                    ),
-                    const SizedBox(height: 20),
-                    TextButton(
                       onPressed: _signOut,
                       child: const Text('Sign out'),
                     ),

@@ -1014,44 +1014,6 @@ public class FlutterFirebaseAuthPlugin
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
-
-            if (multiFactorSessionId != null) {
-              multiFactorSession = multiFactorSessionMap.get(multiFactorSessionId);
-            }
-
-            final String multiFactorInfoId = (String) arguments.get(Constants.MULTI_FACTOR_INFO);
-            PhoneMultiFactorInfo multiFactorInfo = null;
-
-            if (multiFactorInfoId != null) {
-              for (String resolverId : multiFactorResolverMap.keySet()) {
-                for (MultiFactorInfo info : multiFactorResolverMap.get(resolverId).getHints()) {
-                  if (info.getUid().equals(multiFactorInfoId)
-                      && info instanceof PhoneMultiFactorInfo) {
-                    multiFactorInfo = (PhoneMultiFactorInfo) info;
-                    break;
-                  }
-                }
-              }
-            }
-
-            PhoneNumberVerificationStreamHandler handler =
-                new PhoneNumberVerificationStreamHandler(
-                    getActivity(),
-                    arguments,
-                    multiFactorSession,
-                    multiFactorInfo,
-                    credential -> {
-                      int hashCode = credential.hashCode();
-                      authCredentials.put(hashCode, credential);
-                    });
-
-            channel.setStreamHandler(handler);
-            streamHandlers.put(channel, handler);
-
-            taskCompletionSource.setResult(eventChannelName);
-          } catch (Exception e) {
-            taskCompletionSource.setException(e);
-          }
         });
 
     return taskCompletionSource.getTask();
@@ -1754,7 +1716,7 @@ public class FlutterFirebaseAuthPlugin
     final MultiFactor multiFactor = appMultiFactorUser.get(currentUser.getUid());
     return multiFactor;
   }
-  
+
   @Override
   public void enrollPhone(
       @NonNull String appName,

@@ -122,13 +122,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
       _multiFactorInstances[appName] = multiFactorInstance;
     }
 
-    MethodChannelMultiFactor? multiFactorInstance =
-        _multiFactorInstances[appName];
-    if (multiFactorInstance == null) {
-      multiFactorInstance = MethodChannelMultiFactor(instance);
-      _multiFactorInstances[appName] = multiFactorInstance;
-    }
-
     final userMap = arguments['user'];
     if (userMap == null) {
       instance.currentUser = null;
