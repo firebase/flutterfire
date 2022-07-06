@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 /// Specifies custom configurations for your Cloud Firestore instance.
 ///
