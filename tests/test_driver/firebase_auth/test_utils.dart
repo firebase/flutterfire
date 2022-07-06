@@ -105,8 +105,9 @@ Future<String?> emulatorPhoneVerificationCode(String phoneNumber) async {
   )['code'];
 }
 
-/// Retrieve a sms phone authentication code that may have been sent for a specific
-/// phone number.
+/// Verify an email with an oobCode
+///
+/// Check [emulatorOutOfBandCode] to get an oobCode.
 Future<void> emulatorVerifyEmail(String oobCode) async {
   await http.get(
     Uri.parse(
