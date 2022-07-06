@@ -2,6 +2,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_user_credential.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/utils/pigeon_helper.dart';
+import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class MethodChannelMultiFactor extends MultiFactorPlatform {
   /// Constructs a new [MethodChannelMultiFactor] instance.
