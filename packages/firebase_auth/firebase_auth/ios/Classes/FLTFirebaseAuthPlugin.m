@@ -72,7 +72,7 @@ NSString *const kErrMsgInvalidCredential =
   // Map an id to a MultiFactorSession object.
   NSMutableDictionary<NSString *, FIRMultiFactorSession *> *_multiFactorSessionMap;
 
-  // Map an id to a MultiFactorSession object.
+  // Map an id to a MultiFactorResolver object.
   NSMutableDictionary<NSString *, FIRMultiFactorResolver *> *_multiFactorResolverMap;
 #endif
 
