@@ -105,6 +105,10 @@ const _timestampChecker = TypeChecker.fromUrl(
   'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
 );
 
+const _geoPointChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
+);
+
 @immutable
 class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
@@ -325,9 +329,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                   f.type.isDartCoreInt ||
                   f.type.isDartCoreDouble ||
                   f.type.isDartCoreBool ||
+                  f.type.isPrimitiveList ||
+                  f.type.isJsonDocumentReference ||
                   _dateTimeChecker.isAssignableFromType(f.type) ||
                   _timestampChecker.isAssignableFromType(f.type) ||
-                  f.type.isPrimitiveList,
+                  _geoPointChecker.isAssignableFromType(f.type),
               // TODO filter list other than LIst<string|bool|num>
             )
             .map(

@@ -25,6 +25,7 @@ export 'src/firestore_reference.dart'
 const firestoreJsonConverters = [
   FirestoreDateTimeConverter(),
   FirestoreTimestampConverter(),
+  FirestoreGeoPointConverter(),
 ];
 
 /// A [JsonConverter] that adds support for [Timestamp] objects within ODM models.
@@ -35,6 +36,16 @@ class FirestoreTimestampConverter extends JsonConverter<Timestamp, Timestamp> {
 
   @override
   Timestamp toJson(Timestamp object) => object;
+}
+
+/// A [JsonConverter] that adds support for [GeoPoint] objects within ODM models.
+class FirestoreGeoPointConverter extends JsonConverter<GeoPoint, GeoPoint> {
+  const FirestoreGeoPointConverter();
+  @override
+  GeoPoint fromJson(GeoPoint json) => json;
+
+  @override
+  GeoPoint toJson(GeoPoint object) => object;
 }
 
 /// A [JsonConverter] that adds support for [DateTime] objects within ODM models.

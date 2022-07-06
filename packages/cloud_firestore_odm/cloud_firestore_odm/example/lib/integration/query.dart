@@ -33,6 +33,16 @@ class TimestampQuery {
   final Timestamp time;
 }
 
+@Collection<GeoPointQuery>('firestore-example-app/42/geopoint-time')
+final geoPointQueryRef = GeoPointQueryCollectionReference();
+
+@JsonSerializable()
+@FirestoreGeoPointConverter()
+class GeoPointQuery {
+  GeoPointQuery(this.point);
+  final GeoPoint point;
+}
+
 @Collection<DocumentReferenceQuery>('firestore-example-app/42/doc-ref')
 final documentReferenceRef = DocumentReferenceQueryCollectionReference();
 

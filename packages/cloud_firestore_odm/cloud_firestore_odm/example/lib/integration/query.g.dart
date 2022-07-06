@@ -75,6 +75,10 @@ class _$DateTimeQueryCollectionReference extends _$DateTimeQueryQuery
 
   @override
   DateTimeQueryDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return DateTimeQueryDocumentReference(
       reference.doc(id),
     );
@@ -219,6 +223,17 @@ abstract class DateTimeQueryQuery
   @override
   DateTimeQueryQuery limitToLast(int limit);
 
+  DateTimeQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   DateTimeQueryQuery whereTime({
     DateTime? isEqualTo,
     DateTime? isNotEqualTo,
@@ -229,6 +244,18 @@ abstract class DateTimeQueryQuery
     bool? isNull,
     List<DateTime>? whereIn,
     List<DateTime>? whereNotIn,
+  });
+
+  DateTimeQueryQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    DateTimeQueryDocumentSnapshot? startAtDocument,
+    DateTimeQueryDocumentSnapshot? endAtDocument,
+    DateTimeQueryDocumentSnapshot? endBeforeDocument,
+    DateTimeQueryDocumentSnapshot? startAfterDocument,
   });
 
   DateTimeQueryQuery orderByTime({
@@ -305,20 +332,20 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
     );
   }
 
-  DateTimeQueryQuery whereTime({
-    DateTime? isEqualTo,
-    DateTime? isNotEqualTo,
-    DateTime? isLessThan,
-    DateTime? isLessThanOrEqualTo,
-    DateTime? isGreaterThan,
-    DateTime? isGreaterThanOrEqualTo,
+  DateTimeQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<DateTime>? whereIn,
-    List<DateTime>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$DateTimeQueryQuery(
       reference.where(
-        'time',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -333,6 +360,76 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
     );
   }
 
+  DateTimeQueryQuery whereTime({
+    DateTime? isEqualTo,
+    DateTime? isNotEqualTo,
+    DateTime? isLessThan,
+    DateTime? isLessThanOrEqualTo,
+    DateTime? isGreaterThan,
+    DateTime? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DateTime>? whereIn,
+    List<DateTime>? whereNotIn,
+  }) {
+    return _$DateTimeQueryQuery(
+      reference.where(
+        "time",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  DateTimeQueryQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DateTimeQueryDocumentSnapshot? startAtDocument,
+    DateTimeQueryDocumentSnapshot? endAtDocument,
+    DateTimeQueryDocumentSnapshot? endBeforeDocument,
+    DateTimeQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DateTimeQueryQuery(query, _collection);
+  }
+
   DateTimeQueryQuery orderByTime({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -344,7 +441,7 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
     DateTimeQueryDocumentSnapshot? endBeforeDocument,
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('time', descending: descending);
+    var query = reference.orderBy("time", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -479,6 +576,10 @@ class _$TimestampQueryCollectionReference extends _$TimestampQueryQuery
 
   @override
   TimestampQueryDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return TimestampQueryDocumentReference(
       reference.doc(id),
     );
@@ -623,6 +724,17 @@ abstract class TimestampQueryQuery
   @override
   TimestampQueryQuery limitToLast(int limit);
 
+  TimestampQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   TimestampQueryQuery whereTime({
     Timestamp? isEqualTo,
     Timestamp? isNotEqualTo,
@@ -633,6 +745,18 @@ abstract class TimestampQueryQuery
     bool? isNull,
     List<Timestamp>? whereIn,
     List<Timestamp>? whereNotIn,
+  });
+
+  TimestampQueryQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    TimestampQueryDocumentSnapshot? startAtDocument,
+    TimestampQueryDocumentSnapshot? endAtDocument,
+    TimestampQueryDocumentSnapshot? endBeforeDocument,
+    TimestampQueryDocumentSnapshot? startAfterDocument,
   });
 
   TimestampQueryQuery orderByTime({
@@ -709,20 +833,20 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
     );
   }
 
-  TimestampQueryQuery whereTime({
-    Timestamp? isEqualTo,
-    Timestamp? isNotEqualTo,
-    Timestamp? isLessThan,
-    Timestamp? isLessThanOrEqualTo,
-    Timestamp? isGreaterThan,
-    Timestamp? isGreaterThanOrEqualTo,
+  TimestampQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<Timestamp>? whereIn,
-    List<Timestamp>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$TimestampQueryQuery(
       reference.where(
-        'time',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -737,6 +861,76 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
     );
   }
 
+  TimestampQueryQuery whereTime({
+    Timestamp? isEqualTo,
+    Timestamp? isNotEqualTo,
+    Timestamp? isLessThan,
+    Timestamp? isLessThanOrEqualTo,
+    Timestamp? isGreaterThan,
+    Timestamp? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<Timestamp>? whereIn,
+    List<Timestamp>? whereNotIn,
+  }) {
+    return _$TimestampQueryQuery(
+      reference.where(
+        "time",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  TimestampQueryQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    TimestampQueryDocumentSnapshot? startAtDocument,
+    TimestampQueryDocumentSnapshot? endAtDocument,
+    TimestampQueryDocumentSnapshot? endBeforeDocument,
+    TimestampQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$TimestampQueryQuery(query, _collection);
+  }
+
   TimestampQueryQuery orderByTime({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -748,7 +942,7 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
     TimestampQueryDocumentSnapshot? endBeforeDocument,
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('time', descending: descending);
+    var query = reference.orderBy("time", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -827,6 +1021,507 @@ class TimestampQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class GeoPointQueryCollectionReference
+    implements
+        GeoPointQueryQuery,
+        FirestoreCollectionReference<GeoPointQueryQuerySnapshot> {
+  factory GeoPointQueryCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$GeoPointQueryCollectionReference;
+
+  static GeoPointQuery fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return _$GeoPointQueryFromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    GeoPointQuery value,
+    SetOptions? options,
+  ) {
+    return _$GeoPointQueryToJson(value);
+  }
+
+  @override
+  GeoPointQueryDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<GeoPointQueryDocumentReference> add(GeoPointQuery value);
+}
+
+class _$GeoPointQueryCollectionReference extends _$GeoPointQueryQuery
+    implements GeoPointQueryCollectionReference {
+  factory _$GeoPointQueryCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$GeoPointQueryCollectionReference._(
+      firestore
+          .collection('firestore-example-app/42/geopoint-time')
+          .withConverter(
+            fromFirestore: GeoPointQueryCollectionReference.fromFirestore,
+            toFirestore: GeoPointQueryCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$GeoPointQueryCollectionReference._(
+    CollectionReference<GeoPointQuery> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<GeoPointQuery> get reference =>
+      super.reference as CollectionReference<GeoPointQuery>;
+
+  @override
+  GeoPointQueryDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return GeoPointQueryDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<GeoPointQueryDocumentReference> add(GeoPointQuery value) {
+    return reference
+        .add(value)
+        .then((ref) => GeoPointQueryDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$GeoPointQueryCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class GeoPointQueryDocumentReference
+    extends FirestoreDocumentReference<GeoPointQueryDocumentSnapshot> {
+  factory GeoPointQueryDocumentReference(
+          DocumentReference<GeoPointQuery> reference) =
+      _$GeoPointQueryDocumentReference;
+
+  DocumentReference<GeoPointQuery> get reference;
+
+  /// A reference to the [GeoPointQueryCollectionReference] containing this document.
+  GeoPointQueryCollectionReference get parent {
+    return _$GeoPointQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<GeoPointQueryDocumentSnapshot> snapshots();
+
+  @override
+  Future<GeoPointQueryDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    GeoPoint point,
+  });
+
+  Future<void> set(GeoPointQuery value);
+}
+
+class _$GeoPointQueryDocumentReference
+    extends FirestoreDocumentReference<GeoPointQueryDocumentSnapshot>
+    implements GeoPointQueryDocumentReference {
+  _$GeoPointQueryDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<GeoPointQuery> reference;
+
+  /// A reference to the [GeoPointQueryCollectionReference] containing this document.
+  GeoPointQueryCollectionReference get parent {
+    return _$GeoPointQueryCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<GeoPointQueryDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return GeoPointQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<GeoPointQueryDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return GeoPointQueryDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? point = _sentinel,
+  }) async {
+    final json = {
+      if (point != _sentinel) "point": point as GeoPoint,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(GeoPointQuery value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GeoPointQueryDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class GeoPointQueryDocumentSnapshot extends FirestoreDocumentSnapshot {
+  GeoPointQueryDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<GeoPointQuery> snapshot;
+
+  @override
+  GeoPointQueryDocumentReference get reference {
+    return GeoPointQueryDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final GeoPointQuery? data;
+}
+
+abstract class GeoPointQueryQuery
+    implements QueryReference<GeoPointQueryQuerySnapshot> {
+  @override
+  GeoPointQueryQuery limit(int limit);
+
+  @override
+  GeoPointQueryQuery limitToLast(int limit);
+
+  GeoPointQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  GeoPointQueryQuery wherePoint({
+    GeoPoint? isEqualTo,
+    GeoPoint? isNotEqualTo,
+    GeoPoint? isLessThan,
+    GeoPoint? isLessThanOrEqualTo,
+    GeoPoint? isGreaterThan,
+    GeoPoint? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<GeoPoint>? whereIn,
+    List<GeoPoint>? whereNotIn,
+  });
+
+  GeoPointQueryQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  });
+
+  GeoPointQueryQuery orderByPoint({
+    bool descending = false,
+    GeoPoint startAt,
+    GeoPoint startAfter,
+    GeoPoint endAt,
+    GeoPoint endBefore,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
+    implements GeoPointQueryQuery {
+  _$GeoPointQueryQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<GeoPointQuery> reference;
+
+  GeoPointQueryQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<GeoPointQuery> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return GeoPointQueryQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<GeoPointQueryDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: GeoPointQueryDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return GeoPointQueryQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<GeoPointQueryQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<GeoPointQueryQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  GeoPointQueryQuery limit(int limit) {
+    return _$GeoPointQueryQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  GeoPointQueryQuery limitToLast(int limit) {
+    return _$GeoPointQueryQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  GeoPointQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$GeoPointQueryQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  GeoPointQueryQuery wherePoint({
+    GeoPoint? isEqualTo,
+    GeoPoint? isNotEqualTo,
+    GeoPoint? isLessThan,
+    GeoPoint? isLessThanOrEqualTo,
+    GeoPoint? isGreaterThan,
+    GeoPoint? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<GeoPoint>? whereIn,
+    List<GeoPoint>? whereNotIn,
+  }) {
+    return _$GeoPointQueryQuery(
+      reference.where(
+        "point",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  GeoPointQueryQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GeoPointQueryQuery(query, _collection);
+  }
+
+  GeoPointQueryQuery orderByPoint({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    GeoPointQueryDocumentSnapshot? startAtDocument,
+    GeoPointQueryDocumentSnapshot? endAtDocument,
+    GeoPointQueryDocumentSnapshot? endBeforeDocument,
+    GeoPointQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy("point", descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GeoPointQueryQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$GeoPointQueryQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class GeoPointQueryQuerySnapshot
+    extends FirestoreQuerySnapshot<GeoPointQueryQueryDocumentSnapshot> {
+  GeoPointQueryQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<GeoPointQuery> snapshot;
+
+  @override
+  final List<GeoPointQueryQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<GeoPointQueryDocumentSnapshot>> docChanges;
+}
+
+class GeoPointQueryQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+    implements GeoPointQueryDocumentSnapshot {
+  GeoPointQueryQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<GeoPointQuery> snapshot;
+
+  @override
+  GeoPointQueryDocumentReference get reference {
+    return GeoPointQueryDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final GeoPointQuery data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class DocumentReferenceQueryCollectionReference
     implements
         DocumentReferenceQueryQuery,
@@ -886,6 +1581,10 @@ class _$DocumentReferenceQueryCollectionReference
 
   @override
   DocumentReferenceQueryDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
     return DocumentReferenceQueryDocumentReference(
       reference.doc(id),
     );
@@ -1032,6 +1731,17 @@ abstract class DocumentReferenceQueryQuery
   @override
   DocumentReferenceQueryQuery limitToLast(int limit);
 
+  DocumentReferenceQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   DocumentReferenceQueryQuery whereRef({
     DocumentReference<Map<String, dynamic>>? isEqualTo,
     DocumentReference<Map<String, dynamic>>? isNotEqualTo,
@@ -1042,6 +1752,18 @@ abstract class DocumentReferenceQueryQuery
     bool? isNull,
     List<DocumentReference<Map<String, dynamic>>>? whereIn,
     List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
+  });
+
+  DocumentReferenceQueryQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   });
 
   DocumentReferenceQueryQuery orderByRef({
@@ -1121,20 +1843,20 @@ class _$DocumentReferenceQueryQuery
     );
   }
 
-  DocumentReferenceQueryQuery whereRef({
-    DocumentReference<Map<String, dynamic>>? isEqualTo,
-    DocumentReference<Map<String, dynamic>>? isNotEqualTo,
-    DocumentReference<Map<String, dynamic>>? isLessThan,
-    DocumentReference<Map<String, dynamic>>? isLessThanOrEqualTo,
-    DocumentReference<Map<String, dynamic>>? isGreaterThan,
-    DocumentReference<Map<String, dynamic>>? isGreaterThanOrEqualTo,
+  DocumentReferenceQueryQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<DocumentReference<Map<String, dynamic>>>? whereIn,
-    List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$DocumentReferenceQueryQuery(
       reference.where(
-        'ref',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1149,6 +1871,76 @@ class _$DocumentReferenceQueryQuery
     );
   }
 
+  DocumentReferenceQueryQuery whereRef({
+    DocumentReference<Map<String, dynamic>>? isEqualTo,
+    DocumentReference<Map<String, dynamic>>? isNotEqualTo,
+    DocumentReference<Map<String, dynamic>>? isLessThan,
+    DocumentReference<Map<String, dynamic>>? isLessThanOrEqualTo,
+    DocumentReference<Map<String, dynamic>>? isGreaterThan,
+    DocumentReference<Map<String, dynamic>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<DocumentReference<Map<String, dynamic>>>? whereIn,
+    List<DocumentReference<Map<String, dynamic>>>? whereNotIn,
+  }) {
+    return _$DocumentReferenceQueryQuery(
+      reference.where(
+        "ref",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  DocumentReferenceQueryQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    DocumentReferenceQueryDocumentSnapshot? startAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endAtDocument,
+    DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
+    DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DocumentReferenceQueryQuery(query, _collection);
+  }
+
   DocumentReferenceQueryQuery orderByRef({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1160,7 +1952,7 @@ class _$DocumentReferenceQueryQuery
     DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('ref', descending: descending);
+    var query = reference.orderBy("ref", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1259,6 +2051,16 @@ TimestampQuery _$TimestampQueryFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreTimestampConverter().toJson(instance.time),
+    };
+
+GeoPointQuery _$GeoPointQueryFromJson(Map<String, dynamic> json) =>
+    GeoPointQuery(
+      const FirestoreGeoPointConverter().fromJson(json['point'] as GeoPoint),
+    );
+
+Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
+    <String, dynamic>{
+      'point': const FirestoreGeoPointConverter().toJson(instance.point),
     };
 
 DocumentReferenceQuery _$DocumentReferenceQueryFromJson(
