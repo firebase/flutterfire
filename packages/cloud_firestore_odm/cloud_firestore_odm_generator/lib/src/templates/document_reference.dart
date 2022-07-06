@@ -77,27 +77,28 @@ class _\$${data.documentReferenceName}
   }
 
   String _updatePrototype(CollectionData data) {
-    if (data.queryableFields.isEmpty) return '';
+    if (data.updatableFields.isEmpty) return '';
 
     final parameters = [
-      for (final field in data.queryableFields)
-        '${field.type.getDisplayString(withNullability: true)} ${field.name},'
+      for (final field in data.updatableFields)
+        if (field.updatable)
+          '${field.type.getDisplayString(withNullability: true)} ${field.name},'
     ];
 
     return 'Future<void> update({${parameters.join()}});';
   }
 
   String _update(CollectionData data) {
-    if (data.queryableFields.isEmpty) return '';
+    if (data.updatableFields.isEmpty) return '';
 
     final parameters = [
-      for (final field in data.queryableFields)
+      for (final field in data.updatableFields)
         'Object? ${field.name} = _sentinel,'
     ];
 
     // TODO support nested objects
     final json = [
-      for (final field in data.queryableFields)
+      for (final field in data.updatableFields)
         '''
         if (${field.name} != _sentinel)
           "${field.name}": ${field.name} as ${field.type},

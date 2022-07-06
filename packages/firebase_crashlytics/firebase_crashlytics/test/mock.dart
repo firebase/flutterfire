@@ -12,47 +12,63 @@ typedef Callback = void Function(MethodCall call);
 
 final List<MethodCall> methodCallLog = <MethodCall>[];
 
-void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'Firebase#initializeCore') {
-      return [
-        {
-          'name': defaultFirebaseAppName,
-          'options': {
-            'apiKey': '123',
-            'appId': '123',
-            'messagingSenderId': '123',
-            'projectId': '123',
-          },
-          'pluginConstants': {
-            'plugins.flutter.io/firebase_crashlytics': {
-              'isCrashlyticsCollectionEnabled': true
-            }
-          },
+class MockFirebaseAppWithCollectionEnabled implements TestFirebaseCoreHostApi {
+  @override
+  Future<PigeonInitializeResponse> initializeApp(
+    String appName,
+    PigeonFirebaseOptions initializeAppRequest,
+  ) async {
+    return PigeonInitializeResponse(
+      name: appName,
+      options: PigeonFirebaseOptions(
+        apiKey: '123',
+        projectId: '123',
+        appId: '123',
+        messagingSenderId: '123',
+      ),
+      pluginConstants: {
+        'plugins.flutter.io/firebase_crashlytics': {
+          'isCrashlyticsCollectionEnabled': true
         }
-      ];
-    }
+      },
+    );
+  }
 
-    if (call.method == 'Firebase#initializeApp') {
-      return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
-        'pluginConstants': {
+  @override
+  Future<List<PigeonInitializeResponse?>> initializeCore() async {
+    return [
+      PigeonInitializeResponse(
+        name: defaultFirebaseAppName,
+        options: PigeonFirebaseOptions(
+          apiKey: '123',
+          projectId: '123',
+          appId: '123',
+          messagingSenderId: '123',
+        ),
+        pluginConstants: {
           'plugins.flutter.io/firebase_crashlytics': {
             'isCrashlyticsCollectionEnabled': true
           }
         },
-      };
-    }
+      )
+    ];
+  }
 
-    if (customHandlers != null) {
-      customHandlers(call);
-    }
+  @override
+  Future<PigeonFirebaseOptions> optionsFromResource() async {
+    return PigeonFirebaseOptions(
+      apiKey: '123',
+      projectId: '123',
+      appId: '123',
+      messagingSenderId: '123',
+    );
+  }
+}
 
-    return null;
-  });
+void setupFirebaseCrashlyticsMocks([Callback? customHandlers]) {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  TestFirebaseCoreHostApi.setup(MockFirebaseAppWithCollectionEnabled());
 
   MethodChannelFirebaseCrashlytics.channel
       .setMockMethodCallHandler((MethodCall methodCall) async {

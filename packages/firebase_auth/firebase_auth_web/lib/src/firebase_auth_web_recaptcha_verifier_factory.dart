@@ -117,7 +117,8 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
 
   @override
   void clear() {
-    return _delegate.clear();
+    _delegate.clear();
+    window.document.getElementById(_kInvisibleElementId)?.remove();
   }
 
   @override

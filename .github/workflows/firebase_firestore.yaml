@@ -1,5 +1,9 @@
 name: firebase_firestore
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     paths:
@@ -67,7 +71,6 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-          flutter config --enable-macos-desktop
       - name: "Build iOS Example"
         run: ./.github/workflows/scripts/build-example.sh ios
       - name: Start Firebase Emulator
@@ -98,7 +101,6 @@ jobs:
         run: |
           ./.github/workflows/scripts/install-tools.sh
           sudo npm i -g firebase-tools
-          flutter config --enable-web
       - name: Start Firebase Emulator
         run: cd ./.github/workflows/scripts && ./start-firebase-emulator.sh
       - name: "Drive Example"

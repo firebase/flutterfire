@@ -12,7 +12,7 @@ To get started with Firebase Performance for Flutter, please [see the documentat
 
 ## Usage
 
-To use this plugin, please visit the [Firebase Performance Usage documentation](https://firebase.flutter.dev/docs/performance/usage)
+To use this plugin, please visit the [Firebase Performance Usage documentation](https://firebase.google.com/docs/perf-mon/flutter/get-started)
 
 ## Issues and feedback
 

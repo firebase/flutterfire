@@ -134,12 +134,40 @@ void setupTests() {
       });
 
       group('getDynamicLink', () {
-        test('dynamic link using uri', () async {
-          Uri uri = Uri.parse('');
+        test('dynamic link using uri created on Firebase console', () async {
+          // Link created in Firebase console
+          Uri uri = Uri.parse('https://flutterfiretests.page.link/iho8');
           PendingDynamicLinkData? pendingLink =
               await FirebaseDynamicLinks.instance.getDynamicLink(uri);
-          expect(pendingLink, isNull);
+          expect(pendingLink, isA<PendingDynamicLinkData>());
+          expect(pendingLink?.link.toString(), 'https://example/helloworld');
         });
+
+        test(
+          'Universal link error for URL that cannot be parsed',
+          () async {
+            Uri uri = Uri.parse('');
+            if (defaultTargetPlatform == TargetPlatform.iOS) {
+              await expectLater(
+                FirebaseDynamicLinks.instance.getDynamicLink(uri),
+                throwsA(
+                  isA<FirebaseException>().having(
+                    (e) => e.message,
+                    'message',
+                    contains('could not be parsed'),
+                  ),
+                ),
+              );
+            } else if (defaultTargetPlatform == TargetPlatform.android) {
+              // TODO - android returns normally. Throw error to keep consistent with iOS or catch on iOS and return `null`.
+              // Internal ticket created: https://linear.app/invertase/issue/FF-44/dynamic-link-univeral-link-cannot-be-parsed
+              await expectLater(
+                FirebaseDynamicLinks.instance.getDynamicLink(uri),
+                completes,
+              );
+            }
+          },
+        );
       });
 
       group('onLink', () {
@@ -167,6 +195,11 @@ void setupTests() {
       });
     },
     // Only supported on Android & iOS.
-    skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+    // TODO temporarily skipping tests on Android while we figure out CI issues.
+    //      mainly we're using the google_atd Android emulators since they're more reliable,
+    //      however they do not contain necessary APIs for Dynamic Links.
+    skip: kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.android,
   );
 }

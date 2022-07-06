@@ -14,7 +14,7 @@ To get started with FlutterFire, please [see the documentation](https://firebase
 
 ## Usage
 
-To use this plugin, please visit the [Core Usage documentation](https://firebase.flutter.dev/docs/core/usage)
+To use this plugin, please visit the [Core Usage documentation](https://firebase.google.com/docs/flutter/setup)
 
 ## Issues and feedback
 

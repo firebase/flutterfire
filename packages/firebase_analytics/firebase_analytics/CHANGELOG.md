@@ -1,3 +1,18 @@
+## 9.1.12
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 9.1.11
+
+ - Update a dependency to the latest release.
+
+## 9.1.10
+
+ - **REFACTOR**: remove deprecated `Tasks.call` for android and replace with `TaskCompletionSource`. (#8583). ([94310ab3](https://github.com/firebase/flutterfire/commit/94310ab338ad1bf34174b19d1d5db8a856e8d161))
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8726). ([ab2cdfcd](https://github.com/firebase/flutterfire/commit/ab2cdfcd291a1045add1ba196b758e1d46571934))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
 ## 9.1.9
 
  - Update a dependency to the latest release.

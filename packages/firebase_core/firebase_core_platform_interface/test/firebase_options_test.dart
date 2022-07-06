@@ -48,12 +48,14 @@ void main() {
     });
 
     test('should construct an instance from a Map', () {
-      FirebaseOptions options1 = FirebaseOptions.fromMap(const {
-        'apiKey': 'apiKey',
-        'appId': 'appId',
-        'messagingSenderId': 'messagingSenderId',
-        'projectId': 'projectId'
-      });
+      FirebaseOptions options1 = FirebaseOptions.fromPigeon(
+        PigeonFirebaseOptions(
+          apiKey: 'apiKey',
+          appId: 'appId',
+          messagingSenderId: 'messagingSenderId',
+          projectId: 'projectId',
+        ),
+      );
 
       FirebaseOptions options2 = const FirebaseOptions(
         apiKey: 'apiKey',
