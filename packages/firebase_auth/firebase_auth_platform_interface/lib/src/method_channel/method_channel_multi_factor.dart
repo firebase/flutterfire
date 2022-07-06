@@ -5,7 +5,7 @@ import 'package:firebase_auth_platform_interface/src/method_channel/utils/pigeon
 import 'package:firebase_auth_platform_interface/src/pigeon/messages.pigeon.dart';
 
 class MethodChannelMultiFactor extends MultiFactorPlatform {
-  /// Constructs a new [MethodChannelUser] instance.
+  /// Constructs a new [MethodChannelMultiFactor] instance.
   MethodChannelMultiFactor(FirebaseAuthPlatform auth) : super(auth);
 
   final _api = MultiFactorUserHostApi();
