@@ -186,8 +186,9 @@ scripts:
 
   generate:pigeon:
     run: |
-      melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart"
-      melos run generate:pigeon:macos
+      melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
+      melos run generate:pigeon:macos --no-select && \
+      melos run format --no-select
     select-package:
       file-exists: 'pigeons/messages.dart'
     description: Generate the pigeon messages for all the supported packages.

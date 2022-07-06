@@ -503,6 +503,7 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   ///
   /// Confirm the link is a sign-in email link before calling this method,
   /// using [isSignInWithEmailLink].
+
   ///
   /// A [FirebaseAuthException] maybe thrown with the following error code:
   /// - **expired-action-code**:
@@ -636,13 +637,15 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
     required PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
     // ignore: invalid_use_of_visible_for_testing_member
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
   }) {

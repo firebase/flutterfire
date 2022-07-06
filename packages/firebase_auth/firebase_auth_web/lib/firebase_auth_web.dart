@@ -6,6 +6,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -48,7 +49,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, webUser);
+        return UserWeb(this, MultiFactorWeb(this), webUser);
       }
     }).listen((UserWeb? webUser) {
       _authStateChangesListeners[app.name]!.add(webUser);
@@ -60,7 +61,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, webUser);
+        return UserWeb(this, MultiFactorWeb(this), webUser);
       }
     }).listen((UserWeb? webUser) {
       _idTokenChangesListeners[app.name]!.add(webUser);
@@ -120,7 +121,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return null;
     }
 
-    return UserWeb(this, _delegate.currentUser!);
+    return UserWeb(this, MultiFactorWeb(this), _delegate.currentUser!);
   }
 
   @override
@@ -400,7 +401,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -408,6 +410,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) {
     throw UnimplementedError(
         'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');
