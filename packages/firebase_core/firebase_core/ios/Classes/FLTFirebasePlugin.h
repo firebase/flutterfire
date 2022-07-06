@@ -57,8 +57,7 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  *     registering callbacks.
  */
 @required
-- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:
-    (FIRApp *_Nonnull)firebaseApp;
+- (NSDictionary *_Nonnull)pluginConstantsForFIRApp:(FIRApp *_Nonnull)firebaseApp;
 
 /**
  * The Firebase library name of the plugin, used by
@@ -95,17 +94,15 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  * An interface represent a returned result from a Flutter Method Call.
  */
 @interface FLTFirebaseMethodCallResult : NSObject
-+ (instancetype _Nonnull)
-    createWithSuccess:(FLTFirebaseMethodCallSuccessBlock _Nonnull)successBlock
-        andErrorBlock:(FLTFirebaseMethodCallErrorBlock _Nonnull)errorBlock;
++ (instancetype _Nonnull)createWithSuccess:(FLTFirebaseMethodCallSuccessBlock _Nonnull)successBlock
+                             andErrorBlock:(FLTFirebaseMethodCallErrorBlock _Nonnull)errorBlock;
 
 /**
  * Submit a result indicating a successful method call.
  *
  * E.g.: `result.success(nil);`
  */
-@property(readonly, nonatomic)
-    FLTFirebaseMethodCallSuccessBlock _Nonnull success;
+@property(readonly, nonatomic) FLTFirebaseMethodCallSuccessBlock _Nonnull success;
 
 /**
  * Submit a result indicating a failed method call.
@@ -131,8 +128,7 @@ typedef void (^FLTFirebaseMethodCallErrorBlock)(NSString *_Nullable code,
  */
 + (FlutterError *_Nonnull)createFlutterErrorFromCode:(NSString *_Nonnull)code
                                              message:(NSString *_Nonnull)message
-                                     optionalDetails:
-                                         (NSDictionary *_Nullable)details
+                                     optionalDetails:(NSDictionary *_Nullable)details
                                   andOptionalNSError:(NSError *_Nullable)error;
 
 /**

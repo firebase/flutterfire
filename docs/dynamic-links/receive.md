@@ -15,7 +15,7 @@ get the data passed in the Dynamic Link.
 1.  [Install and initialize the Firebase SDKs for Flutter](/docs/flutter/setup) if you
     haven't already done so.
 
-1.  From the root direcctory of your Flutter project, run the following
+1.  From the root directory of your Flutter project, run the following
     command to install the Dynamic Links plugin:
 
     ```
@@ -71,8 +71,12 @@ start the activity with this intent filter to handle the link.
     1.  On the Signing & Capabilities page, ensure your Team is registered, and
         your Provisioning Profile is set.
 
-    1.  Add the domain you created in the Firebase console to the Associated
-        Domains, prefixed with `applinks:` (for example, `applinks:example.page.link`).
+    1.  On the Signing & Capabilities page, enable **Associated Domains** and
+        add the following to the Associated Domains list:
+        
+        ```
+        applinks:example.page.link
+        ```
 
     1.  On the Info page, add a URL Type to your project. Set the URL Schemes
         field to your app's bundle ID. (The Identifier can be `Bundle ID` or
@@ -102,7 +106,7 @@ start the activity with this intent filter to handle the link.
     1.  **Optional:** Disable the Dynamic Links SDK's use of the iOS pasteboard.
 
         By default, the Dynamic Links SDK uses the pasteboard to improve the
-        reliablity of post-install deep links. By using the pasteboard, Dynamic
+        reliability of post-install deep links. By using the pasteboard, Dynamic
         Links can make sure that when a user opens a Dynamic Link but needs to
         install your app first, the user can go immediately to the original
         linked content when opening the app for the first time after

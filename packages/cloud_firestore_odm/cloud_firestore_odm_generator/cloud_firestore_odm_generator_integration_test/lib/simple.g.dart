@@ -280,6 +280,17 @@ abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
     bool? isNull,
   });
 
+  ModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   ModelQuery whereValue({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -290,6 +301,18 @@ abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
     bool? isNull,
     List<String>? whereIn,
     List<String>? whereNotIn,
+  });
+
+  ModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
   });
 
   ModelQuery orderByValue({
@@ -428,7 +451,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     );
   }
 
-  ModelQuery whereValue({
+  ModelQuery whereDocumentId({
     String? isEqualTo,
     String? isNotEqualTo,
     String? isLessThan,
@@ -441,7 +464,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
   }) {
     return _$ModelQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -456,6 +479,76 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     );
   }
 
+  ModelQuery whereValue({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ModelQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ModelDocumentSnapshot? startAtDocument,
+    ModelDocumentSnapshot? endAtDocument,
+    ModelDocumentSnapshot? endBeforeDocument,
+    ModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
+  }
+
   ModelQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -467,7 +560,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -820,6 +913,17 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     bool? isNull,
   });
 
+  NestedQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -869,6 +973,18 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
     List<dynamic>? arrayContainsAny,
+  });
+
+  NestedQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
   });
 
   NestedQuery orderByBoolList({
@@ -1055,6 +1171,34 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -1067,7 +1211,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        'boolList',
+        "boolList",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1093,7 +1237,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        'stringList',
+        "stringList",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1119,7 +1263,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        'numList',
+        "numList",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1145,7 +1289,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        'objectList',
+        "objectList",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1171,7 +1315,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        'dynamicList',
+        "dynamicList",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1185,6 +1329,48 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     );
   }
 
+  NestedQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
   NestedQuery orderByBoolList({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1196,7 +1382,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('boolList', descending: descending);
+    var query = reference.orderBy("boolList", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1238,7 +1424,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('stringList', descending: descending);
+    var query = reference.orderBy("stringList", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1280,7 +1466,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('numList', descending: descending);
+    var query = reference.orderBy("numList", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1322,7 +1508,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('objectList', descending: descending);
+    var query = reference.orderBy("objectList", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1364,7 +1550,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('dynamicList', descending: descending);
+    var query = reference.orderBy("dynamicList", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1695,6 +1881,30 @@ abstract class SplitFileModelQuery
     List<Object?>? whereNotIn,
     bool? isNull,
   });
+
+  SplitFileModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  SplitFileModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  });
 }
 
 class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
@@ -1818,6 +2028,76 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
       ),
       _collection,
     );
+  }
+
+  SplitFileModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$SplitFileModelQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  SplitFileModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SplitFileModelDocumentSnapshot? startAtDocument,
+    SplitFileModelDocumentSnapshot? endAtDocument,
+    SplitFileModelDocumentSnapshot? endBeforeDocument,
+    SplitFileModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SplitFileModelQuery(query, _collection);
   }
 
   @override
@@ -2118,6 +2398,30 @@ abstract class EmptyModelQuery
     List<Object?>? whereNotIn,
     bool? isNull,
   });
+
+  EmptyModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  EmptyModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  });
 }
 
 class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
@@ -2241,6 +2545,76 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
       ),
       _collection,
     );
+  }
+
+  EmptyModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$EmptyModelQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  EmptyModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EmptyModelDocumentSnapshot? startAtDocument,
+    EmptyModelDocumentSnapshot? endAtDocument,
+    EmptyModelDocumentSnapshot? endBeforeDocument,
+    EmptyModelDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
   }
 
   @override
@@ -2558,6 +2932,17 @@ abstract class OptionalJsonQuery
     bool? isNull,
   });
 
+  OptionalJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   OptionalJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -2568,6 +2953,18 @@ abstract class OptionalJsonQuery
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
+  });
+
+  OptionalJsonQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
   });
 
   OptionalJsonQuery orderByValue({
@@ -2706,20 +3103,20 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     );
   }
 
-  OptionalJsonQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  OptionalJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$OptionalJsonQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2734,6 +3131,76 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     );
   }
 
+  OptionalJsonQuery whereValue({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$OptionalJsonQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  OptionalJsonQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    OptionalJsonDocumentSnapshot? startAtDocument,
+    OptionalJsonDocumentSnapshot? endAtDocument,
+    OptionalJsonDocumentSnapshot? endBeforeDocument,
+    OptionalJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$OptionalJsonQuery(query, _collection);
+  }
+
   OptionalJsonQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -2745,7 +3212,7 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3088,6 +3555,17 @@ abstract class MixedJsonQuery
     bool? isNull,
   });
 
+  MixedJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   MixedJsonQuery whereValue({
     int? isEqualTo,
     int? isNotEqualTo,
@@ -3098,6 +3576,18 @@ abstract class MixedJsonQuery
     bool? isNull,
     List<int>? whereIn,
     List<int>? whereNotIn,
+  });
+
+  MixedJsonQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
   });
 
   MixedJsonQuery orderByValue({
@@ -3236,20 +3726,20 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     );
   }
 
-  MixedJsonQuery whereValue({
-    int? isEqualTo,
-    int? isNotEqualTo,
-    int? isLessThan,
-    int? isLessThanOrEqualTo,
-    int? isGreaterThan,
-    int? isGreaterThanOrEqualTo,
+  MixedJsonQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<int>? whereIn,
-    List<int>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$MixedJsonQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3264,6 +3754,76 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     );
   }
 
+  MixedJsonQuery whereValue({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$MixedJsonQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  MixedJsonQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MixedJsonDocumentSnapshot? startAtDocument,
+    MixedJsonDocumentSnapshot? endAtDocument,
+    MixedJsonDocumentSnapshot? endBeforeDocument,
+    MixedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MixedJsonQuery(query, _collection);
+  }
+
   MixedJsonQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3275,7 +3835,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3646,6 +4206,17 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
     bool? isNull,
   });
 
+  RootQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   RootQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -3667,6 +4238,18 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+
+  RootQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
   });
 
   RootQuery orderByNonNullable({
@@ -3817,6 +4400,34 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     );
   }
 
+  RootQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$RootQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   RootQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -3830,7 +4441,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        'nonNullable',
+        "nonNullable",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3858,7 +4469,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        'nullable',
+        "nullable",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3873,6 +4484,48 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     );
   }
 
+  RootQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    RootDocumentSnapshot? startAtDocument,
+    RootDocumentSnapshot? endAtDocument,
+    RootDocumentSnapshot? endBeforeDocument,
+    RootDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$RootQuery(query, _collection);
+  }
+
   RootQuery orderByNonNullable({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -3884,7 +4537,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: descending);
+    var query = reference.orderBy("nonNullable", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3926,7 +4579,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: descending);
+    var query = reference.orderBy("nullable", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4287,6 +4940,17 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
     bool? isNull,
   });
 
+  SubQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   SubQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -4308,6 +4972,18 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
     bool? isNull,
     List<int?>? whereIn,
     List<int?>? whereNotIn,
+  });
+
+  SubQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
   });
 
   SubQuery orderByNonNullable({
@@ -4457,6 +5133,34 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     );
   }
 
+  SubQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$SubQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   SubQuery whereNonNullable({
     String? isEqualTo,
     String? isNotEqualTo,
@@ -4470,7 +5174,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        'nonNullable',
+        "nonNullable",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4498,7 +5202,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        'nullable',
+        "nullable",
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4513,6 +5217,48 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     );
   }
 
+  SubQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    SubDocumentSnapshot? startAtDocument,
+    SubDocumentSnapshot? endAtDocument,
+    SubDocumentSnapshot? endBeforeDocument,
+    SubDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SubQuery(query, _collection);
+  }
+
   SubQuery orderByNonNullable({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -4524,7 +5270,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nonNullable', descending: descending);
+    var query = reference.orderBy("nonNullable", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4566,7 +5312,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('nullable', descending: descending);
+    var query = reference.orderBy("nullable", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4930,6 +5676,17 @@ abstract class AsCamelCaseQuery
     bool? isNull,
   });
 
+  AsCamelCaseQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   AsCamelCaseQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -4940,6 +5697,18 @@ abstract class AsCamelCaseQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  AsCamelCaseQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
   });
 
   AsCamelCaseQuery orderByValue({
@@ -5078,20 +5847,20 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     );
   }
 
-  AsCamelCaseQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  AsCamelCaseQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$AsCamelCaseQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5106,6 +5875,76 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     );
   }
 
+  AsCamelCaseQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$AsCamelCaseQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  AsCamelCaseQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AsCamelCaseDocumentSnapshot? startAtDocument,
+    AsCamelCaseDocumentSnapshot? endAtDocument,
+    AsCamelCaseDocumentSnapshot? endBeforeDocument,
+    AsCamelCaseDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AsCamelCaseQuery(query, _collection);
+  }
+
   AsCamelCaseQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -5117,7 +5956,7 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -5481,6 +6320,17 @@ abstract class CustomSubNameQuery
     bool? isNull,
   });
 
+  CustomSubNameQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   CustomSubNameQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -5491,6 +6341,18 @@ abstract class CustomSubNameQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  CustomSubNameQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
   });
 
   CustomSubNameQuery orderByValue({
@@ -5629,20 +6491,20 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     );
   }
 
-  CustomSubNameQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  CustomSubNameQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$CustomSubNameQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5657,6 +6519,76 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     );
   }
 
+  CustomSubNameQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$CustomSubNameQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  CustomSubNameQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    CustomSubNameDocumentSnapshot? startAtDocument,
+    CustomSubNameDocumentSnapshot? endAtDocument,
+    CustomSubNameDocumentSnapshot? endBeforeDocument,
+    CustomSubNameDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CustomSubNameQuery(query, _collection);
+  }
+
   CustomSubNameQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -5668,7 +6600,7 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -6024,6 +6956,17 @@ abstract class ExplicitPathQuery
     bool? isNull,
   });
 
+  ExplicitPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   ExplicitPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -6034,6 +6977,18 @@ abstract class ExplicitPathQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  ExplicitPathQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
   });
 
   ExplicitPathQuery orderByValue({
@@ -6172,20 +7127,20 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     );
   }
 
-  ExplicitPathQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  ExplicitPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$ExplicitPathQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6200,6 +7155,76 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     );
   }
 
+  ExplicitPathQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ExplicitPathQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitPathQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitPathDocumentSnapshot? startAtDocument,
+    ExplicitPathDocumentSnapshot? endAtDocument,
+    ExplicitPathDocumentSnapshot? endBeforeDocument,
+    ExplicitPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitPathQuery(query, _collection);
+  }
+
   ExplicitPathQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -6211,7 +7236,7 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -6575,6 +7600,17 @@ abstract class ExplicitSubPathQuery
     bool? isNull,
   });
 
+  ExplicitSubPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
   ExplicitSubPathQuery whereValue({
     num? isEqualTo,
     num? isNotEqualTo,
@@ -6585,6 +7621,18 @@ abstract class ExplicitSubPathQuery
     bool? isNull,
     List<num>? whereIn,
     List<num>? whereNotIn,
+  });
+
+  ExplicitSubPathQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
   });
 
   ExplicitSubPathQuery orderByValue({
@@ -6724,20 +7772,20 @@ class _$ExplicitSubPathQuery
     );
   }
 
-  ExplicitSubPathQuery whereValue({
-    num? isEqualTo,
-    num? isNotEqualTo,
-    num? isLessThan,
-    num? isLessThanOrEqualTo,
-    num? isGreaterThan,
-    num? isGreaterThanOrEqualTo,
+  ExplicitSubPathQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
     bool? isNull,
-    List<num>? whereIn,
-    List<num>? whereNotIn,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
   }) {
     return _$ExplicitSubPathQuery(
       reference.where(
-        'value',
+        FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6752,6 +7800,76 @@ class _$ExplicitSubPathQuery
     );
   }
 
+  ExplicitSubPathQuery whereValue({
+    num? isEqualTo,
+    num? isNotEqualTo,
+    num? isLessThan,
+    num? isLessThanOrEqualTo,
+    num? isGreaterThan,
+    num? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<num>? whereIn,
+    List<num>? whereNotIn,
+  }) {
+    return _$ExplicitSubPathQuery(
+      reference.where(
+        "value",
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  ExplicitSubPathQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ExplicitSubPathDocumentSnapshot? startAtDocument,
+    ExplicitSubPathDocumentSnapshot? endAtDocument,
+    ExplicitSubPathDocumentSnapshot? endBeforeDocument,
+    ExplicitSubPathDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitSubPathQuery(query, _collection);
+  }
+
   ExplicitSubPathQuery orderByValue({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -6763,7 +7881,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy('value', descending: descending);
+    var query = reference.orderBy("value", descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);

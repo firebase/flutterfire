@@ -1,9 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '10.0'
-
-require 'yaml'
-
-pubspec = YAML.load_file(File.join('..', File.join('..', 'pubspec.yaml')))
+# platform :ios, '9.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -36,23 +32,6 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
-
-  if defined?($FirebaseSDKVersion)
-    Pod::UI.puts "#{pubspec['name']}: Using user specified Firebase SDK version for FirebaseFirestore framework: '#{$FirebaseSDKVersion}'"
-    firebase_sdk_version = $FirebaseSDKVersion
-  else
-    firebase_core_script = File.join(File.expand_path('..', File.expand_path('..', File.expand_path('..', File.expand_path('..', File.dirname(__FILE__))))), 'firebase_core/firebase_core/ios/firebase_sdk_version.rb')
-    if File.exist?(firebase_core_script)
-      require firebase_core_script
-      firebase_sdk_version = firebase_sdk_version!
-      Pod::UI.puts "#{pubspec['name']}: Using Firebase SDK version '#{firebase_sdk_version}' defined in 'firebase_core for FirebaseFirestore framework'"
-    else
-      raise "Error - unable to locate firebase_ios_sdk.rb script in firebase_core, and no FirebaseSDKVersion specified"
-    end
-  end
-
-  # TODO - replace with #{firebase_sdk_version} once it has been released on: https://github.com/invertase/firestore-ios-sdk-frameworks.git
-  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :branch => 'main'
 end
 
 post_install do |installer|
