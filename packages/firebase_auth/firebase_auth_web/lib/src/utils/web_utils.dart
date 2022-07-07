@@ -6,8 +6,10 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
+import 'package:flutter/material.dart';
 
 import '../interop/auth.dart' as auth_interop;
+import '../interop/multi_factor.dart' as multi_factor_interop;
 
 /// Given a web error, an [Exception] is returned.
 ///
@@ -289,4 +291,10 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
     default:
       return 'light';
   }
+}
+
+/// Converts a [multi_factor_interop.MultiFactorSession] into a [MultiFactorSession].
+MultiFactorSession convertMultiFactorSession(
+    multi_factor_interop.MultiFactorSession multiFactorSession) {
+  return MultiFactorSession(UniqueKey().toString());
 }

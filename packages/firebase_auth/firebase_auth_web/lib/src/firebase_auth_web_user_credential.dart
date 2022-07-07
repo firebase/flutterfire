@@ -8,6 +8,7 @@ import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 
 import 'firebase_auth_web_user.dart';
 import 'interop/auth.dart' as auth_interop;
+import 'interop/multi_factor.dart';
 import 'utils/web_utils.dart';
 
 /// Web delegate implementation of [UserCredentialPlatform].
@@ -22,6 +23,9 @@ class UserCredentialWeb extends UserCredentialPlatform {
             webUserCredential.additionalUserInfo,
           ),
           credential: convertWebOAuthCredential(webUserCredential.credential),
-          user: UserWeb(auth, MultiFactorWeb(auth), webUserCredential.user!),
+          user: UserWeb(
+              auth,
+              MultiFactorWeb(auth, multiFactor(webUserCredential.user!)),
+              webUserCredential.user!),
         );
 }

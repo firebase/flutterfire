@@ -19,6 +19,7 @@ import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'src/firebase_auth_web_user.dart';
 import 'src/firebase_auth_web_user_credential.dart';
 import 'src/interop/auth.dart' as auth_interop;
+import 'src/interop/multi_factor.dart' as multi_factor;
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
@@ -49,7 +50,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, MultiFactorWeb(this), webUser);
+        return UserWeb(this,
+            MultiFactorWeb(this, multi_factor.multiFactor(webUser)), webUser);
       }
     }).listen((UserWeb? webUser) {
       _authStateChangesListeners[app.name]!.add(webUser);
@@ -61,7 +63,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, MultiFactorWeb(this), webUser);
+        return UserWeb(this,
+            MultiFactorWeb(this, multi_factor.multiFactor(webUser)), webUser);
       }
     }).listen((UserWeb? webUser) {
       _idTokenChangesListeners[app.name]!.add(webUser);
@@ -121,7 +124,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return null;
     }
 
-    return UserWeb(this, MultiFactorWeb(this), _delegate.currentUser!);
+    return UserWeb(
+        this,
+        MultiFactorWeb(this, multi_factor.multiFactor(_delegate.currentUser!)),
+        _delegate.currentUser!);
   }
 
   @override
