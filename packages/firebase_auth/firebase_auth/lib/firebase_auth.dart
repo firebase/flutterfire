@@ -16,6 +16,7 @@ export 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
         FirebaseAuthException,
         FirebaseAuthMultiFactorException,
         MultiFactorInfo,
+        PhoneMultiFactorGenerator,
         PhoneMultiFactorInfo,
         IdTokenResult,
         UserMetadata,

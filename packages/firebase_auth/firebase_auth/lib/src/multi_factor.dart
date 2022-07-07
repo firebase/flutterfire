@@ -17,7 +17,7 @@ class MultiFactor {
   ///
   /// [displayName] can be used to provide a display name for the second factor.
   Future<void> enroll(
-    MultiFactorAssertion assertion, {
+    MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
     return _delegate.enroll(assertion, displayName: displayName);

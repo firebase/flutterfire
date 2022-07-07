@@ -322,7 +322,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await _delegate.signInWithEmailAndPassword(email, password));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 

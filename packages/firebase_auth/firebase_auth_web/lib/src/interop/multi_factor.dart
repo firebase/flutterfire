@@ -12,11 +12,16 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import 'auth.dart' as auth;
 import 'auth_interop.dart' as auth_interop;
 
-export 'auth_interop.dart';
-
 /// Given an AppJSImp, return the Auth instance.
 MultiFactorUser multiFactor(auth.User user) {
   return MultiFactorUser.getInstance(auth_interop.multiFactor(user.jsObject));
+}
+
+/// Given an AppJSImp, return the Auth instance.
+MultiFactorResolver getMultiFactorResolver(
+    auth.Auth auth, auth_interop.MultiFactorError error) {
+  return MultiFactorResolver.fromJsObject(
+      auth_interop.getMultiFactorResolver(auth.jsObject, error));
 }
 
 /// The Firebase MultiFactorUser service class.
@@ -71,10 +76,9 @@ class MultiFactorUser
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
-class MultiFactorInfo
-    extends JsObjectWrapper<auth_interop.MultiFactorInfoJsImpl> {
-  MultiFactorInfo.fromJsObject(auth.MultiFactorInfoJsImpl jsObject)
-      : super.fromJsObject(jsObject);
+class MultiFactorInfo<T extends auth_interop.MultiFactorInfoJsImpl>
+    extends JsObjectWrapper<T> {
+  MultiFactorInfo.fromJsObject(T jsObject) : super.fromJsObject(jsObject);
 
   /// The user friendly name of the current second factor.
   String? get displayName => jsObject.displayName;
@@ -87,6 +91,16 @@ class MultiFactorInfo
 
   /// The multi-factor enrollment ID.
   String get uid => jsObject.uid;
+}
+
+class PhoneMultiFactorInfo
+    extends MultiFactorInfo<auth_interop.PhoneMultiFactorInfoJsImpl> {
+  PhoneMultiFactorInfo.fromJsObject(
+      auth_interop.PhoneMultiFactorInfoJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  /// The user friendly name of the current second factor.
+  String get phoneNumber => jsObject.phoneNumber;
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
@@ -110,4 +124,26 @@ class PhoneMultiFactorAssertion
   PhoneMultiFactorAssertion.fromJsObject(
       auth.PhoneMultiFactorAssertionJsImpl jsObject)
       : super.fromJsObject(jsObject);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth#getmultifactorresolver
+class MultiFactorResolver
+    extends JsObjectWrapper<auth_interop.MultiFactorResolverJsImpl> {
+  MultiFactorResolver.fromJsObject(auth.MultiFactorResolverJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  List<MultiFactorInfo> get hints => jsObject.hints.map((e) {
+        if (e is auth_interop.PhoneMultiFactorInfoJsImpl) {
+          return PhoneMultiFactorInfo.fromJsObject(e);
+        } else {
+          return MultiFactorInfo.fromJsObject(e);
+        }
+      }).toList();
+  MultiFactorSession get session =>
+      MultiFactorSession.fromJsObject(jsObject.session);
+
+  Future<auth.UserCredential> resolveSignIn(MultiFactorAssertion assertion) {
+    return handleThenable(jsObject.resolveSignIn(assertion.jsObject))
+        .then(auth.UserCredential.fromJsObject);
+  }
 }

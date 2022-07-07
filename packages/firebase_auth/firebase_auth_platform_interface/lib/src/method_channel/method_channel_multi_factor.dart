@@ -18,11 +18,13 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
 
   @override
   Future<void> enroll(
-    MultiFactorAssertion assertion, {
+    MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
-    if (assertion.credential is PhoneAuthCredential) {
-      final credential = assertion.credential as PhoneAuthCredential;
+    final _assertion = assertion as MultiFactorAssertion;
+
+    if (_assertion.credential is PhoneAuthCredential) {
+      final credential = _assertion.credential as PhoneAuthCredential;
       final verificationId = credential.verificationId;
       final verificationCode = credential.smsCode;
 
@@ -43,7 +45,7 @@ class MethodChannelMultiFactor extends MultiFactorPlatform {
       );
     } else {
       throw UnimplementedError(
-        'Credential type ${assertion.credential} is not supported yet',
+        'Credential type ${_assertion.credential} is not supported yet',
       );
     }
   }
@@ -90,10 +92,12 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
 
   @override
   Future<UserCredentialPlatform> resolveSignIn(
-    MultiFactorAssertion assertion,
+    MultiFactorAssertionPlatform assertion,
   ) async {
-    if (assertion.credential is PhoneAuthCredential) {
-      final credential = assertion.credential as PhoneAuthCredential;
+    final _assertion = assertion as MultiFactorAssertion;
+
+    if (_assertion.credential is PhoneAuthCredential) {
+      final credential = _assertion.credential as PhoneAuthCredential;
       final verificationId = credential.verificationId;
       final verificationCode = credential.smsCode;
 
@@ -118,8 +122,28 @@ class MethodChannelMultiFactorResolver extends MultiFactorResolverPlatform {
       return userCredential;
     } else {
       throw UnimplementedError(
-        'Credential type ${assertion.credential} is not supported yet',
+        'Credential type ${_assertion.credential} is not supported yet',
       );
     }
+  }
+}
+
+/// Represents an assertion that the Firebase Authentication server
+/// can use to authenticate a user as part of a multi-factor flow.
+class MultiFactorAssertion extends MultiFactorAssertionPlatform {
+  MultiFactorAssertion(this.credential) : super();
+
+  /// Associated credential to the assertion
+  final AuthCredential credential;
+}
+
+/// Helper class used to generate PhoneMultiFactorAssertions.
+class MethodChannelPhoneMultiFactorGenerator extends PhoneMultiFactorGenerator {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  static MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
+    return MultiFactorAssertion(credential);
   }
 }

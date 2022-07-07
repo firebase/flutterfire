@@ -240,6 +240,13 @@ external MultiFactorUserJsImpl multiFactor(
   UserJsImpl user,
 );
 
+/// https://firebase.google.com/docs/reference/js/auth.md#multifactor
+@JS()
+external MultiFactorResolverJsImpl getMultiFactorResolver(
+  AuthJsImpl auth,
+  MultiFactorError error,
+);
+
 @JS('Auth')
 abstract class AuthJsImpl {
   external AppJsImpl get app;
@@ -689,7 +696,7 @@ class MultiFactorAssertionJsImpl {
 /// https://firebase.google.com/docs/reference/js/auth.multifactorerror
 @JS('Error')
 @anonymous
-class MultiFactorErrorJsImpl extends AuthError {
+class MultiFactorError extends AuthError {
   external dynamic get customData;
 }
 

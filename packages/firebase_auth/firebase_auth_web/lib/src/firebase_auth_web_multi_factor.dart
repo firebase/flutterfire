@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_web/firebase_auth_web.dart';
+import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 
 import 'interop/multi_factor.dart' as multi_factor_interop;
 import 'utils/web_utils.dart';
@@ -16,7 +18,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
   final multi_factor_interop.MultiFactorUser _webMultiFactorUser;
 
   final mapAssertion =
-      <multi_factor_interop.MultiFactorAssertion, MultiFactorAssertion>{};
+      <multi_factor_interop.MultiFactorAssertion, MultiFactorAssertionWeb>{};
 
   @override
   Future<MultiFactorSession> getSession() async {
@@ -29,7 +31,7 @@ class MultiFactorWeb extends MultiFactorPlatform {
 
   @override
   Future<void> enroll(
-    MultiFactorAssertion assertion, {
+    MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
     try {
@@ -74,5 +76,37 @@ class MultiFactorWeb extends MultiFactorPlatform {
               uid: e.uid,
             ))
         .toList();
+  }
+}
+
+class MultiFactorAssertionWeb extends MultiFactorAssertionPlatform {
+  MultiFactorAssertionWeb(
+    this.assertion,
+  ) : super();
+
+  final multi_factor_interop.MultiFactorAssertion assertion;
+}
+
+class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
+  MultiFactorResolverWeb(
+    List<MultiFactorInfo> hints,
+    MultiFactorSession session,
+    this._auth,
+    this._webMultiFactorResolver,
+  ) : super(hints, session);
+
+  final multi_factor_interop.MultiFactorResolver _webMultiFactorResolver;
+  final FirebaseAuthWeb _auth;
+
+  @override
+  Future<UserCredentialPlatform> resolveSignIn(
+    MultiFactorAssertionPlatform assertion,
+  ) async {
+    final webAssertion = assertion as MultiFactorAssertionWeb;
+
+    return UserCredentialWeb(
+      _auth,
+      await _webMultiFactorResolver.resolveSignIn(webAssertion.assertion),
+    );
   }
 }
