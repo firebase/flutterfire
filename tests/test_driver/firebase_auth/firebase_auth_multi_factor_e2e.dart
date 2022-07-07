@@ -63,7 +63,7 @@ void setupTests() {
         test(
           'should enroll and unenroll factor',
           () async {
-            String testPhoneNumber = '+447444555666';
+            String testPhoneNumber = '+441444555666';
             User? user;
             UserCredential userCredential;
 
@@ -97,14 +97,18 @@ void setupTests() {
                   verificationCompleted: (PhoneAuthCredential credential) {
                     if (!completer.isCompleted) {
                       return completer.completeError(
-                        Exception('Should not have been called'),
+                        Exception(
+                          'verificationCompleted should not have been called',
+                        ),
                       );
                     }
                   },
                   verificationFailed: (FirebaseException e) {
                     if (!completer.isCompleted) {
                       return completer.completeError(
-                        Exception('Should not have been called'),
+                        Exception(
+                          'verificationFailed should not have been called',
+                        ),
                       );
                     }
                   },
@@ -114,7 +118,9 @@ void setupTests() {
                   codeAutoRetrievalTimeout: (String foo) {
                     if (!completer.isCompleted) {
                       return completer.completeError(
-                        Exception('Should not have been called'),
+                        Exception(
+                          'codeAutoRetrievalTimeout should not have been called',
+                        ),
                       );
                     }
                   },
