@@ -110,3 +110,12 @@ class MultiFactorResolverWeb extends MultiFactorResolverPlatform {
     );
   }
 }
+
+class MultiFactorSessionWeb extends MultiFactorSession {
+  MultiFactorSessionWeb(
+    String id,
+    this.webSession,
+  ) : super(id);
+
+  final multi_factor_interop.MultiFactorSession webSession;
+}

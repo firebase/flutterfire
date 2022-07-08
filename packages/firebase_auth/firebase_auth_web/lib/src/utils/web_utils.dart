@@ -49,8 +49,6 @@ FirebaseAuthException getFirebaseAuthException(
       firebaseError as auth_interop.MultiFactorError,
     );
 
-    print('coucou');
-
     return FirebaseAuthMultiFactorException(
       code: code,
       message: message,
@@ -78,7 +76,7 @@ FirebaseAuthException getFirebaseAuthException(
             uid: e.uid,
           );
         }).toList(),
-        MultiFactorSession('123'),
+        MultiFactorSessionWeb('web', resolverWeb.session),
         FirebaseAuthWeb.instance,
         resolverWeb,
       ),
@@ -351,5 +349,5 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
 /// Converts a [multi_factor_interop.MultiFactorSession] into a [MultiFactorSession].
 MultiFactorSession convertMultiFactorSession(
     multi_factor_interop.MultiFactorSession multiFactorSession) {
-  return MultiFactorSession(UniqueKey().toString());
+  return MultiFactorSessionWeb('web', multiFactorSession);
 }

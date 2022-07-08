@@ -46,6 +46,7 @@ class RecaptchaVerifier {
   ///
   /// [onExpired] An optional callback which is called when the reCAPTCHA expires.
   factory RecaptchaVerifier({
+    required FirebaseAuthPlatform auth,
     String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,
@@ -55,6 +56,7 @@ class RecaptchaVerifier {
   }) {
     return RecaptchaVerifier._(
       _factory.delegateFor(
+        auth: auth,
         container: container,
         size: size,
         theme: theme,

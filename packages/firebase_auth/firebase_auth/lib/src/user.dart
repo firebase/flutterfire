@@ -262,7 +262,7 @@ class User {
     // If we add a recaptcha to the page by creating a new instance, we must
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
-    verifier ??= RecaptchaVerifier();
+    verifier ??= RecaptchaVerifier(auth: _delegate.auth);
     final result =
         await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
     if (mustClear) {

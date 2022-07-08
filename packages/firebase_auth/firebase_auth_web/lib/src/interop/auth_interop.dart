@@ -457,7 +457,7 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
-    String phoneNumber,
+    dynamic /* PhoneInfoOptions | string */ phoneOptions,
     ApplicationVerifierJsImpl applicationVerifier,
   );
   external static AuthCredential credential(
@@ -475,10 +475,10 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
-    container, [
-    Object? parameters,
-    AppJsImpl? app,
-  ]);
+    containerOrId,
+    Object parameters,
+    AuthJsImpl authExtern,
+  );
   external void clear();
   external PromiseJsImpl<num> render();
 }
