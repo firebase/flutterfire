@@ -382,18 +382,21 @@ void main() {
 
           expect(
             await collection.reference
+                .orderBy('first_name')
+                .orderBy('LAST_NAME')
                 .get()
-                .then((value) => value.docs.map((e) => e.data())),
+                .then((value) => value.docs.map((e) => e.data().toJson())),
             [
-              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
-              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
               {'first_name': 'John', 'LAST_NAME': 'Doe'},
+              {'first_name': 'John', 'LAST_NAME': 'Smith'},
+              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
             ],
           );
 
           expect(
             await collection
                 .whereFirstName(isEqualTo: 'John')
+                .orderByLastName()
                 .get()
                 .then((value) => value.docs.map((e) => e.data)),
             [
@@ -404,6 +407,7 @@ void main() {
           expect(
             await collection
                 .whereLastName(isEqualTo: 'Doe')
+                .orderByFirstName()
                 .get()
                 .then((value) => value.docs.map((e) => e.data)),
             [
@@ -429,86 +433,34 @@ void main() {
 
           expect(
             await collection.reference
+                .orderBy('first_name')
+                .orderBy('LAST_NAME')
                 .get()
-                .then((value) => value.docs.map((e) => e.data())),
+                .then((value) => value.docs.map((e) => e.data().toJson())),
             [
-              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
-              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
+              {'first_name': 'A', 'LAST_NAME': 'A'},
               {'first_name': 'John', 'LAST_NAME': 'Doe'},
+              {'first_name': 'John', 'LAST_NAME': 'Smith'},
+              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
             ],
           );
 
           expect(
             await collection
-                .orderByFirstName(startAt: 'John')
+                .orderByFirstName(startAt: 'B')
                 .get()
-                .then((value) => value.docs.map((e) => e.data)),
-            [
-              AdvancedJson(firstName: 'John', lastName: 'Doe'),
-              AdvancedJson(firstName: 'John', lastName: 'Smith'),
-              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
-            ],
+                .then((value) => value.docs.map((e) => e.data.firstName)),
+            ['John', 'John', 'Mike'],
           );
           expect(
             await collection
-                .orderByLastName(startAt: 'Doe')
+                .orderByLastName(startAt: 'B')
                 .get()
-                .then((value) => value.docs.map((e) => e.data)),
-            [
-              AdvancedJson(firstName: 'John', lastName: 'Doe'),
-              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
-              AdvancedJson(firstName: 'John', lastName: 'Smith'),
-            ],
+                .then((value) => value.docs.map((e) => e.data.lastName)),
+            ['Doe', 'Doe', 'Smith'],
           );
         });
       });
-
-      group('where', () {
-        test('supports field renaming', () async {
-          final collection =
-              await initializeTest(AdvancedJsonCollectionReference());
-
-          await collection
-              .add(AdvancedJson(firstName: 'John', lastName: 'Doe'));
-          await collection
-              .add(AdvancedJson(firstName: 'John', lastName: 'Smith'));
-          await collection
-              .add(AdvancedJson(firstName: 'Mike', lastName: 'Doe'));
-
-          expect(
-            await collection.reference
-                .get()
-                .then((value) => value.docs.map((e) => e.data())),
-            [
-              {'first_name': 'Mike', 'LAST_NAME': 'Doe'},
-              {'first_name': 'Mike', 'LAST_NAME': 'Smith'},
-              {'first_name': 'John', 'LAST_NAME': 'Doe'},
-            ],
-          );
-
-          expect(
-            await collection
-                .whereFirstName(isEqualTo: 'John')
-                .get()
-                .then((value) => value.docs.map((e) => e.data)),
-            [
-              AdvancedJson(firstName: 'John', lastName: 'Doe'),
-              AdvancedJson(firstName: 'John', lastName: 'Smith'),
-            ],
-          );
-          expect(
-            await collection
-                .whereLastName(isEqualTo: 'Doe')
-                .get()
-                .then((value) => value.docs.map((e) => e.data)),
-            [
-              AdvancedJson(firstName: 'John', lastName: 'Doe'),
-              AdvancedJson(firstName: 'Mike', lastName: 'Doe'),
-            ],
-          );
-        });
-      });
-
       group('startAt', () {
         test('supports values', () async {
           final collection = await initializeTest(MovieCollectionReference());

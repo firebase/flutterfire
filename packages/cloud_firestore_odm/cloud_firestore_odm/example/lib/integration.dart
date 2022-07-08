@@ -31,7 +31,7 @@ class ManualJson {
 }
 
 @Collection<AdvancedJson>('firestore-example-app/test/advanced')
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class AdvancedJson {
   AdvancedJson({this.firstName, this.lastName, this.ignored});
 
@@ -42,11 +42,24 @@ class AdvancedJson {
 
   @JsonKey(ignore: true)
   final String? ignored;
+
+  Map<String, Object?> toJson() => _$AdvancedJsonToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdvancedJson &&
+        other.lastName == lastName &&
+        other.firstName == firstName &&
+        other.ignored == ignored;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([firstName, lastName, ignored]);
 }
 
 // This tests that the generated code compiles
 @Collection<_PrivateAdvancedJson>('firestore-example-app/test/private-advanced')
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class _PrivateAdvancedJson {
   _PrivateAdvancedJson({
     this.firstName,
@@ -62,4 +75,17 @@ class _PrivateAdvancedJson {
 
   @JsonKey(ignore: true)
   final String? ignored;
+
+  Map<String, Object?> toJson() => _$PrivateAdvancedJsonToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    return other is AdvancedJson &&
+        other.lastName == lastName &&
+        other.firstName == firstName &&
+        other.ignored == ignored;
+  }
+
+  @override
+  int get hashCode => Object.hashAll([firstName, lastName, ignored]);
 }

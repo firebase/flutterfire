@@ -39,6 +39,9 @@ abstract class ModelCollectionReference
   }
 
   @override
+  CollectionReference<Model> get reference;
+
+  @override
   ModelDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -531,6 +534,9 @@ abstract class NestedCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Nested> get reference;
 
   @override
   NestedDocumentReference doc([String? id]);
@@ -1403,6 +1409,9 @@ abstract class SplitFileModelCollectionReference
   }
 
   @override
+  CollectionReference<SplitFileModel> get reference;
+
+  @override
   SplitFileModelDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -1796,6 +1805,9 @@ abstract class EmptyModelCollectionReference
   }
 
   @override
+  CollectionReference<EmptyModel> get reference;
+
+  @override
   EmptyModelDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -2183,6 +2195,9 @@ abstract class OptionalJsonCollectionReference
   ) {
     return _$OptionalJsonToJson(value);
   }
+
+  @override
+  CollectionReference<OptionalJson> get reference;
 
   @override
   OptionalJsonDocumentReference doc([String? id]);
@@ -2685,6 +2700,9 @@ abstract class MixedJsonCollectionReference
   }
 
   @override
+  CollectionReference<MixedJson> get reference;
+
+  @override
   MixedJsonDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -3178,6 +3196,9 @@ abstract class RootCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Root> get reference;
 
   @override
   RootDocumentReference doc([String? id]);
@@ -3798,6 +3819,9 @@ abstract class SubCollectionReference
     return value.toJson();
   }
 
+  @override
+  CollectionReference<Sub> get reference;
+
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
 
@@ -4408,6 +4432,9 @@ abstract class AsCamelCaseCollectionReference
     return value.toJson();
   }
 
+  @override
+  CollectionReference<AsCamelCase> get reference;
+
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
 
@@ -4925,6 +4952,9 @@ abstract class CustomSubNameCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<CustomSubName> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -5445,6 +5475,9 @@ abstract class ExplicitPathCollectionReference
   }
 
   @override
+  CollectionReference<ExplicitPath> get reference;
+
+  @override
   ExplicitPathDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -5953,6 +5986,9 @@ abstract class ExplicitSubPathCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<ExplicitSubPath> get reference;
 
   /// A reference to the containing [ExplicitPathDocumentReference] if this is a subcollection.
   ExplicitPathDocumentReference get parent;

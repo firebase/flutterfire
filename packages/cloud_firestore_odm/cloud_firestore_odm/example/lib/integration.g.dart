@@ -41,6 +41,9 @@ abstract class ManualJsonCollectionReference
   }
 
   @override
+  CollectionReference<ManualJson> get reference;
+
+  @override
   ManualJsonDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -533,8 +536,11 @@ abstract class AdvancedJsonCollectionReference
     AdvancedJson value,
     SetOptions? options,
   ) {
-    return _$AdvancedJsonToJson(value);
+    return value.toJson();
   }
+
+  @override
+  CollectionReference<AdvancedJson> get reference;
 
   @override
   AdvancedJsonDocumentReference doc([String? id]);
@@ -621,6 +627,7 @@ abstract class AdvancedJsonDocumentReference
   Future<void> update({
     String? firstName,
     String? lastName,
+    int hashCode,
   });
 
   Future<void> set(AdvancedJson value);
@@ -667,10 +674,12 @@ class _$AdvancedJsonDocumentReference
   Future<void> update({
     Object? firstName = _sentinel,
     Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -753,6 +762,17 @@ abstract class AdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
+  AdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -784,6 +804,18 @@ abstract class AdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
+    AdvancedJsonDocumentSnapshot? startAtDocument,
+    AdvancedJsonDocumentSnapshot? endAtDocument,
+    AdvancedJsonDocumentSnapshot? endBeforeDocument,
+    AdvancedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  AdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     AdvancedJsonDocumentSnapshot? startAtDocument,
     AdvancedJsonDocumentSnapshot? endAtDocument,
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -936,6 +968,34 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
     );
   }
 
+  AdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$AdvancedJsonQuery(
+      reference.where(
+        _$AdvancedJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   AdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1064,6 +1124,49 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
     return _$AdvancedJsonQuery(query, _collection);
   }
 
+  AdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    AdvancedJsonDocumentSnapshot? startAtDocument,
+    AdvancedJsonDocumentSnapshot? endAtDocument,
+    AdvancedJsonDocumentSnapshot? endBeforeDocument,
+    AdvancedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$AdvancedJsonFieldMap["hashCode"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AdvancedJsonQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$AdvancedJsonQuery &&
@@ -1130,8 +1233,11 @@ abstract class _PrivateAdvancedJsonCollectionReference
     _PrivateAdvancedJson value,
     SetOptions? options,
   ) {
-    return _$PrivateAdvancedJsonToJson(value);
+    return value.toJson();
   }
+
+  @override
+  CollectionReference<_PrivateAdvancedJson> get reference;
 
   @override
   _PrivateAdvancedJsonDocumentReference doc([String? id]);
@@ -1224,6 +1330,7 @@ abstract class _PrivateAdvancedJsonDocumentReference
   Future<void> update({
     String? firstName,
     String? lastName,
+    int hashCode,
   });
 
   Future<void> set(_PrivateAdvancedJson value);
@@ -1270,10 +1377,12 @@ class _$_PrivateAdvancedJsonDocumentReference
   Future<void> update({
     Object? firstName = _sentinel,
     Object? lastName = _sentinel,
+    Object? hashCode = _sentinel,
   }) async {
     final json = {
       if (firstName != _sentinel) "firstName": firstName as String?,
       if (lastName != _sentinel) "lastName": lastName as String?,
+      if (hashCode != _sentinel) "hashCode": hashCode as int,
     };
 
     return reference.update(json);
@@ -1356,6 +1465,17 @@ abstract class _PrivateAdvancedJsonQuery
     List<String?>? whereIn,
     List<String?>? whereNotIn,
   });
+  _PrivateAdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  });
 
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
@@ -1387,6 +1507,18 @@ abstract class _PrivateAdvancedJsonQuery
     String? startAfter,
     String? endAt,
     String? endBefore,
+    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
+  });
+
+  _PrivateAdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    int startAt,
+    int startAfter,
+    int endAt,
+    int endBefore,
     _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -1542,6 +1674,34 @@ class _$_PrivateAdvancedJsonQuery
     );
   }
 
+  _PrivateAdvancedJsonQuery whereHashCode({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int>? whereIn,
+    List<int>? whereNotIn,
+  }) {
+    return _$_PrivateAdvancedJsonQuery(
+      reference.where(
+        _$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   _PrivateAdvancedJsonQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1670,6 +1830,49 @@ class _$_PrivateAdvancedJsonQuery
     return _$_PrivateAdvancedJsonQuery(query, _collection);
   }
 
+  _PrivateAdvancedJsonQuery orderByHashCode({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
+    _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["hashCode"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$_PrivateAdvancedJsonQuery(query, _collection);
+  }
+
   @override
   bool operator ==(Object other) {
     return other is _$_PrivateAdvancedJsonQuery &&
@@ -1740,6 +1943,9 @@ abstract class EmptyModelCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<EmptyModel> get reference;
 
   @override
   EmptyModelDocumentReference doc([String? id]);
@@ -2117,35 +2323,35 @@ Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
 AdvancedJson _$AdvancedJsonFromJson(Map<String, dynamic> json) => AdvancedJson(
-      firstName: json['firstName'] as String?,
+      firstName: json['first_name'] as String?,
       lastName: json['LAST_NAME'] as String?,
     );
 
 const _$AdvancedJsonFieldMap = <String, String>{
-  'firstName': 'firstName',
+  'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
 
 Map<String, dynamic> _$AdvancedJsonToJson(AdvancedJson instance) =>
     <String, dynamic>{
-      'firstName': instance.firstName,
+      'first_name': instance.firstName,
       'LAST_NAME': instance.lastName,
     };
 
 _PrivateAdvancedJson _$PrivateAdvancedJsonFromJson(Map<String, dynamic> json) =>
     _PrivateAdvancedJson(
-      firstName: json['firstName'] as String?,
+      firstName: json['first_name'] as String?,
       lastName: json['LAST_NAME'] as String?,
     );
 
 const _$PrivateAdvancedJsonFieldMap = <String, String>{
-  'firstName': 'firstName',
+  'firstName': 'first_name',
   'lastName': 'LAST_NAME',
 };
 
 Map<String, dynamic> _$PrivateAdvancedJsonToJson(
         _PrivateAdvancedJson instance) =>
     <String, dynamic>{
-      'firstName': instance.firstName,
+      'first_name': instance.firstName,
       'LAST_NAME': instance.lastName,
     };

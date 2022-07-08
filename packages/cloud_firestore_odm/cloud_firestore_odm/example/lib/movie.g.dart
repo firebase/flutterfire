@@ -39,6 +39,9 @@ abstract class MovieCollectionReference
   }
 
   @override
+  CollectionReference<Movie> get reference;
+
+  @override
   MovieDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -1120,6 +1123,9 @@ abstract class CommentCollectionReference
   ) {
     return _$CommentToJson(value);
   }
+
+  @override
+  CollectionReference<Comment> get reference;
 
   /// A reference to the containing [MovieDocumentReference] if this is a subcollection.
   MovieDocumentReference get parent;
