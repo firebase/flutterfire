@@ -1731,6 +1731,16 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       year: json['year'] as int,
     );
 
+const _$MovieFieldMap = <String, String>{
+  'poster': 'poster',
+  'likes': 'likes',
+  'title': 'title',
+  'year': 'year',
+  'runtime': 'runtime',
+  'rated': 'rated',
+  'genre': 'genre',
+};
+
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'poster': instance.poster,
       'likes': instance.likes,
@@ -1745,6 +1755,11 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       authorName: json['authorName'] as String,
       message: json['message'] as String,
     );
+
+const _$CommentFieldMap = <String, String>{
+  'authorName': 'authorName',
+  'message': 'message',
+};
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'authorName': instance.authorName,

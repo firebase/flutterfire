@@ -2109,6 +2109,8 @@ class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
+const _$EmptyModelFieldMap = <String, String>{};
+
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
@@ -2116,6 +2118,11 @@ AdvancedJson _$AdvancedJsonFromJson(Map<String, dynamic> json) => AdvancedJson(
       firstName: json['firstName'] as String?,
       lastName: json['LAST_NAME'] as String?,
     );
+
+const _$AdvancedJsonFieldMap = <String, String>{
+  'firstName': 'firstName',
+  'lastName': 'LAST_NAME',
+};
 
 Map<String, dynamic> _$AdvancedJsonToJson(AdvancedJson instance) =>
     <String, dynamic>{
@@ -2128,6 +2135,11 @@ _PrivateAdvancedJson _$PrivateAdvancedJsonFromJson(Map<String, dynamic> json) =>
       firstName: json['firstName'] as String?,
       lastName: json['LAST_NAME'] as String?,
     );
+
+const _$PrivateAdvancedJsonFieldMap = <String, String>{
+  'firstName': 'firstName',
+  'lastName': 'LAST_NAME',
+};
 
 Map<String, dynamic> _$PrivateAdvancedJsonToJson(
         _PrivateAdvancedJson instance) =>

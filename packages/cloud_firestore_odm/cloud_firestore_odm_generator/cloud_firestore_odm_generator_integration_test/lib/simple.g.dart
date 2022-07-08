@@ -365,7 +365,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
   }) {
     return _$ModelQuery(
       reference.where(
-        _$ModelFieldMap["value"],
+        _$ModelFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -434,7 +434,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     ModelDocumentSnapshot? startAfterDocument,
   }) {
     var query =
-        reference.orderBy(_$ModelFieldMap["value"], descending: descending);
+        reference.orderBy(_$ModelFieldMap["value"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -958,7 +958,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        _$NestedFieldMap["boolList"],
+        _$NestedFieldMap["boolList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -984,7 +984,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        _$NestedFieldMap["stringList"],
+        _$NestedFieldMap["stringList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1010,7 +1010,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        _$NestedFieldMap["numList"],
+        _$NestedFieldMap["numList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1036,7 +1036,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        _$NestedFieldMap["objectList"],
+        _$NestedFieldMap["objectList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1062,7 +1062,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        _$NestedFieldMap["dynamicList"],
+        _$NestedFieldMap["dynamicList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1129,8 +1129,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$NestedFieldMap["boolList"], descending: descending);
+    var query = reference.orderBy(_$NestedFieldMap["boolList"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1172,7 +1172,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["stringList"],
+    var query = reference.orderBy(_$NestedFieldMap["stringList"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1216,7 +1216,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     var query =
-        reference.orderBy(_$NestedFieldMap["numList"], descending: descending);
+        reference.orderBy(_$NestedFieldMap["numList"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1258,7 +1258,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["objectList"],
+    var query = reference.orderBy(_$NestedFieldMap["objectList"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1301,7 +1301,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$NestedFieldMap["dynamicList"],
+    var query = reference.orderBy(_$NestedFieldMap["dynamicList"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -2515,7 +2515,7 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   }) {
     return _$OptionalJsonQuery(
       reference.where(
-        _$OptionalJsonFieldMap["value"],
+        _$OptionalJsonFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -2583,7 +2583,7 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$OptionalJsonFieldMap["value"],
+    var query = reference.orderBy(_$OptionalJsonFieldMap["value"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -3012,7 +3012,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
   }) {
     return _$MixedJsonQuery(
       reference.where(
-        _$MixedJsonFieldMap["value"],
+        _$MixedJsonFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3080,8 +3080,8 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$MixedJsonFieldMap["value"], descending: descending);
+    var query = reference.orderBy(_$MixedJsonFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3560,7 +3560,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        _$RootFieldMap["nonNullable"],
+        _$RootFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3588,7 +3588,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        _$RootFieldMap["nullable"],
+        _$RootFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3656,7 +3656,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$RootFieldMap["nonNullable"],
+    var query = reference.orderBy(_$RootFieldMap["nonNullable"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -3700,7 +3700,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? startAfterDocument,
   }) {
     var query =
-        reference.orderBy(_$RootFieldMap["nullable"], descending: descending);
+        reference.orderBy(_$RootFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4168,7 +4168,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        _$SubFieldMap["nonNullable"],
+        _$SubFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4196,7 +4196,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        _$SubFieldMap["nullable"],
+        _$SubFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4264,8 +4264,8 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query =
-        reference.orderBy(_$SubFieldMap["nonNullable"], descending: descending);
+    var query = reference.orderBy(_$SubFieldMap["nonNullable"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4308,7 +4308,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? startAfterDocument,
   }) {
     var query =
-        reference.orderBy(_$SubFieldMap["nullable"], descending: descending);
+        reference.orderBy(_$SubFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4757,7 +4757,7 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   }) {
     return _$AsCamelCaseQuery(
       reference.where(
-        _$AsCamelCaseFieldMap["value"],
+        _$AsCamelCaseFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4825,7 +4825,7 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$AsCamelCaseFieldMap["value"],
+    var query = reference.orderBy(_$AsCamelCaseFieldMap["value"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -5275,7 +5275,7 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   }) {
     return _$CustomSubNameQuery(
       reference.where(
-        _$CustomSubNameFieldMap["value"],
+        _$CustomSubNameFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5343,7 +5343,7 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$CustomSubNameFieldMap["value"],
+    var query = reference.orderBy(_$CustomSubNameFieldMap["value"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -5785,7 +5785,7 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   }) {
     return _$ExplicitPathQuery(
       reference.where(
-        _$ExplicitPathFieldMap["value"],
+        _$ExplicitPathFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5853,7 +5853,7 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$ExplicitPathFieldMap["value"],
+    var query = reference.orderBy(_$ExplicitPathFieldMap["value"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -6304,7 +6304,7 @@ class _$ExplicitSubPathQuery
   }) {
     return _$ExplicitSubPathQuery(
       reference.where(
-        _$ExplicitSubPathFieldMap["value"],
+        _$ExplicitSubPathFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6372,7 +6372,7 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"],
+    var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"]!,
         descending: descending);
 
     if (startAtDocument != null) {

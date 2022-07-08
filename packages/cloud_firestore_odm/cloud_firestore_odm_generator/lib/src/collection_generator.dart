@@ -332,7 +332,7 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
               e.type,
               updatable: true,
               field: hasJsonSerializable
-                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]'
+                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]!'
                   : key,
             );
           },
