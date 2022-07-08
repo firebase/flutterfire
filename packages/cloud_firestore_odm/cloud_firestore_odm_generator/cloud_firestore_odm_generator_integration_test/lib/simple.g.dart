@@ -769,6 +769,7 @@ abstract class NestedDocumentReference
     List<num>? numList,
     List<Object?>? objectList,
     List<dynamic>? dynamicList,
+    List<SimpleEnum>? enumList,
   });
 
   Future<void> set(Nested value);
@@ -819,6 +820,7 @@ class _$NestedDocumentReference
     Object? numList = _sentinel,
     Object? objectList = _sentinel,
     Object? dynamicList = _sentinel,
+    Object? enumList = _sentinel,
   }) async {
     final json = {
       if (simple != _sentinel) "simple": simple as int?,
@@ -828,6 +830,7 @@ class _$NestedDocumentReference
       if (objectList != _sentinel) "objectList": objectList as List<Object?>?,
       if (dynamicList != _sentinel)
         "dynamicList": dynamicList as List<dynamic>?,
+      if (enumList != _sentinel) "enumList": enumList as List<SimpleEnum>?,
     };
 
     return reference.update(json);
@@ -1019,6 +1022,17 @@ abstract class NestedQuery
     dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
+  NestedQuery whereEnumList({
+    List<SimpleEnum>? isEqualTo,
+    List<SimpleEnum>? isNotEqualTo,
+    List<SimpleEnum>? isLessThan,
+    List<SimpleEnum>? isLessThanOrEqualTo,
+    List<SimpleEnum>? isGreaterThan,
+    List<SimpleEnum>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    SimpleEnum? arrayContains,
+    List<SimpleEnum>? arrayContainsAny,
+  });
 
   NestedQuery orderByDocumentId({
     bool descending = false,
@@ -1098,6 +1112,18 @@ abstract class NestedQuery
     List<dynamic>? startAfter,
     List<dynamic>? endAt,
     List<dynamic>? endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderByEnumList({
+    bool descending = false,
+    List<SimpleEnum>? startAt,
+    List<SimpleEnum>? startAfter,
+    List<SimpleEnum>? endAt,
+    List<SimpleEnum>? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -1438,6 +1464,34 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereEnumList({
+    List<SimpleEnum>? isEqualTo,
+    List<SimpleEnum>? isNotEqualTo,
+    List<SimpleEnum>? isLessThan,
+    List<SimpleEnum>? isLessThanOrEqualTo,
+    List<SimpleEnum>? isGreaterThan,
+    List<SimpleEnum>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    SimpleEnum? arrayContains,
+    List<SimpleEnum>? arrayContainsAny,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["enumList"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+      ),
+      _collection,
+    );
+  }
+
   NestedQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1707,6 +1761,49 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(_$NestedFieldMap["dynamicList"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderByEnumList({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$NestedFieldMap["enumList"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -7001,6 +7098,657 @@ class CustomSubNameQueryDocumentSnapshot
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class EnumTestCollectionReference
+    implements
+        EnumTestQuery,
+        FirestoreCollectionReference<EnumTest, EnumTestQuerySnapshot> {
+  factory EnumTestCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$EnumTestCollectionReference;
+
+  static EnumTest fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return EnumTest.fromJson(snapshot.data()!);
+  }
+
+  static Map<String, Object?> toFirestore(
+    EnumTest value,
+    SetOptions? options,
+  ) {
+    return value.toJson();
+  }
+
+  @override
+  CollectionReference<EnumTest> get reference;
+
+  @override
+  EnumTestDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<EnumTestDocumentReference> add(EnumTest value);
+}
+
+class _$EnumTestCollectionReference extends _$EnumTestQuery
+    implements EnumTestCollectionReference {
+  factory _$EnumTestCollectionReference([FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$EnumTestCollectionReference._(
+      firestore.collection('enum-test').withConverter(
+            fromFirestore: EnumTestCollectionReference.fromFirestore,
+            toFirestore: EnumTestCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$EnumTestCollectionReference._(
+    CollectionReference<EnumTest> reference,
+  ) : super(reference, reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<EnumTest> get reference =>
+      super.reference as CollectionReference<EnumTest>;
+
+  @override
+  EnumTestDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return EnumTestDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<EnumTestDocumentReference> add(EnumTest value) {
+    return reference.add(value).then((ref) => EnumTestDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$EnumTestCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class EnumTestDocumentReference
+    extends FirestoreDocumentReference<EnumTest, EnumTestDocumentSnapshot> {
+  factory EnumTestDocumentReference(DocumentReference<EnumTest> reference) =
+      _$EnumTestDocumentReference;
+
+  DocumentReference<EnumTest> get reference;
+
+  /// A reference to the [EnumTestCollectionReference] containing this document.
+  EnumTestCollectionReference get parent {
+    return _$EnumTestCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<EnumTestDocumentSnapshot> snapshots();
+
+  @override
+  Future<EnumTestDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  Future<void> update({
+    SimpleEnum nonNullable,
+  });
+
+  Future<void> set(EnumTest value);
+}
+
+class _$EnumTestDocumentReference
+    extends FirestoreDocumentReference<EnumTest, EnumTestDocumentSnapshot>
+    implements EnumTestDocumentReference {
+  _$EnumTestDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<EnumTest> reference;
+
+  /// A reference to the [EnumTestCollectionReference] containing this document.
+  EnumTestCollectionReference get parent {
+    return _$EnumTestCollectionReference(reference.firestore);
+  }
+
+  @override
+  Stream<EnumTestDocumentSnapshot> snapshots() {
+    return reference.snapshots().map((snapshot) {
+      return EnumTestDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<EnumTestDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then((snapshot) {
+      return EnumTestDocumentSnapshot._(
+        snapshot,
+        snapshot.data(),
+      );
+    });
+  }
+
+  @override
+  Future<void> delete() {
+    return reference.delete();
+  }
+
+  Future<void> update({
+    Object? nonNullable = _sentinel,
+  }) async {
+    final json = {
+      if (nonNullable != _sentinel) "nonNullable": nonNullable as SimpleEnum,
+    };
+
+    return reference.update(json);
+  }
+
+  Future<void> set(EnumTest value) {
+    return reference.set(value);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EnumTestDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+class EnumTestDocumentSnapshot extends FirestoreDocumentSnapshot<EnumTest> {
+  EnumTestDocumentSnapshot._(
+    this.snapshot,
+    this.data,
+  );
+
+  @override
+  final DocumentSnapshot<EnumTest> snapshot;
+
+  @override
+  EnumTestDocumentReference get reference {
+    return EnumTestDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final EnumTest? data;
+}
+
+abstract class EnumTestQuery
+    implements QueryReference<EnumTest, EnumTestQuerySnapshot> {
+  @override
+  EnumTestQuery limit(int limit);
+
+  @override
+  EnumTestQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  EnumTestQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  EnumTestQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  EnumTestQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  EnumTestQuery whereNonNullable({
+    SimpleEnum? isEqualTo,
+    SimpleEnum? isNotEqualTo,
+    SimpleEnum? isLessThan,
+    SimpleEnum? isLessThanOrEqualTo,
+    SimpleEnum? isGreaterThan,
+    SimpleEnum? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<SimpleEnum>? whereIn,
+    List<SimpleEnum>? whereNotIn,
+  });
+
+  EnumTestQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  });
+
+  EnumTestQuery orderByNonNullable({
+    bool descending = false,
+    SimpleEnum startAt,
+    SimpleEnum startAfter,
+    SimpleEnum endAt,
+    SimpleEnum endBefore,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$EnumTestQuery extends QueryReference<EnumTest, EnumTestQuerySnapshot>
+    implements EnumTestQuery {
+  _$EnumTestQuery(
+    this.reference,
+    this._collection,
+  );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  final Query<EnumTest> reference;
+
+  EnumTestQuerySnapshot _decodeSnapshot(
+    QuerySnapshot<EnumTest> snapshot,
+  ) {
+    final docs = snapshot.docs.map((e) {
+      return EnumTestQueryDocumentSnapshot._(e, e.data());
+    }).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return FirestoreDocumentChange<EnumTestDocumentSnapshot>(
+        type: change.type,
+        oldIndex: change.oldIndex,
+        newIndex: change.newIndex,
+        doc: EnumTestDocumentSnapshot._(change.doc, change.doc.data()),
+      );
+    }).toList();
+
+    return EnumTestQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  @override
+  Stream<EnumTestQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference.snapshots().map(_decodeSnapshot);
+  }
+
+  @override
+  Future<EnumTestQuerySnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(_decodeSnapshot);
+  }
+
+  @override
+  EnumTestQuery limit(int limit) {
+    return _$EnumTestQuery(
+      reference.limit(limit),
+      _collection,
+    );
+  }
+
+  @override
+  EnumTestQuery limitToLast(int limit) {
+    return _$EnumTestQuery(
+      reference.limitToLast(limit),
+      _collection,
+    );
+  }
+
+  EnumTestQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EnumTestQuery(query, _collection);
+  }
+
+  EnumTestQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$EnumTestQuery(
+      reference.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      _collection,
+    );
+  }
+
+  EnumTestQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$EnumTestQuery(
+      reference.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
+  EnumTestQuery whereNonNullable({
+    SimpleEnum? isEqualTo,
+    SimpleEnum? isNotEqualTo,
+    SimpleEnum? isLessThan,
+    SimpleEnum? isLessThanOrEqualTo,
+    SimpleEnum? isGreaterThan,
+    SimpleEnum? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<SimpleEnum>? whereIn,
+    List<SimpleEnum>? whereNotIn,
+  }) {
+    List<String>? _whereInList;
+    whereIn?.forEach((e) {
+      _whereInList?.add(e.name);
+    });
+    List<String>? _whereNotInList;
+    whereNotIn?.forEach((e) {
+      _whereNotInList?.add(e.name);
+    });
+
+    return _$EnumTestQuery(
+      reference.where(
+        'nonNullable',
+        isEqualTo: isEqualTo?.name,
+        isNotEqualTo: isNotEqualTo?.name,
+        isLessThan: isLessThan?.name,
+        isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+        isGreaterThan: isGreaterThan?.name,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+        isNull: isNull,
+        whereIn: _whereInList,
+        whereNotIn: _whereNotInList,
+      ),
+      _collection,
+    );
+  }
+
+  EnumTestQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EnumTestQuery(query, _collection);
+  }
+
+  EnumTestQuery orderByNonNullable({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    EnumTestDocumentSnapshot? startAtDocument,
+    EnumTestDocumentSnapshot? endAtDocument,
+    EnumTestDocumentSnapshot? endBeforeDocument,
+    EnumTestDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$EnumTestFieldMap["nonNullable"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EnumTestQuery(query, _collection);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$EnumTestQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class EnumTestQuerySnapshot
+    extends FirestoreQuerySnapshot<EnumTest, EnumTestQueryDocumentSnapshot> {
+  EnumTestQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  final QuerySnapshot<EnumTest> snapshot;
+
+  @override
+  final List<EnumTestQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<EnumTestDocumentSnapshot>> docChanges;
+}
+
+class EnumTestQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<EnumTest>
+    implements EnumTestDocumentSnapshot {
+  EnumTestQueryDocumentSnapshot._(this.snapshot, this.data);
+
+  @override
+  final QueryDocumentSnapshot<EnumTest> snapshot;
+
+  @override
+  EnumTestDocumentReference get reference {
+    return EnumTestDocumentReference(snapshot.reference);
+  }
+
+  @override
+  final EnumTest data;
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class ExplicitPathCollectionReference
     implements
         ExplicitPathQuery,
@@ -8367,6 +9115,9 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
           (json['numList'] as List<dynamic>?)?.map((e) => e as num).toList(),
       objectList: json['objectList'] as List<dynamic>?,
       dynamicList: json['dynamicList'] as List<dynamic>?,
+      enumList: (json['enumList'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$SimpleEnumEnumMap, e))
+          .toList(),
     );
 
 const _$NestedFieldMap = <String, String>{
@@ -8378,6 +9129,7 @@ const _$NestedFieldMap = <String, String>{
   'numList': 'numList',
   'objectList': 'objectList',
   'dynamicList': 'dynamicList',
+  'enumList': 'enumList',
 };
 
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
@@ -8389,7 +9141,15 @@ Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'numList': instance.numList,
       'objectList': instance.objectList,
       'dynamicList': instance.dynamicList,
+      'enumList':
+          instance.enumList?.map((e) => _$SimpleEnumEnumMap[e]!).toList(),
     };
+
+const _$SimpleEnumEnumMap = {
+  SimpleEnum.enum1: 'enum1',
+  SimpleEnum.enum2: 'enum2',
+  SimpleEnum.enum3: 'enum3',
+};
 
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
@@ -8431,6 +9191,18 @@ const _$RootFieldMap = <String, String>{
 Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
       'nullable': instance.nullable,
+    };
+
+EnumTest _$EnumTestFromJson(Map<String, dynamic> json) => EnumTest(
+      $enumDecode(_$SimpleEnumEnumMap, json['nonNullable']),
+    );
+
+const _$EnumTestFieldMap = <String, String>{
+  'nonNullable': 'nonNullable',
+};
+
+Map<String, dynamic> _$EnumTestToJson(EnumTest instance) => <String, dynamic>{
+      'nonNullable': _$SimpleEnumEnumMap[instance.nonNullable]!,
     };
 
 OptionalJson _$OptionalJsonFromJson(Map<String, dynamic> json) => OptionalJson(

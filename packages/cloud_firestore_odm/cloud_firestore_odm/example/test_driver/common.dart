@@ -30,6 +30,15 @@ Movie createMovie({
   String runtime = '',
   String title = '',
   int year = 1990,
+  List<LanguageType> language = const [],
+  CertificationType certification = CertificationType.None,
+  List<Map<CastType, String>> cast = const [
+    {CastType.Cameo: 'Wil Wheaton', CastType.Recurring: 'Jim Parsons'}
+  ],
+  Map<CastType, String> majorCast = const {
+    CastType.Cameo: 'Wil Wheaton',
+    CastType.Recurring: 'Jim Parsons'
+  },
 }) {
   return Movie(
     genre: genre,
@@ -39,6 +48,10 @@ Movie createMovie({
     runtime: runtime,
     title: title,
     year: year,
+    language: language,
+    certification: certification,
+    cast: cast,
+    majorCast: majorCast,
   );
 }
 

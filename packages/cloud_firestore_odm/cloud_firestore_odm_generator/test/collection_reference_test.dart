@@ -56,4 +56,28 @@ void main() {
       );
     });
   });
+
+  group('enum-test collections', () {
+    test('simple enum', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+  enumTestRef.orderByNonNullable(startAt: null);
+  // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+  enumTestRef.orderByNonNullable(startAfter: null);
+  // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+  enumTestRef.orderByNonNullable(endAt: null);
+  // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+  enumTestRef.orderByNonNullable(endBefore: null);
+}
+''',
+        ),
+        compiles,
+      );
+    });
+  });
 }

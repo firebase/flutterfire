@@ -18,6 +18,7 @@ command:
     # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
     # makes the CI much more stable.
     runPubGetInParallel: false
+    # usePubspecOverrides: true
 
 scripts:
   lint:all:
@@ -226,6 +227,20 @@ scripts:
       no-depends-on: 'test'
       scope: '*odm*'
 
+  odm:test:e2e:
+    run: |
+      melos exec -c 1 --fail-fast -- \
+        "flutter drive --no-pub --verbose-system-logs --device-id=web-server --target=./test_driver/cloud_firestore_odm_e2e.dart"
+    description: |
+      Run all e2e tests on odm on web platform.
+      - Requires Node.js and NPM installed.
+      - Requires Firebase Emulator Suite is running
+      - Requires "chromedriver" is installed and running
+    select-package:
+      dir-exists:
+        - test_driver
+      scope: '*odm_example*'
+
   odm:example_build_runner:build:
     run: |
       melos exec -- \
@@ -237,7 +252,7 @@ scripts:
   odm:generator_test_build_runner:build:
     run: |
       melos exec -c 1 -- \
-        "dart pub get && flutter pub run build_runner build --delete-conflicting-outputs"
+        "flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs"
     description: Run a build_runner build generator test.
     select-package:
       scope:

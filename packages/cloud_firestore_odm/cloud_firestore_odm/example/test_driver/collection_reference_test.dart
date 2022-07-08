@@ -79,6 +79,112 @@ void main() {
           skip: true,
         );
 
+        test(
+          'supports get with enum',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.doc('123').set(
+                  createMovie(
+                    title: 'title',
+                    certification: CertificationType.PG,
+                  ),
+                );
+
+            await collection.doc('123').get();
+
+            expect(
+              await collection
+                  .whereCertification(isEqualTo: CertificationType.PG)
+                  .get(),
+              isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
+                isA<MovieQueryDocumentSnapshot>().having(
+                  (e) => e.data.certification,
+                  'data.certification',
+                  CertificationType.PG,
+                )
+              ]),
+            );
+          },
+        );
+
+        test(
+          'supports get using list of enum',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.doc('123').set(
+                  createMovie(
+                    title: 'title',
+                    language: [LanguageType.English, LanguageType.Korean],
+                    cast: [
+                      {CastType.CoStar: 'William Shatner'},
+                      {CastType.Cameo: 'Harlan Ellison'}
+                    ],
+                  ),
+                );
+            await collection.doc('123').get();
+
+            expect(
+              await collection
+                  .whereLanguage(
+                    arrayContains: LanguageType.English,
+                    // arrayContainsAny: [LanguageType.English],
+                    // isEqualTo: [LanguageType.English, LanguageType.Korean]
+                  )
+                  .get(),
+              isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
+                isA<MovieQueryDocumentSnapshot>().having(
+                  (e) => e.data.language,
+                  'data.language',
+                  [LanguageType.English, LanguageType.Korean],
+                )
+              ]),
+            );
+          },
+        );
+
+        test(
+          'supports get using enum (list of) map',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.doc('123').set(
+                  createMovie(
+                    title: 'title',
+                    language: [LanguageType.English, LanguageType.Korean],
+                    cast: [
+                      {
+                        CastType.CoStar: 'William Shatner',
+                      },
+                      {CastType.Cameo: 'Harlan Ellison'}
+                    ],
+                    majorCast: {
+                      CastType.CoStar: 'William Shatner',
+                      CastType.Cameo: 'Harlan Ellison'
+                    },
+                  ),
+                );
+            await collection.doc('123').get();
+
+            expect(
+              await collection.whereCast(
+                // whereMajorCast
+                arrayContains: {
+                  CastType.CoStar: 'William Shatner',
+                },
+              ).get(),
+              isA<MovieQuerySnapshot>().having((e) => e.docs, 'doc', [
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((e) => e.data.cast, 'data.cast', [
+                  {CastType.CoStar: 'William Shatner'},
+                  {CastType.Cameo: 'Harlan Ellison'},
+                ])
+              ]),
+            );
+          },
+        );
+
         test('returns a future that fails if decoding throws', () async {
           final collection = await initializeTest(MovieCollectionReference());
 
@@ -699,6 +805,15 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            language: [LanguageType.English],
+            certification: CertificationType.PG,
+            cast: [
+              {CastType.Cameo: 'Wil Wheaton', CastType.Recurring: 'Jim Parsons'}
+            ],
+            majorCast: {
+              CastType.Cameo: 'Wil Wheaton',
+              CastType.Recurring: 'Jim Parsons'
+            },
           ),
         );
         final snapshot = StreamQueue(doc.snapshots());
@@ -722,6 +837,18 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            language: [LanguageType.English],
+            certification: CertificationType.R,
+            cast: [
+              {
+                CastType.Star: 'Michael Jackson',
+                CastType.GuestStar: 'Vincent Price'
+              }
+            ],
+            majorCast: {
+              CastType.Star: 'Michael Jackson',
+              CastType.GuestStar: 'Vincent Price'
+            },
           ),
         );
 
@@ -755,6 +882,18 @@ void main() {
             runtime: 'runtime',
             title: 'title',
             year: 1999,
+            language: [LanguageType.English],
+            certification: CertificationType.PG13,
+            cast: [
+              {
+                CastType.CoStar: 'William Shatner',
+                CastType.Cameo: 'Harlan Ellison'
+              }
+            ],
+            majorCast: {
+              CastType.CoStar: 'William Shatner',
+              CastType.Cameo: 'Harlan Ellison'
+            },
           ),
         );
 
@@ -777,6 +916,18 @@ void main() {
             runtime: 'runtime2',
             title: 'title2',
             year: 14242,
+            language: [LanguageType.Spanish],
+            certification: CertificationType.TVMA,
+            cast: [
+              {
+                CastType.CoStar: 'Sandra Bullock',
+                CastType.Cameo: 'George Clooney'
+              }
+            ],
+            majorCast: {
+              CastType.CoStar: 'Sandra Bullock',
+              CastType.Cameo: 'George Clooney'
+            },
           ),
         );
 

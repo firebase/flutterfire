@@ -1,3 +1,4 @@
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:analyzer/dart/element/type_provider.dart';
@@ -17,13 +18,13 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
   ${data.queryReferenceInterfaceName} limitToLast(int limit);
 
   /// Perform an order query based on a [FieldPath].
-  /// 
+  ///
   /// This method is considered unsafe as it does check that the field path
   /// maps to a valid property or that parameters such as [isEqualTo] receive
   /// a value of the correct type.
-  /// 
+  ///
   /// If possible, instead use the more explicit variant of order queries:
-  /// 
+  ///
   /// **AVOID**:
   /// ```dart
   /// collection.orderByFieldPath(
@@ -31,7 +32,7 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
   ///   startAt: 'title',
   /// );
   /// ```
-  /// 
+  ///
   /// **PREFER**:
   /// ```dart
   /// collection.orderByTitle(startAt: 'title');
@@ -50,18 +51,18 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
   });
 
   /// Perform a where query based on a [FieldPath].
-  /// 
+  ///
   /// This method is considered unsafe as it does check that the field path
   /// maps to a valid property or that parameters such as [isEqualTo] receive
   /// a value of the correct type.
-  /// 
+  ///
   /// If possible, instead use the more explicit variant of where queries:
-  /// 
+  ///
   /// **AVOID**:
   /// ```dart
   /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
   /// ```
-  /// 
+  ///
   /// **PREFER**:
   /// ```dart
   /// collection.whereTitle(isEqualTo: 'title');
@@ -128,7 +129,7 @@ class ${data.queryReferenceImplName}
   Stream<${data.querySnapshotName}> snapshots([SnapshotOptions? options]) {
     return reference.snapshots().map(_decodeSnapshot);
   }
-  
+
 
   @override
   Future<${data.querySnapshotName}> get([GetOptions? options]) {
@@ -328,6 +329,39 @@ class ${data.queryReferenceImplName}
     final buffer = StringBuffer();
 
     for (final field in data.queryableFields) {
+      final _isEnum = field.type.element2?.kind == ElementKind.ENUM;
+      var _isEnumList = false;
+      var _isEnumListMap = false;
+      var _isEnumMap = false;
+
+      if (field.type.isDartCoreList) {
+        final _typeArguments = (field.type as InterfaceType).typeArguments;
+        for (final subType in _typeArguments) {
+          if (subType.isDartCoreMap) {
+            // We have something like this: Map<CastType, String>
+            // TODO: Need to get the subtypes of subtype. In this case CastTYpe
+            // and then test it to see if it is an Enum
+
+            final _mapTypeArguments = (subType as InterfaceType).typeArguments;
+            for (final subSubType in _mapTypeArguments) {
+              if (subSubType.element2?.kind == ElementKind.ENUM) {
+                _isEnumListMap = true;
+              }
+              // _isEnumListMap = subSubType.element2?.kind == ElementKind.ENUM;
+            }
+          } else if (subType.element2?.kind == ElementKind.ENUM) {
+            _isEnumList = true;
+          }
+        }
+      } else if (field.type.isDartCoreMap) {
+        final _mapTypeArguments = (field.type as InterfaceType).typeArguments;
+        for (final subSubType in _mapTypeArguments) {
+          if (subSubType.element2?.kind == ElementKind.ENUM) {
+            _isEnumMap = true;
+          }
+        }
+      }
+
       final titledNamed = field.name.replaceFirstMapped(
         RegExp('[a-zA-Z]'),
         (match) => match.group(0)!.toUpperCase(),
@@ -359,7 +393,41 @@ class ${data.queryReferenceImplName}
       final prototype =
           operators.entries.map((e) => '${e.value} ${e.key}').join(',');
 
-      final parameters = operators.keys.map((e) => '$e: $e').join(',');
+      // final parameters = operators.keys.map((e) => '$e: $e').join(',');
+      final parameters = operators.keys.map((e) {
+        if (_isEnumList) {
+          if (e == 'arrayContains') {
+            return '$e: $e?.name';
+          } else if (e == 'isNull') {
+            return '$e: $e';
+          } else {
+            return '$e: _enumConvertList($e)';
+          }
+        } else if (_isEnumListMap) {
+          if (e == 'arrayContains') {
+            return '$e: _enumConvertMap($e)';
+          } else if (e == 'isNull') {
+            return '$e: $e';
+          } else {
+            return '$e: _enumConvertListMap($e)';
+          }
+        } else if (_isEnum) {
+          if (e == 'whereIn') {
+            return '$e: _whereInList';
+          } else if (e == 'whereNotIn') {
+            return '$e: _whereNotInList';
+          } else if (e == 'isNull') {
+            return '$e: isNull';
+          } else {
+            return '$e: $e?.name';
+          }
+        } else if (_isEnumMap) {
+          // TODO fully support a Map of Enums
+          return '$e: $e?.name';
+        } else {
+          return '$e: $e';
+        }
+      }).join(',');
 
       // TODO support whereX(isEqual: null);
       // TODO handle JsonSerializable case change and JsonKey(name: ...)
@@ -367,6 +435,73 @@ class ${data.queryReferenceImplName}
       if (isAbstract) {
         buffer.writeln(
           '${data.queryReferenceInterfaceName} where$titledNamed({$prototype,});',
+        );
+      } else if (_isEnumList) {
+        buffer.writeln(
+          '''
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+
+    return ${data.queryReferenceImplName}(
+      reference.where('${field.name}', $parameters,),
+      _collection,
+    );
+  }
+''',
+        );
+      } else if (_isEnumListMap) {
+        buffer.writeln(
+          '''
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+    List<Map<String, String>>? _enumConvertListMap($nullableType enumListMap) {
+      if (enumListMap == null) {
+        return null;
+      }
+      List<Map<String, String>>? _tmpEnumListMap;
+
+      for (var e in enumListMap) {
+        e.forEach((k,v) {
+          // TODO: Test for an enum key or enum value
+          // var _k = (k is Enum) ? k.name : k;
+          // var _v = (v is Enum) ? v.name : v;
+          var _k = k.name;
+          var _v = v;
+          _tmpEnumListMap?.add({_k: _v});
+        });
+      };
+      return _tmpEnumListMap;
+    }
+
+    Map<String, String>? _enumConvertMap(${data.libraryElement.typeProvider.asNullable((field.type as InterfaceType).typeArguments.first)} enumMap) {
+
+      Map<String, String>? _tmpEnumMap;
+      enumMap?.forEach((k,v) {
+        _tmpEnumMap?.update(k.name, (oldVal) => v);
+      });
+      return _tmpEnumMap;
+    }
+
+    return ${data.queryReferenceImplName}(
+      reference.where('${field.name}', $parameters,),
+      _collection,
+    );
+  }
+''',
+        );
+      } else if (_isEnum) {
+        buffer.writeln(
+          '''
+  ${data.queryReferenceInterfaceName} where$titledNamed({$prototype,}) {
+    List<String>? _whereInList;
+    whereIn?.forEach((e) { _whereInList?.add(e.name); });
+    List<String>? _whereNotInList;
+    whereNotIn?.forEach((e) { _whereNotInList?.add(e.name); });
+
+    return ${data.queryReferenceImplName}(
+      reference.where('${field.name}', $parameters,),
+      _collection,
+    );
+  }
+''',
         );
       } else {
         buffer.writeln(

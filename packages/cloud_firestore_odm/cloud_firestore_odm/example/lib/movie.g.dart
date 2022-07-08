@@ -11,6 +11,49 @@ part of 'movie.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
+List<String>? _enumConvertList(enumList) {
+  if (enumList == null) {
+    return null;
+  }
+  List<String> _tmpEnumList = [];
+  enumList.forEach((Enum e) {
+    _tmpEnumList.add(e.name);
+  });
+  return (_tmpEnumList.length > 0) ? _tmpEnumList : null;
+}
+
+List<Map<String, String>>? _enumConvertListMap(enumListMap) {
+  if (enumListMap == null) {
+    return null;
+  }
+  List<Map<String, String>> _tmpEnumListMap = [];
+
+  for (var e in enumListMap) {
+    e.forEach((Enum k, v) {
+      // TODO: Test for an enum key or enum value
+      // var _k = (k is Enum) ? k.name : k;
+      // var _v = (v is Enum) ? v.name : v;
+      var _k = k.name;
+      var _v = v;
+      _tmpEnumListMap.add({_k: _v});
+    });
+  }
+  ;
+  return (_tmpEnumListMap.length > 0) ? _tmpEnumListMap : null;
+}
+
+Map<String, dynamic>? _enumConvertMap(enumMap) {
+  if (enumMap == null) {
+    return null;
+  }
+  Map<String, dynamic> _tmpEnumMap = {};
+
+  enumMap?.forEach((Enum k, v) {
+    _tmpEnumMap.addAll({k.name: v});
+  });
+  return (_tmpEnumMap.length > 0) ? _tmpEnumMap : null;
+}
+
 class _Sentinel {
   const _Sentinel();
 }
@@ -136,6 +179,9 @@ abstract class MovieDocumentReference
     String runtime,
     String rated,
     List<String>? genre,
+    List<LanguageType>? language,
+    CertificationType certification,
+    List<Map<CastType, String>> cast,
   });
 
   Future<void> set(Movie value);
@@ -191,6 +237,9 @@ class _$MovieDocumentReference
     Object? runtime = _sentinel,
     Object? rated = _sentinel,
     Object? genre = _sentinel,
+    Object? language = _sentinel,
+    Object? certification = _sentinel,
+    Object? cast = _sentinel,
   }) async {
     final json = {
       if (poster != _sentinel) "poster": poster as String,
@@ -200,6 +249,12 @@ class _$MovieDocumentReference
       if (runtime != _sentinel) "runtime": runtime as String,
       if (rated != _sentinel) "rated": rated as String,
       if (genre != _sentinel) "genre": genre as List<String>?,
+      if (language != _sentinel)
+        "language": _enumConvertList(language as List<LanguageType>?),
+      if (certification != _sentinel)
+        "certification": certification as CertificationType,
+      if (cast != _sentinel)
+        "cast": _enumConvertListMap(cast as List<Map<CastType, String>>),
     };
 
     return reference.update(json);
@@ -401,6 +456,39 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     String? arrayContains,
     List<String>? arrayContainsAny,
   });
+  MovieQuery whereLanguage({
+    List<LanguageType>? isEqualTo,
+    List<LanguageType>? isNotEqualTo,
+    List<LanguageType>? isLessThan,
+    List<LanguageType>? isLessThanOrEqualTo,
+    List<LanguageType>? isGreaterThan,
+    List<LanguageType>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    LanguageType? arrayContains,
+    List<LanguageType>? arrayContainsAny,
+  });
+  MovieQuery whereCertification({
+    CertificationType? isEqualTo,
+    CertificationType? isNotEqualTo,
+    CertificationType? isLessThan,
+    CertificationType? isLessThanOrEqualTo,
+    CertificationType? isGreaterThan,
+    CertificationType? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<CertificationType>? whereIn,
+    List<CertificationType>? whereNotIn,
+  });
+  MovieQuery whereCast({
+    List<Map<CastType, String>>? isEqualTo,
+    List<Map<CastType, String>>? isNotEqualTo,
+    List<Map<CastType, String>>? isLessThan,
+    List<Map<CastType, String>>? isLessThanOrEqualTo,
+    List<Map<CastType, String>>? isGreaterThan,
+    List<Map<CastType, String>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Map<CastType, String>? arrayContains,
+    List<Map<CastType, String>>? arrayContainsAny,
+  });
 
   MovieQuery orderByDocumentId({
     bool descending = false,
@@ -492,6 +580,42 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? startAfter,
     List<String>? endAt,
     List<String>? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByLanguage({
+    bool descending = false,
+    List<LanguageType>? startAt,
+    List<LanguageType>? startAfter,
+    List<LanguageType>? endAt,
+    List<LanguageType>? endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByCertification({
+    bool descending = false,
+    CertificationType startAt,
+    CertificationType startAfter,
+    CertificationType endAt,
+    CertificationType endBefore,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  });
+
+  MovieQuery orderByCast({
+    bool descending = false,
+    List<Map<CastType, String>> startAt,
+    List<Map<CastType, String>> startAfter,
+    List<Map<CastType, String>> endAt,
+    List<Map<CastType, String>> endBefore,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -860,6 +984,99 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     );
   }
 
+  MovieQuery whereLanguage({
+    List<LanguageType>? isEqualTo,
+    List<LanguageType>? isNotEqualTo,
+    List<LanguageType>? isLessThan,
+    List<LanguageType>? isLessThanOrEqualTo,
+    List<LanguageType>? isGreaterThan,
+    List<LanguageType>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    LanguageType? arrayContains,
+    List<LanguageType>? arrayContainsAny,
+  }) {
+    return _$MovieQuery(
+      reference.where(
+        'language',
+        isEqualTo: _enumConvertList(isEqualTo),
+        isNotEqualTo: _enumConvertList(isNotEqualTo),
+        isLessThan: _enumConvertList(isLessThan),
+        isLessThanOrEqualTo: _enumConvertList(isLessThanOrEqualTo),
+        isGreaterThan: _enumConvertList(isGreaterThan),
+        isGreaterThanOrEqualTo: _enumConvertList(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: arrayContains?.name,
+        arrayContainsAny: _enumConvertList(arrayContainsAny),
+      ),
+      _collection,
+    );
+  }
+
+  MovieQuery whereCertification({
+    CertificationType? isEqualTo,
+    CertificationType? isNotEqualTo,
+    CertificationType? isLessThan,
+    CertificationType? isLessThanOrEqualTo,
+    CertificationType? isGreaterThan,
+    CertificationType? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<CertificationType>? whereIn,
+    List<CertificationType>? whereNotIn,
+  }) {
+    List<String>? _whereInList;
+    whereIn?.forEach((e) {
+      _whereInList?.add(e.name);
+    });
+    List<String>? _whereNotInList;
+    whereNotIn?.forEach((e) {
+      _whereNotInList?.add(e.name);
+    });
+
+    return _$MovieQuery(
+      reference.where(
+        'certification',
+        isEqualTo: isEqualTo?.name,
+        isNotEqualTo: isNotEqualTo?.name,
+        isLessThan: isLessThan?.name,
+        isLessThanOrEqualTo: isLessThanOrEqualTo?.name,
+        isGreaterThan: isGreaterThan?.name,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo?.name,
+        isNull: isNull,
+        whereIn: _whereInList,
+        whereNotIn: _whereNotInList,
+      ),
+      _collection,
+    );
+  }
+
+  MovieQuery whereCast({
+    List<Map<CastType, String>>? isEqualTo,
+    List<Map<CastType, String>>? isNotEqualTo,
+    List<Map<CastType, String>>? isLessThan,
+    List<Map<CastType, String>>? isLessThanOrEqualTo,
+    List<Map<CastType, String>>? isGreaterThan,
+    List<Map<CastType, String>>? isGreaterThanOrEqualTo,
+    bool? isNull,
+    Map<CastType, String>? arrayContains,
+    List<Map<CastType, String>>? arrayContainsAny,
+  }) {
+    return _$MovieQuery(
+      reference.where(
+        'cast',
+        isEqualTo: _enumConvertListMap(isEqualTo),
+        isNotEqualTo: _enumConvertListMap(isNotEqualTo),
+        isLessThan: _enumConvertListMap(isLessThan),
+        isLessThanOrEqualTo: _enumConvertListMap(isLessThanOrEqualTo),
+        isGreaterThan: _enumConvertListMap(isGreaterThan),
+        isGreaterThanOrEqualTo: _enumConvertListMap(isGreaterThanOrEqualTo),
+        isNull: isNull,
+        arrayContains: _enumConvertMap(arrayContains),
+        arrayContainsAny: _enumConvertListMap(arrayContainsAny),
+      ),
+      _collection,
+    );
+  }
+
   MovieQuery orderByDocumentId({
     bool descending = false,
     Object? startAt = _sentinel,
@@ -1173,6 +1390,135 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     var query =
         reference.orderBy(_$MovieFieldMap["genre"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MovieQuery(query, _collection);
+  }
+
+  MovieQuery orderByLanguage({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$MovieFieldMap["language"]!, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MovieQuery(query, _collection);
+  }
+
+  MovieQuery orderByCertification({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    var query = reference.orderBy(_$MovieFieldMap["certification"]!,
+        descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MovieQuery(query, _collection);
+  }
+
+  MovieQuery orderByCast({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    MovieDocumentSnapshot? startAtDocument,
+    MovieDocumentSnapshot? endAtDocument,
+    MovieDocumentSnapshot? endBeforeDocument,
+    MovieDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$MovieFieldMap["cast"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2026,6 +2372,20 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       runtime: json['runtime'] as String,
       title: json['title'] as String,
       year: json['year'] as int,
+      language: (json['language'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$LanguageTypeEnumMap, e))
+          .toList(),
+      certification:
+          $enumDecode(_$CertificationTypeEnumMap, json['certification']),
+      cast: (json['cast'] as List<dynamic>)
+          .map((e) => (e as Map<String, dynamic>).map(
+                (k, e) =>
+                    MapEntry($enumDecode(_$CastTypeEnumMap, k), e as String),
+              ))
+          .toList(),
+      majorCast: (json['majorCast'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry($enumDecode(_$CastTypeEnumMap, k), e as String),
+      ),
     );
 
 const _$MovieFieldMap = <String, String>{
@@ -2036,6 +2396,10 @@ const _$MovieFieldMap = <String, String>{
   'runtime': 'runtime',
   'rated': 'rated',
   'genre': 'genre',
+  'language': 'language',
+  'certification': 'certification',
+  'cast': 'cast',
+  'majorCast': 'majorCast',
 };
 
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
@@ -2046,7 +2410,43 @@ Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'runtime': instance.runtime,
       'rated': instance.rated,
       'genre': instance.genre,
+      'language':
+          instance.language?.map((e) => _$LanguageTypeEnumMap[e]!).toList(),
+      'certification': _$CertificationTypeEnumMap[instance.certification]!,
+      'cast': instance.cast
+          .map((e) => e.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e)))
+          .toList(),
+      'majorCast':
+          instance.majorCast.map((k, e) => MapEntry(_$CastTypeEnumMap[k]!, e)),
     };
+
+const _$LanguageTypeEnumMap = {
+  LanguageType.English: 'English',
+  LanguageType.French: 'French',
+  LanguageType.Spanish: 'Spanish',
+  LanguageType.Chinese: 'Chinese',
+  LanguageType.Korean: 'Korean',
+};
+
+const _$CertificationTypeEnumMap = {
+  CertificationType.None: 'None',
+  CertificationType.G: 'G',
+  CertificationType.PG: 'PG',
+  CertificationType.PG13: 'PG13',
+  CertificationType.R: 'R',
+  CertificationType.TVPG: 'TVPG',
+  CertificationType.TVMA: 'TVMA',
+};
+
+const _$CastTypeEnumMap = {
+  CastType.Background: 'Background',
+  CastType.Cameo: 'Cameo',
+  CastType.Recurring: 'Recurring',
+  CastType.Side: 'Side',
+  CastType.Star: 'Star',
+  CastType.CoStar: 'CoStar',
+  CastType.GuestStar: 'GuestStar',
+};
 
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       authorName: json['authorName'] as String,

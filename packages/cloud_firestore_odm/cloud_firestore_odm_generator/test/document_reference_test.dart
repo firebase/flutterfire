@@ -69,7 +69,10 @@ void main() {
   );
   nestedRef.doc('42').update(
     dynamicList: null,
-  );  
+  );
+  nestedRef.doc('42').update(
+    enumList: null,
+  );
 }
 ''',
         ),

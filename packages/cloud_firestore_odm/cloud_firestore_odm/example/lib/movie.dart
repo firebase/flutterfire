@@ -4,6 +4,41 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'movie.g.dart';
 
+// ignore_for_file: constant_identifier_names
+enum LanguageType { English, French, Spanish, Chinese, Korean }
+
+enum GenreType {
+  Action,
+  Adventure,
+  Comedy,
+  Crime,
+  Drame,
+  Fantasy,
+  Mystery,
+  SciFi,
+  Thriler,
+}
+
+enum CertificationType {
+  None,
+  G,
+  PG,
+  PG13,
+  R,
+  TVPG,
+  TVMA,
+}
+
+enum CastType {
+  Background,
+  Cameo,
+  Recurring,
+  Side,
+  Star,
+  CoStar,
+  GuestStar,
+}
+
 @JsonSerializable()
 class Movie {
   Movie({
@@ -14,6 +49,10 @@ class Movie {
     required this.runtime,
     required this.title,
     required this.year,
+    required this.language,
+    required this.certification,
+    required this.cast,
+    required this.majorCast,
   }) {
     _$assertMovie(this);
   }
@@ -27,6 +66,10 @@ class Movie {
   final String runtime;
   final String rated;
   final List<String>? genre;
+  final List<LanguageType>? language;
+  final CertificationType certification;
+  final List<Map<CastType, String>> cast;
+  final Map<CastType, String> majorCast;
 }
 
 @Collection<Movie>('firestore-example-app')
