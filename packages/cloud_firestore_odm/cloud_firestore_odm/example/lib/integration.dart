@@ -14,7 +14,7 @@ class EmptyModel {
   Map<String, dynamic> toJson() => _$EmptyModelToJson(this);
 }
 
-@Collection<EmptyModel>('config')
+@Collection<EmptyModel>('firestore-example-app/test/config')
 final emptyModelRef = EmptyModelCollectionReference();
 
 @Collection<ManualJson>('root')
@@ -30,7 +30,7 @@ class ManualJson {
   Map<String, Object?> toJson() => {'value': value};
 }
 
-@Collection<AdvancedJson>('advanced')
+@Collection<AdvancedJson>('firestore-example-app/test/advanced')
 @JsonSerializable()
 class AdvancedJson {
   AdvancedJson({this.firstName, this.lastName, this.ignored});
@@ -45,7 +45,7 @@ class AdvancedJson {
 }
 
 // This tests that the generated code compiles
-@Collection<_PrivateAdvancedJson>('private-advanced')
+@Collection<_PrivateAdvancedJson>('firestore-example-app/test/private-advanced')
 @JsonSerializable()
 class _PrivateAdvancedJson {
   _PrivateAdvancedJson({

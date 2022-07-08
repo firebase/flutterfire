@@ -550,7 +550,7 @@ class _$AdvancedJsonCollectionReference extends _$AdvancedJsonQuery
     firestore ??= FirebaseFirestore.instance;
 
     return _$AdvancedJsonCollectionReference._(
-      firestore.collection('advanced').withConverter(
+      firestore.collection('firestore-example-app/test/advanced').withConverter(
             fromFirestore: AdvancedJsonCollectionReference.fromFirestore,
             toFirestore: AdvancedJsonCollectionReference.toFirestore,
           ),
@@ -1149,7 +1149,9 @@ class _$_PrivateAdvancedJsonCollectionReference
     firestore ??= FirebaseFirestore.instance;
 
     return _$_PrivateAdvancedJsonCollectionReference._(
-      firestore.collection('private-advanced').withConverter(
+      firestore
+          .collection('firestore-example-app/test/private-advanced')
+          .withConverter(
             fromFirestore:
                 _PrivateAdvancedJsonCollectionReference.fromFirestore,
             toFirestore: _PrivateAdvancedJsonCollectionReference.toFirestore,
@@ -1753,7 +1755,7 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
     firestore ??= FirebaseFirestore.instance;
 
     return _$EmptyModelCollectionReference._(
-      firestore.collection('config').withConverter(
+      firestore.collection('firestore-example-app/test/config').withConverter(
             fromFirestore: EmptyModelCollectionReference.fromFirestore,
             toFirestore: EmptyModelCollectionReference.toFirestore,
           ),
