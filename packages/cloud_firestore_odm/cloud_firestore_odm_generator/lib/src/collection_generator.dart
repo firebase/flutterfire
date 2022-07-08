@@ -297,11 +297,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       collectionName: name,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type}FromJson($json)';
+        return '_\$${type.toString().public}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type}ToJson($value)';
+        return '_\$${type.toString().public}ToJson($value)';
       },
       queryableFields: [
         QueryingField(

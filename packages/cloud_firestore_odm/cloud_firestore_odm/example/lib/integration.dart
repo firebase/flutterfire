@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -20,7 +21,7 @@ final emptyModelRef = EmptyModelCollectionReference();
 class ManualJson {
   ManualJson(this.value);
 
-  factory ManualJson.fromJson(Map<String, Object> json) {
+  factory ManualJson.fromJson(Map<String, Object?> json) {
     return ManualJson(json['value']! as String);
   }
 

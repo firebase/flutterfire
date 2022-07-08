@@ -6454,7 +6454,7 @@ class ExplicitSubPathQueryDocumentSnapshot
 // ValidatorGenerator
 // **************************************************************************
 
-_$assertMinValidation(MinValidation instance) {
+void _$assertMinValidation(MinValidation instance) {
   const Min(0).validate(instance.intNbr, "intNbr");
   const Max(42).validate(instance.intNbr, "intNbr");
   const Min(10).validate(instance.doubleNbr, "doubleNbr");

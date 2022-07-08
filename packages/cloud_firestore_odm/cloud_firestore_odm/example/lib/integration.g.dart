@@ -893,7 +893,7 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
   }) {
     return _$AdvancedJsonQuery(
       reference.where(
-        _$AdvancedJsonFieldMap["firstName"],
+        _$AdvancedJsonFieldMap["firstName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -921,7 +921,7 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
   }) {
     return _$AdvancedJsonQuery(
       reference.where(
-        _$AdvancedJsonFieldMap["lastName"],
+        _$AdvancedJsonFieldMap["lastName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -989,7 +989,7 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$AdvancedJsonFieldMap["firstName"],
+    var query = reference.orderBy(_$AdvancedJsonFieldMap["firstName"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1032,7 +1032,7 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$AdvancedJsonFieldMap["lastName"],
+    var query = reference.orderBy(_$AdvancedJsonFieldMap["lastName"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1123,14 +1123,14 @@ abstract class _PrivateAdvancedJsonCollectionReference
     DocumentSnapshot<Map<String, Object?>> snapshot,
     SnapshotOptions? options,
   ) {
-    return _$_PrivateAdvancedJsonFromJson(snapshot.data()!);
+    return _$PrivateAdvancedJsonFromJson(snapshot.data()!);
   }
 
   static Map<String, Object?> toFirestore(
     _PrivateAdvancedJson value,
     SetOptions? options,
   ) {
-    return _$_PrivateAdvancedJsonToJson(value);
+    return _$PrivateAdvancedJsonToJson(value);
   }
 
   @override
@@ -1497,7 +1497,7 @@ class _$_PrivateAdvancedJsonQuery
   }) {
     return _$_PrivateAdvancedJsonQuery(
       reference.where(
-        _$PrivateAdvancedJsonFieldMap["firstName"],
+        _$PrivateAdvancedJsonFieldMap["firstName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1525,7 +1525,7 @@ class _$_PrivateAdvancedJsonQuery
   }) {
     return _$_PrivateAdvancedJsonQuery(
       reference.where(
-        _$PrivateAdvancedJsonFieldMap["lastName"],
+        _$PrivateAdvancedJsonFieldMap["lastName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1593,7 +1593,7 @@ class _$_PrivateAdvancedJsonQuery
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["firstName"],
+    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["firstName"]!,
         descending: descending);
 
     if (startAtDocument != null) {
@@ -1636,7 +1636,7 @@ class _$_PrivateAdvancedJsonQuery
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["lastName"],
+    var query = reference.orderBy(_$PrivateAdvancedJsonFieldMap["lastName"]!,
         descending: descending);
 
     if (startAtDocument != null) {
