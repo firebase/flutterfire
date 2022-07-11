@@ -135,7 +135,6 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   @override
   Future<String> verify() {
     try {
-      print('verify');
       return _delegate.verify();
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -145,7 +144,6 @@ class RecaptchaVerifierFactoryWeb extends RecaptchaVerifierFactoryPlatform {
   @override
   Future<int> render() async {
     try {
-      print('rendering');
       return await _delegate.render() as int;
     } catch (e) {
       throw getFirebaseAuthException(e);

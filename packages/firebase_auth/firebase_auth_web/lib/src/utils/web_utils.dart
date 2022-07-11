@@ -3,6 +3,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
@@ -56,12 +58,14 @@ FirebaseAuthException getFirebaseAuthException(
       tenantId: firebaseError.tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
+          print(e.enrollmentTime);
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
             return PhoneMultiFactorInfo(
               displayName: e.displayName,
               factorId: e.factorId,
-              // TODO(Lyokone): fix
-              enrollmentTimestamp: 123,
+              enrollmentTimestamp:
+                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
+                      1000,
               uid: e.uid,
               phoneNumber: e.phoneNumber,
             );
@@ -69,8 +73,8 @@ FirebaseAuthException getFirebaseAuthException(
           return MultiFactorInfo(
             displayName: e.displayName,
             factorId: e.factorId,
-            // TODO(Lyokone): fix
-            enrollmentTimestamp: 123,
+            enrollmentTimestamp:
+                HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
             uid: e.uid,
           );
         }).toList(),
