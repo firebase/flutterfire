@@ -909,7 +909,7 @@ class PhoneAuthProvider
   /// Creates a new PhoneAuthProvider with the optional [Auth] instance
   /// in which sign-ins should occur.
   factory PhoneAuthProvider([Auth? auth]) =>
-      PhoneAuthProvider.fromJsObject((auth != null)
+      PhoneAuthProvider.fromJsObject(auth != null
           ? auth_interop.PhoneAuthProviderJsImpl(auth.jsObject)
           : auth_interop.PhoneAuthProviderJsImpl());
 
@@ -931,10 +931,10 @@ class PhoneAuthProvider
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
   /// user's mobile device.
-  static auth_interop.OAuthCredential credential(
+  static auth_interop.PhoneAuthCredentialJsImpl credential(
           String verificationId, String verificationCode) =>
       auth_interop.PhoneAuthProviderJsImpl.credential(
-          verificationId, verificationCode) as auth_interop.OAuthCredential;
+          verificationId, verificationCode);
 }
 
 /// A verifier for domain verification and abuse prevention.

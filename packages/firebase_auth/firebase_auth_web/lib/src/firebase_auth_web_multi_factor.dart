@@ -7,6 +7,7 @@ import 'package:firebase_auth_platform_interface/firebase_auth_platform_interfac
 import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
 
+import 'interop/auth.dart' as auth;
 import 'interop/multi_factor.dart' as multi_factor_interop;
 import 'utils/web_utils.dart';
 
@@ -16,9 +17,6 @@ class MultiFactorWeb extends MultiFactorPlatform {
       : super(auth);
 
   final multi_factor_interop.MultiFactorUser _webMultiFactorUser;
-
-  final mapAssertion =
-      <multi_factor_interop.MultiFactorAssertion, MultiFactorAssertionWeb>{};
 
   @override
   Future<MultiFactorSession> getSession() async {
@@ -35,10 +33,9 @@ class MultiFactorWeb extends MultiFactorPlatform {
     String? displayName,
   }) async {
     try {
-      final webAssertion = mapAssertion.keys
-          .firstWhere((element) => mapAssertion[element] == assertion);
+      final webAssertion = assertion as MultiFactorAssertionWeb;
       return await _webMultiFactorUser.enroll(
-        webAssertion,
+        webAssertion.assertion,
         displayName,
       );
     } catch (e) {
@@ -118,4 +115,30 @@ class MultiFactorSessionWeb extends MultiFactorSession {
   ) : super(id);
 
   final multi_factor_interop.MultiFactorSession webSession;
+}
+
+/// Helper class used to generate PhoneMultiFactorAssertions.
+class PhoneMultiFactorGeneratorWeb extends PhoneMultiFactorGeneratorPlatform {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  @override
+  MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
+    final verificationId = credential.verificationId;
+    final verificationCode = credential.smsCode;
+
+    if (verificationCode == null) {
+      throw ArgumentError('verificationCode must not be null');
+    }
+    if (verificationId == null) {
+      throw ArgumentError('verificationId must not be null');
+    }
+
+    final cred =
+        auth.PhoneAuthProvider.credential(verificationId, verificationCode);
+
+    return MultiFactorAssertionWeb(
+        multi_factor_interop.PhoneMultiFactorGenerator.assertion(cred));
+  }
 }

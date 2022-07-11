@@ -460,7 +460,7 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
     dynamic /* PhoneInfoOptions | string */ phoneOptions,
     ApplicationVerifierJsImpl applicationVerifier,
   );
-  external static AuthCredential credential(
+  external static PhoneAuthCredentialJsImpl credential(
     String verificationId,
     String verificationCode,
   );
@@ -731,8 +731,7 @@ class PhoneMultiFactorEnrollInfoOptionsJsImpl {
 }
 
 /// https://firebase.google.com/docs/reference/js/auth.phonemultifactorgenerator
-@JS()
-@anonymous
+@JS('PhoneMultiFactorGenerator')
 class PhoneMultiFactorGeneratorJsImpl {
   external static String get FACTOR_ID;
   external static PhoneMultiFactorAssertionJsImpl? assertion(

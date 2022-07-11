@@ -147,3 +147,17 @@ class MultiFactorResolver
         .then(auth.UserCredential.fromJsObject);
   }
 }
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorsession.md#multifactorsession_interface
+class PhoneMultiFactorGenerator
+    extends JsObjectWrapper<auth_interop.PhoneMultiFactorGeneratorJsImpl> {
+  PhoneMultiFactorGenerator.fromJsObject(
+      auth.PhoneMultiFactorGeneratorJsImpl jsObject)
+      : super.fromJsObject(jsObject);
+
+  static PhoneMultiFactorAssertion assertion(
+      auth.PhoneAuthCredentialJsImpl credential) {
+    return PhoneMultiFactorAssertion.fromJsObject(
+        auth_interop.PhoneMultiFactorGeneratorJsImpl.assertion(credential)!);
+  }
+}

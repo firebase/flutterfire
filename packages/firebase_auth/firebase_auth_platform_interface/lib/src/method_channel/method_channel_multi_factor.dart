@@ -138,10 +138,12 @@ class MultiFactorAssertion extends MultiFactorAssertionPlatform {
 }
 
 /// Helper class used to generate PhoneMultiFactorAssertions.
-class MethodChannelPhoneMultiFactorGenerator extends PhoneMultiFactorGenerator {
+class MethodChannelPhoneMultiFactorGenerator
+    extends PhoneMultiFactorGeneratorPlatform {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  static MultiFactorAssertionPlatform getAssertion(
+  @override
+  MultiFactorAssertionPlatform getAssertion(
     PhoneAuthCredential credential,
   ) {
     return MultiFactorAssertion(credential);

@@ -8,7 +8,6 @@ import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
-import 'package:flutter/material.dart';
 
 import '../interop/auth.dart' as auth_interop;
 import '../interop/multi_factor.dart' as multi_factor_interop;
@@ -57,7 +56,6 @@ FirebaseAuthException getFirebaseAuthException(
       tenantId: firebaseError.tenantId,
       resolver: MultiFactorResolverWeb(
         resolverWeb.hints.map((e) {
-          print(e);
           if (e is multi_factor_interop.PhoneMultiFactorInfo) {
             return PhoneMultiFactorInfo(
               displayName: e.displayName,
@@ -307,7 +305,7 @@ auth_interop.OAuthCredential? convertPlatformCredential(
     return auth_interop.PhoneAuthProvider.credential(
       credential.verificationId!,
       credential.smsCode!,
-    );
+    ) as auth_interop.OAuthCredential;
   }
 
   if (credential is OAuthCredential) {

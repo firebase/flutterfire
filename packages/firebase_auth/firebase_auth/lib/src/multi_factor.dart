@@ -40,3 +40,14 @@ class MultiFactor {
     return _delegate.getEnrolledFactors();
   }
 }
+
+/// Provider for generating a PhoneMultiFactorAssertion.
+class PhoneMultiFactorGenerator {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  static MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
+    return PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
+  }
+}

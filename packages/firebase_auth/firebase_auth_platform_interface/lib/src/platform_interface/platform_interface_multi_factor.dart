@@ -1,4 +1,5 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// {@template .platformInterfaceMultiFactor}
@@ -130,10 +131,31 @@ class PhoneMultiFactorInfo extends MultiFactorInfo {
 }
 
 /// Helper class used to generate PhoneMultiFactorAssertions.
-class PhoneMultiFactorGenerator {
+class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
+  static PhoneMultiFactorGeneratorPlatform? _instance;
+
+  static final Object _token = Object();
+
+  PhoneMultiFactorGeneratorPlatform() : super(token: _token);
+
+  /// The current default [PhoneMultiFactorGeneratorPlatform] instance.
+  ///
+  /// It will always default to [MethodChannelPhoneMultiFactorGenerator]
+  /// if no other implementation was provided.
+  static PhoneMultiFactorGeneratorPlatform get instance {
+    _instance ??= MethodChannelPhoneMultiFactorGenerator();
+    return _instance!;
+  }
+
+  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
+  static set instance(PhoneMultiFactorGeneratorPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  static MultiFactorAssertionPlatform getAssertion(
+  MultiFactorAssertionPlatform getAssertion(
     PhoneAuthCredential credential,
   ) {
     throw UnimplementedError('getAssertion() is not implemented');
