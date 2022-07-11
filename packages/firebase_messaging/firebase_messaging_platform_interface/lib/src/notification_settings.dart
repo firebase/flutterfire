@@ -18,7 +18,7 @@ class NotificationSettings {
       required this.notificationCenter,
       required this.showPreviews,
       required this.timeSensitive,
-      required this.critical,
+      required this.criticalAlert,
       required this.sound});
 
   /// Whether or not messages containing a notification will alert the user.
@@ -44,7 +44,7 @@ class NotificationSettings {
   /// shown as highest priority, overriding the phone's focus and mute settings.
   ///
   /// Apple devices only.
-  final AppleNotificationSetting critical;
+  final AppleNotificationSetting criticalAlert;
 
   /// Whether or not messages containing a notification can update the application badge.
   ///
