@@ -35,7 +35,7 @@ class DecodeUtility {
       return GeoPoint(value.latitude as double, value.longitude as double);
     } else if (value is DateTime) {
       return Timestamp.fromDate(value);
-    } else if (util.instanceof(value, BlobConstructor)) {
+    } else if (util.instanceof(value, BytesConstructor)) {
       return Blob(value.toUint8Array());
     } else if (value is firestore_interop.DocumentReference) {
       return (FirebaseFirestorePlatform.instance as FirebaseFirestoreWeb)

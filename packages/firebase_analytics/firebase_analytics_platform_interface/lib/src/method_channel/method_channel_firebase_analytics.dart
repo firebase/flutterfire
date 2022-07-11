@@ -38,6 +38,12 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
     return MethodChannelFirebaseAnalytics(app: app);
   }
 
+  /// Returns "true" as this API is used to inform users of web browser support
+  @override
+  Future<bool> isSupported() {
+    return Future.value(true);
+  }
+
   @override
   Future<void> logEvent({
     required String name,

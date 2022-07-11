@@ -5,16 +5,14 @@
 
 // ignore_for_file: public_member_api_docs
 
-@JS('firebase.app')
+@JS('firebase_core')
 library firebase_interop.core.app;
 
 import 'package:js/js.dart';
 import 'core_interop.dart';
-import 'utils/es6_interop.dart';
 
-@JS('App')
+@JS('FirebaseApp')
 abstract class AppJsImpl {
   external String get name;
   external FirebaseOptions get options;
-  external PromiseJsImpl<void> delete();
 }

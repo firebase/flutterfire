@@ -17,6 +17,8 @@ targets:
             - lib/**
             - test_driver/integration/*
             - test_driver/integration/**/*
+        options:
+          create_field_map: true
       source_gen|combining_builder:
         options:
           ignore_for_file:

@@ -307,11 +307,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       collectionName: name,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type}FromJson($json)';
+        return '_\$${type.toString().public}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type}ToJson($value)';
+        return '_\$${type.toString().public}ToJson($value)';
       },
       queryableFields: [
         QueryingField(
@@ -336,13 +336,18 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                   _geoPointChecker.isAssignableFromType(f.type),
               // TODO filter list other than LIst<string|bool|num>
             )
+            .where((f) => !f.isJsonIgnored())
             .map(
           (e) {
+            final key = '"${e.name}"';
+
             return QueryingField(
               e.name,
               e.type,
               updatable: true,
-              field: '"${e.name}"',
+              field: hasJsonSerializable
+                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]!'
+                  : key,
             );
           },
         ).toList(),
@@ -384,6 +389,12 @@ const _sentinel = _Sentinel();
   void parseGlobalData(LibraryElement library) {}
 }
 
+extension on String {
+  String get public {
+    return startsWith('_') ? substring(1) : this;
+  }
+}
+
 extension on DartType {
   bool get isJsonDocumentReference {
     return element?.librarySource?.uri.scheme == 'package' &&
@@ -403,5 +414,21 @@ extension on DartType {
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
         generic.isDynamic;
+  }
+}
+
+extension on FieldElement {
+  bool isJsonIgnored() {
+    const checker = TypeChecker.fromRuntime(JsonKey);
+    final jsonKeys = checker.annotationsOf(this);
+
+    for (final jsonKey in jsonKeys) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue();
+      if (ignore ?? false) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

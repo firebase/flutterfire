@@ -41,6 +41,9 @@ abstract class MovieCollectionReference
   }
 
   @override
+  CollectionReference<Movie> get reference;
+
+  @override
   MovieDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -530,7 +533,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "poster",
+        _$MovieFieldMap["poster"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -558,7 +561,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "likes",
+        _$MovieFieldMap["likes"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -586,7 +589,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "title",
+        _$MovieFieldMap["title"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -614,7 +617,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "year",
+        _$MovieFieldMap["year"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -642,7 +645,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "runtime",
+        _$MovieFieldMap["runtime"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -670,7 +673,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "rated",
+        _$MovieFieldMap["rated"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -697,7 +700,7 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       reference.where(
-        "genre",
+        _$MovieFieldMap["genre"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -764,7 +767,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("poster", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["poster"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -806,7 +810,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("likes", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["likes"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -848,7 +853,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("title", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["title"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -890,7 +896,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("year", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["year"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -932,7 +939,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("runtime", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["runtime"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -974,7 +982,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("rated", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["rated"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1016,7 +1025,8 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("genre", descending: descending);
+    var query =
+        reference.orderBy(_$MovieFieldMap["genre"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1115,6 +1125,9 @@ abstract class CommentCollectionReference
   ) {
     return _$CommentToJson(value);
   }
+
+  @override
+  CollectionReference<Comment> get reference;
 
   /// A reference to the containing [MovieDocumentReference] if this is a subcollection.
   MovieDocumentReference get parent;
@@ -1487,7 +1500,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       reference.where(
-        "authorName",
+        _$CommentFieldMap["authorName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1515,7 +1528,7 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       reference.where(
-        "message",
+        _$CommentFieldMap["message"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1583,7 +1596,8 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("authorName", descending: descending);
+    var query = reference.orderBy(_$CommentFieldMap["authorName"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1625,7 +1639,8 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("message", descending: descending);
+    var query = reference.orderBy(_$CommentFieldMap["message"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1704,7 +1719,7 @@ class CommentQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 // ValidatorGenerator
 // **************************************************************************
 
-_$assertMovie(Movie instance) {
+void _$assertMovie(Movie instance) {
   const Min(0).validate(instance.likes, "likes");
   const Min(0).validate(instance.year, "year");
 }
@@ -1724,6 +1739,16 @@ Movie _$MovieFromJson(Map<String, dynamic> json) => Movie(
       year: json['year'] as int,
     );
 
+const _$MovieFieldMap = <String, String>{
+  'poster': 'poster',
+  'likes': 'likes',
+  'title': 'title',
+  'year': 'year',
+  'runtime': 'runtime',
+  'rated': 'rated',
+  'genre': 'genre',
+};
+
 Map<String, dynamic> _$MovieToJson(Movie instance) => <String, dynamic>{
       'poster': instance.poster,
       'likes': instance.likes,
@@ -1738,6 +1763,11 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       authorName: json['authorName'] as String,
       message: json['message'] as String,
     );
+
+const _$CommentFieldMap = <String, String>{
+  'authorName': 'authorName',
+  'message': 'message',
+};
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'authorName': instance.authorName,

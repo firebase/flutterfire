@@ -1,0 +1,6 @@
+targets:
+  $default:
+    builders:
+      json_serializable:
+        options:
+          create_field_map: true

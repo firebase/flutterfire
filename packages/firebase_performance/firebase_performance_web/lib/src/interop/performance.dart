@@ -4,13 +4,25 @@
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart' hide jsify;
 
-import 'firebase_interop.dart' as firebase_interop;
 import 'performance_interop.dart' as performance_interop;
 
 /// Given an AppJSImp, return the Performance instance. Performance web
 /// only works with the default app.
-Performance getPerformanceInstance([App? app]) {
-  return Performance.getInstance(firebase_interop.performance());
+Performance getPerformanceInstance([App? app, PerformanceSettings? settings]) {
+  if (settings != null && app != null) {
+    return Performance.getInstance(
+      performance_interop.initializePerformance(
+        app.jsObject,
+        settings.jsObject,
+      ),
+    );
+  }
+
+  return Performance.getInstance(
+    app != null
+        ? performance_interop.getPerformance(app.jsObject)
+        : performance_interop.getPerformance(),
+  );
 }
 
 class Performance
@@ -26,23 +38,13 @@ class Performance
       : super.fromJsObject(jsObject);
 
   Trace trace(String traceName) =>
-      Trace.fromJsObject(jsObject.trace(traceName));
+      Trace.fromJsObject(performance_interop.trace(jsObject, traceName));
 
   /// Non-null App for this instance of firestore service.
   App get app => App.getInstance(jsObject.app);
 
   bool get instrumentationEnabled => jsObject.instrumentationEnabled;
   bool get dataCollectionEnabled => jsObject.dataCollectionEnabled;
-
-  // ignore: use_setters_to_change_properties
-  void setPerformanceCollection(bool enableDataCollection) {
-    jsObject.dataCollectionEnabled = enableDataCollection;
-  }
-
-  // ignore: use_setters_to_change_properties
-  void setInstrumentation(bool enableInstrumentation) {
-    jsObject.instrumentationEnabled = enableInstrumentation;
-  }
 }
 
 class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
@@ -83,5 +85,35 @@ class Trace extends JsObjectWrapper<performance_interop.TraceJsImpl> {
 
   void stop() {
     return jsObject.stop();
+  }
+}
+
+class PerformanceSettings
+    extends JsObjectWrapper<performance_interop.PerformanceSettingsJsImpl> {
+  static final _expando = Expando<PerformanceSettings>();
+
+  static PerformanceSettings getInstance([
+    bool? dataCollectionEnabled,
+    bool? instrumentationEnabled,
+  ]) {
+    final jsObject = performance_interop.PerformanceSettingsJsImpl(
+      dataCollectionEnabled: dataCollectionEnabled,
+      instrumentationEnabled: instrumentationEnabled,
+    );
+    return _expando[jsObject] ??= PerformanceSettings._fromJsObject(jsObject);
+  }
+
+  PerformanceSettings._fromJsObject(
+    performance_interop.PerformanceSettingsJsImpl jsObject,
+  ) : super.fromJsObject(jsObject);
+
+  bool? get dataCollectionEnabled => jsObject.dataCollectionEnabled;
+  set dataCollectionEnabled(bool? b) {
+    jsObject.dataCollectionEnabled = b;
+  }
+
+  bool? get instrumentationEnabled => jsObject.instrumentationEnabled;
+  set instrumentationEnabled(bool? b) {
+    jsObject.instrumentationEnabled = b;
   }
 }
