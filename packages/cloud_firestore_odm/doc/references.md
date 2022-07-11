@@ -110,7 +110,7 @@ Models define exactly what our data schema is, therefore this allows the ODM to 
 useful type-safe methods for querying.
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@@firestoreSerializable
 class User {
   User({
     required this.name,

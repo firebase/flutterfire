@@ -99,6 +99,16 @@ class Data {
   }
 }
 
+const _dateTimeChecker = TypeChecker.fromRuntime(DateTime);
+
+const _timestampChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/timestamp.dart#Timestamp',
+);
+
+const _geoPointChecker = TypeChecker.fromUrl(
+  'package:cloud_firestore_platform_interface/src/geo_point.dart#GeoPoint',
+);
+
 @immutable
 class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
   final _collectionTemplates = <Template<CollectionData>>[
@@ -319,7 +329,11 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
                   f.type.isDartCoreInt ||
                   f.type.isDartCoreDouble ||
                   f.type.isDartCoreBool ||
-                  f.type.isPrimitiveList,
+                  f.type.isPrimitiveList ||
+                  f.type.isJsonDocumentReference ||
+                  _dateTimeChecker.isAssignableFromType(f.type) ||
+                  _timestampChecker.isAssignableFromType(f.type) ||
+                  _geoPointChecker.isAssignableFromType(f.type),
               // TODO filter list other than LIst<string|bool|num>
             )
             .where((f) => !f.isJsonIgnored())
@@ -382,6 +396,14 @@ extension on String {
 }
 
 extension on DartType {
+  bool get isJsonDocumentReference {
+    return element?.librarySource?.uri.scheme == 'package' &&
+        const {'cloud_firestore'}
+            .contains(element?.librarySource?.uri.pathSegments.first) &&
+        element?.name == 'DocumentReference' &&
+        (this as InterfaceType).typeArguments.single.isDartCoreMap;
+  }
+
   bool get isPrimitiveList {
     if (!isDartCoreList) return false;
 
