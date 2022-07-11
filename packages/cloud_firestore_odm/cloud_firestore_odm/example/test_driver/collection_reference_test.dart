@@ -342,9 +342,6 @@ void main() {
               startAt: 'B',
             )
             .get();
-        print(
-          querySnap.docs.map((e) => e.data.title),
-        );
 
         expect(
           querySnap.docs.map((e) => e.data.title),
