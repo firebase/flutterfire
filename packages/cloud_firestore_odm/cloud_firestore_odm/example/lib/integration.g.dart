@@ -409,21 +409,35 @@ class _$ManualJsonQuery extends QueryReference<ManualJsonQuerySnapshot>
     ManualJsonDocumentSnapshot? endBeforeDocument,
     ManualJsonDocumentSnapshot? startAfterDocument,
   }) {
-    return _$ManualJsonQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ManualJsonQuery(query, _collection);
   }
 
   ManualJsonQuery whereFieldPath(
@@ -1090,21 +1104,35 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
     AdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    return _$AdvancedJsonQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AdvancedJsonQuery(query, _collection);
   }
 
   AdvancedJsonQuery whereFieldPath(
@@ -1923,21 +1951,35 @@ class _$_PrivateAdvancedJsonQuery
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
     _PrivateAdvancedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    return _$_PrivateAdvancedJsonQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$_PrivateAdvancedJsonQuery(query, _collection);
   }
 
   _PrivateAdvancedJsonQuery whereFieldPath(
@@ -2657,21 +2699,35 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
     EmptyModelDocumentSnapshot? endBeforeDocument,
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
-    return _$EmptyModelQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
   }
 
   EmptyModelQuery whereFieldPath(

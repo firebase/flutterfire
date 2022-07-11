@@ -412,21 +412,35 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
     DateTimeQueryDocumentSnapshot? endBeforeDocument,
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
-    return _$DateTimeQueryQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DateTimeQueryQuery(query, _collection);
   }
 
   DateTimeQueryQuery whereFieldPath(
@@ -1044,21 +1058,35 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
     TimestampQueryDocumentSnapshot? endBeforeDocument,
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
-    return _$TimestampQueryQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$TimestampQueryQuery(query, _collection);
   }
 
   TimestampQueryQuery whereFieldPath(
@@ -1677,21 +1705,35 @@ class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
     GeoPointQueryDocumentSnapshot? endBeforeDocument,
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
-    return _$GeoPointQueryQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$GeoPointQueryQuery(query, _collection);
   }
 
   GeoPointQueryQuery whereFieldPath(
@@ -2316,21 +2358,35 @@ class _$DocumentReferenceQueryQuery
     DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
-    return _$DocumentReferenceQueryQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$DocumentReferenceQueryQuery(query, _collection);
   }
 
   DocumentReferenceQueryQuery whereFieldPath(

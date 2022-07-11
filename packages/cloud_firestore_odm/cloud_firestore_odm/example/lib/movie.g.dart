@@ -569,21 +569,35 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    return _$MovieQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MovieQuery(query, _collection);
   }
 
   MovieQuery whereFieldPath(
@@ -1663,21 +1677,35 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    return _$CommentQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CommentQuery(query, _collection);
   }
 
   CommentQuery whereFieldPath(

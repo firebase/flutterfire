@@ -404,21 +404,35 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    return _$ModelQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ModelQuery(query, _collection);
   }
 
   ModelQuery whereFieldPath(
@@ -1128,21 +1142,35 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    return _$NestedQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
   }
 
   NestedQuery whereFieldPath(
@@ -1995,21 +2023,35 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
     SplitFileModelDocumentSnapshot? endBeforeDocument,
     SplitFileModelDocumentSnapshot? startAfterDocument,
   }) {
-    return _$SplitFileModelQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SplitFileModelQuery(query, _collection);
   }
 
   SplitFileModelQuery whereFieldPath(
@@ -2515,21 +2557,35 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
     EmptyModelDocumentSnapshot? endBeforeDocument,
     EmptyModelDocumentSnapshot? startAfterDocument,
   }) {
-    return _$EmptyModelQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$EmptyModelQuery(query, _collection);
   }
 
   EmptyModelQuery whereFieldPath(
@@ -3074,21 +3130,35 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    return _$OptionalJsonQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$OptionalJsonQuery(query, _collection);
   }
 
   OptionalJsonQuery whereFieldPath(
@@ -3701,21 +3771,35 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    return _$MixedJsonQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$MixedJsonQuery(query, _collection);
   }
 
   MixedJsonQuery whereFieldPath(
@@ -4379,21 +4463,35 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    return _$RootQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$RootQuery(query, _collection);
   }
 
   RootQuery whereFieldPath(
@@ -5117,21 +5215,35 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    return _$SubQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$SubQuery(query, _collection);
   }
 
   SubQuery whereFieldPath(
@@ -5836,21 +5948,35 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    return _$AsCamelCaseQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$AsCamelCaseQuery(query, _collection);
   }
 
   AsCamelCaseQuery whereFieldPath(
@@ -6484,21 +6610,35 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    return _$CustomSubNameQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$CustomSubNameQuery(query, _collection);
   }
 
   CustomSubNameQuery whereFieldPath(
@@ -7124,21 +7264,35 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    return _$ExplicitPathQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitPathQuery(query, _collection);
   }
 
   ExplicitPathQuery whereFieldPath(
@@ -7773,21 +7927,35 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    return _$ExplicitSubPathQuery(
-      reference.orderBy(
-        fieldPath,
-        descending: descending,
-        startAt: startAt,
-        startAfter: startAfter,
-        endAt: endAt,
-        endBefore: endBefore,
-        startAtDocument: startAtDocument,
-        endAtDocument: endAtDocument,
-        endBeforeDocument: endBeforeDocument,
-        startAfterDocument: startAfterDocument,
-      ),
-      _collection,
-    );
+    var query = reference.orderBy(fieldPath, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$ExplicitSubPathQuery(query, _collection);
   }
 
   ExplicitSubPathQuery whereFieldPath(
