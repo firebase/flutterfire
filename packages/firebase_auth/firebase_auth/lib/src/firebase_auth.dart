@@ -576,6 +576,20 @@ class FirebaseAuth extends FirebasePluginPlatform {
     );
   }
 
+  /// Signs in with an AuthProvider using native authentication flow.
+  ///
+  /// A [FirebaseAuthException] maybe thrown with the following error code:
+  /// - **user-disabled**:
+  ///  - Thrown if the user corresponding to the given email has been disabled.
+  Future<UserCredential> signInWithAuthProvider(
+    AuthProvider provider,
+  ) async {
+    return UserCredential._(
+      this,
+      await _delegate.signInWithAuthProvider(provider),
+    );
+  }
+
   /// Starts a sign-in flow for a phone number.
   ///
   /// You can optionally provide a [RecaptchaVerifier] instance to control the
@@ -590,12 +604,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
     RecaptchaVerifier? verifier,
   ]) async {
     assert(phoneNumber.isNotEmpty);
-
+    // If we add a recaptcha to the page by creating a new instance, we must
+    // also clear that instance before proceeding.
+    bool mustClear = verifier == null;
     verifier ??= RecaptchaVerifier();
-    return ConfirmationResult._(
-      this,
-      await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate),
-    );
+    final result =
+        await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate);
+    if (mustClear) {
+      verifier.clear();
+    }
+    return ConfirmationResult._(this, result);
   }
 
   /// Authenticates a Firebase client using a popup-based OAuth authentication

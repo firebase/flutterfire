@@ -1,21 +1,21 @@
 import 'dart:convert' show utf8;
-import 'package:firebase_core_web/firebase_core_web_interop.dart'
-    as core_interop;
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:firebase_remote_config_platform_interface/firebase_remote_config_platform_interface.dart';
-import 'firebase_interop.dart' as firebase_interop;
 import 'firebase_remote_config_interop.dart' as remote_config_interop;
 
 /// Given an AppJSImp, return the Remote Config instance.
-RemoteConfig getRemoteConfigInstance(core_interop.App? app) {
+RemoteConfig getRemoteConfigInstance(App? app) {
   if (app == null) {
-    return RemoteConfig.getInstance(firebase_interop.remoteConfig());
+    return RemoteConfig.getInstance(remote_config_interop.getRemoteConfig());
   }
-  return RemoteConfig.getInstance(firebase_interop.remoteConfig(app.jsObject));
+  return RemoteConfig.getInstance(
+    remote_config_interop.getRemoteConfig(app.jsObject),
+  );
 }
 
 /// Provides access to Remote Config service.
-class RemoteConfig extends core_interop
-    .JsObjectWrapper<remote_config_interop.RemoteConfigJsImpl> {
+class RemoteConfig
+    extends JsObjectWrapper<remote_config_interop.RemoteConfigJsImpl> {
   static final _expando = Expando<RemoteConfig>();
 
   static RemoteConfig getInstance(
@@ -43,10 +43,10 @@ class RemoteConfig extends core_interop
   /// remoteConfig.defaultConfig['x'] = 1;        // Runtime error: attempt to modify an unmodifiable map.
   /// ```
   Map<String, dynamic> get defaultConfig =>
-      Map.unmodifiable(core_interop.dartify(jsObject.defaultConfig));
+      Map.unmodifiable(dartify(jsObject.defaultConfig));
 
   set defaultConfig(Map<String, dynamic> value) {
-    jsObject.defaultConfig = core_interop.jsify(value);
+    jsObject.defaultConfig = jsify(value);
   }
 
   /// Returns the timestamp of the last *successful* fetch.
@@ -74,24 +74,25 @@ class RemoteConfig extends core_interop
   ///  Returns a future which resolves to `true` if the current call activated the fetched configs.
   ///  If the fetched configs were already activated, the promise will resolve to `false`.
   Future<bool> activate() async =>
-      core_interop.handleThenable(jsObject.activate());
+      handleThenable(remote_config_interop.activate(jsObject));
 
   ///  Ensures the last activated config are available to the getters.
   Future<void> ensureInitialized() async =>
-      core_interop.handleThenable(jsObject.ensureInitialized());
+      handleThenable(remote_config_interop.ensureInitialized(jsObject));
 
   /// Fetches and caches configuration from the Remote Config service.
-  Future<void> fetch() async => core_interop.handleThenable(jsObject.fetch());
+  Future<void> fetch() async =>
+      handleThenable(remote_config_interop.fetchConfig(jsObject));
 
   /// Performs fetch and activate operations, as a convenience.
   /// Returns a promise which resolves to true if the current call activated the fetched configs.
   /// If the fetched configs were already activated, the promise will resolve to false.
   Future<bool> fetchAndActivate() async =>
-      core_interop.handleThenable(jsObject.fetchAndActivate());
+      handleThenable(remote_config_interop.fetchAndActivate(jsObject));
 
   /// Returns all config values.
   Map<String, RemoteConfigValue> getAll() {
-    final keys = core_interop.objectKeys(jsObject.getAll());
+    final keys = objectKeys(remote_config_interop.getAll(jsObject));
     final entries = keys.map<MapEntry<String, RemoteConfigValue>>(
       (dynamic k) => MapEntry<String, RemoteConfigValue>(k, getValue(k)),
     );
@@ -99,24 +100,27 @@ class RemoteConfig extends core_interop
   }
 
   RemoteConfigValue getValue(String key) => RemoteConfigValue(
-        utf8.encode(jsObject.getValue(key).asString()),
-        getSource(jsObject.getValue(key).getSource()),
+        utf8.encode(remote_config_interop.getValue(jsObject, key).asString()),
+        getSource(remote_config_interop.getValue(jsObject, key).getSource()),
       );
 
   ///  Gets the value for the given key as a boolean.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
-  bool getBoolean(String key) => jsObject.getBoolean(key);
+  bool getBoolean(String key) =>
+      remote_config_interop.getBoolean(jsObject, key);
 
   ///  Gets the value for the given key as a number.
   ///  Convenience method for calling `remoteConfig.getValue(key).asNumber()`.
-  num getNumber(String key) => jsObject.getNumber(key);
+  num getNumber(String key) => remote_config_interop.getNumber(jsObject, key);
 
   ///  Gets the value for the given key as a string.
   ///  Convenience method for calling `remoteConfig.getValue(key).asString()`.
-  String getString(String key) => jsObject.getString(key);
+  String getString(String key) =>
+      remote_config_interop.getString(jsObject, key);
 
   void setLogLevel(RemoteConfigLogLevel value) {
-    jsObject.setLogLevel(
+    remote_config_interop.setLogLevel(
+      jsObject,
       const {
         RemoteConfigLogLevel.debug: 'debug',
         RemoteConfigLogLevel.error: 'error',
@@ -141,7 +145,7 @@ ValueSource getSource(String source) {
 
 /// Defines configuration options for the Remote Config SDK.
 class RemoteConfigSettings
-    extends core_interop.JsObjectWrapper<remote_config_interop.SettingsJsImpl> {
+    extends JsObjectWrapper<remote_config_interop.SettingsJsImpl> {
   RemoteConfigSettings._fromJsObject(
     remote_config_interop.SettingsJsImpl jsObject,
   ) : super.fromJsObject(jsObject);

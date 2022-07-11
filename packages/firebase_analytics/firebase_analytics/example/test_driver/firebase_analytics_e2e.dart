@@ -25,6 +25,11 @@ void testsMain() {
       analytics = FirebaseAnalytics.instance;
     });
 
+    test('isSupported', () async {
+      final result = await FirebaseAnalytics.instance.isSupported();
+      expect(result, isA<bool>());
+    });
+
     test('logEvent', () async {
       await expectLater(analytics.logEvent(name: 'testing'), completes);
 

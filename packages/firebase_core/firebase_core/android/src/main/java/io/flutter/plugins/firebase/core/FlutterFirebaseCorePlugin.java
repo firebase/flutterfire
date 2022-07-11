@@ -14,115 +14,76 @@ import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * Flutter plugin implementation controlling the entrypoint for the Firebase SDK.
  *
  * <p>Instantiate this in an add to app scenario to gracefully handle activity and context changes.
  */
-public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
-  private static final String KEY_API_KEY = "apiKey";
-  private static final String KEY_APP_NAME = "appName";
-  private static final String KEY_APP_ID = "appId";
-  private static final String KEY_MESSAGING_SENDER_ID = "messagingSenderId";
-  private static final String KEY_PROJECT_ID = "projectId";
-  private static final String KEY_DATABASE_URL = "databaseURL";
-  private static final String KEY_STORAGE_BUCKET = "storageBucket";
-  private static final String KEY_OPTIONS = "options";
-  private static final String KEY_NAME = "name";
-  private static final String KEY_TRACKING_ID = "trackingId";
-  private static final String KEY_ENABLED = "enabled";
-  private static final String KEY_IS_AUTOMATIC_DATA_COLLECTION_ENABLED =
-      "isAutomaticDataCollectionEnabled";
-  private static final String KEY_PLUGIN_CONSTANTS = "pluginConstants";
-
-  private static final String CHANNEL_NAME = "plugins.flutter.io/firebase_core";
-
-  private MethodChannel channel;
+public class FlutterFirebaseCorePlugin
+    implements FlutterPlugin,
+        GeneratedAndroidFirebaseCore.FirebaseCoreHostApi,
+        GeneratedAndroidFirebaseCore.FirebaseAppHostApi {
   private Context applicationContext;
   private boolean coreInitialized = false;
 
-  /**
-   * Default Constructor.
-   *
-   * <p>Use this constructor in an add to app scenario to gracefully handle activity and context
-   * changes.
-   */
-  public FlutterFirebaseCorePlugin() {}
-
-  private FlutterFirebaseCorePlugin(Context applicationContext) {
-    this.applicationContext = applicationContext;
-  }
-
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), this);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), this);
     applicationContext = binding.getApplicationContext();
-    channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
   }
 
   @Override
   public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
     applicationContext = null;
+    GeneratedAndroidFirebaseCore.FirebaseCoreHostApi.setup(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseCore.FirebaseAppHostApi.setup(binding.getBinaryMessenger(), null);
   }
 
-  private Map<String, String> firebaseOptionsToMap(FirebaseOptions options) {
-    Map<String, String> optionsMap = new HashMap<>();
+  private GeneratedAndroidFirebaseCore.PigeonFirebaseOptions firebaseOptionsToMap(
+      FirebaseOptions options) {
+    GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder firebaseOptions =
+        new GeneratedAndroidFirebaseCore.PigeonFirebaseOptions.Builder();
 
-    optionsMap.put(KEY_API_KEY, options.getApiKey());
-    optionsMap.put(KEY_APP_ID, options.getApplicationId());
-
+    firebaseOptions.setApiKey(options.getApiKey());
+    firebaseOptions.setAppId(options.getApplicationId());
     if (options.getGcmSenderId() != null) {
-      optionsMap.put(KEY_MESSAGING_SENDER_ID, options.getGcmSenderId());
+      firebaseOptions.setMessagingSenderId(options.getGcmSenderId());
     }
-
     if (options.getProjectId() != null) {
-      optionsMap.put(KEY_PROJECT_ID, options.getProjectId());
+      firebaseOptions.setProjectId(options.getProjectId());
     }
+    firebaseOptions.setDatabaseURL(options.getDatabaseUrl());
+    firebaseOptions.setStorageBucket(options.getStorageBucket());
+    firebaseOptions.setTrackingId(options.getGaTrackingId());
 
-    if (options.getDatabaseUrl() != null) {
-      optionsMap.put(KEY_DATABASE_URL, options.getDatabaseUrl());
-    }
-
-    if (options.getStorageBucket() != null) {
-      optionsMap.put(KEY_STORAGE_BUCKET, options.getStorageBucket());
-    }
-
-    if (options.getGaTrackingId() != null) {
-      optionsMap.put(KEY_TRACKING_ID, options.getGaTrackingId());
-    }
-
-    return optionsMap;
+    return firebaseOptions.build();
   }
 
-  private Task<Map<String, Object>> firebaseAppToMap(FirebaseApp firebaseApp) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+  private Task<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppToMap(
+      FirebaseApp firebaseApp) {
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
+        taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            Map<String, Object> appMap = new HashMap<>();
+            GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder initializeResponse =
+                new GeneratedAndroidFirebaseCore.PigeonInitializeResponse.Builder();
 
-            appMap.put(KEY_NAME, firebaseApp.getName());
-            appMap.put(KEY_OPTIONS, firebaseOptionsToMap(firebaseApp.getOptions()));
+            initializeResponse.setName(firebaseApp.getName());
+            initializeResponse.setOptions(firebaseOptionsToMap(firebaseApp.getOptions()));
 
-            appMap.put(
-                KEY_IS_AUTOMATIC_DATA_COLLECTION_ENABLED,
+            initializeResponse.setIsAutomaticDataCollectionEnabled(
                 firebaseApp.isDataCollectionDefaultEnabled());
-            appMap.put(
-                KEY_PLUGIN_CONSTANTS,
+            initializeResponse.setPluginConstants(
                 Tasks.await(
                     FlutterFirebasePluginRegistry.getPluginConstantsForFirebaseApp(firebaseApp)));
 
-            taskCompletionSource.setResult(appMap);
+            taskCompletionSource.setResult(initializeResponse.build());
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
@@ -131,27 +92,43 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
     return taskCompletionSource.getTask();
   }
 
-  private Task<Map<String, Object>> initializeApp(Map<String, Object> arguments) {
-    TaskCompletionSource<Map<String, Object>> taskCompletionSource = new TaskCompletionSource<>();
+  private <T> void listenToResponse(
+      TaskCompletionSource<T> taskCompletionSource, GeneratedAndroidFirebaseCore.Result<T> result) {
+    taskCompletionSource
+        .getTask()
+        .addOnCompleteListener(
+            task -> {
+              if (task.isSuccessful()) {
+                result.success(task.getResult());
+              } else {
+                Exception exception = task.getException();
+                result.error(exception);
+              }
+            });
+  }
+
+  @Override
+  public void initializeApp(
+      @NonNull String appName,
+      @NonNull GeneratedAndroidFirebaseCore.PigeonFirebaseOptions initializeAppRequest,
+      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
+          result) {
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>
+        taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            String name = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-
-            @SuppressWarnings("unchecked")
-            Map<String, String> optionsMap =
-                (Map<String, String>) Objects.requireNonNull(arguments.get(KEY_OPTIONS));
 
             FirebaseOptions options =
                 new FirebaseOptions.Builder()
-                    .setApiKey(Objects.requireNonNull(optionsMap.get(KEY_API_KEY)))
-                    .setApplicationId(Objects.requireNonNull(optionsMap.get(KEY_APP_ID)))
-                    .setDatabaseUrl(optionsMap.get(KEY_DATABASE_URL))
-                    .setGcmSenderId(optionsMap.get(KEY_MESSAGING_SENDER_ID))
-                    .setProjectId(optionsMap.get(KEY_PROJECT_ID))
-                    .setStorageBucket(optionsMap.get(KEY_STORAGE_BUCKET))
-                    .setGaTrackingId(optionsMap.get(KEY_TRACKING_ID))
+                    .setApiKey(initializeAppRequest.getApiKey())
+                    .setApplicationId(initializeAppRequest.getAppId())
+                    .setDatabaseUrl(initializeAppRequest.getDatabaseURL())
+                    .setGcmSenderId(initializeAppRequest.getMessagingSenderId())
+                    .setProjectId(initializeAppRequest.getProjectId())
+                    .setStorageBucket(initializeAppRequest.getStorageBucket())
+                    .setGaTrackingId(initializeAppRequest.getTrackingId())
                     .build();
             // TODO(Salakar) hacky workaround a bug with FirebaseInAppMessaging causing the error:
             //    Can't create handler inside thread Thread[pool-3-thread-1,5,main] that has not called Looper.prepare()
@@ -161,19 +138,24 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
             } catch (Exception e) {
               // do nothing
             }
-            FirebaseApp firebaseApp = FirebaseApp.initializeApp(applicationContext, options, name);
+            FirebaseApp firebaseApp =
+                FirebaseApp.initializeApp(applicationContext, options, appName);
             taskCompletionSource.setResult(Tasks.await(firebaseAppToMap(firebaseApp)));
           } catch (Exception e) {
             taskCompletionSource.setException(e);
           }
         });
 
-    return taskCompletionSource.getTask();
+    listenToResponse(taskCompletionSource, result);
   }
 
-  private Task<List<Map<String, Object>>> initializeCore() {
-    TaskCompletionSource<List<Map<String, Object>>> taskCompletionSource =
-        new TaskCompletionSource<>();
+  @Override
+  public void initializeCore(
+      GeneratedAndroidFirebaseCore.Result<
+              List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
+          result) {
+    TaskCompletionSource<List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse>>
+        taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
@@ -185,7 +167,8 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
             }
 
             List<FirebaseApp> firebaseApps = FirebaseApp.getApps(applicationContext);
-            List<Map<String, Object>> firebaseAppsList = new ArrayList<>(firebaseApps.size());
+            List<GeneratedAndroidFirebaseCore.PigeonInitializeResponse> firebaseAppsList =
+                new ArrayList<>(firebaseApps.size());
 
             for (FirebaseApp firebaseApp : firebaseApps) {
               firebaseAppsList.add(Tasks.await(firebaseAppToMap(firebaseApp)));
@@ -197,11 +180,15 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           }
         });
 
-    return taskCompletionSource.getTask();
+    listenToResponse(taskCompletionSource, result);
   }
 
-  private Task<Map<String, String>> firebaseOptionsFromResource() {
-    TaskCompletionSource<Map<String, String>> taskCompletionSource = new TaskCompletionSource<>();
+  @Override
+  public void optionsFromResource(
+      GeneratedAndroidFirebaseCore.Result<GeneratedAndroidFirebaseCore.PigeonFirebaseOptions>
+          result) {
+    TaskCompletionSource<GeneratedAndroidFirebaseCore.PigeonFirebaseOptions> taskCompletionSource =
+        new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
@@ -217,17 +204,19 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           }
         });
 
-    return taskCompletionSource.getTask();
+    listenToResponse(taskCompletionSource, result);
   }
 
-  private Task<Void> setAutomaticDataCollectionEnabled(Map<String, Object> arguments) {
+  @Override
+  public void setAutomaticDataCollectionEnabled(
+      @NonNull String appName,
+      @NonNull Boolean enabled,
+      GeneratedAndroidFirebaseCore.Result<Void> result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-            Boolean enabled = (Boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
             FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
             firebaseApp.setDataCollectionDefaultEnabled(enabled);
 
@@ -237,17 +226,19 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           }
         });
 
-    return taskCompletionSource.getTask();
+    listenToResponse(taskCompletionSource, result);
   }
 
-  private Task<Void> setAutomaticResourceManagementEnabled(Map<String, Object> arguments) {
+  @Override
+  public void setAutomaticResourceManagementEnabled(
+      @NonNull String appName,
+      @NonNull Boolean enabled,
+      GeneratedAndroidFirebaseCore.Result<Void> result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
-            boolean enabled = (boolean) Objects.requireNonNull(arguments.get(KEY_ENABLED));
             FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
             firebaseApp.setAutomaticResourceManagementEnabled(enabled);
 
@@ -257,16 +248,16 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           }
         });
 
-    return taskCompletionSource.getTask();
+    listenToResponse(taskCompletionSource, result);
   }
 
-  private Task<Void> deleteApp(Map<String, Object> arguments) {
+  @Override
+  public void delete(@NonNull String appName, GeneratedAndroidFirebaseCore.Result<Void> result) {
     TaskCompletionSource<Void> taskCompletionSource = new TaskCompletionSource<>();
 
     cachedThreadPool.execute(
         () -> {
           try {
-            String appName = (String) Objects.requireNonNull(arguments.get(KEY_APP_NAME));
             FirebaseApp firebaseApp = FirebaseApp.getInstance(appName);
             try {
               firebaseApp.delete();
@@ -280,45 +271,6 @@ public class FlutterFirebaseCorePlugin implements FlutterPlugin, MethodChannel.M
           }
         });
 
-    return taskCompletionSource.getTask();
-  }
-
-  @Override
-  public void onMethodCall(MethodCall call, @NonNull final MethodChannel.Result result) {
-    Task<?> methodCallTask;
-
-    switch (call.method) {
-      case "Firebase#initializeApp":
-        methodCallTask = initializeApp(call.arguments());
-        break;
-      case "Firebase#initializeCore":
-        methodCallTask = initializeCore();
-        break;
-      case "Firebase#optionsFromResource":
-        methodCallTask = firebaseOptionsFromResource();
-        break;
-      case "FirebaseApp#setAutomaticDataCollectionEnabled":
-        methodCallTask = setAutomaticDataCollectionEnabled(call.arguments());
-        break;
-      case "FirebaseApp#setAutomaticResourceManagementEnabled":
-        methodCallTask = setAutomaticResourceManagementEnabled(call.arguments());
-        break;
-      case "FirebaseApp#delete":
-        methodCallTask = deleteApp(call.arguments());
-        break;
-      default:
-        result.notImplemented();
-        return;
-    }
-
-    methodCallTask.addOnCompleteListener(
-        task -> {
-          if (task.isSuccessful()) {
-            result.success(task.getResult());
-          } else {
-            Exception exception = task.getException();
-            result.error("firebase_core", exception != null ? exception.getMessage() : null, null);
-          }
-        });
+    listenToResponse(taskCompletionSource, result);
   }
 }

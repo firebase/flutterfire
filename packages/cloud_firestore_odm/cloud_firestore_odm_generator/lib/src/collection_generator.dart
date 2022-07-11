@@ -18,6 +18,20 @@ import 'templates/query_reference.dart';
 import 'templates/query_snapshot.dart';
 import 'templates/template.dart';
 
+class QueryingField {
+  QueryingField(
+    this.name,
+    this.type, {
+    required this.field,
+    required this.updatable,
+  });
+
+  final String name;
+  final DartType type;
+  final String field;
+  final bool updatable;
+}
+
 class CollectionData {
   CollectionData({
     required this.type,
@@ -32,7 +46,10 @@ class CollectionData {
   final DartType type;
   final String collectionName;
   final String path;
-  final List<FieldElement> queryableFields;
+  final List<QueryingField> queryableFields;
+
+  late final updatableFields =
+      queryableFields.where((element) => element.updatable).toList();
 
   CollectionData? _parent;
   CollectionData? get parent => _parent;
@@ -280,25 +297,47 @@ class CollectionGenerator extends ParserGenerator<void, Data, Collection> {
       collectionName: name,
       fromJson: (json) {
         if (fromJson != null) return '$type.fromJson($json)';
-        return '_\$${type}FromJson($json)';
+        return '_\$${type.toString().public}FromJson($json)';
       },
       toJson: (value) {
         if (toJson != null) return '$value.toJson()';
-        return '_\$${type}ToJson($value)';
+        return '_\$${type.toString().public}ToJson($value)';
       },
-      queryableFields: collectionTargetElement.fields
-          .where((f) => f.isPublic)
-          .where(
-            (f) =>
-                f.type.isDartCoreString ||
-                f.type.isDartCoreNum ||
-                f.type.isDartCoreInt ||
-                f.type.isDartCoreDouble ||
-                f.type.isDartCoreBool ||
-                f.type.isPrimitiveList,
-            // TODO filter list other than LIst<string|bool|num>
-          )
-          .toList(),
+      queryableFields: [
+        QueryingField(
+          'documentId',
+          annotatedElement.library!.typeProvider.stringType,
+          field: 'FieldPath.documentId',
+          updatable: false,
+        ),
+        ...collectionTargetElement.fields
+            .where((f) => f.isPublic)
+            .where(
+              (f) =>
+                  f.type.isDartCoreString ||
+                  f.type.isDartCoreNum ||
+                  f.type.isDartCoreInt ||
+                  f.type.isDartCoreDouble ||
+                  f.type.isDartCoreBool ||
+                  f.type.isPrimitiveList,
+              // TODO filter list other than LIst<string|bool|num>
+            )
+            .where((f) => !f.isJsonIgnored())
+            .map(
+          (e) {
+            final key = '"${e.name}"';
+
+            return QueryingField(
+              e.name,
+              e.type,
+              updatable: true,
+              field: hasJsonSerializable
+                  ? '_\$${collectionTargetElement.name.public}FieldMap[$key]!'
+                  : key,
+            );
+          },
+        ).toList(),
+      ],
     );
   }
 
@@ -336,6 +375,12 @@ const _sentinel = _Sentinel();
   void parseGlobalData(LibraryElement library) {}
 }
 
+extension on String {
+  String get public {
+    return startsWith('_') ? substring(1) : this;
+  }
+}
+
 extension on DartType {
   bool get isPrimitiveList {
     if (!isDartCoreList) return false;
@@ -347,5 +392,21 @@ extension on DartType {
         generic.isDartCoreBool ||
         generic.isDartCoreObject ||
         generic.isDynamic;
+  }
+}
+
+extension on FieldElement {
+  bool isJsonIgnored() {
+    const checker = TypeChecker.fromRuntime(JsonKey);
+    final jsonKeys = checker.annotationsOf(this);
+
+    for (final jsonKey in jsonKeys) {
+      final ignore = jsonKey.getField('ignore')?.toBoolValue();
+      if (ignore ?? false) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }
