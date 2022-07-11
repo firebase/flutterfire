@@ -22,10 +22,7 @@ void setupTests() {
       );
       await FirebaseStorage.instance
           .useStorageEmulator(testEmulatorHost, testEmulatorPort);
-      await FirebaseAuth.instance.useAuthEmulator(testEmulatorHost, 9099);
-      if (FirebaseAuth.instance.currentUser == null) {
-        await FirebaseAuth.instance.signInAnonymously();
-      }
+
       // Add a write only file
       await FirebaseStorage.instance
           .ref('writeOnly.txt')
