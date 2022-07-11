@@ -39,6 +39,9 @@ abstract class ModelCollectionReference
   }
 
   @override
+  CollectionReference<Model> get reference;
+
+  @override
   ModelDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -492,7 +495,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
   }) {
     return _$ModelQuery(
       reference.where(
-        "value",
+        _$ModelFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -560,7 +563,8 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
     ModelDocumentSnapshot? endBeforeDocument,
     ModelDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query =
+        reference.orderBy(_$ModelFieldMap["value"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -657,6 +661,9 @@ abstract class NestedCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Nested> get reference;
 
   @override
   NestedDocumentReference doc([String? id]);
@@ -1211,7 +1218,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        "boolList",
+        _$NestedFieldMap["boolList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1237,7 +1244,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        "stringList",
+        _$NestedFieldMap["stringList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1263,7 +1270,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        "numList",
+        _$NestedFieldMap["numList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1289,7 +1296,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        "objectList",
+        _$NestedFieldMap["objectList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1315,7 +1322,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   }) {
     return _$NestedQuery(
       reference.where(
-        "dynamicList",
+        _$NestedFieldMap["dynamicList"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1382,7 +1389,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("boolList", descending: descending);
+    var query = reference.orderBy(_$NestedFieldMap["boolList"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1424,7 +1432,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("stringList", descending: descending);
+    var query = reference.orderBy(_$NestedFieldMap["stringList"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1466,7 +1475,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("numList", descending: descending);
+    var query =
+        reference.orderBy(_$NestedFieldMap["numList"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1508,7 +1518,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("objectList", descending: descending);
+    var query = reference.orderBy(_$NestedFieldMap["objectList"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1550,7 +1561,8 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? endBeforeDocument,
     NestedDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("dynamicList", descending: descending);
+    var query = reference.orderBy(_$NestedFieldMap["dynamicList"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1649,6 +1661,9 @@ abstract class SplitFileModelCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<SplitFileModel> get reference;
 
   @override
   SplitFileModelDocumentReference doc([String? id]);
@@ -2171,6 +2186,9 @@ abstract class EmptyModelCollectionReference
   }
 
   @override
+  CollectionReference<EmptyModel> get reference;
+
+  @override
   EmptyModelDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -2687,6 +2705,9 @@ abstract class OptionalJsonCollectionReference
   }
 
   @override
+  CollectionReference<OptionalJson> get reference;
+
+  @override
   OptionalJsonDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -3144,7 +3165,7 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   }) {
     return _$OptionalJsonQuery(
       reference.where(
-        "value",
+        _$OptionalJsonFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3212,7 +3233,8 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
     OptionalJsonDocumentSnapshot? endBeforeDocument,
     OptionalJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$OptionalJsonFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3311,6 +3333,9 @@ abstract class MixedJsonCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<MixedJson> get reference;
 
   @override
   MixedJsonDocumentReference doc([String? id]);
@@ -3767,7 +3792,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
   }) {
     return _$MixedJsonQuery(
       reference.where(
-        "value",
+        _$MixedJsonFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -3835,7 +3860,8 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
     MixedJsonDocumentSnapshot? endBeforeDocument,
     MixedJsonDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$MixedJsonFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -3932,6 +3958,9 @@ abstract class RootCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Root> get reference;
 
   @override
   RootDocumentReference doc([String? id]);
@@ -4441,7 +4470,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        "nonNullable",
+        _$RootFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4469,7 +4498,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   }) {
     return _$RootQuery(
       reference.where(
-        "nullable",
+        _$RootFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -4537,7 +4566,8 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("nonNullable", descending: descending);
+    var query = reference.orderBy(_$RootFieldMap["nonNullable"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4579,7 +4609,8 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
     RootDocumentSnapshot? endBeforeDocument,
     RootDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("nullable", descending: descending);
+    var query =
+        reference.orderBy(_$RootFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -4676,6 +4707,9 @@ abstract class SubCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<Sub> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -5174,7 +5208,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        "nonNullable",
+        _$SubFieldMap["nonNullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5202,7 +5236,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   }) {
     return _$SubQuery(
       reference.where(
-        "nullable",
+        _$SubFieldMap["nullable"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5270,7 +5304,8 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("nonNullable", descending: descending);
+    var query = reference.orderBy(_$SubFieldMap["nonNullable"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -5312,7 +5347,8 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
     SubDocumentSnapshot? endBeforeDocument,
     SubDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("nullable", descending: descending);
+    var query =
+        reference.orderBy(_$SubFieldMap["nullable"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -5411,6 +5447,9 @@ abstract class AsCamelCaseCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<AsCamelCase> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -5888,7 +5927,7 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   }) {
     return _$AsCamelCaseQuery(
       reference.where(
-        "value",
+        _$AsCamelCaseFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -5956,7 +5995,8 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
     AsCamelCaseDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$AsCamelCaseFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -6055,6 +6095,9 @@ abstract class CustomSubNameCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<CustomSubName> get reference;
 
   /// A reference to the containing [RootDocumentReference] if this is a subcollection.
   RootDocumentReference get parent;
@@ -6532,7 +6575,7 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   }) {
     return _$CustomSubNameQuery(
       reference.where(
-        "value",
+        _$CustomSubNameFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -6600,7 +6643,8 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
     CustomSubNameDocumentSnapshot? endBeforeDocument,
     CustomSubNameDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$CustomSubNameFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -6699,6 +6743,9 @@ abstract class ExplicitPathCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<ExplicitPath> get reference;
 
   @override
   ExplicitPathDocumentReference doc([String? id]);
@@ -7168,7 +7215,7 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   }) {
     return _$ExplicitPathQuery(
       reference.where(
-        "value",
+        _$ExplicitPathFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7236,7 +7283,8 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
     ExplicitPathDocumentSnapshot? endBeforeDocument,
     ExplicitPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$ExplicitPathFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -7335,6 +7383,9 @@ abstract class ExplicitSubPathCollectionReference
   ) {
     return value.toJson();
   }
+
+  @override
+  CollectionReference<ExplicitSubPath> get reference;
 
   /// A reference to the containing [ExplicitPathDocumentReference] if this is a subcollection.
   ExplicitPathDocumentReference get parent;
@@ -7813,7 +7864,7 @@ class _$ExplicitSubPathQuery
   }) {
     return _$ExplicitSubPathQuery(
       reference.where(
-        "value",
+        _$ExplicitSubPathFieldMap["value"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -7881,7 +7932,8 @@ class _$ExplicitSubPathQuery
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,
     ExplicitSubPathDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("value", descending: descending);
+    var query = reference.orderBy(_$ExplicitSubPathFieldMap["value"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -7962,7 +8014,7 @@ class ExplicitSubPathQueryDocumentSnapshot
 // ValidatorGenerator
 // **************************************************************************
 
-_$assertMinValidation(MinValidation instance) {
+void _$assertMinValidation(MinValidation instance) {
   const Min(0).validate(instance.intNbr, "intNbr");
   const Max(42).validate(instance.intNbr, "intNbr");
   const Min(10).validate(instance.doubleNbr, "doubleNbr");
@@ -7976,6 +8028,10 @@ _$assertMinValidation(MinValidation instance) {
 Model _$ModelFromJson(Map<String, dynamic> json) => Model(
       json['value'] as String,
     );
+
+const _$ModelFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
       'value': instance.value,
@@ -7999,6 +8055,16 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
       dynamicList: json['dynamicList'] as List<dynamic>?,
     );
 
+const _$NestedFieldMap = <String, String>{
+  'value': 'value',
+  'valueList': 'valueList',
+  'boolList': 'boolList',
+  'stringList': 'stringList',
+  'numList': 'numList',
+  'objectList': 'objectList',
+  'dynamicList': 'dynamicList',
+};
+
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'value': instance.value,
       'valueList': instance.valueList,
@@ -8011,6 +8077,8 @@ Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
 
 EmptyModel _$EmptyModelFromJson(Map<String, dynamic> json) => EmptyModel();
 
+const _$EmptyModelFieldMap = <String, String>{};
+
 Map<String, dynamic> _$EmptyModelToJson(EmptyModel instance) =>
     <String, dynamic>{};
 
@@ -8020,6 +8088,12 @@ MinValidation _$MinValidationFromJson(Map<String, dynamic> json) =>
       (json['doubleNbr'] as num).toDouble(),
       json['numNbr'] as num,
     );
+
+const _$MinValidationFieldMap = <String, String>{
+  'intNbr': 'intNbr',
+  'doubleNbr': 'doubleNbr',
+  'numNbr': 'numNbr',
+};
 
 Map<String, dynamic> _$MinValidationToJson(MinValidation instance) =>
     <String, dynamic>{
@@ -8033,6 +8107,11 @@ Root _$RootFromJson(Map<String, dynamic> json) => Root(
       json['nullable'] as int?,
     );
 
+const _$RootFieldMap = <String, String>{
+  'nonNullable': 'nonNullable',
+  'nullable': 'nullable',
+};
+
 Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
       'nullable': instance.nullable,
@@ -8041,6 +8120,10 @@ Map<String, dynamic> _$RootToJson(Root instance) => <String, dynamic>{
 OptionalJson _$OptionalJsonFromJson(Map<String, dynamic> json) => OptionalJson(
       json['value'] as int,
     );
+
+const _$OptionalJsonFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$OptionalJsonToJson(OptionalJson instance) =>
     <String, dynamic>{
@@ -8051,6 +8134,10 @@ MixedJson _$MixedJsonFromJson(Map<String, dynamic> json) => MixedJson(
       json['value'] as int,
     );
 
+const _$MixedJsonFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$MixedJsonToJson(MixedJson instance) => <String, dynamic>{
       'value': instance.value,
     };
@@ -8059,6 +8146,11 @@ Sub _$SubFromJson(Map<String, dynamic> json) => Sub(
       json['nonNullable'] as String,
       json['nullable'] as int?,
     );
+
+const _$SubFieldMap = <String, String>{
+  'nonNullable': 'nonNullable',
+  'nullable': 'nullable',
+};
 
 Map<String, dynamic> _$SubToJson(Sub instance) => <String, dynamic>{
       'nonNullable': instance.nonNullable,
@@ -8070,6 +8162,10 @@ CustomSubName _$CustomSubNameFromJson(Map<String, dynamic> json) =>
       json['value'] as num,
     );
 
+const _$CustomSubNameFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$CustomSubNameToJson(CustomSubName instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -8078,6 +8174,10 @@ Map<String, dynamic> _$CustomSubNameToJson(CustomSubName instance) =>
 AsCamelCase _$AsCamelCaseFromJson(Map<String, dynamic> json) => AsCamelCase(
       json['value'] as num,
     );
+
+const _$AsCamelCaseFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$AsCamelCaseToJson(AsCamelCase instance) =>
     <String, dynamic>{
@@ -8088,6 +8188,10 @@ ExplicitPath _$ExplicitPathFromJson(Map<String, dynamic> json) => ExplicitPath(
       json['value'] as num,
     );
 
+const _$ExplicitPathFieldMap = <String, String>{
+  'value': 'value',
+};
+
 Map<String, dynamic> _$ExplicitPathToJson(ExplicitPath instance) =>
     <String, dynamic>{
       'value': instance.value,
@@ -8097,6 +8201,10 @@ ExplicitSubPath _$ExplicitSubPathFromJson(Map<String, dynamic> json) =>
     ExplicitSubPath(
       json['value'] as num,
     );
+
+const _$ExplicitSubPathFieldMap = <String, String>{
+  'value': 'value',
+};
 
 Map<String, dynamic> _$ExplicitSubPathToJson(ExplicitSubPath instance) =>
     <String, dynamic>{
