@@ -124,7 +124,7 @@ class FirebaseMessaging extends FirebasePluginPlatform {
     return _delegate.onTokenRefresh;
   }
 
-  bool isSupported() {
+  Future<bool> isSupported() {
     return _delegate.isSupported();
   }
 

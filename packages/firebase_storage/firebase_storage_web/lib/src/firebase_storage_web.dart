@@ -115,13 +115,13 @@ class FirebaseStorageWeb extends FirebaseStoragePlatform {
   @override
   void setMaxOperationRetryTime(int time) {
     _maxOperationRetryTime = time;
-    delegate.setMaxOperationRetryTime(time);
+    delegate.maxOperationRetryTime = time;
   }
 
   /// The new maximum upload retry time in milliseconds.
   @override
   void setMaxUploadRetryTime(int time) {
-    delegate.setMaxUploadRetryTime(time);
+    delegate.maxUploadRetryTime = time;
   }
 
   /// The new maximum download retry time in milliseconds.

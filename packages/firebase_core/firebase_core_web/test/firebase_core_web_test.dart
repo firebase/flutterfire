@@ -35,13 +35,14 @@ void main() {
     });
 
     test('.apps', () {
-      (js.context['firebase'] as js.JsObject)['apps'] = js.JsArray<dynamic>();
+      (js.context['firebase_core'] as js.JsObject)['getApps'] =
+          js.allowInterop(js.JsArray<dynamic>.new);
       final List<FirebaseApp> apps = Firebase.apps;
       expect(apps, hasLength(0));
     });
 
     test('.app()', () async {
-      (js.context['firebase'] as js.JsObject)['app'] =
+      (js.context['firebase_core'] as js.JsObject)['getApp'] =
           js.allowInterop((String name) {
         return js.JsObject.jsify(<String, dynamic>{
           'name': name,
@@ -67,7 +68,7 @@ void main() {
     test('.initializeApp()', () async {
       bool appConfigured = false;
 
-      (js.context['firebase'] as js.JsObject)['app'] =
+      (js.context['firebase_core'] as js.JsObject)['getApp'] =
           js.allowInterop((String name) {
         if (appConfigured) {
           return js.JsObject.jsify(<String, dynamic>{
@@ -83,7 +84,12 @@ void main() {
           return null;
         }
       });
-      (js.context['firebase'] as js.JsObject)['initializeApp'] =
+
+      // Prevents a warning log.
+      (js.context['firebase_core'] as js.JsObject)['SDK_VERSION'] =
+          supportedFirebaseJsSdkVersion;
+
+      (js.context['firebase_core'] as js.JsObject)['initializeApp'] =
           js.allowInterop((js.JsObject options, String name) {
         appConfigured = true;
         return js.JsObject.jsify(<String, dynamic>{
@@ -91,6 +97,7 @@ void main() {
           'options': options,
         });
       });
+
       final FirebaseApp app = await Firebase.initializeApp(
         name: 'foo',
         options: const FirebaseOptions(

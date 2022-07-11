@@ -144,8 +144,8 @@ class MethodChannelFirebaseMessaging extends FirebaseMessagingPlatform {
 
   /// Returns "true" as this API is used to inform users of web browser support
   @override
-  bool isSupported() {
-    return true;
+  Future<bool> isSupported() {
+    return Future.value(true);
   }
 
   @override

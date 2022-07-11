@@ -5,23 +5,52 @@
 
 // ignore_for_file: public_member_api_docs
 
-@JS('firebase.messaging')
+@JS('firebase_messaging')
 library firebase_interop.messaging;
 
 import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
+@JS()
+external MessagingJsImpl getMessaging([AppJsImpl? app]);
+
+@JS()
+external PromiseJsImpl<bool> deleteToken(MessagingJsImpl messaging);
+
+@JS()
+external PromiseJsImpl<String> getToken(
+    MessagingJsImpl messaging, GetTokenOptions? getTokenOptions);
+
 @JS('isSupported')
-external bool isSupported();
+external PromiseJsImpl<bool> isSupported();
+
+@JS()
+external void Function() onMessage(
+  MessagingJsImpl messaging,
+  Observer observer,
+);
 
 @JS('Messaging')
-abstract class MessagingJsImpl {
-  external PromiseJsImpl<void> deleteToken();
-  external PromiseJsImpl<String> getToken(dynamic getTokenOptions);
-  external void Function() onMessage(
-    dynamic optionsOrObserverOrOnNext,
-    dynamic observerOrOnNextOrOnError,
-  );
+abstract class MessagingJsImpl {}
+
+@JS()
+@anonymous
+class Observer {
+  external dynamic get next;
+  external dynamic get error;
+  external factory Observer({dynamic next, dynamic error});
+}
+
+@JS()
+@anonymous
+class GetTokenOptions {
+  external String get vapidKey;
+  // TODO - I imagine we won't be implementing serviceWorkerRegistration type as it extends EventTarget class
+  // external String get serviceWorkerRegistration
+  external factory GetTokenOptions({
+    String? vapidKey,
+    /*dynamic serviceWorkerRegistration */
+  });
 }
 
 @JS()

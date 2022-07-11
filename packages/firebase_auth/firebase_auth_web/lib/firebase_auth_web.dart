@@ -270,7 +270,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> setPersistence(Persistence persistence) async {
     try {
-      return _delegate.setPersistence(convertPlatformPersistence(persistence));
+      return _delegate.setPersistence(persistence);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
