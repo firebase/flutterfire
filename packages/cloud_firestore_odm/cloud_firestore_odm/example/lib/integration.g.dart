@@ -400,10 +400,10 @@ class _$ManualJsonQuery extends QueryReference<ManualJsonQuerySnapshot>
   ManualJsonQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     ManualJsonDocumentSnapshot? startAtDocument,
     ManualJsonDocumentSnapshot? endAtDocument,
     ManualJsonDocumentSnapshot? endBeforeDocument,
@@ -1095,10 +1095,10 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
   AdvancedJsonQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     AdvancedJsonDocumentSnapshot? startAtDocument,
     AdvancedJsonDocumentSnapshot? endAtDocument,
     AdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -1942,10 +1942,10 @@ class _$_PrivateAdvancedJsonQuery
   _PrivateAdvancedJsonQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     _PrivateAdvancedJsonDocumentSnapshot? startAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endAtDocument,
     _PrivateAdvancedJsonDocumentSnapshot? endBeforeDocument,
@@ -2690,10 +2690,10 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   EmptyModelQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     EmptyModelDocumentSnapshot? startAtDocument,
     EmptyModelDocumentSnapshot? endAtDocument,
     EmptyModelDocumentSnapshot? endBeforeDocument,

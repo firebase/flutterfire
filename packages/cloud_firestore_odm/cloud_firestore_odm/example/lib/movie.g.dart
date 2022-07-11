@@ -560,10 +560,10 @@ class _$MovieQuery extends QueryReference<MovieQuerySnapshot>
   MovieQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     MovieDocumentSnapshot? startAtDocument,
     MovieDocumentSnapshot? endAtDocument,
     MovieDocumentSnapshot? endBeforeDocument,
@@ -1668,10 +1668,10 @@ class _$CommentQuery extends QueryReference<CommentQuerySnapshot>
   CommentQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     CommentDocumentSnapshot? startAtDocument,
     CommentDocumentSnapshot? endAtDocument,
     CommentDocumentSnapshot? endBeforeDocument,

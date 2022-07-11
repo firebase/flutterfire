@@ -395,10 +395,10 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
   ModelQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     ModelDocumentSnapshot? startAtDocument,
     ModelDocumentSnapshot? endAtDocument,
     ModelDocumentSnapshot? endBeforeDocument,
@@ -1133,10 +1133,10 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
   NestedQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -2014,10 +2014,10 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
   SplitFileModelQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     SplitFileModelDocumentSnapshot? startAtDocument,
     SplitFileModelDocumentSnapshot? endAtDocument,
     SplitFileModelDocumentSnapshot? endBeforeDocument,
@@ -2548,10 +2548,10 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   EmptyModelQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     EmptyModelDocumentSnapshot? startAtDocument,
     EmptyModelDocumentSnapshot? endAtDocument,
     EmptyModelDocumentSnapshot? endBeforeDocument,
@@ -3121,10 +3121,10 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   OptionalJsonQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     OptionalJsonDocumentSnapshot? startAtDocument,
     OptionalJsonDocumentSnapshot? endAtDocument,
     OptionalJsonDocumentSnapshot? endBeforeDocument,
@@ -3762,10 +3762,10 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
   MixedJsonQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     MixedJsonDocumentSnapshot? startAtDocument,
     MixedJsonDocumentSnapshot? endAtDocument,
     MixedJsonDocumentSnapshot? endBeforeDocument,
@@ -4454,10 +4454,10 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
   RootQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     RootDocumentSnapshot? startAtDocument,
     RootDocumentSnapshot? endAtDocument,
     RootDocumentSnapshot? endBeforeDocument,
@@ -5206,10 +5206,10 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
   SubQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     SubDocumentSnapshot? startAtDocument,
     SubDocumentSnapshot? endAtDocument,
     SubDocumentSnapshot? endBeforeDocument,
@@ -5939,10 +5939,10 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   AsCamelCaseQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     AsCamelCaseDocumentSnapshot? startAtDocument,
     AsCamelCaseDocumentSnapshot? endAtDocument,
     AsCamelCaseDocumentSnapshot? endBeforeDocument,
@@ -6601,10 +6601,10 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   CustomSubNameQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     CustomSubNameDocumentSnapshot? startAtDocument,
     CustomSubNameDocumentSnapshot? endAtDocument,
     CustomSubNameDocumentSnapshot? endBeforeDocument,
@@ -7255,10 +7255,10 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   ExplicitPathQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     ExplicitPathDocumentSnapshot? startAtDocument,
     ExplicitPathDocumentSnapshot? endAtDocument,
     ExplicitPathDocumentSnapshot? endBeforeDocument,
@@ -7918,10 +7918,10 @@ class _$ExplicitSubPathQuery
   ExplicitSubPathQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     ExplicitSubPathDocumentSnapshot? startAtDocument,
     ExplicitSubPathDocumentSnapshot? endAtDocument,
     ExplicitSubPathDocumentSnapshot? endBeforeDocument,

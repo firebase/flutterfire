@@ -152,10 +152,10 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     ${data.documentSnapshotName}? startAtDocument,
     ${data.documentSnapshotName}? endAtDocument,
     ${data.documentSnapshotName}? endBeforeDocument,

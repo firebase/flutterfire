@@ -403,10 +403,10 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
   DateTimeQueryQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     DateTimeQueryDocumentSnapshot? startAtDocument,
     DateTimeQueryDocumentSnapshot? endAtDocument,
     DateTimeQueryDocumentSnapshot? endBeforeDocument,
@@ -1049,10 +1049,10 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
   TimestampQueryQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     TimestampQueryDocumentSnapshot? startAtDocument,
     TimestampQueryDocumentSnapshot? endAtDocument,
     TimestampQueryDocumentSnapshot? endBeforeDocument,
@@ -1696,10 +1696,10 @@ class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
   GeoPointQueryQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     GeoPointQueryDocumentSnapshot? startAtDocument,
     GeoPointQueryDocumentSnapshot? endAtDocument,
     GeoPointQueryDocumentSnapshot? endBeforeDocument,
@@ -2349,10 +2349,10 @@ class _$DocumentReferenceQueryQuery
   DocumentReferenceQueryQuery orderByFieldPath(
     FieldPath fieldPath, {
     bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
     DocumentReferenceQueryDocumentSnapshot? startAtDocument,
     DocumentReferenceQueryDocumentSnapshot? endAtDocument,
     DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,

@@ -332,50 +332,44 @@ void main() {
       test('orderByFieldPath', () async {
         final collection = await initializeTest(MovieCollectionReference());
 
-        await collection.add(createMovie(title: 'A', genre: ['genre_A']));
-        await collection.add(createMovie(title: 'B', genre: ['genre_B']));
-        await collection.add(createMovie(title: 'C', genre: ['genre_C']));
+        await collection.add(createMovie(title: 'A', rated: '10'));
+        await collection.add(createMovie(title: 'B', rated: '1'));
+        await collection.add(createMovie(title: 'C', rated: '5'));
 
         final querySnap = await collection
             .orderByFieldPath(
-              FieldPath.fromString('genre.0'),
-              startAt: 'genre_B',
+              FieldPath.fromString('title'),
+              startAt: 'B',
             )
             .get();
+        print(
+          querySnap.docs.map((e) => e.data.title),
+        );
 
         expect(
-          querySnap.docs,
-          [
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'B'),
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'C'),
-          ],
+          querySnap.docs.map((e) => e.data.title),
+          ['B', 'C'],
         );
       });
 
       test('whereFieldPath', () async {
         final collection = await initializeTest(MovieCollectionReference());
 
-        await collection.add(createMovie(title: 'A', genre: ['genre']));
-        await collection.add(createMovie(title: 'B', genre: ['genre2']));
-        await collection.add(createMovie(title: 'C', genre: ['genre2']));
+        await collection.add(createMovie(title: 'A', rated: '4'));
+        await collection.add(createMovie(title: 'B', rated: '5'));
+        await collection.add(createMovie(title: 'C', rated: '5'));
 
         final querySnap = await collection
             .whereFieldPath(
-              FieldPath.fromString('genre.0'),
-              isEqualTo: 'genre2',
+              FieldPath.fromString('rated'),
+              isEqualTo: '5',
             )
+            .orderByTitle()
             .get();
 
         expect(
-          querySnap.docs,
-          [
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'B'),
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'C'),
-          ],
+          querySnap.docs.map((e) => e.data.title),
+          ['B', 'C'],
         );
       });
 
