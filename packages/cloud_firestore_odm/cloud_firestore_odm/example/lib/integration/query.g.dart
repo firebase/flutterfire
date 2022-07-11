@@ -43,6 +43,9 @@ abstract class DateTimeQueryCollectionReference
   }
 
   @override
+  CollectionReference<DateTimeQuery> get reference;
+
+  @override
   DateTimeQueryDocumentReference doc([String? id]);
 
   /// Add a new document to this collection with the specified data,
@@ -373,7 +376,7 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
   }) {
     return _$DateTimeQueryQuery(
       reference.where(
-        "time",
+        _$DateTimeQueryFieldMap["time"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -441,7 +444,8 @@ class _$DateTimeQueryQuery extends QueryReference<DateTimeQueryQuerySnapshot>
     DateTimeQueryDocumentSnapshot? endBeforeDocument,
     DateTimeQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("time", descending: descending);
+    var query = reference.orderBy(_$DateTimeQueryFieldMap["time"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -540,6 +544,9 @@ abstract class TimestampQueryCollectionReference
   ) {
     return _$TimestampQueryToJson(value);
   }
+
+  @override
+  CollectionReference<TimestampQuery> get reference;
 
   @override
   TimestampQueryDocumentReference doc([String? id]);
@@ -874,7 +881,7 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
   }) {
     return _$TimestampQueryQuery(
       reference.where(
-        "time",
+        _$TimestampQueryFieldMap["time"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -942,7 +949,8 @@ class _$TimestampQueryQuery extends QueryReference<TimestampQueryQuerySnapshot>
     TimestampQueryDocumentSnapshot? endBeforeDocument,
     TimestampQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("time", descending: descending);
+    var query = reference.orderBy(_$TimestampQueryFieldMap["time"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1042,6 +1050,9 @@ abstract class GeoPointQueryCollectionReference
   ) {
     return _$GeoPointQueryToJson(value);
   }
+
+  @override
+  CollectionReference<GeoPointQuery> get reference;
 
   @override
   GeoPointQueryDocumentReference doc([String? id]);
@@ -1376,7 +1387,7 @@ class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
   }) {
     return _$GeoPointQueryQuery(
       reference.where(
-        "point",
+        _$GeoPointQueryFieldMap["point"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1444,7 +1455,8 @@ class _$GeoPointQueryQuery extends QueryReference<GeoPointQueryQuerySnapshot>
     GeoPointQueryDocumentSnapshot? endBeforeDocument,
     GeoPointQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("point", descending: descending);
+    var query = reference.orderBy(_$GeoPointQueryFieldMap["point"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1543,6 +1555,9 @@ abstract class DocumentReferenceQueryCollectionReference
   ) {
     return _$DocumentReferenceQueryToJson(value);
   }
+
+  @override
+  CollectionReference<DocumentReferenceQuery> get reference;
 
   @override
   DocumentReferenceQueryDocumentReference doc([String? id]);
@@ -1884,7 +1899,7 @@ class _$DocumentReferenceQueryQuery
   }) {
     return _$DocumentReferenceQueryQuery(
       reference.where(
-        "ref",
+        _$DocumentReferenceQueryFieldMap["ref"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
         isLessThan: isLessThan,
@@ -1952,7 +1967,8 @@ class _$DocumentReferenceQueryQuery
     DocumentReferenceQueryDocumentSnapshot? endBeforeDocument,
     DocumentReferenceQueryDocumentSnapshot? startAfterDocument,
   }) {
-    var query = reference.orderBy("ref", descending: descending);
+    var query = reference.orderBy(_$DocumentReferenceQueryFieldMap["ref"]!,
+        descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -2038,6 +2054,10 @@ DateTimeQuery _$DateTimeQueryFromJson(Map<String, dynamic> json) =>
       const FirestoreDateTimeConverter().fromJson(json['time'] as Timestamp),
     );
 
+const _$DateTimeQueryFieldMap = <String, String>{
+  'time': 'time',
+};
+
 Map<String, dynamic> _$DateTimeQueryToJson(DateTimeQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreDateTimeConverter().toJson(instance.time),
@@ -2048,6 +2068,10 @@ TimestampQuery _$TimestampQueryFromJson(Map<String, dynamic> json) =>
       const FirestoreTimestampConverter().fromJson(json['time'] as Timestamp),
     );
 
+const _$TimestampQueryFieldMap = <String, String>{
+  'time': 'time',
+};
+
 Map<String, dynamic> _$TimestampQueryToJson(TimestampQuery instance) =>
     <String, dynamic>{
       'time': const FirestoreTimestampConverter().toJson(instance.time),
@@ -2057,6 +2081,10 @@ GeoPointQuery _$GeoPointQueryFromJson(Map<String, dynamic> json) =>
     GeoPointQuery(
       const FirestoreGeoPointConverter().fromJson(json['point'] as GeoPoint),
     );
+
+const _$GeoPointQueryFieldMap = <String, String>{
+  'point': 'point',
+};
 
 Map<String, dynamic> _$GeoPointQueryToJson(GeoPointQuery instance) =>
     <String, dynamic>{
@@ -2069,6 +2097,10 @@ DocumentReferenceQuery _$DocumentReferenceQueryFromJson(
       const FirestoreDocumentReferenceConverter()
           .fromJson(json['ref'] as DocumentReference<Map<String, dynamic>>),
     );
+
+const _$DocumentReferenceQueryFieldMap = <String, String>{
+  'ref': 'ref',
+};
 
 Map<String, dynamic> _$DocumentReferenceQueryToJson(
         DocumentReferenceQuery instance) =>
