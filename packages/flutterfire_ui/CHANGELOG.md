@@ -1,7 +1,3 @@
-## 0.4.2+3
-
-- Add Hungarian localization.
-
 ## 0.4.2+2
 
  - Update a dependency to the latest release.
@@ -131,7 +127,7 @@
  - **FIX**: some OAuth providers now work on macOS & web (#7576). ([a4315731](https://github.com/firebase/flutterfire/commit/a43157316787edcdefb10f9534800692b76e92c3))
  - **FIX**: fix various typos in i10n text (#7624). ([504f7056](https://github.com/firebase/flutterfire/commit/504f7056f74e4a7bb7800ed45e10910a373e9d29))
  - **BREAKING** **FEAT**: update all dependencies to use latest releases (#7549). ([051ff77b](https://github.com/firebase/flutterfire/commit/051ff77b7e95c376dc2c5014877dd0a5a7856de8))
-   - Note this has no breaking public API changes, however if you additionally also depend on some of the same dependencies in your app, e.g. `flutter_svg` then you may need to update your versions of these packages as well in your app `pubspec.yaml` to
+   - Note this has no breaking public API changes, however if you additionally also depend on some of the same dependencies in your app, e.g. `flutter_svg` then you may need to update your versions of these packages as well in your app `pubspec.yaml` to 
    avoid version resolution issues when running `pub get`.
 
 ## 0.2.0+2
