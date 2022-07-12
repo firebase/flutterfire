@@ -94,7 +94,7 @@ Packages with dependency updates only:
 
 #### `firebase_auth_web` - `v4.0.0`
 
- - **BREAKING** **FEAT**: upgrade auth web to v9 JS sdk ([#8236](https://github.com/firebase/flutterfire/issues/8236)). ([8e95a51d](https://github.com/firebase/flutterfire/commit/8e95a51d99ffc5fec106d933e46c9f331c1e2d50))
+ - **BREAKING** **FEAT**: upgrade auth web to Firebase v9 JS SDK ([#8236](https://github.com/firebase/flutterfire/issues/8236)). ([8e95a51d](https://github.com/firebase/flutterfire/commit/8e95a51d99ffc5fec106d933e46c9f331c1e2d50))
  - **BREAKING**: Cannot set `updateDisplayName()` or `updatePhotoURL()` to `null` on web anymore.
 
 #### `firebase_messaging` - `v12.0.0`
