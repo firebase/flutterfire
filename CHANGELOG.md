@@ -94,20 +94,24 @@ Packages with dependency updates only:
 
 #### `firebase_auth_web` - `v4.0.0`
 
- - **BREAKING** **FEAT**: upgrade auth web to v9 sdk ([#8236](https://github.com/firebase/flutterfire/issues/8236)). ([8e95a51d](https://github.com/firebase/flutterfire/commit/8e95a51d99ffc5fec106d933e46c9f331c1e2d50))
+ - **BREAKING** **FEAT**: upgrade auth web to v9 JS sdk ([#8236](https://github.com/firebase/flutterfire/issues/8236)). ([8e95a51d](https://github.com/firebase/flutterfire/commit/8e95a51d99ffc5fec106d933e46c9f331c1e2d50))
+ - **BREAKING**: Cannot set `updateDisplayName()` or `updatePhotoURL()` to `null` on web anymore.
 
 #### `firebase_messaging` - `v12.0.0`
 
  - **DOCS**: fix usage link to the documentation in the README.md ([#9027](https://github.com/firebase/flutterfire/issues/9027)). ([037e3a5f](https://github.com/firebase/flutterfire/commit/037e3a5f3d41a3914ed8e6fa394e42c44fe29186))
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `firebase_messaging_platform_interface` - `v4.0.0`
 
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `firebase_messaging_web` - `v3.0.0`
 
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `cloud_firestore` - `v3.3.0`
 
@@ -3056,7 +3060,7 @@ Packages with dependency updates only:
  - **FIX**: some OAuth providers now work on macOS & web (#7576).
  - **FIX**: fix various typos in i10n text (#7624).
  - **BREAKING** **FEAT**: update all dependencies to use latest releases (#7549).
-   - Note this has no breaking public API changes, however if you additionally also depend on some of the same dependencies in your app, e.g. `flutter_svg` then you may need to update your versions of these packages as well in your app `pubspec.yaml` to 
+   - Note this has no breaking public API changes, however if you additionally also depend on some of the same dependencies in your app, e.g. `flutter_svg` then you may need to update your versions of these packages as well in your app `pubspec.yaml` to
    avoid version resolution issues when running `pub get`.
 
 #### `cloud_firestore` - `v3.1.5`
