@@ -329,6 +329,47 @@ void main() {
         });
       });
 
+      test('orderByFieldPath', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.add(createMovie(title: 'A', rated: '10'));
+        await collection.add(createMovie(title: 'B', rated: '1'));
+        await collection.add(createMovie(title: 'C', rated: '5'));
+
+        final querySnap = await collection
+            .orderByFieldPath(
+              FieldPath.fromString('title'),
+              startAt: 'B',
+            )
+            .get();
+
+        expect(
+          querySnap.docs.map((e) => e.data.title),
+          ['B', 'C'],
+        );
+      });
+
+      test('whereFieldPath', () async {
+        final collection = await initializeTest(MovieCollectionReference());
+
+        await collection.add(createMovie(title: 'A', rated: '4'));
+        await collection.add(createMovie(title: 'B', rated: '5'));
+        await collection.add(createMovie(title: 'C', rated: '5'));
+
+        final querySnap = await collection
+            .whereFieldPath(
+              FieldPath.fromString('rated'),
+              isEqualTo: '5',
+            )
+            .orderByTitle()
+            .get();
+
+        expect(
+          querySnap.docs.map((e) => e.data.title),
+          ['B', 'C'],
+        );
+      });
+
       group('documentId', () {
         test('orderByDocumentId', () async {
           final collection = await initializeTest(MovieCollectionReference());
