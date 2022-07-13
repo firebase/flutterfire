@@ -1,3 +1,11 @@
+## 12.0.0
+
+> Note: This release has breaking changes.
+
+ - **DOCS**: fix usage link to the documentation in the README.md ([#9027](https://github.com/firebase/flutterfire/issues/9027)). ([037e3a5f](https://github.com/firebase/flutterfire/commit/037e3a5f3d41a3914ed8e6fa394e42c44fe29186))
+ - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<bool>`. It is web only and will always resolve to `true` on other platforms.
+
 ## 11.4.4
 
  - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))

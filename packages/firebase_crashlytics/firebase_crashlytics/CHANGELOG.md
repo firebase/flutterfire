@@ -1,3 +1,7 @@
+## 2.8.5
+
+ - **FIX**: `[core/duplicate-app]` exception when running the example ([#8991](https://github.com/firebase/flutterfire/issues/8991)). ([c70e66a5](https://github.com/firebase/flutterfire/commit/c70e66a546cf9236e728796c5b59a3d4e39caeb2))
+
 ## 2.8.4
 
  - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
