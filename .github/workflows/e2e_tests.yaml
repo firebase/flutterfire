@@ -27,7 +27,7 @@ on:
 jobs:
   android:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v2
@@ -98,7 +98,7 @@ jobs:
           working-directory: tests
           script: |
             sleep 15
-            $ANDROID_HOME/platform-tools/adb logcat '*:D' > adb-log.txt &
+            $ANDROID_HOME/platform-tools/adb logcat '*:E' > adb-log.txt &
             flutter drive --target=./test_driver/driver_e2e.dart --dart-define=CI=true
 
       - name: Compress Emulator Log
