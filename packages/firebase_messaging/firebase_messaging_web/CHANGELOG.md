@@ -3,7 +3,7 @@
 > Note: This release has breaking changes.
 
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
- - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<bool>`. It is web only and will always resolve to `true` on other platforms.
 
 ## 2.4.4
 

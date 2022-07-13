@@ -101,17 +101,17 @@ Packages with dependency updates only:
 
  - **DOCS**: fix usage link to the documentation in the README.md ([#9027](https://github.com/firebase/flutterfire/issues/9027)). ([037e3a5f](https://github.com/firebase/flutterfire/commit/037e3a5f3d41a3914ed8e6fa394e42c44fe29186))
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
- - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<bool>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `firebase_messaging_platform_interface` - `v4.0.0`
 
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
- - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<bool>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `firebase_messaging_web` - `v3.0.0`
 
  - **BREAKING** **FEAT**: upgrade messaging web to Firebase v9 JS SDK. ([#8860](https://github.com/firebase/flutterfire/issues/8860)). ([f3a6bdc5](https://github.com/firebase/flutterfire/commit/f3a6bdc5fd2441ed3c77a9d0ece0d6460afd2ec4))
- - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<void>`. It is web only and will always resolve to `true` on other platforms.
+ - **BREAKING**: `isSupported()` API is now asynchronous and returns `Future<bool>`. It is web only and will always resolve to `true` on other platforms.
 
 #### `cloud_firestore` - `v3.3.0`
 
