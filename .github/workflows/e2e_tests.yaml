@@ -33,6 +33,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+      - name: DNSControl preview
+        uses: koenrh/dnscontrol-action@v3
+        with:
+          args: preview
+          config_file: 'dns/dnsconfig.js'
+          creds_file: 'dns/creds.json'
+      - name: DNSControl push
+        uses: koenrh/dnscontrol-action@v3
+        with:
+          args: push
+          config_file: 'dns/dnsconfig.js'
+          creds_file: 'dns/creds.json'
       - uses: actions/setup-node@v2
         name: Install Node.js 16
         with:
