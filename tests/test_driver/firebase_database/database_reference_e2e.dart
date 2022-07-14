@@ -156,6 +156,11 @@ void setupDatabaseReferenceTests() {
         final snap = await ref.get();
         var value = snap.value;
         expect(value, 1.5);
+
+        await ref.set(ServerValue.increment(1));
+        final snap2 = await ref.get();
+        var value2 = snap2.value;
+        expect(value2, 2.5);
       });
     });
   });
