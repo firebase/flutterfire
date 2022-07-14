@@ -11,9 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_auth: ^3.3.17
+  firebase_auth: ^3.4.2
   flutterfire_ui_oauth: ^0.1.0
-  flutter_facebook_auth: ^4.3.4
+  flutter_facebook_auth: ^4.4.0
 
 dev_dependencies:
   flutter_test:

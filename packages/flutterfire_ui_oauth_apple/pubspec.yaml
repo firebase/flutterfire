@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   firebase_auth: ^3.3.17
   flutterfire_ui_oauth: ^0.1.0
-  sign_in_with_apple: ^3.3.0
+  sign_in_with_apple: ^4.0.0
 
 dev_dependencies:
   flutter_test:

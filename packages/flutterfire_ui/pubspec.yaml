@@ -15,22 +15,18 @@ dependencies:
   cloud_firestore: ^3.3.0
   collection: ^1.15.0
   crypto: ^3.0.1
-  desktop_webview_auth: ^0.0.5
+  desktop_webview_auth: ^0.0.9
   email_validator: ^2.0.1
   firebase_auth: ^3.4.2
-  firebase_core: ^1.10.2
+  firebase_core: ^1.19.2
   firebase_database: ^9.0.19
   firebase_dynamic_links: ^4.3.2
   flutter:
     sdk: flutter
-  flutter_facebook_auth: ^4.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_svg: ^1.0.0
+  flutter_svg: ^1.1.1
   flutterfire_ui_oauth: ^0.1.0
-  google_sign_in: ^5.2.1
-  sign_in_with_apple: ^3.3.0
-  twitter_login: ^4.2.2
 
 dev_dependencies:
   flutter_test:
