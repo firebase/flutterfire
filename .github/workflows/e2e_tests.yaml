@@ -66,19 +66,19 @@ jobs:
 #            ~/.android/avd/*
 #            ~/.android/adb*
 #          key: avd
-      - name: Generate AVD snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: google_atd
-          arch: x86
-          profile: Galaxy Nexus
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          channel: canary
-          script: echo "Generated AVD snapshot for caching"
+#      - name: Generate AVD snapshot for caching
+#        if: steps.avd-cache.outputs.cache-hit != 'true'
+#        uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 30
+#          target: google_atd
+#          arch: x86
+#          profile: Galaxy Nexus
+#          force-avd-creation: false
+#          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+#          disable-animations: false
+#          channel: canary
+#          script: echo "Generated AVD snapshot for caching"
       - name: Firebase Emulator Cache
         uses: actions/cache@v2
         with:
