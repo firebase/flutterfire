@@ -29,6 +29,7 @@ dependencies:
   flutterfire_ui_oauth: ^0.1.0
 
 dev_dependencies:
+  fake_cloud_firestore: ^1.2.4
   flutter_test:
     sdk: flutter
   mockito: ^5.2.0

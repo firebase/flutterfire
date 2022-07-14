@@ -11,10 +11,10 @@ import '../widgets/internal/universal_scaffold.dart';
 import 'internal/responsive_page.dart';
 
 /// An action that is being called when email was successfully verified.
-class EmailVerified extends FlutterFireUIAction {
+class EmailVerifiedAction extends FlutterFireUIAction {
   final VoidCallback callback;
 
-  EmailVerified(this.callback);
+  EmailVerifiedAction(this.callback);
 }
 
 /// {@template ffui.auth.screens.email_verification_screen}
@@ -30,8 +30,8 @@ class EmailVerificationScreen extends StatelessWidget {
 
   /// EmailVerificationScreen could invoke these actions:
   ///
-  /// * [Cancel]
-  /// * [EmailVerified]
+  /// * [AuthCancelledAction]
+  /// * [EmailVerifiedAction]
   ///
   /// ```dart
   /// EmailVerificationScreen(
@@ -145,7 +145,8 @@ class __EmailVerificationScreenContentState
         setState(() {});
 
         if (state == EmailVerificationState.verified) {
-          final action = FlutterFireUIAction.ofType<EmailVerified>(context);
+          final action =
+              FlutterFireUIAction.ofType<EmailVerifiedAction>(context);
           action?.callback();
         }
       })
@@ -215,7 +216,8 @@ class __EmailVerificationScreenContentState
           variant: ButtonVariant.text,
           text: l.goBackButtonLabel,
           onPressed: () {
-            FlutterFireUIAction.ofType<Cancel>(context)?.callback(context);
+            FlutterFireUIAction.ofType<AuthCancelledAction>(context)
+                ?.callback(context);
           },
         )
       ],

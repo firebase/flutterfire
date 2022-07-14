@@ -5,11 +5,11 @@ import 'package:flutterfire_ui/auth.dart';
 /// The following actions are available:
 /// - [AuthStateChangeAction]
 /// - [SignedOutAction]
-/// - [Cancel]
+/// - [AuthCancelledAction]
 /// - [EmailLinkSignInAction]
 /// - [VerifyPhoneAction]
 /// - [SMSCodeRequestedAction]
-/// - [EmailVerified]
+/// - [EmailVerifiedAction]
 /// - [ForgotPasswordAction]
 abstract class FlutterFireUIAction {
   /// Looks up an instance of an action of the type [T] provided
@@ -72,12 +72,12 @@ class SignedOutAction extends FlutterFireUIAction {
 /// {@template ffui.auth.actions.cancel}
 /// An action that is being called when user has cancelled an auth action.
 /// {@endtemplate}
-class Cancel extends FlutterFireUIAction {
+class AuthCancelledAction extends FlutterFireUIAction {
   /// A callback that is being called when user has cancelled an auth action.
   final void Function(BuildContext context) callback;
 
   /// {@macro ffui.auth.actions.cancel}
-  Cancel(this.callback);
+  AuthCancelledAction(this.callback);
 }
 
 /// {@template ffui.auth.actions.flutter_fire_ui_actions}

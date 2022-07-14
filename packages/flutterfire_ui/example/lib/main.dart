@@ -178,10 +178,10 @@ class FirebaseAuthUIExample extends StatelessWidget {
             sideBuilder: sideIcon(Icons.verified),
             actionCodeSettings: actionCodeSettings,
             actions: [
-              EmailVerified(() {
+              EmailVerifiedAction(() {
                 Navigator.pushReplacementNamed(context, '/profile');
               }),
-              Cancel((context) {
+              AuthCancelledAction((context) {
                 FlutterFireUIAuth.signOut(context: context);
                 Navigator.pushReplacementNamed(context, '/');
               }),
