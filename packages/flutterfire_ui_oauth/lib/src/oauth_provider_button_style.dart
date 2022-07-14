@@ -1,8 +1,15 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+/// {@template ffui.oauth.themed_value}
+/// An object that is used to resolve the value base on the current theme
+/// brightness.
+/// {@endtemplate}
 class ThemedValue<T> {
+  /// The value that should be used to when the dark theme is used.
   final T dark;
+
+  /// The value that should be used to when the light theme is used.
   final T light;
 
   const ThemedValue(this.dark, this.light);
@@ -28,6 +35,9 @@ class ThemedIconSrc extends ThemedValue<String> {
   ) : super(dark, light);
 }
 
+/// {@template ffui.oauth.themed_oauth_provider_button_style}
+/// An object that is being used to resolve a style of the button.
+/// {@endtemplate}
 abstract class ThemedOAuthProviderButtonStyle {
   ThemedIconSrc get iconSrc;
   ThemedColor get backgroundColor;
@@ -37,6 +47,7 @@ abstract class ThemedOAuthProviderButtonStyle {
   double get iconPadding => 0;
   String get assetsPackage;
 
+  /// {@macro ffui.oauth.themed_oauth_provider_button_style}
   const ThemedOAuthProviderButtonStyle();
 
   OAuthProviderButtonStyle withBrightness(Brightness brightness) {

@@ -6,6 +6,9 @@ import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart' as ffui_oauth;
 
 typedef ErrorCallback = void Function(Exception e);
 
+/// {@template ffui.auth.widgets.oauth_provider_button.oauth_button_variant}
+/// Either button should display icon and text or only icon.
+/// {@endtemplate}
 enum OAuthButtonVariant {
   icon_and_text,
   icon,
@@ -28,12 +31,26 @@ class _ErrorListener extends StatelessWidget {
   }
 }
 
+/// {@template ffui.auth.widgets.oauth_provider_button}
+/// A button that is used to sign in with an OAuth provider.
+/// {@endtemplate}
 class OAuthProviderButton extends StatelessWidget {
+  /// {@template ffui.auth.widgets.oauth_provider_button.provider}
+  /// An instance of [ffui_oauth.OAuthProvider] that should be used to
+  /// authenticate.
+  /// {@endtemplate}
   final ffui_oauth.OAuthProvider provider;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.widgets.oauth_provider_button.oauth_button_variant}
   final OAuthButtonVariant? variant;
 
+  /// Returns a text that should be displayed on the button.
   static String resolveProviderButtonLabel(
     String providerId,
     FlutterFireUILocalizationLabels labels,
@@ -52,11 +69,20 @@ class OAuthProviderButton extends StatelessWidget {
     }
   }
 
+  /// {@macro ffui.auth.widgets.oauth_provider_button}
   const OAuthProviderButton({
     Key? key,
+
+    /// {@macro ffui.auth.widgets.oauth_provider_button.provider}
     required this.provider,
+
+    /// {@macro ffui.auth.widgets.oauth_provider_button.oauth_button_variant}
     this.variant = OAuthButtonVariant.icon_and_text,
+
+    /// {@macro ffui.auth.auth_action}
     this.action,
+
+    /// {@macro ffui.auth.auth_controller.auth}
     this.auth,
   }) : super(key: key);
 
@@ -70,7 +96,7 @@ class OAuthProviderButton extends StatelessWidget {
       action: action,
       auth: auth,
       builder: (context, state, ctrl, child) {
-        final button = ffui_oauth.BaseOAuthProviderButton(
+        final button = ffui_oauth.OAuthProviderButtonBase(
           provider: provider,
           action: action,
           isLoading: state is SigningIn || state is CredentialReceived,

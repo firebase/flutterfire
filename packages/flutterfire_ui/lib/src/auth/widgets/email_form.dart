@@ -6,18 +6,58 @@ import 'package:flutter/material.dart';
 import '../widgets/internal/loading_button.dart';
 import '../validators.dart';
 
+/// {@template ffui.auth.widgets.email_form.forgot_password_action}
+/// An action that indicates that password recovery was triggered from the UI.
+///
+/// Could be used to show a [ForgotPasswordScreen] or trigger a custom
+/// logic:
+///
+/// ```dart
+/// SignInScreen(
+///   actions: [
+///     ForgotPasswordAction((context, email) {
+///       Navigator.of(context).push(
+///         MaterialPageRoute(
+///           builder: (context) => ForgotPasswordScreen(),
+///         ),
+///       );
+///     }),
+///   ]
+/// );
+/// ```
+/// {@endtemplate}
 class ForgotPasswordAction extends FlutterFireUIAction {
+  /// A callback that is being called when a password recovery flow was
+  /// triggered.
   final void Function(BuildContext context, String? email) callback;
 
+  /// {@macro ffui.auth.widgets.email_form.forgot_password_action}
   ForgotPasswordAction(this.callback);
 }
 
-typedef EmailSubmitCallback = void Function(String email, String password);
+typedef EmailFormSubmitCallback = void Function(String email, String password);
 
+/// {@template ffui.auth.widgets.email_form.email_form_style}
+/// An object that is being used to apply styles to the email form.
+///
+/// For example:
+///
+/// ```dart
+/// EmailForm(
+///   style: EmailFormStyle(
+///     signInButtonVariant: ButtonVariant.text,
+///   ),
+/// );
+/// ```
+/// {@endtemplate}
 class EmailFormStyle extends FlutterFireUIStyle {
+  /// A [ButtonVariant] that should be used for the sign in button.
   final ButtonVariant? signInButtonVariant;
+
+  /// An override of the global [ThemeData.inputDecorationTheme].
   final InputDecorationTheme? inputDecorationTheme;
 
+  /// {@macro ffui.auth.widgets.email_form.email_form_style}
   const EmailFormStyle({
     this.signInButtonVariant = ButtonVariant.outlined,
     this.inputDecorationTheme,
@@ -34,21 +74,26 @@ class EmailFormStyle extends FlutterFireUIStyle {
   }
 }
 
-// FlutterFireUIStyle.defaultStyle = EmailFormStyle();
-
-/// A barebones email form widget.
-///
-/// {@subCategory service:auth}
-/// {@subCategory type:widget}
-/// {@subCategory description:A widget rendering a barebones email form with an action button.}
-/// {@subCategory img:https://place-hold.it/400x150}
+/// {@template ffui.auth.widgets.email_form}
+/// An email form widget.
+/// {@endtemplate}
 class EmailForm extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// An instance of the [EmailAuthProvider] that is being used to authenticate.
   final EmailAuthProvider? provider;
-  final EmailSubmitCallback? onSubmit;
+
+  /// A callback that is being called when the form was submitted.
+  final EmailFormSubmitCallback? onSubmit;
+
+  /// An email that should be pre-filled in the form.
   final String? email;
 
+  /// {@macro ffui.auth.widgets.email_form}
   const EmailForm({
     Key? key,
     this.action,
@@ -78,8 +123,11 @@ class EmailForm extends StatelessWidget {
 }
 
 class _SignInFormContent extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
-  final EmailSubmitCallback? onSubmit;
+  final EmailFormSubmitCallback? onSubmit;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
   final String? email;
   final EmailAuthProvider? provider;
@@ -158,7 +206,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
         focusNode: passwordFocusNode,
         controller: passwordCtrl,
         onSubmit: _submit,
-        label: l.passwordInputLabel,
+        placeholder: l.passwordInputLabel,
       ),
       if (widget.action == AuthAction.signIn) ...[
         const SizedBox(height: 8),
@@ -197,7 +245,7 @@ class _SignInFormContentState extends State<_SignInFormContent> {
               l.confirmPasswordDoesNotMatchErrorText,
             )
           ]),
-          label: l.confirmPasswordInputLabel,
+          placeholder: l.confirmPasswordInputLabel,
         ),
         const SizedBox(height: 8),
       ],

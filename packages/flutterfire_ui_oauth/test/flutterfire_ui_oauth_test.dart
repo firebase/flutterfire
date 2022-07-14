@@ -50,7 +50,7 @@ void main() {
   late Widget button;
 
   Widget renderMaterialButton([Brightness brightness = Brightness.dark]) {
-    button = BaseOAuthProviderButton(
+    button = OAuthProviderButtonBase(
       provider: provider,
       label: 'Sign in with Google',
       loadingIndicator: const CircularProgressIndicator(),

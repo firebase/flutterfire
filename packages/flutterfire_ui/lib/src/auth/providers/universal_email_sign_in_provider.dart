@@ -2,8 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-abstract class UniversalEmailSignInListener extends AuthListener {}
+/// A [UniversalEmailSignInFlow] lifecycle listener.
+abstract class UniversalEmailSignInListener extends AuthListener {
+  @override
+  void onBeforeProvidersForEmailFetch();
 
+  @override
+  void onDifferentProvidersFound(
+    String email,
+    List<String> providers,
+    AuthCredential? credential,
+  );
+}
+
+/// A provider that resolves available authentication methods for a given
+/// email.
 class UniversalEmailSignInProvider
     extends AuthProvider<UniversalEmailSignInListener, AuthCredential> {
   @override

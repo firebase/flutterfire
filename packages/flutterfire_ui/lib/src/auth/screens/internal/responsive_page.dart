@@ -2,6 +2,10 @@ import 'package:flutter/widgets.dart';
 
 import '../../widgets/internal/keyboard_appearence_listener.dart';
 
+/// {@template ffui.auth.screens.responsive_page.header_builder}
+/// A builder that builds the contents of the header.
+/// Used only on mobile platforms.
+/// {@endtemplate}
 typedef HeaderBuilder = Widget Function(
   BuildContext context,
   BoxConstraints constraints,
@@ -10,12 +14,12 @@ typedef HeaderBuilder = Widget Function(
 
 const defaultHeaderImageHeight = 150.0;
 
-class LoginImageSliverDelegate extends SliverPersistentHeaderDelegate {
+class HeaderImageSliverDelegate extends SliverPersistentHeaderDelegate {
   final HeaderBuilder builder;
   @override
   final double maxExtent;
 
-  const LoginImageSliverDelegate({
+  const HeaderImageSliverDelegate({
     required this.builder,
     this.maxExtent = defaultHeaderImageHeight,
   }) : super();
@@ -44,19 +48,56 @@ class LoginImageSliverDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
+/// {@template ffui.auth.screens.responsive_page.side_builder}
+/// A builder that builds a contents of a page displayed on a side of
+/// of the main authentication related UI.
+///
+/// Used only on desktop platforms.
+/// {@endtemplate}
 typedef SideBuilder = Widget Function(
   BuildContext context,
   BoxConstraints constraints,
 );
 
 class ResponsivePage extends StatefulWidget {
+  /// Main content of the page
   final Widget child;
+
+  /// {@template ffui.auth.screens.responsive_page.desktop_layout_direction}
+  /// A direction of the desktop layout.
+  /// [TextDirection.ltr] indicates that side content is built on the left, and
+  /// the child is placed on the right. The order is reversed when
+  /// [TextDirection.rtl] is used.
+  /// {@endtemplate}
   final TextDirection? desktopLayoutDirection;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@template ffui.auth.screens.responsive_page.header_max_extent}
+  /// The maximum height of the header.
+  /// {@endtemplate}
   final double? headerMaxExtent;
+
+  /// {@template ffui.auth.screens.responsive_page.breakpoint}
+  /// Min width of the viewport for desktop layout. If the available width is
+  /// less than this value, a mobile layout is used.
+  /// {@endtemplate}
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
+
+  /// {@template ffui.auth.screens.responsive_page.content_flex}
+  /// A flex value of the [Expanded] that wraps the child on desktop.
+  /// {@endtemplate}
   final int? contentFlex;
+
+  /// {@template ffui.auth.screens.responsive_page.max_width}
+  /// A max width of the page on desktop. If the available width is greater than
+  /// this value, the content is centered and horizontal paddings are added.
+  /// {@endtemplate}
   final double? maxWidth;
 
   const ResponsivePage({
@@ -145,7 +186,7 @@ class _ResponsivePageState extends State<ResponsivePage> {
                 slivers: [
                   if (widget.headerBuilder != null)
                     SliverPersistentHeader(
-                      delegate: LoginImageSliverDelegate(
+                      delegate: HeaderImageSliverDelegate(
                         maxExtent:
                             widget.headerMaxExtent ?? defaultHeaderImageHeight,
                         builder: widget.headerBuilder!,

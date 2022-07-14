@@ -5,58 +5,139 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
+/// {@template ffui.oauth.oauth_provider_button_base.error_builder}
+/// A builder that is invoked to build a widget that indicates an error.
+/// {@endtemplate}
 typedef ErrorBuilder = Widget Function(Exception e);
+
+/// {@template ffui.oauth.oauth_provider_button_base.different_providers_found_callback}
+/// A callback that is being called when there are different oauth providers
+/// associated with the same email.
+/// {@endtemplate}
 typedef DifferentProvidersFoundCallback = void Function(
   List<String> providers,
   AuthCredential? credential,
 );
 
+/// {@template ffui.oauth.oauth_provider_button_base.signed_in_callback}
+/// A callback that is being called when the user signs in.
+/// {@endtemplate}
 typedef SignedInCallback = void Function(UserCredential credential);
 
-class BaseOAuthProviderButton extends StatefulWidget {
+/// {@template ffui.oauth.oauth_provider_button_base}
+/// A base widget that allows authentication using OAuth providers.
+/// {@endtemplate}
+class OAuthProviderButtonBase extends StatefulWidget {
+  /// {@template ffui.oauth.oauth_provider_button.label}
+  /// Text that would be displayed on the button.
+  /// {@endtemplate}
   final String label;
+
+  /// {@template ffui.oauth.oauth_provider_button.size}
+  /// Font size of the button label. Padding of the buttons is calculated to
+  /// meet the provider design requirements.
+  /// {@endtemplate}
   final double size;
   final double _padding;
+
+  /// {@template ffui.oauth.oauth_provider_button.loading_indicator}
+  /// A widget that would be displayed while the button is in loading state.
+  /// {@endtemplate}
   final Widget loadingIndicator;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@template ffui.oauth.oauth_provider_button.on_tap}
+  /// A callback that is being called when the button is tapped.
+  /// {@endtemplate}
   final void Function()? onTap;
+
+  /// {@template ffui.oauth.oauth_provider}
   final OAuthProvider provider;
 
+  /// {@macro ffui.oauth.oauth_provider_button_base.different_providers_found_callback}
   final DifferentProvidersFoundCallback? onDifferentProvidersFound;
 
+  /// {@macro ffui.oauth.oauth_provider_button_base.signed_in_callback}
   final SignedInCallback? onSignedIn;
+
+  /// {@macro ffui.oauth.oauth_provider_button_base.on_error}
+  /// A callback that is being called when an error occurs.
+  /// {@endtemplate}
   final void Function(Exception exception)? onError;
+
+  /// {@macro ffui.oauth.oauth_provider_button_base.on_cancelled}
+  /// A callback that is being called when the user cancels the sign in.
+  /// {@endtemplate}
   final VoidCallback? onCancelled;
 
+  /// {@template ffui.oauth.oauth_provider_button_base.override_default_tap_action}
+  /// Indicates whether the default tap action should be overridden.
+  /// If set to `true`, authentcation logic is not executed and should be
+  /// handled by the user.
+  /// {@endtemplate}
   final bool overrideDefaultTapAction;
+
+  /// {@template ffui.oauth.oauth_provider_button_base.is_loading}
+  /// Indicates whether the sign in process is in progress.
+  /// {@endtemplate}
   final bool isLoading;
 
-  const BaseOAuthProviderButton({
+  const OAuthProviderButtonBase({
     Key? key,
+
+    /// {@macro ffui.oauth.oauth_provider_button.label}
     required this.label,
+
+    /// {@macro ffui.oauth.oauth_provider_button.loading_indicator}
     required this.loadingIndicator,
+
+    /// {@macro ffui.oauth.oauth_provider}
     required this.provider,
+
+    /// {@macro ffui.oauth.oauth_provider_button.on_tap}
     this.onTap,
+
+    /// {@macro ffui.auth.auth_controller.auth}
     this.auth,
+
+    /// {@macro ffui.auth.auth_action}
     this.action,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.different_providers_found_callback}
     this.onDifferentProvidersFound,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.signed_in_callback}
     this.onSignedIn,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.override_default_tap_action}
     this.overrideDefaultTapAction = false,
+
+    /// {@macro ffui.oauth.oauth_provider_button.size}
     this.size = 19,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.is_loading}
     this.isLoading = false,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.on_error}
     this.onError,
+
+    /// {@macro ffui.oauth.oauth_provider_button_base.on_cancelled}
     this.onCancelled,
   })  : assert(!overrideDefaultTapAction || onTap != null),
         _padding = size * 1.33 / 2,
         super(key: key);
 
   @override
-  State<BaseOAuthProviderButton> createState() =>
-      _BaseOAuthProviderButtonState();
+  State<OAuthProviderButtonBase> createState() =>
+      _OAuthProviderButtonBaseState();
 }
 
-class _BaseOAuthProviderButtonState extends State<BaseOAuthProviderButton>
+class _OAuthProviderButtonBaseState extends State<OAuthProviderButtonBase>
     implements OAuthListener {
   double get _height => widget.size + widget._padding * 2;
   late bool isLoading = widget.isLoading;
@@ -238,7 +319,7 @@ class _BaseOAuthProviderButtonState extends State<BaseOAuthProviderButton>
   @override
   void onError(Object error) {
     try {
-      DefaultErrorHandler.onError(provider, error);
+      defaultOnAuthError(provider, error);
     } on Exception catch (err) {
       widget.onError?.call(err);
     }
@@ -254,7 +335,7 @@ class _BaseOAuthProviderButtonState extends State<BaseOAuthProviderButton>
   }
 
   @override
-  void didUpdateWidget(covariant BaseOAuthProviderButton oldWidget) {
+  void didUpdateWidget(covariant OAuthProviderButtonBase oldWidget) {
     if (oldWidget.isLoading != widget.isLoading) {
       isLoading = widget.isLoading;
     }

@@ -6,14 +6,39 @@ import 'internal/provider_screen.dart';
 import 'internal/responsive_page.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
+/// {@template ffui.auth.screens.email_link_sign_in_screen}
+/// A screen that provides a UI for authentication using email link.
+/// {@endtemplate}
 class EmailLinkSignInScreen extends ProviderScreen<EmailLinkAuthProvider> {
-  final List<FlutterFireUIAction>? actions;
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
-  final TextDirection? desktoplayoutDirection;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
+  final TextDirection? desktopLayoutDirection;
+
+  /// EmailLinkSignInScreen could invoke these actions:
+  ///
+  /// * [AuthStateChangeAction]
+  ///
+  /// ```dart
+  /// EmailLinkSignInScreen(
+  ///   actions: [
+  ///     AuthStateChangeAction<SignedIn>((context, state) {
+  ///       Navigator.pushReplacementNamed(context, '/');
+  ///     }),
+  ///   ],
+  /// );
+  /// ```
+  final List<FlutterFireUIAction>? actions;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
-  final Set<FlutterFireUIStyle>? styles;
 
   const EmailLinkSignInScreen({
     Key? key,
@@ -23,32 +48,25 @@ class EmailLinkSignInScreen extends ProviderScreen<EmailLinkAuthProvider> {
     this.headerBuilder,
     this.headerMaxExtent,
     this.sideBuilder,
-    this.desktoplayoutDirection,
+    this.desktopLayoutDirection,
     this.breakpoint = 500,
-    this.styles,
   }) : super(key: key, auth: auth, provider: provider);
 
   @override
   Widget build(BuildContext context) {
-    return FlutterFireUITheme(
-      styles: styles ?? const {},
-      child: FlutterFireUIActions(
-        actions: actions ?? const [],
-        child: UniversalScaffold(
-          body: ResponsivePage(
-            breakpoint: breakpoint,
-            headerBuilder: headerBuilder,
-            headerMaxExtent: headerMaxExtent,
-            maxWidth: 1200,
-            sideBuilder: sideBuilder,
-            desktopLayoutDirection: desktoplayoutDirection,
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: EmailLinkSignInView(
-                auth: auth,
-                provider: provider,
-              ),
-            ),
+    return UniversalScaffold(
+      body: ResponsivePage(
+        breakpoint: breakpoint,
+        headerBuilder: headerBuilder,
+        headerMaxExtent: headerMaxExtent,
+        maxWidth: 1200,
+        sideBuilder: sideBuilder,
+        desktopLayoutDirection: desktopLayoutDirection,
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: EmailLinkSignInView(
+            auth: auth,
+            provider: provider,
           ),
         ),
       ),

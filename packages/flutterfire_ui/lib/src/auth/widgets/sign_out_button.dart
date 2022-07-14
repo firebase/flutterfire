@@ -6,10 +6,17 @@ import 'package:flutter/material.dart';
 
 import '../widgets/internal/universal_button.dart';
 
+/// {@template ffui.auth.widgets.sign_out_button}
+/// A button that signs out the user when pressed.
+/// {@endtemplate}
 class SignOutButton extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.widgets.button_variant}
   final ButtonVariant? variant;
 
+  /// {@macro ffui.auth.widgets.sign_out_button}
   const SignOutButton({
     Key? key,
     this.auth,

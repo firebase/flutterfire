@@ -3,9 +3,17 @@ import 'package:flutter/material.dart';
 
 import 'platform_widget.dart';
 
+/// {@template ffui.auth.widgets.button_variant}
+/// An enumeration of the possible button variants.
+/// {@endtemplate}
 enum ButtonVariant {
+  /// button variant that is rendered as a text without a background or border.
   text,
+
+  /// button variant that has a background.
   filled,
+
+  /// button variant that has a border.
   outlined,
 }
 

@@ -5,11 +5,21 @@ import 'package:flutterfire_ui/i10n.dart';
 
 import 'internal/title.dart';
 
+/// {@template ffui.auth.widget.email_sign_up_dialog}
+/// A dialog [Widget] that allows to create a new account using email and
+/// password or to link current account with an email.
+/// {@endtemplate}
 class EmailSignUpDialog extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// An instance of [EmailAuthProvider] that should be used to authenticate.
   final EmailAuthProvider provider;
 
+  /// {@macro ffui.auth.widget.email_sign_up_dialog}
   const EmailSignUpDialog({
     Key? key,
     this.auth,

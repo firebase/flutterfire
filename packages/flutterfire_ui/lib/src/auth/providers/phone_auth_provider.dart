@@ -2,13 +2,29 @@ import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+/// A listener of the [PhoneAuthFlow] lifecycle.
 abstract class PhoneAuthListener extends AuthListener {
+  /// Caled when the SMS code was requested.
+  /// UIs usually reflect this state with a loading indicator.
+  /// Is not supported on web.
   void onSMSCodeRequested(String phoneNumber);
+
+  /// Called when the phone number was successfully verified.
   void onVerificationCompleted(fba.PhoneAuthCredential credential);
+
+  /// Called when the SMS code was sent.
+  /// UI should provide a way to enter the code.
   void onCodeSent(String verificationId, [int? forceResendToken]);
+
+  /// Caled when the SMS code was requested.
+  /// UIs usually reflect this state with a loading indicator.
+  /// Called only on web.
   void onConfirmationRequested(fba.ConfirmationResult result);
 }
 
+/// {@template ffui.auth.providers.phone_auth_provider}
+/// An [AuthProvider] that allows to authenticate using a phone number.
+/// {@endtemplate}
 class PhoneAuthProvider
     extends AuthProvider<PhoneAuthListener, fba.PhoneAuthCredential> {
   @override
@@ -24,7 +40,16 @@ class PhoneAuthProvider
         kIsWeb;
   }
 
-  void sendVerificationCode(String phoneNumber, AuthAction action) {
+  /// Sends an SMS code to the [phoneNumber].
+  /// If [action] is [AuthAction.link], an obtained auth credential will be
+  /// linked with the currently signed in user account.
+  /// If [action] is [AuthAction.signIn], the user will be created (if doesn't
+  /// exist) or signed in.
+  void sendVerificationCode(
+    String phoneNumber,
+    AuthAction action, [
+    int? forceResendingToken,
+  ]) {
     authListener.onSMSCodeRequested(phoneNumber);
 
     if (kIsWeb) {
@@ -32,6 +57,7 @@ class PhoneAuthProvider
     }
 
     auth.verifyPhoneNumber(
+      forceResendingToken: forceResendingToken,
       phoneNumber: phoneNumber,
       verificationCompleted: authListener.onVerificationCompleted,
       verificationFailed: authListener.onError,
@@ -42,6 +68,8 @@ class PhoneAuthProvider
     );
   }
 
+  /// Verifies an SMS code using [verificationId] or [confirmationResult]
+  /// (depending on what is currently available).
   void verifySMSCode({
     required AuthAction action,
     required String code,

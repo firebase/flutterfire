@@ -6,16 +6,20 @@ import 'package:flutterfire_ui/src/auth/screens/internal/multi_provider_screen.d
 import '../widgets/internal/universal_page_route.dart';
 import '../widgets/internal/universal_scaffold.dart';
 
+/// A screen that allows to resolve previously used providers for a given email.
 class UniversalEmailSignInScreen extends MultiProviderScreen {
+  /// A callback that is being called when providers fetch request completed.
   final ProvidersFoundCallback? onProvidersFound;
-  final Set<FlutterFireUIStyle>? styles;
 
   const UniversalEmailSignInScreen({
     Key? key,
+
+    /// {@macro ffui.auth.auth_controller.auth}
     FirebaseAuth? auth,
+
+    /// A list of all supported auth providers
     List<AuthProvider>? providers,
     this.onProvidersFound,
-    this.styles,
   })  : assert(onProvidersFound != null || providers != null),
         super(key: key, auth: auth, providers: providers);
 
@@ -95,25 +99,22 @@ class UniversalEmailSignInScreen extends MultiProviderScreen {
           (email, providers) => _defaultAction(context, email, providers),
     );
 
-    return FlutterFireUITheme(
-      styles: styles ?? const {},
-      child: UniversalScaffold(
-        body: Center(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.biggest.width < 500) {
-                return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: content,
-                );
-              } else {
-                return ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 500),
-                  child: content,
-                );
-              }
-            },
-          ),
+    return UniversalScaffold(
+      body: Center(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            if (constraints.biggest.width < 500) {
+              return Padding(
+                padding: const EdgeInsets.all(20),
+                child: content,
+              );
+            } else {
+              return ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: content,
+              );
+            }
+          },
         ),
       ),
     );

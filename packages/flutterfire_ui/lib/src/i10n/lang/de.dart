@@ -12,10 +12,6 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String linkEmailButtonText;
   @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
-  @override
   final String signInWithPhoneButtonText;
   @override
   final String signInWithGoogleButtonText;
@@ -31,16 +27,12 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +95,7 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +164,6 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Passwort',
     this.signInActionText = 'Anmelden',
     this.registerActionText = 'Registrieren',
-    this.signInButtonText = 'Anmelden',
-    this.registerButtonText = 'Registrieren',
     this.linkEmailButtonText = 'Weiter',
     this.signInWithPhoneButtonText = 'Mit Telefon anmelden',
     this.signInWithGoogleButtonText = 'Mit Google anmelden',
@@ -184,12 +173,9 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Geben Sie Ihre Telefonnummer ein',
     this.verifyPhoneNumberButtonText = 'Weiter',
     this.verifyCodeButtonText = 'Überprüfen',
-    this.verifyingPhoneNumberViewTitle = 'Code aus SMS eingeben',
     this.unknownError = 'Ein unbekannter Fehler ist aufgetreten',
     this.smsAutoresolutionFailedError =
         'Der SMS-Code konnte nicht automatisch aufgelöst werden. Bitte geben Sie Ihren Code manuell ein',
-    this.smsCodeSentText = 'SMS-Code wurde verschickt',
-    this.sendingSMSCodeText = 'SMS-Code versenden...',
     this.verifyingSMSCodeText = 'SMS-Code überprüfen...',
     this.enterSMSCodeText = 'SMS-Code eingeben',
     this.emailIsRequiredErrorText = 'E-Mail ist erforderlich',
@@ -226,7 +212,6 @@ class DeLocalizations extends FlutterFireUILocalizationLabels {
         'Geben Sie Ihre E-Mail-Adresse ein, um fortzufahren',
     this.continueText = 'Weiter',
     this.countryCode = 'Ländercode',
-    this.codeRequiredErrorText = 'Ländercode ist erforderlich',
     this.invalidCountryCode = 'Ungültiger Code',
     this.chooseACountry = 'Wählen Sie ein Land',
     this.enableMoreSignInMethods = 'Weitere Anmeldemethoden aktivieren',

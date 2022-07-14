@@ -11,10 +11,7 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Wachtwoord',
     this.signInActionText = 'Inloggen',
     this.registerActionText = 'Registreren',
-    this.signInButtonText = 'Inloggen',
-    this.registerButtonText = 'Registreren',
     this.linkEmailButtonText = 'Verder',
     this.signInWithPhoneButtonText = 'Inloggen met telefoon',
     this.signInWithGoogleButtonText = 'Inloggen met Google',
@@ -184,12 +174,9 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Voer uw telefoonnummer in',
     this.verifyPhoneNumberButtonText = 'Verder',
     this.verifyCodeButtonText = 'Verifieer',
-    this.verifyingPhoneNumberViewTitle = 'Vul code van SMS in',
     this.unknownError = 'Er is een onbekende fout opgetreden',
     this.smsAutoresolutionFailedError =
         'Automatisch verifiëren van de SMS code is niet gelukt. Voer de code handmatig in.',
-    this.smsCodeSentText = 'SMS code verstuurd',
-    this.sendingSMSCodeText = 'SMS code versturen...',
     this.verifyingSMSCodeText = 'SMS code verifiëren...',
     this.enterSMSCodeText = 'Voer SMS code in',
     this.emailIsRequiredErrorText = 'E-mailadres is verplicht',
@@ -226,7 +213,6 @@ class NlLocalizations extends FlutterFireUILocalizationLabels {
         'Voer uw e-mailadres in om verder te gaan',
     this.continueText = 'Verder',
     this.countryCode = 'Landcode',
-    this.codeRequiredErrorText = 'Landcode is verplicht',
     this.invalidCountryCode = 'Ongeldige landcode',
     this.chooseACountry = 'Kies een land',
     this.enableMoreSignInMethods = 'Meer inlogmethodes aanzetten',

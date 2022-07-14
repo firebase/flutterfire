@@ -10,6 +10,12 @@ const FACEBOOK_PROVIDER_ID = 'facebook.com';
 const PHONE_PROVIDER_ID = 'phone';
 const PASSWORD_PROVIDER_ID = 'password';
 
+/// Resolves an icon given a [providerId].
+///
+/// ```dart
+/// final icon = providerIcon(context, 'google.com');
+/// Icon(icon);
+/// ```
 IconData providerIcon(BuildContext context, String providerId) {
   final isCupertino = CupertinoUserInterfaceLevel.maybeOf(context) != null;
 

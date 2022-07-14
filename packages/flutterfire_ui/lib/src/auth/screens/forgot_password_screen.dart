@@ -1,22 +1,41 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../widgets/internal/universal_scaffold.dart';
 import 'internal/responsive_page.dart';
 
+/// A password reset screen.
 class ForgotPasswordScreen extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A returned widget would be placed under the title of the screen.
   final WidgetBuilder? subtitleBuilder;
+
+  /// A returned widget would be placed at the bottom.
   final WidgetBuilder? footerBuilder;
+
+  /// An email that should be pre-filled.
   final String? email;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
+
+  /// See [Scaffold.resizeToAvoidBottomInset]
   final bool? resizeToAvoidBottomInset;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
-  final Set<FlutterFireUIStyle>? styles;
 
   const ForgotPasswordScreen({
     Key? key,
@@ -30,7 +49,6 @@ class ForgotPasswordScreen extends StatelessWidget {
     this.desktopLayoutDirection,
     this.resizeToAvoidBottomInset,
     this.breakpoint = 600,
-    this.styles,
   }) : super(key: key);
 
   @override
@@ -42,22 +60,19 @@ class ForgotPasswordScreen extends StatelessWidget {
       subtitleBuilder: subtitleBuilder,
     );
 
-    return FlutterFireUITheme(
-      styles: styles ?? const {},
-      child: UniversalScaffold(
-        resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-        body: ResponsivePage(
-          desktopLayoutDirection: desktopLayoutDirection,
-          headerBuilder: headerBuilder,
-          headerMaxExtent: headerMaxExtent,
-          sideBuilder: sideBuilder,
-          breakpoint: breakpoint,
-          maxWidth: 1200,
-          contentFlex: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(32),
-            child: child,
-          ),
+    return UniversalScaffold(
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      body: ResponsivePage(
+        desktopLayoutDirection: desktopLayoutDirection,
+        headerBuilder: headerBuilder,
+        headerMaxExtent: headerMaxExtent,
+        sideBuilder: sideBuilder,
+        breakpoint: breakpoint,
+        maxWidth: 1200,
+        contentFlex: 1,
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: child,
         ),
       ),
     );

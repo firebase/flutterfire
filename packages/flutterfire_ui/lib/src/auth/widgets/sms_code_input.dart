@@ -119,11 +119,24 @@ class _NumberSlotState extends State<_NumberSlot>
 
 typedef SMSCodeSubmitCallback = void Function(String smsCode);
 
+/// {@template ffui.auth.widgets.sms_code_input}
+///
+/// A widget that allows the user to enter the SMS code sent to the user's
+/// phone.
+///
+/// This input is autofilled if SMS autoresolution is supported.
+/// {@endtemplate}
 class SMSCodeInput extends StatefulWidget {
+  /// Whether the input should have a focus by default.
   final bool autofocus;
+
+  /// Rendered under the input.
   final Widget? text;
+
+  /// A callback that is being called when SMS code is submitted.
   final SMSCodeSubmitCallback? onSubmit;
 
+  /// {@macro ffui.auth.widgets.sms_code_input}
   const SMSCodeInput({
     Key? key,
     this.autofocus = true,

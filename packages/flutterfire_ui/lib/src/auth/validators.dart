@@ -1,14 +1,18 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart' as e;
 
+/// An abstract class for building composite input validators.
 abstract class Validator {
+  /// Error text that should be displayed if the valie is invalid.
   final String errorText;
   List<Validator> _validators;
 
   Validator(this.errorText, List<Validator> children) : _validators = children;
 
+  /// Triggers validation.
   String? validate(String? value);
 
+  /// Triggers all children validators.
   @protected
   String? validateChildren(String? value) {
     for (final validator in _validators) {
@@ -20,11 +24,14 @@ abstract class Validator {
     return null;
   }
 
+  /// Returns a callback that could be used as a [TextFormField.validator].
   static String? Function(String?) validateAll(List<Validator> validators) {
     return CompositeValidator(validators).validate;
   }
 }
 
+/// A validator that doesn't have it's own logic and instead delegates
+/// the validation to its children.
 class CompositeValidator extends Validator {
   CompositeValidator(List<Validator> children) : super('', children);
 
@@ -34,6 +41,7 @@ class CompositeValidator extends Validator {
   }
 }
 
+/// Validates that the input is not a null and not an empty string.
 class NotEmpty extends Validator {
   NotEmpty(String errorText) : super(errorText, []);
 
@@ -43,6 +51,7 @@ class NotEmpty extends Validator {
   }
 }
 
+/// Validates an email.
 class EmailValidator extends Validator {
   EmailValidator(String errorText) : super(errorText, []);
 
@@ -53,6 +62,7 @@ class EmailValidator extends Validator {
   }
 }
 
+/// Validates that the passwords match.
 class ConfirmPasswordValidator extends Validator {
   final TextEditingController controller;
 
@@ -67,6 +77,9 @@ class ConfirmPasswordValidator extends Validator {
   }
 }
 
+/// Validates phone number.
+/// Should be used together with the [NotEmpty] and
+/// [FilteringTextInputFormatter.digitsOnly].
 class PhoneValidator extends Validator {
   PhoneValidator(String errorText) : super(errorText, []);
 

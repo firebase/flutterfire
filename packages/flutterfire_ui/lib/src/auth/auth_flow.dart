@@ -8,16 +8,35 @@ import 'package:flutterfire_ui/auth.dart';
 
 import 'auth_state.dart';
 
+/// An exception that is being thrown when user cancels the authentication
+/// process.
 class AuthCancelledException implements Exception {
   AuthCancelledException([this.message = 'User has cancelled auth']);
 
   final String message;
 }
 
+/// {@template ffui.auth.auth_flow}
+/// A class that provides a current auth state given an [AuthProvider] and
+/// implements shared authentication process logic.
+///
+/// Should be rarely used directly, use available implementations instead:
+/// - [EmailAuthFlow]
+/// - [EmailLinkFlow]
+/// - [OAuthFlow]
+/// - [PhoneAuthFlow]
+/// - [UniversalEmailSignInFlow]
+///
+/// See [AuthFlowBuilder] docs to learn how to wire up the auth flow with the
+/// widget tree.
+/// {@endtemplate}
 class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
     implements AuthController, AuthListener {
   @override
   FirebaseAuth auth;
+
+  /// An initial auth state. Usually [Uninitialized], but varies for different
+  /// auth flows.
   final AuthState initialState;
   AuthAction? _action;
   List<VoidCallback> _onDispose = [];
@@ -40,24 +59,43 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
     return AuthAction.signIn;
   }
 
+  /// Use this setter to override the autoresolved [AuthAction].
+  /// Autoresolved action is [AuthAction.signIn] if there is no currently signed
+  /// in user, [AuthAction.link] otherwise.
   set action(AuthAction value) {
     _action = value;
   }
 
+  /// {@template ffui.auth_flow.on_dispose}
+  /// /// A callback that is being called when auth flow is complete and is being
+  /// desposed (e.g. when [AuthFlowBuilder] widget is unmounteed from the widget
+  /// tree).
+  /// {@endtemplate}
   VoidCallback get onDispose {
     return () {
       _onDispose.forEach((callback) => callback());
     };
   }
 
+  /// {@macro ffui.auth_flow.on_dispose}
   set onDispose(VoidCallback callback) {
     _onDispose.add(callback);
   }
 
+  /// {@macro ffui.auth.auth_flow}
   AuthFlow({
+    /// An initial [AuthState] of the auth flow
     required this.initialState,
+
+    /// {@template ffui.auth.auth_flow.ctor.provider}
+    /// An [AuthProvider] that is used to authenticate the user.
+    /// {@endtemplate}
     required T provider,
+
+    /// {@macro ffui.auth.auth_controller.auth}
     FirebaseAuth? auth,
+
+    /// {@macro @macro ffui.auth.auth_action}
     AuthAction? action,
   })  : auth = auth ?? FirebaseAuth.instance,
         _action = action,
@@ -106,11 +144,6 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   }
 
   @override
-  void findProvidersForEmail(String email) {
-    provider.findProvidersForEmail(email);
-  }
-
-  @override
   void reset() {
     value = initialState;
     onDispose();
@@ -119,7 +152,7 @@ class AuthFlow<T extends AuthProvider> extends ValueNotifier<AuthState>
   @override
   void onError(Object error) {
     try {
-      DefaultErrorHandler.onError(provider, error);
+      defaultOnAuthError(provider, error);
     } on AuthCancelledException {
       reset();
     } on Exception catch (err) {

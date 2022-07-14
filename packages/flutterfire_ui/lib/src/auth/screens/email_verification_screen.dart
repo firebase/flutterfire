@@ -10,23 +10,59 @@ import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/universal_scaffold.dart';
 import 'internal/responsive_page.dart';
 
+/// An action that is being called when email was successfully verified.
 class EmailVerified extends FlutterFireUIAction {
   final VoidCallback callback;
 
   EmailVerified(this.callback);
 }
 
+/// {@template ffui.auth.screens.email_verification_screen}
+/// A screen that contains hints of how to verify the email.
+/// A verification email is being sent automatically when this screen is opened.
+/// {@endtemplate}
 class EmailVerificationScreen extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
-  final HeaderBuilder? headerBuilder;
-  final List<FlutterFireUIAction> actions;
-  final double? headerMaxExtent;
-  final SideBuilder? sideBuilder;
-  final TextDirection? desktoplayoutDirection;
-  final double breakpoint;
-  final ActionCodeSettings? actionCodeSettings;
-  final Set<FlutterFireUIStyle>? styles;
 
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
+  final HeaderBuilder? headerBuilder;
+
+  /// EmailVerificationScreen could invoke these actions:
+  ///
+  /// * [Cancel]
+  /// * [EmailVerified]
+  ///
+  /// ```dart
+  /// EmailVerificationScreen(
+  ///   actions: [
+  ///     EmailVerified(() {
+  ///       Navigator.pushReplacementNamed(context, '/profile');
+  ///     }),
+  ///     Cancel((context) {
+  ///       Navigator.of(context).pop();
+  ///     }),
+  ///   ],
+  /// );
+  /// ```
+  final List<FlutterFireUIAction> actions;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
+  final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
+  final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
+  final TextDirection? desktopLayoutDirection;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
+  final double breakpoint;
+
+  /// A configuration object used to construct a dynamic link.
+  final ActionCodeSettings? actionCodeSettings;
+
+  /// {@macro ffui.auth.screens.email_verification_screen}
   const EmailVerificationScreen({
     Key? key,
     this.auth,
@@ -34,33 +70,29 @@ class EmailVerificationScreen extends StatelessWidget {
     this.headerBuilder,
     this.headerMaxExtent,
     this.sideBuilder,
-    this.desktoplayoutDirection,
+    this.desktopLayoutDirection,
     this.breakpoint = 500,
     this.actionCodeSettings,
-    this.styles,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return FlutterFireUITheme(
-      styles: styles ?? const {},
-      child: FlutterFireUIActions(
-        actions: actions,
-        child: UniversalScaffold(
-          body: ResponsivePage(
-            breakpoint: breakpoint,
-            desktopLayoutDirection: desktoplayoutDirection,
-            headerBuilder: headerBuilder,
-            headerMaxExtent: headerMaxExtent,
-            sideBuilder: sideBuilder,
-            maxWidth: 1200,
-            contentFlex: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: _EmailVerificationScreenContent(
-                auth: auth,
-                actionCodeSettings: actionCodeSettings,
-              ),
+    return FlutterFireUIActions(
+      actions: actions,
+      child: UniversalScaffold(
+        body: ResponsivePage(
+          breakpoint: breakpoint,
+          desktopLayoutDirection: desktopLayoutDirection,
+          headerBuilder: headerBuilder,
+          headerMaxExtent: headerMaxExtent,
+          sideBuilder: sideBuilder,
+          maxWidth: 1200,
+          contentFlex: 2,
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: _EmailVerificationScreenContent(
+              auth: auth,
+              actionCodeSettings: actionCodeSettings,
             ),
           ),
         ),
@@ -70,6 +102,7 @@ class EmailVerificationScreen extends StatelessWidget {
 }
 
 class _EmailVerificationScreenContent extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final ActionCodeSettings? actionCodeSettings;
 
@@ -86,7 +119,7 @@ class _EmailVerificationScreenContent extends StatefulWidget {
 
 class __EmailVerificationScreenContentState
     extends State<_EmailVerificationScreenContent> {
-  late final service = EmailVerificationService(auth);
+  late final controller = EmailVerificationController(auth);
   FirebaseAuth get auth => widget.auth ?? FirebaseAuth.instance;
   User get user => auth.currentUser!;
   bool isLoading = false;
@@ -99,7 +132,7 @@ class __EmailVerificationScreenContentState
   }
 
   void _sendEmailVerification(_) {
-    service
+    controller
       ..addListener(() {
         setState(() {});
 
@@ -114,7 +147,7 @@ class __EmailVerificationScreenContentState
       );
   }
 
-  EmailVerificationState get state => service.state;
+  EmailVerificationState get state => controller.state;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +175,7 @@ class __EmailVerificationScreenContentState
             variant: ButtonVariant.filled,
             label: l.continueText,
             onTap: () async {
-              await service.reload();
+              await controller.reload();
             },
           ),
         ],
@@ -158,7 +191,7 @@ class __EmailVerificationScreenContentState
           UniversalButton(
             text: 'Resend verification email',
             onPressed: () {
-              service.sendVerificationEmail(
+              controller.sendVerificationEmail(
                 Theme.of(context).platform,
                 widget.actionCodeSettings,
               );
@@ -167,7 +200,7 @@ class __EmailVerificationScreenContentState
         ],
         if (state == EmailVerificationState.failed) ...[
           const SizedBox(height: 16),
-          ErrorText(exception: service.error!),
+          ErrorText(exception: controller.error!),
         ],
         const SizedBox(height: 16),
         UniversalButton(

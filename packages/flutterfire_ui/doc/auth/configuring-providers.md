@@ -23,13 +23,13 @@ enabled in the [Firebase Console](https://console.firebase.google.com/project/_/
 
 ![Enable Email/Password Provider](../images/ui-email-provider.jpg)
 
-On any UI widget which supports providers, you can now provide an instance of a `EmailProviderConfiguration` to the
+On any UI widget which supports providers, you can now provide an instance of a `EmailProvider` to the
 `providers` list, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    EmailProviderConfiguration()
+    EmailProvider()
   ],
 )
 ```
@@ -44,13 +44,13 @@ in the [Firebase Console](https://console.firebase.google.com/project/_/authenti
 
 ![Enable Email Link Provider](../images/ui-email-link-provider.png)
 
-On any UI widget which supports providers, you can now provide an instance of a `EmailLinkProviderConfiguration` to the
+On any UI widget which supports providers, you can now provide an instance of a `EmailLinkProvider` to the
 `providers` list, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    EmailLinkProviderConfiguration(
+    EmailLinkProvider(
       actionCodeSettings: ActionCodeSettings(
         url: 'example.com',
         handleCodeInApp: true,
@@ -75,12 +75,12 @@ enabled in the [Firebase Console](https://console.firebase.google.com/project/_/
 Next, follow the [Setup Instructions](https://firebase.google.com/docs/auth/flutter/phone-auth) to configure Phone Authentication for your
 platforms.
 
-Once complete, add a `PhoneProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
+Once complete, add a `PhoneProvider` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    PhoneProviderConfiguration()
+    PhoneProvider()
   ],
 )
 ```
@@ -98,12 +98,12 @@ Next, enable the "Google" provider in the Firebase Console:
 
 > To ensure cross-platform support, please ensure you have followed installation instructions for both the `google_sign_in` package and the provider on the Firebase Console (such as adding a [SHA1 fingerprint](https://developers.google.com/android/guides/client-auth?authuser=0) for Android applications).
 
-Once installed, add a `GoogleProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
+Once installed, add a `GoogleProvider` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    GoogleProviderConfiguration(
+    GoogleProvider(
       clientId: '...',
     )
   ],
@@ -125,12 +125,12 @@ Next, enable the "Facebook" provider in the Firebase Console & provide your crea
 
 ![Enable Facebook Provider](../images/ui-facebook-provider.jpg)
 
-Once installed, add a `FacebookProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
+Once installed, add a `FacebookProvider` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    FacebookProviderConfiguration(
+    FacebookProvider(
       clientId: '...',
     )
   ],
@@ -151,12 +151,12 @@ Next, enable the "Twitter" provider in the Firebase Console:
 
 ![Enable Twitter Provider](../images/ui-twitter-provider.jpg)
 
-Once installed, add a `TwitterProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
+Once installed, add a `TwitterProvider` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    TwitterProviderConfiguration(
+    TwitterProvider(
       apiKey: '...',
       apiSecretKey: '...',
       redirectUri: '<your-scheme>://'
@@ -193,12 +193,12 @@ Next, enable the "Apple" provider in the Firebase Console:
 
 ![Enable Apple Provider](../images/ui-apple-provider.jpg)
 
-Once installed, add an `AppleProviderConfiguration` instance to the `providers` list of a supporting UI widget, for example:
+Once installed, add an `AppleProvider` instance to the `providers` list of a supporting UI widget, for example:
 
 ```dart
 RegisterScreen(
   providers: [
-    AppleProviderConfiguration(),
+    AppleProvider(),
   ],
 )
 ```

@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../widgets/internal/universal_page_route.dart';
 
+/// Opens [PhoneInputScreen].
 Future<void> startPhoneVerification({
   required BuildContext context,
+
+  /// {@macro ffui.auth.auth_action}
   AuthAction? action,
+
+  /// {@macro ffui.auth.auth_controller.auth}
   FirebaseAuth? auth,
 }) async {
   await Navigator.of(context).push(
@@ -14,7 +19,10 @@ Future<void> startPhoneVerification({
       context: context,
       builder: (_) => FlutterFireUIActions.inherit(
         from: context,
-        child: PhoneInputScreen(action: action),
+        child: PhoneInputScreen(
+          auth: auth,
+          action: action,
+        ),
       ),
     ),
   );

@@ -9,13 +9,26 @@ import '../widgets/internal/universal_button.dart';
 import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
 
+/// {@template ffui.auth.views.forgot_password_view}
+/// A view that could be used to build a custom [ForgotPasswordScreen].
+/// {@endtemplate}
 class ForgotPasswordView extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A configuration object that is used to construct a dynamic link.
   final ActionCodeSettings? actionCodeSettings;
+
+  /// Returned widget would be placed under the title.
   final WidgetBuilder? subtitleBuilder;
+
+  /// Returned widget would be placed at the bottom of the view.
   final WidgetBuilder? footerBuilder;
+
+  /// An email that [EmailInput] should be pre-filled with.
   final String? email;
 
+  /// {@macro ffui.auth.views.forgot_password_view}
   const ForgotPasswordView({
     Key? key,
     this.auth,

@@ -12,10 +12,6 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String linkEmailButtonText;
   @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
-  @override
   final String signInWithPhoneButtonText;
   @override
   final String signInWithGoogleButtonText;
@@ -31,16 +27,12 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +95,7 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +164,6 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Password',
     this.signInActionText = 'Sign in',
     this.registerActionText = 'Register',
-    this.signInButtonText = 'Sign in',
-    this.registerButtonText = 'Register',
     this.linkEmailButtonText = 'Next',
     this.signInWithPhoneButtonText = 'Sign in with phone',
     this.signInWithGoogleButtonText = 'Sign in with Google',
@@ -184,12 +173,9 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Enter your phone number',
     this.verifyPhoneNumberButtonText = 'Next',
     this.verifyCodeButtonText = 'Verify',
-    this.verifyingPhoneNumberViewTitle = 'Enter code from SMS',
     this.unknownError = 'An unknown error occurred',
     this.smsAutoresolutionFailedError =
         'Failed to resolve SMS code automatically. Please enter your code manually',
-    this.smsCodeSentText = 'SMS code sent',
-    this.sendingSMSCodeText = 'Sending SMS code...',
     this.verifyingSMSCodeText = 'Verifying SMS code...',
     this.enterSMSCodeText = 'Enter SMS code',
     this.emailIsRequiredErrorText = 'Email is required',
@@ -224,7 +210,6 @@ class EnLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText = 'Enter your email to continue',
     this.continueText = 'Continue',
     this.countryCode = 'Code',
-    this.codeRequiredErrorText = 'Country code is required',
     this.invalidCountryCode = 'Invalid code',
     this.chooseACountry = 'Choose a country',
     this.enableMoreSignInMethods = 'Enable more sign in methods',

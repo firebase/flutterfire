@@ -3,13 +3,22 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+/// A listener of the [EmailLinkFlow] lifecycle.
 abstract class EmailLinkAuthListener extends AuthListener {
+  /// Called when the link being is sent to the user's [email].
   void onBeforeLinkSent(String email);
+
+  /// Called when the link was sucessfully sent to the [email].
   void onLinkSent(String email);
 }
 
+/// {@template ffui.auth.providers.email_link_auth_provider}
+/// An [AuthProvider] that allows to authenticate using a link that is being
+/// sent to the user's email.
+/// {@endtemplate}
 class EmailLinkAuthProvider
     extends AuthProvider<EmailLinkAuthListener, AuthCredential> {
+  /// A configuration of the dynamic link.
   final ActionCodeSettings actionCodeSettings;
   final FirebaseDynamicLinks _dynamicLinks;
 
@@ -25,11 +34,16 @@ class EmailLinkAuthProvider
     return platform == TargetPlatform.android || platform == TargetPlatform.iOS;
   }
 
+  /// {@macro ffui.auth.providers.email_link_auth_provider}
   EmailLinkAuthProvider({
     required this.actionCodeSettings,
+
+    /// An instance of the [FirebaseDynamicLinks] that should be used to handle
+    /// the link. By default [FirebaseDynamicLinks.instance] is used.
     FirebaseDynamicLinks? dynamicLinks,
   }) : _dynamicLinks = dynamicLinks ?? FirebaseDynamicLinks.instance;
 
+  /// Sends a link to the [email].
   void sendLink(String email) {
     authListener.onBeforeLinkSent(email);
 
@@ -59,6 +73,8 @@ class EmailLinkAuthProvider
     }
   }
 
+  /// Calls [FirebaseDynamicLinks] to receive the link and perform a sign in.
+  /// Should be called after [EmailLinkAuthListener.onLinkSent] was called.
   void awaitLink(String email) {
     _dynamicLinks.onLink.first
         .then((linkData) => _onLinkReceived(email, linkData))

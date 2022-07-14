@@ -8,19 +8,19 @@ import '../widgets/internal/universal_text_form_field.dart';
 
 part '../configs/countries.dart';
 
-class CountryCodeItem {
+class _CountryCodeItem {
   final String countryCode;
   final String phoneCode;
   final String name;
 
-  CountryCodeItem({
+  _CountryCodeItem({
     required this.countryCode,
     required this.phoneCode,
     required this.name,
   });
 
-  static CountryCodeItem fromJson(Map<String, String> data) {
-    return CountryCodeItem(
+  static _CountryCodeItem fromJson(Map<String, String> data) {
+    return _CountryCodeItem(
       countryCode: data['countryCode']!,
       phoneCode: data['phoneCode']!,
       name: data['name']!,
@@ -30,15 +30,15 @@ class CountryCodeItem {
 
 typedef SubmitCallback = void Function(String value);
 
-class CountryPicker extends StatefulWidget {
-  const CountryPicker({Key? key}) : super(key: key);
+class _CountryPicker extends StatefulWidget {
+  const _CountryPicker({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
   _CountryPickerState createState() => _CountryPickerState();
 }
 
-class _CountryPickerState extends State<CountryPicker> {
+class _CountryPickerState extends State<_CountryPicker> {
   String? _countryCode;
   String get countryCode => _countryCode!;
   String get phoneCode => countriesByCountryCode[countryCode]!.phoneCode;
@@ -48,7 +48,7 @@ class _CountryPickerState extends State<CountryPicker> {
     _countryCode ??= Localizations.localeOf(context).countryCode;
     final item = countriesByCountryCode[_countryCode]!;
 
-    return PopupMenuButton<CountryCodeItem>(
+    return PopupMenuButton<_CountryCodeItem>(
       onSelected: (selected) => setState(() {
         _countryCode = selected.countryCode;
       }),
@@ -76,10 +76,18 @@ class _CountryPickerState extends State<CountryPicker> {
   }
 }
 
+/// {@template ffui.auth.widgets.phone_input}
+/// An input that allows to enter a phone number and select a country code.
+/// {@endtemplate}
 class PhoneInput extends StatefulWidget {
+  /// A callback that is being called when the input is submitted.
   final SubmitCallback? onSubmit;
+
+  /// An initial country code that should be selected in the country code
+  /// picker.
   final String initialCountryCode;
 
+  /// Returns a phone number from the [PhoneInput] that was provided a [key].
   static String? getPhoneNumber(GlobalKey<PhoneInputState> key) {
     final state = key.currentState!;
 
@@ -90,6 +98,7 @@ class PhoneInput extends StatefulWidget {
     return null;
   }
 
+  /// {@macro ffui.auth.widgets.phone_input}
   const PhoneInput({
     Key? key,
     required this.initialCountryCode,
@@ -100,6 +109,15 @@ class PhoneInput extends StatefulWidget {
   PhoneInputState createState() => PhoneInputState();
 }
 
+/// A state of the [PhoneInput].
+///
+/// Shouldn't be used directly.
+/// Should be used only to construct a key for phone input.
+///
+/// ```dart
+/// final key = GlobalKey<PhoneInputState>();
+/// return PhoneInput(key: key);
+/// ```
 class PhoneInputState extends State<PhoneInput> {
   late final countryController = TextEditingController()
     ..addListener(_onCountryChanged);
@@ -113,7 +131,8 @@ class PhoneInputState extends State<PhoneInput> {
   String? country;
   bool isValidCountryCode = true;
 
-  CountryCodeItem? countryCodeItem;
+  // ignore: library_private_types_in_public_api
+  _CountryCodeItem? countryCodeItem;
 
   void _onSubmitted(_) {
     if (formKey.currentState!.validate()) {
@@ -234,7 +253,7 @@ class PhoneInputState extends State<PhoneInput> {
               ),
             )
           else
-            PopupMenuButton<CountryCodeItem>(
+            PopupMenuButton<_CountryCodeItem>(
               child: Container(
                 padding: const EdgeInsets.all(16).copyWith(left: 0),
                 child: Row(

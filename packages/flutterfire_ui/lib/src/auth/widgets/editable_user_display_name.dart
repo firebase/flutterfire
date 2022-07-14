@@ -6,9 +6,17 @@ import 'package:flutter/material.dart';
 
 import 'internal/subtitle.dart';
 
+/// {@template ffui.auth.widgets.editable_user_display_name}
+/// A widget that displays user name and allows to edit it.
+/// If the user name is not provided by neither of the providers,
+/// a text field is being shown. Otherwise, a user name is rendered with the
+/// edit icon.
+/// {@endtemplate}
 class EditableUserDisplayName extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
 
+  /// {@macro ffui.auth.widgets.editable_user_display_name}
   const EditableUserDisplayName({
     Key? key,
     this.auth,

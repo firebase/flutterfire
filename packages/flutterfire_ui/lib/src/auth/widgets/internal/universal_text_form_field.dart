@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'platform_widget.dart';
 
+/// {@template ffui.auth.widgets.internal.universal_text_form_field}
+/// Uses [TextFormField] under mateiral library and [CupertinoTextFormFieldRow]
+/// under cupertion.
 class UniversalTextFormField extends PlatformWidget {
   final TextEditingController? controller;
   final String? placeholder;

@@ -8,13 +8,27 @@ import '../widgets/internal/universal_button.dart';
 
 typedef SMSCodeSubmitCallback = void Function(String smsCode);
 
+/// {@template ffui.auth.views.sms_code_input_view}
+/// A view that could be used to build a custom [SMSCodeInputScreen].
+/// {@endtemplate}
 class SMSCodeInputView extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// A unique object that could be used to obtain an instance of the
+  /// [PhoneAuthController].
   final Object flowKey;
+
+  /// A callback that is being called when the code was successfully verified.
   final VoidCallback? onCodeVerified;
+
+  /// A callback that is being called when the user submits a SMS code.
   final SMSCodeSubmitCallback? onSubmit;
 
+  /// {@macro ffui.auth.views.sms_code_input_view}
   const SMSCodeInputView({
     Key? key,
     required this.flowKey,
@@ -33,7 +47,7 @@ class _SMSCodeInputViewState extends State<SMSCodeInputView> {
   final key = GlobalKey<SMSCodeInputState>();
 
   @override
-  initState() {
+  void initState() {
     super.initState();
 
     final state = AuthFlowBuilder.getState(widget.flowKey);

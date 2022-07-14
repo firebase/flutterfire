@@ -11,23 +11,54 @@ import 'internal/responsive_page.dart';
 
 /// A screen displaying a fully styled phone number entry screen, with a country-code
 /// picker.
-///
-/// {@subCategory service:auth}
-/// {@subCategory type:screen}
-/// {@subCategory description:A screen displaying a fully styled phone number entry input with a country-code picker.}
-/// {@subCategory img:https://place-hold.it/400x150}
 class PhoneInputScreen extends StatelessWidget {
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// PhoneInputScreen could invoke these actions:
+  ///
+  /// - [SMSCodeRequestedAction]
+  ///
+  /// ```dart
+  /// PhoneInputScreen(
+  ///   actions: [
+  ///     SMSCodeRequestedAction((context, action, flowKey, phoneNumber) {
+  ///       Navigator.of(context).push(
+  ///         MaterialPageRoute(
+  ///           builder: (context) => SMSCodeInputScreen(
+  ///             flowKey: flowKey,
+  ///           ),
+  ///         ),
+  ///       );
+  ///     }),
+  ///   ]
+  /// );
+  /// ```
   final List<FlutterFireUIAction>? actions;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A returned widget would be placed under the title of the screen.
   final WidgetBuilder? subtitleBuilder;
+
+  /// A returned widget would be placed at the bottom.
   final WidgetBuilder? footerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
-  final Set<FlutterFireUIStyle>? styles;
 
   const PhoneInputScreen({
     Key? key,
@@ -41,7 +72,6 @@ class PhoneInputScreen extends StatelessWidget {
     this.sideBuilder,
     this.desktopLayoutDirection,
     this.breakpoint = 500,
-    this.styles,
   }) : super(key: key);
 
   void _next(BuildContext context, AuthAction? action, Object flowKey, _) {
@@ -64,37 +94,34 @@ class PhoneInputScreen extends StatelessWidget {
     final flowKey = Object();
     final l = FlutterFireUILocalizations.labelsOf(context);
 
-    return FlutterFireUITheme(
-      styles: styles ?? const {},
-      child: FlutterFireUIActions(
-        actions: actions ?? [SMSCodeRequestedAction(_next)],
-        child: UniversalScaffold(
-          body: ResponsivePage(
-            desktopLayoutDirection: desktopLayoutDirection,
-            sideBuilder: sideBuilder,
-            headerBuilder: headerBuilder,
-            headerMaxExtent: headerMaxExtent,
-            breakpoint: breakpoint,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  PhoneInputView(
-                    auth: auth,
-                    action: action,
-                    subtitleBuilder: subtitleBuilder,
-                    footerBuilder: footerBuilder,
-                    flowKey: flowKey,
-                  ),
-                  UniversalButton(
-                    text: l.goBackButtonLabel,
-                    variant: ButtonVariant.text,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
+    return FlutterFireUIActions(
+      actions: actions ?? [SMSCodeRequestedAction(_next)],
+      child: UniversalScaffold(
+        body: ResponsivePage(
+          desktopLayoutDirection: desktopLayoutDirection,
+          sideBuilder: sideBuilder,
+          headerBuilder: headerBuilder,
+          headerMaxExtent: headerMaxExtent,
+          breakpoint: breakpoint,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                PhoneInputView(
+                  auth: auth,
+                  action: action,
+                  subtitleBuilder: subtitleBuilder,
+                  footerBuilder: footerBuilder,
+                  flowKey: flowKey,
+                ),
+                UniversalButton(
+                  text: l.goBackButtonLabel,
+                  variant: ButtonVariant.text,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ),
         ),

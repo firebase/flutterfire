@@ -7,20 +7,44 @@ import '../../widgets/internal/universal_scaffold.dart';
 import 'responsive_page.dart';
 
 class LoginScreen extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final AuthAction action;
   final List<AuthProvider> providers;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// Indicates whether icon-only or icon and text OAuth buttons should be used.
+  /// Icon-only buttons are placed in a row.
   final OAuthButtonVariant? oauthButtonVariant;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
   final String? email;
+
+  /// Whether the "Login/Register" link should be displayed. The link changes
+  /// the type of the [AuthAction] from [AuthAction.signIn]
+  /// and [AuthAction.signUp] and vice versa.
   final bool? showAuthActionSwitch;
+
+  /// See [Scaffold.resizeToAvoidBottomInset]
   final bool? resizeToAvoidBottomInset;
+
+  /// A returned widget would be placed up the authentication related widgets.
   final AuthViewContentBuilder? subtitleBuilder;
+
+  /// A returned widget would be placed down the authentication related widgets.
   final AuthViewContentBuilder? footerBuilder;
   final Key? loginViewKey;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
   final Set<FlutterFireUIStyle>? styles;
 

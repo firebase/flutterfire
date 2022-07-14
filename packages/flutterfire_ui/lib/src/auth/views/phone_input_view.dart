@@ -15,15 +15,33 @@ typedef SMSCodeRequestedCallback = void Function(
 
 typedef PhoneNumberSubmitCallback = void Function(String phoneNumber);
 
+/// {@template ffui.auth.views.phone_input_view}
+/// A view that could be used to build a custom [PhoneInputScreen].
+/// {@endtemplate}
 class PhoneInputView extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// A unique object that could be used to obtain an instance of the
+  /// [PhoneAuthController].
   final Object flowKey;
+
+  /// A callback that is being called when the SMS code was requested.
   final SMSCodeRequestedCallback? onSMSCodeRequested;
+
+  /// A callback that is being called when the user submits a phone number.
   final PhoneNumberSubmitCallback? onSubmit;
+
+  /// Returned widget would be placed under the title.
   final WidgetBuilder? subtitleBuilder;
+
+  /// Returned widget would be placed at the bottom.
   final WidgetBuilder? footerBuilder;
 
+  /// {@macro ffui.auth.views.phone_input_view}
   const PhoneInputView({
     Key? key,
     required this.flowKey,

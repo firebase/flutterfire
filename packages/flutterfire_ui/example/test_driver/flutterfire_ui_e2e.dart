@@ -6,14 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-// import 'email_form_test.dart' as email_form;
-// import 'email_link_sign_in_view_test.dart' as email_link_sign_in_view;
-// import 'universal_email_sign_in_screen_test.dart'
-//     as universal_email_sign_in_screen;
-// import 'phone_verification_test.dart' as phone_verification;
-// import 'google_sign_in_test.dart' as google_sign_in;
-// import 'twitter_sign_in_test.dart' as twitter_sign_in;
-// import 'apple_sign_in_test.dart' as apple_sign_in;
+import 'firestore_query_builder_test.dart' as firestore_query_builder;
+import 'firestore_list_view_test.dart' as firestore_list_view;
+import 'email_form_test.dart' as email_form;
+import 'email_link_sign_in_view_test.dart' as email_link_sign_in_view;
+import 'universal_email_sign_in_screen_test.dart'
+    as universal_email_sign_in_screen;
+import 'phone_verification_test.dart' as phone_verification;
+import 'google_sign_in_test.dart' as google_sign_in;
+import 'twitter_sign_in_test.dart' as twitter_sign_in;
+import 'apple_sign_in_test.dart' as apple_sign_in;
 import 'facebook_sign_in_test.dart' as facebook_sign_in;
 
 import 'utils.dart';
@@ -40,14 +42,14 @@ Future<void> main() async {
     }
   });
 
-  // firestore_query_builder.main();
-  // firestore_list_view.main();
-  // email_form.main();
-  // email_link_sign_in_view.main();
-  // universal_email_sign_in_screen.main();
-  // phone_verification.main();
-  // google_sign_in.main();
-  // twitter_sign_in.main();
-  // apple_sign_in.main();
+  firestore_query_builder.main();
+  firestore_list_view.main();
+  email_form.main();
+  email_link_sign_in_view.main();
+  universal_email_sign_in_screen.main();
+  phone_verification.main();
+  google_sign_in.main();
+  twitter_sign_in.main();
+  apple_sign_in.main();
   facebook_sign_in.main();
 }

@@ -6,11 +6,22 @@ import 'package:flutterfire_ui/i10n.dart';
 import '../widgets/internal/loading_button.dart';
 import '../widgets/internal/title.dart';
 
+/// {@template ffui.auth.views.email_link_sign_in_view}
+/// A view that could be used to build a custom [EmailLinkSignInScreen].
+/// {@endtemplate}
 class EmailLinkSignInView extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// An instance of the [EmailLinkAuthProvider] that should be used to
+  /// authenticate.
   final EmailLinkAuthProvider provider;
+
+  /// A focus node that could be used to control the focus state of the
+  /// [EmailInput].
   final FocusNode? emailInputFocusNode;
 
+  /// {@macro ffui.auth.views.email_link_sign_in_view}
   const EmailLinkSignInView({
     Key? key,
     this.auth,

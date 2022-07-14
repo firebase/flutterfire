@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -194,5 +195,5 @@ void main() {
         expect(state.user!.phoneNumber, '+1234567890');
       },
     );
-  });
+  }, skip: kIsWeb);
 }

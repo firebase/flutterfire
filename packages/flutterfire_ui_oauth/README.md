@@ -1,39 +1,18 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# FlutterFire UI OAuth
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+[![pub package](https://img.shields.io/pub/v/flutterfire_ui_oauth.svg)](https://pub.dev/packages/flutterfire_ui_oauth)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+Base package for FlutterFire UI OAuth providers:
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+- [Apple Sign In](https://pub.dev/packages/flutterfire_ui_oauth_apple)
+- [Google Sign In](https://pub.dev/packages/flutterfire_ui_oauth_google)
+- [Facebook Sign In](https://pub.dev/packages/flutterfire_ui_oauth_facebook)
+- [Twitter Sign In](https://pub.dev/packages/flutterfire_ui_oauth_twitter)
 
-## Features
+For issues, please create a new [issue on the repository](https://github.com/FirebaseExtended/flutterfire/issues).
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+For feature requests, & questions, please participate on the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/6978) thread.
 
-## Getting started
+To contribute a change to this plugin, please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md) and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+Please contribute to the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/6978) with feedback.

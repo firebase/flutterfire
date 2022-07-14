@@ -18,7 +18,7 @@ First, we define the root route that checks for authentication state and renders
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providers = [EmailProviderConfiguration()];
+    const providers = [EmailProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
@@ -68,7 +68,7 @@ navigate to a named route, provide the `actions` list with a `ForgotPasswordActi
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const providers = [EmailProviderConfiguration()];
+    const providers = [EmailProvider()];
 
     return MaterialApp(
       initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
@@ -95,3 +95,15 @@ class MyApp extends StatelessWidget {
 ```
 
 To learn more about the available actions, check out the [FlutterFireUIActions API reference](https://pub.dev/documentation/flutterfire_ui/latest/auth/FlutterFireUIActions-class.html).
+
+## Other topics
+
+## Other topics
+
+- [EmaiAuthProvider](./auth/providers/email.md) - allows to register and sign in using email and password.
+- [EmailLinkAuthProvider](./auth/providers/email-link.md) - allows to register and sign in using a link sent to email.
+- [PhoneAuthProvider](./auth/providers/phone.md) - allows to register and sign in using a phone number
+- [UniversalEmailSignInProvider](./auth/providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
+- [OAuth](./providers/oauth.md)
+- [Localization](./auth/localization.md)
+- [Theming](./auth/theming.md)

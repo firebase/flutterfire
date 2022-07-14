@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: [
         // Creates an instance of FirebaseUILocalizationDelegate with overridden labels
         FlutterFireUILocalizations.withDefaultOverrides(const LabelOverrides()),
-        
+
         // Delegates below take care of built-in flutter widgets
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -43,7 +43,17 @@ class MyApp extends StatelessWidget {
 }
 ```
 
-If you need to support multiple languages – follow the [official Flutter localization guide](https://docs.flutter.dev/development/accessibility-and-localization/internationalization#an-alternative-class-for-the-apps-localized-resources) 
+If you need to support multiple languages – follow the [official Flutter localization guide](https://docs.flutter.dev/development/accessibility-and-localization/internationalization#an-alternative-class-for-the-apps-localized-resources)
 and make sure that your custom delegate extends `LocalizationsDelegate<FlutterFireUILocalizations>`.
 
-> Note: check out [API reference](https://pub.dev/documentation/flutterfire_ui/latest/index.html) to learn what labels are used by specific widgets
+> Note: check out [API reference](https://pub.dev/documentation/flutterfire_ui/latest/i10n/FlutterFireUILocalizationLabels-class.html) to learn what labels are used by specific widgets
+
+## Other topics
+
+- [EmaiAuthProvider](./auth/providers/email.md) - allows to register and sign in using email and password.
+- [EmailLinkAuthProvider](./auth/providers/email-link.md) - allows to register and sign in using a link sent to email.
+- [PhoneAuthProvider](./auth/providers/phone.md) - allows to register and sign in using a phone number
+- [UniversalEmailSignInProvider](./auth/providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
+- [OAuth](./providers/oauth.md)
+- [Theming](./auth/theming.md)
+- [Navigation](./auth/navigation.md)

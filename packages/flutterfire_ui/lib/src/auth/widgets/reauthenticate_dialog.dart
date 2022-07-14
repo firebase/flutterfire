@@ -5,11 +5,21 @@ import 'package:flutterfire_ui/i10n.dart';
 
 import '../widgets/internal/title.dart';
 
+/// {@template ffui.auth.widgets.reauthenticate_dialog}
+/// A dialog that prompts the user to re-authenticate their account
+/// Used to confirm destructive actions (like account deletion).
+/// {@endtemplate}
 class ReauthenticateDialog extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A list of all supported auth providers.
   final List<AuthProvider> providers;
+
+  /// A callback that is being called when the user has successfully signed in.
   final VoidCallback? onSignedIn;
 
+  /// {@macro ffui.auth.widgets.reauthenticate_dialog}
   const ReauthenticateDialog({
     Key? key,
     required this.providers,

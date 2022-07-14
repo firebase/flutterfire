@@ -11,10 +11,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'パスワード',
     this.signInActionText = 'サインイン',
     this.registerActionText = '新規登録',
-    this.signInButtonText = 'サインイン',
-    this.registerButtonText = '新規登録',
     this.linkEmailButtonText = '次へ',
     this.signInWithPhoneButtonText = '電話番号でサインイン',
     this.signInWithGoogleButtonText = 'Googleでサインイン',
@@ -184,11 +174,8 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = '電話番号を入力してください',
     this.verifyPhoneNumberButtonText = '次へ',
     this.verifyCodeButtonText = '認証',
-    this.verifyingPhoneNumberViewTitle = 'SMSで届いた認証コードを入力',
     this.unknownError = '不明なエラーが発生しました',
     this.smsAutoresolutionFailedError = 'SMSコードの自動認証に失敗しました。コードを手動で入力してください。',
-    this.smsCodeSentText = 'SMSコードの送信',
-    this.sendingSMSCodeText = 'SMSコードを送信中...',
     this.verifyingSMSCodeText = 'SMSコードを認証中...',
     this.enterSMSCodeText = 'SMSコードを入力',
     this.emailIsRequiredErrorText = 'メールアドレスは必須項目です',
@@ -220,7 +207,6 @@ class JaLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText = 'Eメールを入力して次へ',
     this.continueText = '続ける',
     this.countryCode = '国番号',
-    this.codeRequiredErrorText = '国番号は必須項目です',
     this.invalidCountryCode = '国番号が無効です',
     this.chooseACountry = '国を選択してください',
     this.enableMoreSignInMethods = 'より多くのサインイン方法を有効にする',

@@ -2,6 +2,7 @@ export 'src/provider.dart' show FacebookProvider;
 export 'src/theme.dart' show FacebookProviderButtonStyle;
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart';
 
@@ -84,7 +85,11 @@ class _FacebookSignInButton extends StatelessWidget {
   final void Function()? onTap;
   final bool overrideDefaultTapAction;
   final bool isLoading;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final DifferentProvidersFoundCallback? onDifferentProvidersFound;
   final SignedInCallback? onSignedIn;
@@ -122,7 +127,7 @@ class _FacebookSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseOAuthProviderButton(
+    return OAuthProviderButtonBase(
       provider: provider,
       label: label,
       onTap: onTap,

@@ -5,6 +5,8 @@ import 'platform_widget.dart';
 
 class UniversalScaffold extends PlatformWidget {
   final Widget body;
+
+  /// See [Scaffold.resizeToAvoidBottomInset]
   final bool? resizeToAvoidBottomInset;
 
   const UniversalScaffold({

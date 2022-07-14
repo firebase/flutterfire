@@ -11,10 +11,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Contraseña',
     this.signInActionText = 'Iniciar sesión',
     this.registerActionText = 'Registrarse',
-    this.signInButtonText = 'Iniciar sesión',
-    this.registerButtonText = 'Registrarse',
     this.linkEmailButtonText = 'Siguiente',
     this.signInWithPhoneButtonText = 'Entra con teléfono',
     this.signInWithGoogleButtonText = 'Entra con Google',
@@ -184,12 +174,9 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Ingresa tu número de teléfono',
     this.verifyPhoneNumberButtonText = 'Siguiente',
     this.verifyCodeButtonText = 'Verificar',
-    this.verifyingPhoneNumberViewTitle = 'Introduce el código del SMS',
     this.unknownError = 'Ha ocurrido un error desconocido',
     this.smsAutoresolutionFailedError =
         'No se ha podido detectar el código SMS automáticamente. Por favor, ingrese su código manualmente',
-    this.smsCodeSentText = 'Código SMS enviado',
-    this.sendingSMSCodeText = 'Enviando código SMS ...',
     this.verifyingSMSCodeText = 'Verificando el código SMS ...',
     this.enterSMSCodeText = 'Introduce el código SMS',
     this.emailIsRequiredErrorText = 'El correo electrónico es obligatorio',
@@ -227,7 +214,6 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
         'Introduce su correo electrónico para continuar',
     this.continueText = 'Continuar',
     this.countryCode = 'Código de país',
-    this.codeRequiredErrorText = 'El código de país es obligatorio',
     this.invalidCountryCode = 'El código del país es inválido',
     this.chooseACountry = 'Seleccione un país',
     this.enableMoreSignInMethods = 'Habilitar más métodos de inicio de sesión',

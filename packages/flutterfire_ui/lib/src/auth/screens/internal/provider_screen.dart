@@ -4,10 +4,13 @@ import 'package:flutterfire_ui/auth.dart';
 
 abstract class ProviderScreen<T extends AuthProvider> extends StatelessWidget {
   final T? _provider;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
 
   static final _cache = <Type, AuthProvider>{};
 
+  /// Current [AuthProvider] that is being used to authenticate the user.
   T get provider {
     if (_provider != null) return _provider!;
     if (_cache.containsKey(T)) {

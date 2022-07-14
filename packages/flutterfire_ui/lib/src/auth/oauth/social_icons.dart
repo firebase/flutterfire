@@ -19,6 +19,7 @@
 ///
 import 'package:flutter/widgets.dart';
 
+/// Font icons of the social networks.
 class SocialIcons {
   SocialIcons._();
 

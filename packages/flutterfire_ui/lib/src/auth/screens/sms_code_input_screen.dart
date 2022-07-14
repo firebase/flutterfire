@@ -15,18 +15,56 @@ import '../screens/internal/responsive_page.dart';
 /// {@subCategory description:A screen displaying SMS verification UI.}
 /// {@subCategory img:https://place-hold.it/400x150}
 class SMSCodeInputScreen extends StatelessWidget {
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// SMSCodeInputScreen could invoke these actions:
+  ///
+  /// * [AuthStateChangeAction]
+  ///
+  /// ```dart
+  /// SMSCodeInputScreen(
+  ///   actions: [
+  ///     AuthStateChangeAction<SignedIn>((context, state) {
+  ///       Navigator.pushReplacementNamed(context, '/');
+  ///     }),
+  ///   ],
+  /// );
+  /// ```
   final List<FlutterFireUIAction>? actions;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A unique key that could be used to obtain an instance of the
+  /// [PhoneAuthController].
+  ///
+  /// ```dart
+  /// final ctrl = AuthFlowBuilder.getController<PhoneAuthController>(flowKey);
+  /// ctrl.acceptPhoneNumber('+1234567890');
+  /// ```
   final Object flowKey;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.content_flex}
   final int? contentFlex;
+
+  /// {@macro ffui.auth.screens.responsive_page.max_width}
   final double? maxWidth;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
-  final Set<FlutterFireUIStyle>? styles;
 
   const SMSCodeInputScreen({
     Key? key,
@@ -41,7 +79,6 @@ class SMSCodeInputScreen extends StatelessWidget {
     this.breakpoint = 500,
     this.contentFlex,
     this.maxWidth,
-    this.styles,
   }) : super(key: key);
 
   void _reset() {
@@ -58,44 +95,41 @@ class SMSCodeInputScreen extends StatelessWidget {
         _reset();
         return true;
       },
-      child: FlutterFireUITheme(
-        styles: styles ?? const {},
-        child: FlutterFireUIActions(
-          actions: actions ?? const [],
-          child: UniversalScaffold(
-            body: Center(
-              child: ResponsivePage(
-                breakpoint: breakpoint,
-                maxWidth: maxWidth,
-                desktopLayoutDirection: desktopLayoutDirection,
-                sideBuilder: sideBuilder,
-                headerBuilder: headerBuilder,
-                headerMaxExtent: headerMaxExtent,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SMSCodeInputView(
-                      auth: auth,
-                      action: action,
-                      flowKey: flowKey,
-                      onCodeVerified: () {
-                        if (actions != null) return;
+      child: FlutterFireUIActions(
+        actions: actions ?? const [],
+        child: UniversalScaffold(
+          body: Center(
+            child: ResponsivePage(
+              breakpoint: breakpoint,
+              maxWidth: maxWidth,
+              desktopLayoutDirection: desktopLayoutDirection,
+              sideBuilder: sideBuilder,
+              headerBuilder: headerBuilder,
+              headerMaxExtent: headerMaxExtent,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SMSCodeInputView(
+                    auth: auth,
+                    action: action,
+                    flowKey: flowKey,
+                    onCodeVerified: () {
+                      if (actions != null) return;
 
-                        Navigator.of(context).popUntil((route) {
-                          return route.isFirst;
-                        });
-                      },
-                    ),
-                    UniversalButton(
-                      variant: ButtonVariant.text,
-                      text: l.goBackButtonLabel,
-                      onPressed: () {
-                        _reset();
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
-                ),
+                      Navigator.of(context).popUntil((route) {
+                        return route.isFirst;
+                      });
+                    },
+                  ),
+                  UniversalButton(
+                    variant: ButtonVariant.text,
+                    text: l.goBackButtonLabel,
+                    onPressed: () {
+                      _reset();
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
               ),
             ),
           ),

@@ -4,18 +4,24 @@ import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import '../widgets/internal/loading_button.dart';
 
-import '../auth_state.dart';
 import '../widgets/internal/title.dart';
 
+/// A callback that is being called when providers fetch request is completed.
 typedef ProvidersFoundCallback = void Function(
   String email,
   List<String> providers,
 );
 
+/// {@template ffui.auth.views.find_providers_for_email_view}
+/// A view that could be used to build a custom [UniversalEmailSignInScreen].
+/// {@endtemplate}
 class FindProvidersForEmailView extends StatefulWidget {
   final ProvidersFoundCallback? onProvidersFound;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
 
+  /// {@macro ffui.auth.views.find_providers_for_email_view}
   const FindProvidersForEmailView({
     Key? key,
     this.onProvidersFound,
@@ -36,7 +42,7 @@ class _FindProvidersForEmailViewState extends State<FindProvidersForEmailView> {
     auth: widget.auth,
   );
 
-  void _submit(AuthController ctrl, String email) {
+  void _submit(UniversalEmailSignInController ctrl, String email) {
     if (formKey.currentState!.validate()) {
       ctrl.findProvidersForEmail(email);
     }

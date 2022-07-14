@@ -7,10 +7,22 @@ import 'package:flutterfire_ui/i10n.dart';
 import 'internal/universal_button.dart';
 import 'internal/universal_page_route.dart';
 
+/// {@template ffui.auth.widget.email_link_sign_in_button}
+/// A button that starts an email link sign in flow.
+///
+/// Triggers an [EmailLinkSignInAction] if provided, otherwise
+/// opens an [EmailLinkSignInScreen].
+///
+/// {@endtemplate}
 class EmailLinkSignInButton extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// An instance of [EmailLinkAuthProvider] that should be used to
+  /// authenticate.
   final EmailLinkAuthProvider provider;
 
+  /// {@macro ffui.auth.widget.email_link_sign_in_button}
   const EmailLinkSignInButton({
     Key? key,
     required this.provider,

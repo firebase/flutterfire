@@ -11,10 +11,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'पासवर्ड',
     this.signInActionText = 'साइन इन करें',
     this.registerActionText = 'रजिस्टर करें',
-    this.signInButtonText = 'साइन इन करें',
-    this.registerButtonText = 'रजिस्टर करें',
     this.linkEmailButtonText = 'अगला',
     this.signInWithPhoneButtonText = 'फ़ोन से साइन इन करें',
     this.signInWithGoogleButtonText = 'Google के साथ साइन इन करें',
@@ -184,12 +174,9 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'अपना दूरभाष क्रमांक दर्ज करें',
     this.verifyPhoneNumberButtonText = 'अगला',
     this.verifyCodeButtonText = 'सत्यापित करें',
-    this.verifyingPhoneNumberViewTitle = 'एसएमएस से कोड दर्ज करें',
     this.unknownError = 'एक अज्ञात त्रुटि हुई',
     this.smsAutoresolutionFailedError =
         'एसएमएस कोड को स्वचालित रूप से हल करने में विफल। कृपया अपना कोड मैन्युअल रूप से दर्ज करें',
-    this.smsCodeSentText = 'एसएमएस कोड भेजा गया',
-    this.sendingSMSCodeText = 'एसएमएस कोड भेजा जा रहा है...',
     this.verifyingSMSCodeText = 'एसएमएस कोड सत्यापित किया जा रहा है...',
     this.enterSMSCodeText = 'एसएमएस कोड दर्ज करें',
     this.emailIsRequiredErrorText = 'ईमेल की जरूरत है',
@@ -224,7 +211,6 @@ class HiLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText = 'आगे बढ़ने के लिए अपना ईमेल दर्ज करें',
     this.continueText = 'आगे बढ़े',
     this.countryCode = 'कोड',
-    this.codeRequiredErrorText = 'देश कोड आवश्यक है',
     this.invalidCountryCode = 'अमान्य कोड',
     this.chooseACountry = 'अपना देश चुनें',
     this.enableMoreSignInMethods = 'अधिक साइन इन विधियों को सक्षम करें',

@@ -11,10 +11,7 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Şifre',
     this.signInActionText = 'Giriş yap',
     this.registerActionText = 'Kayıt ol',
-    this.signInButtonText = 'Giriş yap',
-    this.registerButtonText = 'Kayıt ol',
     this.linkEmailButtonText = 'İleri',
     this.signInWithPhoneButtonText = 'Telefon ile giriş yap',
     this.signInWithGoogleButtonText = 'Google ile giriş yap',
@@ -184,12 +174,9 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Telefon numaranızı girin',
     this.verifyPhoneNumberButtonText = 'İleri',
     this.verifyCodeButtonText = 'Doğrula',
-    this.verifyingPhoneNumberViewTitle = 'SMS ile gelen kodu girin',
     this.unknownError = 'Bilinmeyen bir hata meydana geldi',
     this.smsAutoresolutionFailedError =
         'SMS kodu otomatik olarak eklenemedi. Lütfen kodu manuel olarak girin',
-    this.smsCodeSentText = 'SMS kodu gönderildi',
-    this.sendingSMSCodeText = 'SMS kodu gönderiliyor...',
     this.verifyingSMSCodeText = 'SMS kodu doğrulanıyor...',
     this.enterSMSCodeText = 'SMS kodunu girin',
     this.emailIsRequiredErrorText = 'E-mail gerekli',
@@ -225,7 +212,6 @@ class TrLocalizations extends FlutterFireUILocalizationLabels {
         'Devam etmek için email adresinizi girin',
     this.continueText = 'Devam et',
     this.countryCode = 'Kod',
-    this.codeRequiredErrorText = 'Ülke kodu gerekli',
     this.invalidCountryCode = 'Geçersiz kod',
     this.chooseACountry = 'Bir ülke seçin',
     this.enableMoreSignInMethods = 'Daha fazla oturum açma yöntemi etkinleştir',

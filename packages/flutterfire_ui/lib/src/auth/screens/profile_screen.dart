@@ -6,7 +6,7 @@ import 'package:flutter/material.dart' hide Title;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/src/auth/widgets/internal/loading_button.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart'
-    hide BaseOAuthProviderButton;
+    hide OAuthProviderButtonBase;
 
 import '../widgets/internal/universal_button.dart';
 
@@ -16,12 +16,13 @@ import '../widgets/internal/rebuild_scope.dart';
 import '../widgets/internal/subtitle.dart';
 import '../widgets/internal/universal_icon_button.dart';
 
-class AvailableProvidersRow extends StatefulWidget {
+class _AvailableProvidersRow extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final List<AuthProvider> providers;
   final VoidCallback onProviderLinked;
 
-  const AvailableProvidersRow({
+  const _AvailableProvidersRow({
     Key? key,
     this.auth,
     required this.providers,
@@ -29,10 +30,10 @@ class AvailableProvidersRow extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AvailableProvidersRow> createState() => _AvailableProvidersRowState();
+  State<_AvailableProvidersRow> createState() => _AvailableProvidersRowState();
 }
 
-class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
+class _AvailableProvidersRowState extends State<_AvailableProvidersRow> {
   AuthFailed? error;
 
   Future<void> connectProvider({
@@ -138,11 +139,11 @@ class _AvailableProvidersRowState extends State<AvailableProvidersRow> {
   }
 }
 
-class EditButton extends StatelessWidget {
+class _EditButton extends StatelessWidget {
   final bool isEditing;
   final VoidCallback? onPressed;
 
-  const EditButton({
+  const _EditButton({
     Key? key,
     required this.isEditing,
     this.onPressed,
@@ -163,12 +164,13 @@ class EditButton extends StatelessWidget {
   }
 }
 
-class LinkedProvidersRow extends StatefulWidget {
+class _LinkedProvidersRow extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final List<AuthProvider> providers;
   final VoidCallback onProviderUnlinked;
 
-  const LinkedProvidersRow({
+  const _LinkedProvidersRow({
     Key? key,
     this.auth,
     required this.providers,
@@ -176,10 +178,10 @@ class LinkedProvidersRow extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<LinkedProvidersRow> createState() => _LinkedProvidersRowState();
+  State<_LinkedProvidersRow> createState() => _LinkedProvidersRowState();
 }
 
-class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
+class _LinkedProvidersRowState extends State<_LinkedProvidersRow> {
   bool isEditing = false;
   String? unlinkingProvider;
   FirebaseAuthException? error;
@@ -297,7 +299,7 @@ class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
         children: [
           Expanded(child: child),
           const SizedBox(width: 8),
-          EditButton(
+          _EditButton(
             isEditing: isEditing,
             onPressed: _toggleEdit,
           ),
@@ -316,21 +318,22 @@ class _LinkedProvidersRowState extends State<LinkedProvidersRow> {
   }
 }
 
-class EmailVerificationBadge extends StatefulWidget {
+class _EmailVerificationBadge extends StatefulWidget {
   final FirebaseAuth auth;
   final ActionCodeSettings? actionCodeSettings;
-  const EmailVerificationBadge({
+  const _EmailVerificationBadge({
     Key? key,
     required this.auth,
     this.actionCodeSettings,
   }) : super(key: key);
 
   @override
-  State<EmailVerificationBadge> createState() => _EmailVerificationBadgeState();
+  State<_EmailVerificationBadge> createState() =>
+      _EmailVerificationBadgeState();
 }
 
-class _EmailVerificationBadgeState extends State<EmailVerificationBadge> {
-  late final service = EmailVerificationService(widget.auth)
+class _EmailVerificationBadgeState extends State<_EmailVerificationBadge> {
+  late final service = EmailVerificationController(widget.auth)
     ..addListener(() {
       setState(() {});
     })
@@ -437,16 +440,56 @@ class _EmailVerificationBadgeState extends State<EmailVerificationBadge> {
   }
 }
 
+/// {@template ffui.auth.screens.profile_screen}
+/// A pre-built profile screen that allows to link more auth providers,
+/// unlink auth providers, edit user name and delete the account. Could also
+/// contain a user-defined content.
+/// {@endtemplate}
 class ProfileScreen extends MultiProviderScreen {
+  /// A user-defined content of the screen.
   final List<Widget> children;
+
+  /// {@macro ffui.auth.widgets.user_avatar.placeholder_color}
   final Color? avatarPlaceholderColor;
+
+  /// {@macro ffui.auth.widgets.user_avatar.shape}
   final ShapeBorder? avatarShape;
+
+  /// {@macro ffui.auth.widgets.user_avatar.size}
   final double? avatarSize;
+
+  /// Possible actions that could be triggered:
+  ///
+  /// - [SignedOutAction]
+  /// - [AuthStateChangeAction]
+  ///
+  /// ```dart
+  /// ProfileScreen(
+  ///   actions: [
+  ///     SignedOutAction((context) {
+  ///       Navigator.of(context).pushReplacementNamed('/sign-in');
+  ///     }),
+  ///     AuthStateChangeAction<CredentialLinked>((context, state) {
+  ///       ScaffoldMessenger.of(context).showSnackBar(
+  ///         SnackBar(
+  ///           content: Text("Provider sucessfully linked!"),
+  ///         ),
+  ///       );
+  ///     }),
+  ///   ]
+  /// )
+  /// ```
   final List<FlutterFireUIAction>? actions;
+
+  /// See [Scaffold.appBar].
   final AppBar? appBar;
+
+  /// See [CupertinoPageScaffold.navigationBar].
   final CupertinoNavigationBar? cupertinoNavigationBar;
+
+  /// A configuration object used to construct a dynamic link for email
+  /// verification.
   final ActionCodeSettings? actionCodeSettings;
-  final Set<FlutterFireUIStyle>? styles;
 
   const ProfileScreen({
     Key? key,
@@ -460,7 +503,6 @@ class ProfileScreen extends MultiProviderScreen {
     this.appBar,
     this.cupertinoNavigationBar,
     this.actionCodeSettings,
-    this.styles,
   }) : super(key: key, providers: providers, auth: auth);
 
   Future<bool> _reauthenticate(BuildContext context) {
@@ -493,7 +535,7 @@ class ProfileScreen extends MultiProviderScreen {
   @override
   Widget build(BuildContext context) {
     return FlutterFireUITheme(
-      styles: styles ?? const {},
+      styles: const {},
       child: Builder(builder: buildPage),
     );
   }
@@ -524,7 +566,7 @@ class ProfileScreen extends MultiProviderScreen {
                 return const SizedBox.shrink();
               }
 
-              return EmailVerificationBadge(
+              return _EmailVerificationBadge(
                 auth: auth,
                 actionCodeSettings: actionCodeSettings,
               );
@@ -543,7 +585,7 @@ class ProfileScreen extends MultiProviderScreen {
 
             return Padding(
               padding: const EdgeInsets.only(top: 32),
-              child: LinkedProvidersRow(
+              child: _LinkedProvidersRow(
                 auth: auth,
                 providers: linkedProviders,
                 onProviderUnlinked: providersScopeKey.rebuild,
@@ -563,7 +605,7 @@ class ProfileScreen extends MultiProviderScreen {
 
             return Padding(
               padding: const EdgeInsets.only(top: 32),
-              child: AvailableProvidersRow(
+              child: _AvailableProvidersRow(
                 auth: auth,
                 providers: availableProviders,
                 onProviderLinked: providersScopeKey.rebuild,

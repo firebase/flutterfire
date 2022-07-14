@@ -1,7 +1,8 @@
 name: flutterfire_ui_oauth
 description: Base package for the FlutterFire UI OAuth providers
-version: 0.1.0
-homepage:
+version: 1.0.0
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui_oauth
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui_oauth
 
 environment:
   sdk: '>=2.16.2 <3.0.0'

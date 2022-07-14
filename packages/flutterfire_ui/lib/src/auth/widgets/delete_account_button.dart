@@ -9,12 +9,25 @@ import '../widgets/internal/loading_button.dart';
 typedef DeleteFailedCallback = void Function(Exception exception);
 typedef SignInRequiredCallback = Future<bool> Function();
 
+/// {@template ffui.auth.widgets.delete_account_button}
+/// A button that triggers the deletion of the user's account.
+/// {@endtemplate}
 class DeleteAccountButton extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A callback tha is called if the [FirebaseAuth] requires the user to
+  /// re-authenticate and approve the account deletion. By default,
+  /// [ReauthenticateDialog] is being shown.
   final SignInRequiredCallback? onSignInRequired;
+
+  /// A callback that is called if the account deletion fails.
   final DeleteFailedCallback? onDeleteFailed;
+
+  /// {@macro ffui.auth.widgets.button_variant}
   final ButtonVariant? variant;
 
+  /// {@macro ffui.auth.widgets.delete_account_button}
   const DeleteAccountButton({
     Key? key,
     this.auth,

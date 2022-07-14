@@ -4,11 +4,20 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../widgets/internal/universal_page_route.dart';
 
+/// Opens a [ForgotPasswordScreen].
 Future<void> showForgotPasswordScreen({
   required BuildContext context,
+
+  /// {@macro ffui.auth.auth_controller.auth}
   FirebaseAuth? auth,
+
+  /// A email that requires password reset.
   String? email,
+
+  /// A returned widget would be placed under the title of the screen.
   WidgetBuilder? subtitleBuilder,
+
+  /// A returned widget would be placed at the bottom.
   WidgetBuilder? footerBuilder,
 }) async {
   final route = createPageRoute(

@@ -6,7 +6,7 @@ export 'package:desktop_webview_auth/facebook.dart';
 export 'package:desktop_webview_auth/twitter.dart';
 
 export './src/oauth_provider.dart';
-export './src/oauth_provider_button.dart';
+export './src/oauth_provider_button_base.dart';
 export './src/oauth_provider_button_style.dart';
 
 export 'package:flutterfire_ui/auth.dart'

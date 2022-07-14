@@ -12,10 +12,6 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
   @override
   final String linkEmailButtonText;
   @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
-  @override
   final String signInWithPhoneButtonText;
   @override
   final String signInWithGoogleButtonText;
@@ -31,16 +27,12 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +95,7 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +164,6 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'كلمة المرور',
     this.signInActionText = 'تسجيل الدخول',
     this.registerActionText = 'تسجيل جديد',
-    this.signInButtonText = 'تسجيل الدخول',
-    this.registerButtonText = 'تسجيل جديد',
     this.linkEmailButtonText = 'التالي',
     this.signInWithPhoneButtonText = 'تسجيل الدخول برقم الهاتف',
     this.signInWithGoogleButtonText = 'تسجيل الدخول باستخدام Google',
@@ -184,12 +173,9 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'أدخل رقم هاتفك',
     this.verifyPhoneNumberButtonText = 'التالي',
     this.verifyCodeButtonText = 'تحقق',
-    this.verifyingPhoneNumberViewTitle = 'أدخل رمز التحقق المرسل برسالة نصية',
     this.unknownError = 'حدث خطأ غير متوقع',
     this.smsAutoresolutionFailedError =
         'حدث خطأ أثناء محاولة قراءة الرمز تلقائياً. رجاءً قم بإدخاله يدوياً',
-    this.smsCodeSentText = 'تم إرسال رمز التحقق برسالة نصية',
-    this.sendingSMSCodeText = 'جاري إرسال الرمز برسالة نصية...',
     this.verifyingSMSCodeText = 'جاري التحقق من الرمز المرسل...',
     this.enterSMSCodeText = 'أدخل الرمز المرسل',
     this.emailIsRequiredErrorText = 'البريد الإلكتروني مطلوب',
@@ -224,7 +210,6 @@ class ArLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText = 'أدخل بريدك الإلكتروني للمتابعة',
     this.continueText = 'استمرار',
     this.countryCode = 'رمز الدولة',
-    this.codeRequiredErrorText = 'رمز الدولة مطلوب',
     this.invalidCountryCode = 'رمز الدولة هذا غير صالح',
     this.chooseACountry = 'اختر الدولة',
     this.enableMoreSignInMethods = 'تفعيل المزيد من طرق تسجيل الدخول',

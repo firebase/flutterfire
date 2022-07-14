@@ -1,11 +1,12 @@
 name: flutterfire_ui_oauth_google
-description: A new Flutter package project.
+description: Google Sign In for FlutterFire UI
 version: 0.1.0
-homepage:
+repository: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui_oauth_google
+homepage: https://github.com/FirebaseExtended/flutterfire/tree/master/packages/flutterfire_ui_oauth_google
 
 environment:
-  sdk: ">=2.16.2 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: '>=2.16.2 <3.0.0'
+  flutter: '>=1.17.0'
 
 dependencies:
   flutter:

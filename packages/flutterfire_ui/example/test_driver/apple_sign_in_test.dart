@@ -35,7 +35,7 @@ void main() async {
             OAuthProviderButton(provider: provider),
           );
 
-          final button = find.byType(BaseOAuthProviderButton);
+          final button = find.byType(OAuthProviderButtonBase);
           await tester.tap(button);
 
           await tester.pumpAndSettle();
@@ -60,7 +60,7 @@ void main() async {
             },
           );
 
-          final button = find.byType(BaseOAuthProviderButton);
+          final button = find.byType(OAuthProviderButtonBase);
           await tester.tap(button);
           await tester.pump();
 
@@ -74,7 +74,7 @@ void main() async {
           OAuthProviderButton(provider: provider),
         );
 
-        final button = find.byType(BaseOAuthProviderButton);
+        final button = find.byType(OAuthProviderButtonBase);
         await tester.tap(button);
         await tester.pumpAndSettle();
 

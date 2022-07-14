@@ -2,8 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart' as fba;
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+/// A listener of the [EmailAuthFlow] flow lifecycle.
 abstract class EmailAuthListener extends AuthListener {}
 
+/// {@template ffui.auth.providers.email_auth_provider}
+/// An [AuthProvider] that allows to authenticate using email and password.
+/// {@endtemplate}
 class EmailAuthProvider
     extends AuthProvider<EmailAuthListener, fba.EmailAuthCredential> {
   @override
@@ -15,6 +19,7 @@ class EmailAuthProvider
   @override
   bool supportsPlatform(TargetPlatform platform) => true;
 
+  /// Tries to create a new user account with the given [EmailAuthCredential].
   void signUpWithCredential(fba.EmailAuthCredential credential) {
     authListener.onBeforeSignIn();
     auth
@@ -26,6 +31,8 @@ class EmailAuthProvider
         .catchError(authListener.onError);
   }
 
+  /// Creates an [EmailAuthCredential] with the given [email] and [password] and
+  /// performs a corresponding [AuthAction].
   void authenticate(
     String email,
     String password, [

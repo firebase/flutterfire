@@ -11,10 +11,7 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
   final String registerActionText;
   @override
   final String linkEmailButtonText;
-  @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
+
   @override
   final String signInWithPhoneButtonText;
   @override
@@ -31,16 +28,12 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
   final String verifyPhoneNumberButtonText;
   @override
   final String verifyCodeButtonText;
-  @override
-  final String verifyingPhoneNumberViewTitle;
+
   @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
+
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +96,7 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
+
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +165,6 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
     this.passwordInputLabel = 'Kata Sandi',
     this.signInActionText = 'Masuk',
     this.registerActionText = 'Daftar',
-    this.signInButtonText = 'Masuk',
-    this.registerButtonText = 'Daftar',
     this.linkEmailButtonText = 'Selanjutnya',
     this.signInWithPhoneButtonText = 'Masuk dengan Seluler',
     this.signInWithGoogleButtonText = 'Masuk dengan Google',
@@ -184,12 +174,9 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
     this.phoneVerificationViewTitleText = 'Masukkan nomor telepon',
     this.verifyPhoneNumberButtonText = 'Selanjutnya',
     this.verifyCodeButtonText = 'Verifikasi',
-    this.verifyingPhoneNumberViewTitle = 'Masukkan kode dari SMS',
     this.unknownError = 'Terjadi masalah tidak terduga',
     this.smsAutoresolutionFailedError =
         'Gagal mendapatkan kode SMS otomatis. Mohon masukkan secara manual',
-    this.smsCodeSentText = 'Kode SMS telah dikirim',
-    this.sendingSMSCodeText = 'Mengirim kode SMS...',
     this.verifyingSMSCodeText = 'Memverifikasi kode SMS...',
     this.enterSMSCodeText = 'Masukkan kode SMS',
     this.emailIsRequiredErrorText = 'Surel diperlukan',
@@ -224,7 +211,6 @@ class IdLocalizations extends FlutterFireUILocalizationLabels {
     this.findProviderForEmailTitleText = 'Masukkan surel untuk melanjutkan',
     this.continueText = 'Lanjutkan',
     this.countryCode = 'Kode',
-    this.codeRequiredErrorText = 'Kode negara diperlukan',
     this.invalidCountryCode = 'Kode tidak valid',
     this.chooseACountry = 'Pilih negara',
     this.enableMoreSignInMethods = 'Aktifkan lebih banyak metode masuk',

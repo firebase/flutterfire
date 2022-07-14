@@ -213,9 +213,9 @@ final countries = [
   {'name': 'Yemen', 'phoneCode': '967', 'countryCode': 'YE'},
   {'name': 'Zambia', 'phoneCode': '260', 'countryCode': 'ZM'},
   {'name': 'Zimbabwe', 'phoneCode': '263', 'countryCode': 'ZW'}
-].map(CountryCodeItem.fromJson);
+].map(_CountryCodeItem.fromJson);
 
-final countriesByCountryCode = countries.fold<Map<String, CountryCodeItem>>(
+final countriesByCountryCode = countries.fold<Map<String, _CountryCodeItem>>(
   {},
   (previousValue, element) {
     previousValue[element.countryCode] = element;

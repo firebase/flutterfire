@@ -13,7 +13,12 @@ StylesMap _buildStylesMap(Set<FlutterFireUIStyle> styles) {
   });
 }
 
+/// FlutterFireUI styles provider widget.
+///
+/// Shouldn't be used if you're using pre-built screens, but could be used
+/// if you're building your own and using only widgets from the FlutterFireUI.
 class FlutterFireUITheme extends InheritedModel {
+  /// A set of styles that need to be provded down the widget tree.
   final Set<FlutterFireUIStyle> styles;
 
   FlutterFireUITheme({

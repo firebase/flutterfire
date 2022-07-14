@@ -6,23 +6,33 @@ lower level implementation details for developers looking for tighter control.
 
 ## Installation
 
-To get started with Firebase UI for Auth, you first need to ensure the `firebase_auth` plugin is
-[installed on your project](https://firebase.google.com/docs/auth/flutter/start).
+See [Getting started with FlutterFireUI](./getting_started.md) guide.
 
-If you haven't already done so, install the `flutterfire_ui` package by running the following command in your terminal:
+Install dependencies.
 
-```bash
-flutter pub add flutterfire_ui
+```sh
+flutter pub add firebase_auth
 ```
 
-## Getting started
+If you want to handle sign in via email link and in-app email verification, you also need to install [firebase_dynamic_links](https://pub.dev/packages/firebase_dynamic_links).
+
+```sh
+flutter pub add firebase_dynamic_links
+```
+
+## Next steps
 
 To understand what Flutter UI for Auth offers, the following documentation pages walk you through the various topics on
 how to use the package within your Flutter app.
 
-1. [Integrating your first screen](./auth/integrating-your-first-screen.md)
-1. [Configuring Providers](./auth/configuring-providers.md)
-1. [Building a custom UI](./auth/building-a-custom-ui.md)
-1. [Localization](./auth/localization.md)
-1. [Theming](./auth/theming.md)
-1. [Navigation](./auth/navigation.md)
+- Available auth providers:
+
+  - [EmaiAuthProvider](./auth/providers/email.md) - allows to register and sign in using email and password.
+  - [EmailLinkAuthProvider](./auth/providers/email-link.md) - allows to register and sign in using a link sent to email.
+  - [PhoneAuthProvider](./auth/providers/phone.md) - allows to register and sign in using a phone number
+  - [UniversalEmailSignInProvider](./auth/providers/universal-email-sign-in.md) - gets all connected auth providers for a given email.
+  - [OAuth](./auth/providers/oauth.md)
+
+- [Localization](./auth/localization.md)
+- [Theming](./auth/theming.md)
+- [Navigation](./auth/navigation.md)

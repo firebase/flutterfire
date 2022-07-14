@@ -4,42 +4,21 @@ FlutterFire UI enables you to easily integrate your application UI with your Rea
 
 ## Installation
 
-To get started with Firebase UI for Realtime Database, you first need to ensure the `firebase_database` plugin is
-[installed on your project](https://firebase.google.com/docs/database/flutter/start).
+See [Getting started with FlutterFireUI](./getting_started.md) guide.
 
-If you haven't already done so, install the `flutterfire_ui` package by running the following command in your terminal:
+Install [`firebase_database`](https://pub.dev/packages/firebase_database):
 
-```bash
-flutter pub add flutterfire_ui
+```sh
+flutter pub add firebase_database
 ```
 
-## Initializing Firebase
+## Usage
 
-If you haven't already done so, you'll need to initialize Firebase before using FlutterFire UI.
-You can learn more about this in the [Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup)
-documentation, for example:
-
-```dart title="lib/main.dart"
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
-```
-
-Next, import the FlutterFire UI for Realtime Database package:
+Import the FlutterFire UI for Realtime Database package.
 
 ```dart
 import 'package:flutterfire_ui/database.dart';
 ```
-
-## Usage
 
 ### Infinite scrolling
 
@@ -192,4 +171,3 @@ With more power comes more responsibility:
 
 1. Within the `itemBuilder` of our `GridView`, we have to manually ensure that we call the `fetchMore()` method on the snapshot when more data is required.
 1. The `FirebaseDatabaseQueryBuilder` does not provide a list-view based handler, instead you must provide your own implementation.
-

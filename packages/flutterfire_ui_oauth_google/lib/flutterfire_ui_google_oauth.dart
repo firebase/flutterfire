@@ -88,7 +88,11 @@ class _GoogleSignInButton extends StatelessWidget {
   final void Function()? onTap;
   final bool overrideDefaultTapAction;
   final bool isLoading;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction? action;
+
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
   final DifferentProvidersFoundCallback? onDifferentProvidersFound;
   final SignedInCallback? onSignedIn;
@@ -129,7 +133,7 @@ class _GoogleSignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseOAuthProviderButton(
+    return OAuthProviderButtonBase(
       provider: provider,
       label: label,
       onTap: onTap,

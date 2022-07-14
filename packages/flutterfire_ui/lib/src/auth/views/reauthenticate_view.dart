@@ -2,11 +2,20 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/widgets.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+/// {@template ffui.auth.views.reauthenticate_view}
+/// A view that could be used to build a custom [ReauthenticateDialog].
+/// {@endtemplate}
 class ReauthenticateView extends StatelessWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// A list of all supported auth providers.
   final List<AuthProvider> providers;
+
+  /// A callback that is being called when the user has successfuly signed in.
   final VoidCallback? onSignedIn;
 
+  /// {@macro ffui.auth.views.reauthenticate_view}
   const ReauthenticateView({
     Key? key,
     required this.providers,

@@ -1,12 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/material.dart';
 
+/// {@template ffui.auth.widgets.user_avatar}
+///
+/// A widget that displays the user's avatar.
+///
+/// Shows a placeholder if user doesn't have a profile photo.
+/// {@endtemplate}
 class UserAvatar extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@template ffui.auth.widgets.user_avatar.size}
+  /// A size of the avatar.
+  /// {@endtemplate}
   final double? size;
+
+  /// {@template ffui.auth.widgets.user_avatar.shape}
+  /// A shape of the avatar.
+  /// A [CircleBorder] is used by default.
+  /// {@endtemplate}
   final ShapeBorder? shape;
+
+  /// {@template ffui.auth.widgets.user_avatar.placeholder_color}
+  /// A color of the avatar placeholder.
+  /// {@endtemplate}
   final Color? placeholderColor;
 
+  /// {@macro ffui.auth.widgets.user_avatar}
   const UserAvatar({
     Key? key,
     this.auth,

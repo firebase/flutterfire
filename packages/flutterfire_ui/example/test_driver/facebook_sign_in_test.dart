@@ -21,11 +21,11 @@ void main() async {
   const labels = DefaultLocalizations();
 
   group(
-    'Sign in with Twitter button',
+    'Sign in with Facebook button',
     () {
       testWidgets('has a correct button label', (tester) async {
         await render(tester, OAuthProviderButton(provider: provider));
-        expect(find.text(labels.signInWithTwitterButtonText), findsOneWidget);
+        expect(find.text(labels.signInWithFacebookButtonText), findsOneWidget);
       });
 
       testWidgets(
@@ -36,7 +36,7 @@ void main() async {
             OAuthProviderButton(provider: provider),
           );
 
-          final button = find.byType(BaseOAuthProviderButton);
+          final button = find.byType(OAuthProviderButtonBase);
           await tester.tap(button);
 
           await tester.pumpAndSettle();
@@ -61,7 +61,7 @@ void main() async {
             },
           );
 
-          final button = find.byType(BaseOAuthProviderButton);
+          final button = find.byType(OAuthProviderButtonBase);
           await tester.tap(button);
           await tester.pump();
 
@@ -75,7 +75,7 @@ void main() async {
           OAuthProviderButton(provider: provider),
         );
 
-        final button = find.byType(BaseOAuthProviderButton);
+        final button = find.byType(OAuthProviderButtonBase);
         await tester.tap(button);
         await tester.pumpAndSettle();
 

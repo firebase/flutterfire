@@ -337,11 +337,15 @@ void main() {
 
 class MockProvider extends Mock implements PhoneAuthProvider {
   @override
-  void sendVerificationCode(String? phoneNumber, AuthAction? action) {
+  void sendVerificationCode(
+    String? phoneNumber,
+    AuthAction? action, [
+    int? forceResendingToken,
+  ]) {
     super.noSuchMethod(
       Invocation.method(
         #sendVerificationCode,
-        [phoneNumber, action],
+        [phoneNumber, action, forceResendingToken],
       ),
     );
   }

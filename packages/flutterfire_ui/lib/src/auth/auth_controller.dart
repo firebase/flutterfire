@@ -1,13 +1,33 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutter/widgets.dart';
 
+/// {@template ffui.auth.auth_action}
+/// An authentication action to perform.
+/// {@endtemplate}
 enum AuthAction {
+  /// Performs user sign in
   signIn,
+
+  /// Creates a new account with for a provided credential
   signUp,
+
+  /// Links a provided credential with currently signed in user account
   link,
 }
 
+/// An abstract class that should be implemented by auth controllers of
+/// respective auth providers.
+///
+/// See also:
+/// * [EmailAuthController]
+/// * [EmailLinkAuthController]
+/// * [OAuthController]
+/// * [PhoneAuthController]
+/// * [UniversalEmailSignInController]
 abstract class AuthController {
+  /// Looks up an instance of controller of type T.
+  /// This method should be called only inside widgets that have
+  /// an [AuthFlowBuilder] as an ancestor.
   static T ofType<T extends AuthController>(BuildContext context) {
     final ctrl = context
         .dependOnInheritedWidgetOfExactType<AuthControllerProvider>()
@@ -23,18 +43,31 @@ abstract class AuthController {
     return ctrl;
   }
 
+  /// {@macro ffui.auth.auth_action}
   AuthAction get action;
+
+  /// {@template ffui.auth.auth_controller.auth}
+  /// The [FirebaseAuth] instance used to perform authentication against.
+  /// By default, [FirebaseAuth.instance] is used.
+  /// {@endtemplate}
   FirebaseAuth get auth;
 
-  void findProvidersForEmail(String email);
+  /// {@template ffui.auth.auth_controller.reset}
+  /// Resets the controller to initial state.
+  /// Usuall called when user cancels the authentication flow.
+  /// {@endtemplate}
   void reset();
 }
 
 class AuthControllerProvider extends InheritedWidget {
+  /// {@macro ffui.auth.auth_action}
   final AuthAction action;
+
+  /// An instance of controller to provide down the widget tree.
   final AuthController ctrl;
 
   AuthControllerProvider({
+    /// {@macro flutter.widgets.ProxyWidget.child}
     required Widget child,
     required this.action,
     required this.ctrl,

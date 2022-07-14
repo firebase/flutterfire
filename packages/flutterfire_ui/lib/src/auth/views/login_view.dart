@@ -7,9 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 import 'package:flutterfire_ui/i10n.dart';
 import 'package:flutterfire_ui_oauth/flutterfire_ui_oauth.dart'
-    hide BaseOAuthProviderButton;
+    hide OAuthProviderButtonBase;
 
-import '../widgets/email_link_sign_in_button.dart';
 import '../widgets/internal/title.dart';
 
 typedef AuthViewContentBuilder = Widget Function(
@@ -17,18 +16,41 @@ typedef AuthViewContentBuilder = Widget Function(
   AuthAction action,
 );
 
+/// {@template ffui.auth.views.login_view}
+/// A view that could be used to build a custom [SignInScreen] or
+/// [RegisterScreen].
+/// {@endtemplate}
 class LoginView extends StatefulWidget {
+  /// {@macro ffui.auth.auth_controller.auth}
   final FirebaseAuth? auth;
+
+  /// {@macro ffui.auth.auth_action}
   final AuthAction action;
+
+  /// Indicates whether icon-only or icon and text OAuth buttons should be used.
+  /// Icon-only buttons are placed in a row.
   final OAuthButtonVariant? oauthButtonVariant;
   final bool? showTitle;
   final String? email;
+
+  /// Whether the "Login/Register" link should be displayed. The link changes
+  /// the type of the [AuthAction] from [AuthAction.signIn]
+  /// and [AuthAction.signUp] and vice versa.
   final bool? showAuthActionSwitch;
+
+  /// {@template ffui.auth.views.login_view.footer_builder}
+  /// A returned widget would be placed down the authentication related widgets.
+  /// {@endtemplate}
   final AuthViewContentBuilder? footerBuilder;
+
+  /// {@template ffui.auth.views.login_view.subtitle_builder}
+  /// A returned widget would be placed up the authentication related widgets.
+  /// {@endtemplate}
   final AuthViewContentBuilder? subtitleBuilder;
 
   final List<AuthProvider> providers;
 
+  /// {@macro ffui.auth.views.login_view}
   const LoginView({
     Key? key,
     required this.action,
@@ -43,10 +65,10 @@ class LoginView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<LoginView> createState() => LoginViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class LoginViewState extends State<LoginView> {
+class _LoginViewState extends State<LoginView> {
   late AuthAction _action = widget.action;
   bool get _showTitle => widget.showTitle ?? true;
   bool get _showAuthActionSwitch => widget.showAuthActionSwitch ?? true;

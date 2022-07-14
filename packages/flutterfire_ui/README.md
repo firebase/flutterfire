@@ -59,13 +59,11 @@ Learn more in the [Integrating your first screen section](doc/auth/integrating-y
 
 ## Roadmap / Features
 
-FlutterFire UI is still in active development.
+- For issues, please create a new [issue on the repository](https://github.com/firebase/flutterfire/issues).
+- For feature requests, & questions, please participate on the [discussion](https://github.com/firebase/flutterfire/discussions/6978) thread.
+- To contribute a change to this plugin, please review our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md) and open a [pull request](https://github.com/firebase/flutterfire/pulls).
 
-- For issues, please create a new [issue on the repository](https://github.com/FirebaseExtended/flutterfire/issues).
-- For feature requests, & questions, please participate on the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/6978) thread.
-- To contribute a change to this plugin, please review our [contribution guide](https://github.com/FirebaseExtended/flutterfire/blob/master/CONTRIBUTING.md) and open a [pull request](https://github.com/FirebaseExtended/flutterfire/pulls).
-
-Please contribute to the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/6978) with feedback.
+Please contribute to the [discussion](https://github.com/firebase/flutterfire/discussions/6978) with feedback.
 
 ## Next Steps
 

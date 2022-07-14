@@ -28,16 +28,18 @@ String? localizedErrorText(
   }
 }
 
+/// {@template ffui.auth.widgets.error_text}
 /// A widget which displays error text for a given Firebase error code.
-///
-/// {@subCategory service:auth}
-/// {@subCategory type:widget}
-/// {@subCategory description:A widget which displays error text for a given Firebase error code.}
-/// {@subCategory img:https://place-hold.it/400x150}
+/// {@endtemplate}
 class ErrorText extends StatelessWidget {
+  /// An exception that contains error details.
+  /// Often this is a [FirebaseAuthException].
   final Exception exception;
+
+  /// How the text should be aligned horizontally.
   final TextAlign? textAlign;
 
+  /// {@macro ffui.auth.widgets.error_text}
   const ErrorText({
     Key? key,
     required this.exception,

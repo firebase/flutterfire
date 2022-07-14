@@ -1,33 +1,98 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth;
 import 'package:flutterfire_ui/auth.dart';
 
 import 'internal/login_screen.dart';
 import 'internal/multi_provider_screen.dart';
 
+/// {@template ffui.auth.screens.sign_in_screen}
 /// A screen displaying a fully styled Sign In flow for Authentication.
-///
-/// {@subCategory service:auth}
-/// {@subCategory type:screen}
-/// {@subCategory description:A screen displaying a fully styled Sign In flow for Authentication.}
-/// {@subCategory img:https://place-hold.it/400x150}
+/// {@endtemplate}
 class SignInScreen extends MultiProviderScreen {
+  /// {@macro ffui.auth.screens.responsive_page.header_max_extent}
   final double? headerMaxExtent;
+
+  /// {@macro ffui.auth.screens.responsive_page.header_builder}
   final HeaderBuilder? headerBuilder;
+
+  /// {@macro ffui.auth.screens.responsive_page.side_builder}
   final SideBuilder? sideBuilder;
+
+  /// Indicates whether icon-only or icon and text OAuth buttons should be used.
+  /// Icon-only buttons are placed in a row.
   final OAuthButtonVariant? oauthButtonVariant;
+
+  /// {@macro ffui.auth.screens.responsive_page.desktop_layout_direction}
   final TextDirection? desktopLayoutDirection;
+
+  /// A email that [EmailForm] would be pre-filled with.
   final String? email;
+
+  /// See [Scaffold.resizeToAvoidBottomInset]
   final bool? resizeToAvoidBottomInset;
+
+  /// Whether the "Login/Register" link should be displayed. The link changes
+  /// the type of the [AuthAction] from [AuthAction.signIn]
+  /// and [AuthAction.signUp] and vice versa.
   final bool? showAuthActionSwitch;
+
+  /// {@macro ffui.auth.views.login_view.subtitle_builder}
   final AuthViewContentBuilder? subtitleBuilder;
+
+  /// {@macro ffui.auth.views.login_view.subtitle_builder}
   final AuthViewContentBuilder? footerBuilder;
+
+  /// A [Key] that would be passed down to the [LoginView].
   final Key? loginViewKey;
+
+  /// [SignInScreen] could invoke these actions:
+  ///
+  /// * [EmailLinkSignInAction]
+  /// * [VerifyPhoneAction]
+  /// * [ForgotPasswordAction]
+  /// * [AuthStateChangeAction]
+  ///
+  /// These actions could be used to trigger route transtion or display
+  /// a dialog.
+  ///
+  /// ```dart
+  /// SignInScreen(
+  ///   actions: [
+  ///     ForgotPasswordAction((context, email) {
+  ///       Navigator.pushNamed(
+  ///         context,
+  ///         '/forgot-password',
+  ///         arguments: {'email': email},
+  ///       );
+  ///     }),
+  ///     VerifyPhoneAction((context, _) {
+  ///       Navigator.pushNamed(context, '/phone');
+  ///     }),
+  ///     AuthStateChangeAction<SignedIn>((context, state) {
+  ///       if (!state.user!.emailVerified) {
+  ///         Navigator.pushNamed(context, '/verify-email');
+  ///       } else {
+  ///         Navigator.pushReplacementNamed(context, '/profile');
+  ///       }
+  ///     }),
+  ///     EmailLinkSignInAction((context) {
+  ///       Navigator.pushReplacementNamed(context, '/email-link-sign-in');
+  ///     }),
+  ///   ],
+  /// )
+  /// ```
   final List<FlutterFireUIAction> actions;
+
+  /// {@macro ffui.auth.screens.responsive_page.breakpoint}
   final double breakpoint;
+
+  /// A set of styles that are provided to the descendant widgets.
+  ///
+  /// Possible styles are:
+  /// * [EmailFormStyle]
   final Set<FlutterFireUIStyle>? styles;
 
+  /// {@macro ffui.auth.screens.sign_in_screen}
   const SignInScreen({
     Key? key,
     List<AuthProvider>? providers,
