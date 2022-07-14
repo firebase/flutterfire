@@ -10,7 +10,7 @@ class ProviderKey {
   ProviderKey(this.auth, this.providerType);
 
   @override
-  int get hashCode => hashValues(auth, providerType);
+  int get hashCode => Object.hash(auth, providerType);
 
   @override
   bool operator ==(Object other) {

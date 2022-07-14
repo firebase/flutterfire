@@ -1,6 +1,6 @@
 # Defining Models
 
-> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
+> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/firebase/flutterfire/discussions/7475) for more details.
 
 A model represents exactly what data we expect to both receive and mutate on Firestore. The ODM
 ensures that all data is validated against a model, and if the model is not valid an error will be
@@ -17,7 +17,15 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 // This doesn't exist yet...! See "Next Steps"
 part 'user.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+/// A custom JsonSerializable annotation that supports decoding objects such
+/// as Timestamps and DateTimes.
+/// This variable can be reused between different models
+const firestoreSerializable = JsonSerializable(
+  explicitToJson: true,
+  converters: firestoreJsonConverters,
+);
+
+@firestoreSerializable
 class User {
   User({
     required this.name,
@@ -33,11 +41,12 @@ class User {
 
 The `User` model defines that a user must have a name and email as a `String` and age as an `int`.
 
+:::caution
 If your model class is defined in a separate file than the Firestore reference,
 you will need to explicitly specify `fromJson`/`toJson` functions as followed:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
   User({
     required this.name,
@@ -55,6 +64,8 @@ class User {
 }
 ```
 
+:::
+
 **Note**: `JsonSerializable(fieldRename: ...)` and `JsonKey(ignore: true)` are currently not supported
 
 ## Model validation
@@ -68,7 +79,7 @@ The ODM provides some basic annotation validators which can be used on model pro
 example, we can take advantage of the `Min` validator:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
   User({
     required this.name,
@@ -102,7 +113,7 @@ method. Note the name of this class is generated based on the model name (for ex
 The following annotations are available for `int` properties:
 
 | Annotation | Description                                        |
-|------------|----------------------------------------------------|
+| ---------- | -------------------------------------------------- |
 | `Min`      | Validates a number is not less than this value.    |
 | `Max`      | Validates a number is not greater than this value. |
 
@@ -129,7 +140,7 @@ class EmailAddressValidator implements Validator<String> {
 Within the model, you can then apply the validator to the property:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
   User({
     required this.name,
@@ -158,7 +169,7 @@ within the Firestore database. For example, the `users` collection in the root o
 corresponds to the `Users` model we defined previously:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
  // ...
 }

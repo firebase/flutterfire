@@ -56,7 +56,7 @@ class FieldPath {
       const ListEquality().equals(other.components, components);
 
   @override
-  int get hashCode => hashList(components);
+  int get hashCode => Object.hashAll(components);
 
   @override
   String toString() => 'FieldPath($components)';

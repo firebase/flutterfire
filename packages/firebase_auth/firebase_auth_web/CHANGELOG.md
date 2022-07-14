@@ -1,3 +1,26 @@
+## 4.0.0
+
+> Note: This release has breaking changes.
+
+ - **BREAKING** **FEAT**: upgrade auth web to Firebase v9 JS SDK ([#8236](https://github.com/firebase/flutterfire/issues/8236)). ([8e95a51d](https://github.com/firebase/flutterfire/commit/8e95a51d99ffc5fec106d933e46c9f331c1e2d50))
+ - **BREAKING**: Cannot set `updateDisplayName()` or `updatePhotoURL()` to `null` on web anymore.
+
+## 3.3.19
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 3.3.18
+
+ - **FIX**: Web recaptcha hover removed after use. (#8812). ([790e450e](https://github.com/firebase/flutterfire/commit/790e450e8d6acd2fc50e0232c77a152430c7b3ea))
+
+## 3.3.17
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
+## 3.3.16
+
+ - Update a dependency to the latest release.
+
 ## 3.3.15
 
  - Update a dependency to the latest release.
@@ -16,15 +39,15 @@
 
 ## 3.3.11
 
- - **FIX**: Allow `rawNonce` to be passed through on web via the `OAuthCredential`. (#8410). ([0df32f61](https://github.com/FirebaseExtended/flutterfire/commit/0df32f6106ca41cdb95c36c7816e6487124937d4))
+ - **FIX**: Allow `rawNonce` to be passed through on web via the `OAuthCredential`. (#8410). ([0df32f61](https://github.com/firebase/flutterfire/commit/0df32f6106ca41cdb95c36c7816e6487124937d4))
 
 ## 3.3.10
 
- - **FIX**: Check if `UserMetadata` properties are `null` before parsing. (#8313). ([cac41fb9](https://github.com/FirebaseExtended/flutterfire/commit/cac41fb9ddd5462b57f9d17615f387478f10d3dc))
+ - **FIX**: Check if `UserMetadata` properties are `null` before parsing. (#8313). ([cac41fb9](https://github.com/firebase/flutterfire/commit/cac41fb9ddd5462b57f9d17615f387478f10d3dc))
 
 ## 3.3.9
 
- - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/FirebaseExtended/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
+ - **FIX**: update all Dart SDK version constraints to Dart >= 2.16.0 (#8184). ([df4a5bab](https://github.com/firebase/flutterfire/commit/df4a5bab3c029399b4f257a5dd658d302efe3908))
 
 ## 3.3.8
 
@@ -32,7 +55,7 @@
 
 ## 3.3.7
 
- - **FIX**: Add support for`dynamicLinkDomain` property to `ActionCodeSetting` for web. (#7683). ([3b0bf76e](https://github.com/FirebaseExtended/flutterfire/commit/3b0bf76e015c95840b2d38eec7f12c001d3bd47c))
+ - **FIX**: Add support for`dynamicLinkDomain` property to `ActionCodeSetting` for web. (#7683). ([3b0bf76e](https://github.com/firebase/flutterfire/commit/3b0bf76e015c95840b2d38eec7f12c001d3bd47c))
 
 ## 3.3.6
 

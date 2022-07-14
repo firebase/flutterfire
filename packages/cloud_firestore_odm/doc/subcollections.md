@@ -1,12 +1,12 @@
 # Working with Subcollections
 
-> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/FirebaseExtended/flutterfire/discussions/7475) for more details.
+> The Cloud Firestore ODM is currently in **alpha**. Expect breaking changes, API changes and more. The documentation is still a work in progress. See the [discussion](https://github.com/firebase/flutterfire/discussions/7475) for more details.
 
 The ODM provides support for subcollections via the `Collection` annotation. For example, first define
 the root collection as normal:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
  // ...
 }
@@ -19,7 +19,7 @@ Let's assume each user document contains a subcollection containing user address
 the model for an address:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class Address {
  // ...
 }

@@ -21,12 +21,12 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  cloud_firestore: ^3.1.16
+  cloud_firestore: ^3.3.0
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.18
+  firebase_auth: ^3.4.2
   firebase_core: ^1.10.3
-  firebase_database: ^9.0.14
-  firebase_dynamic_links: ^4.2.4
+  firebase_database: ^9.0.19
+  firebase_dynamic_links: ^4.3.2
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.0

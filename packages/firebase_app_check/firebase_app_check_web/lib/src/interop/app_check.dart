@@ -8,16 +8,18 @@ import 'dart:js';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 
 import 'app_check_interop.dart' as app_check_interop;
-import 'firebase_interop.dart' as firebase_interop;
 
 export 'app_check_interop.dart';
 
-/// Given an AppJSImp, return the Auth instance.
-AppCheck getAppCheckInstance([App? app]) {
+/// Given an AppJSImp, return the AppCheck instance.
+AppCheck? getAppCheckInstance([App? app, String? recaptchaKey]) {
+  final provider = app_check_interop.ReCaptchaV3Provider(recaptchaKey);
+  final options = app_check_interop.AppCheckOptions(provider: provider);
+
   return AppCheck.getInstance(
     app != null
-        ? firebase_interop.appCheck(app.jsObject)
-        : firebase_interop.appCheck(),
+        ? app_check_interop.initializeAppCheck(app.jsObject, options)
+        : app_check_interop.initializeAppCheck(context['undefined'], options),
   );
 }
 
@@ -32,13 +34,14 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
   AppCheck._fromJsObject(app_check_interop.AppCheckJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
-  void activate(String? recaptchaKey) => jsObject.activate(recaptchaKey);
-
   void setTokenAutoRefreshEnabled(bool isTokenAutoRefreshEnabled) =>
-      jsObject.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled);
+      app_check_interop.setTokenAutoRefreshEnabled(
+        jsObject,
+        isTokenAutoRefreshEnabled,
+      );
 
   Future<app_check_interop.AppCheckTokenResult> getToken(bool? forceRefresh) =>
-      handleThenable(jsObject.getToken(forceRefresh));
+      handleThenable(app_check_interop.getToken(jsObject, forceRefresh));
 
   Func0? _idTokenChangedUnsubscribe;
 
@@ -58,8 +61,11 @@ class AppCheck extends JsObjectWrapper<app_check_interop.AppCheckJsImpl> {
 
       void startListen() {
         assert(_idTokenChangedUnsubscribe == null);
-        _idTokenChangedUnsubscribe =
-            jsObject.onTokenChanged(nextWrapper, errorWrapper);
+        _idTokenChangedUnsubscribe = app_check_interop.onTokenChanged(
+          jsObject,
+          nextWrapper,
+          errorWrapper,
+        );
       }
 
       void stopListen() {

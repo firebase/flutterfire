@@ -21,7 +21,7 @@ class ValidatorGenerator extends Generator {
       if (validations.isNotEmpty) {
         buffer
           ..write(
-            '_\$assert${classElement.name}(${classElement.name} instance) {',
+            'void _\$assert${classElement.name}(${classElement.name} instance) {',
           )
           ..writeAll(validations)
           ..write('}');

@@ -166,7 +166,7 @@ with the Facebook App ID and Secret set.
 
 Note: Firebase will not set the `User.emailVerified` property
 to `true` if your user logs in with Facebook. Should your user login using a provider that verifies email (e.g. Google sign-in) then this will be set to true.
-For further information, see this [issue](https://github.com/FirebaseExtended/flutterfire/issues/4612#issuecomment-782107867).
+For further information, see this [issue](https://github.com/firebase/flutterfire/issues/4612#issuecomment-782107867).
 
 
 ## Apple
@@ -341,38 +341,20 @@ with the Client ID and Secret are set, with the callback URL set in the GitHub a
 
 * {iOS+ and Android}
 
-  On native platforms, a 3rd party library is required to both install the GitHub SDK and trigger the authentication flow.
+For native platforms, you need to add the `google-services.json` and `GoogleService-Info.plist`.
 
-  Install the [`github_sign_in`](https://pub.dev/packages/github_sign_in) plugin:
+For iOS, add the custom URL scheme as [described on the iOS guide](https://firebase.google.com/docs/auth/ios/github-auth#handle_the_sign-in_flow_with_the_firebase_sdk) step 1.
 
-  ```yaml title="pubspec.yaml"
-  dependencies:
-    github_sign_in: ^0.0.5-dev.4
-  ```
+```dart
+import 'package:github_sign_in/github_sign_in.dart';
 
-  You will need to populate the `GitHubSignIn` instance with your GitHub Client ID, GitHub Client Secret and also a Redirect URL (Firebase callback url).
-  Once complete trigger the sign-in flow, create a GitHub credential and sign the user in:
+Future<UserCredential> signInWithGitHub() async {
+  // Create a new provider
+  GithubAuthProvider githubProvider = GithubAuthProvider();
 
-  ```dart
-  import 'package:github_sign_in/github_sign_in.dart';
-
-  Future<UserCredential> signInWithGitHub() async {
-    // Create a GitHubSignIn instance
-        final GitHubSignIn gitHubSignIn = GitHubSignIn(
-            clientId: clientId,
-            clientSecret: clientSecret,
-            redirectUrl: 'https://my-project.firebaseapp.com/__/auth/handler');
-
-    // Trigger the sign-in flow
-    final result = await gitHubSignIn.signIn(context);
-
-    // Create a credential from the access token
-    final githubAuthCredential = GithubAuthProvider.credential(result.token);
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(githubAuthCredential);
-  }
-  ```
+  return await _auth.signInWithAuthProvider(githubProvider);
+}
+```
 
 * {Web}
 

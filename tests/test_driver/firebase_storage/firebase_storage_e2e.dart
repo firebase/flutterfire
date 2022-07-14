@@ -21,6 +21,7 @@ void setupTests() {
       );
       await FirebaseStorage.instance
           .useStorageEmulator(testEmulatorHost, testEmulatorPort);
+
       // Add a write only file
       await FirebaseStorage.instance
           .ref('writeOnly.txt')

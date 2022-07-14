@@ -11,7 +11,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_database_platform_interface/firebase_database_platform_interface.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-
+import 'package:firebase_core_web/firebase_core_web_interop.dart'
+    as core_interop;
 import 'src/interop/database.dart' as database_interop;
 
 part './src/data_snapshot_web.dart';
@@ -40,7 +41,7 @@ class FirebaseDatabaseWeb extends DatabasePlatform {
   database_interop.Database get _delegate {
     return _firebaseDatabase ??=
         _firebaseDatabase = database_interop.getDatabaseInstance(
-      database_interop.getApp(app?.name),
+      core_interop.app(app?.name),
       databaseURL,
     );
   }

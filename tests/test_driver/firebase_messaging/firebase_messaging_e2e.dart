@@ -41,7 +41,7 @@ void setupTests() {
 
       group('onMessage', () {
         test('can listen multiple times', () async {
-          // regression test for https://github.com/FirebaseExtended/flutterfire/issues/6009
+          // regression test for https://github.com/firebase/flutterfire/issues/6009
 
           StreamSubscription<RemoteMessage> _onMessageSubscription;
           StreamSubscription<RemoteMessage> _onMessageOpenedAppSubscription;
@@ -75,8 +75,10 @@ void setupTests() {
       });
 
       group('isSupported()', () {
-        test('returns "true" value', () {
-          expect(messaging.isSupported(), isTrue);
+        test('returns "true" value', () async {
+          final result = await messaging.isSupported();
+
+          expect(result, isA<bool>());
         });
       });
 
@@ -97,6 +99,7 @@ void setupTests() {
           'authorizationStatus returns AuthorizationStatus.notDetermined on Web',
           () async {
             final result = await messaging.requestPermission();
+
             expect(result, isA<NotificationSettings>());
             expect(
               result.authorizationStatus,
@@ -136,8 +139,21 @@ void setupTests() {
         'getToken()',
         () {
           test('returns a token', () async {
-            final result = await messaging.getToken();
-            expect(result, isA<String>());
+            final result = await messaging.requestPermission();
+
+            if (result.authorizationStatus == AuthorizationStatus.authorized) {
+              final result = await messaging.getToken();
+
+              expect(result, isA<String>());
+            } else {
+              await expectLater(
+                messaging.getToken(),
+                throwsA(
+                  isA<FirebaseException>()
+                      .having((e) => e.code, 'code', 'permission-blocked'),
+                ),
+              );
+            }
           });
         },
         skip: skipManualTests,
@@ -147,14 +163,26 @@ void setupTests() {
         test(
           'generate a new token after deleting',
           () async {
-            final token1 = await messaging.getToken();
-            await Future.delayed(const Duration(seconds: 3));
-            await messaging.deleteToken();
-            await Future.delayed(const Duration(seconds: 3));
-            final token2 = await messaging.getToken();
-            expect(token1, isA<String>());
-            expect(token2, isA<String>());
-            expect(token1, isNot(token2));
+            final result = await messaging.requestPermission();
+
+            if (result.authorizationStatus == AuthorizationStatus.authorized) {
+              final token1 = await messaging.getToken();
+              await Future.delayed(const Duration(seconds: 3));
+              await messaging.deleteToken();
+              await Future.delayed(const Duration(seconds: 3));
+              final token2 = await messaging.getToken();
+              expect(token1, isA<String>());
+              expect(token2, isA<String>());
+              expect(token1, isNot(token2));
+            } else {
+              await expectLater(
+                messaging.getToken(),
+                throwsA(
+                  isA<FirebaseException>()
+                      .having((e) => e.code, 'code', 'permission-blocked'),
+                ),
+              );
+            }
           },
           skip: skipManualTests,
         ); // only run for manual testing
