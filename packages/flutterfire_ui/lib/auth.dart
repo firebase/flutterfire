@@ -1,5 +1,4 @@
 export 'src/loading_indicator.dart';
-export 'src/auth/widgets/auth_flow_builder.dart';
 export 'src/auth/auth_controller.dart' show AuthAction, AuthController;
 export 'src/auth/auth_state.dart'
     show
@@ -15,8 +14,6 @@ export 'src/auth/flows/phone_auth_flow.dart';
 export 'src/auth/flows/email_link_flow.dart';
 
 export 'src/auth/widgets/phone_input.dart' show PhoneInputState, PhoneInput;
-export 'src/auth/configs/phone_provider_configuration.dart'
-    show PhoneProviderConfiguration;
 
 export 'src/auth/widgets/sms_code_input.dart'
     show SMSCodeInputState, SMSCodeInput;

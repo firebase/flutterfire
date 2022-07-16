@@ -32,7 +32,6 @@ export 'src/settings.dart';
 export 'src/get_options.dart';
 export 'src/set_options.dart';
 export 'src/persistence_settings.dart';
-export 'src/load_bundle_task_state.dart';
 export 'src/platform_interface/utils/load_bundle_task_state.dart';
 
 /// Helper method exposed to determine whether a given [collectionPath] points to
