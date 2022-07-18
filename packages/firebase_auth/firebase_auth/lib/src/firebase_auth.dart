@@ -607,7 +607,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     // If we add a recaptcha to the page by creating a new instance, we must
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
-    verifier ??= RecaptchaVerifier();
+    verifier ??= RecaptchaVerifier(auth: _delegate);
     final result =
         await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate);
     if (mustClear) {

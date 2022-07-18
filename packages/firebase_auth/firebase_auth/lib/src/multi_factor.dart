@@ -17,7 +17,7 @@ class MultiFactor {
   ///
   /// [displayName] can be used to provide a display name for the second factor.
   Future<void> enroll(
-    MultiFactorAssertion assertion, {
+    MultiFactorAssertionPlatform assertion, {
     String? displayName,
   }) async {
     return _delegate.enroll(assertion, displayName: displayName);
@@ -38,5 +38,16 @@ class MultiFactor {
   /// Returns a list of the [MultiFactorInfo] already associated with this user.
   Future<List<MultiFactorInfo>> getEnrolledFactors() {
     return _delegate.getEnrolledFactors();
+  }
+}
+
+/// Provider for generating a PhoneMultiFactorAssertion.
+class PhoneMultiFactorGenerator {
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  static MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
+    return PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
   }
 }

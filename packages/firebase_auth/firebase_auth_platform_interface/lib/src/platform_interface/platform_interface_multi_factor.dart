@@ -1,4 +1,5 @@
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// {@template .platformInterfaceMultiFactor}
@@ -19,7 +20,10 @@ abstract class MultiFactorPlatform extends PlatformInterface {
   /// Enrolls a second factor as identified by the [MultiFactorAssertion] parameter for the current user.
   ///
   /// [displayName] can be used to provide a display name for the second factor.
-  Future<void> enroll(MultiFactorAssertion assertion, {String? displayName}) {
+  Future<void> enroll(
+    MultiFactorAssertionPlatform assertion, {
+    String? displayName,
+  }) {
     throw UnimplementedError('enroll() is not implemented');
   }
 
@@ -54,21 +58,7 @@ class MultiFactorSession {
 
 /// Represents an assertion that the Firebase Authentication server
 /// can use to authenticate a user as part of a multi-factor flow.
-class MultiFactorAssertion {
-  const MultiFactorAssertion._(this.credential);
-
-  /// Associated credential to the assertion
-  final AuthCredential credential;
-}
-
-/// Helper class used to generate PhoneMultiFactorAssertions.
-class PhoneMultiFactorGenerator {
-  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
-  /// which can be used to confirm ownership of a phone second factor.
-  static MultiFactorAssertion getAssertion(PhoneAuthCredential credential) {
-    return MultiFactorAssertion._(credential);
-  }
-}
+class MultiFactorAssertionPlatform {}
 
 /// {@macro .platformInterfaceMultiFactorResolverPlatform}
 /// Utility class that contains methods to resolve second factor
@@ -91,7 +81,7 @@ class MultiFactorResolverPlatform {
   /// Completes sign in with a second factor using an MultiFactorAssertion which
   /// confirms that the user has successfully completed the second factor challenge.
   Future<UserCredentialPlatform> resolveSignIn(
-    MultiFactorAssertion assertion,
+    MultiFactorAssertionPlatform assertion,
   ) {
     throw UnimplementedError('resolveSignIn() is not implemented');
   }
@@ -138,4 +128,36 @@ class PhoneMultiFactorInfo extends MultiFactorInfo {
 
   /// The phone number associated with this second factor verification method.
   final String phoneNumber;
+}
+
+/// Helper class used to generate PhoneMultiFactorAssertions.
+class PhoneMultiFactorGeneratorPlatform extends PlatformInterface {
+  static PhoneMultiFactorGeneratorPlatform? _instance;
+
+  static final Object _token = Object();
+
+  PhoneMultiFactorGeneratorPlatform() : super(token: _token);
+
+  /// The current default [PhoneMultiFactorGeneratorPlatform] instance.
+  ///
+  /// It will always default to [MethodChannelPhoneMultiFactorGenerator]
+  /// if no other implementation was provided.
+  static PhoneMultiFactorGeneratorPlatform get instance {
+    _instance ??= MethodChannelPhoneMultiFactorGenerator();
+    return _instance!;
+  }
+
+  /// Sets the [PhoneMultiFactorGeneratorPlatform.instance]
+  static set instance(PhoneMultiFactorGeneratorPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+    _instance = instance;
+  }
+
+  /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
+  /// which can be used to confirm ownership of a phone second factor.
+  MultiFactorAssertionPlatform getAssertion(
+    PhoneAuthCredential credential,
+  ) {
+    throw UnimplementedError('getAssertion() is not implemented');
+  }
 }

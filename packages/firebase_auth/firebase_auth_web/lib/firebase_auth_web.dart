@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
+import 'package:firebase_auth_web/src/interop/utils/utils.dart';
 import 'package:firebase_auth_web/src/utils/web_utils.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
@@ -19,6 +20,7 @@ import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
 import 'src/firebase_auth_web_user.dart';
 import 'src/firebase_auth_web_user_credential.dart';
 import 'src/interop/auth.dart' as auth_interop;
+import 'src/interop/multi_factor.dart' as multi_factor;
 
 /// The web delegate implementation for [FirebaseAuth].
 class FirebaseAuthWeb extends FirebaseAuthPlatform {
@@ -41,7 +43,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         StreamController<UserPlatform?>.broadcast();
 
     // TODO(rrousselGit): close StreamSubscription
-    _delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
+    delegate.onAuthStateChanged.map((auth_interop.User? webUser) {
       if (!_initialized.isCompleted) {
         _initialized.complete();
       }
@@ -49,7 +51,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, MultiFactorWeb(this), webUser);
+        return UserWeb(this,
+            MultiFactorWeb(this, multi_factor.multiFactor(webUser)), webUser);
       }
     }).listen((UserWeb? webUser) {
       _authStateChangesListeners[app.name]!.add(webUser);
@@ -57,11 +60,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
     // TODO(rrousselGit): close StreamSubscription
     // Also triggers `userChanged` events
-    _delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
+    delegate.onIdTokenChanged.map((auth_interop.User? webUser) {
       if (webUser == null) {
         return null;
       } else {
-        return UserWeb(this, MultiFactorWeb(this), webUser);
+        return UserWeb(this,
+            MultiFactorWeb(this, multi_factor.multiFactor(webUser)), webUser);
       }
     }).listen((UserWeb? webUser) {
       _idTokenChangesListeners[app.name]!.add(webUser);
@@ -73,6 +77,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   static void registerWith(Registrar registrar) {
     FirebaseCoreWeb.registerService('auth');
     FirebaseAuthPlatform.instance = FirebaseAuthWeb.instance;
+    PhoneMultiFactorGeneratorPlatform.instance = PhoneMultiFactorGeneratorWeb();
     RecaptchaVerifierFactoryPlatform.instance =
         RecaptchaVerifierFactoryWeb.instance;
   }
@@ -94,7 +99,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   /// instance of Auth from the web plugin
   auth_interop.Auth? _webAuth;
 
-  auth_interop.Auth get _delegate {
+  auth_interop.Auth get delegate {
     return _webAuth ??=
         auth_interop.getAuthInstance(core_interop.app(app.name));
   }
@@ -115,23 +120,26 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   UserPlatform? get currentUser {
-    auth_interop.User? webCurrentUser = _delegate.currentUser;
+    auth_interop.User? webCurrentUser = delegate.currentUser;
 
     if (webCurrentUser == null) {
       return null;
     }
 
-    return UserWeb(this, MultiFactorWeb(this), _delegate.currentUser!);
+    return UserWeb(
+        this,
+        MultiFactorWeb(this, multi_factor.multiFactor(delegate.currentUser!)),
+        delegate.currentUser!);
   }
 
   @override
   String? get tenantId {
-    return _delegate.tenantId;
+    return delegate.tenantId;
   }
 
   @override
   set tenantId(String? tenantId) {
-    _delegate.tenantId = tenantId;
+    delegate.tenantId = tenantId;
   }
 
   @override
@@ -144,7 +152,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> applyActionCode(String code) async {
     try {
-      await _delegate.applyActionCode(code);
+      await delegate.applyActionCode(code);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -153,7 +161,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<ActionCodeInfo> checkActionCode(String code) async {
     try {
-      return convertWebActionCodeInfo(await _delegate.checkActionCode(code))!;
+      return convertWebActionCodeInfo(await delegate.checkActionCode(code))!;
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -162,7 +170,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> confirmPasswordReset(String code, String newPassword) async {
     try {
-      await _delegate.confirmPasswordReset(code, newPassword);
+      await delegate.confirmPasswordReset(code, newPassword);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -174,7 +182,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
         this,
-        await _delegate.createUserWithEmailAndPassword(email, password),
+        await delegate.createUserWithEmailAndPassword(email, password),
       );
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -184,7 +192,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<List<String>> fetchSignInMethodsForEmail(String email) async {
     try {
-      return await _delegate.fetchSignInMethodsForEmail(email);
+      return await delegate.fetchSignInMethodsForEmail(email);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -193,7 +201,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> getRedirectResult() async {
     try {
-      return UserCredentialWeb(this, await _delegate.getRedirectResult());
+      return UserCredentialWeb(this, await delegate.getRedirectResult());
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -226,7 +234,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     try {
-      await _delegate.sendPasswordResetEmail(
+      await delegate.sendPasswordResetEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -239,7 +247,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     try {
-      await _delegate.sendSignInLinkToEmail(
+      await delegate.sendSignInLinkToEmail(
           email, convertPlatformActionCodeSettings(actionCodeSettings));
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -248,12 +256,12 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   String get languageCode {
-    return _delegate.languageCode;
+    return delegate.languageCode;
   }
 
   @override
   Future<void> setLanguageCode(String? languageCode) async {
-    _delegate.languageCode = languageCode;
+    delegate.languageCode = languageCode;
   }
 
   @override
@@ -264,14 +272,14 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     String? smsCode,
     bool? forceRecaptchaFlow,
   }) async {
-    _delegate.settings.appVerificationDisabledForTesting =
+    delegate.settings.appVerificationDisabledForTesting =
         appVerificationDisabledForTesting;
   }
 
   @override
   Future<void> setPersistence(Persistence persistence) async {
     try {
-      return _delegate.setPersistence(persistence);
+      return delegate.setPersistence(persistence);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -280,7 +288,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
-      return UserCredentialWeb(this, await _delegate.signInAnonymously());
+      return UserCredentialWeb(this, await delegate.signInAnonymously());
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -292,7 +300,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
           this,
-          await _delegate
+          await delegate
               .signInWithCredential(convertPlatformCredential(credential)!));
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -303,7 +311,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   Future<UserCredentialPlatform> signInWithCustomToken(String token) async {
     try {
       return UserCredentialWeb(
-          this, await _delegate.signInWithCustomToken(token));
+          this, await delegate.signInWithCustomToken(token));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -314,9 +322,9 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String email, String password) async {
     try {
       return UserCredentialWeb(
-          this, await _delegate.signInWithEmailAndPassword(email, password));
+          this, await delegate.signInWithEmailAndPassword(email, password));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -325,7 +333,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       String email, String emailLink) async {
     try {
       return UserCredentialWeb(
-          this, await _delegate.signInWithEmailLink(email, emailLink));
+          this, await delegate.signInWithEmailLink(email, emailLink));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -341,7 +349,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       auth_interop.RecaptchaVerifier verifier = applicationVerifier.delegate;
 
       return ConfirmationResultWeb(
-          this, await _delegate.signInWithPhoneNumber(phoneNumber, verifier));
+          this, await delegate.signInWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -352,7 +360,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return UserCredentialWeb(
         this,
-        await _delegate.signInWithPopup(convertPlatformAuthProvider(provider)),
+        await delegate.signInWithPopup(convertPlatformAuthProvider(provider)),
       );
     } catch (e) {
       throw getFirebaseAuthException(e);
@@ -362,8 +370,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> signInWithRedirect(AuthProvider provider) async {
     try {
-      return _delegate
-          .signInWithRedirect(convertPlatformAuthProvider(provider));
+      return delegate.signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -372,7 +379,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<void> signOut() async {
     try {
-      await _delegate.signOut();
+      await delegate.signOut();
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -384,7 +391,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       // The generic platform interface is with host and port split to
       // centralize logic between android/ios native, but web takes the
       // origin as a single string
-      _delegate.useAuthEmulator('http://$host:$port');
+      delegate.useAuthEmulator('http://$host:$port');
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -393,7 +400,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   @override
   Future<String> verifyPasswordResetCode(String code) async {
     try {
-      return await _delegate.verifyPasswordResetCode(code);
+      return await delegate.verifyPasswordResetCode(code);
     } catch (e) {
       throw getFirebaseAuthException(e);
     }
@@ -411,8 +418,39 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
     MultiFactorSession? multiFactorSession,
-  }) {
-    throw UnimplementedError(
-        'verifyPhoneNumber() is not supported on the web. Please use `signInWithPhoneNumber` instead.');
+  }) async {
+    try {
+      Map<String, dynamic>? data;
+      if (multiFactorSession != null) {
+        final _webMultiFactorSession =
+            multiFactorSession as MultiFactorSessionWeb;
+        if (multiFactorInfo != null) {
+          data = {
+            'multiFactorUid': multiFactorInfo.uid,
+            'session': _webMultiFactorSession.webSession.jsObject,
+          };
+        } else {
+          data = {
+            'phoneNumber': phoneNumber,
+            'session': _webMultiFactorSession.webSession.jsObject,
+          };
+        }
+      }
+
+      final phoneOptions = (data ?? phoneNumber)!;
+
+      final provider = auth_interop.PhoneAuthProvider(_webAuth);
+      final verifier = RecaptchaVerifierFactoryWeb(
+        auth: this,
+      ).delegate;
+
+      /// We add the passthrough method for LegacyJsObject
+      final verificationId = await provider.verifyPhoneNumber(
+          jsify(phoneOptions, (object) => object), verifier);
+
+      codeSent(verificationId, null);
+    } catch (e) {
+      verificationFailed(getFirebaseAuthException(e));
+    }
   }
 }
