@@ -9,6 +9,7 @@ import 'package:async/async.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
+import 'package:firebase_auth_web/firebase_auth_web.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -691,6 +692,16 @@ void main() {
       expect(
         auth.toString(),
         equals('FirebaseAuth(app: $testCount)'),
+      );
+    });
+
+    test('FirebaseAuthWeb.persistence', () async {
+      const persistence = Persistence.SESSION;
+
+      FirebaseAuth.persistenceType(persistence);
+      expect(
+        persistence,
+        equals(FirebaseAuthWeb.persistence),
       );
     });
   });

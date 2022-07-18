@@ -40,6 +40,26 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return FirebaseAuth.instanceFor(app: defaultAppInstance);
   }
 
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence for
+  /// future sign-in requests, including sign-in with redirect requests.
+  ///
+  /// This will return a promise that will resolve once the state finishes
+  /// copying from one type of storage to the other. Calling a sign-in method
+  /// after changing persistence will wait for that persistence change to
+  /// complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist the
+  /// Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// This is only supported on web based platforms.
+  static void persistenceType(Persistence persistence) {
+    // Web only API
+    FirebaseAuthWeb.persistenceType(persistence);
+  }
+
   /// Returns an instance using a specified [FirebaseApp].
   factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
@@ -411,23 +431,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
         forceRecaptchaFlow: forceRecaptchaFlow);
   }
 
-  /// Changes the current type of persistence on the current Auth instance for
-  /// the currently saved Auth session and applies this type of persistence for
-  /// future sign-in requests, including sign-in with redirect requests.
-  ///
-  /// This will return a promise that will resolve once the state finishes
-  /// copying from one type of storage to the other. Calling a sign-in method
-  /// after changing persistence will wait for that persistence change to
-  /// complete before applying it on the new Auth state.
-  ///
-  /// This makes it easy for a user signing in to specify whether their session
-  /// should be remembered or not. It also makes it easier to never persist the
-  /// Auth state for applications that are shared by other users or have
-  /// sensitive data.
-  ///
-  /// This is only supported on web based platforms.
   Future<void> setPersistence(Persistence persistence) async {
-    return _delegate.setPersistence(persistence);
+    // ignore: avoid_print
+    print(
+        'setPersistence() is now deprecated. Please use the static method: FirebaseAuth.persistenceType() before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
   }
 
   /// Asynchronously creates and becomes an anonymous user.

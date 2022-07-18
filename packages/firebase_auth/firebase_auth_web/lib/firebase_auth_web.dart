@@ -12,6 +12,7 @@ import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:meta/meta.dart';
 
 import 'src/firebase_auth_web_confirmation_result.dart';
 import 'src/firebase_auth_web_recaptcha_verifier_factory.dart';
@@ -28,6 +29,31 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         super(appInstance: null);
 
   Completer<void> _initialized = Completer();
+
+  static Persistence? _persistence;
+
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence for
+  /// future sign-in requests, including sign-in with redirect requests.
+  ///
+  /// This will return a promise that will resolve once the state finishes
+  /// copying from one type of storage to the other. Calling a sign-in method
+  /// after changing persistence will wait for that persistence change to
+  /// complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist the
+  /// Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// This is only supported on web based platforms.
+  // ignore: use_setters_to_change_properties
+  static void persistenceType(Persistence persistenceType) {
+    _persistence = persistenceType;
+  }
+
+  @visibleForTesting
+  static Persistence? get persistence => _persistence;
 
   /// The entry point for the [FirebaseAuthWeb] class.
   FirebaseAuthWeb({required FirebaseApp app}) : super(appInstance: app) {
@@ -94,8 +120,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   auth_interop.Auth? _webAuth;
 
   auth_interop.Auth get _delegate {
-    return _webAuth ??=
-        auth_interop.getAuthInstance(core_interop.app(app.name));
+    return _webAuth ??= auth_interop.getAuthInstance(core_interop.app(app.name),
+        persistence: _persistence);
   }
 
   @override
@@ -269,11 +295,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   @override
   Future<void> setPersistence(Persistence persistence) async {
-    try {
-      return _delegate.setPersistence(persistence);
-    } catch (e) {
-      throw getFirebaseAuthException(e);
-    }
+    // Deprecated now. Please remove in a future version along with the platform interface, method channel and universal package implementation.
   }
 
   @override

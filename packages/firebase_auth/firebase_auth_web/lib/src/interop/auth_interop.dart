@@ -49,10 +49,6 @@ external void connectAuthEmulator(
 );
 
 @JS()
-external PromiseJsImpl<void> setPersistence(
-    AuthJsImpl auth, Persistence persistence);
-
-@JS()
 external PromiseJsImpl<UserCredentialJsImpl> createUserWithEmailAndPassword(
   AuthJsImpl auth,
   String email,

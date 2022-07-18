@@ -34,6 +34,8 @@ Future<void> main() async {
     );
   }
 
+  FirebaseAuth.persistenceType(Persistence.LOCAL);
+
   if (shouldUseFirebaseEmulator) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   }
@@ -84,6 +86,7 @@ class AuthExampleApp extends StatelessWidget {
                   child: StreamBuilder<User?>(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
+                      print('UUUU: ${snapshot.data?.uid}');
                       if (snapshot.hasData) {
                         return const ProfilePage();
                       }

@@ -19,9 +19,34 @@ import 'utils/utils.dart';
 export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
-Auth getAuthInstance(App app) {
+Auth getAuthInstance(App app, {Persistence? persistence}) {
+  if (persistence != null) {
+    auth_interop.Persistence setPersistence;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        setPersistence = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        setPersistence = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        setPersistence = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return Auth.getInstance(auth_interop.initializeAuth(
+        app.jsObject,
+        jsify({
+          'errorMap': auth_interop.debugErrorMap,
+          'persistence': setPersistence
+        })));
+  }
+  // `browserLocalPersistence` is the default persistence setting.
   return Auth.getInstance(auth_interop.initializeAuth(
-      app.jsObject, jsify({'errorMap': auth_interop.debugErrorMap})));
+      app.jsObject,
+      jsify({
+        'errorMap': auth_interop.debugErrorMap,
+        'persistence': auth_interop.browserLocalPersistence
+      })));
 }
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -515,39 +540,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
           [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
       handleThenable(auth_interop.sendPasswordResetEmail(
           jsObject, email, actionCodeSettings));
-
-  /// Changes the current type of persistence on the current Auth instance for
-  /// the currently saved Auth session and applies this type of persistence
-  /// for future sign-in requests, including sign-in with redirect requests.
-  /// This will return a Future that will resolve once the state finishes
-  /// copying from one type of storage to the other.
-  /// Calling a sign-in method after changing persistence will wait for that
-  /// persistence change to complete before applying it on the new Auth state.
-  ///
-  /// This makes it easy for a user signing in to specify whether their session
-  /// should be remembered or not. It also makes it easier to never persist
-  /// the Auth state for applications that are shared by other users or have
-  /// sensitive data.
-  ///
-  /// The default is [:'local':] (provided the browser supports this mechanism).
-  ///
-  /// The [persistence] string is the auth state persistence mechanism.
-  /// See allowed [persistence] values in [Persistence] class.
-  Future setPersistence(Persistence persistence) {
-    auth_interop.Persistence instance;
-    switch (persistence) {
-      case Persistence.LOCAL:
-        instance = auth_interop.browserLocalPersistence;
-        break;
-      case Persistence.SESSION:
-        instance = auth_interop.browserSessionPersistence;
-        break;
-      case Persistence.NONE:
-        instance = auth_interop.inMemoryPersistence;
-        break;
-    }
-    return handleThenable(auth_interop.setPersistence(jsObject, instance));
-  }
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
