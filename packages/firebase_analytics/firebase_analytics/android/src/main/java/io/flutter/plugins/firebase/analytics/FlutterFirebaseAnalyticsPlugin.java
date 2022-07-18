@@ -302,8 +302,7 @@ public class FlutterFirebaseAnalyticsPlugin
     cachedThreadPool.execute(
         () -> {
           try {
-            Map<String, Object> parameters = Objects.requireNonNull(arguments);
-            analytics.setDefaultEventParameters(createBundleFromMap(parameters));
+            analytics.setDefaultEventParameters(createBundleFromMap(arguments));
             taskCompletionSource.setResult(null);
           } catch (Exception e) {
             taskCompletionSource.setException(e);
