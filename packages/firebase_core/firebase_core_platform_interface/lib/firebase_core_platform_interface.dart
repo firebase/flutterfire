@@ -19,6 +19,7 @@ export 'package:firebase_core_platform_interface/src/pigeon/mocks.dart';
 export 'package:firebase_core_platform_interface/src/pigeon/test_api.dart';
 
 part 'src/firebase_core_exceptions.dart';
+part 'src/exceptions/deprecated_exception.dart';
 part 'src/exceptions/firebase_exception.dart';
 part 'src/firebase_options.dart';
 part 'src/method_channel/method_channel_firebase.dart';
