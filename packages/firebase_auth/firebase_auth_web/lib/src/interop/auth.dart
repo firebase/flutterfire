@@ -21,7 +21,11 @@ export 'auth_interop.dart';
 /// Given an AppJSImp, return the Auth instance.
 Auth getAuthInstance(App app) {
   return Auth.getInstance(auth_interop.initializeAuth(
-      app.jsObject, jsify({'errorMap': auth_interop.debugErrorMap})));
+      app.jsObject,
+      jsify({
+        'errorMap': auth_interop.debugErrorMap,
+        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+      })));
 }
 
 /// User profile information, visible only to the Firebase project's apps.

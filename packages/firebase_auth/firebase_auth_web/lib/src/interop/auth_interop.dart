@@ -649,3 +649,5 @@ class AuthSettings {
   external set appVerificationDisabledForTesting(bool? b);
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
+
+external dynamic get browserPopupRedirectResolver;
