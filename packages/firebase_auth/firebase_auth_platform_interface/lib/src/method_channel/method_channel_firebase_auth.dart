@@ -23,6 +23,7 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     'plugins.flutter.io/firebase_auth',
   );
 
+  /// Map of [MethodChannelFirebaseAuth] that can be get with Firebase App Name.
   static Map<String, MethodChannelFirebaseAuth>
       methodChannelFirebaseAuthInstances =
       <String, MethodChannelFirebaseAuth>{};

@@ -10,6 +10,7 @@ class User {
   UserPlatform _delegate;
 
   final FirebaseAuth _auth;
+  MultiFactor? _multiFactor;
 
   User._(this._auth, this._delegate) {
     UserPlatform.verifyExtends(_delegate);
@@ -422,7 +423,7 @@ class User {
   }
 
   MultiFactor get multiFactor {
-    return MultiFactor._(_delegate.multiFactor);
+    return _multiFactor ??= MultiFactor._(_delegate.multiFactor);
   }
 
   @override

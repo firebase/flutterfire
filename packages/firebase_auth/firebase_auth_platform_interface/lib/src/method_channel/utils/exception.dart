@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:collection/collection.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/src/method_channel/method_channel_multi_factor.dart';
@@ -74,15 +75,21 @@ FirebaseException platformExceptionToFirebaseAuthException(
 }
 
 FirebaseAuthMultiFactorException parseMultiFactorError(
-    Map<String, dynamic> details) {
-  final code = details['code'];
-  final message = details['message'];
-  final additionalData = details['additionalData'];
+    Map<String, Object?> details) {
+  final code = details['code'] as String?;
+  final message = details['message'] as String?;
+  final additionalData = details['additionalData'] as Map<Object?, Object?>?;
+
+  if (additionalData == null) {
+    throw FirebaseAuthException(
+      code: "Can't parse multi factor error",
+      message: message,
+    );
+  }
 
   final pigeonMultiFactorInfo =
-      (additionalData['multiFactorHints'] as List<Object?>)
-          .where((element) => element != null)
-          .cast<Object>()
+      (additionalData['multiFactorHints'] as List<Object?>? ?? [])
+          .whereNotNull()
           .map(
             PigeonMultiFactorInfo.decode,
           )
@@ -97,20 +104,28 @@ FirebaseAuthMultiFactorException parseMultiFactorError(
 
   if (auth == null) {
     throw FirebaseAuthException(
-      code: code,
+      code: code ?? 'Unknown',
       message: message,
     );
   }
 
+  final sessionId = additionalData['multiFactorSessionId'] as String?;
+  final resolverId = additionalData['multiFactorResolverId'] as String?;
+  if (sessionId == null || resolverId == null) {
+    throw FirebaseAuthException(
+      code: "Can't parse multi factor error",
+      message: message,
+    );
+  }
   final multiFactorResolver = MethodChannelMultiFactorResolver(
     multiFactorInfo,
-    MultiFactorSession(additionalData['multiFactorSessionId']),
-    additionalData['multiFactorResolverId'],
+    MultiFactorSession(sessionId),
+    resolverId,
     auth,
   );
 
   return FirebaseAuthMultiFactorException(
-    code: code,
+    code: code ?? 'Unknown',
     message: message,
     resolver: multiFactorResolver,
   );
