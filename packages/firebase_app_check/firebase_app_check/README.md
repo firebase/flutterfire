@@ -11,7 +11,7 @@ To get started with Firebase App Check for Flutter, please [see the documentatio
 
 ## Usage
 
-To use this plugin, please visit the [App Check Usage documentation](https://firebase.flutter.dev/docs/app-check/usage)
+To use this plugin, please visit the [App Check Usage documentation](https://firebase.google.com/docs/app-check/flutter/default-providers#initialize)
 
 ## Issues and feedback
 

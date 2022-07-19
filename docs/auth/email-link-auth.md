@@ -149,11 +149,11 @@ can add this method of sign-in to their existing account.
 The difference would be in the second half of the operation:
 
 ```dart
-final userCredential = await FirebaseAuth.instance
-    .signInWithEmailLink(email: emailAuth, emailLink: emailLink);
+final authCredential = EmailAuthProvider
+    .credentialWithLink(email: emailAuth, emailLink: emailLink.toString());
 try {
     await FirebaseAuth.instance.currentUser
-        ?.linkWithCredential(userCredential.credential!);
+        ?.linkWithCredential(authCredential);
 } catch (error) {
     print("Error linking emailLink credential.");
 }
@@ -163,11 +163,11 @@ This can also be used to re-authenticate an email link user before running a
 sensitive operation.
 
 ```dart
-final userCredential = await FirebaseAuth.instance
-    .signInWithEmailLink(email: emailAuth, emailLink: emailLink);
+final authCredential = EmailAuthProvider
+    .credentialWithLink(email: emailAuth, emailLink: emailLink.toString());
 try {
     await FirebaseAuth.instance.currentUser
-        ?.reauthenticateWithCredential(userCredential.credential!);
+        ?.reauthenticateWithCredential(authCredential);
 } catch (error) {
     print("Error reauthenticating credential.");
 }

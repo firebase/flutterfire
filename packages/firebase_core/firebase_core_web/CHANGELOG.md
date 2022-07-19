@@ -1,3 +1,16 @@
+## 1.7.0
+
+ - **FEAT**: web JS v9.9.0 SDK bump ([#9075](https://github.com/firebase/flutterfire/issues/9075)). ([200a7747](https://github.com/firebase/flutterfire/commit/200a7747945155a99694d245c9b53ee3526a1da9))
+ - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))
+
+## 1.6.6
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 1.6.5
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
 ## 1.6.4
 
  - Update a dependency to the latest release.

@@ -11,15 +11,14 @@ import 'package:js/js.dart';
 
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'messaging_interop.dart' as messaging_interop;
-import 'firebase_interop.dart' as firebase_interop;
 
 export 'messaging_interop.dart';
 
 /// Given an AppJSImp, return the Messaging instance.
 Messaging getMessagingInstance([App? app]) {
   return Messaging.getInstance(app != null
-      ? firebase_interop.messaging(app.jsObject)
-      : firebase_interop.messaging());
+      ? messaging_interop.getMessaging(app.jsObject)
+      : messaging_interop.getMessaging());
 }
 
 class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
@@ -29,23 +28,25 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
     return _expando[jsObject] ??= Messaging._fromJsObject(jsObject);
   }
 
-  static bool isSupported() => messaging_interop.isSupported();
+  static Future<bool> isSupported() =>
+      handleThenable(messaging_interop.isSupported());
 
   Messaging._fromJsObject(messaging_interop.MessagingJsImpl jsObject)
       : super.fromJsObject(jsObject);
 
   /// To forcibly stop a registration token from being used, delete it by calling this method.
   /// Calling this method will stop the periodic data transmission to the FCM backend.
-  Future<void> deleteToken() => handleThenable(jsObject.deleteToken());
+  Future<void> deleteToken() =>
+      handleThenable(messaging_interop.deleteToken(jsObject));
 
   /// After calling [requestPermission] you can call this method to get an FCM registration token
   /// that can be used to send push messages to this user.
   Future<String> getToken({String? vapidKey}) =>
-      handleThenable(jsObject.getToken(vapidKey == null
-          ? null
-          : {
-              'vapidKey': vapidKey,
-            }));
+      handleThenable(messaging_interop.getToken(
+          jsObject,
+          vapidKey == null
+              ? null
+              : messaging_interop.GetTokenOptions(vapidKey: vapidKey)));
 
   // ignore: close_sinks
   StreamController<MessagePayload>? _onMessageController;
@@ -67,7 +68,8 @@ class Messaging extends JsObjectWrapper<messaging_interop.MessagingJsImpl> {
         _controller!.addError(e);
       });
 
-      jsObject.onMessage(nextWrapper, errorWrapper);
+      messaging_interop.onMessage(jsObject,
+          messaging_interop.Observer(next: nextWrapper, error: errorWrapper));
     }
     return _controller.stream;
   }

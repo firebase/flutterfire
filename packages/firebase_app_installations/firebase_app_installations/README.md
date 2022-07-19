@@ -10,7 +10,7 @@ To get started with Firebase Installations for Flutter, please [see the document
 
 ## Usage
 
-To use this plugin, please visit the [Installations Usage documentation](https://firebase.flutter.dev/docs/installations/usage)
+To use this plugin, please visit the [Installations Usage documentation](https://firebase.google.com/docs/projects/manage-installations#flutter)
 
 ## Issues and feedback
 

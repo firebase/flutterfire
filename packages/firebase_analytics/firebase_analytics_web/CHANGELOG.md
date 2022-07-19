@@ -1,3 +1,19 @@
+## 0.4.1
+
+ - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))
+
+## 0.4.0+17
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+16
+
+ - Update a dependency to the latest release.
+
+## 0.4.0+15
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+
 ## 0.4.0+14
 
  - Update a dependency to the latest release.

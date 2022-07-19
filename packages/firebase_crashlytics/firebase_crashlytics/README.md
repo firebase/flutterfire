@@ -14,7 +14,7 @@ To get started with Crashlytics for Flutter, please [see the documentation](http
 
 ## Usage
 
-To use this plugin, please visit the [Crashlytics Usage documentation](https://firebase.flutter.dev/docs/crashlytics/usage)
+To use this plugin, please visit the [Crashlytics Usage documentation](https://firebase.google.com/docs/crashlytics/get-started?platform=flutter)
 
 ## Issues and feedback
 

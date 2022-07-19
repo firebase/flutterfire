@@ -13,7 +13,7 @@ To get started with Dynamic Links for Flutter, please [see the documentation](ht
 
 ## Usage
 
-To use this plugin, please visit the [Dynamic Links Usage documentation](https://firebase.flutter.dev/docs/dynamic-links/usage)
+To use this plugin, please visit the [Dynamic Links Usage documentation](https://firebase.google.com/docs/dynamic-links/flutter/create)
 
 ## Issues and feedback
 
