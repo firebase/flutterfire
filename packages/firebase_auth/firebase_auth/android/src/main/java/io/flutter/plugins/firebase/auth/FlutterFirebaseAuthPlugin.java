@@ -1698,11 +1698,11 @@ public class FlutterFirebaseAuthPlugin
   // Map an id to a MultiFactorSession object.
   private final Map<String, MultiFactorResolver> multiFactorResolverMap = new HashMap<>();
 
-  private MultiFactor getAppMultiFactor(
-      @NonNull String appName, GeneratedAndroidFirebaseAuth.Result result) {
+  private MultiFactor getAppMultiFactor(@NonNull String appName)
+      throws FirebaseNoSignedInUserException {
     final FirebaseUser currentUser = getCurrentUser(appName);
     if (currentUser == null) {
-      result.error(new FirebaseNoSignedInUserException("No user is signed in"));
+      throw new FirebaseNoSignedInUserException("No user is signed in");
     }
     if (multiFactorUserMap.get(appName) == null) {
       multiFactorUserMap.put(appName, new HashMap<>());
@@ -1723,7 +1723,13 @@ public class FlutterFirebaseAuthPlugin
       @NonNull GeneratedAndroidFirebaseAuth.PigeonPhoneMultiFactorAssertion assertion,
       @Nullable String displayName,
       GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+    final MultiFactor multiFactor;
+    try {
+      multiFactor = getAppMultiFactor(appName);
+    } catch (FirebaseNoSignedInUserException e) {
+      result.error(e);
+      return;
+    }
 
     PhoneAuthCredential credential =
         PhoneAuthProvider.getCredential(
@@ -1748,7 +1754,13 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String appName,
       GeneratedAndroidFirebaseAuth.Result<GeneratedAndroidFirebaseAuth.PigeonMultiFactorSession>
           result) {
-    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+    final MultiFactor multiFactor;
+    try {
+      multiFactor = getAppMultiFactor(appName);
+    } catch (FirebaseNoSignedInUserException e) {
+      result.error(e);
+      return;
+    }
 
     multiFactor
         .getSession()
@@ -1774,7 +1786,13 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String appName,
       @Nullable String factorUid,
       GeneratedAndroidFirebaseAuth.Result<Void> result) {
-    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+    final MultiFactor multiFactor;
+    try {
+      multiFactor = getAppMultiFactor(appName);
+    } catch (FirebaseNoSignedInUserException e) {
+      result.error(e);
+      return;
+    }
 
     multiFactor
         .unenroll(factorUid)
@@ -1793,7 +1811,13 @@ public class FlutterFirebaseAuthPlugin
       @NonNull String appName,
       GeneratedAndroidFirebaseAuth.Result<List<GeneratedAndroidFirebaseAuth.PigeonMultiFactorInfo>>
           result) {
-    final MultiFactor multiFactor = getAppMultiFactor(appName, result);
+    final MultiFactor multiFactor;
+    try {
+      multiFactor = getAppMultiFactor(appName);
+    } catch (FirebaseNoSignedInUserException e) {
+      result.error(e);
+      return;
+    }
 
     final List<MultiFactorInfo> factors = multiFactor.getEnrolledFactors();
 
