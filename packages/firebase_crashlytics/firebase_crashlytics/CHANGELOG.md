@@ -1,3 +1,22 @@
+## 2.8.5
+
+ - **FIX**: `[core/duplicate-app]` exception when running the example ([#8991](https://github.com/firebase/flutterfire/issues/8991)). ([c70e66a5](https://github.com/firebase/flutterfire/commit/c70e66a546cf9236e728796c5b59a3d4e39caeb2))
+
+## 2.8.4
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 2.8.3
+
+ - Update a dependency to the latest release.
+
+## 2.8.2
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8731). ([c534eb04](https://github.com/firebase/flutterfire/commit/c534eb045a2ced454fdc803d438c3cd0f0b8097a))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FIX**: fix deprecation warning in Android (#8903). ([f2e03484](https://github.com/firebase/flutterfire/commit/f2e03484f99bd2efcb065d31721b9a2b6e801bf5))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
 ## 2.8.1
 
  - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8750). ([e9e1c1bf](https://github.com/firebase/flutterfire/commit/e9e1c1bf19d32e5b8967da162b03d0254843a836))

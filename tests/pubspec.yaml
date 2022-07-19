@@ -27,13 +27,12 @@ dependencies:
     path: ../packages/firebase_analytics/firebase_analytics_platform_interface
   firebase_analytics_web:
     path: ../packages/firebase_analytics/firebase_analytics_web
-  # TODO RTDB emulator breaks just by including App Check
-  # firebase_app_check:
-  #   path: ../packages/firebase_app_check/firebase_app_check
-  # firebase_app_check_platform_interface:
-  #   path: ../packages/firebase_app_check/firebase_app_check_platform_interface
-  # firebase_app_check_web:
-  #   path: ../packages/firebase_app_check/firebase_app_check_web
+  firebase_app_check:
+    path: ../packages/firebase_app_check/firebase_app_check
+  firebase_app_check_platform_interface:
+    path: ../packages/firebase_app_check/firebase_app_check_platform_interface
+  firebase_app_check_web:
+    path: ../packages/firebase_app_check/firebase_app_check_web
   firebase_app_installations:
     path: ../packages/firebase_app_installations/firebase_app_installations
   firebase_app_installations_platform_interface:
@@ -66,10 +65,10 @@ dependencies:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  firebase_in_app_messaging:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  firebase_in_app_messaging_platform_interface:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  #firebase_in_app_messaging:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  #firebase_in_app_messaging_platform_interface:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:
@@ -123,12 +122,12 @@ dependency_overrides:
     path: ../packages/firebase_analytics/firebase_analytics_platform_interface
   firebase_analytics_web:
     path: ../packages/firebase_analytics/firebase_analytics_web
-  # firebase_app_check:
-  #   path: ../packages/firebase_app_check/firebase_app_check
-  # firebase_app_check_platform_interface:
-  #   path: ../packages/firebase_app_check/firebase_app_check_platform_interface
-  # firebase_app_check_web:
-  #   path: ../packages/firebase_app_check/firebase_app_check_web
+  firebase_app_check:
+    path: ../packages/firebase_app_check/firebase_app_check
+  firebase_app_check_platform_interface:
+    path: ../packages/firebase_app_check/firebase_app_check_platform_interface
+  firebase_app_check_web:
+    path: ../packages/firebase_app_check/firebase_app_check_web
   firebase_app_installations:
     path: ../packages/firebase_app_installations/firebase_app_installations
   firebase_app_installations_platform_interface:
@@ -161,10 +160,10 @@ dependency_overrides:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links
   firebase_dynamic_links_platform_interface:
     path: ../packages/firebase_dynamic_links/firebase_dynamic_links_platform_interface
-  firebase_in_app_messaging:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
-  firebase_in_app_messaging_platform_interface:
-    path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
+  #firebase_in_app_messaging:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging
+  #firebase_in_app_messaging_platform_interface:
+  #  path: ../packages/firebase_in_app_messaging/firebase_in_app_messaging_platform_interface
   firebase_messaging:
     path: ../packages/firebase_messaging/firebase_messaging
   firebase_messaging_platform_interface:

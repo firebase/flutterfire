@@ -12,7 +12,7 @@ dependencies:
     path: ../
   flutter:
     sdk: flutter
-  flutter_local_notifications: ^8.2.0
+  flutter_local_notifications: ^9.7.0
   http: ^0.13.0
 
 dependency_overrides:

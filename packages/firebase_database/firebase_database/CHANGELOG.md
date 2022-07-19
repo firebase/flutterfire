@@ -1,3 +1,20 @@
+## 9.0.19
+
+ - Update a dependency to the latest release.
+
+## 9.0.18
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 9.0.17
+
+ - Update a dependency to the latest release.
+
+## 9.0.16
+
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (#8814). ([78006e0d](https://github.com/firebase/flutterfire/commit/78006e0d5b9dce8038ce3606a43ddcbc8a4a71b9))
+
 ## 9.0.15
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8732). ([63aa1011](https://github.com/firebase/flutterfire/commit/63aa10118e3fa541b276fed5828bd7db368c5ebd))

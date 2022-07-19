@@ -1,3 +1,21 @@
+## 0.0.6+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.6+16
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 0.0.6+15
+
+ - **DOCS**: separate the first sentence of a doc comment into its own paragraph for `getToken()` (#8968). ([4d487ef7](https://github.com/firebase/flutterfire/commit/4d487ef7abdb9a8333735ced9c40438fef9912a3))
+
+## 0.0.6+14
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8727). ([41a963b3](https://github.com/firebase/flutterfire/commit/41a963b376ae4ec23e1394bc074f8feee6ae16b2))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
 ## 0.0.6+13
 
  - **DOCS**: use camel case style for "FlutterFire" in `README.md` (#8747). ([e2a022d7](https://github.com/firebase/flutterfire/commit/e2a022d7427817002e4114eb7434aa6e53384891))

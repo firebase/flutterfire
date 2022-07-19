@@ -1,3 +1,24 @@
+## 0.1.1+2
+
+ - Update a dependency to the latest release.
+
+## 0.1.1+1
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 0.1.1
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8728). ([05a1a75b](https://github.com/firebase/flutterfire/commit/05a1a75bce84c1c73547485fe406ec430aefdf40))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **FEAT**: Bump Firebase iOS SDK to `9.2.0` (#8594). ([79610162](https://github.com/firebase/flutterfire/commit/79610162460b8877f3bc727464a7065106f08079))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
+## 0.1.0+14
+
+ - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8728). ([05a1a75b](https://github.com/firebase/flutterfire/commit/05a1a75bce84c1c73547485fe406ec430aefdf40))
+ - **REFACTOR**: use "firebase" instead of "FirebaseExtended" as organisation in all links for this repository (#8791). ([d90b8357](https://github.com/firebase/flutterfire/commit/d90b8357db01d65e753021358668f0b129713e6b))
+ - **DOCS**: point to "firebase.google" domain for hyperlinks in the usage section of `README.md` files (for the missing packages) (#8818). ([5bda8c92](https://github.com/firebase/flutterfire/commit/5bda8c92be1651a941d1285d36e885ee0b967b11))
+
 ## 0.1.0+14
 
  - Update a dependency to the latest release.

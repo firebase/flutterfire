@@ -2,14 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_app_check/firebase_app_check.dart';
-
 import 'package:drive/drive.dart';
-import '../firebase_default_options.dart';
-// import 'package:flutter/foundation.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
-// TODO RTDB emulator breaks just by including App Check
+import '../firebase_default_options.dart';
+
 void setupTests() {
   group(
     'firebase_app_check',
@@ -20,48 +19,45 @@ void setupTests() {
         );
       });
 
-      // test('activate', () async {
-      //   await expectLater(
-      //     FirebaseAppCheck.instance.activate(
-      //       webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
-      //     ),
-      //     completes,
-      //   );
-      // });
+      test('activate', () async {
+        await expectLater(
+          FirebaseAppCheck.instance.activate(
+            webRecaptchaSiteKey: '6Lemcn0dAAAAABLkf6aiiHvpGD6x-zF3nOSDU2M8',
+          ),
+          completes,
+        );
+      });
 
-      // test(
-      //   'getToken',
-      //   () async {
-      //     final token = await FirebaseAppCheck.instance.getToken(true);
-      //     expect(token, isA<String?>());
-      //   },
-      //   // TODO why is this Android/Web only?
-      //   skip: defaultTargetPlatform == TargetPlatform.iOS ||
-      //       defaultTargetPlatform == TargetPlatform.macOS,
-      // );
+      test(
+        'getToken',
+        () async {
+          final token = await FirebaseAppCheck.instance.getToken(true);
+          expect(token, isA<String>());
+        },
+        // Getting "Fetch server returned an HTTP error status. HTTP status:
+        // 400" when running tests on web.
+        //
+        // Is not working on iOS and macOS. Tracking issue:
+        // https://github.com/firebase/flutterfire/issues/8969
+        skip: kIsWeb ||
+            defaultTargetPlatform == TargetPlatform.iOS ||
+            defaultTargetPlatform == TargetPlatform.macOS,
+      );
 
-      // test(
-      //   'setTokenAutoRefreshEnabled',
-      //   () async {
-      //     await expectLater(
-      //       FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
-      //       completes,
-      //     );
-      //   },
-      // );
+      test(
+        'setTokenAutoRefreshEnabled',
+        () async {
+          await expectLater(
+            FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true),
+            completes,
+          );
+        },
+      );
 
-      // test('tokenChanges', () async {
-      //   final stream = FirebaseAppCheck.instance.onTokenChange;
-      //   expect(stream, isA<Stream>());
-
-      //   // TODO how to trigger event listener in e2e tests?
-      //   // await FirebaseAppCheck.instance.getToken(true);
-      //   //
-      //   // final result = await stream.first;
-      //   //
-      //   // expect(result, isA<AppCheckTokenResult>());
-      //   // expect(result.token, isA<String>());
-      // });
+      test('onTokenChange', () async {
+        final stream = FirebaseAppCheck.instance.onTokenChange;
+        expect(stream, isA<Stream<String?>>());
+      });
     },
   );
 }

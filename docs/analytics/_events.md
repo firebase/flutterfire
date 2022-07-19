@@ -22,20 +22,20 @@ events with the library's `log`- methods.
 ### Predefined events
 
 To help you get started, the Analytics SDK defines a number of
-suggested events that are common among different types of apps, including
+recommended events that are common among different types of apps, including
 retail and ecommerce, travel, and gaming apps. To learn more
 [about these events](https://support.google.com/analytics/answer/9322688)
 and when to use them, browse the
 [Events and properties](https://support.google.com/firebase/topic/6317484)
 articles in the Firebase Help Center.
 
-Note: To get the maximum detail in reports, log the suggested events that make
+Note: To get the maximum detail in reports, log the recommended events that make
 sense for your app and their prescribed parameters. This also ensures that you
 benefit from the latest Google Analytics features as
 they become available.
 
 
-You can find the log methods for the suggested event types in the
+You can find the log methods for the recommended event types in the
 [API reference](https://pub.dev/documentation/firebase_analytics/latest/firebase_analytics/FirebaseAnalytics-class.html).
 
 The following example demonstrates how to log a `select_content` event:
@@ -87,7 +87,7 @@ to any event:
 
 ### Custom events
 
-If your application has specific needs not covered by a suggested
+If your application has specific needs not covered by a recommended
 event type, you can log your own custom events as shown in this example:
 
 ```dart

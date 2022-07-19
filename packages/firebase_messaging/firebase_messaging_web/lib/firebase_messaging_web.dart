@@ -27,7 +27,7 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
     _webMessaging ??=
         messaging_interop.getMessagingInstance(core_interop.app(app.name));
 
-    if (!_initialized && messaging_interop.isSupported()) {
+    if (!_initialized) {
       _webMessaging!.onMessage
           .listen((messaging_interop.MessagePayload webMessagePayload) {
         RemoteMessage remoteMessage =
@@ -57,8 +57,8 @@ class FirebaseMessagingWeb extends FirebaseMessagingPlatform {
 
   /// Updates user on browser support for Firebase.Messaging
   @override
-  bool isSupported() {
-    return messaging_interop.isSupported();
+  Future<bool> isSupported() {
+    return messaging_interop.Messaging.isSupported();
   }
 
   @override

@@ -24,32 +24,7 @@ void resetFirebaseCoreMocks() {
   MethodChannelFirebase.isCoreInitialized = false;
   FirebasePlatform.instance = MethodChannelFirebase();
 
-  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'Firebase#initializeCore') {
-      return [
-        {
-          'name': defaultFirebaseAppName,
-          'options': {
-            'apiKey': '123',
-            'appId': '123',
-            'messagingSenderId': '123',
-            'projectId': '123',
-            'storageBucket': kBucket
-          },
-          'pluginConstants': {},
-        }
-      ];
-    }
-
-    if (call.method == 'Firebase#initializeApp') {
-      return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
-        'pluginConstants': {},
-      };
-    }
-    return null;
-  });
+  setupFirebaseCoreMocks();
 }
 
 class MockHttpsCallablePlatform extends HttpsCallablePlatform {

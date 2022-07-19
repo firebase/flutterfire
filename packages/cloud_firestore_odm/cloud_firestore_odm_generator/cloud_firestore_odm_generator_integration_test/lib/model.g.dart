@@ -9,5 +9,7 @@ part of 'model.dart';
 SplitFileModel _$SplitFileModelFromJson(Map<String, dynamic> json) =>
     SplitFileModel();
 
+const _$SplitFileModelFieldMap = <String, String>{};
+
 Map<String, dynamic> _$SplitFileModelToJson(SplitFileModel instance) =>
     <String, dynamic>{};
