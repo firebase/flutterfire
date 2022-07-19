@@ -57,7 +57,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// This is only supported on web based platforms.
   static void persistenceType(Persistence persistence) {
     // Web only API
-    FirebaseAuthWeb.persistenceType(persistence);
+    FirebaseAuthPlatform.persistenceType(persistence);
   }
 
   /// Returns an instance using a specified [FirebaseApp].
