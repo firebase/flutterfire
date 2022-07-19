@@ -268,11 +268,6 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setPersistence(Persistence persistence) async {
-    // Deprecated now. Please remove in a future version along with the platform interface, method channel and universal package implementation.
-  }
-
-  @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
       return UserCredentialWeb(this, await _delegate.signInAnonymously());

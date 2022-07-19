@@ -432,9 +432,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   Future<void> setPersistence(Persistence persistence) async {
-    // ignore: avoid_print
-    print(
-        'setPersistence() is now deprecated. Please use the static method: FirebaseAuth.persistenceType() before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
+    throw DeprecatedException(
+        'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
   }
 
   /// Asynchronously creates and becomes an anonymous user.

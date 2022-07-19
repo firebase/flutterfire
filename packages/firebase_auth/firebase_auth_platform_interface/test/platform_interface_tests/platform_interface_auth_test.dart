@@ -263,13 +263,6 @@ void main() {
       );
     });
 
-    test('throws if setPersistence()', () async {
-      await expectLater(
-        () => firebaseAuthPlatform.setPersistence(Persistence.LOCAL),
-        throwsUnimplementedError,
-      );
-    });
-
     test('throws if signInAnonymously()', () async {
       await expectLater(
         firebaseAuthPlatform.signInAnonymously,

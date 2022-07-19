@@ -797,22 +797,6 @@ void main() {
       });
     });
 
-    group('setPersistence()', () {
-      test('throw [UnimplementedError]', () async {
-        const Persistence persistence = Persistence.LOCAL;
-        try {
-          await auth.setPersistence(persistence);
-        } on UnimplementedError catch (e) {
-          expect(
-              e.message,
-              equals(
-                  'setPersistence() is only supported on web based platforms'));
-        } catch (e) {
-          fail('should have thrown an UnimplementedError');
-        }
-      });
-    });
-
     group('signInWithPopup()', () {
       test('throw [UnimplementedError]', () async {
         final FacebookAuthProvider facebookProvider = FacebookAuthProvider();

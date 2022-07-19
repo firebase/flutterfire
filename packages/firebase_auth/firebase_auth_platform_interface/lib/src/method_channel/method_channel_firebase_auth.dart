@@ -402,12 +402,6 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   }
 
   @override
-  Future<void> setPersistence(Persistence persistence) {
-    throw UnimplementedError(
-        'setPersistence() is only supported on web based platforms');
-  }
-
-  @override
   Future<UserCredentialPlatform> signInAnonymously() async {
     try {
       Map<String, dynamic> data =

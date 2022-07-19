@@ -450,16 +450,6 @@ void main() {
       });
     });
 
-    group('setPersistence()', () {
-      test('should call delegate method', () async {
-        // Necessary as we otherwise get a "null is not a Future<void>" error
-        when(mockAuthPlatform.setPersistence(any)).thenAnswer((i) async {});
-
-        await auth.setPersistence(Persistence.LOCAL);
-        verify(mockAuthPlatform.setPersistence(Persistence.LOCAL));
-      });
-    });
-
     group('signInAnonymously()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
@@ -962,15 +952,6 @@ class MockFirebaseAuth extends Mock
         smsCode,
         forceRecaptchaFlow,
       ]),
-      returnValue: neverEndingFuture<void>(),
-      returnValueForMissingStub: neverEndingFuture<void>(),
-    );
-  }
-
-  @override
-  Future<void> setPersistence(Persistence? persistence) {
-    return super.noSuchMethod(
-      Invocation.method(#setPersistence, [persistence]),
       returnValue: neverEndingFuture<void>(),
       returnValueForMissingStub: neverEndingFuture<void>(),
     );
