@@ -3,6 +3,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:html' as html;
 import 'dart:typed_data';
 
@@ -185,13 +186,21 @@ class ReferenceWeb extends ReferencePlatform {
     PutStringFormat format, [
     SettableMetadata? metadata,
   ]) {
+    dynamic _data = data;
+
+    // The universal package is converting raw to base64, so we need to convert
+    // Any base64 string values into a Uint8List.
+    if (format == PutStringFormat.base64) {
+      _data = base64Decode(data);
+    }
+
     return TaskWeb(
       this,
-      _ref.putString(
-        data,
-        putStringFormatToString(format),
+      _ref.put(
+        _data,
         settableMetadataToFbUploadMetadata(
           _cache.store(metadata),
+          // md5 is computed server-side, so we don't have to unpack a potentially huge Blob.
         ),
       ),
     );

@@ -6,7 +6,7 @@ The ODM provides support for subcollections via the `Collection` annotation. For
 the root collection as normal:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class User {
  // ...
 }
@@ -19,7 +19,7 @@ Let's assume each user document contains a subcollection containing user address
 the model for an address:
 
 ```dart
-@JsonSerializable(explicitToJson: true)
+@firestoreSerializable
 class Address {
  // ...
 }

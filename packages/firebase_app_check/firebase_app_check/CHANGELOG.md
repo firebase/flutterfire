@@ -1,3 +1,15 @@
+## 0.0.6+17
+
+ - Update a dependency to the latest release.
+
+## 0.0.6+16
+
+ - **FIX**: bump `firebase_core_platform_interface` version to fix previous release. ([bea70ea5](https://github.com/firebase/flutterfire/commit/bea70ea5cbbb62cbfd2a7a74ae3a07cb12b3ee5a))
+
+## 0.0.6+15
+
+ - **DOCS**: separate the first sentence of a doc comment into its own paragraph for `getToken()` (#8968). ([4d487ef7](https://github.com/firebase/flutterfire/commit/4d487ef7abdb9a8333735ced9c40438fef9912a3))
+
 ## 0.0.6+14
 
  - **REFACTOR**: use `firebase.google.com` link for `homepage` in `pubspec.yaml` (#8727). ([41a963b3](https://github.com/firebase/flutterfire/commit/41a963b376ae4ec23e1394bc074f8feee6ae16b2))

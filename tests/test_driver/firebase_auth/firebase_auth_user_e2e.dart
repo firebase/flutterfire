@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -704,7 +703,10 @@ void setupTests() {
           // Skip apple CI because of https://github.com/firebase/firebase-ios-sdk/issues/8149
           // Using `kIsWeb` because `Platform` is not available on web
         },
-        skip: !kIsWeb && (Platform.isIOS || Platform.isMacOS),
+        // setting `displayName` on web throws an error
+        skip: kIsWeb ||
+            (defaultTargetPlatform == TargetPlatform.iOS ||
+                defaultTargetPlatform == TargetPlatform.macOS),
       );
     });
 
@@ -747,31 +749,36 @@ void setupTests() {
         );
       });
 
-      test('can set the photoURL to null', () async {
-        // First create a user with a photo
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: email,
-          password: testPassword,
-        );
-        await FirebaseAuth.instance.currentUser!.updatePhotoURL(
-          'http://photo.url/test.jpg',
-        );
-        await FirebaseAuth.instance.currentUser!.reload();
+      test(
+        'can set the photoURL to null',
+        () async {
+          // First create a user with a photo
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: email,
+            password: testPassword,
+          );
+          await FirebaseAuth.instance.currentUser!.updatePhotoURL(
+            'http://photo.url/test.jpg',
+          );
+          await FirebaseAuth.instance.currentUser!.reload();
 
-        // Just checking that the user indeed had a photo before we set it to null
-        expect(
-          FirebaseAuth.instance.currentUser!.photoURL,
-          isNotNull,
-        );
+          // Just checking that the user indeed had a photo before we set it to null
+          expect(
+            FirebaseAuth.instance.currentUser!.photoURL,
+            isNotNull,
+          );
 
-        await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
-        await FirebaseAuth.instance.currentUser!.reload();
+          await FirebaseAuth.instance.currentUser!.updatePhotoURL(null);
+          await FirebaseAuth.instance.currentUser!.reload();
 
-        expect(
-          FirebaseAuth.instance.currentUser!.photoURL,
-          isNull,
-        );
-      });
+          expect(
+            FirebaseAuth.instance.currentUser!.photoURL,
+            isNull,
+          );
+        },
+        // setting `photoURL` on web throws an error
+        skip: kIsWeb,
+      );
     });
 
     group('updateProfile()', () {

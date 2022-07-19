@@ -183,7 +183,7 @@ abstract class FirebaseMessagingPlatform extends PlatformInterface {
 
   /// isSupported() informs web users whether
   /// the browser supports Firebase.Messaging
-  bool isSupported() {
+  Future<bool> isSupported() {
     throw UnimplementedError('isSupported() is not implemented');
   }
 

@@ -24,13 +24,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
         super(appInstance: null);
 
   /// The entry point for the [FirebaseAuthWeb] class.
-  FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app) {
-    _tokenChangesListeners[app.name] = StreamController<String?>.broadcast();
-
-    _delegate.onTokenChanged().map((event) {
-      _tokenChangesListeners[app.name]!.add(event.token);
-    });
-  }
+  FirebaseAppCheckWeb({required FirebaseApp app}) : super(appInstance: app);
 
   /// Called by PluginRegistry to register this plugin for Flutter Web
   static void registerWith(Registrar registrar) {
@@ -47,9 +41,12 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   app_check_interop.AppCheck? _webAppCheck;
 
   /// Lazily initialize [_webAppCheck] on first method call
-  app_check_interop.AppCheck get _delegate {
-    return _webAppCheck ??=
-        app_check_interop.getAppCheckInstance(core_interop.app(app.name));
+  app_check_interop.AppCheck? get _delegate {
+    if (_webAppCheck == null) {
+      throw Exception(
+          "Before using other Firebase App Check APIs, FirebaseAppCheck.instance.activate() must be called first once you've initialized your Firebase app.");
+    }
+    return _webAppCheck;
   }
 
   @override
@@ -64,15 +61,26 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
 
   @override
   Future<void> activate({String? webRecaptchaSiteKey}) async {
-    return convertWebExceptions<Future<void>>(
-        () async => _delegate.activate(webRecaptchaSiteKey));
+    // activate API no longer exists, recaptcha key has to be passed on initialization of app-check instance.
+    return convertWebExceptions<Future<void>>(() async {
+      _webAppCheck ??= app_check_interop.getAppCheckInstance(
+          core_interop.app(app.name), webRecaptchaSiteKey);
+      if (_tokenChangesListeners[app.name] == null) {
+        _tokenChangesListeners[app.name] =
+            StreamController<String?>.broadcast();
+
+        _delegate!.onTokenChanged().map((event) {
+          _tokenChangesListeners[app.name]!.add(event.token);
+        });
+      }
+    });
   }
 
   @override
   Future<String?> getToken(bool forceRefresh) async {
     return convertWebExceptions<Future<String?>>(() async {
       app_check_interop.AppCheckTokenResult result =
-          await _delegate.getToken(forceRefresh);
+          await _delegate!.getToken(forceRefresh);
       return result.token;
     });
   }
@@ -83,7 +91,7 @@ class FirebaseAppCheckWeb extends FirebaseAppCheckPlatform {
   ) async {
     return convertWebExceptions<Future<void>>(
       () async =>
-          _delegate.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled),
+          _delegate!.setTokenAutoRefreshEnabled(isTokenAutoRefreshEnabled),
     );
   }
 

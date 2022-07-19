@@ -185,8 +185,7 @@ top posts sorted by their star count:
 final myUserId = FirebaseAuth.instance.currentUser?.uid;
 final topUserPostsRef = FirebaseDatabase.instance
     .ref("user-posts/$myUserId")
-    .orderByChild("starCount")
-    .ref;
+    .orderByChild("starCount");
 ```
 
 This defines a query that when combined with a [child listener](#child-events)
