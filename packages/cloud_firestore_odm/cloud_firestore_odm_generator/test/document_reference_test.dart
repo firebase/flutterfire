@@ -19,6 +19,10 @@ void main() {
   // Does not arrayContains for non-list
   // expect-error: UNDEFINED_METHOD
   nestedRef.whereValue();
+  nestedRef.whereSimple(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    arrayContains: null,
+  );
   // No arrayContains for complex objects
   nestedRef.whereValueList(
     // expect-error: UNDEFINED_NAMED_PARAMETER
