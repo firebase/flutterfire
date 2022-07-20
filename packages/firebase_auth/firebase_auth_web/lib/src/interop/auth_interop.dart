@@ -9,8 +9,9 @@
 @JS('firebase_auth')
 library firebase_interop.auth;
 
-import 'package:js/js.dart';
+import 'package:firebase_auth_web/src/interop/auth.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart';
+import 'package:js/js.dart';
 
 @JS()
 external AuthJsImpl getAuth([AppJsImpl? app]);
@@ -233,6 +234,19 @@ external PromiseJsImpl<void> updateProfile(
   UserProfile profile,
 );
 
+/// https://firebase.google.com/docs/reference/js/auth.md#multifactor
+@JS()
+external MultiFactorUserJsImpl multiFactor(
+  UserJsImpl user,
+);
+
+/// https://firebase.google.com/docs/reference/js/auth.md#multifactor
+@JS()
+external MultiFactorResolverJsImpl getMultiFactorResolver(
+  AuthJsImpl auth,
+  MultiFactorError error,
+);
+
 @JS('Auth')
 abstract class AuthJsImpl {
   external AppJsImpl get app;
@@ -443,10 +457,10 @@ class PhoneAuthProviderJsImpl extends AuthProviderJsImpl {
   external factory PhoneAuthProviderJsImpl([AuthJsImpl? auth]);
   external static String get PROVIDER_ID;
   external PromiseJsImpl<String> verifyPhoneNumber(
-    String phoneNumber,
+    dynamic /* PhoneInfoOptions | string */ phoneOptions,
     ApplicationVerifierJsImpl applicationVerifier,
   );
-  external static AuthCredential credential(
+  external static PhoneAuthCredentialJsImpl credential(
     String verificationId,
     String verificationCode,
   );
@@ -461,10 +475,10 @@ abstract class ApplicationVerifierJsImpl {
 @JS('RecaptchaVerifier')
 class RecaptchaVerifierJsImpl extends ApplicationVerifierJsImpl {
   external factory RecaptchaVerifierJsImpl(
-    container, [
-    Object? parameters,
-    AppJsImpl? app,
-  ]);
+    containerOrId,
+    Object parameters,
+    AuthJsImpl authExtern,
+  );
   external void clear();
   external PromiseJsImpl<num> render();
 }
@@ -621,7 +635,7 @@ class AndroidSettings {
   });
 }
 
-/// https://firebase.google.com/docs/reference/js/firebase.auth#.UserCredential
+/// https://firebase.google.com/docs/reference/js/auth.usercredential
 @JS()
 @anonymous
 class UserCredentialJsImpl {
@@ -651,3 +665,91 @@ class AuthSettings {
 }
 
 external dynamic get browserPopupRedirectResolver;
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
+@JS()
+@anonymous
+class MultiFactorUserJsImpl {
+  external List<MultiFactorInfoJsImpl> get enrolledFactors;
+  external PromiseJsImpl<void> enroll(
+      MultiFactorAssertionJsImpl assertion, String? displayName);
+  external PromiseJsImpl<MultiFactorSessionJsImpl> getSession();
+  external PromiseJsImpl<void> unenroll(
+      dynamic /* MultiFactorInfo | string */ option);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorinfo
+@JS()
+@anonymous
+class MultiFactorInfoJsImpl {
+  external String? get displayName;
+  external String get enrollmentTime;
+  external String get factorId;
+  external String get uid;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorassertion
+@JS()
+@anonymous
+class MultiFactorAssertionJsImpl {
+  external String get factorId;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorerror
+@JS('Error')
+@anonymous
+class MultiFactorError extends AuthError {
+  external dynamic get customData;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
+@JS()
+@anonymous
+class MultiFactorResolverJsImpl {
+  external List<MultiFactorInfoJsImpl> get hints;
+  external MultiFactorSessionJsImpl get session;
+  external PromiseJsImpl<UserCredentialJsImpl> resolveSignIn(
+      MultiFactorAssertionJsImpl assertion);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.multifactorresolver
+@JS()
+@anonymous
+class MultiFactorSessionJsImpl {}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorinfo
+@JS()
+@anonymous
+class PhoneMultiFactorInfoJsImpl extends MultiFactorInfoJsImpl {
+  external String get phoneNumber;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorenrollinfooptions
+@JS()
+@anonymous
+class PhoneMultiFactorEnrollInfoOptionsJsImpl {
+  external String get phoneNumber;
+  external MultiFactorSessionJsImpl? get session;
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorgenerator
+@JS('PhoneMultiFactorGenerator')
+class PhoneMultiFactorGeneratorJsImpl {
+  external static String get FACTOR_ID;
+  external static PhoneMultiFactorAssertionJsImpl? assertion(
+      PhoneAuthCredentialJsImpl credential);
+}
+
+/// https://firebase.google.com/docs/reference/js/auth.phonemultifactorassertion
+@JS()
+@anonymous
+class PhoneMultiFactorAssertionJsImpl extends MultiFactorAssertionJsImpl {}
+
+/// https://firebase.google.com/docs/reference/js/auth.phoneauthcredential
+@JS()
+@anonymous
+class PhoneAuthCredentialJsImpl extends AuthCredential {
+  external static PhoneAuthCredentialJsImpl fromJSON(
+      dynamic /*object | string*/ json);
+  external Object toJSON();
+}
