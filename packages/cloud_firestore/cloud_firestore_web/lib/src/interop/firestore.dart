@@ -95,13 +95,16 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
   Future<void> clearPersistence() =>
       handleThenable(firestore_interop.clearIndexedDbPersistence(jsObject));
 
-  Future runTransaction(Function(Transaction?) updateFunction) {
+  Future runTransaction(
+      Function(Transaction?) updateFunction, int maxAttempts) {
     var updateFunctionWrap = allowInterop((transaction) =>
         handleFutureWithMapper(
             updateFunction(Transaction.getInstance(transaction)), jsify));
 
-    return handleThenable(
-            firestore_interop.runTransaction(jsObject, updateFunctionWrap))
+    return handleThenable(firestore_interop.runTransaction(
+            jsObject,
+            updateFunctionWrap,
+            firestore_interop.TransactionOptionsJsImpl(maxAttempts)))
         .then((value) => dartify(null));
   }
 

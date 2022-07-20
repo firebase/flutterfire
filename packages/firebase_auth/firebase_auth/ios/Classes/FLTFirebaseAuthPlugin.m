@@ -475,7 +475,11 @@ NSString *const kErrMsgInvalidCredential =
                         // error.
                         result.error(nil, firebaseDictionary[@"message"], nil, nil);
                       } else {
-                        result.error(nil, nil, nil, error);
+                        if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                          [self handleMultiFactorError:arguments withResult:result withError:error];
+                        } else {
+                          result.error(nil, nil, nil, error);
+                        }
                       }
                     } else {
                       result.success(authResult);
@@ -498,8 +502,13 @@ NSString *const kErrMsgInvalidCredential =
                        completion:^(FIRAuthCredential *_Nullable credential,
                                     NSError *_Nullable error) {
                          if (error) {
-                           result.error(kErrCodeInvalidCredential, kErrMsgInvalidCredential, nil,
-                                        nil);
+                           if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                             [self handleMultiFactorError:arguments
+                                               withResult:result
+                                                withError:error];
+                           } else {
+                             result.error(nil, nil, nil, error);
+                           }
                            return;
                          }
                          if (credential) {
@@ -582,11 +591,64 @@ NSString *const kErrMsgInvalidCredential =
   [auth signInWithCustomToken:arguments[kArgumentToken]
                    completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
                      if (error != nil) {
-                       result.error(nil, nil, nil, error);
+                       if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                         [self handleMultiFactorError:arguments withResult:result withError:error];
+                       } else {
+                         result.error(nil, nil, nil, error);
+                       }
                      } else {
                        result.success(authResult);
                      }
                    }];
+}
+
+- (void)handleMultiFactorError:(id)arguments
+                    withResult:(FLTFirebaseMethodCallResult *)result
+                     withError:(NSError *_Nullable)error {
+#if TARGET_OS_OSX
+  result.error(nil, nil, nil, error);
+#else
+
+  FIRMultiFactorResolver *resolver =
+      (FIRMultiFactorResolver *)error.userInfo[FIRAuthErrorUserInfoMultiFactorResolverKey];
+
+  NSArray<FIRMultiFactorInfo *> *hints = resolver.hints;
+  FIRMultiFactorSession *session = resolver.session;
+
+  NSString *sessionId = [[NSUUID UUID] UUIDString];
+  self->_multiFactorSessionMap[sessionId] = session;
+
+  NSString *resolverId = [[NSUUID UUID] UUIDString];
+  self->_multiFactorResolverMap[resolverId] = resolver;
+
+  NSMutableArray<NSDictionary *> *pigeonHints = [NSMutableArray array];
+
+  for (FIRMultiFactorInfo *multiFactorInfo in hints) {
+    NSString *phoneNumber;
+    if ([multiFactorInfo class] == [FIRPhoneMultiFactorInfo class]) {
+      FIRPhoneMultiFactorInfo *phoneFactorInfo = (FIRPhoneMultiFactorInfo *)multiFactorInfo;
+      phoneNumber = phoneFactorInfo.phoneNumber;
+    }
+
+    PigeonMultiFactorInfo *object = [PigeonMultiFactorInfo
+        makeWithDisplayName:multiFactorInfo.displayName
+        enrollmentTimestamp:[NSNumber numberWithDouble:multiFactorInfo.enrollmentDate
+                                                           .timeIntervalSince1970]
+                   factorId:multiFactorInfo.factorID
+                        uid:multiFactorInfo.UID
+                phoneNumber:phoneNumber];
+
+    [pigeonHints addObject:object.toMap];
+  }
+
+  NSDictionary *output = @{
+    kAppName : arguments[kAppName],
+    kArgumentMultiFactorHints : pigeonHints,
+    kArgumentMultiFactorSessionId : sessionId,
+    kArgumentMultiFactorResolverId : resolverId,
+  };
+  result.error(nil, nil, output, error);
+#endif
 }
 
 - (void)signInWithEmailAndPassword:(id)arguments
@@ -597,52 +659,7 @@ NSString *const kErrMsgInvalidCredential =
              completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
                if (error != nil) {
                  if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
-#if TARGET_OS_OSX
-                   result.error(nil, nil, nil, error);
-#else
-            FIRMultiFactorResolver *resolver =
-                (FIRMultiFactorResolver *)
-                    error.userInfo[FIRAuthErrorUserInfoMultiFactorResolverKey];
-
-            NSArray<FIRMultiFactorInfo *> *hints = resolver.hints;
-            FIRMultiFactorSession *session = resolver.session;
-
-            NSString *sessionId = [[NSUUID UUID] UUIDString];
-            self->_multiFactorSessionMap[sessionId] = session;
-
-            NSString *resolverId = [[NSUUID UUID] UUIDString];
-            self->_multiFactorResolverMap[resolverId] = resolver;
-
-            NSMutableArray<NSDictionary *> *pigeonHints = [NSMutableArray array];
-
-            for (FIRMultiFactorInfo *multiFactorInfo in hints) {
-              NSString *phoneNumber;
-              if ([multiFactorInfo class] == [FIRPhoneMultiFactorInfo class]) {
-                FIRPhoneMultiFactorInfo *phoneFactorInfo =
-                    (FIRPhoneMultiFactorInfo *)multiFactorInfo;
-                phoneNumber = phoneFactorInfo.phoneNumber;
-              }
-
-              PigeonMultiFactorInfo *object = [PigeonMultiFactorInfo
-                  makeWithDisplayName:multiFactorInfo.displayName
-                  enrollmentTimestamp:[NSNumber numberWithDouble:multiFactorInfo.enrollmentDate
-                                                                     .timeIntervalSince1970]
-                             factorId:multiFactorInfo.factorID
-                                  uid:multiFactorInfo.UID
-                          phoneNumber:phoneNumber];
-
-              [pigeonHints addObject:object.toMap];
-            }
-
-            NSDictionary *output = @{
-              kAppName : arguments[kAppName],
-              kArgumentMultiFactorHints : pigeonHints,
-              kArgumentMultiFactorSessionId : sessionId,
-              kArgumentMultiFactorResolverId : resolverId,
-            };
-            result.error(nil, nil, output, error);
-#endif
-
+                   [self handleMultiFactorError:arguments withResult:result withError:error];
                  } else {
                    result.error(nil, nil, nil, error);
                  }
@@ -659,7 +676,11 @@ NSString *const kErrMsgInvalidCredential =
                    link:arguments[@"emailLink"]
              completion:^(FIRAuthDataResult *_Nullable authResult, NSError *_Nullable error) {
                if (error != nil) {
-                 result.error(nil, nil, nil, error);
+                 if (error.code == FIRAuthErrorCodeSecondFactorRequired) {
+                   [self handleMultiFactorError:arguments withResult:result withError:error];
+                 } else {
+                   result.error(nil, nil, nil, error);
+                 }
                } else {
                  result.success(authResult);
                }

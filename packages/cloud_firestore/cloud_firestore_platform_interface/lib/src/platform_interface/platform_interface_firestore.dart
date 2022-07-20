@@ -11,8 +11,8 @@ import 'package:flutter/foundation.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../get_options.dart';
-import '../persistence_settings.dart';
 import '../method_channel/method_channel_firestore.dart';
+import '../persistence_settings.dart';
 import '../settings.dart';
 import 'platform_interface_collection_reference.dart';
 import 'platform_interface_document_reference.dart';
@@ -162,8 +162,11 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the [timeout] parameter.
+  ///
+  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// with [maxAttempts]. Attempts should be at least 1.
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) {
+      {Duration timeout = const Duration(seconds: 30), int maxAttempts = 5}) {
     throw UnimplementedError('runTransaction() is not implemented');
   }
 
