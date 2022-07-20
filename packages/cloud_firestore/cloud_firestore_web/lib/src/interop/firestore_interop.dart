@@ -8,11 +8,12 @@
 @JS('firebase_firestore')
 library firebase_interop.firestore;
 
-import './firestore.dart';
-import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'dart:typed_data' show Uint8List;
 
+import 'package:firebase_core_web/firebase_core_web_interop.dart';
 import 'package:js/js.dart';
+
+import './firestore.dart';
 
 @JS()
 external FirestoreJsImpl getFirestore([AppJsImpl? app]);
@@ -187,8 +188,17 @@ external bool refEqual(
 @JS()
 external PromiseJsImpl<void> runTransaction(
   FirestoreJsImpl firestore,
-  Func1<TransactionJsImpl, PromiseJsImpl> updateFunction,
-);
+  Func1<TransactionJsImpl, PromiseJsImpl> updateFunction, [
+  TransactionOptionsJsImpl? options,
+]);
+
+@JS('TransactionOptions')
+class TransactionOptionsJsImpl {
+  external factory TransactionOptionsJsImpl(num maxAttempts);
+
+  /// Maximum number of attempts to commit, after which transaction fails. Default is 5.
+  external num get maxAttempts;
+}
 
 @JS()
 external FieldValue serverTimestamp();

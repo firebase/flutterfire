@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.FirebaseFirestoreException.Code;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.TransactionOptions;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import io.flutter.plugins.firebase.firestore.FlutterFirebaseFirestoreTransactionResult;
@@ -57,8 +58,12 @@ public class TransactionStreamHandler implements OnTransactionResultListener, St
       timeout = 5000L;
     }
 
+    // Always sent by the PlatformChannel
+    int maxAttempts = (int) argumentsMap.get("maxAttempts");
+
     firestore
         .runTransaction(
+            new TransactionOptions.Builder().setMaxAttempts(maxAttempts).build(),
             transaction -> {
               onTransactionStartedListener.onStarted(transaction);
 

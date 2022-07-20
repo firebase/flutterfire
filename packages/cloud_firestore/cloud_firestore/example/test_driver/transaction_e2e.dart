@@ -4,9 +4,9 @@
 
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void runTransactionTests() {
   group(
@@ -89,6 +89,71 @@ void runTransactionTests() {
               await documentReference.get();
           expect(snapshot.data()!['foo'], equals('bar'));
         }
+      });
+
+      test('should not collide if number of maxAttempts is enough', () async {
+        DocumentReference<Map<String, dynamic>> doc1 =
+            await initializeTest('transaction-maxAttempts-1');
+
+        await doc1.set({'test': 0});
+
+        await Future.wait([
+          firestore.runTransaction(
+            (Transaction transaction) async {
+              final value = await transaction.get(doc1);
+              transaction.set(doc1, {
+                'test': value['test'] + 1,
+              });
+            },
+            maxAttempts: 2,
+          ),
+          firestore.runTransaction(
+            (Transaction transaction) async {
+              final value = await transaction.get(doc1);
+              transaction.set(doc1, {
+                'test': value['test'] + 1,
+              });
+            },
+            maxAttempts: 2,
+          ),
+        ]);
+
+        DocumentSnapshot<Map<String, dynamic>> snapshot1 = await doc1.get();
+        expect(snapshot1.data()!['test'], equals(2));
+      });
+
+      test('should collide if number of maxAttempts is too low', () async {
+        DocumentReference<Map<String, dynamic>> doc1 =
+            await initializeTest('transaction-maxAttempts-2');
+
+        await doc1.set({'test': 0});
+
+        await expectLater(
+          Future.wait([
+            firestore.runTransaction(
+              (Transaction transaction) async {
+                final value = await transaction.get(doc1);
+                transaction.set(doc1, {
+                  'test': value['test'] + 1,
+                });
+              },
+              maxAttempts: 1,
+            ),
+            firestore.runTransaction(
+              (Transaction transaction) async {
+                final value = await transaction.get(doc1);
+                transaction.set(doc1, {
+                  'test': value['test'] + 1,
+                });
+              },
+              maxAttempts: 1,
+            ),
+          ]),
+          throwsA(
+            isA<FirebaseException>()
+                .having((e) => e.code, 'code', 'failed-precondition'),
+          ),
+        );
       });
 
       test('runs multiple transactions in parallel', () async {

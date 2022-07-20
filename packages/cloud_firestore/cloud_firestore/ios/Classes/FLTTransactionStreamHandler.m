@@ -37,6 +37,8 @@
                                        eventSink:(nonnull FlutterEventSink)events {
   FIRFirestore *firestore = arguments[@"firestore"];
   NSNumber *transactionTimeout = arguments[@"timeout"];
+  NSNumber *maxAttempts = arguments[@"maxAttempts"];
+
   __weak FLTTransactionStreamHandler *weakSelf = self;
 
   id transactionRunBlock = ^id(FIRTransaction *transaction, NSError **pError) {
@@ -133,8 +135,12 @@
 
     strongSelf.ended();
   };
+  FIRTransactionOptions *options = [[FIRTransactionOptions alloc] init];
+  options.maxAttempts = maxAttempts.integerValue;
 
-  [firestore runTransactionWithBlock:transactionRunBlock completion:transactionCompleteBlock];
+  [firestore runTransactionWithOptions:options
+                                 block:transactionRunBlock
+                            completion:transactionCompleteBlock];
 
   return nil;
 }
