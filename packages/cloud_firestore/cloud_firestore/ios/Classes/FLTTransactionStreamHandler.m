@@ -135,7 +135,7 @@
 
     strongSelf.ended();
   };
-  FIRTransactionOptions *options = [FIRTransactionOptions init];
+  FIRTransactionOptions* options = [[FIRTransactionOptions alloc] init];
   options.maxAttempts = maxAttempts.integerValue;
 
   [firestore runTransactionWithOptions:options
