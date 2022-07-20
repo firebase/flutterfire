@@ -23,11 +23,8 @@ void main() {
     // expect-error: UNDEFINED_NAMED_PARAMETER
     arrayContains: null,
   );
-  // No arrayContains for complex objects
-  nestedRef.whereValueList(
-    // expect-error: UNDEFINED_NAMED_PARAMETER
-    arrayContains: null,
-  );
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValueList();
 
   nestedRef.whereNumList(arrayContains: 42);
   nestedRef.whereNumList(
