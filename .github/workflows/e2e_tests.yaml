@@ -97,8 +97,8 @@ jobs:
           working-directory: tests
           script: |
             sleep 15
-            flutter test integration_test/e2e_test.dart --dart-define=CI=true
             $ANDROID_HOME/platform-tools/adb logcat '*:E' > adb-log.txt &
+            flutter test integration_test/e2e_test.dart --dart-define=CI=true
 
       - name: Compress Emulator Log
         if: always()
