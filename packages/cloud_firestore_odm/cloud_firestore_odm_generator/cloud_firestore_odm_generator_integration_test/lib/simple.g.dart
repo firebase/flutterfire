@@ -953,6 +953,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   });
   NestedQuery whereStringList({
@@ -963,6 +964,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
   NestedQuery whereNumList({
@@ -973,6 +975,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   });
   NestedQuery whereObjectList({
@@ -983,6 +986,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   });
   NestedQuery whereDynamicList({
@@ -993,6 +997,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
 
@@ -1242,6 +1247,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1254,6 +1260,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1268,6 +1275,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1280,6 +1288,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1294,6 +1303,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1306,6 +1316,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1320,6 +1331,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1332,6 +1344,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1346,6 +1359,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1358,6 +1372,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,

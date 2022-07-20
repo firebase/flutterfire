@@ -8,6 +8,38 @@ Future<void> main() async {
     path: 'lib/__test__.dart',
   );
 
+  group('where(arrayContains)', () {
+    test(' is typed', () {
+      expect(
+        library.withCode(
+          '''
+import 'simple.dart';
+
+void main() {
+  // Does not arrayContains for non-list
+  nestedRef.whereValue(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    arrayContains: null,
+  );
+  // No arrayContains for complex objects
+  nestedRef.whereValueList(
+    // expect-error: UNDEFINED_NAMED_PARAMETER
+    arrayContains: null,
+  );
+
+  nestedRef.whereNumList(arrayContains: 42);
+  nestedRef.whereNumList(
+    // expect-error: ARGUMENT_TYPE_NOT_ASSIGNABLE
+    arrayContains: 'string',
+  );
+}
+''',
+        ),
+        compiles,
+      );
+    });
+  });
+
   group('update', () {
     test('rejects complex object list but allows primitive lists', () {
       expect(
