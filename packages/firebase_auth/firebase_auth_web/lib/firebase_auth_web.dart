@@ -303,7 +303,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
           await delegate
               .signInWithCredential(convertPlatformCredential(credential)!));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -313,7 +313,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await delegate.signInWithCustomToken(token));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -335,7 +335,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return UserCredentialWeb(
           this, await delegate.signInWithEmailLink(email, emailLink));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -351,7 +351,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
       return ConfirmationResultWeb(
           this, await delegate.signInWithPhoneNumber(phoneNumber, verifier));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -363,7 +363,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
         await delegate.signInWithPopup(convertPlatformAuthProvider(provider)),
       );
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
@@ -372,7 +372,7 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
     try {
       return delegate.signInWithRedirect(convertPlatformAuthProvider(provider));
     } catch (e) {
-      throw getFirebaseAuthException(e);
+      throw getFirebaseAuthException(e, _webAuth);
     }
   }
 
