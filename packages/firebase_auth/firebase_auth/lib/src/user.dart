@@ -10,6 +10,7 @@ class User {
   UserPlatform _delegate;
 
   final FirebaseAuth _auth;
+  MultiFactor? _multiFactor;
 
   User._(this._auth, this._delegate) {
     UserPlatform.verifyExtends(_delegate);
@@ -262,7 +263,7 @@ class User {
     // If we add a recaptcha to the page by creating a new instance, we must
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
-    verifier ??= RecaptchaVerifier();
+    verifier ??= RecaptchaVerifier(auth: _delegate.auth);
     final result =
         await _delegate.linkWithPhoneNumber(phoneNumber, verifier.delegate);
     if (mustClear) {
@@ -419,6 +420,10 @@ class User {
     ActionCodeSettings? actionCodeSettings,
   ]) async {
     await _delegate.verifyBeforeUpdateEmail(newEmail, actionCodeSettings);
+  }
+
+  MultiFactor get multiFactor {
+    return _multiFactor ??= MultiFactor._(_delegate.multiFactor);
   }
 
   @override

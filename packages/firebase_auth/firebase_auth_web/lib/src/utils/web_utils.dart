@@ -3,17 +3,25 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_auth_web/firebase_auth_web.dart';
+import 'package:firebase_auth_web/src/firebase_auth_web_multi_factor.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     as core_interop;
 
 import '../interop/auth.dart' as auth_interop;
+import '../interop/multi_factor.dart' as multi_factor_interop;
 
 /// Given a web error, an [Exception] is returned.
 ///
 /// The firebase-dart wrapper exposes a [core_interop.FirebaseError], allowing us to
 /// use the code and message and convert it into an expected [FirebaseAuthException].
-FirebaseAuthException getFirebaseAuthException(Object exception) {
+FirebaseAuthException getFirebaseAuthException(
+  Object exception, [
+  auth_interop.Auth? auth,
+]) {
   if (exception is! core_interop.FirebaseError) {
     return FirebaseAuthException(
       code: 'unknown',
@@ -27,6 +35,54 @@ FirebaseAuthException getFirebaseAuthException(Object exception) {
   String message = firebaseError.message
       .replaceFirst(' (${firebaseError.code}).', '')
       .replaceFirst('Firebase: ', '');
+
+  if (code == 'multi-factor-auth-required') {
+    final _auth = auth;
+    if (_auth == null) {
+      throw ArgumentError(
+        'Multi-factor authentication is required, but the auth instance is null. '
+        'Please ensure that the auth instance is not null before calling '
+        '`getFirebaseAuthException()`.',
+      );
+    }
+    final resolverWeb = multi_factor_interop.getMultiFactorResolver(
+      _auth,
+      firebaseError as auth_interop.MultiFactorError,
+    );
+
+    return FirebaseAuthMultiFactorException(
+      code: code,
+      message: message,
+      email: firebaseError.email,
+      phoneNumber: firebaseError.phoneNumber,
+      tenantId: firebaseError.tenantId,
+      resolver: MultiFactorResolverWeb(
+        resolverWeb.hints.map((e) {
+          if (e is multi_factor_interop.PhoneMultiFactorInfo) {
+            return PhoneMultiFactorInfo(
+              displayName: e.displayName,
+              factorId: e.factorId,
+              enrollmentTimestamp:
+                  HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch /
+                      1000,
+              uid: e.uid,
+              phoneNumber: e.phoneNumber,
+            );
+          }
+          return MultiFactorInfo(
+            displayName: e.displayName,
+            factorId: e.factorId,
+            enrollmentTimestamp:
+                HttpDate.parse(e.enrollmentTime).millisecondsSinceEpoch / 1000,
+            uid: e.uid,
+          );
+        }).toList(),
+        MultiFactorSessionWeb('web', resolverWeb.session),
+        FirebaseAuthWeb.instance,
+        resolverWeb,
+      ),
+    );
+  }
 
   return FirebaseAuthException(
     code: code,
@@ -252,7 +308,7 @@ auth_interop.OAuthCredential? convertPlatformCredential(
     return auth_interop.PhoneAuthProvider.credential(
       credential.verificationId!,
       credential.smsCode!,
-    );
+    ) as auth_interop.OAuthCredential;
   }
 
   if (credential is OAuthCredential) {
@@ -289,4 +345,10 @@ String convertRecaptchaVerifierTheme(RecaptchaVerifierTheme theme) {
     default:
       return 'light';
   }
+}
+
+/// Converts a [multi_factor_interop.MultiFactorSession] into a [MultiFactorSession].
+MultiFactorSession convertMultiFactorSession(
+    multi_factor_interop.MultiFactorSession multiFactorSession) {
+  return MultiFactorSessionWeb('web', multiFactorSession);
 }
