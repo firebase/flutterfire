@@ -832,7 +832,10 @@ public class FlutterFirebaseAuthPlugin
     return taskCompletionSource.getTask();
   }
 
-  private void handleMultiFactorException(Map<String, Object> arguments, TaskCompletionSource<Map<String, Object>> taskCompletionSource, Exception e) {
+  private void handleMultiFactorException(
+      Map<String, Object> arguments,
+      TaskCompletionSource<Map<String, Object>> taskCompletionSource,
+      Exception e) {
     final FirebaseAuthMultiFactorException multiFactorException =
         (FirebaseAuthMultiFactorException) e.getCause();
     Map<String, Object> output = new HashMap<>();
