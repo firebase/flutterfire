@@ -17,10 +17,8 @@ import 'simple.dart';
 
 void main() {
   // Does not arrayContains for non-list
-  nestedRef.whereValue(
-    // expect-error: UNDEFINED_NAMED_PARAMETER
-    arrayContains: null,
-  );
+  // expect-error: UNDEFINED_METHOD
+  nestedRef.whereValue();
   // No arrayContains for complex objects
   nestedRef.whereValueList(
     // expect-error: UNDEFINED_NAMED_PARAMETER
