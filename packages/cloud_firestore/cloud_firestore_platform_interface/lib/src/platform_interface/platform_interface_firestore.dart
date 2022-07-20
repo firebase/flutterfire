@@ -162,6 +162,9 @@ abstract class FirebaseFirestorePlatform extends PlatformInterface {
   ///
   /// By default transactions are limited to 5 seconds of execution time. This
   /// timeout can be adjusted by setting the [timeout] parameter.
+  ///
+  /// By default transactions will retry 5 times. You can change the number of attemps
+  /// with [maxAttempts]. Attempts should be at least 1.
   Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
       {Duration timeout = const Duration(seconds: 30), int maxAttempts = 5}) {
     throw UnimplementedError('runTransaction() is not implemented');
