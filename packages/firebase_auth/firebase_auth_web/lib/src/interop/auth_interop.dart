@@ -664,6 +664,8 @@ class AuthSettings {
   // external factory AuthSettings({bool appVerificationDisabledForTesting});
 }
 
+external dynamic get browserPopupRedirectResolver;
+
 /// https://firebase.google.com/docs/reference/js/auth.multifactoruser.md#multifactoruser_interface
 @JS()
 @anonymous
