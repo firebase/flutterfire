@@ -89,8 +89,8 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// Returns a JWT refresh token for the user.
   ///
-  /// This property maybe `null` or empty if the underlying platform does not
-  /// support providing refresh tokens.
+  /// This property will be an empty string for native platforms (android, iOS & macOS) as they do not
+  /// support refresh tokens.
   String? get refreshToken {
     return _user['refreshToken'];
   }
