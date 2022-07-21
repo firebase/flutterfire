@@ -1,3 +1,7 @@
+## 6.4.0
+
+ - **FEAT**: add phone MFA ([#9044](https://github.com/firebase/flutterfire/issues/9044)). ([1b85c8b7](https://github.com/firebase/flutterfire/commit/1b85c8b7fbcc3f21767f23981cb35061772d483f))
+
 ## 6.3.2
 
  - Update a dependency to the latest release.
