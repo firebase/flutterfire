@@ -80,7 +80,16 @@ abstract class FirestoreCollectionReference<
         Model,
         Snapshot extends FirestoreQuerySnapshot<Model,
             FirestoreDocumentSnapshot<Model>>>
+    extends QueryReference<Model, Snapshot>
     implements FirestoreReference<Snapshot> {
+  FirestoreCollectionReference({
+    required Query<Model> referenceWithoutCursor,
+    Query<Model> Function(Query<Model> query)? applyCursor,
+  }) : super(
+          referenceWithoutCursor: referenceWithoutCursor,
+          applyCursor: applyCursor,
+        );
+
   @override
   CollectionReference<Model> get reference;
 
@@ -191,6 +200,8 @@ abstract class QueryReference<
         Snapshot extends FirestoreQuerySnapshot<Model,
             FirestoreDocumentSnapshot<Model>>>
     implements FirestoreReference<Snapshot> {
+  QueryReference({required this.referenceWithoutCursor, this.applyCursor});
+
   @override
   FirestoreListenable<Selected> select<Selected>(
     Selected Function(Snapshot snapshot) selector,
@@ -198,8 +209,21 @@ abstract class QueryReference<
     return FirestoreSelector._(this, selector);
   }
 
+  /// The reference to a query, without operations such as `startAt`
+  @protected
+  final Query<Model> referenceWithoutCursor;
+
+  /// A function which takes [referenceWithoutCursor] and applies cursors like
+  /// `startAt`.
+  @protected
+  final Query<Model> Function(Query<Model> query)? applyCursor;
+
+  // Since we cannot do `orderBy().startAt().orderBy()`, the ODM needs to convert
+  // `orderBy(startAt: ).orderBy()` into a valid query
   @override
-  Query<Model> get reference;
+  late final Query<Model> reference = applyCursor != null
+      ? applyCursor!(referenceWithoutCursor)
+      : referenceWithoutCursor;
 
   /// Executes the query and returns the results as a QuerySnapshot.
   ///

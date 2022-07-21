@@ -5,8 +5,9 @@ import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:flutter/foundation.dart';
 
 class FakeCollectionReference<Value>
-    extends QueryReference<Value, FakeQuerySnapshot<Value>>
-    implements FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
+    implements
+        QueryReference<Value, FakeQuerySnapshot<Value>>,
+        FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
   FakeCollectionReference(this.valueListenable);
   final ValueListenable<List<Value>> valueListenable;
 
