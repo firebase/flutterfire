@@ -5,7 +5,7 @@ class DocumentSnapshotTemplate extends Template<CollectionData> {
   @override
   String generate(CollectionData data) {
     return '''
-class ${data.documentSnapshotName} extends FirestoreDocumentSnapshot {
+class ${data.documentSnapshotName} extends FirestoreDocumentSnapshot<${data.type}> {
   ${data.documentSnapshotName}._(
     this.snapshot,
     this.data,
