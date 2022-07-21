@@ -139,7 +139,7 @@ abstract class FirebaseAnalyticsPlatform extends PlatformInterface {
 
   /// Adds parameters that will be set on every event logged from the SDK, including automatic ones.
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) {
     throw UnimplementedError('setDefaultEventParameters() is not implemented');
   }
