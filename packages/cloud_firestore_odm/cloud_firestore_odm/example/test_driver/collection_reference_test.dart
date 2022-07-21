@@ -502,6 +502,7 @@ void main() {
           );
         });
       });
+
       group('startAt', () {
         test('supports values', () async {
           final collection = await initializeTest(MovieCollectionReference());
@@ -519,6 +520,34 @@ void main() {
                   .having((d) => d.data.title, 'data.title', 'B'),
               isA<MovieQueryDocumentSnapshot>()
                   .having((d) => d.data.title, 'data.title', 'C'),
+            ],
+          );
+        });
+
+        test('can be used multiple times within a query', () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.add(createMovie(title: 'A', likes: 1));
+          await collection.add(createMovie(title: 'A', likes: 2));
+          await collection.add(createMovie(title: 'B', likes: 1));
+          await collection.add(createMovie(title: 'B', likes: 2));
+          await collection.add(createMovie(title: 'C', likes: 1));
+          await collection.add(createMovie(title: 'C', likes: 2));
+
+          final querySnap = await collection
+              .orderByTitle(startAt: 'B')
+              .orderByLikes(startAt: 2)
+              .get();
+
+          expect(
+            querySnap.docs,
+            [
+              isA<MovieQueryDocumentSnapshot>()
+                  .having((d) => d.data.title, 'data.title', 'B')
+                  .having((d) => d.data.title, 'data.likes', 2),
+              isA<MovieQueryDocumentSnapshot>()
+                  .having((d) => d.data.title, 'data.title', 'C')
+                  .having((d) => d.data.title, 'data.likes', 2),
             ],
           );
         });
