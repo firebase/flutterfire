@@ -82,11 +82,6 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   /// the currently saved Auth session and applies this type of persistence for
   /// future sign-in requests, including sign-in with redirect requests.
   ///
-  /// This will return a promise that will resolve once the state finishes
-  /// copying from one type of storage to the other. Calling a sign-in method
-  /// after changing persistence will wait for that persistence change to
-  /// complete before applying it on the new Auth state.
-  ///
   /// This makes it easy for a user signing in to specify whether their session
   /// should be remembered or not. It also makes it easier to never persist the
   /// Auth state for applications that are shared by other users or have
