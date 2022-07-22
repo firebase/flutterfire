@@ -104,7 +104,8 @@ class Firestore extends JsObjectWrapper<firestore_interop.FirestoreJsImpl> {
     return handleThenable(firestore_interop.runTransaction(
             jsObject,
             updateFunctionWrap,
-            firestore_interop.TransactionOptionsJsImpl(maxAttempts)))
+            firestore_interop.TransactionOptionsJsImpl(
+                maxAttempts: maxAttempts)))
         .then((value) => dartify(null));
   }
 
