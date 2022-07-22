@@ -58,18 +58,35 @@ class MultiFactorSession {
 
 /// Represents an assertion that the Firebase Authentication server
 /// can use to authenticate a user as part of a multi-factor flow.
-class MultiFactorAssertionPlatform {}
+class MultiFactorAssertionPlatform extends PlatformInterface {
+  /// {@macro .platformInterfaceMultiFactor}
+  MultiFactorAssertionPlatform() : super(token: _token);
+
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [MultiFactorResolverPlatform].
+  static void verifyExtends(MultiFactorAssertionPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
+}
 
 /// {@macro .platformInterfaceMultiFactorResolverPlatform}
 /// Utility class that contains methods to resolve second factor
 /// requirements on users that have opted into two-factor authentication.
 /// {@endtemplate}
-class MultiFactorResolverPlatform {
+class MultiFactorResolverPlatform extends PlatformInterface {
   /// {@macro .platformInterfaceMultiFactorResolverPlatform}
-  const MultiFactorResolverPlatform(
+  MultiFactorResolverPlatform(
     this.hints,
     this.session,
-  );
+  ) : super(token: _token);
+
+  static final Object _token = Object();
+
+  /// Ensures that any delegate class has extended a [MultiFactorResolverPlatform].
+  static void verifyExtends(MultiFactorResolverPlatform instance) {
+    PlatformInterface.verifyToken(instance, _token);
+  }
 
   /// List of [MultiFactorInfo] which represents the available
   /// second factors that can be used to complete the sign-in for the current session.

@@ -74,7 +74,7 @@ FirebaseException platformExceptionToFirebaseAuthException(
   );
 }
 
-FirebaseAuthMultiFactorException parseMultiFactorError(
+FirebaseAuthMultiFactorExceptionPlatform parseMultiFactorError(
     Map<String, Object?> details) {
   final code = details['code'] as String?;
   final message = details['message'] as String?;
@@ -124,7 +124,7 @@ FirebaseAuthMultiFactorException parseMultiFactorError(
     auth,
   );
 
-  return FirebaseAuthMultiFactorException(
+  return FirebaseAuthMultiFactorExceptionPlatform(
     code: code ?? 'Unknown',
     message: message,
     resolver: multiFactorResolver,

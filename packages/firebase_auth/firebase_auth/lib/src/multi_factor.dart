@@ -17,10 +17,10 @@ class MultiFactor {
   ///
   /// [displayName] can be used to provide a display name for the second factor.
   Future<void> enroll(
-    MultiFactorAssertionPlatform assertion, {
+    MultiFactorAssertion assertion, {
     String? displayName,
   }) async {
-    return _delegate.enroll(assertion, displayName: displayName);
+    return _delegate.enroll(assertion._delegate, displayName: displayName);
   }
 
   /// Unenrolls a second factor from this user.
@@ -45,9 +45,62 @@ class MultiFactor {
 class PhoneMultiFactorGenerator {
   /// Transforms a PhoneAuthCredential into a [MultiFactorAssertion]
   /// which can be used to confirm ownership of a phone second factor.
-  static MultiFactorAssertionPlatform getAssertion(
+  static MultiFactorAssertion getAssertion(
     PhoneAuthCredential credential,
   ) {
-    return PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
+    final assertion =
+        PhoneMultiFactorGeneratorPlatform.instance.getAssertion(credential);
+    return MultiFactorAssertion._(assertion);
   }
+}
+
+class MultiFactorAssertion {
+  final MultiFactorAssertionPlatform _delegate;
+
+  MultiFactorAssertion._(this._delegate) {
+    MultiFactorAssertionPlatform.verifyExtends(_delegate);
+  }
+}
+
+class MultiFactorResolver {
+  final FirebaseAuth _auth;
+  final MultiFactorResolverPlatform _delegate;
+
+  MultiFactorResolver._(this._auth, this._delegate) {
+    MultiFactorResolverPlatform.verifyExtends(_delegate);
+  }
+
+  /// List of [MultiFactorInfo] which represents the available
+  /// second factors that can be used to complete the sign-in for the current session.
+  List<MultiFactorInfo> get hints => _delegate.hints;
+
+  /// A MultiFactorSession, an opaque session identifier for the current sign-in flow.
+  MultiFactorSession get session => _delegate.session;
+
+  /// Completes sign in with a second factor using an MultiFactorAssertion which
+  /// confirms that the user has successfully completed the second factor challenge.
+  Future<UserCredential> resolveSignIn(
+    MultiFactorAssertion assertion,
+  ) async {
+    final credential = await _delegate.resolveSignIn(assertion._delegate);
+    return UserCredential._(_auth, credential);
+  }
+}
+
+class FirebaseAuthMultiFactorException extends FirebaseAuthException {
+  final FirebaseAuth _auth;
+  final FirebaseAuthMultiFactorExceptionPlatform _delegate;
+
+  FirebaseAuthMultiFactorException._(this._auth, this._delegate)
+      : super(
+          code: _delegate.code,
+          message: _delegate.message,
+          email: _delegate.email,
+          credential: _delegate.credential,
+          phoneNumber: _delegate.phoneNumber,
+          tenantId: _delegate.tenantId,
+        );
+
+  MultiFactorResolver get resolver =>
+      MultiFactorResolver._(_auth, _delegate.resolver);
 }

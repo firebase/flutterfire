@@ -8,11 +8,11 @@ import 'package:meta/meta.dart';
 
 /// MultiFactor exception related to Firebase Authentication. Check the error code
 /// and message for more details.
-class FirebaseAuthMultiFactorException extends FirebaseAuthException
+class FirebaseAuthMultiFactorExceptionPlatform extends FirebaseAuthException
     implements Exception {
   // ignore: public_member_api_docs
   @protected
-  FirebaseAuthMultiFactorException({
+  FirebaseAuthMultiFactorExceptionPlatform({
     String? message,
     required String code,
     String? email,

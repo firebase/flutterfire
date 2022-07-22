@@ -492,10 +492,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredential> signInWithCredential(AuthCredential credential) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Tries to sign in a user with a given custom token.
@@ -519,7 +525,14 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **invalid-custom-token**:
   ///  - Thrown if the custom token format is incorrect.
   Future<UserCredential> signInWithCustomToken(String token) async {
-    return UserCredential._(this, await _delegate.signInWithCustomToken(token));
+    try {
+      return UserCredential._(
+          this, await _delegate.signInWithCustomToken(token));
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -545,10 +558,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required String email,
     required String password,
   }) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithEmailAndPassword(email, password),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithEmailAndPassword(email, password),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs in using an email address and email sign-in link.
@@ -570,10 +589,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required String email,
     required String emailLink,
   }) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithEmailLink(email, emailLink),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithEmailLink(email, emailLink),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs in with an AuthProvider using native authentication flow.
@@ -584,10 +609,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
   Future<UserCredential> signInWithAuthProvider(
     AuthProvider provider,
   ) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithAuthProvider(provider),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithAuthProvider(provider),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Starts a sign-in flow for a phone number.
@@ -624,7 +655,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// This method is only available on web based platforms.
   Future<UserCredential> signInWithPopup(AuthProvider provider) async {
-    return UserCredential._(this, await _delegate.signInWithPopup(provider));
+    try {
+      return UserCredential._(this, await _delegate.signInWithPopup(provider));
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Authenticates a Firebase client using a full-page redirect flow.
@@ -632,7 +669,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// To handle the results and errors for this operation, refer to
   /// [getRedirectResult].
   Future<void> signInWithRedirect(AuthProvider provider) {
-    return _delegate.signInWithRedirect(provider);
+    try {
+      return _delegate.signInWithRedirect(provider);
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs out the current user.

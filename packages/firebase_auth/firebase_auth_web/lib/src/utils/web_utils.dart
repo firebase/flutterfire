@@ -50,7 +50,7 @@ FirebaseAuthException getFirebaseAuthException(
       firebaseError as auth_interop.MultiFactorError,
     );
 
-    return FirebaseAuthMultiFactorException(
+    return FirebaseAuthMultiFactorExceptionPlatform(
       code: code,
       message: message,
       email: firebaseError.email,
