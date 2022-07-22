@@ -16,12 +16,12 @@ import 'package:firebase_core_web/firebase_core_web_interop.dart'
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 import 'src/collection_reference_web.dart';
-import 'src/field_value_factory_web.dart';
 import 'src/document_reference_web.dart';
+import 'src/field_value_factory_web.dart';
+import 'src/interop/firestore.dart' as firestore_interop;
 import 'src/query_web.dart';
 import 'src/transaction_web.dart';
 import 'src/write_batch_web.dart';
-import 'src/interop/firestore.dart' as firestore_interop;
 
 /// Web implementation for [FirebaseFirestorePlatform]
 /// delegates calls to firestore web plugin
@@ -100,13 +100,20 @@ class FirebaseFirestoreWeb extends FirebaseFirestorePlatform {
   }
 
   @override
-  Future<T?> runTransaction<T>(TransactionHandler<T> transactionHandler,
-      {Duration timeout = const Duration(seconds: 30)}) async {
+  Future<T?> runTransaction<T>(
+    TransactionHandler<T> transactionHandler, {
+    Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5,
+  }) async {
     await convertWebExceptions(() {
-      return _delegate.runTransaction((transaction) async {
-        return transactionHandler(
-            TransactionWeb(this, _delegate, transaction!));
-      }).timeout(timeout);
+      return _delegate
+          .runTransaction(
+            (transaction) async => transactionHandler(
+              TransactionWeb(this, _delegate, transaction!),
+            ),
+            maxAttempts,
+          )
+          .timeout(timeout);
     });
     // Workaround for 'Runtime type information not available for type_variable_local'
     // See: https://github.com/dart-lang/sdk/issues/29722

@@ -9,10 +9,11 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
+import 'package:http_parser/http_parser.dart';
+import 'package:js/js.dart';
+
 import 'auth_interop.dart' as auth_interop;
 import 'utils/utils.dart';
 
@@ -37,7 +38,8 @@ Auth getAuthInstance(App app, {Persistence? persistence}) {
         app.jsObject,
         jsify({
           'errorMap': auth_interop.debugErrorMap,
-          'persistence': setPersistence
+          'persistence': setPersistence,
+          'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
         })));
   }
   // `browserLocalPersistence` is the default persistence setting.
@@ -45,7 +47,8 @@ Auth getAuthInstance(App app, {Persistence? persistence}) {
       app.jsObject,
       jsify({
         'errorMap': auth_interop.debugErrorMap,
-        'persistence': auth_interop.browserLocalPersistence
+        'persistence': auth_interop.browserLocalPersistence,
+        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
       })));
 }
 
@@ -900,7 +903,7 @@ class PhoneAuthProvider
   /// Creates a new PhoneAuthProvider with the optional [Auth] instance
   /// in which sign-ins should occur.
   factory PhoneAuthProvider([Auth? auth]) =>
-      PhoneAuthProvider.fromJsObject((auth != null)
+      PhoneAuthProvider.fromJsObject(auth != null
           ? auth_interop.PhoneAuthProviderJsImpl(auth.jsObject)
           : auth_interop.PhoneAuthProviderJsImpl());
 
@@ -915,17 +918,17 @@ class PhoneAuthProvider
   ///
   /// For abuse prevention, this method also requires an [ApplicationVerifier].
   Future<String> verifyPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
+          dynamic phoneOptions, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.verifyPhoneNumber(
-          phoneNumber, applicationVerifier.jsObject));
+          phoneOptions, applicationVerifier.jsObject));
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
   /// user's mobile device.
-  static auth_interop.OAuthCredential credential(
+  static auth_interop.PhoneAuthCredentialJsImpl credential(
           String verificationId, String verificationCode) =>
       auth_interop.PhoneAuthProviderJsImpl.credential(
-          verificationId, verificationCode) as auth_interop.OAuthCredential;
+          verificationId, verificationCode);
 }
 
 /// A verifier for domain verification and abuse prevention.
@@ -979,18 +982,16 @@ class RecaptchaVerifier
   ///         print('Response expired');
   ///       }
   ///     });
-  factory RecaptchaVerifier(container,
-          [Map<String, dynamic>? parameters, App? app]) =>
-      (parameters != null)
-          ? ((app != null)
-              ? RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters), app.jsObject))
-              : RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters))))
-          : RecaptchaVerifier.fromJsObject(
-              auth_interop.RecaptchaVerifierJsImpl(container));
+  factory RecaptchaVerifier(
+      container, Map<String, dynamic> parameters, Auth auth) {
+    return RecaptchaVerifier.fromJsObject(
+      auth_interop.RecaptchaVerifierJsImpl(
+        container,
+        jsify(parameters),
+        auth.jsObject,
+      ),
+    );
+  }
 
   /// Creates a new RecaptchaVerifier from a [jsObject].
   RecaptchaVerifier.fromJsObject(auth_interop.RecaptchaVerifierJsImpl jsObject)

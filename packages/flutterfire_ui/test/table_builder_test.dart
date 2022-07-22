@@ -1,43 +1,43 @@
+// ignore_for_file: subtype_of_sealed_class, must_be_immutable, avoid_implementing_value_types
+
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutterfire_ui/src/firestore/table_builder.dart';
+import 'package:mockito/mockito.dart';
+
+typedef Snapshot = QuerySnapshot<Map<String, Object?>>;
+
+final bob = Person(
+  firstName: 'Bob',
+  address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
+);
+final bob2 = Person(
+  firstName: 'Bob #2',
+  address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
+);
 
 Future<void> main() async {
-  final instance = FakeFirebaseFirestore();
-  final collection = instance.collection('persons');
-  final bob = Person(
-    firstName: 'Bob',
-    address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
-  );
-  final bob2 = Person(
-    firstName: 'Bob #2',
-    address: Address(street: 'Awesome Road', city: 'FlutterFire City'),
-  );
-
   setUp(() async {
-    await collection.add(bob.toMap());
-    await collection.add(bob2.toMap());
-  });
-
-  tearDown(() async {
-    final docsSnapshot = await collection.get();
-    for (final id in docsSnapshot.docs.map((e) => e.id)) {
-      await (collection.doc(id)).delete();
-    }
+    when(bobSnapshot.data()).thenReturn(bob.toMap());
+    when(bob2Snapshot.data()).thenReturn(bob2.toMap());
   });
 
   testWidgets(
     'FirestoreDataTable without CellBuilder is render as expected',
     (WidgetTester tester) async {
       await tester.pumpWidget(_dataTableBuilder(query: collection));
+      mockCtrl.add(mockQuerySnapshot);
 
       await tester.pumpAndSettle();
 
-      final streetFinder = find
-          .text('{street: ${bob.address.street}, city: ${bob.address.city}}');
+      final street = bob.address.street;
+      final city = bob.address.city;
+
+      final streetFinder = find.text('{street: $street, city: $city}');
       final firstNameFinder = find.text(bob.firstName);
 
       expect(streetFinder, findsNWidgets(2));
@@ -54,6 +54,8 @@ Future<void> main() async {
           cellBuilder: _defaultCellBuilder,
         ),
       );
+
+      mockCtrl.add(mockQuerySnapshot);
 
       await tester.pumpAndSettle();
 
@@ -76,6 +78,8 @@ Future<void> main() async {
           cellBuilder: _defaultCellBuilder,
         ),
       );
+
+      mockCtrl.add(mockQuerySnapshot);
 
       await tester.pumpAndSettle();
 
@@ -102,6 +106,8 @@ Future<void> main() async {
         ),
       );
 
+      mockCtrl.add(mockQuerySnapshot);
+
       await tester.pumpAndSettle();
 
       final firstNameFinder = find.text(bob.firstName);
@@ -127,15 +133,18 @@ Future<void> main() async {
           cellBuilder: _defaultCellBuilder,
           onTapCell: (doc, value, colKey) async {
             final person = Person.fromMap(doc.data());
-
-            await doc.reference.set(
+            when(bobSnapshot.data()).thenReturn(
               person
                   .copyWith(firstName: person.firstName.toUpperCase())
                   .toMap(),
             );
+
+            mockCtrl.add(mockQuerySnapshot);
           },
         ),
       );
+
+      mockCtrl.add(mockQuerySnapshot);
 
       await tester.pumpAndSettle();
 
@@ -173,6 +182,8 @@ Future<void> main() async {
           },
         ),
       );
+
+      mockCtrl.add(mockQuerySnapshot);
 
       await tester.pumpAndSettle();
 
@@ -307,3 +318,127 @@ class Address {
     );
   }
 }
+
+class MockFirestore extends Mock implements FirebaseFirestore {}
+
+class MockCollection extends Mock
+    implements CollectionReference<Map<String, Object?>> {
+  @override
+  CollectionReference<R> withConverter<R extends Object?>({
+    FromFirestore<R>? fromFirestore,
+    ToFirestore<R>? toFirestore,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(#withConverter, null, {
+        #fromFirestore: fromFirestore,
+        #toFirestore: toFirestore,
+      }),
+      returnValue: this,
+      returnValueForMissingStub: this,
+    );
+  }
+
+  @override
+  Query<Map<String, Object?>> limit([int? limit]) {
+    return super.noSuchMethod(
+      Invocation.method(
+        #limit,
+        [limit],
+      ),
+      returnValue: mockQuery,
+      returnValueForMissingStub: mockQuery,
+    );
+  }
+}
+
+final collection = MockCollection();
+
+class MockDocumentReference extends Mock
+    implements DocumentReference<Map<String, Object?>> {
+  final Person person;
+
+  MockDocumentReference(this.person);
+}
+
+class MockDocumentSnapshot extends Mock
+    implements QueryDocumentSnapshot<Map<String, Object?>> {
+  final Person person;
+
+  MockDocumentSnapshot(this.person);
+
+  @override
+  DocumentReference<Map<String, Object?>> get reference {
+    return super.noSuchMethod(
+      Invocation.getter(#reference),
+      returnValue: MockDocumentReference(person),
+      returnValueForMissingStub: MockDocumentReference(person),
+    );
+  }
+
+  @override
+  String get id {
+    return super.noSuchMethod(
+      Invocation.getter(#id),
+      returnValue: person.hashCode.toString(),
+      returnValueForMissingStub: person.hashCode.toString(),
+    );
+  }
+
+  @override
+  Map<String, Object?> data() {
+    return super.noSuchMethod(
+      Invocation.method(#data, null),
+      returnValue: person.toMap(),
+      returnValueForMissingStub: person.toMap(),
+    );
+  }
+}
+
+final bobSnapshot = MockDocumentSnapshot(bob);
+final bob2Snapshot = MockDocumentSnapshot(bob2);
+
+class MockQuerySnapshot extends Mock implements Snapshot {
+  @override
+  int get size {
+    return super.noSuchMethod(
+      Invocation.getter(#size),
+      returnValue: 2,
+      returnValueForMissingStub: 2,
+    );
+  }
+
+  @override
+  List<QueryDocumentSnapshot<Map<String, Object?>>> get docs {
+    return super.noSuchMethod(
+      Invocation.getter(#docs),
+      returnValue: [
+        bobSnapshot,
+        bob2Snapshot,
+      ],
+      returnValueForMissingStub: [
+        bobSnapshot,
+        bob2Snapshot,
+      ],
+    );
+  }
+}
+
+final mockQuerySnapshot = MockQuerySnapshot();
+final mockCtrl = StreamController<Snapshot>.broadcast();
+
+class MockQuery extends Mock implements Query<Map<String, Object?>> {
+  @override
+  Stream<Snapshot> snapshots({
+    bool? includeMetadataChanges = false,
+  }) {
+    return super.noSuchMethod(
+      Invocation.method(#snapshots, null, {
+        #includeMetadataChanges: includeMetadataChanges,
+      }),
+      returnValue: mockCtrl.stream,
+      returnValueForMissingStub: mockCtrl.stream,
+    );
+  }
+}
+
+final mockQuery = MockQuery();

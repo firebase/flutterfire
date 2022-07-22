@@ -5,10 +5,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.MultiFactorSession;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken;
+import com.google.firebase.auth.PhoneMultiFactorInfo;
 import io.flutter.plugin.common.EventChannel.EventSink;
 import io.flutter.plugin.common.EventChannel.StreamHandler;
 import java.util.HashMap;
@@ -26,8 +28,11 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   final AtomicReference<Activity> activityRef = new AtomicReference<>(null);
   final FirebaseAuth firebaseAuth;
   final String phoneNumber;
+  final PhoneMultiFactorInfo multiFactorInfo;
   final int timeout;
   final OnCredentialsListener onCredentialsListener;
+
+  final MultiFactorSession multiFactorSession;
 
   String autoRetrievedSmsCodeForTesting;
   Integer forceResendingToken;
@@ -39,11 +44,15 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
   public PhoneNumberVerificationStreamHandler(
       Activity activity,
       Map<String, Object> arguments,
+      @Nullable MultiFactorSession multiFactorSession,
+      @Nullable PhoneMultiFactorInfo multiFactorInfo,
       OnCredentialsListener onCredentialsListener) {
     this.activityRef.set(activity);
 
+    this.multiFactorSession = multiFactorSession;
+    this.multiFactorInfo = multiFactorInfo;
     firebaseAuth = FlutterFirebaseAuthPlugin.getAuth(arguments);
-    phoneNumber = (String) Objects.requireNonNull(arguments.get(Constants.PHONE_NUMBER));
+    phoneNumber = (String) arguments.get(Constants.PHONE_NUMBER);
     timeout = (int) Objects.requireNonNull(arguments.get(Constants.TIMEOUT));
 
     if (arguments.containsKey(Constants.AUTO_RETRIEVED_SMS_CODE_FOR_TESTING)) {
@@ -140,8 +149,17 @@ public class PhoneNumberVerificationStreamHandler implements StreamHandler {
 
     PhoneAuthOptions.Builder phoneAuthOptionsBuilder = new PhoneAuthOptions.Builder(firebaseAuth);
     phoneAuthOptionsBuilder.setActivity(activityRef.get());
-    phoneAuthOptionsBuilder.setPhoneNumber(phoneNumber);
     phoneAuthOptionsBuilder.setCallbacks(callbacks);
+
+    if (phoneNumber != null) {
+      phoneAuthOptionsBuilder.setPhoneNumber(phoneNumber);
+    }
+    if (multiFactorSession != null) {
+      phoneAuthOptionsBuilder.setMultiFactorSession(multiFactorSession);
+    }
+    if (multiFactorInfo != null) {
+      phoneAuthOptionsBuilder.setMultiFactorHint(multiFactorInfo);
+    }
     phoneAuthOptionsBuilder.setTimeout((long) timeout, TimeUnit.MILLISECONDS);
 
     if (forceResendingToken != null) {

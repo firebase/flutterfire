@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../mock.dart';
+import 'platform_interface_user_credential_test.dart';
 
 void main() {
   setupFirebaseAuthMocks();
@@ -58,7 +59,8 @@ void main() {
         'refreshToken': kMockRefreshToken,
         'tenantId': kMockTenantId,
       };
-      userPlatform = TestUserPlatform(auth, kMockUser);
+      userPlatform =
+          TestUserPlatform(auth, TestMultiFactorPlatform(auth), kMockUser);
     });
 
     group('Constructor', () {
@@ -283,6 +285,7 @@ void main() {
 }
 
 class TestUserPlatform extends UserPlatform {
-  TestUserPlatform(FirebaseAuthPlatform auth, Map<String, dynamic> data)
-      : super(auth, data);
+  TestUserPlatform(FirebaseAuthPlatform auth, MultiFactorPlatform multiFactor,
+      Map<String, dynamic> data)
+      : super(auth, multiFactor, data);
 }
