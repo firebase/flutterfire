@@ -20,6 +20,9 @@ void setupFirebaseAnalyticsMocks([Callback? customHandlers]) {
       .setMockMethodCallHandler((MethodCall methodCall) async {
     methodCallLog.add(methodCall);
     switch (methodCall.method) {
+      case 'Analytics#getAppInstanceId':
+        return 'ABCD1234';
+
       default:
         return false;
     }

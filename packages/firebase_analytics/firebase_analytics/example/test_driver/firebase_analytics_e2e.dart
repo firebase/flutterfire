@@ -195,6 +195,29 @@ void testsMain() {
         }
       },
     );
+
+    test('appInstanceId', () async {
+      if (kIsWeb) {
+        await expectLater(
+          FirebaseAnalytics.instance.appInstanceId,
+          throwsA(isA<UnimplementedError>()),
+        );
+      } else {
+        final result = await FirebaseAnalytics.instance.appInstanceId;
+        expect(result, isNull);
+
+        await expectLater(
+          FirebaseAnalytics.instance.setConsent(
+            analyticsStorageConsentGranted: true,
+            adStorageConsentGranted: false,
+          ),
+          completes,
+        );
+
+        final result2 = await FirebaseAnalytics.instance.appInstanceId;
+        expect(result2, isA<String>());
+      }
+    });
   });
 }
 

@@ -169,6 +169,15 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
   }
 
   @override
+  Future<String?> getAppInstanceId() {
+    try {
+      return channel.invokeMethod<String?>('Analytics#getAppInstanceId');
+    } catch (e, s) {
+      convertPlatformException(e, s);
+    }
+  }
+
+  @override
   Future<void> setSessionTimeoutDuration(Duration timeout) async {
     try {
       if (Platform.isAndroid) {
