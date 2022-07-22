@@ -426,6 +426,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
         forceRecaptchaFlow: forceRecaptchaFlow);
   }
 
+  @Deprecated(
+    'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`',
+  )
   Future<void> setPersistence(Persistence persistence) async {
     throw DeprecatedException(
         'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
