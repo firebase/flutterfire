@@ -479,19 +479,6 @@ void setupTests() {
       );
     });
 
-    group('setPersistence()', () {
-      test(
-        'throw an unimplemented error',
-        () async {
-          try {
-            await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-            fail('Should have thrown');
-          } catch (e) {
-            expect(e, isInstanceOf<DeprecatedException>());
-          }
-        });
-    });
-
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {
         Future successCallback(UserCredential currentUserCredential) async {
