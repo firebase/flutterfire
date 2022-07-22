@@ -82,7 +82,7 @@ class MethodChannelFirebaseAnalytics extends FirebaseAnalyticsPlatform {
 
   @override
   Future<void> setDefaultEventParameters(
-    Map<String, Object> defaultParameters,
+    Map<String, Object?>? defaultParameters,
   ) async {
     try {
       return channel.invokeMethod<void>(

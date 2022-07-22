@@ -79,7 +79,7 @@ user, use the `providerData` property. For example:
 ```dart
 if (user != null) {
     for (final providerProfile in user.providerData) {
-        // ID of the provider (google.com, apple.cpm, etc.)
+        // ID of the provider (google.com, apple.com, etc.)
         final provider = providerProfile.providerId;
 
         // UID specific to the provider

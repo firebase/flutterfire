@@ -189,10 +189,32 @@ void setupTests() {
                 .setDefaultEventParameters({'default': 'parameters'}),
             throwsA(isA<UnimplementedError>()),
           );
+          // reset a single default parameter
+          await expectLater(
+            FirebaseAnalytics.instance
+                .setDefaultEventParameters({'default': null}),
+            throwsA(isA<UnimplementedError>()),
+          );
+          // reset all default parameters
+          await expectLater(
+            FirebaseAnalytics.instance.setDefaultEventParameters(null),
+            throwsA(isA<UnimplementedError>()),
+          );
         } else {
           await expectLater(
             FirebaseAnalytics.instance
                 .setDefaultEventParameters({'default': 'parameters'}),
+            completes,
+          );
+          // reset a single default parameter
+          await expectLater(
+            FirebaseAnalytics.instance
+                .setDefaultEventParameters({'default': null}),
+            completes,
+          );
+          // reset all default parameters
+          await expectLater(
+            FirebaseAnalytics.instance.setDefaultEventParameters(null),
             completes,
           );
         }

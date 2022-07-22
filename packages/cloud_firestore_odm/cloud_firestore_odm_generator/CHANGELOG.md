@@ -1,3 +1,7 @@
+## 1.0.0-dev.22
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.21
 
  - **FEAT**: add orderByFieldPath / whereFieldPath ([#8951](https://github.com/firebase/flutterfire/issues/8951)). ([5957c23b](https://github.com/firebase/flutterfire/commit/5957c23b44b235dab9d97449acb9c737da07b8e7))
