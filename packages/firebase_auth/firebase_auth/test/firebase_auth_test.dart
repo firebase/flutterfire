@@ -684,16 +684,6 @@ void main() {
         equals('FirebaseAuth(app: $testCount)'),
       );
     });
-
-    test('FirebaseAuthWeb.persistence', () async {
-      const persistence = Persistence.SESSION;
-
-      FirebaseAuth.persistenceType(persistence);
-      expect(
-        persistence,
-        equals(FirebaseAuthPlatform.persistence),
-      );
-    });
   });
 }
 

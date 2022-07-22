@@ -40,23 +40,12 @@ class FirebaseAuth extends FirebasePluginPlatform {
     return FirebaseAuth.instanceFor(app: defaultAppInstance);
   }
 
-  /// Changes the current type of persistence on the current Auth instance for
-  /// the currently saved Auth session and applies this type of persistence for
-  /// future sign-in requests, including sign-in with redirect requests.
-  ///
-  /// This makes it easy for a user signing in to specify whether their session
-  /// should be remembered or not. It also makes it easier to never persist the
-  /// Auth state for applications that are shared by other users or have
-  /// sensitive data.
-  ///
-  /// This is only supported on web based platforms.
-  static void persistenceType(Persistence persistence) {
-    // Web only API
-    FirebaseAuthPlatform.persistenceType(persistence);
-  }
-
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
+  factory FirebaseAuth.instanceFor(
+      {required FirebaseApp app, Persistence? persistence}) {
+    if (persistence != null) {
+      FirebaseAuthPlatform.persistenceType(persistence);
+    }
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
       return FirebaseAuth._(app: app);
     });
