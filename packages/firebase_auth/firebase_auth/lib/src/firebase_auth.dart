@@ -416,11 +416,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   @Deprecated(
-    'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`',
+    'setPersistence() is now obsolete and deprecated. Please use the following method: `FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.LOCAL);` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`',
   )
   Future<void> setPersistence(Persistence persistence) async {
     throw DeprecatedException(
-        'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
+        'setPersistence() is now obsolete and deprecated. Please use the following method: `FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.LOCAL);` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
   }
 
   /// Asynchronously creates and becomes an anonymous user.
