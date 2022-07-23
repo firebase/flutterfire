@@ -56,10 +56,12 @@ class MultiFactorSession {
   final String id;
 }
 
+/// {@template .multiFactorAssertion}
 /// Represents an assertion that the Firebase Authentication server
 /// can use to authenticate a user as part of a multi-factor flow.
+/// {@endtemplate}
 class MultiFactorAssertionPlatform extends PlatformInterface {
-  /// {@macro .platformInterfaceMultiFactor}
+  /// {@macro .multiFactorAssertion}
   MultiFactorAssertionPlatform() : super(token: _token);
 
   static final Object _token = Object();
@@ -70,7 +72,7 @@ class MultiFactorAssertionPlatform extends PlatformInterface {
   }
 }
 
-/// {@macro .platformInterfaceMultiFactorResolverPlatform}
+/// {@template .platformInterfaceMultiFactorResolverPlatform}
 /// Utility class that contains methods to resolve second factor
 /// requirements on users that have opted into two-factor authentication.
 /// {@endtemplate}

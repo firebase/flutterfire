@@ -54,6 +54,8 @@ class PhoneMultiFactorGenerator {
   }
 }
 
+/// Represents an assertion that the Firebase Authentication server
+/// can use to authenticate a user as part of a multi-factor flow.
 class MultiFactorAssertion {
   final MultiFactorAssertionPlatform _delegate;
 
@@ -62,6 +64,8 @@ class MultiFactorAssertion {
   }
 }
 
+/// Utility class that contains methods to resolve second factor
+/// requirements on users that have opted into two-factor authentication.
 class MultiFactorResolver {
   final FirebaseAuth _auth;
   final MultiFactorResolverPlatform _delegate;
@@ -87,6 +91,8 @@ class MultiFactorResolver {
   }
 }
 
+/// MultiFactor exception related to Firebase Authentication. Check the error code
+/// and message for more details.
 class FirebaseAuthMultiFactorException extends FirebaseAuthException {
   final FirebaseAuth _auth;
   final FirebaseAuthMultiFactorExceptionPlatform _delegate;
