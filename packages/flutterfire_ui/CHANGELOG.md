@@ -1,3 +1,7 @@
+## 0.4.3+1
+
+ - Update a dependency to the latest release.
+
 ## 0.4.3
 
  - **FEAT**: add max attempts for Firestore transactions ([#9163](https://github.com/firebase/flutterfire/issues/9163)). ([9da7cc36](https://github.com/firebase/flutterfire/commit/9da7cc36cb266e4f5a0de26dfe727e0a4687f1a0))

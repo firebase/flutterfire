@@ -1,3 +1,7 @@
+## 2.8.1
+
+ - **FIX**: fix interop on TransactionOptions ([#9188](https://github.com/firebase/flutterfire/issues/9188)). ([f0201674](https://github.com/firebase/flutterfire/commit/f0201674a3dfe1a6ce103f2aa6ad2b994dcc1da8))
+
 ## 2.8.0
 
  - **FEAT**: add max attempts for Firestore transactions ([#9163](https://github.com/firebase/flutterfire/issues/9163)). ([9da7cc36](https://github.com/firebase/flutterfire/commit/9da7cc36cb266e4f5a0de26dfe727e0a4687f1a0))
