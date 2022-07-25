@@ -7,7 +7,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -436,15 +435,24 @@ void runInstanceTests() {
       }, skip: !kIsWeb);
     });
 
-    test('FirebaseAuthPlatform.persistence', () {
-      const persistence = Persistence.SESSION;
+    group('setPersistence()', () {
+      test('throw an unimplemented error', () async {
+        try {
+          await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+          fail('Should have thrown');
+        } catch (e) {
+          expect(e, isInstanceOf<UnimplementedError>());
+        }
+      }, skip: kIsWeb);
 
-      FirebaseAuth.instanceFor(app: Firebase.app(), persistence: persistence);
-      expect(
-        persistence,
-        equals(FirebaseAuthPlatform.persistence),
-      );
-    }, skip: !kIsWeb);
+      test('should set persistence', () async {
+        try {
+          await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+        } catch (e) {
+          fail('unexpected error thrown');
+        }
+      }, skip: !kIsWeb);
+    });
 
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {

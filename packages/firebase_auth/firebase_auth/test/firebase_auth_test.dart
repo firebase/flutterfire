@@ -451,6 +451,16 @@ void main() {
       });
     });
 
+    group('setPersistence()', () {
+      test('should call delegate method', () async {
+        // Necessary as we otherwise get a "null is not a Future<void>" error
+        when(mockAuthPlatform.setPersistence(any)).thenAnswer((i) async {});
+
+        await auth.setPersistence(Persistence.LOCAL);
+        verify(mockAuthPlatform.setPersistence(Persistence.LOCAL));
+      });
+    });
+
     group('signInAnonymously()', () {
       test('should call delegate method', () async {
         // Necessary as we otherwise get a "null is not a Future<void>" error
@@ -718,7 +728,8 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return super.noSuchMethod(
       Invocation.method(#delegateFor, [], {#app: app}),
       returnValue: TestFirebaseAuthPlatform(),
@@ -949,6 +960,15 @@ class MockFirebaseAuth extends Mock
   }
 
   @override
+  Future<void> setPersistence(Persistence? persistence) {
+    return super.noSuchMethod(
+      Invocation.method(#setPersistence, [persistence]),
+      returnValue: neverEndingFuture<void>(),
+      returnValueForMissingStub: neverEndingFuture<void>(),
+    );
+  }
+
+  @override
   Future<void> signOut() {
     return super.noSuchMethod(
       Invocation.method(#signOut, [signOut]),
@@ -1005,7 +1025,8 @@ class FakeFirebaseAuthPlatform extends Fake
   String? tenantId;
 
   @override
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     return this;
   }
 
@@ -1066,7 +1087,8 @@ class TestFirebaseAuthPlatform extends FirebaseAuthPlatform {
   }) {}
 
   @override
-  FirebaseAuthPlatform delegateFor({FirebaseApp? app}) {
+  FirebaseAuthPlatform delegateFor(
+      {FirebaseApp? app, Persistence? persistence}) {
     return this;
   }
 

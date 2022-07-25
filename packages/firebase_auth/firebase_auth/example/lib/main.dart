@@ -14,13 +14,12 @@ bool shouldUseFirebaseEmulator = false;
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseApp app;
   // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
   // See related issue: https://github.com/flutter/flutter/issues/96391
   if (!kIsWeb) {
-    app = await Firebase.initializeApp();
+    await Firebase.initializeApp();
   } else {
-    app = await Firebase.initializeApp(
+    await Firebase.initializeApp(
       options: const FirebaseOptions(
         apiKey: 'AIzaSyAgUhHU8wSJgO5MVNy95tMT07NEjzMOfz0',
         appId: '1:448618578101:web:0b650370bb29e29cac3efc',
@@ -33,8 +32,6 @@ Future<void> main() async {
       ),
     );
   }
-
-  FirebaseAuth.instanceFor(app: app, persistence: Persistence.LOCAL);
 
   if (shouldUseFirebaseEmulator) {
     await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);

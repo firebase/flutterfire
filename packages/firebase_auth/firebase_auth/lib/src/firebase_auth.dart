@@ -15,6 +15,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseAuthPlatform? _delegatePackingProperty;
 
+  /// To set "persistence" on web, it is now required on web v9 JS SDK to pass the value on the initializeAuth() call.
+  /// https://firebase.google.com/docs/reference/js/auth.md#initializeauth
+  Persistence? _persistence;
+
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
@@ -23,15 +27,18 @@ class FirebaseAuth extends FirebasePluginPlatform {
     _delegatePackingProperty ??= FirebaseAuthPlatform.instanceFor(
       app: app,
       pluginConstants: pluginConstants,
+      persistence: _persistence,
     );
+    _persistence = null;
     return _delegatePackingProperty!;
   }
 
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_auth');
+  FirebaseAuth._({required this.app, Persistence? persistence})
+      : _persistence = persistence,
+        super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {
@@ -43,11 +50,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   factory FirebaseAuth.instanceFor(
       {required FirebaseApp app, Persistence? persistence}) {
-    if (persistence != null) {
-      FirebaseAuthPlatform.persistenceType(persistence);
-    }
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      return FirebaseAuth._(app: app, persistence: persistence);
     });
   }
 
@@ -415,12 +419,23 @@ class FirebaseAuth extends FirebasePluginPlatform {
         forceRecaptchaFlow: forceRecaptchaFlow);
   }
 
-  @Deprecated(
-    'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`',
-  )
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence for
+  /// future sign-in requests, including sign-in with redirect requests.
+  ///
+  /// This will return a promise that will resolve once the state finishes
+  /// copying from one type of storage to the other. Calling a sign-in method
+  /// after changing persistence will wait for that persistence change to
+  /// complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist the
+  /// Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// This is only supported on web based platforms.
   Future<void> setPersistence(Persistence persistence) async {
-    throw DeprecatedException(
-        'setPersistence() is now obsolete and deprecated. Please use the static method: `FirebaseAuth.persistenceType()` before initializing FirebaseAuth. i.e. `FirebaseAuth.instance`');
+    return _delegate.setPersistence(persistence);
   }
 
   /// Asynchronously creates and becomes an anonymous user.

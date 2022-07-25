@@ -187,7 +187,8 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
   ///
   /// Instances are cached and reused for incoming event handlers.
   @override
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     return methodChannelFirebaseAuthInstances.putIfAbsent(app.name, () {
       return MethodChannelFirebaseAuth(app: app);
     });
@@ -418,6 +419,12 @@ class MethodChannelFirebaseAuth extends FirebaseAuthPlatform {
     } catch (e, stack) {
       convertPlatformException(e, stack);
     }
+  }
+
+  @override
+  Future<void> setPersistence(Persistence persistence) {
+    throw UnimplementedError(
+        'setPersistence() is only supported on web based platforms');
   }
 
   @override

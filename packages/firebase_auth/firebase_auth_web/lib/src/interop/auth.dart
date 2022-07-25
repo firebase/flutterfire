@@ -520,6 +520,39 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       handleThenable(auth_interop.sendSignInLinkToEmail(
           jsObject, email, actionCodeSettings));
 
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence
+  /// for future sign-in requests, including sign-in with redirect requests.
+  /// This will return a Future that will resolve once the state finishes
+  /// copying from one type of storage to the other.
+  /// Calling a sign-in method after changing persistence will wait for that
+  /// persistence change to complete before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist
+  /// the Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// The default is [:'local':] (provided the browser supports this mechanism).
+  ///
+  /// The [persistence] string is the auth state persistence mechanism.
+  /// See allowed [persistence] values in [Persistence] class.
+  Future setPersistence(Persistence persistence) {
+    auth_interop.Persistence instance;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        instance = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        instance = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        instance = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return handleThenable(auth_interop.setPersistence(jsObject, instance));
+  }
+
   /// Sends a password reset e-mail to the given [email].
   /// To confirm password reset, use the [Auth.confirmPasswordReset].
   ///

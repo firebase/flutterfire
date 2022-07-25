@@ -478,6 +478,33 @@ void setupTests() {
       );
     });
 
+    group('setPersistence()', () {
+      test(
+        'throw an unimplemented error',
+            () async {
+          try {
+            await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+            fail('Should have thrown');
+          } catch (e) {
+            expect(e, isInstanceOf<UnimplementedError>());
+          }
+        },
+        skip: kIsWeb,
+      );
+
+      test(
+        'should set persistence',
+            () async {
+          try {
+            await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+          } catch (e) {
+            fail('unexpected error thrown');
+          }
+        },
+        skip: !kIsWeb,
+      );
+    });
+
     group('signInAnonymously()', () {
       test('should sign in anonymously', () async {
         Future successCallback(UserCredential currentUserCredential) async {

@@ -48,15 +48,18 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   /// Create an instance using [app] using the existing implementation
-  factory FirebaseAuthPlatform.instanceFor({
-    required FirebaseApp app,
-    required Map<dynamic, dynamic> pluginConstants,
-  }) {
-    return FirebaseAuthPlatform.instance.delegateFor(app: app).setInitialValues(
-        languageCode: pluginConstants['APP_LANGUAGE_CODE'],
-        currentUser: pluginConstants['APP_CURRENT_USER'] == null
-            ? null
-            : Map<String, dynamic>.from(pluginConstants['APP_CURRENT_USER']));
+  factory FirebaseAuthPlatform.instanceFor(
+      {required FirebaseApp app,
+      required Map<dynamic, dynamic> pluginConstants,
+      Persistence? persistence}) {
+    return FirebaseAuthPlatform.instance
+        .delegateFor(app: app, persistence: persistence)
+        .setInitialValues(
+            languageCode: pluginConstants['APP_LANGUAGE_CODE'],
+            currentUser: pluginConstants['APP_CURRENT_USER'] == null
+                ? null
+                : Map<String, dynamic>.from(
+                    pluginConstants['APP_CURRENT_USER']));
   }
 
   /// The current default [FirebaseAuthPlatform] instance.
@@ -76,29 +79,11 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  static Persistence? _persistence;
-
-  /// Changes the current type of persistence on the current Auth instance for
-  /// the currently saved Auth session and applies this type of persistence for
-  /// future sign-in requests, including sign-in with redirect requests.
-  ///
-  /// This makes it easy for a user signing in to specify whether their session
-  /// should be remembered or not. It also makes it easier to never persist the
-  /// Auth state for applications that are shared by other users or have
-  /// sensitive data.
-  ///
-  /// This is only supported on web based platforms.
-  // ignore: use_setters_to_change_properties
-  static void persistenceType(Persistence persistenceType) {
-    _persistence = persistenceType;
-  }
-
-  static Persistence? get persistence => _persistence;
-
   /// Enables delegates to create new instances of themselves if a none default
   /// [FirebaseApp] instance is required by the user.
   @protected
-  FirebaseAuthPlatform delegateFor({required FirebaseApp app}) {
+  FirebaseAuthPlatform delegateFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     throw UnimplementedError('delegateFor() is not implemented');
   }
 
@@ -386,6 +371,24 @@ abstract class FirebaseAuthPlatform extends PlatformInterface {
     bool? forceRecaptchaFlow,
   }) {
     throw UnimplementedError('setSettings() is not implemented');
+  }
+
+  /// Changes the current type of persistence on the current Auth instance for
+  /// the currently saved Auth session and applies this type of persistence for
+  /// future sign-in requests, including sign-in with redirect requests. This
+  /// will return a promise that will resolve once the state finishes copying
+  /// from one type of storage to the other. Calling a sign-in method after
+  /// changing persistence will wait for that persistence change to complete
+  /// before applying it on the new Auth state.
+  ///
+  /// This makes it easy for a user signing in to specify whether their session
+  /// should be remembered or not. It also makes it easier to never persist the
+  /// Auth state for applications that are shared by other users or have
+  /// sensitive data.
+  ///
+  /// This is only supported on web based platforms.
+  Future<void> setPersistence(Persistence persistence) async {
+    throw UnimplementedError('setPersistence() is not implemented');
   }
 
   /// Asynchronously creates and becomes an anonymous user.
