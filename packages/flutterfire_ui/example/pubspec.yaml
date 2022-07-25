@@ -21,10 +21,10 @@ environment:
   sdk: '>=2.16.0 <3.0.0'
 
 dependencies:
-  cloud_firestore: ^3.4.0
+  cloud_firestore: ^3.4.1
   crypto: ^3.0.1
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.5.0
+  firebase_auth: ^3.5.1
   firebase_core: ^1.10.3
   firebase_database: ^9.0.20
   firebase_dynamic_links: ^4.3.3

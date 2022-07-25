@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-07-25
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_web` - `v2.8.1`](#cloud_firestore_web---v281)
+ - [`firebase_analytics` - `v9.3.0`](#firebase_analytics---v930)
+ - [`firebase_analytics_platform_interface` - `v3.3.0`](#firebase_analytics_platform_interface---v330)
+ - [`firebase_analytics_web` - `v0.4.2`](#firebase_analytics_web---v042)
+ - [`firebase_auth_web` - `v4.1.1`](#firebase_auth_web---v411)
+ - [`cloud_firestore` - `v3.4.1`](#cloud_firestore---v341)
+ - [`flutterfire_ui` - `v0.4.3+1`](#flutterfire_ui---v0431)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.23`](#cloud_firestore_odm---v100-dev23)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.23`](#cloud_firestore_odm_generator---v100-dev23)
+ - [`firebase_auth` - `v3.5.1`](#firebase_auth---v351)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore` - `v3.4.1`
+ - `flutterfire_ui` - `v0.4.3+1`
+ - `cloud_firestore_odm` - `v1.0.0-dev.23`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.23`
+ - `firebase_auth` - `v3.5.1`
+
+---
+
+#### `cloud_firestore_web` - `v2.8.1`
+
+ - **FIX**: fix interop on TransactionOptions ([#9188](https://github.com/firebase/flutterfire/issues/9188)). ([f0201674](https://github.com/firebase/flutterfire/commit/f0201674a3dfe1a6ce103f2aa6ad2b994dcc1da8))
+
+#### `firebase_analytics` - `v9.3.0`
+
+ - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))
+
+#### `firebase_analytics_platform_interface` - `v3.3.0`
+
+ - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))
+
+#### `firebase_analytics_web` - `v0.4.2`
+
+ - **FEAT**: retrieves `appInstanceId` property on native platforms if available ([#8689](https://github.com/firebase/flutterfire/issues/8689)). ([7132d771](https://github.com/firebase/flutterfire/commit/7132d771ed5ada7a0433232b9f0d996ef0d61481))
+
+#### `firebase_auth_web` - `v4.1.1`
+
+ - **FIX**: provide `browserPopupRedirectResolver` on init ([#9146](https://github.com/firebase/flutterfire/issues/9146)). ([bf1d9be1](https://github.com/firebase/flutterfire/commit/bf1d9be11a59475be173b01184efb53d92d152fe))
+
+
 ## 2022-07-21
 
 ### Changes

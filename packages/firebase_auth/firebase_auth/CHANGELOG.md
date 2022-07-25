@@ -1,3 +1,7 @@
+## 3.5.1
+
+ - Update a dependency to the latest release.
+
 ## 3.5.0
 
  - **FEAT**: add all providers available to MFA ([#9159](https://github.com/firebase/flutterfire/issues/9159)). ([5a03a859](https://github.com/firebase/flutterfire/commit/5a03a859385f0b06ad9afe8e8c706c046976b8d8))
