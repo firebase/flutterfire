@@ -21,8 +21,10 @@ part 'user.g.dart';
 /// as Timestamps and DateTimes.
 /// This variable can be reused between different models
 const firestoreSerializable = JsonSerializable(
-  explicitToJson: true,
   converters: firestoreJsonConverters,
+  // The following values could alternatively be set inside your `build.yaml`
+  explicitToJson: true,
+  createFieldMap: true,
 );
 
 @firestoreSerializable
