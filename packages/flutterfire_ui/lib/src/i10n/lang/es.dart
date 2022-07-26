@@ -187,7 +187,7 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.verifyingPhoneNumberViewTitle = 'Introduce el código del SMS',
     this.unknownError = 'Ha ocurrido un error desconocido',
     this.smsAutoresolutionFailedError =
-        'No se ha podido detectar el código SMS automáticamente. Por favor, ingrese su código manualmente',
+        'No se ha podido detectar el código SMS automáticamente. Por favor, ingresa tu código manualmente',
     this.smsCodeSentText = 'Código SMS enviado',
     this.sendingSMSCodeText = 'Enviando código SMS ...',
     this.verifyingSMSCodeText = 'Verificando el código SMS ...',
@@ -222,26 +222,26 @@ class EsLocalizations extends FlutterFireUILocalizationLabels {
     this.resetPasswordButtonLabel = 'Restablecer contraseña',
     this.verifyItsYouText = 'Verifica que eres tú',
     this.differentMethodsSignInTitleText =
-        'Utilice uno de los siguientes métodos para iniciar sesión',
+        'Utiliza uno de los siguientes métodos para iniciar sesión',
     this.findProviderForEmailTitleText =
-        'Introduce su correo electrónico para continuar',
+        'Introduce tu correo electrónico para continuar',
     this.continueText = 'Continuar',
     this.countryCode = 'Código de país',
     this.codeRequiredErrorText = 'El código de país es obligatorio',
     this.invalidCountryCode = 'El código del país es inválido',
-    this.chooseACountry = 'Seleccione un país',
+    this.chooseACountry = 'Selecciona un país',
     this.enableMoreSignInMethods = 'Habilitar más métodos de inicio de sesión',
     this.signInMethods = 'Métodos de inicio de sesión',
-    this.provideEmail = 'Proporcione su correo electrónico y contraseña',
+    this.provideEmail = 'Proporciona tu correo electrónico y contraseña',
     this.goBackButtonLabel = 'Volver',
     this.passwordResetEmailSentText =
-        'Le enviamos un correo electrónico con un enlace para restablecer su contraseña. Por favor revise su correo electrónico.',
+        'Te enviamos un correo electrónico con un enlace para restablecer tu contraseña. Por favor revisa tu correo electrónico.',
     this.forgotPasswordHintText =
-        'Introduce su correo electrónico y le enviaremos un enlace para restablecer su contraseña',
+        'Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña',
     this.emailLinkSignInButtonLabel = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkViewTitleText = 'Iniciar sesión con enlace mágico',
     this.signInWithEmailLinkSentText =
-        'Le hemos enviado un correo electrónico con un enlace mágico. Revise su correo electrónico y siga el enlace para iniciar sesión',
+        'Te hemos enviado un correo electrónico con un enlace mágico. Revisa tu correo electrónico y sigue el enlace para iniciar sesión',
     this.sendLinkButtonLabel = 'Enviar enlace mágico',
     this.arrayLabel = 'arreglo',
     this.booleanLabel = 'booleano',
