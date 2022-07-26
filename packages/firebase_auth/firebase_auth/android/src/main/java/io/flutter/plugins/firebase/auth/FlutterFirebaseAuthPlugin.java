@@ -128,8 +128,9 @@ public class FlutterFirebaseAuthPlugin
     channel.setMethodCallHandler(null);
     channel = null;
     messenger = null;
-    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(null, this);
-    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(null, this);
+    GeneratedAndroidFirebaseAuth.MultiFactorUserHostApi.setup(binding.getBinaryMessenger(), null);
+    GeneratedAndroidFirebaseAuth.MultiFactoResolverHostApi.setup(
+        binding.getBinaryMessenger(), null);
 
     removeEventListeners();
   }
