@@ -504,83 +504,19 @@ void main() {
       });
 
       test(
-          'Using startAt after startAtDocumentSnapshot overrides the overrides the previous cursor',
-          () async {
-        final collection = await initializeTest(MovieCollectionReference());
-
-        await collection.add(createMovie(title: 'A'));
-        await collection.add(createMovie(title: 'B'));
-        final cRef = await collection.add(createMovie(title: 'C'));
-        final cSnap = await cRef.get();
-
-        final querySnap = await collection
-            .orderByTitle(startAtDocument: cSnap)
-            .orderByTitle(startAt: 'B')
-            .get();
-
-        expect(
-          querySnap.docs,
-          [
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'B'),
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'C'),
-          ],
-        );
-      });
-
-      test(
-          'Using startAtDocumentSnapshot after startAt overrides the overrides the previous cursor',
-          () async {
-        final collection = await initializeTest(MovieCollectionReference());
-
-        await collection.add(createMovie(title: 'A'));
-        await collection.add(createMovie(title: 'B'));
-        final cRef = await collection.add(createMovie(title: 'C'));
-        final cSnap = await cRef.get();
-
-        final querySnap = await collection
-            .orderByTitle(startAt: 'B')
-            .orderByTitle(startAtDocument: cSnap)
-            .get();
-
-        expect(querySnap.docs.single.data.title, 'C');
-      });
-
-      test(
-          'Using startAt after startAt overrides the overrides the previous cursor',
-          () async {
-        final collection = await initializeTest(MovieCollectionReference());
-
-        await collection.add(createMovie(title: 'A'));
-        await collection.add(createMovie(title: 'B'));
-        await collection.add(createMovie(title: 'C'));
-
-        final querySnap = await collection
-            .orderByTitle(startAt: 'C')
-            .orderByTitle(startAt: 'B')
-            .get();
-
-        expect(
-          querySnap.docs,
-          [
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'B'),
-            isA<MovieQueryDocumentSnapshot>()
-                .having((d) => d.data.title, 'data.title', 'C'),
-          ],
-        );
-      });
-
-      group('startAt', () {
-        test('supports values', () async {
+        'Using startAt after startAtDocumentSnapshot overrides the overrides the previous cursor',
+        () async {
           final collection = await initializeTest(MovieCollectionReference());
 
           await collection.add(createMovie(title: 'A'));
           await collection.add(createMovie(title: 'B'));
-          await collection.add(createMovie(title: 'C'));
+          final cRef = await collection.add(createMovie(title: 'C'));
+          final cSnap = await cRef.get();
 
-          final querySnap = await collection.orderByTitle(startAt: 'B').get();
+          final querySnap = await collection
+              .orderByTitle(startAtDocument: cSnap)
+              .orderByTitle(startAt: 'B')
+              .get();
 
           expect(
             querySnap.docs,
@@ -591,35 +527,113 @@ void main() {
                   .having((d) => d.data.title, 'data.title', 'C'),
             ],
           );
-        });
+        },
+        timeout: const Timeout.factor(2),
+      );
 
-        test('can be used multiple times within a query', () async {
+      test(
+        'Using startAtDocumentSnapshot after startAt overrides the overrides the previous cursor',
+        () async {
           final collection = await initializeTest(MovieCollectionReference());
 
-          await collection.add(createMovie(title: 'A', likes: 1));
-          await collection.add(createMovie(title: 'A', likes: 2));
-          await collection.add(createMovie(title: 'B', likes: 1));
-          await collection.add(createMovie(title: 'B', likes: 2));
-          await collection.add(createMovie(title: 'C', likes: 1));
-          await collection.add(createMovie(title: 'C', likes: 2));
+          await collection.add(createMovie(title: 'A'));
+          await collection.add(createMovie(title: 'B'));
+          final cRef = await collection.add(createMovie(title: 'C'));
+          final cSnap = await cRef.get();
 
           final querySnap = await collection
               .orderByTitle(startAt: 'B')
-              .orderByLikes(startAt: 2)
+              .orderByTitle(startAtDocument: cSnap)
+              .get();
+
+          expect(querySnap.docs.single.data.title, 'C');
+        },
+        timeout: const Timeout.factor(2),
+      );
+
+      test(
+        'Using startAt after startAt overrides the overrides the previous cursor',
+        () async {
+          final collection = await initializeTest(MovieCollectionReference());
+
+          await collection.add(createMovie(title: 'A'));
+          await collection.add(createMovie(title: 'B'));
+          await collection.add(createMovie(title: 'C'));
+
+          final querySnap = await collection
+              .orderByTitle(startAt: 'C')
+              .orderByTitle(startAt: 'B')
               .get();
 
           expect(
             querySnap.docs,
             [
               isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'B')
-                  .having((d) => d.data.likes, 'data.likes', 2),
+                  .having((d) => d.data.title, 'data.title', 'B'),
               isA<MovieQueryDocumentSnapshot>()
-                  .having((d) => d.data.title, 'data.title', 'C')
-                  .having((d) => d.data.likes, 'data.likes', 2),
+                  .having((d) => d.data.title, 'data.title', 'C'),
             ],
           );
-        });
+        },
+        timeout: const Timeout.factor(2),
+      );
+
+      group('startAt', () {
+        test(
+          'supports values',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.add(createMovie(title: 'A'));
+            await collection.add(createMovie(title: 'B'));
+            await collection.add(createMovie(title: 'C'));
+
+            final querySnap = await collection.orderByTitle(startAt: 'B').get();
+
+            expect(
+              querySnap.docs,
+              [
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'B'),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C'),
+              ],
+            );
+          },
+          timeout: const Timeout.factor(2),
+        );
+
+        test(
+          'can be used multiple times within a query',
+          () async {
+            final collection = await initializeTest(MovieCollectionReference());
+
+            await collection.add(createMovie(title: 'A', likes: 1));
+            await collection.add(createMovie(title: 'A', likes: 2));
+            await collection.add(createMovie(title: 'B', likes: 1));
+            await collection.add(createMovie(title: 'B', likes: 2));
+            await collection.add(createMovie(title: 'C', likes: 1));
+            await collection.add(createMovie(title: 'C', likes: 2));
+
+            final querySnap = await collection
+                .orderByTitle(startAt: 'B')
+                .orderByLikes(startAt: 2)
+                .get();
+
+            expect(
+              querySnap.docs,
+              [
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'B')
+                    .having((d) => d.data.likes, 'data.likes', 2),
+                isA<MovieQueryDocumentSnapshot>()
+                    .having((d) => d.data.title, 'data.title', 'C')
+                    .having((d) => d.data.likes, 'data.likes', 2),
+              ],
+            );
+          },
+          timeout: const Timeout.factor(2),
+        );
 
         test('supports document snapshots', () async {
           final collection = await initializeTest(MovieCollectionReference());
