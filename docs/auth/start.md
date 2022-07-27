@@ -217,7 +217,7 @@ You can still update the persistence for each Auth instance using `setPersistenc
 ```dart
 // Disable persistence on web platforms. Must be called on initialization:
 final auth = FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.NONE);
-// To change again, use `setPersistence()` like:
+// To change it after initialization, use `setPersistence()`:
 await auth.setPersistence(Persistence.LOCAL);
 ```
 

@@ -15,7 +15,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseAuthPlatform? _delegatePackingProperty;
 
-  /// To set "persistence" on web, it is now required on web v9 JS SDK to pass the value on the initializeAuth() call.
+  // To set "persistence" on web, it is now required on the v9.0.0 or above Firebase JS SDK to pass the value on calling `initializeAuth()`.
   /// https://firebase.google.com/docs/reference/js/auth.md#initializeauth
   Persistence? _persistence;
 
@@ -47,6 +47,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
+  /// Note that persistence can only be used on Web and is not supported on other platforms.
   factory FirebaseAuth.instanceFor(
       {required FirebaseApp app, Persistence? persistence}) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {

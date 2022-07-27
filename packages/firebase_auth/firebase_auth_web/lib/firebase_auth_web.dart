@@ -32,8 +32,8 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
 
   Completer<void> _initialized = Completer();
 
-  /// To set "persistence" on web, it is now required on web v9 JS SDK to pass the value on the initializeAuth() call.
-  /// https://firebase.google.com/docs/reference/js/auth.md#initializeauth
+  // To set "persistence" on web, it is now required on the v9.0.0 or above Firebase JS SDK to pass the value on calling `initializeAuth()`.
+  // https://firebase.google.com/docs/reference/js/auth.md#initializeauth
   Persistence? _persistence;
 
   /// The entry point for the [FirebaseAuthWeb] class.
