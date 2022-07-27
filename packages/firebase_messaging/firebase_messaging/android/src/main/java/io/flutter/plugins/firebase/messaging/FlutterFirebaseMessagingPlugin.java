@@ -6,11 +6,14 @@ package io.flutter.plugins.firebase.messaging;
 
 import static io.flutter.plugins.firebase.core.FlutterFirebasePluginRegistry.registerPlugin;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
@@ -30,6 +33,8 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry.RequestPermissionsResultListener;
+import io.flutter.plugin.common.PluginRegistry.ActivityResultListener;
 import io.flutter.plugin.common.PluginRegistry.NewIntentListener;
 import io.flutter.plugins.firebase.core.FlutterFirebasePlugin;
 import java.util.HashMap;
@@ -42,13 +47,17 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
         MethodCallHandler,
         NewIntentListener,
         FlutterPlugin,
-        ActivityAware {
+        ActivityAware,
+  ActivityResultListener,
+  RequestPermissionsResultListener
+{
 
   private final HashMap<String, Boolean> consumedInitialMessages = new HashMap<>();
   private MethodChannel channel;
   private Activity mainActivity;
   private RemoteMessage initialMessage;
-
+  private ActivityPluginBinding binding;
+  private String permissionsInput = "android-13-permissions";
   private void initInstance(BinaryMessenger messenger) {
     String channelName = "plugins.flutter.io/firebase_messaging";
     channel = new MethodChannel(messenger, channelName);
@@ -79,7 +88,10 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onAttachedToActivity(ActivityPluginBinding binding) {
+    this.binding = binding;
     binding.addOnNewIntentListener(this);
+    binding.addActivityResultListener(this);
+    binding.addRequestPermissionsResultListener(this);
     this.mainActivity = binding.getActivity();
     if (mainActivity.getIntent() != null && mainActivity.getIntent().getExtras() != null) {
       if ((mainActivity.getIntent().getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY)
@@ -102,6 +114,9 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public void onDetachedFromActivity() {
+    this.binding.removeActivityResultListener(this);
+    this.binding.removeRequestPermissionsResultListener(this);
+    this.binding = null;
     this.mainActivity = null;
   }
 
@@ -311,6 +326,24 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     return taskCompletionSource.getTask();
   }
 
+  private Task<Map<String, Integer>> getPermissionsAndroid13() {
+    TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
+
+    cachedThreadPool.execute(
+      () -> {
+        try {
+          final Map<String, Integer> permissions = new HashMap<>();
+          Intent permissionIntent = new ActivityResultContracts.RequestPermission().createIntent(ContextHolder.getApplicationContext(), permissionsInput);
+          this.mainActivity.startActivityForResult(permissionIntent, Manifest.permission.POST_NOTIFICATIONS);
+          taskCompletionSource.setResult(permissions);
+        } catch (Exception e) {
+          taskCompletionSource.setException(e);
+        }
+      });
+
+    return taskCompletionSource.getTask();
+  }
+
   private Task<Map<String, Integer>> getPermissions() {
     TaskCompletionSource<Map<String, Integer>> taskCompletionSource = new TaskCompletionSource<>();
 
@@ -499,5 +532,15 @@ public class FlutterFirebaseMessagingPlugin extends BroadcastReceiver
     cachedThreadPool.execute(() -> taskCompletionSource.setResult(null));
 
     return taskCompletionSource.getTask();
+  }
+
+  @Override
+  public boolean onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    return false;
+  }
+
+  @Override
+  public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    return false;
   }
 }
