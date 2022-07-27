@@ -211,13 +211,14 @@ On web platforms, the user's authentication state is stored in
 [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
 If required, you can change this default behavior to only persist
 authentication state for the current session, or not at all. To configure these
-settings, call the `setPersistence()` method. (On native platforms, an
-[`UnimplementedError`](https://api.flutter.dev/flutter/dart-core/UnimplementedError-class.html)
-will be thrown.)
+settings, call the following method `FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.LOCAL);`.
+You can still update the persistence for each Auth instance using `setPersistence(Persistence.NONE)`.
 
 ```dart
-// Disable persistence on web platforms
-await FirebaseAuth.instance.setPersistence(Persistence.NONE);
+// Disable persistence on web platforms. Must be called on initialization:
+final auth = FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.NONE);
+// To change it after initialization, use `setPersistence()`:
+await auth.setPersistence(Persistence.LOCAL);
 ```
 
 ## Next Steps
