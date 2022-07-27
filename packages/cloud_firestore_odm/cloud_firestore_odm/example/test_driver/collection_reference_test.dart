@@ -528,7 +528,7 @@ void main() {
             ],
           );
         },
-        timeout: const Timeout.factor(2),
+        timeout: const Timeout.factor(5),
       );
 
       test(
@@ -548,7 +548,7 @@ void main() {
 
           expect(querySnap.docs.single.data.title, 'C');
         },
-        timeout: const Timeout.factor(2),
+        timeout: const Timeout.factor(5),
       );
 
       test(
@@ -575,7 +575,7 @@ void main() {
             ],
           );
         },
-        timeout: const Timeout.factor(2),
+        timeout: const Timeout.factor(5),
       );
 
       group('startAt', () {
@@ -600,7 +600,7 @@ void main() {
               ],
             );
           },
-          timeout: const Timeout.factor(2),
+          timeout: const Timeout.factor(5),
         );
 
         test(
@@ -632,7 +632,7 @@ void main() {
               ],
             );
           },
-          timeout: const Timeout.factor(2),
+          timeout: const Timeout.factor(5),
         );
 
         test('supports document snapshots', () async {
