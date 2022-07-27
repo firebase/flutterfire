@@ -29,7 +29,6 @@ class FirebaseAuth extends FirebasePluginPlatform {
       pluginConstants: pluginConstants,
       persistence: _persistence,
     );
-    _persistence = null;
     return _delegatePackingProperty!;
   }
 

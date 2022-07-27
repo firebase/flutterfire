@@ -106,14 +106,10 @@ class FirebaseAuthWeb extends FirebaseAuthPlatform {
   auth_interop.Auth? _webAuth;
 
   auth_interop.Auth get delegate {
-    if (_webAuth == null) {
-      _webAuth = auth_interop.getAuthInstance(core_interop.app(app.name),
-          persistence: _persistence);
-      _persistence = null;
-      return _webAuth!;
-    } else {
-      return _webAuth!;
-    }
+    _webAuth ??= auth_interop.getAuthInstance(core_interop.app(app.name),
+        persistence: _persistence);
+
+    return _webAuth!;
   }
 
   @override
