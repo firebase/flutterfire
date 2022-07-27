@@ -212,8 +212,7 @@ On web platforms, the user's authentication state is stored in
 If required, you can change this default behavior to only persist
 authentication state for the current session, or not at all. To configure these
 settings, call the following method `FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.LOCAL);`.
-You can still update the persistence for each Auth instance using `setPersistence(Persistence.NONE)`, but it is required to initialize
-first otherwise persistence will not update from default behaviour.
+You can still update the persistence for each Auth instance using `setPersistence(Persistence.NONE)`.
 
 ```dart
 // Disable persistence on web platforms. Must be called on initialization:
