@@ -68,7 +68,7 @@ class _$MovieCollectionReference extends _$MovieQuery
 
   _$MovieCollectionReference._(
     CollectionReference<Movie> reference,
-  ) : super(reference, referenceWithoutCursor: reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   String get path => reference.path;
 
@@ -502,11 +502,11 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     implements MovieQuery {
   _$MovieQuery(
     this._collection, {
-    required Query<Movie> referenceWithoutCursor,
-    Query<Movie> Function(Query<Movie> query)? applyCursor,
+    required Query<Movie> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
   }) : super(
-          referenceWithoutCursor: referenceWithoutCursor,
-          applyCursor: applyCursor,
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
         );
 
   final CollectionReference<Object?> _collection;
@@ -548,8 +548,8 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   MovieQuery limit(int limit) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limit(limit),
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -557,8 +557,8 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   MovieQuery limitToLast(int limit) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limitToLast(limit),
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -575,48 +575,62 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? startAfterDocument,
   }) {
     final query =
-        referenceWithoutCursor.orderBy(fieldPath, descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -636,7 +650,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -650,7 +664,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -667,7 +681,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -679,7 +693,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -696,7 +710,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["poster"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -708,7 +722,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -725,7 +739,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["likes"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -737,7 +751,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -754,7 +768,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["title"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -766,7 +780,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -783,7 +797,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["year"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -795,7 +809,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -812,7 +826,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["runtime"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -824,7 +838,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -841,7 +855,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["rated"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -853,7 +867,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -869,7 +883,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
   }) {
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$MovieFieldMap["genre"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -880,7 +894,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         isNull: isNull,
         arrayContainsAny: arrayContainsAny,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -895,49 +909,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(FieldPath.documentId,
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -952,49 +981,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["poster"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["poster"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1009,49 +1053,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["likes"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["likes"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1066,49 +1125,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["title"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["title"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1123,49 +1197,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["year"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["year"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1180,49 +1269,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["runtime"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["runtime"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1237,49 +1341,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["rated"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["rated"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1294,49 +1413,64 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     MovieDocumentSnapshot? endBeforeDocument,
     MovieDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$MovieFieldMap["genre"]!,
+    final query = $referenceWithoutCursor.orderBy(_$MovieFieldMap["genre"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Movie> Function(Query<Movie> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$MovieQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1440,7 +1574,7 @@ class _$CommentCollectionReference extends _$CommentQuery
   _$CommentCollectionReference._(
     this.parent,
     CollectionReference<Comment> reference,
-  ) : super(reference, referenceWithoutCursor: reference);
+  ) : super(reference, $referenceWithoutCursor: reference);
 
   @override
   final MovieDocumentReference parent;
@@ -1751,11 +1885,11 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     implements CommentQuery {
   _$CommentQuery(
     this._collection, {
-    required Query<Comment> referenceWithoutCursor,
-    Query<Comment> Function(Query<Comment> query)? applyCursor,
+    required Query<Comment> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
   }) : super(
-          referenceWithoutCursor: referenceWithoutCursor,
-          applyCursor: applyCursor,
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
         );
 
   final CollectionReference<Object?> _collection;
@@ -1797,8 +1931,8 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   CommentQuery limit(int limit) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limit(limit),
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1806,8 +1940,8 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   CommentQuery limitToLast(int limit) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limitToLast(limit),
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1824,48 +1958,62 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? startAfterDocument,
   }) {
     final query =
-        referenceWithoutCursor.orderBy(fieldPath, descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Comment> Function(Query<Comment> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -1885,7 +2033,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1899,7 +2047,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1916,7 +2064,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         FieldPath.documentId,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1928,7 +2076,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1945,7 +2093,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$CommentFieldMap["authorName"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1957,7 +2105,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -1974,7 +2122,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
   }) {
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
         _$CommentFieldMap["message"]!,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -1986,7 +2134,7 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
         whereIn: whereIn,
         whereNotIn: whereNotIn,
       ),
-      applyCursor: applyCursor,
+      $queryCursor: $queryCursor,
     );
   }
 
@@ -2001,49 +2149,64 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(FieldPath.documentId,
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Comment> Function(Query<Comment> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -2058,49 +2221,64 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor
+    final query = $referenceWithoutCursor
         .orderBy(_$CommentFieldMap["authorName"]!, descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Comment> Function(Query<Comment> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 
@@ -2115,49 +2293,64 @@ class _$CommentQuery extends QueryReference<Comment, CommentQuerySnapshot>
     CommentDocumentSnapshot? endBeforeDocument,
     CommentDocumentSnapshot? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(_$CommentFieldMap["message"]!,
+    final query = $referenceWithoutCursor.orderBy(_$CommentFieldMap["message"]!,
         descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<Comment> Function(Query<Comment> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    var queryCursor = $queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return _$CommentQuery(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
     );
   }
 

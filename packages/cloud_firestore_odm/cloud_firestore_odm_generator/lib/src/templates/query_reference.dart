@@ -88,11 +88,11 @@ class ${data.queryReferenceImplName}
     implements ${data.queryReferenceInterfaceName} {
   ${data.queryReferenceImplName}(
     this._collection, {
-    required Query<${data.type}> referenceWithoutCursor,
-    Query<${data.type}> Function(Query<${data.type}> query)? applyCursor,
+    required Query<${data.type}> \$referenceWithoutCursor,
+    \$QueryCursor \$queryCursor = const \$QueryCursor(),
   })  : super(
-          referenceWithoutCursor: referenceWithoutCursor,
-          applyCursor: applyCursor,
+          \$referenceWithoutCursor: \$referenceWithoutCursor,
+          \$queryCursor: \$queryCursor,
         );
 
   final CollectionReference<Object?> _collection;
@@ -138,8 +138,8 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} limit(int limit) {
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limit(limit),
-      applyCursor: applyCursor,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.limit(limit),
+      \$queryCursor: \$queryCursor,
     );
   }
 
@@ -147,8 +147,8 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} limitToLast(int limit) {
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.limitToLast(limit),
-      applyCursor: applyCursor,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.limitToLast(limit),
+      \$queryCursor: \$queryCursor,
     );
   }
 
@@ -164,48 +164,62 @@ class ${data.queryReferenceImplName}
     ${data.documentSnapshotName}? endBeforeDocument,
     ${data.documentSnapshotName}? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(fieldPath, descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<${data.type}> Function(Query<${data.type}> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    final query = \$referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = \$queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
-
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      \$referenceWithoutCursor: query,
+      \$queryCursor: queryCursor,
     );
   }
 
@@ -225,7 +239,7 @@ class ${data.queryReferenceImplName}
   }) {
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(
+      \$referenceWithoutCursor: \$referenceWithoutCursor.where(
         fieldPath,
         isEqualTo: isEqualTo,
         isNotEqualTo: isNotEqualTo,
@@ -239,7 +253,7 @@ class ${data.queryReferenceImplName}
         whereNotIn: whereNotIn,
         isNull: isNull,
       ),
-      applyCursor: applyCursor,
+      \$queryCursor: \$queryCursor,
     );
   }
 
@@ -302,48 +316,63 @@ class ${data.queryReferenceImplName}
     ${data.documentSnapshotName}? endBeforeDocument,
     ${data.documentSnapshotName}? startAfterDocument,
   }) {
-    final query = referenceWithoutCursor.orderBy(${field.field}, descending: descending);
-    var applyCursor = this.applyCursor;
-
-    void updateCursor(Query<${data.type}> Function(Query<${data.type}> q) newCursor) {
-      final previousCursor = applyCursor;
-      if (previousCursor != null) {
-        applyCursor = (q) => newCursor(previousCursor(q));
-      } else {
-        applyCursor = newCursor;
-      }
-    }
+    final query = \$referenceWithoutCursor.orderBy(${field.field}, descending: descending);
+    var queryCursor = \$queryCursor;
 
     if (startAtDocument != null) {
-      updateCursor((q) => q.startAtDocument(startAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
     }
     if (startAfterDocument != null) {
-      updateCursor((q) => q.startAfterDocument(startAfterDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
     }
     if (endAtDocument != null) {
-      updateCursor((q) => q.endAtDocument(endAtDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
     }
     if (endBeforeDocument != null) {
-      updateCursor((q) => q.endBeforeDocument(endBeforeDocument.snapshot));
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
     }
 
     if (startAt != _sentinel) {
-      updateCursor((q) => q.startAt([startAt]));
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
     }
     if (startAfter != _sentinel) {
-      updateCursor((q) => q.startAfter([startAfter]));
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
     }
     if (endAt != _sentinel) {
-      updateCursor((q) => q.endAt([endAt]));
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
     }
     if (endBefore != _sentinel) {
-      updateCursor((q) => q.endBefore([endBefore]));
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
     }
 
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: query,
-      applyCursor: applyCursor,
+      \$referenceWithoutCursor: query,
+      \$queryCursor: queryCursor,
     );
   }
 ''',
@@ -404,8 +433,8 @@ class ${data.queryReferenceImplName}
   ${data.queryReferenceInterfaceName} where$titledNamed({$prototype}) {
     return ${data.queryReferenceImplName}(
       _collection,
-      referenceWithoutCursor: referenceWithoutCursor.where(${field.field}, $parameters),
-      applyCursor: applyCursor,
+      \$referenceWithoutCursor: \$referenceWithoutCursor.where(${field.field}, $parameters),
+      \$queryCursor: \$queryCursor,
     );
   }
 ''',

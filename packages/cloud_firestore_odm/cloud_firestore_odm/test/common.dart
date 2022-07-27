@@ -15,7 +15,7 @@ class _FakeQueryRef<Value> implements Query<Value> {
 class FakeCollectionReference<Value>
     extends FirestoreCollectionReference<Value, FakeQuerySnapshot<Value>> {
   FakeCollectionReference(this.valueListenable)
-      : super(referenceWithoutCursor: _FakeQueryRef());
+      : super($referenceWithoutCursor: _FakeQueryRef());
 
   @override
   CollectionReference<Value> get reference => throw UnimplementedError();
