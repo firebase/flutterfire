@@ -193,11 +193,12 @@ external PromiseJsImpl<void> runTransaction(
 ]);
 
 @JS('TransactionOptions')
-class TransactionOptionsJsImpl {
-  external factory TransactionOptionsJsImpl(num maxAttempts);
+@anonymous
+abstract class TransactionOptionsJsImpl {
+  external factory TransactionOptionsJsImpl({num maxAttempts});
 
   /// Maximum number of attempts to commit, after which transaction fails. Default is 5.
-  external num get maxAttempts;
+  external static num get maxAttempts;
 }
 
 @JS()
