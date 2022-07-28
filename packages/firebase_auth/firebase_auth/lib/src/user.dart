@@ -123,6 +123,9 @@ class User {
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
   /// other metadata.
   ///
+  /// Returns the current token if it has not expired. Otherwise, this will
+  /// refresh the token and return a new one.
+  ///
   /// If [forceRefresh] is `true`, the token returned will be refreshed regardless
   /// of token expiration.
   Future<IdTokenResult> getIdTokenResult([bool forceRefresh = false]) {
