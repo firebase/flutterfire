@@ -62,5 +62,7 @@
 	<array>
 		<string>https://reactnativefirebase.page.link/**</string>
 	</array>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 </dict>
 </plist>
