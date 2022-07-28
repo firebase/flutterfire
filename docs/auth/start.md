@@ -208,7 +208,9 @@ restarts. The user can clear the apps cached data using the device settings,
 which will wipe any existing state being stored.
 
 On web platforms, the user's authentication state is stored in
-[local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
+[IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API).
+You can change the persistence to store data in the [local storage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+using `Persistence.LOCAL`.
 If required, you can change this default behavior to only persist
 authentication state for the current session, or not at all. To configure these
 settings, call the following method `FirebaseAuth.instanceFor(app: Firebase.app(), persistence: Persistence.LOCAL);`.
