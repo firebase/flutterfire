@@ -461,8 +461,6 @@ class Query<T extends database_interop.QueryJsImpl> extends JsObjectWrapper<T> {
       throw ArgumentError('Please provide "args" parameter.');
     }
     var params = args.map(jsify).toList();
-    print(method);
-    print(params);
     return callMethod(method, 'apply', [null, jsify(params)]);
   }
 }
