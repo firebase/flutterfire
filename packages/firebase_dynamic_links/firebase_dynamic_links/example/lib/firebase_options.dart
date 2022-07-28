@@ -65,8 +65,10 @@ class DefaultFirebaseOptions {
     projectId: 'react-native-firebase-testing',
     databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
     storageBucket: 'react-native-firebase-testing.appspot.com',
-    androidClientId: '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
-    iosClientId: '448618578101-4km55qmv55tguvnivgjdiegb3r0jquv5.apps.googleusercontent.com',
+    androidClientId:
+        '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
+    iosClientId:
+        '448618578101-4km55qmv55tguvnivgjdiegb3r0jquv5.apps.googleusercontent.com',
     iosBundleId: 'io.invertase.testing',
   );
 }
