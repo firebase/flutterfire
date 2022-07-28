@@ -7,7 +7,7 @@ class QueryTemplate extends Template<CollectionData> {
   @override
   String generate(CollectionData data) {
     return '''
-abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${data.querySnapshotName}> {
+abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${data.type}, ${data.querySnapshotName}> {
   @override
   ${data.queryReferenceInterfaceName} limit(int limit);
 
@@ -84,7 +84,7 @@ abstract class ${data.queryReferenceInterfaceName} implements QueryReference<${d
 }
 
 class ${data.queryReferenceImplName}
-    extends QueryReference<${data.querySnapshotName}>
+    extends QueryReference<${data.type}, ${data.querySnapshotName}>
     implements ${data.queryReferenceInterfaceName} {
   ${data.queryReferenceImplName}(
     this.reference,
