@@ -25,7 +25,7 @@ class UserMetadata {
   /// sign-in attempts.
   DateTime? get lastSignInTime => _lastSignInTime == null
       ? null
-      : DateTime.fromMillisecondsSinceEpoch(_lastSignInTime!);
+      : DateTime.fromMillisecondsSinceEpoch(_lastSignInTime!, isUtc: true);
 
   @override
   String toString() {
