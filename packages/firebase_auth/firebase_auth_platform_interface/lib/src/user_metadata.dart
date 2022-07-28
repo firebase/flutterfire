@@ -17,7 +17,7 @@ class UserMetadata {
   /// When this account was created as dictated by the server clock.
   DateTime? get creationTime => _creationTimestamp == null
       ? null
-      : DateTime.fromMillisecondsSinceEpoch(_creationTimestamp!);
+      : DateTime.fromMillisecondsSinceEpoch(_creationTimestamp!, isUtc: true);
 
   /// When the user last signed in as dictated by the server clock.
   ///
