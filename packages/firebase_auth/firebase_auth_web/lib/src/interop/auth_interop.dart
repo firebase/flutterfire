@@ -31,6 +31,8 @@ external Persistence inMemoryPersistence;
 external Persistence browserSessionPersistence;
 @JS()
 external Persistence browserLocalPersistence;
+@JS()
+external Persistence indexedDBLocalPersistence;
 
 @JS()
 external PromiseJsImpl<ActionCodeInfo> checkActionCode(
