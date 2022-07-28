@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-07-28
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - [`cloud_firestore_odm` - `v1.0.0-dev.24`](#cloud_firestore_odm---v100-dev24)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.24`](#cloud_firestore_odm_generator---v100-dev24)
+
+Packages with other changes:
+
+ - [`cloud_firestore_web` - `v2.8.2`](#cloud_firestore_web---v282)
+ - [`firebase_auth_platform_interface` - `v6.5.1`](#firebase_auth_platform_interface---v651)
+ - [`firebase_auth_web` - `v4.2.1`](#firebase_auth_web---v421)
+ - [`cloud_firestore` - `v3.4.2`](#cloud_firestore---v342)
+ - [`flutterfire_ui` - `v0.4.3+3`](#flutterfire_ui---v0433)
+ - [`firebase_auth` - `v3.6.1`](#firebase_auth---v361)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore` - `v3.4.2`
+ - `flutterfire_ui` - `v0.4.3+3`
+ - `firebase_auth` - `v3.6.1`
+
+---
+
+#### `cloud_firestore_odm` - `v1.0.0-dev.24`
+
+ - **FIX**: Correctly type `firestoreJsonConverters` as `List<JsonConverter>` instead of `List<Object>` ([#9236](https://github.com/firebase/flutterfire/issues/9236)). ([b39d87c7](https://github.com/firebase/flutterfire/commit/b39d87c7d62cc8bbaddc0b151ec987ee54706870))
+ - **FEAT**: Add where(arrayContains) support ([#9167](https://github.com/firebase/flutterfire/issues/9167)). ([1a2f2262](https://github.com/firebase/flutterfire/commit/1a2f2262578c6230560761630d017637b99cbd6c))
+ - **BREAKING** **FEAT**: The low-level interface of Queries/Document ([#9184](https://github.com/firebase/flutterfire/issues/9184)). ([fad4b0cd](https://github.com/firebase/flutterfire/commit/fad4b0cd0aa09e9161c64deeecf222c14603cd69))
+
+#### `cloud_firestore_odm_generator` - `v1.0.0-dev.24`
+
+ - **FEAT**: Add where(arrayContains) support ([#9167](https://github.com/firebase/flutterfire/issues/9167)). ([1a2f2262](https://github.com/firebase/flutterfire/commit/1a2f2262578c6230560761630d017637b99cbd6c))
+ - **BREAKING** **FEAT**: The low-level interface of Queries/Document ([#9184](https://github.com/firebase/flutterfire/issues/9184)). ([fad4b0cd](https://github.com/firebase/flutterfire/commit/fad4b0cd0aa09e9161c64deeecf222c14603cd69))
+
+#### `cloud_firestore_web` - `v2.8.2`
+
+ - **FIX**: change the interop to fix an issue with startAt/endAt when compilating with dart2js in release mode ([#9246](https://github.com/firebase/flutterfire/issues/9246)). ([b4e92ed8](https://github.com/firebase/flutterfire/commit/b4e92ed854dc1e93cee42dc5ef748be7aeae7650))
+
+#### `firebase_auth_platform_interface` - `v6.5.1`
+
+ - **FIX**: restore default persistence to IndexedDB that was incorrectly set to localStorage ([#9247](https://github.com/firebase/flutterfire/issues/9247)). ([785c4869](https://github.com/firebase/flutterfire/commit/785c4869a45be039d3f1b1473380a1d08609c28e))
+
+#### `firebase_auth_web` - `v4.2.1`
+
+ - **FIX**: restore default persistence to IndexedDB that was incorrectly set to localStorage ([#9247](https://github.com/firebase/flutterfire/issues/9247)). ([785c4869](https://github.com/firebase/flutterfire/commit/785c4869a45be039d3f1b1473380a1d08609c28e))
+
+
 ## 2022-07-27
 
 ### Changes
