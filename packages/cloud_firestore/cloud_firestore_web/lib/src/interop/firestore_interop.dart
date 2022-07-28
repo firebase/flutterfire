@@ -93,15 +93,6 @@ external PromiseJsImpl<void> enableMultiTabIndexedDbPersistence(
 external PromiseJsImpl<void> enableNetwork(FirestoreJsImpl firestore);
 
 @JS()
-external QueryConstraintJsImpl endBefore(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl endAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-@JS()
 external PromiseJsImpl<DocumentSnapshotJsImpl> getDoc(
   DocumentReferenceJsImpl reference,
 );
@@ -218,16 +209,6 @@ external void setLogLevel(String logLevel);
 external bool snapshotEqual(
   dynamic /* DocumentSnapshot | QuerySnapshot */ left,
   dynamic /* DocumentSnapshot | QuerySnapshot */ right,
-);
-
-@JS()
-external QueryConstraintJsImpl startAfter(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
-);
-
-@JS()
-external QueryConstraintJsImpl startAt(
-  dynamic /* DocumentSnapshot | ...fieldValues */ fieldValues,
 );
 
 @JS()
@@ -655,3 +636,18 @@ abstract class SnapshotOptions {
 
   external factory SnapshotOptions({String? serverTimestamps});
 }
+
+// We type those 4 functions as Object to avoid an issue with dart2js compilation
+// in release mode
+// Discussed internally with dart2js team
+@JS()
+external Object get startAfter;
+
+@JS()
+external Object get startAt;
+
+@JS()
+external Object get endBefore;
+
+@JS()
+external Object get endAt;

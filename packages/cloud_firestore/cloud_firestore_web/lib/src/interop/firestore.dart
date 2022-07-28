@@ -467,7 +467,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
   /// We need to call this method in all paginating methods to fix that Dart
   /// doesn't support varargs - we need to use [List] to call js function.
   S? _createQueryConstraint<S>(
-      Function method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
+      Object method, DocumentSnapshot? snapshot, List<dynamic>? fieldValues) {
     if (snapshot == null && fieldValues == null) {
       throw ArgumentError(
           'Please provide either snapshot or fieldValues parameter.');
@@ -477,7 +477,7 @@ class Query<T extends firestore_interop.QueryJsImpl>
         ? [snapshot.jsObject]
         : fieldValues!.map(jsify).toList();
 
-    return callMethod(method, 'apply', jsify([null, args]));
+    return callMethod(method, 'apply', [null, jsify(args)]);
   }
 }
 
