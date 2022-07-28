@@ -16,6 +16,7 @@ class Model {
 class Nested {
   Nested({
     required this.value,
+    required this.simple,
     required this.valueList,
     required this.boolList,
     required this.stringList,
@@ -29,6 +30,7 @@ class Nested {
   Map<String, Object?> toJson() => _$NestedToJson(this);
 
   final Nested? value;
+  final int? simple;
   final List<Nested>? valueList;
   final List<bool>? boolList;
   final List<String>? stringList;

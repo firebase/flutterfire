@@ -1,4 +1,6 @@
 import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
+import 'package:analyzer/dart/element/type_provider.dart';
 
 import '../collection_generator.dart';
 import 'template.dart';
@@ -345,8 +347,8 @@ class ${data.queryReferenceImplName}
         'isGreaterThanOrEqualTo': nullableType,
         'isNull': 'bool?',
         if (field.type.isDartCoreList) ...{
-          // TODO support arrayContains
-          // 'arrayContains': nullableType,
+          'arrayContains': data.libraryElement.typeProvider
+              .asNullable((field.type as InterfaceType).typeArguments.first),
           'arrayContainsAny': nullableType,
         } else ...{
           'whereIn': 'List<${field.type}>?',
@@ -399,5 +401,14 @@ class ${data.queryReferenceImplName}
   @override
   int get hashCode => Object.hash(${propertyNames.join(', ')});
 ''';
+  }
+}
+
+extension on TypeProvider {
+  DartType asNullable(DartType type) {
+    final typeSystem = nullType.element.library.typeSystem;
+    if (typeSystem.isNullable(type)) return type;
+
+    return typeSystem.leastUpperBound(type, nullType);
   }
 }

@@ -398,6 +398,7 @@ abstract class MovieQuery implements QueryReference<Movie, MovieQuerySnapshot> {
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
 
@@ -839,6 +840,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$MovieQuery(
@@ -851,6 +853,7 @@ class _$MovieQuery extends QueryReference<Movie, MovieQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,

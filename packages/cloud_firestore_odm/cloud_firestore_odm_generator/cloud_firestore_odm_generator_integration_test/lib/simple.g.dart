@@ -763,6 +763,7 @@ abstract class NestedDocumentReference
   Future<void> delete();
 
   Future<void> update({
+    int? simple,
     List<bool>? boolList,
     List<String>? stringList,
     List<num>? numList,
@@ -812,6 +813,7 @@ class _$NestedDocumentReference
   }
 
   Future<void> update({
+    Object? simple = _sentinel,
     Object? boolList = _sentinel,
     Object? stringList = _sentinel,
     Object? numList = _sentinel,
@@ -819,6 +821,7 @@ class _$NestedDocumentReference
     Object? dynamicList = _sentinel,
   }) async {
     final json = {
+      if (simple != _sentinel) "simple": simple as int?,
       if (boolList != _sentinel) "boolList": boolList as List<bool>?,
       if (stringList != _sentinel) "stringList": stringList as List<String>?,
       if (numList != _sentinel) "numList": numList as List<num>?,
@@ -950,6 +953,17 @@ abstract class NestedQuery
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  });
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -958,6 +972,7 @@ abstract class NestedQuery
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   });
   NestedQuery whereStringList({
@@ -968,6 +983,7 @@ abstract class NestedQuery
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
   NestedQuery whereNumList({
@@ -978,6 +994,7 @@ abstract class NestedQuery
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   });
   NestedQuery whereObjectList({
@@ -988,6 +1005,7 @@ abstract class NestedQuery
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   });
   NestedQuery whereDynamicList({
@@ -998,6 +1016,7 @@ abstract class NestedQuery
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
 
@@ -1007,6 +1026,18 @@ abstract class NestedQuery
     String startAfter,
     String endAt,
     String endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    int? startAt,
+    int? startAfter,
+    int? endAt,
+    int? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -1239,6 +1270,34 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["simple"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -1247,6 +1306,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1259,6 +1319,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1273,6 +1334,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1285,6 +1347,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1299,6 +1362,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1311,6 +1375,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1325,6 +1390,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1337,6 +1403,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1351,6 +1418,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1363,6 +1431,7 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1381,6 +1450,49 @@ class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$NestedFieldMap["simple"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -8242,6 +8354,7 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
       value: json['value'] == null
           ? null
           : Nested.fromJson(json['value'] as Map<String, dynamic>),
+      simple: json['simple'] as int?,
       valueList: (json['valueList'] as List<dynamic>?)
           ?.map((e) => Nested.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -8258,6 +8371,7 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
 
 const _$NestedFieldMap = <String, String>{
   'value': 'value',
+  'simple': 'simple',
   'valueList': 'valueList',
   'boolList': 'boolList',
   'stringList': 'stringList',
@@ -8268,6 +8382,7 @@ const _$NestedFieldMap = <String, String>{
 
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'value': instance.value,
+      'simple': instance.simple,
       'valueList': instance.valueList,
       'boolList': instance.boolList,
       'stringList': instance.stringList,
