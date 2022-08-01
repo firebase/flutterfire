@@ -1,3 +1,7 @@
+## 2.8.3
+
+ - **FIX**: fix apply method for arrayRemove & arrayUnion ([#9281](https://github.com/firebase/flutterfire/issues/9281)). ([29ef7c2a](https://github.com/firebase/flutterfire/commit/29ef7c2aa4f6f9f87802806508c1b9f142a3890e))
+
 ## 2.8.2
 
  - **FIX**: change the interop to fix an issue with startAt/endAt when compilating with dart2js in release mode ([#9246](https://github.com/firebase/flutterfire/issues/9246)). ([b4e92ed8](https://github.com/firebase/flutterfire/commit/b4e92ed854dc1e93cee42dc5ef748be7aeae7650))
