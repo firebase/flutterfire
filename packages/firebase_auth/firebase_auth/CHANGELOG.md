@@ -1,3 +1,7 @@
+## 3.6.2
+
+ - **DOCS**: update `getIdTokenResult` inline documentation ([#9150](https://github.com/firebase/flutterfire/issues/9150)). ([519518ce](https://github.com/firebase/flutterfire/commit/519518ce3ed36580e35713e791281b251018201c))
+
 ## 3.6.1
 
  - Update a dependency to the latest release.

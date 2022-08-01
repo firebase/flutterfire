@@ -3,6 +3,67 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2022-08-01
+
+### Changes
+
+---
+
+Packages with breaking changes:
+
+ - There are no breaking changes in this release.
+
+Packages with other changes:
+
+ - [`cloud_firestore_web` - `v2.8.3`](#cloud_firestore_web---v283)
+ - [`firebase_auth` - `v3.6.2`](#firebase_auth---v362)
+ - [`firebase_auth_platform_interface` - `v6.5.2`](#firebase_auth_platform_interface---v652)
+ - [`firebase_database` - `v9.1.0`](#firebase_database---v910)
+ - [`firebase_database_platform_interface` - `v0.2.2`](#firebase_database_platform_interface---v022)
+ - [`firebase_database_web` - `v0.2.1+2`](#firebase_database_web---v0212)
+ - [`cloud_firestore` - `v3.4.3`](#cloud_firestore---v343)
+ - [`flutterfire_ui` - `v0.4.3+4`](#flutterfire_ui---v0434)
+ - [`cloud_firestore_odm` - `v1.0.0-dev.25`](#cloud_firestore_odm---v100-dev25)
+ - [`cloud_firestore_odm_generator` - `v1.0.0-dev.25`](#cloud_firestore_odm_generator---v100-dev25)
+ - [`firebase_auth_web` - `v4.2.2`](#firebase_auth_web---v422)
+
+Packages with dependency updates only:
+
+> Packages listed below depend on other packages in this workspace that have had changes. Their versions have been incremented to bump the minimum dependency versions of the packages they depend upon in this project.
+
+ - `cloud_firestore` - `v3.4.3`
+ - `flutterfire_ui` - `v0.4.3+4`
+ - `cloud_firestore_odm` - `v1.0.0-dev.25`
+ - `cloud_firestore_odm_generator` - `v1.0.0-dev.25`
+ - `firebase_auth_web` - `v4.2.2`
+
+---
+
+#### `cloud_firestore_web` - `v2.8.3`
+
+ - **FIX**: fix apply method for arrayRemove & arrayUnion ([#9281](https://github.com/firebase/flutterfire/issues/9281)). ([29ef7c2a](https://github.com/firebase/flutterfire/commit/29ef7c2aa4f6f9f87802806508c1b9f142a3890e))
+
+#### `firebase_auth` - `v3.6.2`
+
+ - **DOCS**: update `getIdTokenResult` inline documentation ([#9150](https://github.com/firebase/flutterfire/issues/9150)). ([519518ce](https://github.com/firebase/flutterfire/commit/519518ce3ed36580e35713e791281b251018201c))
+
+#### `firebase_auth_platform_interface` - `v6.5.2`
+
+ - **DOCS**: update `getIdTokenResult` inline documentation ([#9150](https://github.com/firebase/flutterfire/issues/9150)). ([519518ce](https://github.com/firebase/flutterfire/commit/519518ce3ed36580e35713e791281b251018201c))
+
+#### `firebase_database` - `v9.1.0`
+
+ - **FEAT**: `ServerValue.increment()` now correctly accepts a `num`  to support both integers and doubles. ([#9101](https://github.com/firebase/flutterfire/issues/9101)). ([35cce5b0](https://github.com/firebase/flutterfire/commit/35cce5b03fae00b1753fc9b6ed688c7f020a5007))
+
+#### `firebase_database_platform_interface` - `v0.2.2`
+
+ - **FEAT**: `ServerValue.increment()` now correctly accepts a `num`  to support both integers and doubles. ([#9101](https://github.com/firebase/flutterfire/issues/9101)). ([35cce5b0](https://github.com/firebase/flutterfire/commit/35cce5b03fae00b1753fc9b6ed688c7f020a5007))
+
+#### `firebase_database_web` - `v0.2.1+2`
+
+ - **FIX**: change the interop to fix an issue with startAt/endAt/limitTo when compilating with dart2js in release mode ([#9251](https://github.com/firebase/flutterfire/issues/9251)). ([c2771a42](https://github.com/firebase/flutterfire/commit/c2771a425bd7260b11970e9e9e77ef40a39f9f16))
+
+
 ## 2022-07-28
 
 ### Changes

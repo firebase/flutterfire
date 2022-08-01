@@ -1,3 +1,7 @@
+## 4.2.2
+
+ - Update a dependency to the latest release.
+
 ## 4.2.1
 
  - **FIX**: restore default persistence to IndexedDB that was incorrectly set to localStorage ([#9247](https://github.com/firebase/flutterfire/issues/9247)). ([785c4869](https://github.com/firebase/flutterfire/commit/785c4869a45be039d3f1b1473380a1d08609c28e))
