@@ -707,7 +707,7 @@ class _FieldValueArrayUnion extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayUnion, 'apply', jsify([null, elements]));
+        firestore_interop.arrayUnion, 'apply', [null, jsify(elements)]);
   }
 
   @override
@@ -721,7 +721,7 @@ class _FieldValueArrayRemove extends _FieldValueArray {
   firestore_interop.FieldValue? _jsify() {
     // This uses var arg so cannot use js package
     return callMethod(
-        firestore_interop.arrayRemove, 'apply', jsify([null, elements]));
+        firestore_interop.arrayRemove, 'apply', [null, jsify(elements)]);
   }
 
   @override

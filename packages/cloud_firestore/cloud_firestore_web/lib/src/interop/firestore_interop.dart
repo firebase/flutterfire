@@ -29,12 +29,6 @@ external PromiseJsImpl<DocumentReferenceJsImpl> addDoc(
 );
 
 @JS()
-external FieldValue arrayRemove(dynamic elements);
-
-@JS()
-external FieldValue arrayUnion(dynamic elements);
-
-@JS()
 external PromiseJsImpl<void> clearIndexedDbPersistence(
   FirestoreJsImpl firestore,
 );
@@ -637,7 +631,7 @@ abstract class SnapshotOptions {
   external factory SnapshotOptions({String? serverTimestamps});
 }
 
-// We type those 4 functions as Object to avoid an issue with dart2js compilation
+// We type these 6 functions as Object to avoid an issue with dart2js compilation
 // in release mode
 // Discussed internally with dart2js team
 @JS()
@@ -651,3 +645,9 @@ external Object get endBefore;
 
 @JS()
 external Object get endAt;
+
+@JS()
+external Object get arrayRemove;
+
+@JS()
+external Object get arrayUnion;
