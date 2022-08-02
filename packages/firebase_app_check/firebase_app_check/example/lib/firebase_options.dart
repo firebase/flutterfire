@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     projectId: 'react-native-firebase-testing',
     databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
     storageBucket: 'react-native-firebase-testing.appspot.com',
-    androidClientId: '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
-    iosClientId: '448618578101-jr218j4iu7v7uvrrdhk8rl0vidhi9fda.apps.googleusercontent.com',
+    androidClientId:
+        '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
+    iosClientId:
+        '448618578101-jr218j4iu7v7uvrrdhk8rl0vidhi9fda.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.appcheckExample',
   );
 
@@ -82,8 +84,10 @@ class DefaultFirebaseOptions {
     projectId: 'react-native-firebase-testing',
     databaseURL: 'https://react-native-firebase-testing.firebaseio.com',
     storageBucket: 'react-native-firebase-testing.appspot.com',
-    androidClientId: '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
-    iosClientId: '448618578101-jr218j4iu7v7uvrrdhk8rl0vidhi9fda.apps.googleusercontent.com',
+    androidClientId:
+        '448618578101-a9p7bj5jlakabp22fo3cbkj7nsmag24e.apps.googleusercontent.com',
+    iosClientId:
+        '448618578101-jr218j4iu7v7uvrrdhk8rl0vidhi9fda.apps.googleusercontent.com',
     iosBundleId: 'io.flutter.plugins.firebase.appcheckExample',
   );
 }

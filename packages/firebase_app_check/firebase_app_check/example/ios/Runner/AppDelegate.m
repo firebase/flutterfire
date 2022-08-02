@@ -6,15 +6,13 @@
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
 #if DEBUG
-  FIRAppCheckDebugProviderFactory *providerFactory =
-        [[FIRAppCheckDebugProviderFactory alloc] init];
+  FIRAppCheckDebugProviderFactory *providerFactory = [[FIRAppCheckDebugProviderFactory alloc] init];
   [FIRAppCheck setAppCheckProviderFactory:providerFactory];
 #endif
   [GeneratedPluginRegistrant registerWithRegistry:self];
-    // Override point for customization after application launch.
-    return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  // Override point for customization after application launch.
+  return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 @end
