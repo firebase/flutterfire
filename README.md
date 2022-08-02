@@ -53,10 +53,3 @@ the [Flutter issue tracker](https://github.com/flutter/flutter/issues/new).
 If you wish to contribute a change to any of the existing plugins in this repo, please review
 our [contribution guide](https://github.com/firebase/flutterfire/blob/master/CONTRIBUTING.md)
 and open a [pull request](https://github.com/firebase/flutterfire/pulls).
-
-## Status
-
-![Status: Experimental](https://img.shields.io/badge/Status-Experimental-blue)
-
-This repository is maintained by Googlers but is not a supported Firebase product. Issues here are answered by
-maintainers and other community members on GitHub on a best-effort basis.
