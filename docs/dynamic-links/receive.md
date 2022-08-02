@@ -149,8 +149,6 @@ Future<void> main() async {
 }
 ```
 
-
-
 Within your application logic, you can then check whether a link was handled and perform an action, for example:
 
 ```dart
