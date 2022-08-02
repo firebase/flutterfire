@@ -90,9 +90,8 @@ class _FirebaseAppCheck extends State<FirebaseAppCheckExample> {
             ),
             ElevatedButton(
               onPressed: () async {
-                final token = await appCheck.getToken(true);
-                print('token: $token');
-                // setMessage('your token: $token');
+                // Token will be passed to `onTokenChange()` event handler
+                await appCheck.getToken(true);
               },
               child: const Text('getToken()'),
             ),
