@@ -18,25 +18,29 @@ import 'permissions.dart';
 import 'token_monitor.dart';
 import 'firebase_options.dart';
 
-/// Working example of using FirebaseMessaging.
-/// To verify messages are working in foreground, background & terminated state,
-/// use this example app. Simply do the following (Assuming you've already followed
-/// the platform specific setup steps found here:
+/// Working example of FirebaseMessaging.
+/// Please use this in order to verify messages are working in foreground, background & terminated state.
+/// Setup your app following this guide:
 /// https://firebase.google.com/docs/cloud-messaging/flutter/client#platform-specific_setup_and_requirements):
-/// 1. Run `flutterfire configure` in the root of your project to setup app with your Firebase project.
-/// 2. Run the app on an actual device for iOS, android is fine to run on an emulator.
-/// 3. Use the following script to send a message to your device: scripts/send-message.js (Follow the steps in the script to send a message)
-///    to test each API as documented here: https://firebase.google.com/docs/cloud-messaging/flutter/receive
-/// 4. To run this script (scripts/send-message.js), you will need nodejs installed on your computer. Then the following:
+///
+/// Once you've completed platform specific requirements, follow these instructions:
+/// 1. Install melos tool by running `flutter pub global activate melos`.
+/// 2. Run `melos bootstrap` in FlutterFire project.
+/// 3. In your terminal, root to ./packages/firebase_messaging/firebase_messaging/example directory.
+/// 4. Run `flutterfire configure` in the example/ directory to setup your app with your Firebase project.
+/// 5. Run the app on an actual device for iOS, android is fine to run on an emulator.
+/// 6. Use the following script to send a message to your device: scripts/send-message.js. To run this script,
+///    you will need nodejs installed on your computer. Then the following:
 ///     a. Download a service account key (JSON file) from your Firebase console and add to the example/scripts directory.
 ///     b. Copy the token for your device that is printed in the console on app start (`flutter run`) for the FirebaseMessaging example.
 ///     c. From your terminal, root to example/scripts directory & run `npm install`.
 ///     d. Run `npm run send-message` in the example/scripts directory and your app will receive messages in any state; foreground, background, terminated.
-///  Please note; If you find your messages have stopped arriving, it is extremely likely they are being throttled by the platform. iOS in particular
+///  Note: Flutter API documentation for receiving messages: https://firebase.google.com/docs/cloud-messaging/flutter/receive
+///  Note: If you find your messages have stopped arriving, it is extremely likely they are being throttled by the platform. iOS in particular
 ///  are aggressive with their throttling policy.
+///
 /// Define a top-level named handler which background/terminated messages will
 /// call.
-///
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await setupFlutterNotifications();
