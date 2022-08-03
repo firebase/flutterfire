@@ -27,7 +27,13 @@ import 'firebase_options.dart';
 /// 2. Run the app on an actual device for iOS, android is fine to run on an emulator.
 /// 3. Use the following script to send a message to your device: scripts/send-message.js (Follow the steps in the script to send a message)
 ///    to test each API as documented here: https://firebase.google.com/docs/cloud-messaging/flutter/receive
-///
+/// 4. To run this script (scripts/send-message.js), you will need nodejs installed on your computer. Then the following:
+///     a. Download a service account key (JSON file) from your Firebase console and add to the example/scripts directory.
+///     b. Copy the token for your device that is printed in the console on app start (`flutter run`) for the FirebaseMessaging example.
+///     c. From your terminal, root to example/scripts directory & run `npm install`.
+///     d. Run `npm run send-message` in the example/scripts directory and your app will receive messages in any state; foreground, background, terminated.
+///  Please note; If you find your messages have stopped arriving, it is extremely likely they are being throttled by the platform. iOS in particular
+///  are aggressive with their throttling policy.
 /// Define a top-level named handler which background/terminated messages will
 /// call.
 ///
