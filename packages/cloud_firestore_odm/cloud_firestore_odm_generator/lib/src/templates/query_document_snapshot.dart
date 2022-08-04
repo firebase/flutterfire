@@ -5,7 +5,7 @@ class QueryDocumentSnapshotTemplate extends Template<CollectionData> {
   @override
   String generate(CollectionData data) {
     return '''
-class ${data.queryDocumentSnapshotName} extends FirestoreQueryDocumentSnapshot implements ${data.documentSnapshotName} {
+class ${data.queryDocumentSnapshotName} extends FirestoreQueryDocumentSnapshot<${data.type}> implements ${data.documentSnapshotName} {
   ${data.queryDocumentSnapshotName}._(this.snapshot, this.data);
 
   @override

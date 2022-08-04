@@ -19,7 +19,9 @@ const _sentinel = _Sentinel();
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class ModelCollectionReference
-    implements ModelQuery, FirestoreCollectionReference<ModelQuerySnapshot> {
+    implements
+        ModelQuery,
+        FirestoreCollectionReference<Model, ModelQuerySnapshot> {
   factory ModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$ModelCollectionReference;
@@ -100,7 +102,7 @@ class _$ModelCollectionReference extends _$ModelQuery
 }
 
 abstract class ModelDocumentReference
-    extends FirestoreDocumentReference<ModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<Model, ModelDocumentSnapshot> {
   factory ModelDocumentReference(DocumentReference<Model> reference) =
       _$ModelDocumentReference;
 
@@ -128,7 +130,7 @@ abstract class ModelDocumentReference
 }
 
 class _$ModelDocumentReference
-    extends FirestoreDocumentReference<ModelDocumentSnapshot>
+    extends FirestoreDocumentReference<Model, ModelDocumentSnapshot>
     implements ModelDocumentReference {
   _$ModelDocumentReference(this.reference);
 
@@ -191,7 +193,7 @@ class _$ModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ModelDocumentSnapshot extends FirestoreDocumentSnapshot<Model> {
   ModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -211,7 +213,7 @@ class ModelDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Model? data;
 }
 
-abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
+abstract class ModelQuery implements QueryReference<Model, ModelQuerySnapshot> {
   @override
   ModelQuery limit(int limit);
 
@@ -331,7 +333,7 @@ abstract class ModelQuery implements QueryReference<ModelQuerySnapshot> {
   });
 }
 
-class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
+class _$ModelQuery extends QueryReference<Model, ModelQuerySnapshot>
     implements ModelQuery {
   _$ModelQuery(
     this.reference,
@@ -621,7 +623,7 @@ class _$ModelQuery extends QueryReference<ModelQuerySnapshot>
 }
 
 class ModelQuerySnapshot
-    extends FirestoreQuerySnapshot<ModelQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Model, ModelQueryDocumentSnapshot> {
   ModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -637,7 +639,7 @@ class ModelQuerySnapshot
   final List<FirestoreDocumentChange<ModelDocumentSnapshot>> docChanges;
 }
 
-class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Model>
     implements ModelDocumentSnapshot {
   ModelQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -657,7 +659,9 @@ class ModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class NestedCollectionReference
-    implements NestedQuery, FirestoreCollectionReference<NestedQuerySnapshot> {
+    implements
+        NestedQuery,
+        FirestoreCollectionReference<Nested, NestedQuerySnapshot> {
   factory NestedCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$NestedCollectionReference;
@@ -738,7 +742,7 @@ class _$NestedCollectionReference extends _$NestedQuery
 }
 
 abstract class NestedDocumentReference
-    extends FirestoreDocumentReference<NestedDocumentSnapshot> {
+    extends FirestoreDocumentReference<Nested, NestedDocumentSnapshot> {
   factory NestedDocumentReference(DocumentReference<Nested> reference) =
       _$NestedDocumentReference;
 
@@ -759,6 +763,7 @@ abstract class NestedDocumentReference
   Future<void> delete();
 
   Future<void> update({
+    int? simple,
     List<bool>? boolList,
     List<String>? stringList,
     List<num>? numList,
@@ -770,7 +775,7 @@ abstract class NestedDocumentReference
 }
 
 class _$NestedDocumentReference
-    extends FirestoreDocumentReference<NestedDocumentSnapshot>
+    extends FirestoreDocumentReference<Nested, NestedDocumentSnapshot>
     implements NestedDocumentReference {
   _$NestedDocumentReference(this.reference);
 
@@ -808,6 +813,7 @@ class _$NestedDocumentReference
   }
 
   Future<void> update({
+    Object? simple = _sentinel,
     Object? boolList = _sentinel,
     Object? stringList = _sentinel,
     Object? numList = _sentinel,
@@ -815,6 +821,7 @@ class _$NestedDocumentReference
     Object? dynamicList = _sentinel,
   }) async {
     final json = {
+      if (simple != _sentinel) "simple": simple as int?,
       if (boolList != _sentinel) "boolList": boolList as List<bool>?,
       if (stringList != _sentinel) "stringList": stringList as List<String>?,
       if (numList != _sentinel) "numList": numList as List<num>?,
@@ -842,7 +849,7 @@ class _$NestedDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class NestedDocumentSnapshot extends FirestoreDocumentSnapshot {
+class NestedDocumentSnapshot extends FirestoreDocumentSnapshot<Nested> {
   NestedDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -862,7 +869,8 @@ class NestedDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Nested? data;
 }
 
-abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
+abstract class NestedQuery
+    implements QueryReference<Nested, NestedQuerySnapshot> {
   @override
   NestedQuery limit(int limit);
 
@@ -945,6 +953,17 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<String>? whereIn,
     List<String>? whereNotIn,
   });
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  });
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -953,6 +972,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   });
   NestedQuery whereStringList({
@@ -963,6 +983,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   });
   NestedQuery whereNumList({
@@ -973,6 +994,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   });
   NestedQuery whereObjectList({
@@ -983,6 +1005,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   });
   NestedQuery whereDynamicList({
@@ -993,6 +1016,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   });
 
@@ -1002,6 +1026,18 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
     String startAfter,
     String endAt,
     String endBefore,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  });
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    int? startAt,
+    int? startAfter,
+    int? endAt,
+    int? endBefore,
     NestedDocumentSnapshot? startAtDocument,
     NestedDocumentSnapshot? endAtDocument,
     NestedDocumentSnapshot? endBeforeDocument,
@@ -1069,7 +1105,7 @@ abstract class NestedQuery implements QueryReference<NestedQuerySnapshot> {
   });
 }
 
-class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
+class _$NestedQuery extends QueryReference<Nested, NestedQuerySnapshot>
     implements NestedQuery {
   _$NestedQuery(
     this.reference,
@@ -1234,6 +1270,34 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     );
   }
 
+  NestedQuery whereSimple({
+    int? isEqualTo,
+    int? isNotEqualTo,
+    int? isLessThan,
+    int? isLessThanOrEqualTo,
+    int? isGreaterThan,
+    int? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<int?>? whereIn,
+    List<int?>? whereNotIn,
+  }) {
+    return _$NestedQuery(
+      reference.where(
+        _$NestedFieldMap["simple"]!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      _collection,
+    );
+  }
+
   NestedQuery whereBoolList({
     List<bool>? isEqualTo,
     List<bool>? isNotEqualTo,
@@ -1242,6 +1306,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<bool>? isGreaterThan,
     List<bool>? isGreaterThanOrEqualTo,
     bool? isNull,
+    bool? arrayContains,
     List<bool>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1254,6 +1319,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1268,6 +1334,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<String>? isGreaterThan,
     List<String>? isGreaterThanOrEqualTo,
     bool? isNull,
+    String? arrayContains,
     List<String>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1280,6 +1347,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1294,6 +1362,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<num>? isGreaterThan,
     List<num>? isGreaterThanOrEqualTo,
     bool? isNull,
+    num? arrayContains,
     List<num>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1306,6 +1375,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1320,6 +1390,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<Object?>? isGreaterThan,
     List<Object?>? isGreaterThanOrEqualTo,
     bool? isNull,
+    Object? arrayContains,
     List<Object?>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1332,6 +1403,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1346,6 +1418,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     List<dynamic>? isGreaterThan,
     List<dynamic>? isGreaterThanOrEqualTo,
     bool? isNull,
+    dynamic arrayContains,
     List<dynamic>? arrayContainsAny,
   }) {
     return _$NestedQuery(
@@ -1358,6 +1431,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
         isGreaterThan: isGreaterThan,
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
         isNull: isNull,
+        arrayContains: arrayContains,
         arrayContainsAny: arrayContainsAny,
       ),
       _collection,
@@ -1376,6 +1450,49 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
     NestedDocumentSnapshot? startAfterDocument,
   }) {
     var query = reference.orderBy(FieldPath.documentId, descending: descending);
+
+    if (startAtDocument != null) {
+      query = query.startAtDocument(startAtDocument.snapshot);
+    }
+    if (startAfterDocument != null) {
+      query = query.startAfterDocument(startAfterDocument.snapshot);
+    }
+    if (endAtDocument != null) {
+      query = query.endAtDocument(endAtDocument.snapshot);
+    }
+    if (endBeforeDocument != null) {
+      query = query.endBeforeDocument(endBeforeDocument.snapshot);
+    }
+
+    if (startAt != _sentinel) {
+      query = query.startAt([startAt]);
+    }
+    if (startAfter != _sentinel) {
+      query = query.startAfter([startAfter]);
+    }
+    if (endAt != _sentinel) {
+      query = query.endAt([endAt]);
+    }
+    if (endBefore != _sentinel) {
+      query = query.endBefore([endBefore]);
+    }
+
+    return _$NestedQuery(query, _collection);
+  }
+
+  NestedQuery orderBySimple({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    NestedDocumentSnapshot? startAtDocument,
+    NestedDocumentSnapshot? endAtDocument,
+    NestedDocumentSnapshot? endBeforeDocument,
+    NestedDocumentSnapshot? startAfterDocument,
+  }) {
+    var query =
+        reference.orderBy(_$NestedFieldMap["simple"]!, descending: descending);
 
     if (startAtDocument != null) {
       query = query.startAtDocument(startAtDocument.snapshot);
@@ -1633,7 +1750,7 @@ class _$NestedQuery extends QueryReference<NestedQuerySnapshot>
 }
 
 class NestedQuerySnapshot
-    extends FirestoreQuerySnapshot<NestedQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Nested, NestedQueryDocumentSnapshot> {
   NestedQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1649,7 +1766,7 @@ class NestedQuerySnapshot
   final List<FirestoreDocumentChange<NestedDocumentSnapshot>> docChanges;
 }
 
-class NestedQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class NestedQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Nested>
     implements NestedDocumentSnapshot {
   NestedQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1671,7 +1788,8 @@ class NestedQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class SplitFileModelCollectionReference
     implements
         SplitFileModelQuery,
-        FirestoreCollectionReference<SplitFileModelQuerySnapshot> {
+        FirestoreCollectionReference<SplitFileModel,
+            SplitFileModelQuerySnapshot> {
   factory SplitFileModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$SplitFileModelCollectionReference;
@@ -1754,7 +1872,8 @@ class _$SplitFileModelCollectionReference extends _$SplitFileModelQuery
 }
 
 abstract class SplitFileModelDocumentReference
-    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<SplitFileModel,
+        SplitFileModelDocumentSnapshot> {
   factory SplitFileModelDocumentReference(
           DocumentReference<SplitFileModel> reference) =
       _$SplitFileModelDocumentReference;
@@ -1778,9 +1897,9 @@ abstract class SplitFileModelDocumentReference
   Future<void> set(SplitFileModel value);
 }
 
-class _$SplitFileModelDocumentReference
-    extends FirestoreDocumentReference<SplitFileModelDocumentSnapshot>
-    implements SplitFileModelDocumentReference {
+class _$SplitFileModelDocumentReference extends FirestoreDocumentReference<
+    SplitFileModel,
+    SplitFileModelDocumentSnapshot> implements SplitFileModelDocumentReference {
   _$SplitFileModelDocumentReference(this.reference);
 
   @override
@@ -1832,7 +1951,8 @@ class _$SplitFileModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class SplitFileModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class SplitFileModelDocumentSnapshot
+    extends FirestoreDocumentSnapshot<SplitFileModel> {
   SplitFileModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1853,7 +1973,7 @@ class SplitFileModelDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class SplitFileModelQuery
-    implements QueryReference<SplitFileModelQuerySnapshot> {
+    implements QueryReference<SplitFileModel, SplitFileModelQuerySnapshot> {
   @override
   SplitFileModelQuery limit(int limit);
 
@@ -1950,7 +2070,8 @@ abstract class SplitFileModelQuery
   });
 }
 
-class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
+class _$SplitFileModelQuery
+    extends QueryReference<SplitFileModel, SplitFileModelQuerySnapshot>
     implements SplitFileModelQuery {
   _$SplitFileModelQuery(
     this.reference,
@@ -2168,8 +2289,8 @@ class _$SplitFileModelQuery extends QueryReference<SplitFileModelQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class SplitFileModelQuerySnapshot
-    extends FirestoreQuerySnapshot<SplitFileModelQueryDocumentSnapshot> {
+class SplitFileModelQuerySnapshot extends FirestoreQuerySnapshot<SplitFileModel,
+    SplitFileModelQueryDocumentSnapshot> {
   SplitFileModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2186,7 +2307,8 @@ class SplitFileModelQuerySnapshot
       docChanges;
 }
 
-class SplitFileModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class SplitFileModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<SplitFileModel>
     implements SplitFileModelDocumentSnapshot {
   SplitFileModelQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -2208,7 +2330,7 @@ class SplitFileModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class EmptyModelCollectionReference
     implements
         EmptyModelQuery,
-        FirestoreCollectionReference<EmptyModelQuerySnapshot> {
+        FirestoreCollectionReference<EmptyModel, EmptyModelQuerySnapshot> {
   factory EmptyModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$EmptyModelCollectionReference;
@@ -2289,7 +2411,7 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 }
 
 abstract class EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot> {
   factory EmptyModelDocumentReference(DocumentReference<EmptyModel> reference) =
       _$EmptyModelDocumentReference;
 
@@ -2313,7 +2435,7 @@ abstract class EmptyModelDocumentReference
 }
 
 class _$EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot>
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot>
     implements EmptyModelDocumentReference {
   _$EmptyModelDocumentReference(this.reference);
 
@@ -2366,7 +2488,7 @@ class _$EmptyModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot<EmptyModel> {
   EmptyModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2387,7 +2509,7 @@ class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class EmptyModelQuery
-    implements QueryReference<EmptyModelQuerySnapshot> {
+    implements QueryReference<EmptyModel, EmptyModelQuerySnapshot> {
   @override
   EmptyModelQuery limit(int limit);
 
@@ -2484,7 +2606,8 @@ abstract class EmptyModelQuery
   });
 }
 
-class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
+class _$EmptyModelQuery
+    extends QueryReference<EmptyModel, EmptyModelQuerySnapshot>
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this.reference,
@@ -2702,8 +2825,8 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class EmptyModelQuerySnapshot
-    extends FirestoreQuerySnapshot<EmptyModelQueryDocumentSnapshot> {
+class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
+    EmptyModelQueryDocumentSnapshot> {
   EmptyModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2719,7 +2842,8 @@ class EmptyModelQuerySnapshot
   final List<FirestoreDocumentChange<EmptyModelDocumentSnapshot>> docChanges;
 }
 
-class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class EmptyModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<EmptyModel>
     implements EmptyModelDocumentSnapshot {
   EmptyModelQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -2741,7 +2865,7 @@ class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class OptionalJsonCollectionReference
     implements
         OptionalJsonQuery,
-        FirestoreCollectionReference<OptionalJsonQuerySnapshot> {
+        FirestoreCollectionReference<OptionalJson, OptionalJsonQuerySnapshot> {
   factory OptionalJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$OptionalJsonCollectionReference;
@@ -2823,8 +2947,8 @@ class _$OptionalJsonCollectionReference extends _$OptionalJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class OptionalJsonDocumentReference
-    extends FirestoreDocumentReference<OptionalJsonDocumentSnapshot> {
+abstract class OptionalJsonDocumentReference extends FirestoreDocumentReference<
+    OptionalJson, OptionalJsonDocumentSnapshot> {
   factory OptionalJsonDocumentReference(
           DocumentReference<OptionalJson> reference) =
       _$OptionalJsonDocumentReference;
@@ -2852,9 +2976,9 @@ abstract class OptionalJsonDocumentReference
   Future<void> set(OptionalJson value);
 }
 
-class _$OptionalJsonDocumentReference
-    extends FirestoreDocumentReference<OptionalJsonDocumentSnapshot>
-    implements OptionalJsonDocumentReference {
+class _$OptionalJsonDocumentReference extends FirestoreDocumentReference<
+    OptionalJson,
+    OptionalJsonDocumentSnapshot> implements OptionalJsonDocumentReference {
   _$OptionalJsonDocumentReference(this.reference);
 
   @override
@@ -2916,7 +3040,8 @@ class _$OptionalJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class OptionalJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class OptionalJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<OptionalJson> {
   OptionalJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2937,7 +3062,7 @@ class OptionalJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class OptionalJsonQuery
-    implements QueryReference<OptionalJsonQuerySnapshot> {
+    implements QueryReference<OptionalJson, OptionalJsonQuerySnapshot> {
   @override
   OptionalJsonQuery limit(int limit);
 
@@ -3057,7 +3182,8 @@ abstract class OptionalJsonQuery
   });
 }
 
-class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
+class _$OptionalJsonQuery
+    extends QueryReference<OptionalJson, OptionalJsonQuerySnapshot>
     implements OptionalJsonQuery {
   _$OptionalJsonQuery(
     this.reference,
@@ -3346,8 +3472,8 @@ class _$OptionalJsonQuery extends QueryReference<OptionalJsonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class OptionalJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<OptionalJsonQueryDocumentSnapshot> {
+class OptionalJsonQuerySnapshot extends FirestoreQuerySnapshot<OptionalJson,
+    OptionalJsonQueryDocumentSnapshot> {
   OptionalJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -3363,7 +3489,8 @@ class OptionalJsonQuerySnapshot
   final List<FirestoreDocumentChange<OptionalJsonDocumentSnapshot>> docChanges;
 }
 
-class OptionalJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class OptionalJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<OptionalJson>
     implements OptionalJsonDocumentSnapshot {
   OptionalJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -3385,7 +3512,7 @@ class OptionalJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class MixedJsonCollectionReference
     implements
         MixedJsonQuery,
-        FirestoreCollectionReference<MixedJsonQuerySnapshot> {
+        FirestoreCollectionReference<MixedJson, MixedJsonQuerySnapshot> {
   factory MixedJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$MixedJsonCollectionReference;
@@ -3466,7 +3593,7 @@ class _$MixedJsonCollectionReference extends _$MixedJsonQuery
 }
 
 abstract class MixedJsonDocumentReference
-    extends FirestoreDocumentReference<MixedJsonDocumentSnapshot> {
+    extends FirestoreDocumentReference<MixedJson, MixedJsonDocumentSnapshot> {
   factory MixedJsonDocumentReference(DocumentReference<MixedJson> reference) =
       _$MixedJsonDocumentReference;
 
@@ -3494,7 +3621,7 @@ abstract class MixedJsonDocumentReference
 }
 
 class _$MixedJsonDocumentReference
-    extends FirestoreDocumentReference<MixedJsonDocumentSnapshot>
+    extends FirestoreDocumentReference<MixedJson, MixedJsonDocumentSnapshot>
     implements MixedJsonDocumentReference {
   _$MixedJsonDocumentReference(this.reference);
 
@@ -3557,7 +3684,7 @@ class _$MixedJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot<MixedJson> {
   MixedJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -3578,7 +3705,7 @@ class MixedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class MixedJsonQuery
-    implements QueryReference<MixedJsonQuerySnapshot> {
+    implements QueryReference<MixedJson, MixedJsonQuerySnapshot> {
   @override
   MixedJsonQuery limit(int limit);
 
@@ -3698,7 +3825,7 @@ abstract class MixedJsonQuery
   });
 }
 
-class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
+class _$MixedJsonQuery extends QueryReference<MixedJson, MixedJsonQuerySnapshot>
     implements MixedJsonQuery {
   _$MixedJsonQuery(
     this.reference,
@@ -3988,7 +4115,7 @@ class _$MixedJsonQuery extends QueryReference<MixedJsonQuerySnapshot>
 }
 
 class MixedJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<MixedJsonQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<MixedJson, MixedJsonQueryDocumentSnapshot> {
   MixedJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -4004,7 +4131,8 @@ class MixedJsonQuerySnapshot
   final List<FirestoreDocumentChange<MixedJsonDocumentSnapshot>> docChanges;
 }
 
-class MixedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class MixedJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<MixedJson>
     implements MixedJsonDocumentSnapshot {
   MixedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -4024,7 +4152,9 @@ class MixedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class RootCollectionReference
-    implements RootQuery, FirestoreCollectionReference<RootQuerySnapshot> {
+    implements
+        RootQuery,
+        FirestoreCollectionReference<Root, RootQuerySnapshot> {
   factory RootCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$RootCollectionReference;
@@ -4105,7 +4235,7 @@ class _$RootCollectionReference extends _$RootQuery
 }
 
 abstract class RootDocumentReference
-    extends FirestoreDocumentReference<RootDocumentSnapshot> {
+    extends FirestoreDocumentReference<Root, RootDocumentSnapshot> {
   factory RootDocumentReference(DocumentReference<Root> reference) =
       _$RootDocumentReference;
 
@@ -4148,7 +4278,7 @@ abstract class RootDocumentReference
 }
 
 class _$RootDocumentReference
-    extends FirestoreDocumentReference<RootDocumentSnapshot>
+    extends FirestoreDocumentReference<Root, RootDocumentSnapshot>
     implements RootDocumentReference {
   _$RootDocumentReference(this.reference);
 
@@ -4227,7 +4357,7 @@ class _$RootDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class RootDocumentSnapshot extends FirestoreDocumentSnapshot {
+class RootDocumentSnapshot extends FirestoreDocumentSnapshot<Root> {
   RootDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -4247,7 +4377,7 @@ class RootDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Root? data;
 }
 
-abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
+abstract class RootQuery implements QueryReference<Root, RootQuerySnapshot> {
   @override
   RootQuery limit(int limit);
 
@@ -4390,7 +4520,7 @@ abstract class RootQuery implements QueryReference<RootQuerySnapshot> {
   });
 }
 
-class _$RootQuery extends QueryReference<RootQuerySnapshot>
+class _$RootQuery extends QueryReference<Root, RootQuerySnapshot>
     implements RootQuery {
   _$RootQuery(
     this.reference,
@@ -4751,7 +4881,7 @@ class _$RootQuery extends QueryReference<RootQuerySnapshot>
 }
 
 class RootQuerySnapshot
-    extends FirestoreQuerySnapshot<RootQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Root, RootQueryDocumentSnapshot> {
   RootQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -4767,7 +4897,7 @@ class RootQuerySnapshot
   final List<FirestoreDocumentChange<RootDocumentSnapshot>> docChanges;
 }
 
-class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Root>
     implements RootDocumentSnapshot {
   RootQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -4787,7 +4917,7 @@ class RootQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
 abstract class SubCollectionReference
-    implements SubQuery, FirestoreCollectionReference<SubQuerySnapshot> {
+    implements SubQuery, FirestoreCollectionReference<Sub, SubQuerySnapshot> {
   factory SubCollectionReference(
     DocumentReference<Root> parent,
   ) = _$SubCollectionReference;
@@ -4876,7 +5006,7 @@ class _$SubCollectionReference extends _$SubQuery
 }
 
 abstract class SubDocumentReference
-    extends FirestoreDocumentReference<SubDocumentSnapshot> {
+    extends FirestoreDocumentReference<Sub, SubDocumentSnapshot> {
   factory SubDocumentReference(DocumentReference<Sub> reference) =
       _$SubDocumentReference;
 
@@ -4910,7 +5040,7 @@ abstract class SubDocumentReference
 }
 
 class _$SubDocumentReference
-    extends FirestoreDocumentReference<SubDocumentSnapshot>
+    extends FirestoreDocumentReference<Sub, SubDocumentSnapshot>
     implements SubDocumentReference {
   _$SubDocumentReference(this.reference);
 
@@ -4980,7 +5110,7 @@ class _$SubDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class SubDocumentSnapshot extends FirestoreDocumentSnapshot {
+class SubDocumentSnapshot extends FirestoreDocumentSnapshot<Sub> {
   SubDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -5000,7 +5130,7 @@ class SubDocumentSnapshot extends FirestoreDocumentSnapshot {
   final Sub? data;
 }
 
-abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
+abstract class SubQuery implements QueryReference<Sub, SubQuerySnapshot> {
   @override
   SubQuery limit(int limit);
 
@@ -5143,7 +5273,8 @@ abstract class SubQuery implements QueryReference<SubQuerySnapshot> {
   });
 }
 
-class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
+class _$SubQuery extends QueryReference<Sub, SubQuerySnapshot>
+    implements SubQuery {
   _$SubQuery(
     this.reference,
     this._collection,
@@ -5503,7 +5634,7 @@ class _$SubQuery extends QueryReference<SubQuerySnapshot> implements SubQuery {
 }
 
 class SubQuerySnapshot
-    extends FirestoreQuerySnapshot<SubQueryDocumentSnapshot> {
+    extends FirestoreQuerySnapshot<Sub, SubQueryDocumentSnapshot> {
   SubQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -5519,7 +5650,7 @@ class SubQuerySnapshot
   final List<FirestoreDocumentChange<SubDocumentSnapshot>> docChanges;
 }
 
-class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot<Sub>
     implements SubDocumentSnapshot {
   SubQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -5541,7 +5672,7 @@ class SubQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class AsCamelCaseCollectionReference
     implements
         AsCamelCaseQuery,
-        FirestoreCollectionReference<AsCamelCaseQuerySnapshot> {
+        FirestoreCollectionReference<AsCamelCase, AsCamelCaseQuerySnapshot> {
   factory AsCamelCaseCollectionReference(
     DocumentReference<Root> parent,
   ) = _$AsCamelCaseCollectionReference;
@@ -5631,8 +5762,8 @@ class _$AsCamelCaseCollectionReference extends _$AsCamelCaseQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class AsCamelCaseDocumentReference
-    extends FirestoreDocumentReference<AsCamelCaseDocumentSnapshot> {
+abstract class AsCamelCaseDocumentReference extends FirestoreDocumentReference<
+    AsCamelCase, AsCamelCaseDocumentSnapshot> {
   factory AsCamelCaseDocumentReference(
           DocumentReference<AsCamelCase> reference) =
       _$AsCamelCaseDocumentReference;
@@ -5666,7 +5797,7 @@ abstract class AsCamelCaseDocumentReference
 }
 
 class _$AsCamelCaseDocumentReference
-    extends FirestoreDocumentReference<AsCamelCaseDocumentSnapshot>
+    extends FirestoreDocumentReference<AsCamelCase, AsCamelCaseDocumentSnapshot>
     implements AsCamelCaseDocumentReference {
   _$AsCamelCaseDocumentReference(this.reference);
 
@@ -5734,7 +5865,8 @@ class _$AsCamelCaseDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class AsCamelCaseDocumentSnapshot extends FirestoreDocumentSnapshot {
+class AsCamelCaseDocumentSnapshot
+    extends FirestoreDocumentSnapshot<AsCamelCase> {
   AsCamelCaseDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -5755,7 +5887,7 @@ class AsCamelCaseDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class AsCamelCaseQuery
-    implements QueryReference<AsCamelCaseQuerySnapshot> {
+    implements QueryReference<AsCamelCase, AsCamelCaseQuerySnapshot> {
   @override
   AsCamelCaseQuery limit(int limit);
 
@@ -5875,7 +6007,8 @@ abstract class AsCamelCaseQuery
   });
 }
 
-class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
+class _$AsCamelCaseQuery
+    extends QueryReference<AsCamelCase, AsCamelCaseQuerySnapshot>
     implements AsCamelCaseQuery {
   _$AsCamelCaseQuery(
     this.reference,
@@ -6164,8 +6297,8 @@ class _$AsCamelCaseQuery extends QueryReference<AsCamelCaseQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class AsCamelCaseQuerySnapshot
-    extends FirestoreQuerySnapshot<AsCamelCaseQueryDocumentSnapshot> {
+class AsCamelCaseQuerySnapshot extends FirestoreQuerySnapshot<AsCamelCase,
+    AsCamelCaseQueryDocumentSnapshot> {
   AsCamelCaseQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -6181,7 +6314,8 @@ class AsCamelCaseQuerySnapshot
   final List<FirestoreDocumentChange<AsCamelCaseDocumentSnapshot>> docChanges;
 }
 
-class AsCamelCaseQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class AsCamelCaseQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<AsCamelCase>
     implements AsCamelCaseDocumentSnapshot {
   AsCamelCaseQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -6203,7 +6337,8 @@ class AsCamelCaseQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class CustomSubNameCollectionReference
     implements
         CustomSubNameQuery,
-        FirestoreCollectionReference<CustomSubNameQuerySnapshot> {
+        FirestoreCollectionReference<CustomSubName,
+            CustomSubNameQuerySnapshot> {
   factory CustomSubNameCollectionReference(
     DocumentReference<Root> parent,
   ) = _$CustomSubNameCollectionReference;
@@ -6294,7 +6429,8 @@ class _$CustomSubNameCollectionReference extends _$CustomSubNameQuery
 }
 
 abstract class CustomSubNameDocumentReference
-    extends FirestoreDocumentReference<CustomSubNameDocumentSnapshot> {
+    extends FirestoreDocumentReference<CustomSubName,
+        CustomSubNameDocumentSnapshot> {
   factory CustomSubNameDocumentReference(
           DocumentReference<CustomSubName> reference) =
       _$CustomSubNameDocumentReference;
@@ -6327,9 +6463,9 @@ abstract class CustomSubNameDocumentReference
   Future<void> set(CustomSubName value);
 }
 
-class _$CustomSubNameDocumentReference
-    extends FirestoreDocumentReference<CustomSubNameDocumentSnapshot>
-    implements CustomSubNameDocumentReference {
+class _$CustomSubNameDocumentReference extends FirestoreDocumentReference<
+    CustomSubName,
+    CustomSubNameDocumentSnapshot> implements CustomSubNameDocumentReference {
   _$CustomSubNameDocumentReference(this.reference);
 
   @override
@@ -6396,7 +6532,8 @@ class _$CustomSubNameDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class CustomSubNameDocumentSnapshot extends FirestoreDocumentSnapshot {
+class CustomSubNameDocumentSnapshot
+    extends FirestoreDocumentSnapshot<CustomSubName> {
   CustomSubNameDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -6417,7 +6554,7 @@ class CustomSubNameDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class CustomSubNameQuery
-    implements QueryReference<CustomSubNameQuerySnapshot> {
+    implements QueryReference<CustomSubName, CustomSubNameQuerySnapshot> {
   @override
   CustomSubNameQuery limit(int limit);
 
@@ -6537,7 +6674,8 @@ abstract class CustomSubNameQuery
   });
 }
 
-class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
+class _$CustomSubNameQuery
+    extends QueryReference<CustomSubName, CustomSubNameQuerySnapshot>
     implements CustomSubNameQuery {
   _$CustomSubNameQuery(
     this.reference,
@@ -6826,8 +6964,8 @@ class _$CustomSubNameQuery extends QueryReference<CustomSubNameQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class CustomSubNameQuerySnapshot
-    extends FirestoreQuerySnapshot<CustomSubNameQueryDocumentSnapshot> {
+class CustomSubNameQuerySnapshot extends FirestoreQuerySnapshot<CustomSubName,
+    CustomSubNameQueryDocumentSnapshot> {
   CustomSubNameQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -6843,7 +6981,8 @@ class CustomSubNameQuerySnapshot
   final List<FirestoreDocumentChange<CustomSubNameDocumentSnapshot>> docChanges;
 }
 
-class CustomSubNameQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class CustomSubNameQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<CustomSubName>
     implements CustomSubNameDocumentSnapshot {
   CustomSubNameQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -6865,7 +7004,7 @@ class CustomSubNameQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class ExplicitPathCollectionReference
     implements
         ExplicitPathQuery,
-        FirestoreCollectionReference<ExplicitPathQuerySnapshot> {
+        FirestoreCollectionReference<ExplicitPath, ExplicitPathQuerySnapshot> {
   factory ExplicitPathCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$ExplicitPathCollectionReference;
@@ -6947,8 +7086,8 @@ class _$ExplicitPathCollectionReference extends _$ExplicitPathQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class ExplicitPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitPathDocumentSnapshot> {
+abstract class ExplicitPathDocumentReference extends FirestoreDocumentReference<
+    ExplicitPath, ExplicitPathDocumentSnapshot> {
   factory ExplicitPathDocumentReference(
           DocumentReference<ExplicitPath> reference) =
       _$ExplicitPathDocumentReference;
@@ -6981,9 +7120,9 @@ abstract class ExplicitPathDocumentReference
   Future<void> set(ExplicitPath value);
 }
 
-class _$ExplicitPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitPathDocumentSnapshot>
-    implements ExplicitPathDocumentReference {
+class _$ExplicitPathDocumentReference extends FirestoreDocumentReference<
+    ExplicitPath,
+    ExplicitPathDocumentSnapshot> implements ExplicitPathDocumentReference {
   _$ExplicitPathDocumentReference(this.reference);
 
   @override
@@ -7050,7 +7189,8 @@ class _$ExplicitPathDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ExplicitPathDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ExplicitPathDocumentSnapshot
+    extends FirestoreDocumentSnapshot<ExplicitPath> {
   ExplicitPathDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -7071,7 +7211,7 @@ class ExplicitPathDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class ExplicitPathQuery
-    implements QueryReference<ExplicitPathQuerySnapshot> {
+    implements QueryReference<ExplicitPath, ExplicitPathQuerySnapshot> {
   @override
   ExplicitPathQuery limit(int limit);
 
@@ -7191,7 +7331,8 @@ abstract class ExplicitPathQuery
   });
 }
 
-class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
+class _$ExplicitPathQuery
+    extends QueryReference<ExplicitPath, ExplicitPathQuerySnapshot>
     implements ExplicitPathQuery {
   _$ExplicitPathQuery(
     this.reference,
@@ -7480,8 +7621,8 @@ class _$ExplicitPathQuery extends QueryReference<ExplicitPathQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class ExplicitPathQuerySnapshot
-    extends FirestoreQuerySnapshot<ExplicitPathQueryDocumentSnapshot> {
+class ExplicitPathQuerySnapshot extends FirestoreQuerySnapshot<ExplicitPath,
+    ExplicitPathQueryDocumentSnapshot> {
   ExplicitPathQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -7497,7 +7638,8 @@ class ExplicitPathQuerySnapshot
   final List<FirestoreDocumentChange<ExplicitPathDocumentSnapshot>> docChanges;
 }
 
-class ExplicitPathQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class ExplicitPathQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ExplicitPath>
     implements ExplicitPathDocumentSnapshot {
   ExplicitPathQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -7519,7 +7661,8 @@ class ExplicitPathQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class ExplicitSubPathCollectionReference
     implements
         ExplicitSubPathQuery,
-        FirestoreCollectionReference<ExplicitSubPathQuerySnapshot> {
+        FirestoreCollectionReference<ExplicitSubPath,
+            ExplicitSubPathQuerySnapshot> {
   factory ExplicitSubPathCollectionReference(
     DocumentReference<ExplicitPath> parent,
   ) = _$ExplicitSubPathCollectionReference;
@@ -7610,7 +7753,8 @@ class _$ExplicitSubPathCollectionReference extends _$ExplicitSubPathQuery
 }
 
 abstract class ExplicitSubPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitSubPathDocumentSnapshot> {
+    extends FirestoreDocumentReference<ExplicitSubPath,
+        ExplicitSubPathDocumentSnapshot> {
   factory ExplicitSubPathDocumentReference(
           DocumentReference<ExplicitSubPath> reference) =
       _$ExplicitSubPathDocumentReference;
@@ -7643,8 +7787,8 @@ abstract class ExplicitSubPathDocumentReference
   Future<void> set(ExplicitSubPath value);
 }
 
-class _$ExplicitSubPathDocumentReference
-    extends FirestoreDocumentReference<ExplicitSubPathDocumentSnapshot>
+class _$ExplicitSubPathDocumentReference extends FirestoreDocumentReference<
+        ExplicitSubPath, ExplicitSubPathDocumentSnapshot>
     implements ExplicitSubPathDocumentReference {
   _$ExplicitSubPathDocumentReference(this.reference);
 
@@ -7712,7 +7856,8 @@ class _$ExplicitSubPathDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ExplicitSubPathDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ExplicitSubPathDocumentSnapshot
+    extends FirestoreDocumentSnapshot<ExplicitSubPath> {
   ExplicitSubPathDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -7733,7 +7878,7 @@ class ExplicitSubPathDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class ExplicitSubPathQuery
-    implements QueryReference<ExplicitSubPathQuerySnapshot> {
+    implements QueryReference<ExplicitSubPath, ExplicitSubPathQuerySnapshot> {
   @override
   ExplicitSubPathQuery limit(int limit);
 
@@ -7854,7 +7999,7 @@ abstract class ExplicitSubPathQuery
 }
 
 class _$ExplicitSubPathQuery
-    extends QueryReference<ExplicitSubPathQuerySnapshot>
+    extends QueryReference<ExplicitSubPath, ExplicitSubPathQuerySnapshot>
     implements ExplicitSubPathQuery {
   _$ExplicitSubPathQuery(
     this.reference,
@@ -8143,8 +8288,8 @@ class _$ExplicitSubPathQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class ExplicitSubPathQuerySnapshot
-    extends FirestoreQuerySnapshot<ExplicitSubPathQueryDocumentSnapshot> {
+class ExplicitSubPathQuerySnapshot extends FirestoreQuerySnapshot<
+    ExplicitSubPath, ExplicitSubPathQueryDocumentSnapshot> {
   ExplicitSubPathQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -8162,7 +8307,7 @@ class ExplicitSubPathQuerySnapshot
 }
 
 class ExplicitSubPathQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ExplicitSubPath>
     implements ExplicitSubPathDocumentSnapshot {
   ExplicitSubPathQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -8209,6 +8354,7 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
       value: json['value'] == null
           ? null
           : Nested.fromJson(json['value'] as Map<String, dynamic>),
+      simple: json['simple'] as int?,
       valueList: (json['valueList'] as List<dynamic>?)
           ?.map((e) => Nested.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -8225,6 +8371,7 @@ Nested _$NestedFromJson(Map<String, dynamic> json) => Nested(
 
 const _$NestedFieldMap = <String, String>{
   'value': 'value',
+  'simple': 'simple',
   'valueList': 'valueList',
   'boolList': 'boolList',
   'stringList': 'stringList',
@@ -8235,6 +8382,7 @@ const _$NestedFieldMap = <String, String>{
 
 Map<String, dynamic> _$NestedToJson(Nested instance) => <String, dynamic>{
       'value': instance.value,
+      'simple': instance.simple,
       'valueList': instance.valueList,
       'boolList': instance.boolList,
       'stringList': instance.stringList,

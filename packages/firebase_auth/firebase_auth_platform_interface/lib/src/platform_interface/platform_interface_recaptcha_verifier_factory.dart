@@ -80,6 +80,7 @@ abstract class RecaptchaVerifierFactoryPlatform extends PlatformInterface {
   /// Underlying implementations can use this method to create the underlying
   /// implementation of a Recaptcha Verifier.
   RecaptchaVerifierFactoryPlatform delegateFor({
+    required FirebaseAuthPlatform auth,
     String? container,
     RecaptchaVerifierSize size = RecaptchaVerifierSize.normal,
     RecaptchaVerifierTheme theme = RecaptchaVerifierTheme.light,

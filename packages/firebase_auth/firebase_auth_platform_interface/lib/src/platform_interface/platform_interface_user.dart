@@ -11,7 +11,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 /// A user account.
 abstract class UserPlatform extends PlatformInterface {
   // ignore: public_member_api_docs
-  UserPlatform(this.auth, Map<String, dynamic> user)
+  UserPlatform(this.auth, this.multiFactor, Map<String, dynamic> user)
       : _user = user,
         super(token: _token);
 
@@ -24,6 +24,8 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// The [FirebaseAuthPlatform] instance.
   final FirebaseAuthPlatform auth;
+
+  final MultiFactorPlatform multiFactor;
 
   final Map<String, dynamic> _user;
 
@@ -136,6 +138,9 @@ abstract class UserPlatform extends PlatformInterface {
 
   /// Returns a [IdTokenResult] containing the users JSON Web Token (JWT) and
   /// other metadata.
+  ///
+  /// Returns the current token if it has not expired. Otherwise, this will
+  /// refresh the token and return a new one.
   ///
   /// If [forceRefresh] is `true`, the token returned will be refresh regardless
   /// of token expiration.

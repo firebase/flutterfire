@@ -1,3 +1,9 @@
+## 1.20.0
+
+ - **FEAT**: bump Firebase Android SDK to 30.3.0 ([#9161](https://github.com/firebase/flutterfire/issues/9161)). ([d1f96310](https://github.com/firebase/flutterfire/commit/d1f96310310c7584c4af751e1e75dc178aacce89))
+ - **FEAT**: add phone MFA ([#9044](https://github.com/firebase/flutterfire/issues/9044)). ([1b85c8b7](https://github.com/firebase/flutterfire/commit/1b85c8b7fbcc3f21767f23981cb35061772d483f))
+ - **FEAT**: update to 9.3.0 ([#9137](https://github.com/firebase/flutterfire/issues/9137)). ([97f6417b](https://github.com/firebase/flutterfire/commit/97f6417bf66f88e6621afa177c73245b9a7d5c73))
+
 ## 1.19.2
 
  - Update a dependency to the latest release.

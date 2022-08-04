@@ -5,9 +5,10 @@
 
 import 'dart:async';
 
-import 'interop/auth.dart' as auth_interop;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import 'package:firebase_auth_web/src/firebase_auth_web_user_credential.dart';
+
+import 'interop/auth.dart' as auth_interop;
 import 'utils/web_utils.dart';
 
 /// The web delegate implementation for [ConfirmationResultPlatform].

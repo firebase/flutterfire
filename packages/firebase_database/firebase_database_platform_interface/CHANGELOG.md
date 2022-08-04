@@ -1,3 +1,11 @@
+## 0.2.2
+
+ - **FEAT**: `ServerValue.increment()` now correctly accepts a `num`  to support both integers and doubles. ([#9101](https://github.com/firebase/flutterfire/issues/9101)). ([35cce5b0](https://github.com/firebase/flutterfire/commit/35cce5b03fae00b1753fc9b6ed688c7f020a5007))
+
+## 0.2.1+12
+
+ - Update a dependency to the latest release.
+
 ## 0.2.1+11
 
  - Update a dependency to the latest release.

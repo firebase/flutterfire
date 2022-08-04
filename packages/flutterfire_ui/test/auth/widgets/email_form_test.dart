@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../test_utils.dart';
+
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 void main() {
   group('EmailForm', () {

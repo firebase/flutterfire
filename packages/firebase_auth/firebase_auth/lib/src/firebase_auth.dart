@@ -15,6 +15,10 @@ class FirebaseAuth extends FirebasePluginPlatform {
   // instance with the default app before a user specifies an app.
   FirebaseAuthPlatform? _delegatePackingProperty;
 
+  // To set "persistence" on web, it is now required on the v9.0.0 or above Firebase JS SDK to pass the value on calling `initializeAuth()`.
+  /// https://firebase.google.com/docs/reference/js/auth.md#initializeauth
+  Persistence? _persistence;
+
   /// Returns the underlying delegate implementation.
   ///
   /// If called and no [_delegatePackingProperty] exists, it will first be
@@ -23,6 +27,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     _delegatePackingProperty ??= FirebaseAuthPlatform.instanceFor(
       app: app,
       pluginConstants: pluginConstants,
+      persistence: _persistence,
     );
     return _delegatePackingProperty!;
   }
@@ -30,8 +35,9 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// The [FirebaseApp] for this current Auth instance.
   FirebaseApp app;
 
-  FirebaseAuth._({required this.app})
-      : super(app.name, 'plugins.flutter.io/firebase_auth');
+  FirebaseAuth._({required this.app, Persistence? persistence})
+      : _persistence = persistence,
+        super(app.name, 'plugins.flutter.io/firebase_auth');
 
   /// Returns an instance using the default [FirebaseApp].
   static FirebaseAuth get instance {
@@ -41,9 +47,11 @@ class FirebaseAuth extends FirebasePluginPlatform {
   }
 
   /// Returns an instance using a specified [FirebaseApp].
-  factory FirebaseAuth.instanceFor({required FirebaseApp app}) {
+  /// Note that persistence can only be used on Web and is not supported on other platforms.
+  factory FirebaseAuth.instanceFor(
+      {required FirebaseApp app, Persistence? persistence}) {
     return _firebaseAuthInstances.putIfAbsent(app.name, () {
-      return FirebaseAuth._(app: app);
+      return FirebaseAuth._(app: app, persistence: persistence);
     });
   }
 
@@ -492,10 +500,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///  - Thrown if the credential is a [PhoneAuthProvider.credential] and the
   ///    verification ID of the credential is not valid.id.
   Future<UserCredential> signInWithCredential(AuthCredential credential) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithCredential(credential),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithCredential(credential),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Tries to sign in a user with a given custom token.
@@ -519,7 +533,14 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// - **invalid-custom-token**:
   ///  - Thrown if the custom token format is incorrect.
   Future<UserCredential> signInWithCustomToken(String token) async {
-    return UserCredential._(this, await _delegate.signInWithCustomToken(token));
+    try {
+      return UserCredential._(
+          this, await _delegate.signInWithCustomToken(token));
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Attempts to sign in a user with the given email address and password.
@@ -545,10 +566,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required String email,
     required String password,
   }) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithEmailAndPassword(email, password),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithEmailAndPassword(email, password),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs in using an email address and email sign-in link.
@@ -570,10 +597,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
     required String email,
     required String emailLink,
   }) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithEmailLink(email, emailLink),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithEmailLink(email, emailLink),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs in with an AuthProvider using native authentication flow.
@@ -584,10 +617,16 @@ class FirebaseAuth extends FirebasePluginPlatform {
   Future<UserCredential> signInWithAuthProvider(
     AuthProvider provider,
   ) async {
-    return UserCredential._(
-      this,
-      await _delegate.signInWithAuthProvider(provider),
-    );
+    try {
+      return UserCredential._(
+        this,
+        await _delegate.signInWithAuthProvider(provider),
+      );
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Starts a sign-in flow for a phone number.
@@ -607,7 +646,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
     // If we add a recaptcha to the page by creating a new instance, we must
     // also clear that instance before proceeding.
     bool mustClear = verifier == null;
-    verifier ??= RecaptchaVerifier();
+    verifier ??= RecaptchaVerifier(auth: _delegate);
     final result =
         await _delegate.signInWithPhoneNumber(phoneNumber, verifier.delegate);
     if (mustClear) {
@@ -624,7 +663,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   ///
   /// This method is only available on web based platforms.
   Future<UserCredential> signInWithPopup(AuthProvider provider) async {
-    return UserCredential._(this, await _delegate.signInWithPopup(provider));
+    try {
+      return UserCredential._(this, await _delegate.signInWithPopup(provider));
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Authenticates a Firebase client using a full-page redirect flow.
@@ -632,7 +677,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// To handle the results and errors for this operation, refer to
   /// [getRedirectResult].
   Future<void> signInWithRedirect(AuthProvider provider) {
-    return _delegate.signInWithRedirect(provider);
+    try {
+      return _delegate.signInWithRedirect(provider);
+    } on FirebaseAuthMultiFactorExceptionPlatform catch (e) {
+      throw FirebaseAuthMultiFactorException._(this, e);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   /// Signs out the current user.
@@ -683,6 +734,13 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [phoneNumber] The phone number for the account the user is signing up
   ///   for or signing into. Make sure to pass in a phone number with country
   ///   code prefixed with plus sign ('+').
+  ///   Should be null if it's a multi-factor sign in.
+  ///
+  /// [multiFactorInfo] The multi factor info you're using to verify the phone number.
+  ///   Should be set if a [multiFactorSession] is provided.
+  ///
+  /// [multiFactorSession] The multi factor session you're using to verify the phone number.
+  ///   Should be set if a [multiFactorInfo] is provided.
   ///
   /// [timeout] The maximum amount of time you are willing to wait for SMS
   ///   auto-retrieval to be completed by the library. Maximum allowed value
@@ -707,7 +765,8 @@ class FirebaseAuth extends FirebasePluginPlatform {
   /// [codeAutoRetrievalTimeout] Triggered when SMS auto-retrieval times out and
   ///   provide a [verificationId].
   Future<void> verifyPhoneNumber({
-    required String phoneNumber,
+    String? phoneNumber,
+    PhoneMultiFactorInfo? multiFactorInfo,
     required PhoneVerificationCompleted verificationCompleted,
     required PhoneVerificationFailed verificationFailed,
     required PhoneCodeSent codeSent,
@@ -715,9 +774,15 @@ class FirebaseAuth extends FirebasePluginPlatform {
     @visibleForTesting String? autoRetrievedSmsCodeForTesting,
     Duration timeout = const Duration(seconds: 30),
     int? forceResendingToken,
+    MultiFactorSession? multiFactorSession,
   }) {
+    assert(
+      phoneNumber != null || multiFactorInfo != null,
+      'Either phoneNumber or multiFactorInfo must be provided.',
+    );
     return _delegate.verifyPhoneNumber(
       phoneNumber: phoneNumber,
+      multiFactorInfo: multiFactorInfo,
       timeout: timeout,
       forceResendingToken: forceResendingToken,
       verificationCompleted: verificationCompleted,
@@ -726,6 +791,7 @@ class FirebaseAuth extends FirebasePluginPlatform {
       codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
       // ignore: invalid_use_of_visible_for_testing_member
       autoRetrievedSmsCodeForTesting: autoRetrievedSmsCodeForTesting,
+      multiFactorSession: multiFactorSession,
     );
   }
 

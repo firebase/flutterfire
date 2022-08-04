@@ -23,7 +23,7 @@ const _sentinel = _Sentinel();
 abstract class ManualJsonCollectionReference
     implements
         ManualJsonQuery,
-        FirestoreCollectionReference<ManualJsonQuerySnapshot> {
+        FirestoreCollectionReference<ManualJson, ManualJsonQuerySnapshot> {
   factory ManualJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$ManualJsonCollectionReference;
@@ -104,7 +104,7 @@ class _$ManualJsonCollectionReference extends _$ManualJsonQuery
 }
 
 abstract class ManualJsonDocumentReference
-    extends FirestoreDocumentReference<ManualJsonDocumentSnapshot> {
+    extends FirestoreDocumentReference<ManualJson, ManualJsonDocumentSnapshot> {
   factory ManualJsonDocumentReference(DocumentReference<ManualJson> reference) =
       _$ManualJsonDocumentReference;
 
@@ -132,7 +132,7 @@ abstract class ManualJsonDocumentReference
 }
 
 class _$ManualJsonDocumentReference
-    extends FirestoreDocumentReference<ManualJsonDocumentSnapshot>
+    extends FirestoreDocumentReference<ManualJson, ManualJsonDocumentSnapshot>
     implements ManualJsonDocumentReference {
   _$ManualJsonDocumentReference(this.reference);
 
@@ -195,7 +195,7 @@ class _$ManualJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot<ManualJson> {
   ManualJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -216,7 +216,7 @@ class ManualJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class ManualJsonQuery
-    implements QueryReference<ManualJsonQuerySnapshot> {
+    implements QueryReference<ManualJson, ManualJsonQuerySnapshot> {
   @override
   ManualJsonQuery limit(int limit);
 
@@ -336,7 +336,8 @@ abstract class ManualJsonQuery
   });
 }
 
-class _$ManualJsonQuery extends QueryReference<ManualJsonQuerySnapshot>
+class _$ManualJsonQuery
+    extends QueryReference<ManualJson, ManualJsonQuerySnapshot>
     implements ManualJsonQuery {
   _$ManualJsonQuery(
     this.reference,
@@ -624,8 +625,8 @@ class _$ManualJsonQuery extends QueryReference<ManualJsonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class ManualJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<ManualJsonQueryDocumentSnapshot> {
+class ManualJsonQuerySnapshot extends FirestoreQuerySnapshot<ManualJson,
+    ManualJsonQueryDocumentSnapshot> {
   ManualJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -641,7 +642,8 @@ class ManualJsonQuerySnapshot
   final List<FirestoreDocumentChange<ManualJsonDocumentSnapshot>> docChanges;
 }
 
-class ManualJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class ManualJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ManualJson>
     implements ManualJsonDocumentSnapshot {
   ManualJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -663,7 +665,7 @@ class ManualJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class AdvancedJsonCollectionReference
     implements
         AdvancedJsonQuery,
-        FirestoreCollectionReference<AdvancedJsonQuerySnapshot> {
+        FirestoreCollectionReference<AdvancedJson, AdvancedJsonQuerySnapshot> {
   factory AdvancedJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$AdvancedJsonCollectionReference;
@@ -745,8 +747,8 @@ class _$AdvancedJsonCollectionReference extends _$AdvancedJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-abstract class AdvancedJsonDocumentReference
-    extends FirestoreDocumentReference<AdvancedJsonDocumentSnapshot> {
+abstract class AdvancedJsonDocumentReference extends FirestoreDocumentReference<
+    AdvancedJson, AdvancedJsonDocumentSnapshot> {
   factory AdvancedJsonDocumentReference(
           DocumentReference<AdvancedJson> reference) =
       _$AdvancedJsonDocumentReference;
@@ -776,9 +778,9 @@ abstract class AdvancedJsonDocumentReference
   Future<void> set(AdvancedJson value);
 }
 
-class _$AdvancedJsonDocumentReference
-    extends FirestoreDocumentReference<AdvancedJsonDocumentSnapshot>
-    implements AdvancedJsonDocumentReference {
+class _$AdvancedJsonDocumentReference extends FirestoreDocumentReference<
+    AdvancedJson,
+    AdvancedJsonDocumentSnapshot> implements AdvancedJsonDocumentReference {
   _$AdvancedJsonDocumentReference(this.reference);
 
   @override
@@ -844,7 +846,8 @@ class _$AdvancedJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class AdvancedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class AdvancedJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<AdvancedJson> {
   AdvancedJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -865,7 +868,7 @@ class AdvancedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class AdvancedJsonQuery
-    implements QueryReference<AdvancedJsonQuerySnapshot> {
+    implements QueryReference<AdvancedJson, AdvancedJsonQuerySnapshot> {
   @override
   AdvancedJsonQuery limit(int limit);
 
@@ -1031,7 +1034,8 @@ abstract class AdvancedJsonQuery
   });
 }
 
-class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
+class _$AdvancedJsonQuery
+    extends QueryReference<AdvancedJson, AdvancedJsonQuerySnapshot>
     implements AdvancedJsonQuery {
   _$AdvancedJsonQuery(
     this.reference,
@@ -1462,8 +1466,8 @@ class _$AdvancedJsonQuery extends QueryReference<AdvancedJsonQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class AdvancedJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<AdvancedJsonQueryDocumentSnapshot> {
+class AdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<AdvancedJson,
+    AdvancedJsonQueryDocumentSnapshot> {
   AdvancedJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -1479,7 +1483,8 @@ class AdvancedJsonQuerySnapshot
   final List<FirestoreDocumentChange<AdvancedJsonDocumentSnapshot>> docChanges;
 }
 
-class AdvancedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class AdvancedJsonQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<AdvancedJson>
     implements AdvancedJsonDocumentSnapshot {
   AdvancedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -1501,7 +1506,8 @@ class AdvancedJsonQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
 abstract class _PrivateAdvancedJsonCollectionReference
     implements
         _PrivateAdvancedJsonQuery,
-        FirestoreCollectionReference<_PrivateAdvancedJsonQuerySnapshot> {
+        FirestoreCollectionReference<_PrivateAdvancedJson,
+            _PrivateAdvancedJsonQuerySnapshot> {
   factory _PrivateAdvancedJsonCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$_PrivateAdvancedJsonCollectionReference;
@@ -1590,7 +1596,8 @@ class _$_PrivateAdvancedJsonCollectionReference
 }
 
 abstract class _PrivateAdvancedJsonDocumentReference
-    extends FirestoreDocumentReference<_PrivateAdvancedJsonDocumentSnapshot> {
+    extends FirestoreDocumentReference<_PrivateAdvancedJson,
+        _PrivateAdvancedJsonDocumentSnapshot> {
   factory _PrivateAdvancedJsonDocumentReference(
           DocumentReference<_PrivateAdvancedJson> reference) =
       _$_PrivateAdvancedJsonDocumentReference;
@@ -1621,7 +1628,8 @@ abstract class _PrivateAdvancedJsonDocumentReference
 }
 
 class _$_PrivateAdvancedJsonDocumentReference
-    extends FirestoreDocumentReference<_PrivateAdvancedJsonDocumentSnapshot>
+    extends FirestoreDocumentReference<_PrivateAdvancedJson,
+        _PrivateAdvancedJsonDocumentSnapshot>
     implements _PrivateAdvancedJsonDocumentReference {
   _$_PrivateAdvancedJsonDocumentReference(this.reference);
 
@@ -1688,7 +1696,8 @@ class _$_PrivateAdvancedJsonDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class _PrivateAdvancedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
+class _PrivateAdvancedJsonDocumentSnapshot
+    extends FirestoreDocumentSnapshot<_PrivateAdvancedJson> {
   _PrivateAdvancedJsonDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -1709,7 +1718,9 @@ class _PrivateAdvancedJsonDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class _PrivateAdvancedJsonQuery
-    implements QueryReference<_PrivateAdvancedJsonQuerySnapshot> {
+    implements
+        QueryReference<_PrivateAdvancedJson,
+            _PrivateAdvancedJsonQuerySnapshot> {
   @override
   _PrivateAdvancedJsonQuery limit(int limit);
 
@@ -1875,9 +1886,8 @@ abstract class _PrivateAdvancedJsonQuery
   });
 }
 
-class _$_PrivateAdvancedJsonQuery
-    extends QueryReference<_PrivateAdvancedJsonQuerySnapshot>
-    implements _PrivateAdvancedJsonQuery {
+class _$_PrivateAdvancedJsonQuery extends QueryReference<_PrivateAdvancedJson,
+    _PrivateAdvancedJsonQuerySnapshot> implements _PrivateAdvancedJsonQuery {
   _$_PrivateAdvancedJsonQuery(
     this.reference,
     this._collection,
@@ -2309,8 +2319,8 @@ class _$_PrivateAdvancedJsonQuery
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class _PrivateAdvancedJsonQuerySnapshot
-    extends FirestoreQuerySnapshot<_PrivateAdvancedJsonQueryDocumentSnapshot> {
+class _PrivateAdvancedJsonQuerySnapshot extends FirestoreQuerySnapshot<
+    _PrivateAdvancedJson, _PrivateAdvancedJsonQueryDocumentSnapshot> {
   _PrivateAdvancedJsonQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2328,7 +2338,7 @@ class _PrivateAdvancedJsonQuerySnapshot
 }
 
 class _PrivateAdvancedJsonQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<_PrivateAdvancedJson>
     implements _PrivateAdvancedJsonDocumentSnapshot {
   _PrivateAdvancedJsonQueryDocumentSnapshot._(this.snapshot, this.data);
 
@@ -2350,7 +2360,7 @@ class _PrivateAdvancedJsonQueryDocumentSnapshot
 abstract class EmptyModelCollectionReference
     implements
         EmptyModelQuery,
-        FirestoreCollectionReference<EmptyModelQuerySnapshot> {
+        FirestoreCollectionReference<EmptyModel, EmptyModelQuerySnapshot> {
   factory EmptyModelCollectionReference([
     FirebaseFirestore? firestore,
   ]) = _$EmptyModelCollectionReference;
@@ -2431,7 +2441,7 @@ class _$EmptyModelCollectionReference extends _$EmptyModelQuery
 }
 
 abstract class EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot> {
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot> {
   factory EmptyModelDocumentReference(DocumentReference<EmptyModel> reference) =
       _$EmptyModelDocumentReference;
 
@@ -2455,7 +2465,7 @@ abstract class EmptyModelDocumentReference
 }
 
 class _$EmptyModelDocumentReference
-    extends FirestoreDocumentReference<EmptyModelDocumentSnapshot>
+    extends FirestoreDocumentReference<EmptyModel, EmptyModelDocumentSnapshot>
     implements EmptyModelDocumentReference {
   _$EmptyModelDocumentReference(this.reference);
 
@@ -2508,7 +2518,7 @@ class _$EmptyModelDocumentReference
   int get hashCode => Object.hash(runtimeType, parent, id);
 }
 
-class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
+class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot<EmptyModel> {
   EmptyModelDocumentSnapshot._(
     this.snapshot,
     this.data,
@@ -2529,7 +2539,7 @@ class EmptyModelDocumentSnapshot extends FirestoreDocumentSnapshot {
 }
 
 abstract class EmptyModelQuery
-    implements QueryReference<EmptyModelQuerySnapshot> {
+    implements QueryReference<EmptyModel, EmptyModelQuerySnapshot> {
   @override
   EmptyModelQuery limit(int limit);
 
@@ -2626,7 +2636,8 @@ abstract class EmptyModelQuery
   });
 }
 
-class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
+class _$EmptyModelQuery
+    extends QueryReference<EmptyModel, EmptyModelQuerySnapshot>
     implements EmptyModelQuery {
   _$EmptyModelQuery(
     this.reference,
@@ -2844,8 +2855,8 @@ class _$EmptyModelQuery extends QueryReference<EmptyModelQuerySnapshot>
   int get hashCode => Object.hash(runtimeType, reference);
 }
 
-class EmptyModelQuerySnapshot
-    extends FirestoreQuerySnapshot<EmptyModelQueryDocumentSnapshot> {
+class EmptyModelQuerySnapshot extends FirestoreQuerySnapshot<EmptyModel,
+    EmptyModelQueryDocumentSnapshot> {
   EmptyModelQuerySnapshot._(
     this.snapshot,
     this.docs,
@@ -2861,7 +2872,8 @@ class EmptyModelQuerySnapshot
   final List<FirestoreDocumentChange<EmptyModelDocumentSnapshot>> docChanges;
 }
 
-class EmptyModelQueryDocumentSnapshot extends FirestoreQueryDocumentSnapshot
+class EmptyModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<EmptyModel>
     implements EmptyModelDocumentSnapshot {
   EmptyModelQueryDocumentSnapshot._(this.snapshot, this.data);
 

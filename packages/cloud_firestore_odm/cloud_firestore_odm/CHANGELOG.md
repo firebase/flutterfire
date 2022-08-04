@@ -1,3 +1,23 @@
+## 1.0.0-dev.25
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.24
+
+> Note: This release has breaking changes.
+
+ - **FIX**: Correctly type `firestoreJsonConverters` as `List<JsonConverter>` instead of `List<Object>` ([#9236](https://github.com/firebase/flutterfire/issues/9236)). ([b39d87c7](https://github.com/firebase/flutterfire/commit/b39d87c7d62cc8bbaddc0b151ec987ee54706870))
+ - **FEAT**: Add where(arrayContains) support ([#9167](https://github.com/firebase/flutterfire/issues/9167)). ([1a2f2262](https://github.com/firebase/flutterfire/commit/1a2f2262578c6230560761630d017637b99cbd6c))
+ - **BREAKING** **FEAT**: The low-level interface of Queries/Document ([#9184](https://github.com/firebase/flutterfire/issues/9184)). ([fad4b0cd](https://github.com/firebase/flutterfire/commit/fad4b0cd0aa09e9161c64deeecf222c14603cd69))
+
+## 1.0.0-dev.23
+
+ - Update a dependency to the latest release.
+
+## 1.0.0-dev.22
+
+ - Update a dependency to the latest release.
+
 ## 1.0.0-dev.21
 
  - **FEAT**: add orderByFieldPath / whereFieldPath ([#8951](https://github.com/firebase/flutterfire/issues/8951)). ([5957c23b](https://github.com/firebase/flutterfire/commit/5957c23b44b235dab9d97449acb9c737da07b8e7))

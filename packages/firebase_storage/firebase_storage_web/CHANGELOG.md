@@ -1,3 +1,11 @@
+## 3.3.2
+
+ - **FIX**: fix UploadTask by fixing TaskEvent Web Interop ([#9212](https://github.com/firebase/flutterfire/issues/9212)). ([6df75ca0](https://github.com/firebase/flutterfire/commit/6df75ca09b0ae1334d2f80804c1386f8baac13fa))
+
+## 3.3.1
+
+ - Update a dependency to the latest release.
+
 ## 3.3.0
 
  - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))

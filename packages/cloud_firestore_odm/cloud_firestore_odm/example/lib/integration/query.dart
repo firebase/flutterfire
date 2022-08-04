@@ -7,8 +7,7 @@ part 'query.g.dart';
 @Collection<DateTimeQuery>('firestore-example-app/42/date-time')
 final dateTimeQueryRef = DateTimeQueryCollectionReference();
 
-@JsonSerializable()
-@FirestoreDateTimeConverter()
+@JsonSerializable(converters: firestoreJsonConverters)
 class DateTimeQuery {
   DateTimeQuery(this.time);
   final DateTime time;
@@ -26,8 +25,7 @@ class FirestoreDateTimeConverter extends JsonConverter<DateTime, Timestamp> {
 @Collection<TimestampQuery>('firestore-example-app/42/timestamp-time')
 final timestampQueryRef = TimestampQueryCollectionReference();
 
-@JsonSerializable()
-@FirestoreTimestampConverter()
+@JsonSerializable(converters: firestoreJsonConverters)
 class TimestampQuery {
   TimestampQuery(this.time);
   final Timestamp time;
@@ -36,8 +34,7 @@ class TimestampQuery {
 @Collection<GeoPointQuery>('firestore-example-app/42/geopoint-time')
 final geoPointQueryRef = GeoPointQueryCollectionReference();
 
-@JsonSerializable()
-@FirestoreGeoPointConverter()
+@JsonSerializable(converters: firestoreJsonConverters)
 class GeoPointQuery {
   GeoPointQuery(this.point);
   final GeoPoint point;
@@ -46,8 +43,7 @@ class GeoPointQuery {
 @Collection<DocumentReferenceQuery>('firestore-example-app/42/doc-ref')
 final documentReferenceRef = DocumentReferenceQueryCollectionReference();
 
-@JsonSerializable()
-@FirestoreDocumentReferenceConverter()
+@JsonSerializable(converters: firestoreJsonConverters)
 class DocumentReferenceQuery {
   DocumentReferenceQuery(this.ref);
 

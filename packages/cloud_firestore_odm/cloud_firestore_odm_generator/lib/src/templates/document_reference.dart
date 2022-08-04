@@ -5,7 +5,7 @@ class DocumentReferenceTemplate extends Template<CollectionData> {
   @override
   String generate(CollectionData data) {
     return '''
-abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<${data.documentSnapshotName}> {
+abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<${data.type}, ${data.documentSnapshotName}> {
   factory ${data.documentReferenceName}(DocumentReference<${data.type}> reference) = _\$${data.documentReferenceName};
 
   DocumentReference<${data.type}> get reference;
@@ -29,7 +29,7 @@ abstract class ${data.documentReferenceName} extends FirestoreDocumentReference<
 }
 
 class _\$${data.documentReferenceName}
-      extends FirestoreDocumentReference<${data.documentSnapshotName}>
+      extends FirestoreDocumentReference<${data.type}, ${data.documentSnapshotName}>
       implements ${data.documentReferenceName} {
   _\$${data.documentReferenceName}(this.reference);
 

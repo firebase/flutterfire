@@ -1,3 +1,19 @@
+## 2.8.3
+
+ - **FIX**: fix apply method for arrayRemove & arrayUnion ([#9281](https://github.com/firebase/flutterfire/issues/9281)). ([29ef7c2a](https://github.com/firebase/flutterfire/commit/29ef7c2aa4f6f9f87802806508c1b9f142a3890e))
+
+## 2.8.2
+
+ - **FIX**: change the interop to fix an issue with startAt/endAt when compilating with dart2js in release mode ([#9246](https://github.com/firebase/flutterfire/issues/9246)). ([b4e92ed8](https://github.com/firebase/flutterfire/commit/b4e92ed854dc1e93cee42dc5ef748be7aeae7650))
+
+## 2.8.1
+
+ - **FIX**: fix interop on TransactionOptions ([#9188](https://github.com/firebase/flutterfire/issues/9188)). ([f0201674](https://github.com/firebase/flutterfire/commit/f0201674a3dfe1a6ce103f2aa6ad2b994dcc1da8))
+
+## 2.8.0
+
+ - **FEAT**: add max attempts for Firestore transactions ([#9163](https://github.com/firebase/flutterfire/issues/9163)). ([9da7cc36](https://github.com/firebase/flutterfire/commit/9da7cc36cb266e4f5a0de26dfe727e0a4687f1a0))
+
 ## 2.7.0
 
  - **FEAT**: upgrade to support v9.8.1 Firebase JS SDK ([#8235](https://github.com/firebase/flutterfire/issues/8235)). ([4b417af5](https://github.com/firebase/flutterfire/commit/4b417af574bb8a32ca8e4b3ab2ff253a22be9903))

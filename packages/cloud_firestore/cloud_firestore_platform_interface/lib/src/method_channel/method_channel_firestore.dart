@@ -18,8 +18,8 @@ import 'method_channel_document_reference.dart';
 import 'method_channel_query.dart';
 import 'method_channel_transaction.dart';
 import 'method_channel_write_batch.dart';
-import 'utils/firestore_message_codec.dart';
 import 'utils/exception.dart';
+import 'utils/firestore_message_codec.dart';
 
 /// The entry point for accessing a Firestore.
 ///
@@ -221,6 +221,7 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
   Future<T> runTransaction<T>(
     TransactionHandler<T> transactionHandler, {
     Duration timeout = const Duration(seconds: 30),
+    int maxAttempts = 5,
   }) async {
     assert(timeout.inMilliseconds > 0,
         'Transaction timeout must be more than 0 milliseconds');
@@ -243,7 +244,11 @@ class MethodChannelFirebaseFirestore extends FirebaseFirestorePlatform {
     );
 
     snapshotStream = eventChannel.receiveBroadcastStream(
-      <String, dynamic>{'firestore': this, 'timeout': timeout.inMilliseconds},
+      <String, dynamic>{
+        'firestore': this,
+        'timeout': timeout.inMilliseconds,
+        'maxAttempts': maxAttempts,
+      },
     ).listen(
       (event) async {
         if (event['error'] != null) {

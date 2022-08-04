@@ -198,6 +198,19 @@ void main() {
         ),
       );
     });
+
+    test('throws if .getAppInstanceId() not implemented', () async {
+      await expectLater(
+        () => firebaseAnalyticsPlatform.getAppInstanceId(),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            'getAppInstanceId() is not implemented',
+          ),
+        ),
+      );
+    });
   });
 }
 

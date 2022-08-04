@@ -9,19 +9,55 @@
 import 'dart:async';
 
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:js/js.dart';
 import 'package:firebase_core_web/firebase_core_web_interop.dart'
     hide jsify, dartify;
+import 'package:http_parser/http_parser.dart';
+import 'package:js/js.dart';
+
 import 'auth_interop.dart' as auth_interop;
 import 'utils/utils.dart';
 
 export 'auth_interop.dart';
 
 /// Given an AppJSImp, return the Auth instance.
-Auth getAuthInstance(App app) {
+Auth getAuthInstance(App app, {Persistence? persistence}) {
+  if (persistence != null) {
+    auth_interop.Persistence setPersistence;
+    switch (persistence) {
+      case Persistence.LOCAL:
+        setPersistence = auth_interop.browserLocalPersistence;
+        break;
+      case Persistence.INDEXED_DB:
+        setPersistence = auth_interop.indexedDBLocalPersistence;
+        break;
+      case Persistence.SESSION:
+        setPersistence = auth_interop.browserSessionPersistence;
+        break;
+      case Persistence.NONE:
+        setPersistence = auth_interop.inMemoryPersistence;
+        break;
+    }
+    return Auth.getInstance(auth_interop.initializeAuth(
+        app.jsObject,
+        jsify({
+          'errorMap': auth_interop.debugErrorMap,
+          'persistence': setPersistence,
+          'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+        })));
+  }
   return Auth.getInstance(auth_interop.initializeAuth(
-      app.jsObject, jsify({'errorMap': auth_interop.debugErrorMap})));
+      app.jsObject,
+      jsify({
+        'errorMap': auth_interop.debugErrorMap,
+        // Default persistence can be seen here
+        // https://github.com/firebase/firebase-js-sdk/blob/master/packages/auth/src/platform_browser/index.ts#L47
+        'persistence': [
+          auth_interop.indexedDBLocalPersistence,
+          auth_interop.browserLocalPersistence,
+          auth_interop.browserSessionPersistence
+        ],
+        'popupRedirectResolver': auth_interop.browserPopupRedirectResolver
+      })));
 }
 
 /// User profile information, visible only to the Firebase project's apps.
@@ -492,30 +528,6 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       handleThenable(auth_interop.sendSignInLinkToEmail(
           jsObject, email, actionCodeSettings));
 
-  /// Sends a password reset e-mail to the given [email].
-  /// To confirm password reset, use the [Auth.confirmPasswordReset].
-  ///
-  /// The optional parameter [actionCodeSettings] is the action code settings.
-  /// If specified, the state/continue URL will be set as the 'continueUrl'
-  /// parameter in the password reset link.
-  /// The default password reset landing page will use this to display
-  /// a link to go back to the app if it is installed.
-  ///
-  /// If the [actionCodeSettings] is not specified, no URL is appended to the
-  /// action URL. The state URL provided must belong to a domain that is
-  /// whitelisted by the developer in the console. Otherwise an error will be
-  /// thrown.
-  ///
-  /// Mobile app redirects will only be applicable if the developer configures
-  /// and accepts the Firebase Dynamic Links terms of condition.
-  ///
-  /// The Android package name and iOS bundle ID will be respected only if
-  /// they are configured in the same Firebase Auth project used.
-  Future sendPasswordResetEmail(String email,
-          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
-      handleThenable(auth_interop.sendPasswordResetEmail(
-          jsObject, email, actionCodeSettings));
-
   /// Changes the current type of persistence on the current Auth instance for
   /// the currently saved Auth session and applies this type of persistence
   /// for future sign-in requests, including sign-in with redirect requests.
@@ -539,6 +551,9 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
       case Persistence.LOCAL:
         instance = auth_interop.browserLocalPersistence;
         break;
+      case Persistence.INDEXED_DB:
+        instance = auth_interop.indexedDBLocalPersistence;
+        break;
       case Persistence.SESSION:
         instance = auth_interop.browserSessionPersistence;
         break;
@@ -548,6 +563,30 @@ class Auth extends JsObjectWrapper<auth_interop.AuthJsImpl> {
     }
     return handleThenable(auth_interop.setPersistence(jsObject, instance));
   }
+
+  /// Sends a password reset e-mail to the given [email].
+  /// To confirm password reset, use the [Auth.confirmPasswordReset].
+  ///
+  /// The optional parameter [actionCodeSettings] is the action code settings.
+  /// If specified, the state/continue URL will be set as the 'continueUrl'
+  /// parameter in the password reset link.
+  /// The default password reset landing page will use this to display
+  /// a link to go back to the app if it is installed.
+  ///
+  /// If the [actionCodeSettings] is not specified, no URL is appended to the
+  /// action URL. The state URL provided must belong to a domain that is
+  /// whitelisted by the developer in the console. Otherwise an error will be
+  /// thrown.
+  ///
+  /// Mobile app redirects will only be applicable if the developer configures
+  /// and accepts the Firebase Dynamic Links terms of condition.
+  ///
+  /// The Android package name and iOS bundle ID will be respected only if
+  /// they are configured in the same Firebase Auth project used.
+  Future sendPasswordResetEmail(String email,
+          [auth_interop.ActionCodeSettings? actionCodeSettings]) =>
+      handleThenable(auth_interop.sendPasswordResetEmail(
+          jsObject, email, actionCodeSettings));
 
   /// Asynchronously signs in with the given credentials, and returns any
   /// available additional user information, such as user name.
@@ -908,7 +947,7 @@ class PhoneAuthProvider
   /// Creates a new PhoneAuthProvider with the optional [Auth] instance
   /// in which sign-ins should occur.
   factory PhoneAuthProvider([Auth? auth]) =>
-      PhoneAuthProvider.fromJsObject((auth != null)
+      PhoneAuthProvider.fromJsObject(auth != null
           ? auth_interop.PhoneAuthProviderJsImpl(auth.jsObject)
           : auth_interop.PhoneAuthProviderJsImpl());
 
@@ -923,17 +962,17 @@ class PhoneAuthProvider
   ///
   /// For abuse prevention, this method also requires an [ApplicationVerifier].
   Future<String> verifyPhoneNumber(
-          String phoneNumber, ApplicationVerifier applicationVerifier) =>
+          dynamic phoneOptions, ApplicationVerifier applicationVerifier) =>
       handleThenable(jsObject.verifyPhoneNumber(
-          phoneNumber, applicationVerifier.jsObject));
+          phoneOptions, applicationVerifier.jsObject));
 
   /// Creates a phone auth credential given the verification ID
   /// from [verifyPhoneNumber] and the [verificationCode] that was sent to the
   /// user's mobile device.
-  static auth_interop.OAuthCredential credential(
+  static auth_interop.PhoneAuthCredentialJsImpl credential(
           String verificationId, String verificationCode) =>
       auth_interop.PhoneAuthProviderJsImpl.credential(
-          verificationId, verificationCode) as auth_interop.OAuthCredential;
+          verificationId, verificationCode);
 }
 
 /// A verifier for domain verification and abuse prevention.
@@ -987,18 +1026,16 @@ class RecaptchaVerifier
   ///         print('Response expired');
   ///       }
   ///     });
-  factory RecaptchaVerifier(container,
-          [Map<String, dynamic>? parameters, App? app]) =>
-      (parameters != null)
-          ? ((app != null)
-              ? RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters), app.jsObject))
-              : RecaptchaVerifier.fromJsObject(
-                  auth_interop.RecaptchaVerifierJsImpl(
-                      container, jsify(parameters))))
-          : RecaptchaVerifier.fromJsObject(
-              auth_interop.RecaptchaVerifierJsImpl(container));
+  factory RecaptchaVerifier(
+      container, Map<String, dynamic> parameters, Auth auth) {
+    return RecaptchaVerifier.fromJsObject(
+      auth_interop.RecaptchaVerifierJsImpl(
+        container,
+        jsify(parameters),
+        auth.jsObject,
+      ),
+    );
+  }
 
   /// Creates a new RecaptchaVerifier from a [jsObject].
   RecaptchaVerifier.fromJsObject(auth_interop.RecaptchaVerifierJsImpl jsObject)

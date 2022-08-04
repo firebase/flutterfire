@@ -14,7 +14,6 @@ bool shouldUseFirebaseEmulator = false;
 // e.g via `melos run firebase:emulator`.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   // We're using the manual installation on non-web platforms since Google sign in plugin doesn't yet support Dart initialization.
   // See related issue: https://github.com/flutter/flutter/issues/96391
   if (!kIsWeb) {

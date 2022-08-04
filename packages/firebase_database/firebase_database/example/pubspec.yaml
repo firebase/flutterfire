@@ -22,6 +22,8 @@ dependency_overrides:
     path: ../../../firebase_core/firebase_core_web
   firebase_database:
     path: ../
+  firebase_database_platform_interface:
+    path: ../../firebase_database_platform_interface
   firebase_database_web:
     path: ../../firebase_database_web
 

@@ -333,10 +333,11 @@ class UploadTask extends JsObjectWrapper<storage_interop.UploadTaskJsImpl> {
 
     void startListen() {
       onStateChangedUnsubscribe = jsObject.on(
-          storage_interop.TaskEvent.STATE_CHANGED,
-          nextWrapper,
-          errorWrapper,
-          onCompletion);
+        storage_interop.TaskEvent,
+        nextWrapper,
+        errorWrapper,
+        onCompletion,
+      );
     }
 
     void stopListen() {
