@@ -167,6 +167,11 @@ void main() {
       });
     },
     // Only supported on Android & iOS.
-    skip: kIsWeb || defaultTargetPlatform == TargetPlatform.macOS,
+    // TODO temporarily skipping tests on Android while we figure out CI issues.
+    //      mainly we're using the google_atd Android emulators since they're more reliable,
+    //      however they do not contain necessary APIs for Dynamic Links.
+    skip: kIsWeb ||
+        defaultTargetPlatform == TargetPlatform.macOS ||
+        defaultTargetPlatform == TargetPlatform.android,
   );
 }
