@@ -36,7 +36,7 @@ admin
   )
   .then((res) => {
     if (res.failureCount) {
-      console.log('Failed');
+      console.log('Failed', res.results[0].error);
     } else {
       console.log('Success');
     }
