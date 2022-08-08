@@ -338,7 +338,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
   _notificationOpenedAppID = remoteNotification[@"gcm.message_id"];
   // We only want to handle FCM notifications and stop firing `onMessageOpenedApp()` when app is
-  // coming from terminated state.
+  // coming from a terminated state.
   if (remoteNotification[@"gcm.message_id"] &&
       ![_initialNoticationID isEqualToString:remoteNotification[@"gcm.message_id"]]) {
     NSDictionary *notificationDict =
