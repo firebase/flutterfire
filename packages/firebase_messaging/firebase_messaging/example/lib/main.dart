@@ -32,7 +32,8 @@ import 'firebase_options.dart';
 /// 6. Use the following script to send a message to your device: scripts/send-message.js. To run this script,
 ///    you will need nodejs installed on your computer. Then the following:
 ///     a. Download a service account key (JSON file) from your Firebase console, rename it to "google-services.json" and add to the example/scripts directory.
-///     b. Copy the token for your device that is printed in the console on app start (`flutter run`) for the FirebaseMessaging example.
+///     b. Ensure your device/emulator is running, and run the FirebaseMessaging example app using `flutter run --no-pub`.
+///     c. Copy the token that is printed in the console and paste it here: https://github.com/firebase/flutterfire/blob/01b4d357e1/packages/firebase_messaging/firebase_messaging/example/lib/main.dart#L32
 ///     c. From your terminal, root to example/scripts directory & run `npm install`.
 ///     d. Run `npm run send-message` in the example/scripts directory and your app will receive messages in any state; foreground, background, terminated.
 ///  Note: Flutter API documentation for receiving messages: https://firebase.google.com/docs/cloud-messaging/flutter/receive
