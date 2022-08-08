@@ -22,6 +22,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   NSObject<FlutterPluginRegistrar> *_registrar;
   NSData *_apnsToken;
   NSDictionary *_initialNotification;
+  bool _notificationOpenedApp;
 
 #ifdef __FF_NOTIFICATIONS_SUPPORTED_PLATFORM
   API_AVAILABLE(ios(10), macosx(10.14))
@@ -43,7 +44,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
   if (self) {
     _channel = channel;
     _registrar = registrar;
-
+    _notificationOpenedApp = false;
     // Application
     // Dart -> `getInitialNotification`
     // ObjC -> Initialize other delegates & observers
@@ -333,6 +334,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
     didReceiveNotificationResponse:(UNNotificationResponse *)response
              withCompletionHandler:(void (^)(void))completionHandler
     API_AVAILABLE(macos(10.14), ios(10.0)) {
+  _notificationOpenedApp = true;
   NSDictionary *remoteNotification = response.notification.request.content.userInfo;
   // We only want to handle FCM notifications.
   if (remoteNotification[@"gcm.message_id"]) {
@@ -995,7 +997,7 @@ NSString *const kMessagingPresentationOptionsUserDefaults =
 
 - (nullable NSDictionary *)copyInitialNotification {
   @synchronized(self) {
-    if (_initialNotification != nil) {
+    if (_initialNotification != nil && _notificationOpenedApp == true) {
       NSDictionary *initialNotificationCopy = [_initialNotification copy];
       _initialNotification = nil;
       return initialNotificationCopy;
