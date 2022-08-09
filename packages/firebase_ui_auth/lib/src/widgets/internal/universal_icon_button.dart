@@ -10,7 +10,7 @@ class UniversalIconButton extends PlatformWidget {
   final double? size;
   final Color? color;
 
-  UniversalIconButton({
+  const UniversalIconButton({
     Key? key,
     this.onPressed,
     required this.cupertinoIcon,

@@ -12,10 +12,6 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
   @override
   final String linkEmailButtonText;
   @override
-  final String signInButtonText;
-  @override
-  final String registerButtonText;
-  @override
   final String signInWithPhoneButtonText;
   @override
   final String signInWithGoogleButtonText;
@@ -32,15 +28,9 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
   @override
   final String verifyCodeButtonText;
   @override
-  final String verifyingPhoneNumberViewTitle;
-  @override
   final String unknownError;
   @override
   final String smsAutoresolutionFailedError;
-  @override
-  final String smsCodeSentText;
-  @override
-  final String sendingSMSCodeText;
   @override
   final String verifyingSMSCodeText;
   @override
@@ -103,8 +93,6 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
   final String continueText;
   @override
   final String countryCode;
-  @override
-  final String codeRequiredErrorText;
   @override
   final String invalidCountryCode;
   @override
@@ -173,8 +161,6 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
     this.passwordInputLabel = '密码',
     this.signInActionText = '登录',
     this.registerActionText = '注册',
-    this.signInButtonText = '登录',
-    this.registerButtonText = '注册',
     this.linkEmailButtonText = '下一步',
     this.signInWithPhoneButtonText = '使用手机号登录',
     this.signInWithGoogleButtonText = '使用Google登录',
@@ -184,11 +170,8 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
     this.phoneVerificationViewTitleText = '输入手机号码',
     this.verifyPhoneNumberButtonText = '下一步',
     this.verifyCodeButtonText = '验证',
-    this.verifyingPhoneNumberViewTitle = '输入短信验证码',
     this.unknownError = '发生未知错误',
     this.smsAutoresolutionFailedError = '无法自动解析短信验证码。请手动输入验证码',
-    this.smsCodeSentText = '短信验证码已发送',
-    this.sendingSMSCodeText = '正在发送短信验证码...',
     this.verifyingSMSCodeText = '正在验证短信验证码...',
     this.enterSMSCodeText = '输入短信验证码',
     this.emailIsRequiredErrorText = '电子邮箱地址为必填项',
@@ -220,7 +203,6 @@ class ZhLocalizations extends FirebaseUILocalizationLabels {
     this.findProviderForEmailTitleText = '输入电子邮箱以继续',
     this.continueText = '继续',
     this.countryCode = '地区代码',
-    this.codeRequiredErrorText = '地区代码为必填项',
     this.invalidCountryCode = '无效的地区代码',
     this.chooseACountry = '选择一个国家或地区',
     this.enableMoreSignInMethods = '启用更多登录方式',

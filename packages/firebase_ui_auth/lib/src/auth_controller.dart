@@ -67,11 +67,13 @@ class AuthControllerProvider extends InheritedWidget {
   final AuthController ctrl;
 
   const AuthControllerProvider({
+    Key? key,
+
     /// {@macro flutter.widgets.ProxyWidget.child}
     required Widget child,
     required this.action,
     required this.ctrl,
-  }) : super(child: child);
+  }) : super(key: key, child: child);
 
   @override
   bool updateShouldNotify(AuthControllerProvider oldWidget) {

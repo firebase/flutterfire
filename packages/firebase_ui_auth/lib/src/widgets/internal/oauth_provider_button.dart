@@ -10,6 +10,7 @@ typedef ErrorCallback = void Function(Exception e);
 /// Either button should display icon and text or only icon.
 /// {@endtemplate}
 enum OAuthButtonVariant {
+  // ignore: constant_identifier_names
   icon_and_text,
   icon,
 }

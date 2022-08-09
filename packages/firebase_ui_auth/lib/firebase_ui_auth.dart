@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 export 'src/loading_indicator.dart';
 export 'src/widgets/auth_flow_builder.dart';
 export 'src/auth_controller.dart' show AuthAction, AuthController;
@@ -122,19 +124,19 @@ class FirebaseUIAuth {
       );
     }
 
-    final _app = app ?? Firebase.app();
+    final resolvedApp = app ?? Firebase.app();
 
-    if (_configuredApps[_app] ?? false) {
+    if (_configuredApps[resolvedApp] ?? false) {
       throw Exception(
         'You can only configure providers once '
         'for each Firebase App',
       );
     }
 
-    _providers[_app] = configs;
+    _providers[resolvedApp] = configs;
 
     configs.whereType<OAuthProvider>().forEach((element) {
-      final auth = FirebaseAuth.instanceFor(app: _app);
+      final auth = FirebaseAuth.instanceFor(app: resolvedApp);
       OAuthProviders.register(auth, element);
     });
   }
@@ -143,9 +145,9 @@ class FirebaseUIAuth {
     BuildContext? context,
     FirebaseAuth? auth,
   }) async {
-    final _auth = auth ?? FirebaseAuth.instance;
-    await OAuthProviders.signOut(_auth);
-    await _auth.signOut();
+    final resolvedAuth = auth ?? FirebaseAuth.instance;
+    await OAuthProviders.signOut(resolvedAuth);
+    await resolvedAuth.signOut();
 
     if (context != null) {
       final action = FirebaseUIAction.ofType<SignedOutAction>(context);

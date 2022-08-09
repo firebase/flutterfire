@@ -22,15 +22,15 @@ abstract class OAuthProviders {
   static final _providers = <ProviderKey, OAuthProvider>{};
 
   static void register(FirebaseAuth? auth, OAuthProvider provider) {
-    final _auth = auth ?? FirebaseAuth.instance;
-    final key = ProviderKey(_auth, provider.runtimeType);
+    final resolvedAuth = auth ?? FirebaseAuth.instance;
+    final key = ProviderKey(resolvedAuth, provider.runtimeType);
 
     _providers[key] = provider;
   }
 
   static OAuthProvider? resolve(FirebaseAuth? auth, Type providerType) {
-    final _auth = auth ?? FirebaseAuth.instance;
-    final key = ProviderKey(_auth, providerType);
+    final resolvedAuth = auth ?? FirebaseAuth.instance;
+    final key = ProviderKey(resolvedAuth, providerType);
     return _providers[key];
   }
 
@@ -43,8 +43,8 @@ abstract class OAuthProviders {
   }
 
   static Future<void> signOut([FirebaseAuth? auth]) async {
-    final _auth = auth ?? FirebaseAuth.instance;
-    final providers = providersFor(_auth);
+    final resolvedAuth = auth ?? FirebaseAuth.instance;
+    final providers = providersFor(resolvedAuth);
 
     for (final p in providers) {
       await p.logOutProvider();

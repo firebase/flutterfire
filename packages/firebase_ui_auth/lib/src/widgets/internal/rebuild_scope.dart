@@ -6,9 +6,9 @@ class RebuildScopeKey {
   final _elements = <RebuildScopeElement>[];
 
   void rebuild() {
-    _elements.forEach((element) {
+    for (var element in _elements) {
       element.markNeedsBuild();
-    });
+    }
   }
 }
 

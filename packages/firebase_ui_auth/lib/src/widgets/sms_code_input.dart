@@ -15,7 +15,7 @@ class _NumberDecorationPainter extends BoxPainter {
     required this.color,
   }) : super(onChanged);
 
-  final rect = const Rect.fromLTWH(0, 0, NUMBER_SLOT_WIDTH, NUMBER_SLOT_HEIGHT);
+  final rect = const Rect.fromLTWH(0, 0, _numberSlotWidth, _numberSlotHeight);
 
   @override
   void paint(Canvas canvas, Offset offset, ImageConfiguration configuration) {
@@ -47,9 +47,9 @@ class _NumberSlotDecoration extends Decoration {
   }
 }
 
-const NUMBER_SLOT_WIDTH = 44.0;
-const NUMBER_SLOT_HEIGHT = 55.0;
-const NUMBER_SLOT_MARGIN = 5.5;
+const _numberSlotWidth = 44.0;
+const _numberSlotHeight = 55.0;
+const _numberSlotMargin = 5.5;
 
 class _NumberSlot extends StatefulWidget {
   final String number;
@@ -91,13 +91,13 @@ class _NumberSlotState extends State<_NumberSlot>
     final color = hasError ? errorColor : primaryColor;
 
     return Container(
-      width: NUMBER_SLOT_WIDTH,
-      height: NUMBER_SLOT_HEIGHT,
+      width: _numberSlotWidth,
+      height: _numberSlotHeight,
       decoration: _NumberSlotDecoration(
         inputBorder: inputBorder ?? const UnderlineInputBorder(),
         color: color,
       ),
-      margin: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
+      margin: const EdgeInsets.all(_numberSlotMargin),
       child: Center(
         child: AnimatedBuilder(
           animation: controller,
@@ -199,7 +199,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
 
     return ConstrainedBox(
       constraints: const BoxConstraints(
-        maxWidth: NUMBER_SLOT_WIDTH * 6 + NUMBER_SLOT_MARGIN * 12,
+        maxWidth: _numberSlotWidth * 6 + _numberSlotMargin * 12,
       ),
       child: Stack(
         children: [
@@ -208,7 +208,7 @@ class SMSCodeInputState extends State<SMSCodeInput> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.all(NUMBER_SLOT_MARGIN),
+                padding: const EdgeInsets.all(_numberSlotMargin),
                 child: Text(
                   l.enterSMSCodeText,
                   style: TextStyle(color: primaryColor),

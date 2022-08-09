@@ -5,7 +5,7 @@ import 'package:email_validator/email_validator.dart' as e;
 abstract class Validator {
   /// Error text that should be displayed if the valie is invalid.
   final String errorText;
-  List<Validator> _validators;
+  final List<Validator> _validators;
 
   Validator(this.errorText, List<Validator> children) : _validators = children;
 
